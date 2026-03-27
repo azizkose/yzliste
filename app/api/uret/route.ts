@@ -1,6 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 
+const istekSayaci = new Map<string, number>();
+
+function gunlukLimitKontrol(ip: string): boolean {
+  const bugun = new Date().toDateString();
+  const anahtar = `${ip}-${bugun}`;
+  const sayi = istekSayaci.get(anahtar) || 0;
+  if (sayi >= 10) return false;
+  istekSayaci.set(anahtar, sayi + 1);
+  return true;
+}
+
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for") || "bilinmiyor";
+  if (!gunlukLimitKontrol(ip)) {
+    return NextResponse.json(
+      { icerik: "Gunluk deneme limitine ulastiniz. Lutfen yarin tekrar deneyin." },
+      { status: 429 }
+    );
+  }
+
   const { urunAdi, kategori, ozellikler, platform } = await req.json();
 
   const platformSablonlari: Record<string, string> = {
