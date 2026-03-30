@@ -200,7 +200,7 @@ export default function Home() {
       const res = await fetch("/api/gorsel", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ foto: fotolar[0], stil: gorselStil }),
+        body: JSON.stringify({ foto: fotolar[0], stil: gorselStil, ozellikler }),
       });
       const data = await res.json();
       if (data.gorselUrl) {

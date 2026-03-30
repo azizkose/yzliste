@@ -4,7 +4,7 @@ import { fal } from "@fal-ai/client";
 fal.config({ credentials: process.env.FAL_KEY });
 
 export async function POST(req: NextRequest) {
-  const { foto, stil } = await req.json();
+  const { foto, stil, ozellikler } = await req.json();
 
   if (!foto) {
     return NextResponse.json({ hata: "Fotoğraf gerekli" }, { status: 400 });
@@ -23,31 +23,22 @@ export async function POST(req: NextRequest) {
     const imageUrl = await fal.storage.upload(blob);
 
     const stilPromptlari: Record<string, string> = {
-      beyaz: "product photography, pure white background, professional studio lighting, sharp focus, clean, commercial quality",
-      lifestyle: "product photography, modern lifestyle setting, natural daylight, professional quality",
-      gradient: "product photography, soft pastel gradient background, studio lighting, elegant, commercial quality",
+      beyaz: "professional product photo, pure white background, studio lighting, sharp focus, commercial quality, no shadows",
+      lifestyle: "professional product photo, modern lifestyle setting, natural daylight, interior design background, commercial quality",
+      gradient: "professional product photo, soft gradient background, studio lighting, elegant, commercial quality",
     };
 
-    // Önce arka planı temizle
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const bgResult = await fal.subscribe("fal-ai/background-removal", {
-      input: { image_url: imageUrl },
-    }) as any;
-
-    const temizGorsel = bgResult?.image?.url || imageUrl;
-
-    // Sonra yeni arka plan ekle
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const gorselResult = await fal.subscribe("fal-ai/flux/dev/image-to-image", {
+    const result = await fal.subscribe("fal-ai/flux-pro/v1/redux", {
       input: {
-        image_url: temizGorsel,
-        prompt: stilPromptlari[stil] || stilPromptlari.beyaz,
-        strength: 0.4,
-        num_inference_steps: 28,
+        image_url: imageUrl,
+        prompt: `${stilPromptlari[stil] || stilPromptlari.beyaz}${ozellikler ? `, ${ozellikler}` : ""}`,
+        num_inference_steps: 25,
+        guidance_scale: 3.5,
       },
     }) as any;
 
-    const gorselUrl = gorselResult?.images?.[0]?.url;
+    const gorselUrl = result?.data?.images?.[0]?.url || result?.images?.[0]?.url;
 
     if (!gorselUrl) {
       return NextResponse.json({ hata: "Gorsel uretilemedi" }, { status: 500 });
@@ -55,7 +46,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ gorselUrl });
   } catch (e) {
-    console.log(e);
+    console.log("FAL HATA:", JSON.stringify(e, null, 2));
     return NextResponse.json({ hata: "Gorsel uretim hatasi" }, { status: 500 });
   }
 }
