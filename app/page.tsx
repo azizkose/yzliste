@@ -1,5 +1,6 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { BrowserMultiFormatReader } from "@zxing/library";
 
 export default function Home() {
   const [urunAdi, setUrunAdi] = useState("");
@@ -12,10 +13,19 @@ export default function Home() {
   const [girisTipi, setGirisTipi] = useState<"manuel" | "foto" | "barkod">("manuel");
   const [barkod, setBarkod] = useState("");
   const [barkodYukleniyor, setBarkodYukleniyor] = useState(false);
-  const [barkodBilgi, setBarkodBilgi] = useState<{isim: string, marka: string, aciklama: string} | null>(null);
+  const [barkodBilgi, setBarkodBilgi] = useState<{isim: string, marka: string, aciklama: string, kategori: string, renk: string, boyut: string} | null>(null);
   const [kameraAcik, setKameraAcik] = useState(false);
+  const [taramaAktif, setTaramaAktif] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const readerRef = useRef<BrowserMultiFormatReader | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (readerRef.current) {
+        readerRef.current.reset();
+      }
+    };
+  }, []);
 
   const fotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
     const dosyalar = Array.from(e.target.files || []);
@@ -48,6 +58,7 @@ export default function Home() {
         setUrunAdi(data.isim);
         if (data.marka) setKategori(data.marka);
         if (data.aciklama) setOzellikler(data.aciklama);
+        kameraKapat();
       } else {
         alert("Ürün bulunamadı. Lütfen manuel giriş yapın.");
       }
@@ -59,28 +70,51 @@ export default function Home() {
 
   const kameraAc = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" }
-      });
-      streamRef.current = stream;
       setKameraAcik(true);
-      setTimeout(() => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play();
+      setTaramaAktif(true);
+      const codeReader = new BrowserMultiFormatReader();
+      readerRef.current = codeReader;
+
+      setTimeout(async () => {
+        if (!videoRef.current) return;
+        try {
+          await codeReader.decodeFromVideoDevice(
+            undefined,
+            videoRef.current,
+            (result, err) => {
+              if (result) {
+                const kod = result.getText();
+                setBarkod(kod);
+                setTaramaAktif(false);
+                codeReader.reset();
+                barkodSorgula(kod);
+              }
+              if (err && err.name !== "NotFoundException") {
+                console.log(err);
+              }
+            }
+          );
+        } catch (e) {
+          console.log(e);
+          alert("Kamera açılamadı.");
+          setKameraAcik(false);
+          setTaramaAktif(false);
         }
-      }, 100);
+      }, 200);
     } catch {
-      alert("Kamera açılamadı. Lütfen barkodu manuel girin.");
+      alert("Kamera erişimi reddedildi.");
+      setKameraAcik(false);
+      setTaramaAktif(false);
     }
   };
 
   const kameraKapat = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(t => t.stop());
-      streamRef.current = null;
+    if (readerRef.current) {
+      readerRef.current.reset();
+      readerRef.current = null;
     }
     setKameraAcik(false);
+    setTaramaAktif(false);
   };
 
   const icerikUret = async () => {
@@ -133,7 +167,7 @@ export default function Home() {
             {(["manuel", "foto", "barkod"] as const).map((tip) => (
               <button
                 key={tip}
-                onClick={() => setGirisTipi(tip)}
+                onClick={() => { setGirisTipi(tip); kameraKapat(); }}
                 className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
                   girisTipi === tip
                     ? "bg-orange-500 text-white"
@@ -214,7 +248,7 @@ export default function Home() {
                   value={barkod}
                   onChange={(e) => setBarkod(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && barkodSorgula(barkod)}
-                  placeholder="Barkod numarası girin (EAN/UPC)"
+                  placeholder="Barkod numarası (EAN/UPC)"
                   className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
                 <button
@@ -226,16 +260,31 @@ export default function Home() {
                 </button>
                 <button
                   onClick={kameraAcik ? kameraKapat : kameraAc}
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    kameraAcik ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
                 >
-                  {kameraAcik ? "Kapat" : "📷 Kamera"}
+                  {kameraAcik ? "Kapat" : "📷 Tara"}
                 </button>
               </div>
 
               {kameraAcik && (
-                <div className="space-y-2">
+                <div className="relative rounded-lg overflow-hidden">
                   <video ref={videoRef} className="w-full rounded-lg" playsInline muted />
-                  <p className="text-xs text-gray-400 text-center">Barkodu kameraya göster, numarayı yukarıya gir</p>
+                  {taramaAktif && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="w-48 h-48 border-2 border-orange-400 rounded-lg relative">
+                        <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-orange-500 rounded-tl"></div>
+                        <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-orange-500 rounded-tr"></div>
+                        <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-orange-500 rounded-bl"></div>
+                        <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-orange-500 rounded-br"></div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-full h-0.5 bg-orange-400 opacity-70 animate-pulse"></div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <p className="text-xs text-gray-400 text-center mt-2">Barkodu çerçeve içine hizala</p>
                 </div>
               )}
 
