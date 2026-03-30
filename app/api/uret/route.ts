@@ -15,10 +15,7 @@ function gunlukLimitKontrol(ip: string): boolean {
 export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for") || "bilinmiyor";
   if (!gunlukLimitKontrol(ip)) {
-    return NextResponse.json(
-      { icerik: "Gunluk deneme limitine ulastiniz." },
-      { status: 429 }
-    );
+    return NextResponse.json({ icerik: "Gunluk deneme limitine ulastiniz." }, { status: 429 });
   }
 
   const { urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi, userId } = await req.json();
@@ -68,15 +65,16 @@ export async function POST(req: NextRequest) {
 
   const data = await response.json();
   const icerik = data.content?.[0]?.text || JSON.stringify(data);
+  const inputToken = data.usage?.input_tokens || 0;
+  const outputToken = data.usage?.output_tokens || 0;
 
-  // Supabase'e kaydet
   if (userId) {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_KEY!
     );
 
-    const urunAdiKayit = girisTipi === "foto" ? "Fotoğraftan üretim" :
+    const urunAdiKayit = girisTipi === "foto" ? "Fotograftan uretim" :
                          girisTipi === "barkod" ? barkodBilgi?.isim || "Barkod" :
                          urunAdi;
 
@@ -86,20 +84,22 @@ export async function POST(req: NextRequest) {
       giris_tipi: girisTipi,
       urun_adi: urunAdiKayit,
       sonuc: icerik,
+      input_token: inputToken,
+      output_token: outputToken,
     });
 
-    await supabase.from("profiles")
+    const { data: profil } = await supabase
+      .from("profiles")
       .select("kredi")
       .eq("id", userId)
-      .single()
-      .then(async ({ data: profil }) => {
-        if (profil) {
-          await supabase.from("profiles")
-            .update({ kredi: profil.kredi - 1 })
-            .eq("id", userId);
-        }
-      });
+      .single();
+
+    if (profil) {
+      await supabase.from("profiles")
+        .update({ kredi: profil.kredi - 1 })
+        .eq("id", userId);
+    }
   }
 
-  return NextResponse.json({ icerik });
+  return NextResponse.json({ icerik, inputToken, outputToken });
 }
