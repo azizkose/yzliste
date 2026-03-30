@@ -35,6 +35,9 @@ export default function Home() {
   const [kullanici, setKullanici] = useState<Kullanici | null>(null);
   const [gecmis, setGecmis] = useState<Uretim[]>([]);
   const [seciliUretim, setSeciliUretim] = useState<Uretim | null>(null);
+  const [gorselStil, setGorselStil] = useState("beyaz");
+  const [gorselYukleniyor, setGorselYukleniyor] = useState(false);
+  const [uretilmisGorsel, setUretilmisGorsel] = useState<string | null>(null);
   const scannerRef = useRef<unknown>(null);
   const scannerBaslatildi = useRef(false);
   const sorguCalisiyor = useRef(false);
@@ -96,6 +99,7 @@ export default function Home() {
 
   const fotoKaldir = (index: number) => {
     setFotolar((prev) => prev.filter((_, i) => i !== index));
+    setUretilmisGorsel(null);
   };
 
   const barkodSorgula = async (kod: string) => {
@@ -188,6 +192,28 @@ export default function Home() {
     setYukleniyor(false);
   };
 
+  const gorselUret = async () => {
+    if (fotolar.length === 0) return;
+    setGorselYukleniyor(true);
+    setUretilmisGorsel(null);
+    try {
+      const res = await fetch("/api/gorsel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ foto: fotolar[0], stil: gorselStil }),
+      });
+      const data = await res.json();
+      if (data.gorselUrl) {
+        setUretilmisGorsel(data.gorselUrl);
+      } else {
+        alert("Görsel üretilemedi. Tekrar deneyin.");
+      }
+    } catch {
+      alert("Hata oluştu.");
+    }
+    setGorselYukleniyor(false);
+  };
+
   const uretButonAktif =
     !yukleniyor &&
     ((girisTipi === "manuel" && urunAdi && kategori) ||
@@ -205,7 +231,6 @@ export default function Home() {
     <main className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-5xl mx-auto">
 
-        {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
             YZ<span className="text-orange-500">Liste</span>
@@ -345,6 +370,42 @@ export default function Home() {
               </button>
             </div>
 
+            {/* Görsel Üretim — sadece fotoğraf modunda */}
+            {girisTipi === "foto" && fotolar.length > 0 && (
+              <div className="bg-white rounded-2xl shadow p-6">
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">✨ Ürün Görseli Üret</h2>
+                <p className="text-xs text-gray-400 mb-3">Ürün fotoğrafını profesyonel e-ticaret görseline dönüştür</p>
+                <div className="flex gap-2 mb-4">
+                  {[
+                    { id: "beyaz", label: "⬜ Beyaz" },
+                    { id: "lifestyle", label: "🏠 Lifestyle" },
+                    { id: "gradient", label: "🎨 Gradient" },
+                  ].map((s) => (
+                    <button key={s.id} onClick={() => setGorselStil(s.id)}
+                      className={`flex-1 py-2 rounded-lg text-xs font-medium transition-colors ${
+                        gorselStil === s.id ? "bg-purple-500 text-white" : "bg-gray-100 text-gray-600"
+                      }`}>
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+                <button onClick={gorselUret} disabled={gorselYukleniyor}
+                  className="w-full bg-purple-500 hover:bg-purple-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-lg transition-colors">
+                  {gorselYukleniyor ? "Görsel üretiliyor... (~30sn)" : "✨ Görsel Üret"}
+                </button>
+                {uretilmisGorsel && (
+                  <div className="mt-4">
+                    <img src={uretilmisGorsel} alt="Üretilen görsel" className="w-full rounded-xl border border-gray-100" />
+                    <a href={uretilmisGorsel} download target="_blank"
+                      className="block text-center text-sm text-purple-500 hover:text-purple-600 mt-2 font-medium">
+                      ⬇️ İndir
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* İçerik sonucu */}
             {sonuc && (
               <div className="bg-white rounded-2xl shadow p-6">
                 <div className="flex justify-between items-center mb-4">
@@ -362,7 +423,6 @@ export default function Home() {
           {/* Sağ — Kredi & Geçmiş */}
           <div className="w-full lg:w-72 space-y-4">
 
-            {/* Kredi kartı */}
             {kullanici && (
               <div className="bg-white rounded-2xl shadow p-5">
                 <h3 className="text-sm font-semibold text-gray-700 mb-4">Kredi Durumu</h3>
@@ -388,7 +448,6 @@ export default function Home() {
               </div>
             )}
 
-            {/* Geçmiş */}
             <div className="bg-white rounded-2xl shadow p-5">
               <h3 className="text-sm font-semibold text-gray-700 mb-3">Son Üretimler</h3>
               {gecmis.length === 0 ? (
