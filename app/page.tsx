@@ -1,5 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [urunAdi, setUrunAdi] = useState("");
@@ -14,13 +16,35 @@ export default function Home() {
   const [barkodYukleniyor, setBarkodYukleniyor] = useState(false);
   const [barkodBilgi, setBarkodBilgi] = useState<{isim: string, marka: string, aciklama: string, kategori: string, renk: string, boyut: string} | null>(null);
   const [kameraAcik, setKameraAcik] = useState(false);
-  const sorguCalisiyor = useRef(false);
+  const [kullanici, setKullanici] = useState<{email: string, kredi: number} | null>(null);
   const scannerRef = useRef<unknown>(null);
   const scannerBaslatildi = useRef(false);
+  const sorguCalisiyor = useRef(false);
+  const router = useRouter();
 
   useEffect(() => {
+    kullaniciyiKontrolEt();
     return () => { kameraKapat(); };
   }, []);
+
+  const kullaniciyiKontrolEt = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      router.push("/auth");
+      return;
+    }
+    const { data: profil } = await supabase
+      .from("profiles")
+      .select("email, kredi")
+      .eq("id", user.id)
+      .single();
+    if (profil) setKullanici(profil);
+  };
+
+  const cikisYap = async () => {
+    await supabase.auth.signOut();
+    router.push("/auth");
+  };
 
   const fotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
     const dosyalar = Array.from(e.target.files || []);
@@ -39,9 +63,9 @@ export default function Home() {
   };
 
   const barkodSorgula = async (kod: string) => {
+    if (!kod || kod.length < 8) return;
     if (sorguCalisiyor.current) return;
     sorguCalisiyor.current = true;
-    if (!kod || kod.length < 8) return;
     setBarkodYukleniyor(true);
     setBarkodBilgi(null);
     try {
@@ -51,15 +75,14 @@ export default function Home() {
         alert("Bu ürün veritabanında bulunamadı. Lütfen ürün adı ve özelliklerini Manuel sekmesinden girin.");
         setGirisTipi("manuel");
         setBarkod("");
-        return;
-      }
-      if (data.isim) {        setBarkodBilgi(data);
+      } else if (data.isim) {
+        setBarkodBilgi(data);
         setUrunAdi(data.isim);
         if (data.marka) setKategori(data.marka);
         if (data.aciklama) setOzellikler(data.aciklama);
         kameraKapat();
       } else {
-        alert("Ürün bulunamadı. Lütfen manuel giriş yapın.");
+        alert("Barkod sorgulanırken hata oluştu.");
       }
     } catch {
       alert("Barkod sorgulanırken hata oluştu.");
@@ -71,26 +94,21 @@ export default function Home() {
   const kameraAc = async () => {
     if (scannerBaslatildi.current) return;
     setKameraAcik(true);
-
     setTimeout(async () => {
       try {
         const { Html5Qrcode } = await import("html5-qrcode");
         const scanner = new Html5Qrcode("barkod-okuyucu");
         scannerRef.current = scanner;
         scannerBaslatildi.current = true;
-
         await scanner.start(
           { facingMode: "environment" },
           { fps: 10, qrbox: { width: 250, height: 150 } },
-          (decodedText: string) => {
-            setBarkod(decodedText);
-            barkodSorgula(decodedText);
-          },
+          (decodedText: string) => { setBarkod(decodedText); barkodSorgula(decodedText); },
           () => {}
         );
       } catch (e) {
         console.log(e);
-        alert("Kamera açılamadı. Lütfen barkodu manuel girin.");
+        alert("Kamera açılamadı.");
         setKameraAcik(false);
         scannerBaslatildi.current = false;
       }
@@ -103,9 +121,7 @@ export default function Home() {
         const scanner = scannerRef.current as { stop: () => Promise<void>; clear: () => void };
         await scanner.stop();
         scanner.clear();
-      } catch (e) {
-        console.log(e);
-      }
+      } catch (e) { console.log(e); }
       scannerRef.current = null;
       scannerBaslatildi.current = false;
     }
@@ -113,6 +129,10 @@ export default function Home() {
   };
 
   const icerikUret = async () => {
+    if (!kullanici || kullanici.kredi <= 0) {
+      alert("Krediniz bitti. Lütfen kredi satın alın.");
+      return;
+    }
     if (girisTipi === "manuel" && (!urunAdi || !kategori)) return;
     if (girisTipi === "foto" && fotolar.length === 0) return;
     if (girisTipi === "barkod" && !barkodBilgi) return;
@@ -127,6 +147,17 @@ export default function Home() {
 
     const data = await res.json();
     setSonuc(data.icerik);
+
+    // Kredi düş
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      await supabase
+        .from("profiles")
+        .update({ kredi: kullanici.kredi - 1 })
+        .eq("id", user.id);
+      setKullanici({ ...kullanici, kredi: kullanici.kredi - 1 });
+    }
+
     setYukleniyor(false);
   };
 
@@ -140,11 +171,20 @@ export default function Home() {
     <main className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-2xl mx-auto">
 
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <div className="flex justify-between items-center mb-10">
+          <h1 className="text-4xl font-bold text-gray-900">
             YZ<span className="text-orange-500">Liste</span>
           </h1>
-          <p className="text-gray-500">E-ticaret satıcıları için AI içerik asistanı</p>
+          {kullanici && (
+            <div className="flex items-center gap-4">
+              <span className="text-sm bg-orange-100 text-orange-700 px-3 py-1 rounded-full font-medium">
+                {kullanici.kredi} kredi
+              </span>
+              <button onClick={cikisYap} className="text-sm text-gray-400 hover:text-gray-600">
+                Çıkış
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-2xl shadow p-6 space-y-4">
@@ -179,115 +219,3 @@ export default function Home() {
               </div>
             </>
           )}
-
-          {girisTipi === "foto" && (
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700">
-                Ürün Fotoğrafları * <span className="text-gray-400 font-normal">(max 3)</span>
-              </label>
-              {fotolar.length > 0 && (
-                <div className="flex gap-2 flex-wrap">
-                  {fotolar.map((f, i) => (
-                    <div key={i} className="relative">
-                      <img src={f} alt={`Ürün ${i + 1}`} className="w-24 h-24 object-cover rounded-lg border border-gray-200" />
-                      <button onClick={() => fotoKaldir(i)}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">×</button>
-                    </div>
-                  ))}
-                </div>
-              )}
-              {fotolar.length < 3 && (
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-orange-400 transition-colors">
-                  <input type="file" accept="image/*" multiple onChange={fotoSec} className="hidden" id="foto-input" />
-                  <label htmlFor="foto-input" className="cursor-pointer block space-y-2">
-                    <div className="text-3xl">📷</div>
-                    <p className="text-gray-500 text-sm">{fotolar.length === 0 ? "Fotoğraf seçmek için tıkla" : "Daha fazla ekle"}</p>
-                    <p className="text-gray-400 text-xs">{3 - fotolar.length} fotoğraf daha eklenebilir</p>
-                  </label>
-                </div>
-              )}
-            </div>
-          )}
-
-          {girisTipi === "barkod" && (
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700">Barkod *</label>
-              <div className="flex gap-2">
-                <input type="text" value={barkod} onChange={(e) => setBarkod(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && barkodSorgula(barkod)}
-                  placeholder="Barkod numarası (EAN/UPC)"
-                  className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
-                <button onClick={() => barkodSorgula(barkod)}
-                  disabled={barkodYukleniyor || barkod.length < 8}
-                  className="bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                  {barkodYukleniyor ? "..." : "Sorgula"}
-                </button>
-                <button onClick={kameraAcik ? kameraKapat : kameraAc}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    kameraAcik ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}>
-                  {kameraAcik ? "Kapat" : "📷 Tara"}
-                </button>
-              </div>
-
-              {kameraAcik && (
-                <div className="space-y-2">
-                  <div id="barkod-okuyucu" className="w-full rounded-lg overflow-hidden" />
-                  <p className="text-xs text-gray-400 text-center">Barkodu çerçeve içine hizala, otomatik okunacak</p>
-                </div>
-              )}
-
-              {barkodBilgi && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-sm">
-                  <p className="font-medium text-green-800">✓ Ürün bulundu</p>
-                  <p className="text-green-700">{barkodBilgi.isim}</p>
-                  {barkodBilgi.marka && <p className="text-green-600 text-xs">Marka: {barkodBilgi.marka}</p>}
-                </div>
-              )}
-            </div>
-          )}
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
-            </label>
-            <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)}
-              placeholder="örn: renk, beden, malzeme, özel özellikler..."
-              rows={3}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Platform</label>
-            <select value={platform} onChange={(e) => setPlatform(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
-              <option value="trendyol">Trendyol</option>
-              <option value="hepsiburada">Hepsiburada</option>
-              <option value="amazon">Amazon TR</option>
-              <option value="n11">N11</option>
-            </select>
-          </div>
-
-          <button onClick={icerikUret} disabled={!uretButonAktif}
-            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-lg transition-colors">
-            {yukleniyor ? "Üretiliyor..." : "İçerik Üret"}
-          </button>
-        </div>
-
-        {sonuc && (
-          <div className="bg-white rounded-2xl shadow p-6 mt-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-800">Üretilen İçerik</h2>
-              <button onClick={() => navigator.clipboard.writeText(sonuc)}
-                className="text-sm text-orange-500 hover:text-orange-600 font-medium">
-                Kopyala
-              </button>
-            </div>
-            <pre className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">{sonuc}</pre>
-          </div>
-        )}
-
-      </div>
-    </main>
-  );
-}
