@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { urunAdi, kategori, ozellikler, platform, foto, girisTipi } = await req.json();
+  const { urunAdi, kategori, ozellikler, platform, fotolar, girisTipi } = await req.json();
 
   const platformSablonlari: Record<string, string> = {
     trendyol: "Trendyol icin max 100 karakter baslik, 5 madde ozellik, 300 kelime aciklama ve 10 arama etiketi yaz.",
@@ -31,25 +31,29 @@ export async function POST(req: NextRequest) {
 
   let messages;
 
-  if (girisTipi === "foto" && foto) {
-    const base64 = foto.split(",")[1];
-    const mediaType = foto.split(";")[0].split(":")[1];
+  if (girisTipi === "foto" && fotolar && fotolar.length > 0) {
+    const icerikler: object[] = [];
 
-    messages = [
-      {
-        role: "user",
-        content: [
-          {
-            type: "image",
-            source: {
-              type: "base64",
-              media_type: mediaType,
-              data: base64,
-            },
-          },
-          {
-            type: "text",
-            text: `Bu urun fotografini analiz et. Urunu tanimlayarak asagidaki formatta icerik uret.
+    // Tüm fotoğrafları ekle
+    fotolar.forEach((foto: string) => {
+      const base64 = foto.split(",")[1];
+      const mediaType = foto.split(";")[0].split(":")[1];
+      icerikler.push({
+        type: "image",
+        source: {
+          type: "base64",
+          media_type: mediaType,
+          data: base64,
+        },
+      });
+    });
+
+    // Metin promptu ekle
+    icerikler.push({
+      type: "text",
+      text: `Bu urun fotograflarini analiz et. ${
+        ozellikler ? `Ek bilgi: ${ozellikler}.` : ""
+      } Asagidaki formatta icerik uret.
 
 ${platformSablonlari[platform] || platformSablonlari.trendyol}
 
@@ -69,10 +73,9 @@ ACIKLAMA:
 
 ARAMA ETIKETLERI:
 [etiket1, etiket2, etiket3]`,
-          },
-        ],
-      },
-    ];
+    });
+
+    messages = [{ role: "user", content: icerikler }];
   } else {
     messages = [
       {
@@ -81,7 +84,7 @@ ARAMA ETIKETLERI:
 
 Urun: ${urunAdi}
 Kategori: ${kategori}
-Ozellikler: ${ozellikler || "belirtilmedi"}
+Ek bilgi: ${ozellikler || "belirtilmedi"}
 
 ${platformSablonlari[platform] || platformSablonlari.trendyol}
 

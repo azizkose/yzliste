@@ -8,27 +8,45 @@ export default function Home() {
   const [platform, setPlatform] = useState("trendyol");
   const [sonuc, setSonuc] = useState("");
   const [yukleniyor, setYukleniyor] = useState(false);
-  const [foto, setFoto] = useState<string | null>(null);
+  const [fotolar, setFotolar] = useState<string[]>([]);
   const [girisTipi, setGirisTipi] = useState<"manuel" | "foto">("manuel");
 
   const fotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const dosya = e.target.files?.[0];
-    if (!dosya) return;
-    const reader = new FileReader();
-    reader.onload = () => setFoto(reader.result as string);
-    reader.readAsDataURL(dosya);
+    const dosyalar = Array.from(e.target.files || []);
+    dosyalar.slice(0, 3 - fotolar.length).forEach((dosya) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setFotolar((prev) => {
+          if (prev.length >= 3) return prev;
+          return [...prev, reader.result as string];
+        });
+      };
+      reader.readAsDataURL(dosya);
+    });
+    e.target.value = "";
+  };
+
+  const fotoKaldir = (index: number) => {
+    setFotolar((prev) => prev.filter((_, i) => i !== index));
   };
 
   const icerikUret = async () => {
     if (girisTipi === "manuel" && (!urunAdi || !kategori)) return;
-    if (girisTipi === "foto" && !foto) return;
+    if (girisTipi === "foto" && fotolar.length === 0) return;
     setYukleniyor(true);
     setSonuc("");
 
     const res = await fetch("/api/uret", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ urunAdi, kategori, ozellikler, platform, foto, girisTipi }),
+      body: JSON.stringify({
+        urunAdi,
+        kategori,
+        ozellikler,
+        platform,
+        fotolar,
+        girisTipi,
+      }),
     });
 
     const data = await res.json();
@@ -49,7 +67,7 @@ export default function Home() {
 
         <div className="bg-white rounded-2xl shadow p-6 space-y-4">
 
-          {/* Giriş tipi seçimi */}
+          {/* Giriş tipi */}
           <div className="flex gap-2">
             <button
               onClick={() => setGirisTipi("manuel")}
@@ -96,55 +114,79 @@ export default function Home() {
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Özellikler (isteğe bağlı)</label>
-                <textarea
-                  value={ozellikler}
-                  onChange={(e) => setOzellikler(e.target.value)}
-                  placeholder="örn: hakiki deri, su geçirmez, kışlık, siyah renk"
-                  rows={3}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
-                />
-              </div>
             </>
           )}
 
           {/* Fotoğraf girişi */}
           {girisTipi === "foto" && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Fotoğrafı *</label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-orange-400 transition-colors">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={fotoSec}
-                  className="hidden"
-                  id="foto-input"
-                />
-                <label htmlFor="foto-input" className="cursor-pointer">
-                  {foto ? (
-                    <img src={foto} alt="Seçilen ürün" className="max-h-48 mx-auto rounded-lg object-contain" />
-                  ) : (
-                    <div className="space-y-2">
-                      <div className="text-4xl">📷</div>
-                      <p className="text-gray-500 text-sm">Fotoğraf seçmek için tıkla</p>
-                      <p className="text-gray-400 text-xs">JPG, PNG desteklenir</p>
+            <div className="space-y-3">
+              <label className="block text-sm font-medium text-gray-700">
+                Ürün Fotoğrafları * <span className="text-gray-400 font-normal">(max 3)</span>
+              </label>
+
+              {/* Fotoğraf önizlemeleri */}
+              {fotolar.length > 0 && (
+                <div className="flex gap-2 flex-wrap">
+                  {fotolar.map((f, i) => (
+                    <div key={i} className="relative">
+                      <img
+                        src={f}
+                        alt={`Ürün ${i + 1}`}
+                        className="w-24 h-24 object-cover rounded-lg border border-gray-200"
+                      />
+                      <button
+                        onClick={() => fotoKaldir(i)}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center hover:bg-red-600"
+                      >
+                        ×
+                      </button>
                     </div>
-                  )}
-                </label>
-              </div>
-              {foto && (
-                <button
-                  onClick={() => setFoto(null)}
-                  className="mt-2 text-xs text-red-400 hover:text-red-500"
-                >
-                  Fotoğrafı kaldır
-                </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Yükleme alanı */}
+              {fotolar.length < 3 && (
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-orange-400 transition-colors">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={fotoSec}
+                    className="hidden"
+                    id="foto-input"
+                  />
+                  <label htmlFor="foto-input" className="cursor-pointer space-y-2 block">
+                    <div className="text-3xl">📷</div>
+                    <p className="text-gray-500 text-sm">
+                      {fotolar.length === 0
+                        ? "Fotoğraf seçmek için tıkla"
+                        : "Daha fazla fotoğraf ekle"}
+                    </p>
+                    <p className="text-gray-400 text-xs">
+                      {3 - fotolar.length} fotoğraf daha ekleyebilirsin
+                    </p>
+                  </label>
+                </div>
               )}
             </div>
           )}
 
-          {/* Platform seçimi — her iki modda da göster */}
+          {/* Ek bilgi — her iki modda da göster */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+            </label>
+            <textarea
+              value={ozellikler}
+              onChange={(e) => setOzellikler(e.target.value)}
+              placeholder="örn: hakiki deri, su geçirmez, kışlık, siyah renk, beden 42"
+              rows={3}
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            />
+          </div>
+
+          {/* Platform */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Platform</label>
             <select
@@ -164,7 +206,7 @@ export default function Home() {
             disabled={
               yukleniyor ||
               (girisTipi === "manuel" && (!urunAdi || !kategori)) ||
-              (girisTipi === "foto" && !foto)
+              (girisTipi === "foto" && fotolar.length === 0)
             }
             className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-lg transition-colors"
           >
