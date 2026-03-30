@@ -1,6 +1,5 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { BrowserMultiFormatReader } from "@zxing/library";
 
 export default function Home() {
   const [urunAdi, setUrunAdi] = useState("");
@@ -15,16 +14,11 @@ export default function Home() {
   const [barkodYukleniyor, setBarkodYukleniyor] = useState(false);
   const [barkodBilgi, setBarkodBilgi] = useState<{isim: string, marka: string, aciklama: string, kategori: string, renk: string, boyut: string} | null>(null);
   const [kameraAcik, setKameraAcik] = useState(false);
-  const [taramaAktif, setTaramaAktif] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const readerRef = useRef<BrowserMultiFormatReader | null>(null);
+  const scannerRef = useRef<unknown>(null);
+  const scannerBaslatildi = useRef(false);
 
   useEffect(() => {
-    return () => {
-      if (readerRef.current) {
-        readerRef.current.reset();
-      }
-    };
+    return () => { kameraKapat(); };
   }, []);
 
   const fotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,10 +26,7 @@ export default function Home() {
     dosyalar.slice(0, 3 - fotolar.length).forEach((dosya) => {
       const reader = new FileReader();
       reader.onload = () => {
-        setFotolar((prev) => {
-          if (prev.length >= 3) return prev;
-          return [...prev, reader.result as string];
-        });
+        setFotolar((prev) => prev.length >= 3 ? prev : [...prev, reader.result as string]);
       };
       reader.readAsDataURL(dosya);
     });
@@ -69,52 +60,47 @@ export default function Home() {
   };
 
   const kameraAc = async () => {
-    try {
-      setKameraAcik(true);
-      setTaramaAktif(true);
-      const codeReader = new BrowserMultiFormatReader();
-      readerRef.current = codeReader;
+    if (scannerBaslatildi.current) return;
+    setKameraAcik(true);
 
-      setTimeout(async () => {
-        if (!videoRef.current) return;
-        try {
-          await codeReader.decodeFromVideoDevice(
-            undefined,
-            videoRef.current,
-            (result, err) => {
-              if (result) {
-                const kod = result.getText();
-                setBarkod(kod);
-                setTaramaAktif(false);
-                codeReader.reset();
-                barkodSorgula(kod);
-              }
-              if (err && err.name !== "NotFoundException") {
-                console.log(err);
-              }
-            }
-          );
-        } catch (e) {
-          console.log(e);
-          alert("Kamera açılamadı.");
-          setKameraAcik(false);
-          setTaramaAktif(false);
-        }
-      }, 200);
-    } catch {
-      alert("Kamera erişimi reddedildi.");
-      setKameraAcik(false);
-      setTaramaAktif(false);
-    }
+    setTimeout(async () => {
+      try {
+        const { Html5Qrcode } = await import("html5-qrcode");
+        const scanner = new Html5Qrcode("barkod-okuyucu");
+        scannerRef.current = scanner;
+        scannerBaslatildi.current = true;
+
+        await scanner.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: { width: 250, height: 150 } },
+          (decodedText: string) => {
+            setBarkod(decodedText);
+            barkodSorgula(decodedText);
+          },
+          () => {}
+        );
+      } catch (e) {
+        console.log(e);
+        alert("Kamera açılamadı. Lütfen barkodu manuel girin.");
+        setKameraAcik(false);
+        scannerBaslatildi.current = false;
+      }
+    }, 300);
   };
 
-  const kameraKapat = () => {
-    if (readerRef.current) {
-      readerRef.current.reset();
-      readerRef.current = null;
+  const kameraKapat = async () => {
+    if (scannerRef.current && scannerBaslatildi.current) {
+      try {
+        const scanner = scannerRef.current as { stop: () => Promise<void>; clear: () => void };
+        await scanner.stop();
+        scanner.clear();
+      } catch (e) {
+        console.log(e);
+      }
+      scannerRef.current = null;
+      scannerBaslatildi.current = false;
     }
     setKameraAcik(false);
-    setTaramaAktif(false);
   };
 
   const icerikUret = async () => {
@@ -127,15 +113,7 @@ export default function Home() {
     const res = await fetch("/api/uret", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        urunAdi,
-        kategori,
-        ozellikler,
-        platform,
-        fotolar,
-        girisTipi,
-        barkodBilgi,
-      }),
+      body: JSON.stringify({ urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi }),
     });
 
     const data = await res.json();
@@ -162,16 +140,13 @@ export default function Home() {
 
         <div className="bg-white rounded-2xl shadow p-6 space-y-4">
 
-          {/* Giriş tipi */}
           <div className="flex gap-2">
             {(["manuel", "foto", "barkod"] as const).map((tip) => (
               <button
                 key={tip}
                 onClick={() => { setGirisTipi(tip); kameraKapat(); }}
                 className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  girisTipi === tip
-                    ? "bg-orange-500 text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  girisTipi === tip ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
                 {tip === "manuel" ? "Manuel" : tip === "foto" ? "📷 Fotoğraf" : "🔍 Barkod"}
@@ -179,33 +154,23 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Manuel */}
           {girisTipi === "manuel" && (
             <>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Adı *</label>
-                <input
-                  type="text"
-                  value={urunAdi}
-                  onChange={(e) => setUrunAdi(e.target.value)}
+                <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)}
                   placeholder="örn: Erkek Deri Bot"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
-                />
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Kategori *</label>
-                <input
-                  type="text"
-                  value={kategori}
-                  onChange={(e) => setKategori(e.target.value)}
+                <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)}
                   placeholder="örn: Ayakkabı / Giyim / Elektronik"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
-                />
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
               </div>
             </>
           )}
 
-          {/* Fotoğraf */}
           {girisTipi === "foto" && (
             <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
@@ -216,10 +181,8 @@ export default function Home() {
                   {fotolar.map((f, i) => (
                     <div key={i} className="relative">
                       <img src={f} alt={`Ürün ${i + 1}`} className="w-24 h-24 object-cover rounded-lg border border-gray-200" />
-                      <button
-                        onClick={() => fotoKaldir(i)}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
-                      >×</button>
+                      <button onClick={() => fotoKaldir(i)}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">×</button>
                     </div>
                   ))}
                 </div>
@@ -237,54 +200,31 @@ export default function Home() {
             </div>
           )}
 
-          {/* Barkod */}
           {girisTipi === "barkod" && (
             <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">Barkod *</label>
-
               <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={barkod}
-                  onChange={(e) => setBarkod(e.target.value)}
+                <input type="text" value={barkod} onChange={(e) => setBarkod(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && barkodSorgula(barkod)}
                   placeholder="Barkod numarası (EAN/UPC)"
-                  className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
-                />
-                <button
-                  onClick={() => barkodSorgula(barkod)}
+                  className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                <button onClick={() => barkodSorgula(barkod)}
                   disabled={barkodYukleniyor || barkod.length < 8}
-                  className="bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                >
+                  className="bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                   {barkodYukleniyor ? "..." : "Sorgula"}
                 </button>
-                <button
-                  onClick={kameraAcik ? kameraKapat : kameraAc}
+                <button onClick={kameraAcik ? kameraKapat : kameraAc}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     kameraAcik ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                >
+                  }`}>
                   {kameraAcik ? "Kapat" : "📷 Tara"}
                 </button>
               </div>
 
               {kameraAcik && (
-                <div className="relative rounded-lg overflow-hidden">
-                  <video ref={videoRef} className="w-full rounded-lg" playsInline muted />
-                  {taramaAktif && (
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="w-48 h-48 border-2 border-orange-400 rounded-lg relative">
-                        <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-orange-500 rounded-tl"></div>
-                        <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-orange-500 rounded-tr"></div>
-                        <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-orange-500 rounded-bl"></div>
-                        <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-orange-500 rounded-br"></div>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-full h-0.5 bg-orange-400 opacity-70 animate-pulse"></div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  <p className="text-xs text-gray-400 text-center mt-2">Barkodu çerçeve içine hizala</p>
+                <div className="space-y-2">
+                  <div id="barkod-okuyucu" className="w-full rounded-lg overflow-hidden" />
+                  <p className="text-xs text-gray-400 text-center">Barkodu çerçeve içine hizala, otomatik okunacak</p>
                 </div>
               )}
 
@@ -298,28 +238,20 @@ export default function Home() {
             </div>
           )}
 
-          {/* Ek bilgi */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
             </label>
-            <textarea
-              value={ozellikler}
-              onChange={(e) => setOzellikler(e.target.value)}
+            <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)}
               placeholder="örn: renk, beden, malzeme, özel özellikler..."
               rows={3}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
-            />
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
           </div>
 
-          {/* Platform */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Platform</label>
-            <select
-              value={platform}
-              onChange={(e) => setPlatform(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
-            >
+            <select value={platform} onChange={(e) => setPlatform(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
               <option value="trendyol">Trendyol</option>
               <option value="hepsiburada">Hepsiburada</option>
               <option value="amazon">Amazon TR</option>
@@ -327,11 +259,8 @@ export default function Home() {
             </select>
           </div>
 
-          <button
-            onClick={icerikUret}
-            disabled={!uretButonAktif}
-            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-lg transition-colors"
-          >
+          <button onClick={icerikUret} disabled={!uretButonAktif}
+            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-lg transition-colors">
             {yukleniyor ? "Üretiliyor..." : "İçerik Üret"}
           </button>
         </div>
@@ -340,10 +269,8 @@ export default function Home() {
           <div className="bg-white rounded-2xl shadow p-6 mt-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-gray-800">Üretilen İçerik</h2>
-              <button
-                onClick={() => navigator.clipboard.writeText(sonuc)}
-                className="text-sm text-orange-500 hover:text-orange-600 font-medium"
-              >
+              <button onClick={() => navigator.clipboard.writeText(sonuc)}
+                className="text-sm text-orange-500 hover:text-orange-600 font-medium">
                 Kopyala
               </button>
             </div>
