@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { urunAdi, kategori, ozellikler, platform, fotolar, girisTipi } = await req.json();
+  const { urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi } = await req.json();
 
   const platformSablonlari: Record<string, string> = {
     trendyol: "Trendyol icin max 100 karakter baslik, 5 madde ozellik, 300 kelime aciklama ve 10 arama etiketi yaz.",
@@ -34,26 +34,20 @@ export async function POST(req: NextRequest) {
   if (girisTipi === "foto" && fotolar && fotolar.length > 0) {
     const icerikler: object[] = [];
 
-    // Tüm fotoğrafları ekle
     fotolar.forEach((foto: string) => {
       const base64 = foto.split(",")[1];
       const mediaType = foto.split(";")[0].split(":")[1];
       icerikler.push({
         type: "image",
-        source: {
-          type: "base64",
-          media_type: mediaType,
-          data: base64,
-        },
+        source: { type: "base64", media_type: mediaType, data: base64 },
       });
     });
 
-    // Metin promptu ekle
     icerikler.push({
       type: "text",
       text: `Bu urun fotograflarini analiz et. ${
         ozellikler ? `Ek bilgi: ${ozellikler}.` : ""
-      } Asagidaki formatta icerik uret.
+      } Asagidaki formatta Turkce icerik uret.
 
 ${platformSablonlari[platform] || platformSablonlari.trendyol}
 
@@ -76,6 +70,43 @@ ARAMA ETIKETLERI:
     });
 
     messages = [{ role: "user", content: icerikler }];
+
+  } else if (girisTipi === "barkod" && barkodBilgi) {
+    messages = [
+      {
+        role: "user",
+        content: `Sen bir e-ticaret icerik uzmanisın. Turk tuketiciye yonelik, satisa donusen icerikler yaziyorsun.
+
+Urun bilgileri (barkoddan alindi):
+Urun Adi: ${barkodBilgi.isim}
+Marka: ${barkodBilgi.marka || "belirtilmedi"}
+Kategori: ${barkodBilgi.kategori || "belirtilmedi"}
+Renk: ${barkodBilgi.renk || "belirtilmedi"}
+Boyut: ${barkodBilgi.boyut || "belirtilmedi"}
+Aciklama: ${barkodBilgi.aciklama || "belirtilmedi"}
+Ek bilgi: ${ozellikler || "belirtilmedi"}
+
+${platformSablonlari[platform] || platformSablonlari.trendyol}
+
+Cikti formati:
+BASLIK:
+[baslik buraya]
+
+OZELLIKLER:
+- ozellik 1
+- ozellik 2
+- ozellik 3
+- ozellik 4
+- ozellik 5
+
+ACIKLAMA:
+[aciklama buraya]
+
+ARAMA ETIKETLERI:
+[etiket1, etiket2, etiket3]`,
+      },
+    ];
+
   } else {
     messages = [
       {

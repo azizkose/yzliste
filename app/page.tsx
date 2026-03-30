@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function Home() {
   const [urunAdi, setUrunAdi] = useState("");
@@ -9,7 +9,13 @@ export default function Home() {
   const [sonuc, setSonuc] = useState("");
   const [yukleniyor, setYukleniyor] = useState(false);
   const [fotolar, setFotolar] = useState<string[]>([]);
-  const [girisTipi, setGirisTipi] = useState<"manuel" | "foto">("manuel");
+  const [girisTipi, setGirisTipi] = useState<"manuel" | "foto" | "barkod">("manuel");
+  const [barkod, setBarkod] = useState("");
+  const [barkodYukleniyor, setBarkodYukleniyor] = useState(false);
+  const [barkodBilgi, setBarkodBilgi] = useState<{isim: string, marka: string, aciklama: string} | null>(null);
+  const [kameraAcik, setKameraAcik] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const fotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
     const dosyalar = Array.from(e.target.files || []);
@@ -30,9 +36,57 @@ export default function Home() {
     setFotolar((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const barkodSorgula = async (kod: string) => {
+    if (!kod || kod.length < 8) return;
+    setBarkodYukleniyor(true);
+    setBarkodBilgi(null);
+    try {
+      const res = await fetch(`/api/barkod?kod=${kod}`);
+      const data = await res.json();
+      if (data.isim) {
+        setBarkodBilgi(data);
+        setUrunAdi(data.isim);
+        if (data.marka) setKategori(data.marka);
+        if (data.aciklama) setOzellikler(data.aciklama);
+      } else {
+        alert("Ürün bulunamadı. Lütfen manuel giriş yapın.");
+      }
+    } catch {
+      alert("Barkod sorgulanırken hata oluştu.");
+    }
+    setBarkodYukleniyor(false);
+  };
+
+  const kameraAc = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" }
+      });
+      streamRef.current = stream;
+      setKameraAcik(true);
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play();
+        }
+      }, 100);
+    } catch {
+      alert("Kamera açılamadı. Lütfen barkodu manuel girin.");
+    }
+  };
+
+  const kameraKapat = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(t => t.stop());
+      streamRef.current = null;
+    }
+    setKameraAcik(false);
+  };
+
   const icerikUret = async () => {
     if (girisTipi === "manuel" && (!urunAdi || !kategori)) return;
     if (girisTipi === "foto" && fotolar.length === 0) return;
+    if (girisTipi === "barkod" && !barkodBilgi) return;
     setYukleniyor(true);
     setSonuc("");
 
@@ -46,6 +100,7 @@ export default function Home() {
         platform,
         fotolar,
         girisTipi,
+        barkodBilgi,
       }),
     });
 
@@ -53,6 +108,12 @@ export default function Home() {
     setSonuc(data.icerik);
     setYukleniyor(false);
   };
+
+  const uretButonAktif =
+    !yukleniyor &&
+    ((girisTipi === "manuel" && urunAdi && kategori) ||
+     (girisTipi === "foto" && fotolar.length > 0) ||
+     (girisTipi === "barkod" && barkodBilgi !== null));
 
   return (
     <main className="min-h-screen bg-gray-50 py-12 px-4">
@@ -69,29 +130,22 @@ export default function Home() {
 
           {/* Giriş tipi */}
           <div className="flex gap-2">
-            <button
-              onClick={() => setGirisTipi("manuel")}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                girisTipi === "manuel"
-                  ? "bg-orange-500 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              Manuel Giriş
-            </button>
-            <button
-              onClick={() => setGirisTipi("foto")}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                girisTipi === "foto"
-                  ? "bg-orange-500 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              📷 Fotoğraftan Üret
-            </button>
+            {(["manuel", "foto", "barkod"] as const).map((tip) => (
+              <button
+                key={tip}
+                onClick={() => setGirisTipi(tip)}
+                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  girisTipi === tip
+                    ? "bg-orange-500 text-white"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                {tip === "manuel" ? "Manuel" : tip === "foto" ? "📷 Fotoğraf" : "🔍 Barkod"}
+              </button>
+            ))}
           </div>
 
-          {/* Manuel giriş */}
+          {/* Manuel */}
           {girisTipi === "manuel" && (
             <>
               <div>
@@ -117,62 +171,85 @@ export default function Home() {
             </>
           )}
 
-          {/* Fotoğraf girişi */}
+          {/* Fotoğraf */}
           {girisTipi === "foto" && (
             <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
                 Ürün Fotoğrafları * <span className="text-gray-400 font-normal">(max 3)</span>
               </label>
-
-              {/* Fotoğraf önizlemeleri */}
               {fotolar.length > 0 && (
                 <div className="flex gap-2 flex-wrap">
                   {fotolar.map((f, i) => (
                     <div key={i} className="relative">
-                      <img
-                        src={f}
-                        alt={`Ürün ${i + 1}`}
-                        className="w-24 h-24 object-cover rounded-lg border border-gray-200"
-                      />
+                      <img src={f} alt={`Ürün ${i + 1}`} className="w-24 h-24 object-cover rounded-lg border border-gray-200" />
                       <button
                         onClick={() => fotoKaldir(i)}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center hover:bg-red-600"
-                      >
-                        ×
-                      </button>
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+                      >×</button>
                     </div>
                   ))}
                 </div>
               )}
-
-              {/* Yükleme alanı */}
               {fotolar.length < 3 && (
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-orange-400 transition-colors">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={fotoSec}
-                    className="hidden"
-                    id="foto-input"
-                  />
-                  <label htmlFor="foto-input" className="cursor-pointer space-y-2 block">
+                  <input type="file" accept="image/*" multiple onChange={fotoSec} className="hidden" id="foto-input" />
+                  <label htmlFor="foto-input" className="cursor-pointer block space-y-2">
                     <div className="text-3xl">📷</div>
-                    <p className="text-gray-500 text-sm">
-                      {fotolar.length === 0
-                        ? "Fotoğraf seçmek için tıkla"
-                        : "Daha fazla fotoğraf ekle"}
-                    </p>
-                    <p className="text-gray-400 text-xs">
-                      {3 - fotolar.length} fotoğraf daha ekleyebilirsin
-                    </p>
+                    <p className="text-gray-500 text-sm">{fotolar.length === 0 ? "Fotoğraf seçmek için tıkla" : "Daha fazla ekle"}</p>
+                    <p className="text-gray-400 text-xs">{3 - fotolar.length} fotoğraf daha eklenebilir</p>
                   </label>
                 </div>
               )}
             </div>
           )}
 
-          {/* Ek bilgi — her iki modda da göster */}
+          {/* Barkod */}
+          {girisTipi === "barkod" && (
+            <div className="space-y-3">
+              <label className="block text-sm font-medium text-gray-700">Barkod *</label>
+
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={barkod}
+                  onChange={(e) => setBarkod(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && barkodSorgula(barkod)}
+                  placeholder="Barkod numarası girin (EAN/UPC)"
+                  className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                />
+                <button
+                  onClick={() => barkodSorgula(barkod)}
+                  disabled={barkodYukleniyor || barkod.length < 8}
+                  className="bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                >
+                  {barkodYukleniyor ? "..." : "Sorgula"}
+                </button>
+                <button
+                  onClick={kameraAcik ? kameraKapat : kameraAc}
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                >
+                  {kameraAcik ? "Kapat" : "📷 Kamera"}
+                </button>
+              </div>
+
+              {kameraAcik && (
+                <div className="space-y-2">
+                  <video ref={videoRef} className="w-full rounded-lg" playsInline muted />
+                  <p className="text-xs text-gray-400 text-center">Barkodu kameraya göster, numarayı yukarıya gir</p>
+                </div>
+              )}
+
+              {barkodBilgi && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-sm">
+                  <p className="font-medium text-green-800">✓ Ürün bulundu</p>
+                  <p className="text-green-700">{barkodBilgi.isim}</p>
+                  {barkodBilgi.marka && <p className="text-green-600 text-xs">Marka: {barkodBilgi.marka}</p>}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Ek bilgi */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
@@ -180,7 +257,7 @@ export default function Home() {
             <textarea
               value={ozellikler}
               onChange={(e) => setOzellikler(e.target.value)}
-              placeholder="örn: hakiki deri, su geçirmez, kışlık, siyah renk, beden 42"
+              placeholder="örn: renk, beden, malzeme, özel özellikler..."
               rows={3}
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
@@ -203,11 +280,7 @@ export default function Home() {
 
           <button
             onClick={icerikUret}
-            disabled={
-              yukleniyor ||
-              (girisTipi === "manuel" && (!urunAdi || !kategori)) ||
-              (girisTipi === "foto" && fotolar.length === 0)
-            }
+            disabled={!uretButonAktif}
             className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-lg transition-colors"
           >
             {yukleniyor ? "Üretiliyor..." : "İçerik Üret"}
