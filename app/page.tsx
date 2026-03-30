@@ -44,8 +44,13 @@ export default function Home() {
     try {
       const res = await fetch(`/api/barkod?kod=${kod}`);
       const data = await res.json();
-      if (data.isim) {
-        setBarkodBilgi(data);
+      if (data.bulunamadi) {
+        alert("Bu ürün veritabanında bulunamadı. Lütfen ürün adı ve özelliklerini Manuel sekmesinden girin.");
+        setGirisTipi("manuel");
+        setBarkod("");
+        return;
+      }
+      if (data.isim) {        setBarkodBilgi(data);
         setUrunAdi(data.isim);
         if (data.marka) setKategori(data.marka);
         if (data.aciklama) setOzellikler(data.aciklama);
