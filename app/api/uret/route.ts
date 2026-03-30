@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { urunAdi, kategori, ozellikler, platform } = await req.json();
+  const { urunAdi, kategori, ozellikler, platform, foto, girisTipi } = await req.json();
 
   const platformSablonlari: Record<string, string> = {
     trendyol: "Trendyol icin max 100 karakter baslik, 5 madde ozellik, 300 kelime aciklama ve 10 arama etiketi yaz.",
@@ -29,7 +29,55 @@ export async function POST(req: NextRequest) {
     n11: "N11 icin max 100 karakter baslik, 5 madde ozellik, 200 kelime aciklama ve 8 arama etiketi yaz.",
   };
 
-  const prompt = `Sen bir e-ticaret icerik uzmanisın. Turk tuketiciye yonelik, satisa donusen icerikler yaziyorsun.
+  let messages;
+
+  if (girisTipi === "foto" && foto) {
+    const base64 = foto.split(",")[1];
+    const mediaType = foto.split(";")[0].split(":")[1];
+
+    messages = [
+      {
+        role: "user",
+        content: [
+          {
+            type: "image",
+            source: {
+              type: "base64",
+              media_type: mediaType,
+              data: base64,
+            },
+          },
+          {
+            type: "text",
+            text: `Bu urun fotografini analiz et. Urunu tanimlayarak asagidaki formatta icerik uret.
+
+${platformSablonlari[platform] || platformSablonlari.trendyol}
+
+Cikti formati:
+BASLIK:
+[baslik buraya]
+
+OZELLIKLER:
+- ozellik 1
+- ozellik 2
+- ozellik 3
+- ozellik 4
+- ozellik 5
+
+ACIKLAMA:
+[aciklama buraya]
+
+ARAMA ETIKETLERI:
+[etiket1, etiket2, etiket3]`,
+          },
+        ],
+      },
+    ];
+  } else {
+    messages = [
+      {
+        role: "user",
+        content: `Sen bir e-ticaret icerik uzmanisın. Turk tuketiciye yonelik, satisa donusen icerikler yaziyorsun.
 
 Urun: ${urunAdi}
 Kategori: ${kategori}
@@ -52,7 +100,10 @@ ACIKLAMA:
 [aciklama buraya]
 
 ARAMA ETIKETLERI:
-[etiket1, etiket2, etiket3]`;
+[etiket1, etiket2, etiket3]`,
+      },
+    ];
+  }
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -64,7 +115,7 @@ ARAMA ETIKETLERI:
     body: JSON.stringify({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 1000,
-      messages: [{ role: "user", content: prompt }],
+      messages,
     }),
   });
 
