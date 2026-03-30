@@ -14,6 +14,7 @@ export default function Home() {
   const [barkodYukleniyor, setBarkodYukleniyor] = useState(false);
   const [barkodBilgi, setBarkodBilgi] = useState<{isim: string, marka: string, aciklama: string, kategori: string, renk: string, boyut: string} | null>(null);
   const [kameraAcik, setKameraAcik] = useState(false);
+  const sorguCalisiyor = useRef(false);
   const scannerRef = useRef<unknown>(null);
   const scannerBaslatildi = useRef(false);
 
@@ -38,6 +39,8 @@ export default function Home() {
   };
 
   const barkodSorgula = async (kod: string) => {
+    if (sorguCalisiyor.current) return;
+    sorguCalisiyor.current = true;
     if (!kod || kod.length < 8) return;
     setBarkodYukleniyor(true);
     setBarkodBilgi(null);
@@ -62,6 +65,7 @@ export default function Home() {
       alert("Barkod sorgulanırken hata oluştu.");
     }
     setBarkodYukleniyor(false);
+    sorguCalisiyor.current = false;
   };
 
   const kameraAc = async () => {
