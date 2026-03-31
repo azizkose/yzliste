@@ -56,19 +56,6 @@ Günlük koşu rutininden yarışma günlerine kadar performansını desteklemek
 🏷️ Etiketler:
 erkek koşu ayakkabısı, nefes alan spor ayakkabı, hafif koşu ayakkabısı, lescon erkek, maraton ayakkabısı, kaymaz taban, EVA taban`;
 
-  const gorselOrnekleri = [
-    {
-      kategori: "Koltuk / Mobilya",
-      once: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600",
-      sonra: "/ornek_beyaz.jpg",
-    },
-    {
-      kategori: "Mont / Giyim",
-      once: "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=600",
-      sonra: "/ornek_lifestyle.jpg",
-    },
-  ];
-
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -99,7 +86,7 @@ erkek koşu ayakkabısı, nefes alan spor ayakkabı, hafif koşu ayakkabısı, l
           </h2>
           <p className="text-lg text-gray-500 mb-8">
             Trendyol, Hepsiburada, Amazon TR ve N11 için yapay zeka destekli,
-            Türk alıcı psikolojisine göre optimize edilmiş listing içerikleri.
+            Türk alıcı davranışına göre optimize edilmiş listing içerikleri.
           </p>
           <button
             onClick={() => {
@@ -243,19 +230,23 @@ erkek koşu ayakkabısı, nefes alan spor ayakkabı, hafif koşu ayakkabısı, l
           </div>
 
           <div className="bg-white rounded-2xl shadow p-8">
-            <div className="flex gap-2 mb-6">
+            <div className="flex gap-3 mb-6">
               <button
                 onClick={() => setMod("kayit")}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  mod === "kayit" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all border-2 ${
+                  mod === "kayit"
+                    ? "bg-orange-500 text-white border-orange-500 shadow-sm"
+                    : "bg-white text-orange-500 border-orange-300 hover:border-orange-500"
                 }`}
               >
-                Kayıt Ol
+                🎁 Kayıt Ol
               </button>
               <button
                 onClick={() => setMod("giris")}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  mod === "giris" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all border-2 ${
+                  mod === "giris"
+                    ? "bg-gray-800 text-white border-gray-800 shadow-sm"
+                    : "bg-white text-gray-600 border-gray-300 hover:border-gray-500"
                 }`}
               >
                 Giriş Yap
