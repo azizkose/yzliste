@@ -33,6 +33,11 @@ export default function AuthPage() {
     setYukleniyor(false);
   };
 
+  const scrollToForm = (seciliMod: "giris" | "kayit") => {
+    setMod(seciliMod);
+    document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   const adimlar = [
     { no: "1", baslik: "Ürünü tanımla", aciklama: "Ürün adı yaz, fotoğraf yükle ya da barkod tara", ikon: "📝" },
     { no: "2", baslik: "Platform seç", aciklama: "Trendyol, Hepsiburada, Amazon TR veya N11", ikon: "🛒" },
@@ -62,15 +67,20 @@ erkek koşu ayakkabısı, nefes alan spor ayakkabı, hafif koşu ayakkabısı, l
       <header className="bg-white border-b border-gray-100 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
-          <button
-            onClick={() => {
-              setMod("giris");
-              document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" });
-            }}
-            className="text-sm text-gray-600 hover:text-orange-500 font-medium transition-colors"
-          >
-            Zaten hesabım var →
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => scrollToForm("kayit")}
+              className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+            >
+              🎁 Kayıt Ol
+            </button>
+            <button
+              onClick={() => scrollToForm("giris")}
+              className="border border-gray-300 hover:border-gray-400 text-gray-700 text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+            >
+              Giriş Yap
+            </button>
+          </div>
         </div>
       </header>
 
@@ -89,10 +99,7 @@ erkek koşu ayakkabısı, nefes alan spor ayakkabı, hafif koşu ayakkabısı, l
             Türk alıcı davranışına göre optimize edilmiş listing içerikleri.
           </p>
           <button
-            onClick={() => {
-              setMod("kayit");
-              document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" });
-            }}
+            onClick={() => scrollToForm("kayit")}
             className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3.5 rounded-xl text-base transition-colors shadow-sm"
           >
             Ücretsiz Dene — 3 Kredi Hediye 🎁
@@ -130,7 +137,6 @@ erkek koşu ayakkabısı, nefes alan spor ayakkabı, hafif koşu ayakkabısı, l
           <p className="text-center text-sm text-gray-400 mb-8">Gerçek bir Trendyol listing örneği — sıfır düzenleme, direkt yapıştır</p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-            {/* Sol — Listing çıktısı */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col">
               <div className="flex items-center gap-2 mb-4">
                 <span className="bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1 rounded-full">Trendyol</span>
@@ -156,7 +162,6 @@ erkek koşu ayakkabısı, nefes alan spor ayakkabı, hafif koşu ayakkabısı, l
               </div>
             </div>
 
-            {/* Sağ — AI Görsel tanıtımı */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col">
               <div className="flex items-center gap-2 mb-1">
                 <span className="bg-purple-100 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full">✨ AI Görsel</span>
@@ -165,7 +170,6 @@ erkek koşu ayakkabısı, nefes alan spor ayakkabı, hafif koşu ayakkabısı, l
               <p className="text-xs text-gray-500 mb-4">
                 Ürün fotoğrafını yükle — aynı fotoğraftan 3 farklı stil, her stilden 4 varyasyon
               </p>
-
               <div className="grid grid-cols-3 gap-2 flex-1">
                 {[
                   { label: "⬜ Beyaz Zemin", aciklama: "Trendyol standart", img: "/ornek_beyaz.jpg" },
@@ -183,7 +187,6 @@ erkek koşu ayakkabısı, nefes alan spor ayakkabı, hafif koşu ayakkabısı, l
                   </div>
                 ))}
               </div>
-
               <div className="mt-4 pt-4 border-t border-gray-100">
                 <div className="flex items-center gap-2 text-xs text-gray-500">
                   <span className="bg-purple-50 text-purple-600 px-2 py-1 rounded-lg font-medium">1 stil = 1 hak = 4 görsel</span>
