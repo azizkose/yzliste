@@ -231,7 +231,7 @@ export default function Home() {
   const [gecmis, setGecmis] = useState<Uretim[]>([]);
   const [seciliUretim, setSeciliUretim] = useState<Uretim | null>(null);
   const [gorselEkPrompt, setGorselEkPrompt] = useState("");
-  const [seciliStiller, setSeciliStiller] = useState<string[]>(["beyaz"]);
+  const [seciliStiller, setSeciliStiller] = useState<string[]>([]);
   const [gorselYukleniyor, setGorselYukleniyor] = useState(false);
   const [gorselSonuclar, setGorselSonuclar] = useState<{ stil: string; label: string; gorseller: string[] }[]>([]);
   const [paketModalAcik, setPaketModalAcik] = useState(false);
@@ -592,9 +592,42 @@ export default function Home() {
 
               {gorselSonuclar.length > 0 && (
                 <div className="space-y-5">
-                  <p className="text-xs text-gray-500 font-medium text-center">
-                    ✅ {gorselSonuclar.reduce((t, s) => t + s.gorseller.length, 0)} görsel hazır — üzerine gel ve indir
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-gray-500 font-medium">
+                      ✅ {gorselSonuclar.reduce((t, s) => t + s.gorseller.length, 0)} görsel hazır
+                    </p>
+                    <button
+                      onClick={async () => {
+                        const tumGorseller = gorselSonuclar.flatMap(g => g.gorseller);
+                        for (let i = 0; i < tumGorseller.length; i++) {
+                          const url = tumGorseller[i];
+                          try {
+                            const res = await fetch(url);
+                            const blob = await res.blob();
+                            const a = document.createElement("a");
+                            a.href = URL.createObjectURL(blob);
+                            a.download = `gorsel-${i + 1}.jpg`;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(a.href);
+                            await new Promise(r => setTimeout(r, 400));
+                          } catch(e) { console.error(e); }
+                        }
+                        if (kullanici && !kullanici.is_admin) {
+                          await fetch("/api/gorsel", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ action: "indir", userId: kullanici.id, stilSayisi: seciliStiller.length }),
+                          });
+                          setKullanici(prev => prev ? { ...prev, kredi: prev.kredi - seciliStiller.length, toplam_kullanilan: prev.toplam_kullanilan + seciliStiller.length } : prev);
+                        }
+                      }}
+                      className="text-xs bg-purple-500 hover:bg-purple-600 text-white px-3 py-1.5 rounded-lg font-medium transition-colors"
+                    >
+                      ⬇ Hepsini İndir ({gorselSonuclar.reduce((t, s) => t + s.gorseller.length, 0)})
+                    </button>
+                  </div>
                   {gorselSonuclar.map((grup) => (
                     <div key={grup.stil}>
                       <p className="text-xs font-semibold text-gray-600 mb-2">
@@ -603,11 +636,14 @@ export default function Home() {
                       </p>
                       <div className="grid grid-cols-2 gap-2">
                         {grup.gorseller.map((url, i) => (
-                          <div key={i} className="relative group rounded-xl overflow-hidden border border-gray-100 aspect-square">
-                            <img src={url} alt={`${grup.label} ${i + 1}`} className="w-full h-full object-cover" />
-                            <a href={url} download target="_blank" className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-sm font-medium rounded-xl">
-                              ⬇️ İndir
-                            </a>
+                          <div key={i} className="rounded-xl overflow-hidden border border-gray-100 aspect-square"
+                            onContextMenu={(e) => e.preventDefault()}>
+                            <img
+                              src={url}
+                              alt={`${grup.label} ${i + 1}`}
+                              className="w-full h-full object-cover pointer-events-none select-none"
+                              draggable={false}
+                            />
                           </div>
                         ))}
                       </div>
