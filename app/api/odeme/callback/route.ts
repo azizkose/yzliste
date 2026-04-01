@@ -6,8 +6,6 @@ const IYZICO_API_KEY = process.env.IYZICO_API_KEY!;
 const IYZICO_SECRET_KEY = process.env.IYZICO_SECRET_KEY!;
 const IYZICO_BASE_URL = "https://sandbox-api.iyzipay.com";
 const URI_PATH = "/payment/iyzipos/checkoutform/auth/ecom/detail";
-
-// Kullanici bu adrese yonlendirilir (domain)
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://yzliste.com";
 
 function randomString(length: number): string {
@@ -23,9 +21,14 @@ function iyzicoAuth(randomKey: string, body: string): string {
   return Buffer.from(authorizationString).toString("base64");
 }
 
+function redirect303(url: string): NextResponse {
+  // 303 See Other: tarayici POST'u GET olarak tekrar eder
+  return NextResponse.redirect(url, { status: 303 });
+}
+
 async function odemeDogrula(token: string): Promise<NextResponse> {
   if (!token) {
-    return NextResponse.redirect(`${SITE_URL}/?odeme=hata`);
+    return redirect303(`${SITE_URL}/?odeme=hata`);
   }
 
   const supabase = createClient(
@@ -53,7 +56,7 @@ async function odemeDogrula(token: string): Promise<NextResponse> {
 
   if (data.status !== "success" || data.paymentStatus !== "SUCCESS") {
     await supabase.from("payments").update({ durum: "basarisiz" }).eq("iyzico_token", token);
-    return NextResponse.redirect(`${SITE_URL}/?odeme=hata`);
+    return redirect303(`${SITE_URL}/?odeme=hata`);
   }
 
   const { data: odeme } = await supabase
@@ -71,7 +74,7 @@ async function odemeDogrula(token: string): Promise<NextResponse> {
     }
   }
 
-  return NextResponse.redirect(`${SITE_URL}/?odeme=basarili`);
+  return redirect303(`${SITE_URL}/?odeme=basarili`);
 }
 
 export async function POST(req: NextRequest) {
