@@ -5,6 +5,7 @@ import crypto from "crypto";
 const IYZICO_API_KEY = process.env.IYZICO_API_KEY!;
 const IYZICO_SECRET_KEY = process.env.IYZICO_SECRET_KEY!;
 const IYZICO_BASE_URL = "https://sandbox-api.iyzipay.com";
+const URI_PATH = "/payment/iyzipos/checkoutform/initialize/auth/ecom";
 
 const PAKETLER: Record<string, { isim: string; kredi: number; tutar: number }> = {
   baslangic: { isim: "Baslangic Paketi", kredi: 10, tutar: 29 },
@@ -16,12 +17,18 @@ function randomString(length: number): string {
   return crypto.randomBytes(length).toString("hex").slice(0, length);
 }
 
-function iyzicoImzaOlustur(randomKey: string, payload: string): string {
-  const hash = crypto
+function iyzicoAuth(randomKey: string, body: string): string {
+  // encryptedData = HMACSHA256(randomKey + uriPath + body, secretKey)
+  const encryptedData = crypto
     .createHmac("sha256", IYZICO_SECRET_KEY)
-    .update(IYZICO_API_KEY + randomKey + IYZICO_SECRET_KEY + payload)
-    .digest("base64");
-  return hash;
+    .update(randomKey + URI_PATH + body)
+    .digest("hex");
+
+  // authorizationString = apiKey:VALUE&randomKey:VALUE&signature:VALUE
+  const authorizationString = `apiKey:${IYZICO_API_KEY}&randomKey:${randomKey}&signature:${encryptedData}`;
+
+  // base64 encode
+  return Buffer.from(authorizationString).toString("base64");
 }
 
 export async function POST(req: NextRequest) {
@@ -45,6 +52,7 @@ export async function POST(req: NextRequest) {
 
   const conversationId = randomString(12);
   const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://yzliste.vercel.app";
+  const randomKey = randomString(20);
 
   const requestBody = {
     locale: "tr",
@@ -75,23 +83,23 @@ export async function POST(req: NextRequest) {
     ],
   };
 
-  const payload = JSON.stringify(requestBody);
-  const randomKey = randomString(8);
-  const imza = iyzicoImzaOlustur(randomKey, payload);
+  const body = JSON.stringify(requestBody);
+  const authHeader = iyzicoAuth(randomKey, body);
 
-  const response = await fetch(`${IYZICO_BASE_URL}/payment/iyzipos/checkoutform/initialize/auth/ecom`, {
+  const response = await fetch(`${IYZICO_BASE_URL}${URI_PATH}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `IYZWSv2 apiKey=${IYZICO_API_KEY}&randomKey=${randomKey}&signature=${imza}`,
+      "Authorization": `IYZWSv2 ${authHeader}`,
+      "x-iyzi-rnd": randomKey,
     },
-    body: payload,
+    body,
   });
 
   const data = await response.json();
+  console.log("Iyzico yanit:", JSON.stringify(data));
 
   if (data.status !== "success") {
-    console.error("Iyzico hata:", JSON.stringify(data));
     return NextResponse.json({ hata: data.errorMessage || "Odeme baslatılamadı" }, { status: 400 });
   }
 

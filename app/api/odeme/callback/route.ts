@@ -5,16 +5,20 @@ import crypto from "crypto";
 const IYZICO_API_KEY = process.env.IYZICO_API_KEY!;
 const IYZICO_SECRET_KEY = process.env.IYZICO_SECRET_KEY!;
 const IYZICO_BASE_URL = "https://sandbox-api.iyzipay.com";
+const URI_PATH = "/payment/iyzipos/checkoutform/auth/ecom/detail";
 
 function randomString(length: number): string {
   return crypto.randomBytes(length).toString("hex").slice(0, length);
 }
 
-function iyzicoImzaOlustur(randomKey: string, payload: string): string {
-  return crypto
+function iyzicoAuth(randomKey: string, body: string): string {
+  const encryptedData = crypto
     .createHmac("sha256", IYZICO_SECRET_KEY)
-    .update(IYZICO_API_KEY + randomKey + IYZICO_SECRET_KEY + payload)
-    .digest("base64");
+    .update(randomKey + URI_PATH + body)
+    .digest("hex");
+
+  const authorizationString = `apiKey:${IYZICO_API_KEY}&randomKey:${randomKey}&signature:${encryptedData}`;
+  return Buffer.from(authorizationString).toString("base64");
 }
 
 export async function POST(req: NextRequest) {
@@ -32,21 +36,23 @@ export async function POST(req: NextRequest) {
     process.env.SUPABASE_SERVICE_KEY!
   );
 
+  const randomKey = randomString(20);
   const requestBody = { locale: "tr", conversationId: randomString(12), token };
-  const payload = JSON.stringify(requestBody);
-  const randomKey = randomString(8);
-  const imza = iyzicoImzaOlustur(randomKey, payload);
+  const body = JSON.stringify(requestBody);
+  const authHeader = iyzicoAuth(randomKey, body);
 
-  const response = await fetch(`${IYZICO_BASE_URL}/payment/iyzipos/checkoutform/auth/ecom/detail`, {
+  const response = await fetch(`${IYZICO_BASE_URL}${URI_PATH}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `IYZWSv2 apiKey=${IYZICO_API_KEY}&randomKey=${randomKey}&signature=${imza}`,
+      "Authorization": `IYZWSv2 ${authHeader}`,
+      "x-iyzi-rnd": randomKey,
     },
-    body: payload,
+    body,
   });
 
   const data = await response.json();
+  console.log("Iyzico callback yanit:", JSON.stringify(data));
 
   if (data.status !== "success" || data.paymentStatus !== "SUCCESS") {
     await supabase.from("payments").update({ durum: "basarisiz" }).eq("iyzico_token", token);
