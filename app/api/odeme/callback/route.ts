@@ -16,16 +16,12 @@ function iyzicoAuth(randomKey: string, body: string): string {
     .createHmac("sha256", IYZICO_SECRET_KEY)
     .update(randomKey + URI_PATH + body)
     .digest("hex");
-
   const authorizationString = `apiKey:${IYZICO_API_KEY}&randomKey:${randomKey}&signature:${encryptedData}`;
   return Buffer.from(authorizationString).toString("base64");
 }
 
-export async function POST(req: NextRequest) {
+async function odemeDogrula(token: string): Promise<NextResponse> {
   const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://yzliste.vercel.app";
-
-  const formData = await req.formData();
-  const token = formData.get("token") as string;
 
   if (!token) {
     return NextResponse.redirect(`${appBaseUrl}/?odeme=hata`);
@@ -67,7 +63,12 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (odeme) {
-    const { data: profil } = await supabase.from("profiles").select("kredi").eq("id", odeme.user_id).single();
+    const { data: profil } = await supabase
+      .from("profiles")
+      .select("kredi")
+      .eq("id", odeme.user_id)
+      .single();
+
     if (profil) {
       const yeniKredi = odeme.paket === "sinırsiz" ? 9999 : profil.kredi + odeme.kredi;
       await supabase.from("profiles").update({ kredi: yeniKredi }).eq("id", odeme.user_id);
@@ -75,4 +76,16 @@ export async function POST(req: NextRequest) {
   }
 
   return NextResponse.redirect(`${appBaseUrl}/?odeme=basarili`);
+}
+
+export async function POST(req: NextRequest) {
+  const formData = await req.formData();
+  const token = formData.get("token") as string;
+  return odemeDogrula(token);
+}
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const token = searchParams.get("token") || "";
+  return odemeDogrula(token);
 }
