@@ -527,7 +527,7 @@ export default function Home() {
             <div className="bg-white rounded-2xl shadow p-6 space-y-4">
               <div>
                 <h2 className="text-base font-semibold text-gray-800">✨ Ürün Görseli Üret</h2>
-                <p className="text-xs text-gray-400 mt-0.5">Seçtiğin her stil için 4 varyasyon — 1 stil = 1 kullanım hakkı</p>
+                <p className="text-xs text-gray-400 mt-0.5">YZ bazen hata yapabilir — bu yüzden her stilden <strong>4 farklı varyasyon</strong> üretiyoruz. İnceleme ücretsiz, indirdiğinde 1 hak düşer.</p>
               </div>
 
               {fotolar.length === 0 ? (
@@ -590,6 +590,9 @@ export default function Home() {
                 {gorselYukleniyor ? `⏳ ${seciliStiller.length * 4} görsel üretiliyor...` : seciliStiller.length === 0 ? "Önce bir stil seç" : fotolar.length === 0 ? "Önce fotoğraf ekle" : `✨ ${seciliStiller.length * 4} Görsel Üret — ${seciliStiller.length} kullanım hakkı`}
               </button>
 
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800 leading-relaxed">
+                <span className="font-semibold">💡 Nasıl çalışır?</span> YZ bazen tam istediğin sonucu üretemeyebilir — bu yüzden her stilden <span className="font-semibold">4 farklı varyasyon</span> veriyoruz, en az biri işe yarasın. Görselleri incelemek ücretsiz. <span className="font-semibold">Hepsini İndir</span> butonuna bastığında 1 kullanım hakkı düşer.
+              </div>
               {gorselSonuclar.length > 0 && (
                 <div className="space-y-5">
                   <div className="flex items-center justify-between">
