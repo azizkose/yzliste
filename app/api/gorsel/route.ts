@@ -10,33 +10,34 @@ const supabaseAdmin = createClient(
 );
 
 export async function POST(req: NextRequest) {
-  const { foto, stil, ozellikler, userId } = await req.json();
+  const { foto, stil, stiller, ekPrompt, ozellikler, userId } = await req.json();
 
   if (!foto) {
     return NextResponse.json({ hata: "Fotograf gerekli" }, { status: 400 });
   }
 
-  if (!userId) {
-    return NextResponse.json({ hata: "Giris yapilmadi" }, { status: 401 });
+  // Admin kontrolu - userId varsa yap, yoksa devam et
+  let isAdmin = false;
+  if (userId) {
+    const { data: profil } = await supabaseAdmin
+      .from("profiles")
+      .select("kredi, is_admin")
+      .eq("id", userId)
+      .single();
+
+    if (profil) {
+      isAdmin = profil.is_admin === true;
+      if (!isAdmin && profil.kredi <= 0) {
+        return NextResponse.json({ hata: "Krediniz bitti." }, { status: 402 });
+      }
+    }
   }
 
-  // Kullanici bilgisini ve admin durumunu cek
-  const { data: profil } = await supabaseAdmin
-    .from("profiles")
-    .select("kredi, is_admin")
-    .eq("id", userId)
-    .single();
-
-  if (!profil) {
-    return NextResponse.json({ hata: "Kullanici bulunamadi" }, { status: 404 });
-  }
-
-  const isAdmin = profil.is_admin === true;
-
-  // Admin degilse kredi kontrolu yap
-  if (!isAdmin && profil.kredi <= 0) {
-    return NextResponse.json({ hata: "Krediniz bitti. Lutfen kredi satin alin." }, { status: 402 });
-  }
+  const stilSahneleri: Record<string, string> = {
+    beyaz: "pure white seamless background, clean studio lighting, professional e-commerce product photo, sharp focus",
+    koyu: "dark black seamless background, dramatic studio lighting, soft spotlight on product, premium luxury product photography",
+    lifestyle: "cozy modern living room, natural daylight from window, plants and home decor around, lifestyle interior photography",
+  };
 
   try {
     const base64 = foto.split(",")[1];
@@ -49,47 +50,78 @@ export async function POST(req: NextRequest) {
     const blob = new Blob([bytes], { type: mediaType });
     const imageUrl = await fal.storage.upload(blob);
 
-    const stilSahneleri: Record<string, string> = {
-      beyaz: "pure white seamless background, clean studio lighting, professional e-commerce product photo, sharp focus",
-      koyu: "dark black seamless background, dramatic studio lighting, soft spotlight on product, premium luxury product photography",
-      lifestyle: "cozy modern living room, natural daylight from window, plants and home decor around, lifestyle interior photography",
+    // Hem stiller (array) hem stil (string) destekle
+    const stilListesi: string[] = stiller && stiller.length > 0
+      ? stiller
+      : stil
+      ? [stil]
+      : ["beyaz"];
+
+    const ekAciklama = ekPrompt || ozellikler || "";
+
+    // Her stil icin gorsel uret
+    const sonuclar = [];
+    const stilEtiketleri: Record<string, string> = {
+      beyaz: "Beyaz Zemin",
+      koyu: "Koyu Zemin",
+      lifestyle: "Lifestyle",
     };
 
-    const sahne = ozellikler
-      ? `${stilSahneleri[stil] || stilSahneleri.beyaz}, ${ozellikler}`
-      : stilSahneleri[stil] || stilSahneleri.beyaz;
+    for (const s of stilListesi) {
+      const sahne = ekAciklama
+        ? `${stilSahneleri[s] || stilSahneleri.beyaz}, ${ekAciklama}`
+        : stilSahneleri[s] || stilSahneleri.beyaz;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result = await fal.subscribe("fal-ai/bria/product-shot", {
-      input: {
-        image_url: imageUrl,
-        scene_description: sahne,
-        optimize_description: true,
-        num_results: 4,
-        fast: false,
-      },
-    }) as any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await fal.subscribe("fal-ai/bria/product-shot", {
+        input: {
+          image_url: imageUrl,
+          scene_description: sahne,
+          optimize_description: true,
+          num_results: 4,
+          fast: false,
+        },
+      }) as any;
 
-    const gorselUrller =
-      result?.data?.images?.map((img: any) => img.url) ||
-      result?.images?.map((img: any) => img.url) ||
-      [];
+      const gorseller =
+        result?.data?.images?.map((img: any) => img.url) ||
+        result?.images?.map((img: any) => img.url) ||
+        [];
 
-    if (!gorselUrller.length) {
-      return NextResponse.json({ hata: "Gorsel uretilemedi" }, { status: 500 });
+      sonuclar.push({
+        stil: s,
+        label: stilEtiketleri[s] || s,
+        gorseller,
+      });
     }
 
-    // Admin degilse kredi dusur
-    if (!isAdmin) {
-      await supabaseAdmin
+    // Admin degilse kredi dusur (toplam kullanim = stil sayisi)
+    if (!isAdmin && userId) {
+      const { data: profil } = await supabaseAdmin
         .from("profiles")
-        .update({ kredi: profil.kredi - 1 })
-        .eq("id", userId);
+        .select("kredi")
+        .eq("id", userId)
+        .single();
+
+      if (profil) {
+        await supabaseAdmin
+          .from("profiles")
+          .update({ kredi: Math.max(0, profil.kredi - stilListesi.length) })
+          .eq("id", userId);
+      }
     }
 
-    return NextResponse.json({ gorselUrller, isAdmin });
-  } catch (e) {
-    console.error("FAL HATA:", JSON.stringify(e, null, 2));
-    return NextResponse.json({ hata: "Gorsel uretim hatasi" }, { status: 500 });
+    // Hem eski (gorselUrl) hem yeni (sonuclar) formati destekle
+    const ilkGorsel = sonuclar[0]?.gorseller?.[0];
+    return NextResponse.json({
+      sonuclar,
+      gorselUrl: ilkGorsel,
+      gorselUrller: sonuclar[0]?.gorseller || [],
+      isAdmin,
+    });
+
+  } catch (e: any) {
+    console.error("FAL HATA:", e?.message || JSON.stringify(e));
+    return NextResponse.json({ hata: "Gorsel uretim hatasi: " + (e?.message || "bilinmiyor") }, { status: 500 });
   }
 }
