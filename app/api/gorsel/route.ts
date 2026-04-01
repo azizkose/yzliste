@@ -10,13 +10,33 @@ const supabaseAdmin = createClient(
 );
 
 export async function POST(req: NextRequest) {
-  const { foto, stil, stiller, ekPrompt, ozellikler, userId } = await req.json();
+  const body = await req.json();
+  const { foto, stiller, ekPrompt, ozellikler, userId, action } = body;
 
-  if (!foto) {
-    return NextResponse.json({ hata: "Fotograf gerekli" }, { status: 400 });
+  // Hak dusurme islemi - ayri endpoint olarak cagrilir
+  // action === "indir" olunca kredi dusur
+  if (action === "indir") {
+    if (!userId) return NextResponse.json({ hata: "Giris yapilmadi" }, { status: 401 });
+    const { data: profil } = await supabaseAdmin
+      .from("profiles")
+      .select("kredi, is_admin")
+      .eq("id", userId)
+      .single();
+    if (!profil) return NextResponse.json({ hata: "Kullanici bulunamadi" }, { status: 404 });
+    if (!profil.is_admin) {
+      const { stilSayisi } = body;
+      await supabaseAdmin
+        .from("profiles")
+        .update({ kredi: Math.max(0, profil.kredi - (stilSayisi || 1)) })
+        .eq("id", userId);
+    }
+    return NextResponse.json({ ok: true });
   }
 
-  // Admin kontrolu - userId varsa yap, yoksa devam et
+  // Normal gorsel uretim - kredi dusurme YOK
+  if (!foto) return NextResponse.json({ hata: "Fotograf gerekli" }, { status: 400 });
+
+  // Admin kontrolu
   let isAdmin = false;
   if (userId) {
     const { data: profil } = await supabaseAdmin
@@ -24,11 +44,10 @@ export async function POST(req: NextRequest) {
       .select("kredi, is_admin")
       .eq("id", userId)
       .single();
-
     if (profil) {
       isAdmin = profil.is_admin === true;
       if (!isAdmin && profil.kredi <= 0) {
-        return NextResponse.json({ hata: "Krediniz bitti." }, { status: 402 });
+        return NextResponse.json({ hata: "Krediniz bitti. Lutfen kredi satin alin." }, { status: 402 });
       }
     }
   }
@@ -44,29 +63,20 @@ export async function POST(req: NextRequest) {
     const mediaType = foto.split(";")[0].split(":")[1];
     const binaryStr = atob(base64);
     const bytes = new Uint8Array(binaryStr.length);
-    for (let i = 0; i < binaryStr.length; i++) {
-      bytes[i] = binaryStr.charCodeAt(i);
-    }
+    for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
     const blob = new Blob([bytes], { type: mediaType });
     const imageUrl = await fal.storage.upload(blob);
 
-    // Hem stiller (array) hem stil (string) destekle
-    const stilListesi: string[] = stiller && stiller.length > 0
-      ? stiller
-      : stil
-      ? [stil]
-      : ["beyaz"];
-
+    const stilListesi: string[] = stiller && stiller.length > 0 ? stiller : ["beyaz"];
     const ekAciklama = ekPrompt || ozellikler || "";
 
-    // Her stil icin gorsel uret
-    const sonuclar = [];
     const stilEtiketleri: Record<string, string> = {
       beyaz: "Beyaz Zemin",
       koyu: "Koyu Zemin",
       lifestyle: "Lifestyle",
     };
 
+    const sonuclar = [];
     for (const s of stilListesi) {
       const sahne = ekAciklama
         ? `${stilSahneleri[s] || stilSahneleri.beyaz}, ${ekAciklama}`
@@ -88,37 +98,10 @@ export async function POST(req: NextRequest) {
         result?.images?.map((img: any) => img.url) ||
         [];
 
-      sonuclar.push({
-        stil: s,
-        label: stilEtiketleri[s] || s,
-        gorseller,
-      });
+      sonuclar.push({ stil: s, label: stilEtiketleri[s] || s, gorseller });
     }
 
-    // Admin degilse kredi dusur (toplam kullanim = stil sayisi)
-    if (!isAdmin && userId) {
-      const { data: profil } = await supabaseAdmin
-        .from("profiles")
-        .select("kredi")
-        .eq("id", userId)
-        .single();
-
-      if (profil) {
-        await supabaseAdmin
-          .from("profiles")
-          .update({ kredi: Math.max(0, profil.kredi - stilListesi.length) })
-          .eq("id", userId);
-      }
-    }
-
-    // Hem eski (gorselUrl) hem yeni (sonuclar) formati destekle
-    const ilkGorsel = sonuclar[0]?.gorseller?.[0];
-    return NextResponse.json({
-      sonuclar,
-      gorselUrl: ilkGorsel,
-      gorselUrller: sonuclar[0]?.gorseller || [],
-      isAdmin,
-    });
+    return NextResponse.json({ sonuclar, isAdmin });
 
   } catch (e: any) {
     console.error("FAL HATA:", e?.message || JSON.stringify(e));
