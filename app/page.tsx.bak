@@ -65,8 +65,7 @@ const yukleniyorMesajlari = [
 function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () => void }) {
   const [seciliPaket, setSeciliPaket] = useState<string | null>(null);
   const [yukleniyor, setYukleniyor] = useState(false);
-  const [odemeAcik, setOdemeAcik] = useState(false);
-  const formRef = useRef<HTMLDivElement>(null);
+  const [odemeForm, setOdemeForm] = useState<string | null>(null);
 
   const paketler = [
     { id: "baslangic", isim: "Başlangıç", fiyat: "₺29", kredi: "10 kullanım hakkı", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
@@ -85,22 +84,7 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
       });
       const data = await res.json();
       if (data.checkoutFormContent) {
-        setOdemeAcik(true);
-        setTimeout(() => {
-          if (formRef.current) {
-            formRef.current.innerHTML = data.checkoutFormContent;
-            const scriptlar = formRef.current.querySelectorAll("script");
-            scriptlar.forEach((eskiScript) => {
-              const yeniScript = document.createElement("script");
-              if (eskiScript.src) {
-                yeniScript.src = eskiScript.src;
-              } else {
-                yeniScript.textContent = eskiScript.textContent;
-              }
-              eskiScript.parentNode?.replaceChild(yeniScript, eskiScript);
-            });
-          }
-        }, 100);
+        setOdemeForm(data.checkoutFormContent);
       } else {
         alert(data.hata || "Ödeme başlatılamadı, tekrar deneyin.");
       }
@@ -121,7 +105,7 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
           <button onClick={onKapat} className="text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
         </div>
 
-        {!odemeAcik ? (
+        {!odemeForm ? (
           <div className="p-6 space-y-4">
             {paketler.map((p) => (
               <div key={p.id} className={`border-2 ${p.renk} rounded-2xl p-5 relative`}>
@@ -148,7 +132,8 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
           </div>
         ) : (
           <div className="p-4">
-            <div ref={formRef} id="iyzipay-checkout-form" className="popup" />
+            <p className="text-xs text-gray-500 text-center mb-3">Ödeme formuna yönlendiriliyorsunuz...</p>
+            <div dangerouslySetInnerHTML={{ __html: odemeForm }} />
           </div>
         )}
       </div>
@@ -245,11 +230,11 @@ export default function Home() {
     kullaniciyiKontrolEt();
     const params = new URLSearchParams(window.location.search);
     if (params.get("odeme") === "basarili") {
-      alert("🎉 Ödeme başarılı! Kredileriniz hesabınıza eklendi.");
+      alert("Odeme basarili! Kredileriniz hesabiniza eklendi.");
       window.history.replaceState({}, "", "/");
       kullaniciyiKontrolEt();
     } else if (params.get("odeme") === "hata") {
-      alert("Ödeme tamamlanamadı. Tekrar deneyin.");
+      alert("Odeme tamamlanamadi. Tekrar deneyin.");
       window.history.replaceState({}, "", "/");
     }
     return () => {
@@ -301,9 +286,9 @@ export default function Home() {
     try {
       const res = await fetch(`/api/barkod?kod=${kod}`);
       const data = await res.json();
-      if (data.bulunamadi) { alert("Bu ürün veritabanında bulunamadı."); setGirisTipi("manuel"); setBarkod(""); }
+      if (data.bulunamadi) { alert("Bu urun veritabaninda bulunamadi."); setGirisTipi("manuel"); setBarkod(""); }
       else if (data.isim) { setBarkodBilgi(data); setUrunAdi(data.isim); if (data.marka) setKategori(data.marka); if (data.aciklama) setOzellikler(data.aciklama); kameraKapat(); }
-    } catch { alert("Barkod sorgulanırken hata oluştu."); }
+    } catch { alert("Barkod sorgulanirken hata olustu."); }
     setBarkodYukleniyor(false);
     sorguCalisiyor.current = false;
   };
@@ -319,7 +304,7 @@ export default function Home() {
         scannerBaslatildi.current = true;
         await scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 150 } },
           (decodedText: string) => { setBarkod(decodedText); barkodSorgula(decodedText); }, () => {});
-      } catch (e) { console.log(e); alert("Kamera açılamadı."); setKameraAcik(false); scannerBaslatildi.current = false; }
+      } catch (e) { console.log(e); alert("Kamera acilamadi."); setKameraAcik(false); scannerBaslatildi.current = false; }
     }, 300);
   };
 
@@ -360,8 +345,8 @@ export default function Home() {
   };
 
   const gorselUret = async () => {
-    if (fotolar.length === 0) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
-    if (seciliStiller.length === 0) { alert("En az bir stil seçin."); return; }
+    if (fotolar.length === 0) { alert("Once bir urun fotografı ekleyin."); return; }
+    if (seciliStiller.length === 0) { alert("En az bir stil secin."); return; }
     if (!kullanici || (!kullanici.is_admin && kullanici.kredi < seciliStiller.length)) { setPaketModalAcik(true); return; }
     setGorselYukleniyor(true);
     setGorselSonuclar([]);
@@ -377,8 +362,8 @@ export default function Home() {
         if (!kullanici.is_admin) {
           setKullanici((prev) => prev ? { ...prev, kredi: prev.kredi - seciliStiller.length, toplam_kullanilan: prev.toplam_kullanilan + seciliStiller.length } : prev);
         }
-      } else { alert("Görsel üretilemedi. Tekrar deneyin."); }
-    } catch { alert("Hata oluştu."); }
+      } else { alert("Gorsel uretilemedi. Tekrar deneyin."); }
+    } catch { alert("Hata olustu."); }
     setGorselYukleniyor(false);
   };
 
@@ -397,20 +382,20 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <span className="text-xs text-gray-400">{kullanici.email}</span>
               {kullanici.is_admin && <a href="/admin" className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-lg font-medium">Admin</a>}
-              <button onClick={cikisYap} className="text-sm text-gray-400 hover:text-gray-600">Çıkış</button>
+              <button onClick={cikisYap} className="text-sm text-gray-400 hover:text-gray-600">Cikis</button>
             </div>
           )}
         </div>
 
-        {/* Kullanım bilgi banner */}
+        {/* Kullanim bilgi banner */}
         <div className="bg-white rounded-2xl shadow p-4 mb-6 flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
           <div className="flex items-start gap-3">
             <div className="text-2xl">💡</div>
             <div>
-              <p className="text-sm font-semibold text-gray-800">Metin ve görsel üretimi ayrı kullanım hakkı tüketir</p>
+              <p className="text-sm font-semibold text-gray-800">Metin ve gorsel uretimi ayri kullanim hakki tuketir</p>
               <p className="text-xs text-gray-500 mt-0.5">
-                <span className="text-orange-600 font-medium">İçerik Üret</span> → 1 kullanım hakkı &nbsp;·&nbsp;
-                <span className="text-purple-600 font-medium">Görsel Üret</span> → 1 kullanım hakkı
+                <span className="text-orange-600 font-medium">Icerik Uret</span> → 1 kullanim hakki &nbsp;·&nbsp;
+                <span className="text-purple-600 font-medium">Gorsel Uret</span> → 1 kullanim hakki
               </p>
             </div>
           </div>
@@ -421,7 +406,7 @@ export default function Home() {
             </div>
             <div className="bg-gray-50 rounded-xl px-4 py-2">
               <div className="text-xl font-bold text-gray-700">{kullanici?.toplam_kullanilan ?? "–"}</div>
-              <div className="text-xs text-gray-500">Kullanılan</div>
+              <div className="text-xs text-gray-500">Kullanilan</div>
             </div>
             <button onClick={() => setPaketModalAcik(true)} className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors whitespace-nowrap">
               + Paket Al
@@ -432,20 +417,20 @@ export default function Home() {
         <div className="flex gap-6 items-start flex-col lg:flex-row">
           <div className="flex-1 w-full space-y-4">
 
-            {/* İçerik Üretim Formu */}
+            {/* Icerik Uretim Formu */}
             <div className="bg-white rounded-2xl shadow p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-base font-semibold text-gray-800">📝 Listing İçeriği Üret</h2>
-                <span className="text-xs bg-orange-50 text-orange-600 px-2 py-1 rounded-lg font-medium">1 kullanım hakkı</span>
+                <h2 className="text-base font-semibold text-gray-800">📝 Listing Icerigi Uret</h2>
+                <span className="text-xs bg-orange-50 text-orange-600 px-2 py-1 rounded-lg font-medium">1 kullanim hakki</span>
               </div>
 
               <div>
-                <p className="text-xs text-gray-500 mb-2 font-medium">Ürünü nasıl eklemek istersin?</p>
+                <p className="text-xs text-gray-500 mb-2 font-medium">Urunu nasil eklemek istersin?</p>
                 <div className="flex gap-2">
                   {(["manuel", "foto", "barkod"] as const).map((tip) => (
                     <button key={tip} onClick={() => { setGirisTipi(tip); kameraKapat(); }}
                       className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${girisTipi === tip ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
-                      {tip === "manuel" ? "✏️ Manuel" : tip === "foto" ? "📷 Fotoğraf" : "🔍 Barkod"}
+                      {tip === "manuel" ? "✏️ Manuel" : tip === "foto" ? "📷 Fotograf" : "🔍 Barkod"}
                     </button>
                   ))}
                 </div>
@@ -454,24 +439,24 @@ export default function Home() {
               {girisTipi === "manuel" && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Adı <span className="text-red-400">*</span></label>
-                    <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)} placeholder="örn: Erkek Hakiki Deri Bot" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Urun Adi <span className="text-red-400">*</span></label>
+                    <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)} placeholder="orn: Erkek Hakiki Deri Bot" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Kategori <span className="text-red-400">*</span></label>
-                    <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder="örn: Ayakkabı / Giyim / Elektronik" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                    <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder="orn: Ayakkabi / Giyim / Elektronik" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
                   </div>
                 </>
               )}
 
               {girisTipi === "foto" && (
                 <div className="space-y-3">
-                  <label className="block text-sm font-medium text-gray-700">Ürün Fotoğrafları <span className="text-red-400">*</span><span className="text-gray-400 font-normal"> (max 3)</span></label>
+                  <label className="block text-sm font-medium text-gray-700">Urun Fotograflari <span className="text-red-400">*</span><span className="text-gray-400 font-normal"> (max 3)</span></label>
                   {fotolar.length > 0 && (
                     <div className="flex gap-2 flex-wrap">
                       {fotolar.map((f, i) => (
                         <div key={i} className="relative">
-                          <img src={f} alt={`Ürün ${i + 1}`} className="w-24 h-24 object-cover rounded-lg border border-gray-200" />
+                          <img src={f} alt={`Urun ${i + 1}`} className="w-24 h-24 object-cover rounded-lg border border-gray-200" />
                           <button onClick={() => fotoKaldir(i)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">×</button>
                         </div>
                       ))}
@@ -482,8 +467,8 @@ export default function Home() {
                       <input type="file" accept="image/*" multiple onChange={fotoSec} className="hidden" id="foto-input" />
                       <label htmlFor="foto-input" className="cursor-pointer block space-y-2">
                         <div className="text-3xl">📷</div>
-                        <p className="text-gray-500 text-sm">{fotolar.length === 0 ? "Fotoğraf seçmek için tıkla" : "Daha fazla ekle"}</p>
-                        <p className="text-gray-400 text-xs">{3 - fotolar.length} fotoğraf daha eklenebilir</p>
+                        <p className="text-gray-500 text-sm">{fotolar.length === 0 ? "Fotograf secmek icin tikla" : "Daha fazla ekle"}</p>
+                        <p className="text-gray-400 text-xs">{3 - fotolar.length} fotograf daha eklenebilir</p>
                       </label>
                     </div>
                   )}
@@ -494,18 +479,18 @@ export default function Home() {
                 <div className="space-y-3">
                   <label className="block text-sm font-medium text-gray-700">Barkod <span className="text-red-400">*</span></label>
                   <div className="flex gap-2">
-                    <input type="text" value={barkod} onChange={(e) => setBarkod(e.target.value)} onKeyDown={(e) => e.key === "Enter" && barkodSorgula(barkod)} placeholder="Barkod numarası (EAN/UPC)" className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                    <input type="text" value={barkod} onChange={(e) => setBarkod(e.target.value)} onKeyDown={(e) => e.key === "Enter" && barkodSorgula(barkod)} placeholder="Barkod numarasi (EAN/UPC)" className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
                     <button onClick={() => barkodSorgula(barkod)} disabled={barkodYukleniyor || barkod.length < 8} className="bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg text-sm font-medium">{barkodYukleniyor ? "..." : "Sorgula"}</button>
                     <button onClick={kameraAcik ? kameraKapat : kameraAc} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${kameraAcik ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-700"}`}>{kameraAcik ? "Kapat" : "📷 Tara"}</button>
                   </div>
-                  {kameraAcik && (<div className="space-y-2"><div id="barkod-okuyucu" className="w-full rounded-lg overflow-hidden" /><p className="text-xs text-gray-400 text-center">Barkodu çerçeve içine hizala</p></div>)}
-                  {barkodBilgi && (<div className="bg-green-50 border border-green-200 rounded-lg p-3 text-sm"><p className="font-medium text-green-800">✓ Ürün bulundu</p><p className="text-green-700">{barkodBilgi.isim}</p>{barkodBilgi.marka && <p className="text-green-600 text-xs">Marka: {barkodBilgi.marka}</p>}</div>)}
+                  {kameraAcik && (<div className="space-y-2"><div id="barkod-okuyucu" className="w-full rounded-lg overflow-hidden" /><p className="text-xs text-gray-400 text-center">Barkodu cerceve icine hizala</p></div>)}
+                  {barkodBilgi && (<div className="bg-green-50 border border-green-200 rounded-lg p-3 text-sm"><p className="font-medium text-green-800">Urun bulundu</p><p className="text-green-700">{barkodBilgi.isim}</p>{barkodBilgi.marka && <p className="text-green-600 text-xs">Marka: {barkodBilgi.marka}</p>}</div>)}
                 </div>
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)} placeholder="örn: renk, beden, malzeme, özel özellikler..." rows={4} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Ek Bilgi <span className="text-gray-400 font-normal">(istege bagli)</span></label>
+                <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)} placeholder="orn: renk, beden, malzeme, ozel ozellikler..." rows={4} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
               </div>
 
               <div>
@@ -519,15 +504,15 @@ export default function Home() {
               </div>
 
               <button onClick={icerikUret} disabled={!uretButonAktif} className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-lg transition-colors">
-                {yukleniyor ? "⏳ Üretiliyor..." : `İçerik Üret — ${kullanici?.is_admin ? "∞" : kullanici?.kredi || 0} kullanım hakkı kaldı`}
+                {yukleniyor ? "⏳ Uretiliyor..." : `Icerik Uret — ${kullanici?.is_admin ? "∞" : kullanici?.kredi || 0} kullanim hakki kaldi`}
               </button>
             </div>
 
-            {/* Görsel Üretim */}
+            {/* Gorsel Uretim */}
             <div className="bg-white rounded-2xl shadow p-6 space-y-4">
               <div>
-                <h2 className="text-base font-semibold text-gray-800">✨ Ürün Görseli Üret</h2>
-                <p className="text-xs text-gray-400 mt-0.5">Seçtiğin her stil için 4 varyasyon — 1 stil = 1 kullanım hakkı</p>
+                <h2 className="text-base font-semibold text-gray-800">✨ Urun Gorseli Uret</h2>
+                <p className="text-xs text-gray-400 mt-0.5">Sectigin her stil icin 4 varyasyon — 1 stil = 1 kullanim hakki</p>
               </div>
 
               {fotolar.length === 0 ? (
@@ -535,27 +520,27 @@ export default function Home() {
                   <input type="file" accept="image/*" onChange={fotoSec} className="hidden" id="gorsel-foto-input" />
                   <label htmlFor="gorsel-foto-input" className="cursor-pointer block space-y-1">
                     <div className="text-2xl">📷</div>
-                    <p className="text-sm font-medium text-purple-700">Ürün fotoğrafı ekle</p>
-                    <p className="text-xs text-purple-400">Fotoğraf sekmesinden de ekleyebilirsin</p>
+                    <p className="text-sm font-medium text-purple-700">Urun fotografı ekle</p>
+                    <p className="text-xs text-purple-400">Fotograf sekmesinden de ekleyebilirsin</p>
                   </label>
                 </div>
               ) : (
                 <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl p-3">
-                  <img src={fotolar[0]} alt="Ürün" className="w-12 h-12 object-cover rounded-lg border border-green-200" />
+                  <img src={fotolar[0]} alt="Urun" className="w-12 h-12 object-cover rounded-lg border border-green-200" />
                   <div className="flex-1">
-                    <p className="text-xs font-medium text-green-700">✓ Fotoğraf hazır</p>
-                    <p className="text-xs text-green-500">{fotolar.length} fotoğraf yüklendi</p>
+                    <p className="text-xs font-medium text-green-700">Fotograf hazir</p>
+                    <p className="text-xs text-green-500">{fotolar.length} fotograf yuklendi</p>
                   </div>
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-2">Stil seç <span className="text-gray-400 font-normal">(birden fazla seçebilirsin — her biri 1 kullanım hakkı)</span></label>
+                <label className="block text-xs font-medium text-gray-600 mb-2">Stil sec <span className="text-gray-400 font-normal">(birden fazla secebilirsin — her biri 1 kullanim hakki)</span></label>
                 <div className="grid grid-cols-3 gap-2">
                   {([
                     { id: "beyaz", label: "⬜ Beyaz Zemin", aciklama: "Trendyol standart", img: "/ornek_beyaz.jpg" },
                     { id: "koyu", label: "⬛ Koyu Zemin", aciklama: "Premium / elektronik", img: "/ornek_koyu.jpg" },
-                    { id: "lifestyle", label: "🏠 Lifestyle", aciklama: "Gerçek ortam", img: "/ornek_lifestyle.jpg" },
+                    { id: "lifestyle", label: "🏠 Lifestyle", aciklama: "Gercek ortam", img: "/ornek_lifestyle.jpg" },
                   ] as const).map((s) => (
                     <button key={s.id} onClick={() => { setSeciliStiller((prev) => prev.includes(s.id) ? prev.filter((x) => x !== s.id) : [...prev, s.id]); }}
                       className={`rounded-xl overflow-hidden border-2 transition-all text-left ${seciliStiller.includes(s.id) ? "border-purple-500 shadow-md" : "border-gray-200 hover:border-purple-300"}`}>
@@ -576,24 +561,24 @@ export default function Home() {
                 </div>
                 {seciliStiller.length > 0 && (
                   <p className="text-xs text-purple-600 font-medium mt-2 text-center">
-                    {seciliStiller.length} stil seçildi → {seciliStiller.length * 4} görsel · {seciliStiller.length} kullanım hakkı
+                    {seciliStiller.length} stil secildi → {seciliStiller.length * 4} gorsel · {seciliStiller.length} kullanim hakki
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Ek yönlendirme <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="örn: parlak yüzey, gölge efekti, sonbahar tonları, minimalist..." rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
+                <label className="block text-xs font-medium text-gray-600 mb-1">Ek yonlendirme <span className="text-gray-400 font-normal">(istege bagli)</span></label>
+                <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="orn: parlak yuzey, golge efekti, sonbahar tonlari, minimalist..." rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
               </div>
 
               <button onClick={gorselUret} disabled={gorselYukleniyor || seciliStiller.length === 0 || fotolar.length === 0} className="w-full bg-purple-500 hover:bg-purple-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-lg transition-colors">
-                {gorselYukleniyor ? `⏳ ${seciliStiller.length * 4} görsel üretiliyor...` : seciliStiller.length === 0 ? "Önce bir stil seç" : fotolar.length === 0 ? "Önce fotoğraf ekle" : `✨ ${seciliStiller.length * 4} Görsel Üret — ${seciliStiller.length} kullanım hakkı`}
+                {gorselYukleniyor ? `⏳ ${seciliStiller.length * 4} gorsel uretiliyor...` : seciliStiller.length === 0 ? "Once bir stil sec" : fotolar.length === 0 ? "Once fotograf ekle" : `✨ ${seciliStiller.length * 4} Gorsel Uret — ${seciliStiller.length} kullanim hakki`}
               </button>
 
               {gorselSonuclar.length > 0 && (
                 <div className="space-y-5">
                   <p className="text-xs text-gray-500 font-medium text-center">
-                    ✅ {gorselSonuclar.reduce((t, s) => t + s.gorseller.length, 0)} görsel hazır — üzerine gel ve indir
+                    ✅ {gorselSonuclar.reduce((t, s) => t + s.gorseller.length, 0)} gorsel hazir — uzerine gel ve indir
                   </p>
                   {gorselSonuclar.map((grup) => (
                     <div key={grup.stil}>
@@ -606,7 +591,7 @@ export default function Home() {
                           <div key={i} className="relative group rounded-xl overflow-hidden border border-gray-100 aspect-square">
                             <img src={url} alt={`${grup.label} ${i + 1}`} className="w-full h-full object-cover" />
                             <a href={url} download target="_blank" className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-sm font-medium rounded-xl">
-                              ⬇️ İndir
+                              ⬇️ Indir
                             </a>
                           </div>
                         ))}
@@ -623,14 +608,14 @@ export default function Home() {
                   <div className="w-10 h-10 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin" />
                 </div>
                 <p className="text-gray-600 font-medium text-sm animate-pulse">{yukleniyorMesajlari[yukleniyorMesaj]}</p>
-                <p className="text-gray-400 text-xs mt-2">Bu birkaç saniye sürebilir...</p>
+                <p className="text-gray-400 text-xs mt-2">Bu birkac saniye surebilir...</p>
               </div>
             )}
 
             {sonuc && !yukleniyor && (
               <div id="sonuc-alani" className="space-y-3">
                 <div className="flex justify-between items-center px-1">
-                  <h2 className="text-base font-semibold text-gray-800">✅ Üretilen İçerik</h2>
+                  <h2 className="text-base font-semibold text-gray-800">✅ Uretilen Icerik</h2>
                   <KopyalaButon metin={sonuc} />
                 </div>
                 {sonucBolumleri.map((bolum, i) => (
@@ -646,12 +631,12 @@ export default function Home() {
             )}
           </div>
 
-          {/* Sağ — Geçmiş */}
+          {/* Sag — Gecmis */}
           <div className="w-full lg:w-72 space-y-4">
             <div className="bg-white rounded-2xl shadow p-5">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">Son Üretimler</h3>
+              <h3 className="text-sm font-semibold text-gray-700 mb-3">Son Uretimler</h3>
               {gecmis.length === 0 ? (
-                <p className="text-xs text-gray-400 text-center py-4">Henüz üretim yapılmadı</p>
+                <p className="text-xs text-gray-400 text-center py-4">Henuz uretim yapilmadi</p>
               ) : (
                 <div className="space-y-2">
                   {gecmis.map((u) => (
@@ -667,7 +652,7 @@ export default function Home() {
                       {seciliUretim?.id === u.id && (
                         <div className="mt-3 pt-3 border-t border-orange-200">
                           <div className="flex justify-between items-center mb-2">
-                            <span className="text-xs text-gray-500">İçerik</span>
+                            <span className="text-xs text-gray-500">Icerik</span>
                             <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(u.sonuc); }} className="text-xs text-orange-500 hover:text-orange-600">Kopyala</button>
                           </div>
                           <pre className="text-xs text-gray-600 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto">{u.sonuc}</pre>
