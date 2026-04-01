@@ -240,7 +240,7 @@ export default function Home() {
   };
 
   const icerikUret = async () => {
-    if (!kullanici || kullanici.kredi <= 0) { alert("Kullanım hakkınız bitti. Lütfen yeni paket satın alın."); return; }
+    if (!kullanici || (!kullanici.is_admin && kullanici.kredi <= 0)) { alert("Kullanım hakkınız bitti. Lütfen yeni paket satın alın."); return; }
     if (girisTipi === "manuel" && (!urunAdi || !kategori)) return;
     if (girisTipi === "foto" && fotolar.length === 0) return;
     if (girisTipi === "barkod" && !barkodBilgi) return;
@@ -254,7 +254,11 @@ export default function Home() {
     if (mesajInterval.current) clearInterval(mesajInterval.current);
     setSonuc(data.icerik);
     if (!kullanici.is_admin) {
-      setKullanici({ ...kullanici, kredi: kullanici.kredi - 1, toplam_kullanilan: kullanici.toplam_kullanilan + 1 });
+      if (!kullanici.is_admin) {
+        setKullanici({ ...kullanici, kredi: kullanici.kredi - 1, toplam_kullanilan: kullanici.toplam_kullanilan + 1 });
+      } else {
+        setKullanici({ ...kullanici, toplam_kullanilan: kullanici.toplam_kullanilan + 1 });
+      }
     } else {
       setKullanici({ ...kullanici, toplam_kullanilan: kullanici.toplam_kullanilan + 1 });
     }
