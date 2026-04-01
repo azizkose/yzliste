@@ -397,6 +397,7 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <span className="text-xs text-gray-400">{kullanici.email}</span>
               {kullanici.is_admin && <a href="/admin" className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-lg font-medium">Admin</a>}
+              <a href="/profil" className="text-sm text-gray-400 hover:text-gray-600">Profil</a>
               <button onClick={cikisYap} className="text-sm text-gray-400 hover:text-gray-600">Çıkış</button>
             </div>
           )}
