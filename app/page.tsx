@@ -17,6 +17,7 @@ type Kullanici = {
   email: string;
   kredi: number;
   toplam_kullanilan: number;
+  is_admin: boolean;
 };
 
 type SonucBolum = {
@@ -171,9 +172,9 @@ export default function Home() {
   const kullaniciyiKontrolEt = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push("/auth"); return; }
-    const { data: profil } = await supabase.from("profiles").select("email, kredi").eq("id", user.id).single();
+    const { data: profil } = await supabase.from("profiles").select("email, kredi, is_admin").eq("id", user.id).single();
     const { count } = await supabase.from("uretimler").select("*", { count: "exact", head: true }).eq("user_id", user.id);
-    if (profil) setKullanici({ id: user.id, email: profil.email, kredi: profil.kredi, toplam_kullanilan: count || 0 });
+    if (profil) setKullanici({ id: user.id, email: profil.email, kredi: profil.kredi, toplam_kullanilan: count || 0, is_admin: profil.is_admin || false });
     gecmisiYukle(user.id);
   };
 
@@ -252,7 +253,11 @@ export default function Home() {
     const data = await res.json();
     if (mesajInterval.current) clearInterval(mesajInterval.current);
     setSonuc(data.icerik);
-    setKullanici({ ...kullanici, kredi: kullanici.kredi - 1, toplam_kullanilan: kullanici.toplam_kullanilan + 1 });
+    if (!kullanici.is_admin) {
+      setKullanici({ ...kullanici, kredi: kullanici.kredi - 1, toplam_kullanilan: kullanici.toplam_kullanilan + 1 });
+    } else {
+      setKullanici({ ...kullanici, toplam_kullanilan: kullanici.toplam_kullanilan + 1 });
+    }
     gecmisiYukle(kullanici.id); setYukleniyor(false);
     setTimeout(() => { document.getElementById("sonuc-alani")?.scrollIntoView({ behavior: "smooth", block: "start" }); }, 100);
   };

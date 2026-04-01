@@ -1,34 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fal } from "@fal-ai/client";
+import { createClient } from "@supabase/supabase-js";
 
 fal.config({ credentials: process.env.FAL_KEY });
 
-const STILLER = [
-  {
-    id: "beyaz",
-    label: "Beyaz Zemin",
-    sahne: "pure white background, clean studio lighting, professional e-commerce product photo, no shadows, minimal",
-  },
-  {
-    id: "koyu",
-    label: "Koyu Zemin",
-    sahne: "dark charcoal black background, dramatic studio lighting, soft spotlight on product, premium luxury product photography",
-  },
-  {
-    id: "lifestyle",
-    label: "Lifestyle",
-    sahne: "cozy modern living room, natural daylight from window, plants and home decor in background, lifestyle interior photography, product in natural environment",
-  },
-];
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(req: NextRequest) {
-  const { foto, ekPrompt, stiller: seciliStiller } = await req.json();
+  const { foto, stil, ozellikler, userId } = await req.json();
+
   if (!foto) {
-    return NextResponse.json({ hata: "Fotoğraf gerekli" }, { status: 400 });
+    return NextResponse.json({ hata: "Fotograf gerekli" }, { status: 400 });
+  }
+
+  if (!userId) {
+    return NextResponse.json({ hata: "Giris yapilmadi" }, { status: 401 });
+  }
+
+  // Kullanici bilgisini ve admin durumunu cek
+  const { data: profil } = await supabaseAdmin
+    .from("profiles")
+    .select("kredi, is_admin")
+    .eq("id", userId)
+    .single();
+
+  if (!profil) {
+    return NextResponse.json({ hata: "Kullanici bulunamadi" }, { status: 404 });
+  }
+
+  const isAdmin = profil.is_admin === true;
+
+  // Admin degilse kredi kontrolu yap
+  if (!isAdmin && profil.kredi <= 0) {
+    return NextResponse.json({ hata: "Krediniz bitti. Lutfen kredi satin alin." }, { status: 402 });
   }
 
   try {
-    // Base64 → blob → fal storage
     const base64 = foto.split(",")[1];
     const mediaType = foto.split(";")[0].split(":")[1];
     const binaryStr = atob(base64);
@@ -39,39 +49,47 @@ export async function POST(req: NextRequest) {
     const blob = new Blob([bytes], { type: mediaType });
     const imageUrl = await fal.storage.upload(blob);
 
-    // Sadece seçili stilleri üret — her biri 4 görsel
-    const aktifStiller = seciliStiller?.length > 0
-      ? STILLER.filter(s => seciliStiller.includes(s.id))
-      : STILLER;
+    const stilSahneleri: Record<string, string> = {
+      beyaz: "pure white seamless background, clean studio lighting, professional e-commerce product photo, sharp focus",
+      koyu: "dark black seamless background, dramatic studio lighting, soft spotlight on product, premium luxury product photography",
+      lifestyle: "cozy modern living room, natural daylight from window, plants and home decor around, lifestyle interior photography",
+    };
 
-    const sonuclar = await Promise.all(
-      aktifStiller.map(async (stil) => {
-        const sahne = ekPrompt ? `${stil.sahne}, ${ekPrompt}` : stil.sahne;
+    const sahne = ozellikler
+      ? `${stilSahneleri[stil] || stilSahneleri.beyaz}, ${ozellikler}`
+      : stilSahneleri[stil] || stilSahneleri.beyaz;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result = await fal.subscribe("fal-ai/bria/product-shot", {
-          input: {
-            image_url: imageUrl,
-            scene_description: sahne,
-            optimize_description: true,
-            num_results: 4,
-            fast: true,
-          },
-        }) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result = await fal.subscribe("fal-ai/bria/product-shot", {
+      input: {
+        image_url: imageUrl,
+        scene_description: sahne,
+        optimize_description: true,
+        num_results: 4,
+        fast: false,
+      },
+    }) as any;
 
-        const images = result?.data?.images || result?.images || [];
+    const gorselUrller =
+      result?.data?.images?.map((img: any) => img.url) ||
+      result?.images?.map((img: any) => img.url) ||
+      [];
 
-        return {
-          stil: stil.id,
-          label: stil.label,
-          gorseller: images.map((img: { url: string }) => img.url),
-        };
-      })
-    );
+    if (!gorselUrller.length) {
+      return NextResponse.json({ hata: "Gorsel uretilemedi" }, { status: 500 });
+    }
 
-    return NextResponse.json({ sonuclar });
+    // Admin degilse kredi dusur
+    if (!isAdmin) {
+      await supabaseAdmin
+        .from("profiles")
+        .update({ kredi: profil.kredi - 1 })
+        .eq("id", userId);
+    }
+
+    return NextResponse.json({ gorselUrller, isAdmin });
   } catch (e) {
-    console.log("FAL HATA:", JSON.stringify(e, null, 2));
+    console.error("FAL HATA:", JSON.stringify(e, null, 2));
     return NextResponse.json({ hata: "Gorsel uretim hatasi" }, { status: 500 });
   }
 }

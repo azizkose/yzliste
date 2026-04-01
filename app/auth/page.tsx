@@ -9,6 +9,7 @@ export default function AuthPage() {
   const [mod, setMod] = useState<"giris" | "kayit">("kayit");
   const [yukleniyor, setYukleniyor] = useState(false);
   const [mesaj, setMesaj] = useState("");
+  const [aktifOrnek, setAktifOrnek] = useState(0);
   const router = useRouter();
 
   const handleSubmit = async () => {
@@ -20,12 +21,12 @@ export default function AuthPage() {
       if (error) {
         setMesaj(error.message);
       } else {
-        setMesaj("Kayıt başarılı! E-postanızı doğrulayın.");
+        setMesaj("Kayit basarili! E-postanizi dogrulayin.");
       }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password: sifre });
       if (error) {
-        setMesaj("E-posta veya şifre hatalı.");
+        setMesaj("E-posta veya sifre hatali.");
       } else {
         router.push("/");
       }
@@ -33,279 +34,331 @@ export default function AuthPage() {
     setYukleniyor(false);
   };
 
-  const scrollToForm = (seciliMod: "giris" | "kayit") => {
-    setMod(seciliMod);
-    document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" });
-  };
-
   const adimlar = [
-    { no: "1", baslik: "Ürünü tanımla", aciklama: "Ürün adı yaz, fotoğraf yükle ya da barkod tara", ikon: "📝" },
-    { no: "2", baslik: "Platform seç", aciklama: "Trendyol, Hepsiburada, Amazon TR veya N11", ikon: "🛒" },
-    { no: "3", baslik: "Listing al", aciklama: "Optimize başlık, özellikler ve açıklama hazır", ikon: "✅" },
-    { no: "4", baslik: "Görseli profesyonelleştir", aciklama: "İstersen ürün fotoğrafını AI ile stüdyo kalitesine taşı", ikon: "✨" },
+    { no: "1", baslik: "Urunu tanimla", aciklama: "Urun adi yaz, fotograf yukle ya da barkod tara", ikon: "📦" },
+    { no: "2", baslik: "Platform sec", aciklama: "Trendyol, Hepsiburada, Amazon TR veya N11", ikon: "🛒" },
+    { no: "3", baslik: "Listing al", aciklama: "Optimize baslik, ozellikler ve aciklama hazir", ikon: "✅" },
+    { no: "4", baslik: "Gorseli profesyonellestir", aciklama: "Urun fotografini AI ile studyo kalitesine tasi", ikon: "✨" },
   ];
 
-  const ornekCikti = `📌 Başlık:
-Lescon Erkek Nefes Alan Koşu Ayakkabısı | Hafif Taban | Gri-Siyah | 40-45
+  // Gercek Unsplash mutfak urun fotograflari
+  // Once: Evde cekilmis, arka plan dagitik hali
+  // Sonra: Profesyonel studyo / beyaz zemin hali
+  const gorselOrnekleri = [
+    {
+      kategori: "Elektrikli Kettle",
+      etiket: "Mutfak Urunleri",
+      // Mutfak tezgahinda gundelik ortamda cekilmis kettle
+      once: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80",
+      // Temiz beyaz zeminde profesyonel kettle cekim
+      sonra: "https://images.unsplash.com/photo-1594385208974-2e75f8d7bb48?w=600&q=80",
+      onceDurum: "Evde cep telefonu cekimi",
+      sonraDurum: "AI ile studyo gorseli",
+    },
+    {
+      kategori: "Kahve Makinesi",
+      etiket: "Mutfak Urunleri",
+      // Tezgah uzerinde donemsel fotograf
+      once: "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=600&q=80",
+      // Profesyonel kahve makinesi cekim
+      sonra: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80",
+      onceDurum: "Evde cep telefonu cekimi",
+      sonraDurum: "AI ile studyo gorseli",
+    },
+    {
+      kategori: "Tencere Seti",
+      etiket: "Mutfak Urunleri",
+      // Mutfak tezgahinda tencere
+      once: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=600&q=80",
+      // Temiz profesyonel tencere cekim
+      sonra: "https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=600&q=80",
+      onceDurum: "Evde cep telefonu cekimi",
+      sonraDurum: "AI ile studyo gorseli",
+    },
+  ];
 
-🔹 Özellikler:
-• Örgü Üst Yüzey — Hava sirkülasyonu ile uzun koşularda terleme önler
-• Ultra Hafif EVA Taban — 280g ağırlık, diz ve eklem yükünü %30 azaltır
-• Kaymaz Dış Taban — Islak/kuru zeminde güvenli tutuş
-• Anatomik İç Taban — Uzun süreli konfor, ayak şekline göre şekillenir
-• Pişik Önleyici Dikiş Tasarımı — Maraton mesafesinde bile sürtünmesiz
+  const ornek = gorselOrnekleri[aktifOrnek];
 
-📄 Açıklama:
-Günlük koşu rutininden yarışma günlerine kadar performansını desteklemek için tasarlanan Lescon Erkek Koşu Ayakkabısı, gelişmiş nefes alabilir örgü yapısıyla ayağınızı serin ve kuru tutar. Ultra hafif EVA ara tabanlık teknolojisi sayesinde her adımda darbe emilimi sağlanır; diz, kalça ve bel üzerindeki yükü minimize eder. Kaymaz dış taban paterni, parkur veya şehir koşularında güvenli ve dengeli bir adım garantiler.
+  const ornekListing = `Baslik:
+Arzum Okka Minio Pro Elektrikli Su Isitici | 1.5 Litre | Paslanmaz Celik | Beyaz
 
-🏷️ Etiketler:
-erkek koşu ayakkabısı, nefes alan spor ayakkabı, hafif koşu ayakkabısı, lescon erkek, maraton ayakkabısı, kaymaz taban, EVA taban`;
+Ozellikler:
+• 1500W Hizli Isitma — 1.5 litre suyu 3 dakikada kaynatir
+• 360 Derece Donebilir Taban — Sol ve sag eliklilere esit kullanim kolayligi
+• Otomatik Kapanma — Kaynar veya bos brakildikta guvenli kesinti
+• Paslanmaz Celik Ic Yuzey — Koku ve tat gecirmez, kolay temizlik
+• LED Aydinlatma — Calismada parlayan taban, seviye takibi kolaylastirir
+
+Aciklama:
+Arzum Okka Minio Pro, yogun mutfak kullaniminiz icin tasarlanmis kompakt ama guclu bir su isiticidir. 1500 watt gucu ile cay, filtre kahve veya anlık corba icin suyu hizla kaynatir. 360 derece donebilir ergonomik tasarim sayesinde mutfak tezgahinda her konumda rahatca kullanilabilir.`;
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-white font-sans">
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 px-6 py-4">
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-gray-100 px-6 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
-          <div className="flex items-center gap-2">
+          <span className="text-xl font-bold text-gray-900">
+            YZ<span className="text-orange-500">Liste</span>
+          </span>
+          <div className="flex gap-2">
             <button
-              onClick={() => scrollToForm("kayit")}
-              className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+              onClick={() => setMod("giris")}
+              className="text-sm text-gray-500 hover:text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
-              🎁 Kayıt Ol
+              Giris Yap
             </button>
             <button
-              onClick={() => scrollToForm("giris")}
-              className="border border-gray-300 hover:border-gray-400 text-gray-700 text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+              onClick={() => setMod("kayit")}
+              className="text-sm bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium"
             >
-              Giriş Yap
+              Ucretsiz Baslat
             </button>
           </div>
         </div>
       </header>
 
       {/* Hero */}
-      <section className="bg-white px-6 py-16 text-center border-b border-gray-100">
-        <div className="max-w-2xl mx-auto">
-          <span className="inline-block bg-orange-50 text-orange-600 text-xs font-semibold px-3 py-1 rounded-full mb-4 tracking-wide uppercase">
-            Türk E-Ticaret Satıcıları İçin
-          </span>
-          <h2 className="text-4xl font-bold text-gray-900 leading-tight mb-4">
-            30 saniyede mükemmel<br />
-            <span className="text-orange-500">ürün listesi</span> oluştur
-          </h2>
-          <p className="text-lg text-gray-500 mb-8">
-            Trendyol, Hepsiburada, Amazon TR ve N11 için yapay zeka destekli,
-            Türk alıcı davranışına göre optimize edilmiş listing içerikleri.
-          </p>
+      <section className="px-6 pt-16 pb-12 text-center max-w-3xl mx-auto">
+        <span className="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-5 tracking-wide uppercase">
+          Trendyol • Hepsiburada • Amazon TR • N11
+        </span>
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-5">
+          Saniyeler icinde{" "}
+          <span className="text-orange-500">profesyonel</span>{" "}
+          urun listesi
+        </h1>
+        <p className="text-lg text-gray-500 mb-8 max-w-xl mx-auto leading-relaxed">
+          Urun adini yaz, fotoğraf yukle ya da barkod tara.
+          YZListe platforma ozel optimize baslik, ozellikler ve aciklama uretir.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
-            onClick={() => scrollToForm("kayit")}
-            className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3.5 rounded-xl text-base transition-colors shadow-sm"
+            onClick={() => {
+              document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" });
+              setMod("kayit");
+            }}
+            className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100"
           >
-            Ücretsiz Dene — 3 Kredi Hediye 🎁
+            3 Ucretsiz Kredi ile Baslat →
           </button>
-          <p className="text-xs text-gray-400 mt-3">Kredi kartı gerekmez</p>
+          <button
+            onClick={() => document.getElementById("nasil-calisir")?.scrollIntoView({ behavior: "smooth" })}
+            className="text-gray-500 hover:text-gray-800 font-medium px-8 py-4 rounded-xl border border-gray-200 hover:border-gray-300 transition-colors text-base"
+          >
+            Nasil calisir?
+          </button>
         </div>
       </section>
 
-      {/* 4 Adım */}
-      <section className="px-6 py-14">
+      {/* ===== ONCE / SONRA GORSEL BOLUMU ===== */}
+      <section className="px-6 pb-16">
         <div className="max-w-5xl mx-auto">
-          <h3 className="text-center text-xl font-bold text-gray-800 mb-10">Nasıl çalışır?</h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {adimlar.map((adim, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center relative">
-                {i < adimlar.length - 1 && (
-                  <div className="hidden md:block absolute top-1/2 -right-3 text-gray-300 text-xl z-10">→</div>
-                )}
-                <div className="text-3xl mb-3">{adim.ikon}</div>
-                <div className="inline-block bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full mb-2">
-                  Adım {adim.no}
-                </div>
-                <h4 className="font-semibold text-gray-800 mb-1 text-sm">{adim.baslik}</h4>
-                <p className="text-xs text-gray-500">{adim.aciklama}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Örnek Çıktı */}
-      <section className="px-6 pb-14">
-        <div className="max-w-5xl mx-auto">
-          <h3 className="text-center text-xl font-bold text-gray-800 mb-2">Böyle bir sonuç alacaksın</h3>
-          <p className="text-center text-sm text-gray-400 mb-8">Gerçek bir Trendyol listing örneği — sıfır düzenleme, direkt yapıştır</p>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1 rounded-full">Trendyol</span>
-                <span className="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">✓ Optimize</span>
-                <span className="text-xs text-gray-400 ml-auto">~18 sn</span>
-              </div>
-              <pre className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed font-sans bg-gray-50 rounded-xl p-4 flex-1 overflow-y-auto" style={{maxHeight: "420px"}}>
-                {ornekCikti}
-              </pre>
-              <div className="flex gap-4 mt-4 pt-4 border-t border-gray-100">
-                <div className="text-center flex-1">
-                  <div className="text-lg font-bold text-orange-500">94</div>
-                  <div className="text-xs text-gray-400">SEO skoru</div>
-                </div>
-                <div className="text-center flex-1">
-                  <div className="text-lg font-bold text-orange-500">5</div>
-                  <div className="text-xs text-gray-400">özellik maddesi</div>
-                </div>
-                <div className="text-center flex-1">
-                  <div className="text-lg font-bold text-orange-500">8</div>
-                  <div className="text-xs text-gray-400">anahtar kelime</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="bg-purple-100 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full">✨ AI Görsel</span>
-                <span className="text-xs text-gray-400 ml-auto">~30 sn · 1 kullanım hakkı</span>
-              </div>
-              <p className="text-xs text-gray-500 mb-4">
-                Ürün fotoğrafını yükle — aynı fotoğraftan 3 farklı stil, her stilden 4 varyasyon
-              </p>
-              <div className="grid grid-cols-3 gap-2 flex-1">
-                {[
-                  { label: "⬜ Beyaz Zemin", aciklama: "Trendyol standart", img: "/ornek_beyaz.jpg" },
-                  { label: "⬛ Koyu Zemin", aciklama: "Premium his", img: "/ornek_koyu.jpg" },
-                  { label: "🏠 Lifestyle", aciklama: "Gerçek ortam", img: "/ornek_lifestyle.jpg" },
-                ].map((s, i) => (
-                  <div key={i} className="rounded-xl overflow-hidden border border-gray-100 flex flex-col">
-                    <div className="flex-1 overflow-hidden">
-                      <img src={s.img} alt={s.label} className="w-full h-full object-cover" style={{minHeight: "120px"}} />
-                    </div>
-                    <div className="p-2 bg-gray-50">
-                      <p className="text-xs font-semibold text-gray-700">{s.label}</p>
-                      <p className="text-xs text-gray-400">{s.aciklama}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <span className="bg-purple-50 text-purple-600 px-2 py-1 rounded-lg font-medium">1 stil = 1 hak = 4 görsel</span>
-                  <span>·</span>
-                  <span>3 stil seçersen 12 görsel alırsın</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Özellikler */}
-      <section className="bg-white px-6 py-14 border-t border-gray-100">
-        <div className="max-w-4xl mx-auto">
-          <h3 className="text-center text-xl font-bold text-gray-800 mb-8">Neden YZListe?</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { ikon: "📷", baslik: "Fotoğraftan Listing", aciklama: "Ürün fotoğrafını yükle, AI analiz etsin" },
-              { ikon: "🔍", baslik: "Barkod Tarama", aciklama: "Barkodu tara, ürün bilgileri otomatik gelsin" },
-              { ikon: "🏪", baslik: "4 Platform", aciklama: "Her platform için ayrı optimize format" },
-              { ikon: "⚡", baslik: "30 Saniye", aciklama: "Manuel yazmaya son, anında hazır" },
-            ].map((f, i) => (
-              <div key={i} className="text-center p-4">
-                <div className="text-2xl mb-2">{f.ikon}</div>
-                <div className="font-semibold text-sm text-gray-800 mb-1">{f.baslik}</div>
-                <div className="text-xs text-gray-500">{f.aciklama}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Auth Form */}
-      <section id="auth-form" className="px-6 py-16 bg-gray-50">
-        <div className="max-w-md mx-auto">
+          {/* Bolum Basligi */}
           <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              {mod === "kayit" ? "Hemen başla" : "Tekrar hoş geldin"}
-            </h3>
-            <p className="text-gray-500 text-sm">
-              {mod === "kayit" ? "3 ücretsiz kredi ile dene, kredi kartı gerekmez" : "Hesabına giriş yap"}
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              Cep telefonu cekimi → Studyo gorseli
+            </h2>
+            <p className="text-gray-400 text-sm">
+              Fotoğrafini yukle, AI arka plani temizler ve profesyonel e-ticaret gorseli uretir
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow p-8">
-            <div className="flex gap-3 mb-6">
+          {/* Kategori Secimleri */}
+          <div className="flex gap-2 justify-center mb-6 flex-wrap">
+            {gorselOrnekleri.map((g, i) => (
               <button
-                onClick={() => setMod("kayit")}
-                className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all border-2 ${
-                  mod === "kayit"
-                    ? "bg-orange-500 text-white border-orange-500 shadow-sm"
-                    : "bg-white text-orange-500 border-orange-300 hover:border-orange-500"
+                key={i}
+                onClick={() => setAktifOrnek(i)}
+                className={`text-sm px-4 py-2 rounded-full border transition-colors font-medium ${
+                  aktifOrnek === i
+                    ? "bg-orange-500 text-white border-orange-500"
+                    : "bg-white text-gray-500 border-gray-200 hover:border-orange-300"
                 }`}
               >
-                🎁 Kayıt Ol
+                {g.kategori}
               </button>
-              <button
-                onClick={() => setMod("giris")}
-                className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all border-2 ${
-                  mod === "giris"
-                    ? "bg-gray-800 text-white border-gray-800 shadow-sm"
-                    : "bg-white text-gray-600 border-gray-300 hover:border-gray-500"
-                }`}
-              >
-                Giriş Yap
-              </button>
+            ))}
+          </div>
+
+          {/* Once / Sonra Karti */}
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="grid grid-cols-1 sm:grid-cols-2">
+              {/* ONCE */}
+              <div className="relative">
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="bg-gray-800/70 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur font-medium">
+                    📱 {ornek.onceDurum}
+                  </span>
+                </div>
+                <img
+                  src={ornek.once}
+                  alt={`${ornek.kategori} once`}
+                  className="w-full aspect-square object-cover"
+                />
+                <div className="p-4 bg-red-50 border-t border-red-100">
+                  <p className="text-xs text-red-600 font-medium flex items-center gap-1.5">
+                    <span>✗</span>
+                    Dagitik arka plan — platforma yuklenmez / reddedilir
+                  </p>
+                </div>
+              </div>
+
+              {/* SONRA */}
+              <div className="relative border-t sm:border-t-0 sm:border-l border-gray-100">
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="bg-orange-500 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur font-medium">
+                    ✨ {ornek.sonraDurum}
+                  </span>
+                </div>
+                <img
+                  src={ornek.sonra}
+                  alt={`${ornek.kategori} sonra`}
+                  className="w-full aspect-square object-cover"
+                />
+                <div className="p-4 bg-green-50 border-t border-green-100">
+                  <p className="text-xs text-green-600 font-medium flex items-center gap-1.5">
+                    <span>✓</span>
+                    Beyaz zemin, studyo kalitesi — Trendyol standartlarina uygun
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-center text-xs text-gray-400 mt-4">
+            Gorseller temsilidir. Gercek sonuclar urune gore degisir.
+          </p>
+        </div>
+      </section>
+
+      {/* Nasil Calisir */}
+      <section id="nasil-calisir" className="px-6 pb-16 bg-gray-50">
+        <div className="max-w-4xl mx-auto pt-14">
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-10">
+            4 adimda hazir listing
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {adimlar.map((adim) => (
+              <div key={adim.no} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center">
+                <div className="text-3xl mb-3">{adim.ikon}</div>
+                <div className="w-7 h-7 rounded-full bg-orange-100 text-orange-600 text-xs font-bold flex items-center justify-center mx-auto mb-3">
+                  {adim.no}
+                </div>
+                <h3 className="font-semibold text-gray-800 text-sm mb-1">{adim.baslik}</h3>
+                <p className="text-xs text-gray-400 leading-relaxed">{adim.aciklama}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Ornek Listing Ciktisi */}
+      <section className="px-6 pb-16">
+        <div className="max-w-3xl mx-auto pt-10">
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
+            Boyle bir sonuc alacaksin
+          </h2>
+          <p className="text-center text-sm text-gray-400 mb-8">
+            Gercek bir Trendyol listing ornegi — sifir duzenleme, direkt yapistir
+          </p>
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="flex items-center gap-2 px-6 py-4 border-b border-gray-100 bg-orange-50">
+              <span className="w-2 h-2 rounded-full bg-orange-400" />
+              <span className="text-xs font-semibold text-orange-700">Trendyol formatinda ornek cikti</span>
+            </div>
+            <pre className="p-6 text-xs text-gray-700 leading-relaxed whitespace-pre-wrap font-mono overflow-x-auto">
+              {ornekListing}
+            </pre>
+          </div>
+        </div>
+      </section>
+
+      {/* Ozellikler */}
+      <section className="px-6 pb-16 bg-gray-50">
+        <div className="max-w-4xl mx-auto pt-10">
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-10">Neden YZListe?</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              { ikon: "📸", baslik: "Fotograf ile giris", aciklama: "Metni elle yazmak zorunda degilsin. Urun fotografini yukle, gerisini YZ halletsin." },
+              { ikon: "📦", baslik: "Barkod tarama", aciklama: "Barkodu tarat, urun bilgilerini aninda cek, listing uret. Depo hizinda calis." },
+              { ikon: "🎯", baslik: "Platform secimli", aciklama: "Her platform farkli format ister. Trendyol, Hepsiburada, Amazon TR ve N11 icin ayri sablonlar." },
+              { ikon: "🖼️", baslik: "AI gorsel iyilestirme", aciklama: "Cep telefonu cekimini 3 farkli stil ile studyo kalitesine donustur." },
+              { ikon: "⚡", baslik: "Saniyeler icinde", aciklama: "Manuel yazmak yerine dakikalar degil saniyeler. Daha fazla urun, daha az zaman." },
+              { ikon: "💰", baslik: "Pay-as-you-go", aciklama: "Abonelik yok. Ne kadar kullanirsan o kadar ode. 3 ucretsiz kredi ile baslat." },
+            ].map((ozellik, i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div className="text-2xl mb-3">{ozellik.ikon}</div>
+                <h3 className="font-semibold text-gray-800 text-sm mb-1">{ozellik.baslik}</h3>
+                <p className="text-xs text-gray-400 leading-relaxed">{ozellik.aciklama}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Auth Formu */}
+      <section id="auth-form" className="px-6 py-16">
+        <div className="max-w-md mx-auto">
+          <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                {mod === "kayit" ? "Ucretsiz hesap olustur" : "Tekrar hosgeldin"}
+              </h2>
+              <p className="text-sm text-gray-400">
+                {mod === "kayit" ? "3 ucretsiz kredi hediye" : "Hesabina giris yap"}
+              </p>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">E-posta</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="ornek@email.com"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Şifre</label>
-                <input
-                  type="password"
-                  value={sifre}
-                  onChange={(e) => setSifre(e.target.value)}
-                  placeholder="En az 6 karakter"
-                  onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm"
-                />
-              </div>
-
+            <div className="space-y-3">
+              <input
+                type="email"
+                placeholder="E-posta"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+              />
+              <input
+                type="password"
+                placeholder="Sifre"
+                value={sifre}
+                onChange={(e) => setSifre(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+              />
               {mesaj && (
-                <p className={`text-sm ${mesaj.includes("başarılı") ? "text-green-600" : "text-red-500"}`}>
+                <p className={`text-xs ${mesaj.includes("basarili") ? "text-green-600" : "text-red-500"}`}>
                   {mesaj}
                 </p>
               )}
-
               <button
                 onClick={handleSubmit}
                 disabled={yukleniyor || !email || !sifre}
-                className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-lg transition-colors text-sm"
+                className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors text-sm"
               >
-                {yukleniyor ? "..." : mod === "kayit" ? "Ücretsiz Hesap Oluştur →" : "Giriş Yap →"}
+                {yukleniyor ? "..." : mod === "kayit" ? "Ucretsiz Hesap Olustur" : "Giris Yap"}
               </button>
             </div>
 
             {mod === "kayit" && (
               <p className="text-xs text-gray-400 text-center mt-4">
-                🎁 Kayıt olunca <strong>3 ücretsiz kredi</strong> alırsınız
+                Kayit olunca 3 ucretsiz kredi alirsiniz
               </p>
             )}
+
+            <div className="text-center mt-5 pt-4 border-t border-gray-100">
+              <button
+                onClick={() => setMod(mod === "giris" ? "kayit" : "giris")}
+                className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                {mod === "giris" ? "Hesabin yok mu? Kaydol →" : "Zaten hesabin var mi? Giris yap →"}
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="text-center py-6 text-xs text-gray-400 border-t border-gray-100">
-        © 2026 YZListe · Türk e-ticaret satıcıları için yapay zeka asistanı
+        2026 YZListe
       </footer>
     </main>
   );
