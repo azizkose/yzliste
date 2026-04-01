@@ -7,6 +7,9 @@ const IYZICO_SECRET_KEY = process.env.IYZICO_SECRET_KEY!;
 const IYZICO_BASE_URL = "https://sandbox-api.iyzipay.com";
 const URI_PATH = "/payment/iyzipos/checkoutform/auth/ecom/detail";
 
+// Kullanici bu adrese yonlendirilir (domain)
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://yzliste.com";
+
 function randomString(length: number): string {
   return crypto.randomBytes(length).toString("hex").slice(0, length);
 }
@@ -21,10 +24,8 @@ function iyzicoAuth(randomKey: string, body: string): string {
 }
 
 async function odemeDogrula(token: string): Promise<NextResponse> {
-  const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://yzliste.vercel.app";
-
   if (!token) {
-    return NextResponse.redirect(`${appBaseUrl}/?odeme=hata`);
+    return NextResponse.redirect(`${SITE_URL}/?odeme=hata`);
   }
 
   const supabase = createClient(
@@ -48,11 +49,11 @@ async function odemeDogrula(token: string): Promise<NextResponse> {
   });
 
   const data = await response.json();
-  console.log("Iyzico callback yanit:", JSON.stringify(data));
+  console.log("Iyzico callback:", JSON.stringify(data));
 
   if (data.status !== "success" || data.paymentStatus !== "SUCCESS") {
     await supabase.from("payments").update({ durum: "basarisiz" }).eq("iyzico_token", token);
-    return NextResponse.redirect(`${appBaseUrl}/?odeme=hata`);
+    return NextResponse.redirect(`${SITE_URL}/?odeme=hata`);
   }
 
   const { data: odeme } = await supabase
@@ -63,19 +64,14 @@ async function odemeDogrula(token: string): Promise<NextResponse> {
     .single();
 
   if (odeme) {
-    const { data: profil } = await supabase
-      .from("profiles")
-      .select("kredi")
-      .eq("id", odeme.user_id)
-      .single();
-
+    const { data: profil } = await supabase.from("profiles").select("kredi").eq("id", odeme.user_id).single();
     if (profil) {
       const yeniKredi = odeme.paket === "sinırsiz" ? 9999 : profil.kredi + odeme.kredi;
       await supabase.from("profiles").update({ kredi: yeniKredi }).eq("id", odeme.user_id);
     }
   }
 
-  return NextResponse.redirect(`${appBaseUrl}/?odeme=basarili`);
+  return NextResponse.redirect(`${SITE_URL}/?odeme=basarili`);
 }
 
 export async function POST(req: NextRequest) {

@@ -18,16 +18,11 @@ function randomString(length: number): string {
 }
 
 function iyzicoAuth(randomKey: string, body: string): string {
-  // encryptedData = HMACSHA256(randomKey + uriPath + body, secretKey)
   const encryptedData = crypto
     .createHmac("sha256", IYZICO_SECRET_KEY)
     .update(randomKey + URI_PATH + body)
     .digest("hex");
-
-  // authorizationString = apiKey:VALUE&randomKey:VALUE&signature:VALUE
   const authorizationString = `apiKey:${IYZICO_API_KEY}&randomKey:${randomKey}&signature:${encryptedData}`;
-
-  // base64 encode
   return Buffer.from(authorizationString).toString("base64");
 }
 
@@ -51,7 +46,8 @@ export async function POST(req: NextRequest) {
     .single();
 
   const conversationId = randomString(12);
-  const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://yzliste.vercel.app";
+  // callbackUrl her zaman vercel.app — POST body kaybolmasin
+  const callbackBase = "https://yzliste.vercel.app";
   const randomKey = randomString(20);
 
   const requestBody = {
@@ -62,7 +58,7 @@ export async function POST(req: NextRequest) {
     currency: "TRY",
     basketId: odeme?.id || conversationId,
     paymentGroup: "PRODUCT",
-    callbackUrl: `${appBaseUrl}/api/odeme/callback`,
+    callbackUrl: `${callbackBase}/api/odeme/callback`,
     enabledInstallments: [1, 2, 3, 6, 9],
     buyer: {
       id: userId,
@@ -97,9 +93,9 @@ export async function POST(req: NextRequest) {
   });
 
   const data = await response.json();
-  console.log("Iyzico yanit:", JSON.stringify(data));
 
   if (data.status !== "success") {
+    console.error("Iyzico hata:", JSON.stringify(data));
     return NextResponse.json({ hata: data.errorMessage || "Odeme baslatılamadı" }, { status: 400 });
   }
 
