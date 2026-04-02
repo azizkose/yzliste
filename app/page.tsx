@@ -71,7 +71,7 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
   const paketler = [
     { id: "baslangic", isim: "Başlangıç", fiyat: "₺29", kredi: "10 kullanım hakkı", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
     { id: "populer", isim: "Popüler", fiyat: "₺79", kredi: "30 kullanım hakkı", renk: "border-orange-400 ring-2 ring-orange-400", butonRenk: "bg-orange-500 hover:bg-orange-600", rozet: true },
-    { id: "sinırsiz", isim: "Sınırsız", fiyat: "₺199/ay", kredi: "Sınırsız kullanım", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
+    { id: "buyuk", isim: "Büyük", fiyat: "₺149", kredi: "100 kullanım hakkı", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
   ];
 
   const odemeBaslat = async (paketId: string) => {

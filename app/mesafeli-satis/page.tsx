@@ -38,7 +38,7 @@ export default function MesafeliSatisPage() {
               <ul className="list-disc ml-5 space-y-1">
                 <li>Başlangıç Paketi: 10 kullanım hakkı — 29 TL (KDV dahil)</li>
                 <li>Popüler Paket: 30 kullanım hakkı — 79 TL (KDV dahil)</li>
-                <li>Sınırsız Paket: Aylık sınırsız kullanım — 199 TL/ay (KDV dahil)</li>
+                <li>Büyük Paket: 100 kullanım hakkı — 149 TL (KDV dahil)</li>
               </ul>
               <p className="mt-2">
                 Kullanım hakları ödeme tamamlandıktan hemen sonra hesaba tanımlanır.

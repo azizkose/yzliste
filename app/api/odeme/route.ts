@@ -10,7 +10,7 @@ const URI_PATH = "/payment/iyzipos/checkoutform/initialize/auth/ecom";
 const PAKETLER: Record<string, { isim: string; kredi: number; tutar: number }> = {
   baslangic: { isim: "Baslangic Paketi", kredi: 10, tutar: 29 },
   populer: { isim: "Populer Paket", kredi: 30, tutar: 79 },
-  sinırsiz: { isim: "Sinirsiz Paket", kredi: 9999, tutar: 199 },
+  buyuk: { isim: "Buyuk Paket", kredi: 100, tutar: 149 },
 };
 
 function randomString(length: number): string {
@@ -46,7 +46,6 @@ export async function POST(req: NextRequest) {
     .single();
 
   const conversationId = randomString(12);
-  // callbackUrl her zaman vercel.app — POST body kaybolmasin
   const callbackBase = "https://yzliste.vercel.app";
   const randomKey = randomString(20);
 
