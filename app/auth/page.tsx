@@ -65,7 +65,7 @@ export default function AuthPage() {
       {/* HEADER */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100 px-6 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
+          <a href="/auth"><img src="/yzliste_logo.png" alt="yzliste" className="h-8" /></a>
           <div className="flex gap-2">
             <button
               onClick={() => { handleModDegistir("giris"); document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" }); }}
