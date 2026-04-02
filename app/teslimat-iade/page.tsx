@@ -8,13 +8,12 @@ export default function TeslimatIadePage() {
         </div>
         <div className="bg-white rounded-2xl shadow p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Teslimat ve İade Şartları</h1>
-
           <div className="space-y-6 text-gray-600 text-sm leading-relaxed">
 
             <div>
               <h2 className="text-base font-semibold text-gray-800 mb-2">Teslimat</h2>
               <p>
-                YZListe, dijital bir hizmet platformudur. Satın alınan kullanım hakları
+                yzliste, dijital bir hizmet platformudur. Satın alınan kullanım hakları
                 ödeme işlemi tamamlandıktan hemen sonra kullanıcı hesabına otomatik olarak
                 tanımlanır. Fiziksel bir teslimat söz konusu değildir.
               </p>
@@ -30,8 +29,8 @@ export default function TeslimatIadePage() {
               <p>
                 Dijital hizmet niteliğinde olan kullanım hakları, teslim edildiği andan
                 itibaren kullanılabilir durumdadır. Bu nedenle, 6502 sayılı Tüketicinin
-                Korunması Hakkında Kanun'un 49. maddesi uyarınca dijital içerik ve hizmetlerde
-                cayma hakkı kullanılamaz.
+                Korunması Hakkında Kanun'un 49. maddesi uyarınca dijital içerik ve
+                hizmetlerde cayma hakkı kullanılamaz.
               </p>
               <p className="mt-2">
                 Ancak hiç kullanılmamış krediler için iade talebi, satın alma tarihinden
@@ -39,18 +38,17 @@ export default function TeslimatIadePage() {
                 değerlendirmeye alınacaktır.
               </p>
               <p className="mt-2">
-                İade kararı verilmesi durumunda, ödeme ödeme yönteminize bağlı olarak
+                İade kararı verilmesi durumunda, ödeme yönteminize bağlı olarak
                 3-10 iş günü içinde hesabınıza iade edilir.
               </p>
             </div>
 
-            <div>
+            <div className="border-t border-gray-100 pt-4">
               <h2 className="text-base font-semibold text-gray-800 mb-2">İletişim</h2>
-              <p>
-                Teslimat veya iade ile ilgili her türlü sorunuz için:{" "}
-                <a href="mailto:destek@yzliste.com" className="text-orange-500 hover:underline">
-                  destek@yzliste.com
-                </a>
+              <p>SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI</p>
+              <p>Mehmet Akif Mah. Ulubatlı Hasan Cad. Paradise City Sitesi C1 Blok No: 43L İç Kapı No: 31 Çekmeköy / İstanbul</p>
+              <p className="mt-1">
+                <a href="mailto:destek@yzliste.com" className="text-orange-500 hover:underline">destek@yzliste.com</a>
               </p>
             </div>
           </div>

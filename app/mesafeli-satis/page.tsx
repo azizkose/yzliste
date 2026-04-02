@@ -14,24 +14,31 @@ export default function MesafeliSatisPage() {
 
             <div>
               <h2 className="text-base font-semibold text-gray-800 mb-2">1. Taraflar</h2>
-              <p><strong>Satıcı:</strong> YZListe (yzliste.com)</p>
-              <p className="mt-1"><strong>Alıcı:</strong> Platforma kayıtlı kullanıcı</p>
+              <div className="space-y-1">
+                <p><span className="font-medium text-gray-700">Satıcı Ünvanı:</span> SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI</p>
+                <p><span className="font-medium text-gray-700">Adres:</span> Mehmet Akif Mah. Ulubatlı Hasan Cad. Paradise City Sitesi C1 Blok No: 43L İç Kapı No: 31 Çekmeköy / İstanbul</p>
+                <p><span className="font-medium text-gray-700">Vergi Dairesi / No:</span> Sarıgazi / 7701113995</p>
+                <p><span className="font-medium text-gray-700">E-posta:</span>{" "}
+                  <a href="mailto:destek@yzliste.com" className="text-orange-500 hover:underline">destek@yzliste.com</a>
+                </p>
+                <p className="mt-2"><span className="font-medium text-gray-700">Alıcı:</span> Platforma kayıtlı kullanıcı</p>
+              </div>
             </div>
 
             <div>
               <h2 className="text-base font-semibold text-gray-800 mb-2">2. Sözleşmenin Konusu</h2>
               <p>
-                İşbu sözleşme, Alıcının YZListe platformunda satın aldığı dijital kullanım
+                İşbu sözleşme, Alıcının yzliste.com platformunda satın aldığı dijital kullanım
                 haklarına (kredi paketleri) ilişkin koşulları düzenlemektedir.
               </p>
             </div>
 
             <div>
-              <h2 className="text-base font-semibold text-gray-800 mb-2">3. Hizmet Bilgileri</h2>
+              <h2 className="text-base font-semibold text-gray-800 mb-2">3. Hizmet ve Fiyat Bilgileri</h2>
               <ul className="list-disc ml-5 space-y-1">
-                <li>Başlangıç Paketi: 10 kullanım hakkı — 29 TL</li>
-                <li>Popüler Paket: 30 kullanım hakkı — 79 TL</li>
-                <li>Sınırsız Paket: Aylık sınırsız kullanım — 199 TL/ay</li>
+                <li>Başlangıç Paketi: 10 kullanım hakkı — 29 TL (KDV dahil)</li>
+                <li>Popüler Paket: 30 kullanım hakkı — 79 TL (KDV dahil)</li>
+                <li>Sınırsız Paket: Aylık sınırsız kullanım — 199 TL/ay (KDV dahil)</li>
               </ul>
               <p className="mt-2">
                 Kullanım hakları ödeme tamamlandıktan hemen sonra hesaba tanımlanır.
@@ -58,36 +65,34 @@ export default function MesafeliSatisPage() {
             <div>
               <h2 className="text-base font-semibold text-gray-800 mb-2">6. Cayma Hakkı</h2>
               <p>
-                6502 sayılı Tüketicinin Korunması Hakkında Kanunun 49. maddesi ve
-                Mesafeli Sözleşmeler Yönetmeliği uyarınca; dijital içerik ve hizmetler,
-                tüketicinin onayıyla ifaya başlandığı andan itibaren cayma hakkı
-                kapsamı dışında tutulabilir.
+                6502 sayılı Tüketicinin Korunması Hakkında Kanun'un 49. maddesi ve Mesafeli
+                Sözleşmeler Yönetmeliği uyarınca; dijital içerik ve hizmetler, tüketicinin
+                onayıyla ifaya başlandığı andan itibaren cayma hakkı kapsamı dışında tutulabilir.
               </p>
               <p className="mt-2">
-                Kullanıcı, satın alma işlemini tamamlayarak dijital hizmetin hemen
-                kullanılabilir hale getirilmesine onay vermiş sayılır ve bu durumda
-                cayma hakkından feragat etmiş kabul edilir.
+                Kullanıcı, satın alma işlemini tamamlayarak dijital hizmetin hemen kullanılabilir
+                hale getirilmesine onay vermiş sayılır ve bu durumda cayma hakkından feragat
+                etmiş kabul edilir.
               </p>
               <p className="mt-2">
-                Hiç kullanılmamış krediler için 3 gün içinde destek@yzliste.com
-                adresine başvurulabilir.
+                Hiç kullanılmamış krediler için 3 gün içinde destek@yzliste.com adresine
+                başvurulabilir.
               </p>
             </div>
 
             <div>
               <h2 className="text-base font-semibold text-gray-800 mb-2">7. Uyuşmazlık Çözümü</h2>
               <p>
-                İşbu sözleşmeden doğacak uyuşmazlıklarda Türkiye Cumhuriyeti mahkemeleri
-                ve tüketici hakem heyetleri yetkilidir.
+                İşbu sözleşmeden doğacak uyuşmazlıklarda İstanbul mahkemeleri ve tüketici
+                hakem heyetleri yetkilidir.
               </p>
             </div>
 
             <div>
-              <h2 className="text-base font-semibold text-gray-800 mb-2">8. İletişim</h2>
+              <h2 className="text-base font-semibold text-gray-800 mb-2">8. Yürürlük</h2>
               <p>
-                <a href="mailto:destek@yzliste.com" className="text-orange-500 hover:underline">
-                  destek@yzliste.com
-                </a>
+                Alıcı, satın alma işlemini tamamlayarak işbu sözleşmeyi okuduğunu,
+                anladığını ve kabul ettiğini beyan eder.
               </p>
             </div>
           </div>

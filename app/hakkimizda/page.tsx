@@ -8,11 +8,11 @@ export default function HakkimizdaPage() {
         </div>
         <div className="bg-white rounded-2xl shadow p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Hakkımızda</h1>
-
           <div className="space-y-4 text-gray-600 text-sm leading-relaxed">
             <p>
-              YZListe, Türk e-ticaret satıcılarının ürün listelerini daha hızlı ve etkili oluşturmasına
-              yardımcı olmak amacıyla geliştirilmiş yapay zeka destekli bir SaaS platformudur.
+              yzliste, Türk e-ticaret satıcılarının ürün listelerini daha hızlı ve etkili
+              oluşturmasına yardımcı olmak amacıyla geliştirilmiş yapay zeka destekli bir
+              SaaS platformudur.
             </p>
             <p>
               Trendyol, Hepsiburada, Amazon TR ve N11 gibi Türkiye'nin önde gelen e-ticaret
@@ -25,20 +25,20 @@ export default function HakkimizdaPage() {
               özelliği de sunmaktadır.
             </p>
             <p>
-              YZListe olarak amacımız, satıcıların teknik içerik oluşturma süreçlerini
+              yzliste olarak amacımız, satıcıların teknik içerik oluşturma süreçlerini
               otomatikleştirerek daha fazla zamana ve enerjiye sahip olmalarını sağlamaktır.
             </p>
 
-            <div className="border-t border-gray-100 pt-4 mt-6">
-              <h2 className="text-base font-semibold text-gray-800 mb-3">İletişim</h2>
-              <p>Sorularınız için bize ulaşabilirsiniz:</p>
-              <p className="mt-1">
-                E-posta:{" "}
-                <a href="mailto:destek@yzliste.com" className="text-orange-500 hover:underline">
-                  destek@yzliste.com
-                </a>
+            <div className="border-t border-gray-100 pt-6 mt-6 space-y-2">
+              <h2 className="text-base font-semibold text-gray-800 mb-3">Şirket Bilgileri</h2>
+              <p><span className="font-medium text-gray-700">Ünvan:</span> SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI</p>
+              <p><span className="font-medium text-gray-700">Adres:</span> Mehmet Akif Mah. Ulubatlı Hasan Cad. Paradise City Sitesi C1 Blok No: 43L İç Kapı No: 31 Çekmeköy / İstanbul</p>
+              <p><span className="font-medium text-gray-700">Vergi Dairesi:</span> Sarıgazi</p>
+              <p><span className="font-medium text-gray-700">Vergi No:</span> 7701113995</p>
+              <p><span className="font-medium text-gray-700">E-posta:</span>{" "}
+                <a href="mailto:destek@yzliste.com" className="text-orange-500 hover:underline">destek@yzliste.com</a>
               </p>
-              <p className="mt-1">Web: <span className="text-orange-500">yzliste.com</span></p>
+              <p><span className="font-medium text-gray-700">Web:</span> yzliste.com</p>
             </div>
           </div>
         </div>
