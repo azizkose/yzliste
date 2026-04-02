@@ -90,13 +90,13 @@ export default function AuthPage() {
         </span>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-5">
           E-ticaret listing'i için<br />
-          <span className="text-orange-500">tek çözüm</span>
+          <span className="text-orange-500">en kolay çözüm</span>
         </h1>
         <p className="text-lg text-gray-500 mb-4 max-w-2xl mx-auto leading-relaxed">
           Platforma ürün yüklemek için hem <strong className="text-gray-700">optimize metin</strong> hem de <strong className="text-gray-700">profesyonel görsel</strong> gerekir. yzliste ikisini de tek yerden, ayrı ayrı veya birlikte üretir.
         </p>
         <p className="text-sm text-gray-400 mb-8 max-w-xl mx-auto">
-          Ürün fotoğrafını yükle ya da barkod tara — gerisini YZ halleder.
+          İster açıklama gir, ister ürün fotoğrafını yükle ya da barkod tara — gerisini YZ halleder.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
