@@ -199,7 +199,7 @@ export default function AuthPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="space-y-2">
               <div className="relative rounded-2xl overflow-hidden border-2 border-gray-300">
-                <img src="/ornek_beyaz.jpg" alt="önce" className="w-full aspect-square object-cover" />
+                <img src="/ornek_once.jpg" alt="önce" className="w-full aspect-square object-cover" />
                 <div className="absolute top-2 left-2">
                   <span className="bg-gray-800/80 text-white text-[10px] px-2 py-1 rounded-full">📱 Ham fotoğraf</span>
                 </div>
