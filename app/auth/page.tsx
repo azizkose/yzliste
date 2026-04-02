@@ -10,9 +10,9 @@ export default function AuthPage() {
   const [yukleniyor, setYukleniyor] = useState(false);
   const [mesaj, setMesaj] = useState("");
   const [ornekAcik, setOrnekAcik] = useState(false);
+  const [sozlesmeOnay, setSozlesmeOnay] = useState(false);
   const router = useRouter();
 
-  // FIX: Türkçe hata mesajları
   const turkceHata = (hata: string): string => {
     if (hata.includes("Password should be at least 6 characters"))
       return "Şifre en az 6 karakter olmalıdır.";
@@ -29,14 +29,11 @@ export default function AuthPage() {
     return "Bir hata oluştu. Lütfen tekrar deneyin.";
   };
 
-  // FIX: Boş alan validasyonu eklendi
   const handleSubmit = async () => {
-    if (!email.trim()) {
-      setMesaj("E-posta adresi giriniz.");
-      return;
-    }
-    if (!sifre.trim()) {
-      setMesaj("Şifre giriniz.");
+    if (!email.trim()) { setMesaj("E-posta adresi giriniz."); return; }
+    if (!sifre.trim()) { setMesaj("Şifre giriniz."); return; }
+    if (mod === "kayit" && !sozlesmeOnay) {
+      setMesaj("Devam etmek için sözleşmeleri kabul etmelisiniz.");
       return;
     }
     setYukleniyor(true);
@@ -53,15 +50,15 @@ export default function AuthPage() {
     setYukleniyor(false);
   };
 
-  // FIX: Mod değişiminde form sıfırlanıyor
   const handleModDegistir = (yeniMod: "giris" | "kayit") => {
     setMod(yeniMod);
     setEmail("");
     setSifre("");
     setMesaj("");
+    setSozlesmeOnay(false);
   };
 
-  const ornekMetin = `📌 BAŞLIK: Kütahya Porselen Çiçek Desenli Kahve Fincanı 6'lı Set | 80ml | Altın Yaldızlı | Dishwasher Safe 🔹 ÖZELLİKLER: • Birinci Kalite Porselen — Kurşunsuz, gıda güvenli materyal; keskin ve ince yapı sayesinde zarif sunum sağlar. • 80ml Espresso Hacmi — Türk kahvesi, espresso ve menengiç kahvesi için ideal boyut; ağza yayılmayan sıcaklık tutma özelliği. • El Yapımı Çiçek Deseni + Altın Yaldız — Her fincan benzersiz baskıyla işlenmiş; düğün, nişan ve özel gün hediyesi olarak tercih edilen estetik görünüm. • 6 Kişilik Komple Set — Fincan ve tabaklar dahil, ayrıca alım gerektirmez; özel hediye kutusunda teslim. • Bulaşık Makinesine Uyumlu — Yaldızlar bozulmadan yıkanabilir; günlük kullanıma dayanıklı üretim standardı. 📄 AÇIKLAMA: Kütahya'nın 500 yıllık porselen geleneğinden ilham alarak tasarlanan bu 6'lı fincan seti, hem estetik hem de işlevselliği bir arada sunar. Birinci kalite kurşunsuz porselen hamuru kullanılarak üretilen fincanlar, ince cidarlı yapısıyla sıcaklığı uzun süre korurken seramik soğukluğunu hissettirmez. El baskısı çiçek deseni ve altın yaldız detaylar, her fincanı özel kılar. Düğün, nişan, bayram veya iş hediyesi olarak özel kutusunda sunulan bu set, alıcıda kalıcı bir izlenim bırakır. Trendyol'un "Hediye Ürün" filtresinde öne çıkmak için ürün başlığına "hediye" kelimesini eklemenizi öneririz. Bulaşık makinesinde yüksek ısıya dayanıklı özel sır kaplama sayesinde yaldızlar solmaz, renkler canlılığını korur. Günlük kullanım ya da özel anlar için vazgeçilmez bir tercih. 🏷️ ARAMA ETİKETLERİ: porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızlı fincan, 6lı fincan seti, türk kahvesi fincanı, düğün hediyesi fincan, çiçek desenli fincan, dishwasher safe fincan, espresso fincanı`;
+  const ornekMetin = `📌 BAŞLIK: Kütahya Porselen Çiçek Desenli Kahve Fincanı 6'lı Set | 80ml | Altın Yaldızlı | Dishwasher Safe 🔹 ÖZELLİKLER: • Birinci Kalite Porselen — Kurşunsuz, gıda güvenli materyal; keskin ve ince yapı sayesinde zarif sunum sağlar. • 80ml Espresso Hacmi — Türk kahvesi, espresso ve menengiç kahvesi için ideal boyut; ağza yayılmayan sıcaklık tutma özelliği. • El Yapımı Çiçek Deseni + Altın Yaldız — Her fincan benzersiz baskıyla işlenmiş; düğün, nişan ve özel gün hediyesi olarak tercih edilen estetik görünüm. • 6 Kişilik Komple Set — Fincan ve tabaklar dahil, ayrıca alım gerektirmez; özel hediye kutusunda teslim. • Bulaşık Makinesine Uyumlu — Yaldızlar bozulmadan yıkanabilir; günlük kullanıma dayanıklı üretim standardı. 📄 AÇIKLAMA: Kütahya'nın 500 yıllık porselen geleneğinden ilham alarak tasarlanan bu 6'lı fincan seti, hem estetik hem de işlevselliği bir arada sunar. 🏷️ ARAMA ETİKETLERİ: porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızlı fincan, 6lı fincan seti, türk kahvesi fincanı, düğün hediyesi fincan`;
 
   return (
     <main className="min-h-screen bg-white font-sans">
@@ -71,19 +68,13 @@ export default function AuthPage() {
           <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
           <div className="flex gap-2">
             <button
-              onClick={() => {
-                handleModDegistir("giris");
-                document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" });
-              }}
+              onClick={() => { handleModDegistir("giris"); document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" }); }}
               className="text-sm text-gray-500 hover:text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
               Giriş Yap
             </button>
             <button
-              onClick={() => {
-                handleModDegistir("kayit");
-                document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" });
-              }}
+              onClick={() => { handleModDegistir("kayit"); document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" }); }}
               className="text-sm bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium"
             >
               Ücretsiz Başla
@@ -109,10 +100,7 @@ export default function AuthPage() {
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
-            onClick={() => {
-              handleModDegistir("kayit");
-              document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" });
-            }}
+            onClick={() => { handleModDegistir("kayit"); document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" }); }}
             className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100"
           >
             3 Ücretsiz Hakla Başla →
@@ -129,14 +117,9 @@ export default function AuthPage() {
       {/* 3 SEÇENEK KUTUSU */}
       <section className="px-6 pb-16 bg-gray-50">
         <div className="max-w-5xl mx-auto pt-14">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
-            Neye ihtiyacın var?
-          </h2>
-          <p className="text-center text-sm text-gray-400 mb-10">
-            Metin, görsel ya da her ikisi — ayrı ayrı veya birlikte kullanabilirsin
-          </p>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Neye ihtiyacın var?</h2>
+          <p className="text-center text-sm text-gray-400 mb-10">Metin, görsel ya da her ikisi — ayrı ayrı veya birlikte kullanabilirsin</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Sadece Metin */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="bg-blue-50 px-5 pt-6 pb-4">
                 <div className="text-2xl mb-2">📝</div>
@@ -144,9 +127,7 @@ export default function AuthPage() {
                 <p className="text-xs text-gray-500 mt-1">1 kullanım hakkı</p>
               </div>
               <div className="p-5 space-y-3">
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Platforma özel optimize başlık, madde madde özellikler, satışa dönen açıklama ve arama etiketleri — hazır yapıştır formatında.
-                </p>
+                <p className="text-sm text-gray-600 leading-relaxed">Platforma özel optimize başlık, madde madde özellikler, satışa dönen açıklama ve arama etiketleri — hazır yapıştır formatında.</p>
                 <ul className="space-y-1.5">
                   {["Manuel metin girişi", "Fotoğraftan otomatik analiz", "Barkod ile ürün tanıma"].map(f => (
                     <li key={f} className="flex items-center gap-2 text-xs text-gray-500">
@@ -157,7 +138,6 @@ export default function AuthPage() {
                 </ul>
               </div>
             </div>
-            {/* Sadece Görsel */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="bg-purple-50 px-5 pt-6 pb-4">
                 <div className="text-2xl mb-2">🖼️</div>
@@ -165,27 +145,22 @@ export default function AuthPage() {
                 <p className="text-xs text-gray-500 mt-1">Stil başına 1 hak · Her stilden 4 varyasyon</p>
               </div>
               <div className="p-5 space-y-3">
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Tek fotoğraftan 3 farklı stilde stüdyo görseli. Beyazı Trendyol'a, koyuyu öne çıkan ürüne, lifestyle'ı sosyal medyaya kullan.
-                </p>
+                <p className="text-sm text-gray-600 leading-relaxed">Tek fotoğraftan 3 farklı stilde stüdyo görseli. Beyazı Trendyol'a, koyuyu öne çıkan ürüne, lifestyle'ı sosyal medyaya kullan.</p>
                 <div className="grid grid-cols-3 gap-1.5">
-                  <div className="relative rounded-lg overflow-hidden">
-                    <img src="/ornek_beyaz.png" alt="beyaz" className="w-full aspect-square object-cover" />
-                    <span className="absolute bottom-0 inset-x-0 bg-black/40 text-white text-[9px] text-center py-0.5">Beyaz</span>
-                  </div>
-                  <div className="relative rounded-lg overflow-hidden">
-                    <img src="/ornek_koyu.png" alt="koyu" className="w-full aspect-square object-cover" />
-                    <span className="absolute bottom-0 inset-x-0 bg-black/40 text-white text-[9px] text-center py-0.5">Koyu</span>
-                  </div>
-                  <div className="relative rounded-lg overflow-hidden">
-                    <img src="/ornek_lifestyle.png" alt="lifestyle" className="w-full aspect-square object-cover" />
-                    <span className="absolute bottom-0 inset-x-0 bg-black/40 text-white text-[9px] text-center py-0.5">Lifestyle</span>
-                  </div>
+                  {[
+                    { src: "/ornek_beyaz.jpg", label: "Beyaz" },
+                    { src: "/ornek_koyu.jpg", label: "Koyu" },
+                    { src: "/ornek_lifestyle.jpg", label: "Lifestyle" },
+                  ].map(s => (
+                    <div key={s.label} className="relative rounded-lg overflow-hidden">
+                      <img src={s.src} alt={s.label} className="w-full aspect-square object-cover" />
+                      <span className="absolute bottom-0 inset-x-0 bg-black/40 text-white text-[9px] text-center py-0.5">{s.label}</span>
+                    </div>
+                  ))}
                 </div>
                 <p className="text-xs text-gray-400">Beğendiğini indir — hak yalnızca indirmede düşer</p>
               </div>
             </div>
-            {/* İkisi Birden */}
             <div className="bg-white rounded-2xl border-2 border-orange-200 shadow-sm overflow-hidden">
               <div className="bg-orange-50 px-5 pt-6 pb-4">
                 <div className="flex items-center gap-2 mb-2">
@@ -196,17 +171,15 @@ export default function AuthPage() {
                 <p className="text-xs text-gray-500 mt-1">Ayrı ayrı kullanım hakkı · En yüksek değer</p>
               </div>
               <div className="p-5 space-y-3">
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Trendyol ve Hepsiburada'da hem metin hem görsel zorunlu. İkisini aynı anda üret, platforma hazır hale gel.
-                </p>
+                <p className="text-sm text-gray-600 leading-relaxed">Trendyol ve Hepsiburada'da hem metin hem görsel zorunlu. İkisini aynı anda üret, platforma hazır hale gel.</p>
                 <div className="space-y-2">
                   {[
-                    { renk: "blue", no: "1", text: "Optimize listing metni (başlık + özellik + açıklama + etiket)" },
-                    { renk: "purple", no: "2", text: "Seçtiğin stilde 4 stüdyo görseli — beğendiğini indir" },
-                    { renk: "orange", no: "3", text: "Platforma hazır, düzenleme gerektirmez" },
+                    { no: "1", text: "Optimize listing metni (başlık + özellik + açıklama + etiket)" },
+                    { no: "2", text: "Seçtiğin stilde 4 stüdyo görseli — beğendiğini indir" },
+                    { no: "3", text: "Platforma hazır, düzenleme gerektirmez" },
                   ].map(item => (
                     <div key={item.no} className="flex items-start gap-2 text-xs text-gray-600">
-                      <span className={`w-5 h-5 rounded-full bg-${item.renk}-100 text-${item.renk}-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5`}>{item.no}</span>
+                      <span className="w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">{item.no}</span>
                       {item.text}
                     </div>
                   ))}
@@ -220,36 +193,26 @@ export default function AuthPage() {
       {/* ÖNCE / SONRA GÖRSEL */}
       <section className="px-6 py-16">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
-            Tek fotoğraftan 3 farklı stüdyo görseli
-          </h2>
-          <p className="text-center text-sm text-gray-400 mb-3">
-            AI arka planı kaldırır, istediğin ortama yerleştirir — her stilden 4 varyasyon
-          </p>
-          <p className="text-center text-xs text-orange-600 font-medium mb-10">
-            💡 İstersen kendi prompt'unu da girebilirsin: "ahşap zemin, sonbahar tonları, minimalist..."
-          </p>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Tek fotoğraftan 3 farklı stüdyo görseli</h2>
+          <p className="text-center text-sm text-gray-400 mb-3">AI arka planı kaldırır, istediğin ortama yerleştirir — her stilden 4 varyasyon</p>
+          <p className="text-center text-xs text-orange-600 font-medium mb-10">💡 İstersen kendi prompt'unu da girebilirsin: "ahşap zemin, sonbahar tonları, minimalist..."</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="space-y-2">
               <div className="relative rounded-2xl overflow-hidden border-2 border-gray-300">
-                <img src="/ornek_once.jpg" alt="önce" className="w-full aspect-square object-cover" />
+                <img src="/ornek_beyaz.jpg" alt="önce" className="w-full aspect-square object-cover" />
                 <div className="absolute top-2 left-2">
                   <span className="bg-gray-800/80 text-white text-[10px] px-2 py-1 rounded-full">📱 Ham fotoğraf</span>
                 </div>
               </div>
-              <div className="bg-red-50 rounded-xl p-2.5 border border-red-100">
-                <p className="text-[11px] text-red-600 font-medium">✗ Dağınık arka plan</p>
-                <p className="text-[10px] text-red-400 mt-0.5">Platform reddedebilir</p>
-              </div>
             </div>
             {[
-              { src: "/ornek_beyaz.png", etiket: "⬜ Beyaz Zemin", aciklama: "✓ Trendyol standart", alt: "beyaz" },
-              { src: "/ornek_koyu.png", etiket: "⬛ Koyu Zemin", aciklama: "✓ Premium his", alt: "koyu" },
-              { src: "/ornek_lifestyle.png", etiket: "🏠 Lifestyle", aciklama: "✓ Doğal ortam", alt: "lifestyle" },
+              { src: "/ornek_beyaz.jpg", etiket: "⬜ Beyaz Zemin", aciklama: "✓ Trendyol standart" },
+              { src: "/ornek_koyu.jpg", etiket: "⬛ Koyu Zemin", aciklama: "✓ Premium his" },
+              { src: "/ornek_lifestyle.jpg", etiket: "🏠 Lifestyle", aciklama: "✓ Doğal ortam" },
             ].map((item) => (
-              <div key={item.alt} className="space-y-2">
+              <div key={item.etiket} className="space-y-2">
                 <div className="relative rounded-2xl overflow-hidden border-2 border-green-200">
-                  <img src={item.src} alt={item.alt} className="w-full aspect-square object-cover" />
+                  <img src={item.src} alt={item.etiket} className="w-full aspect-square object-cover" />
                   <div className="absolute top-2 left-2">
                     <span className="bg-white/90 text-gray-700 text-[10px] px-2 py-1 rounded-full">{item.etiket}</span>
                   </div>
@@ -261,42 +224,28 @@ export default function AuthPage() {
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-gray-400 mt-5">
-            Görseller gerçek yzliste çıktısıdır — herhangi bir düzenleme yapılmamıştır
-          </p>
         </div>
       </section>
 
       {/* ÖRNEK LİSTİNG */}
       <section className="px-6 py-16 bg-gray-50">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
-            Böyle bir metin alırsın
-          </h2>
-          <p className="text-center text-sm text-gray-400 mb-8">
-            Gerçek bir Trendyol listing örneği — sıfır düzenleme, direkt yapıştır
-          </p>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Böyle bir metin alırsın</h2>
+          <p className="text-center text-sm text-gray-400 mb-8">Gerçek bir Trendyol listing örneği — sıfır düzenleme, direkt yapıştır</p>
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-orange-50">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-orange-400" />
-                <span className="text-xs font-semibold text-orange-700">Trendyol formatında örnek çıktı — Çiçek Desenli Kahve Fincanı</span>
+                <span className="text-xs font-semibold text-orange-700">Trendyol formatında örnek çıktı</span>
               </div>
-              <button
-                onClick={() => setOrnekAcik(!ornekAcik)}
-                className="text-xs text-orange-600 hover:text-orange-800 font-medium"
-              >
+              <button onClick={() => setOrnekAcik(!ornekAcik)} className="text-xs text-orange-600 hover:text-orange-800 font-medium">
                 {ornekAcik ? "Küçült ▲" : "Tümünü gör ▼"}
               </button>
             </div>
             <div className={`overflow-hidden transition-all duration-300 ${ornekAcik ? "max-h-none" : "max-h-48"}`}>
-              <pre className="p-5 text-xs text-gray-700 leading-relaxed whitespace-pre-wrap font-mono">
-                {ornekMetin}
-              </pre>
+              <pre className="p-5 text-xs text-gray-700 leading-relaxed whitespace-pre-wrap font-mono">{ornekMetin}</pre>
             </div>
-            {!ornekAcik && (
-              <div className="h-12 bg-gradient-to-t from-white to-transparent -mt-12 relative pointer-events-none" />
-            )}
+            {!ornekAcik && <div className="h-12 bg-gradient-to-t from-white to-transparent -mt-12 relative pointer-events-none" />}
           </div>
         </div>
       </section>
@@ -314,9 +263,7 @@ export default function AuthPage() {
             ].map((adim) => (
               <div key={adim.no} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <div className="text-3xl mb-3">{adim.ikon}</div>
-                <div className="w-7 h-7 rounded-full bg-orange-100 text-orange-600 text-xs font-bold flex items-center justify-center mb-3">
-                  {adim.no}
-                </div>
+                <div className="w-7 h-7 rounded-full bg-orange-100 text-orange-600 text-xs font-bold flex items-center justify-center mb-3">{adim.no}</div>
                 <h3 className="font-semibold text-gray-800 text-sm mb-2">{adim.baslik}</h3>
                 <p className="text-xs text-gray-400 leading-relaxed">{adim.aciklama}</p>
               </div>
@@ -366,6 +313,7 @@ export default function AuthPage() {
                 placeholder="E-posta"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
               />
               <input
@@ -374,24 +322,47 @@ export default function AuthPage() {
                 value={sifre}
                 onChange={(e) => setSifre(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                autoComplete={mod === "kayit" ? "new-password" : "current-password"}
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
               />
+
+              {/* Sözleşme onayı — sadece kayıt modunda */}
+              {mod === "kayit" && (
+                <label className="flex items-start gap-3 cursor-pointer mt-1">
+                  <input
+                    type="checkbox"
+                    checked={sozlesmeOnay}
+                    onChange={(e) => setSozlesmeOnay(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-400 cursor-pointer flex-shrink-0"
+                  />
+                  <span className="text-xs text-gray-500 leading-relaxed">
+                    <a href="/gizlilik" target="_blank" className="text-orange-500 hover:underline font-medium">Gizlilik Politikası</a>
+                    {" "}ve{" "}
+                    <a href="/mesafeli-satis" target="_blank" className="text-orange-500 hover:underline font-medium">Mesafeli Satış Sözleşmesi</a>
+                    {" "}ile{" "}
+                    <a href="/teslimat-iade" target="_blank" className="text-orange-500 hover:underline font-medium">Teslimat ve İade Şartları</a>
+                    'nı okudum ve kabul ediyorum.
+                  </span>
+                </label>
+              )}
+
               {mesaj && (
                 <p className={`text-xs ${mesaj.includes("başarılı") ? "text-green-600" : "text-red-500"}`}>{mesaj}</p>
               )}
+
               <button
                 onClick={handleSubmit}
-                disabled={yukleniyor}
+                disabled={yukleniyor || (mod === "kayit" && !sozlesmeOnay)}
                 className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors text-sm"
               >
                 {yukleniyor ? "..." : mod === "kayit" ? "Ücretsiz Hesap Oluştur" : "Giriş Yap"}
               </button>
             </div>
+
             {mod === "kayit" && (
               <p className="text-xs text-gray-400 text-center mt-4">Kayıt olunca 3 ücretsiz kullanım hakkı alırsınız</p>
             )}
             <div className="text-center mt-5 pt-4 border-t border-gray-100">
-              {/* FIX: handleModDegistir kullanılıyor - form sıfırlanıyor */}
               <button
                 onClick={() => handleModDegistir(mod === "giris" ? "kayit" : "giris")}
                 className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
@@ -406,7 +377,6 @@ export default function AuthPage() {
       {/* Footer */}
       <footer className="bg-white border-t border-gray-100 px-6 py-8">
         <div className="max-w-4xl mx-auto space-y-6">
-          {/* Yasal linkler */}
           <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
             <a href="/hakkimizda" className="hover:text-orange-500">Hakkımızda</a>
             <span>·</span>
@@ -418,17 +388,13 @@ export default function AuthPage() {
             <span>·</span>
             <a href="mailto:destek@yzliste.com" className="hover:text-orange-500">destek@yzliste.com</a>
           </div>
-
-          {/* Ödeme logoları */}
-          <div className="flex flex-wrap justify-center items-center gap-4">
-            <img src="/iyzico_footer_logo.png" alt="iyzico ile öde" className="h-8" />
-            <div className="flex items-center gap-2">
-              <div className="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded" style={{fontFamily: "serif", fontSize: "11px", letterSpacing: "0.5px"}}>VISA</div>
-              <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded" style={{fontSize: "9px"}}>MasterCard</div>
-            </div>
+          {/* Sadece iyzico logosu — içinde zaten Visa/MC var */}
+          <div className="flex justify-center">
+            <img src="/iyzico_footer_logo.png" alt="iyzico ile öde" className="h-10" />
           </div>
-
-          <p className="text-center text-xs text-gray-400">© 2026 YZListe · Türk e-ticaret satıcıları için yapay zeka asistanı</p>
+          <p className="text-center text-xs text-gray-400">
+            © 2026 yzliste · SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI
+          </p>
         </div>
       </footer>
     </main>
