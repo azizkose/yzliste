@@ -204,6 +204,10 @@ export default function AuthPage() {
                   <span className="bg-gray-800/80 text-white text-[10px] px-2 py-1 rounded-full">📱 Ham fotoğraf</span>
                 </div>
               </div>
+              <div className="bg-red-50 rounded-xl p-2.5 border border-red-100">
+                <p className="text-[11px] text-red-600 font-medium">✗ Dağınık arka plan</p>
+                <p className="text-[10px] text-red-400 mt-0.5">Platform reddedebilir</p>
+              </div>
             </div>
             {[
               { src: "/ornek_beyaz.jpg", etiket: "⬜ Beyaz Zemin", aciklama: "✓ Trendyol standart" },
