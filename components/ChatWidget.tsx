@@ -7,12 +7,15 @@ interface Mesaj {
   metin: string;
 }
 
+const KARSILAMA = "Merhaba! Sana nasil yardimci olabilirim? Urun listeleme, gorsel, paketler veya teknik bir konuda sorularin varsa buradayim.";
+
 export default function ChatWidget() {
   const [acik, setAcik] = useState(false);
-  const [mesajlar, setMesajlar] = useState<Mesaj[]>([]);
+  const [mesajlar, setMesajlar] = useState<Mesaj[]>([
+    { rol: "asistan", metin: KARSILAMA },
+  ]);
   const [input, setInput] = useState("");
   const [yukleniyor, setYukleniyor] = useState(false);
-  const [ilkAcilis, setIlkAcilis] = useState(true);
   const mesajSonuRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -27,33 +30,6 @@ export default function ChatWidget() {
       inputRef.current.focus();
     }
   }, [acik]);
-
-  const widgetAc = async () => {
-    setAcik(true);
-    if (ilkAcilis && mesajlar.length === 0) {
-      setIlkAcilis(false);
-      setYukleniyor(true);
-      try {
-        const res = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ mesajlar: [] }),
-        });
-        const data = await res.json();
-        if (data.cevap) {
-          setMesajlar([{ rol: "asistan", metin: data.cevap }]);
-        }
-      } catch {
-        setMesajlar([
-          {
-            rol: "asistan",
-            metin: "Merhaba! Ben yzliste. Sana nasil yardimci olabilirim?",
-          },
-        ]);
-      }
-      setYukleniyor(false);
-    }
-  };
 
   const gonder = async () => {
     const metin = input.trim();
@@ -93,7 +69,6 @@ export default function ChatWidget() {
     <div className="fixed bottom-6 right-6 z-50">
       {acik && (
         <div className="mb-3 bg-white rounded-2xl shadow-2xl border border-gray-100 w-80 flex flex-col overflow-hidden">
-          {/* Header */}
           <div className="bg-orange-500 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
@@ -103,11 +78,10 @@ export default function ChatWidget() {
               onClick={() => setAcik(false)}
               className="text-white/80 hover:text-white text-xl leading-none"
             >
-              ×
+              x
             </button>
           </div>
 
-          {/* Mesajlar */}
           <div className="flex-1 p-4 space-y-3 h-72 overflow-y-auto bg-gray-50">
             {mesajlar.map((m, i) => (
               <div
@@ -139,7 +113,6 @@ export default function ChatWidget() {
             <div ref={mesajSonuRef} />
           </div>
 
-          {/* Input */}
           <div className="p-3 border-t border-gray-100 bg-white flex gap-2">
             <input
               ref={inputRef}
@@ -162,13 +135,12 @@ export default function ChatWidget() {
         </div>
       )}
 
-      {/* Toggle butonu */}
       <button
-        onClick={acik ? () => setAcik(false) : widgetAc}
+        onClick={() => setAcik(!acik)}
         className="bg-orange-500 hover:bg-orange-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl transition-all hover:scale-105"
         title="yzliste destek"
       >
-        {acik ? "×" : "💬"}
+        💬
       </button>
     </div>
   );
