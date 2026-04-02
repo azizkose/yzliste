@@ -6,8 +6,96 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_KEY!
 );
 
+const PLATFORM_KURALLARI: Record<string, {
+  baslikLimit: number;
+  ozellikSayisi: number;
+  aciklamaKelime: number;
+  etiketSayisi: number;
+  emojiDestekli: boolean;
+  notlar: string;
+}> = {
+  trendyol: {
+    baslikLimit: 100,
+    ozellikSayisi: 5,
+    aciklamaKelime: 300,
+    etiketSayisi: 10,
+    emojiDestekli: true,
+    notlar: "Trendyol'da başlık formatı genellikle: Marka + Ürün Adı + Ana Özellik + Model/Renk şeklindedir. Özellikler bullet point olarak girilir.",
+  },
+  hepsiburada: {
+    baslikLimit: 150,
+    ozellikSayisi: 5,
+    aciklamaKelime: 350,
+    etiketSayisi: 10,
+    emojiDestekli: true,
+    notlar: "Hepsiburada'da başlık daha uzun tutulabilir. Teknik özellikler öne çıkarılmalıdır.",
+  },
+  amazon: {
+    baslikLimit: 200,
+    ozellikSayisi: 5,
+    aciklamaKelime: 400,
+    etiketSayisi: 10,
+    emojiDestekli: false,
+    notlar: "Amazon TR'de başlık formatı: Marka + Ürün Tipi + Ana Özellikler (virgülle ayrılmış) + Renk/Model. Bullet point özellikler tam cümle olmalı, fayda odaklı yazılmalı. Emoji kullanma.",
+  },
+  n11: {
+    baslikLimit: 100,
+    ozellikSayisi: 5,
+    aciklamaKelime: 250,
+    etiketSayisi: 8,
+    emojiDestekli: true,
+    notlar: "N11'de sade ve anlaşılır bir dil kullanılmalıdır.",
+  },
+};
+
+function sistemPromptOlustur(platform: string): string {
+  const kural = PLATFORM_KURALLARI[platform] || PLATFORM_KURALLARI.trendyol;
+
+  return `Sen bir Türk e-ticaret listing uzmanısın. Görevin verilen ürün için ${platform.toUpperCase()} platformuna özel, satışa hazır, SEO ve GEO (üretken yapay zeka arama) optimizasyonlu içerik üretmek.
+
+PLATFORM KURALLARI — ${platform.toUpperCase()}:
+- Başlık: max ${kural.baslikLimit} karakter
+- Özellikler: ${kural.ozellikSayisi} madde, bullet point formatında
+- Açıklama: yaklaşık ${kural.aciklamaKelime} kelime
+- Etiketler: ${kural.etiketSayisi} adet
+- Emoji: ${kural.emojiDestekli ? "KULLAN — özellik maddelerinde ve açıklamada uygun yerlerde" : "KULLANMA — Amazon emoji desteklemez"}
+- ${kural.notlar}
+
+SEO VE GEO OPTİMİZASYONU:
+1. Türk alıcıların bu ürünü ararken kullandığı gerçek sorgu kelimelerini başlık, özellikler ve açıklamada doğal olarak geçir
+2. Başlıkta: marka (varsa) + ürün adı + en önemli 2-3 özellik (malzeme/renk/boyut/model) olsun
+3. Özelliklerde: her madde fayda odaklı yazılsın ("Deri malzeme" değil, "Hakiki deri malzeme — uzun ömürlü ve doğal görünüm")
+4. Açıklamada: ürünün kim için ideal olduğu, ne zaman / nerede kullanılacağı, rakiplerinden farkı
+5. Güvenlik / uyarı bilgisi varsa mutlaka ekle (özellikle elektrikli ürünler, bebek ürünleri, gıda)
+6. Etiketler: hem genel ("bot") hem spesifik ("hakiki deri erkek bot") hem de uzun kuyruk ("kışlık su geçirmez erkek bot") kelimeler içersin
+
+ÇIKTI FORMATI — kesinlikle bu yapıya uy:
+📌 BAŞLIK:
+[başlık — max ${kural.baslikLimit} karakter]
+
+🔹 ÖZELLİKLER:
+• [özellik 1 — fayda odaklı${kural.emojiDestekli ? ", emoji ile başla" : ""}]
+• [özellik 2]
+• [özellik 3]
+• [özellik 4]
+• [özellik 5]
+
+📄 AÇIKLAMA:
+[açıklama — paragraflar halinde, keyword'ler doğal geçişli]
+
+🏷️ ETİKETLER:
+[etiket1, etiket2, etiket3, ...]
+
+Sadece bu formatı kullan. Başka açıklama ekleme.`;
+}
+
+type MessageContent =
+  | { type: "text"; text: string }
+  | { type: "image"; source: { type: "base64"; media_type: string; data: string } };
+
 export async function POST(req: NextRequest) {
-  const { urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi, userId } = await req.json();
+  const { urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi, userId } =
+    await req.json();
 
   if (!userId) {
     return NextResponse.json({ hata: "Giris yapilmadi" }, { status: 401 });
@@ -26,19 +114,11 @@ export async function POST(req: NextRequest) {
   const isAdmin = profil.is_admin === true;
 
   if (!isAdmin && profil.kredi <= 0) {
-    return NextResponse.json({ hata: "Krediniz bitti. Lutfen kredi satin alin." }, { status: 402 });
+    return NextResponse.json(
+      { hata: "Krediniz bitti. Lutfen kredi satin alin." },
+      { status: 402 }
+    );
   }
-
-  const platformSablonlari: Record<string, string> = {
-    trendyol: "Trendyol icin max 100 karakter baslik, 5 madde ozellik, 300 kelime aciklama ve 10 arama etiketi yaz.",
-    hepsiburada: "Hepsiburada icin max 150 karakter baslik, 5 madde ozellik, 300 kelime aciklama ve 10 arama etiketi yaz.",
-    amazon: "Amazon TR icin max 200 karakter baslik, 5 madde bullet point ozellik, 300 kelime aciklama ve 10 arama etiketi yaz.",
-    n11: "N11 icin max 100 karakter baslik, 5 madde ozellik, 200 kelime aciklama ve 8 arama etiketi yaz.",
-  };
-
-  type MessageContent =
-    | { type: "text"; text: string }
-    | { type: "image"; source: { type: "base64"; media_type: string; data: string } };
 
   const mesajIcerikleri: MessageContent[] = [];
 
@@ -46,22 +126,24 @@ export async function POST(req: NextRequest) {
     fotolar.slice(0, 3).forEach((foto: string) => {
       const base64 = foto.split(",")[1];
       const mediaType = foto.split(";")[0].split(":")[1];
-      mesajIcerikleri.push({ type: "image", source: { type: "base64", media_type: mediaType, data: base64 } });
+      mesajIcerikleri.push({
+        type: "image",
+        source: { type: "base64", media_type: mediaType, data: base64 },
+      });
     });
   }
 
-  let promptMetin = "";
+  let kullaniciBilgi = "";
+
   if (girisTipi === "foto") {
-    promptMetin = `Bu urun fotografina bakarak ${platformSablonlari[platform] || platformSablonlari.trendyol}\n\nKategori: ${kategori || "belirtilmedi"}\nEk ozellikler: ${ozellikler || "yok"}`;
+    kullaniciBilgi = `Bu ürün fotoğrafına bakarak içerik üret.\nKategori: ${kategori || "belirtilmedi"}\nEk bilgi: ${ozellikler || "yok"}`;
   } else if (girisTipi === "barkod" && barkodBilgi) {
-    promptMetin = `Urun: ${barkodBilgi.isim}\nMarka: ${barkodBilgi.marka || "belirtilmedi"}\nKategori: ${kategori || "belirtilmedi"}\nBarkod bilgisi: ${barkodBilgi.aciklama || ""}\n\n${platformSablonlari[platform] || platformSablonlari.trendyol}`;
+    kullaniciBilgi = `Ürün adı: ${barkodBilgi.isim}\nMarka: ${barkodBilgi.marka || "belirtilmedi"}\nKategori: ${kategori || "belirtilmedi"}\nAçıklama: ${barkodBilgi.aciklama || "yok"}\nRenk: ${barkodBilgi.renk || "belirtilmedi"}\nBoyut: ${barkodBilgi.boyut || "belirtilmedi"}`;
   } else {
-    promptMetin = `Urun: ${urunAdi}\nKategori: ${kategori}\nOzellikler: ${ozellikler || "belirtilmedi"}\n\n${platformSablonlari[platform] || platformSablonlari.trendyol}`;
+    kullaniciBilgi = `Ürün adı: ${urunAdi}\nKategori: ${kategori}\nEk özellikler ve bilgiler: ${ozellikler || "belirtilmedi"}`;
   }
 
-  promptMetin += "\n\nCikti formati:\nBASLIK:\n[baslik]\n\nOZELLIKLER:\n- [ozellik 1]\n- [ozellik 2]\n- [ozellik 3]\n- [ozellik 4]\n- [ozellik 5]\n\nACIKLAMA:\n[aciklama]\n\nARAMA ETIKETLERI:\n[etiket1, etiket2, etiket3]";
-
-  mesajIcerikleri.push({ type: "text", text: promptMetin });
+  mesajIcerikleri.push({ type: "text", text: kullaniciBilgi });
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -72,14 +154,14 @@ export async function POST(req: NextRequest) {
     },
     body: JSON.stringify({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 1500,
-      system: "Sen bir Turk e-ticaret icerik uzmanisin. Sadece istenen formatta cikti uret.",
+      max_tokens: 2000,
+      system: sistemPromptOlustur(platform),
       messages: [{ role: "user", content: mesajIcerikleri }],
     }),
   });
 
   const data = await response.json();
-  const icerik = data.content?.[0]?.text || "Hata olustu.";
+  const icerik = data.content?.[0]?.text || "İçerik üretilemedi, tekrar deneyin.";
 
   if (!isAdmin) {
     await supabaseAdmin
