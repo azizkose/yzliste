@@ -12,13 +12,38 @@ export default function AuthPage() {
   const [ornekAcik, setOrnekAcik] = useState(false);
   const router = useRouter();
 
+  // FIX: Türkçe hata mesajları
+  const turkceHata = (hata: string): string => {
+    if (hata.includes("Password should be at least 6 characters"))
+      return "Şifre en az 6 karakter olmalıdır.";
+    if (hata.includes("Invalid login credentials"))
+      return "E-posta veya şifre hatalı.";
+    if (hata.includes("Email not confirmed"))
+      return "E-posta adresinizi doğrulayınız.";
+    if (hata.includes("User already registered"))
+      return "Bu e-posta adresi zaten kayıtlı.";
+    if (hata.includes("invalid") && hata.includes("email"))
+      return "Geçerli bir e-posta adresi giriniz.";
+    if (hata.includes("rate limit") || hata.includes("too many"))
+      return "Çok fazla deneme yapıldı. Lütfen biraz bekleyin.";
+    return "Bir hata oluştu. Lütfen tekrar deneyin.";
+  };
+
+  // FIX: Boş alan validasyonu eklendi
   const handleSubmit = async () => {
-    if (!email || !sifre) return;
+    if (!email.trim()) {
+      setMesaj("E-posta adresi giriniz.");
+      return;
+    }
+    if (!sifre.trim()) {
+      setMesaj("Şifre giriniz.");
+      return;
+    }
     setYukleniyor(true);
     setMesaj("");
     if (mod === "kayit") {
       const { error } = await supabase.auth.signUp({ email, password: sifre });
-      if (error) setMesaj(error.message);
+      if (error) setMesaj(turkceHata(error.message));
       else setMesaj("Kayıt başarılı! E-postanızı doğrulayın.");
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password: sifre });
@@ -28,40 +53,39 @@ export default function AuthPage() {
     setYukleniyor(false);
   };
 
-  const ornekMetin = `📌 BAŞLIK:
-Kütahya Porselen Çiçek Desenli Kahve Fincanı 6'lı Set | 80ml | Altın Yaldızlı | Dishwasher Safe
+  // FIX: Mod değişiminde form sıfırlanıyor
+  const handleModDegistir = (yeniMod: "giris" | "kayit") => {
+    setMod(yeniMod);
+    setEmail("");
+    setSifre("");
+    setMesaj("");
+  };
 
-🔹 ÖZELLİKLER:
-• Birinci Kalite Porselen — Kurşunsuz, gıda güvenli materyal; keskin ve ince yapı sayesinde zarif sunum sağlar.
-• 80ml Espresso Hacmi — Türk kahvesi, espresso ve menengiç kahvesi için ideal boyut; ağza yayılmayan sıcaklık tutma özelliği.
-• El Yapımı Çiçek Deseni + Altın Yaldız — Her fincan benzersiz baskıyla işlenmiş; düğün, nişan ve özel gün hediyesi olarak tercih edilen estetik görünüm.
-• 6 Kişilik Komple Set — Fincan ve tabaklar dahil, ayrıca alım gerektirmez; özel hediye kutusunda teslim.
-• Bulaşık Makinesine Uyumlu — Yaldızlar bozulmadan yıkanabilir; günlük kullanıma dayanıklı üretim standardı.
-
-📄 AÇIKLAMA:
-Kütahya'nın 500 yıllık porselen geleneğinden ilham alarak tasarlanan bu 6'lı fincan seti, hem estetik hem de işlevselliği bir arada sunar. Birinci kalite kurşunsuz porselen hamuru kullanılarak üretilen fincanlar, ince cidarlı yapısıyla sıcaklığı uzun süre korurken seramik soğukluğunu hissettirmez.
-
-El baskısı çiçek deseni ve altın yaldız detaylar, her fincanı özel kılar. Düğün, nişan, bayram veya iş hediyesi olarak özel kutusunda sunulan bu set, alıcıda kalıcı bir izlenim bırakır. Trendyol'un "Hediye Ürün" filtresinde öne çıkmak için ürün başlığına "hediye" kelimesini eklemenizi öneririz.
-
-Bulaşık makinesinde yüksek ısıya dayanıklı özel sır kaplama sayesinde yaldızlar solmaz, renkler canlılığını korur. Günlük kullanım ya da özel anlar için vazgeçilmez bir tercih.
-
-🏷️ ARAMA ETİKETLERİ:
-porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızlı fincan, 6lı fincan seti, türk kahvesi fincanı, düğün hediyesi fincan, çiçek desenli fincan, dishwasher safe fincan, espresso fincanı`;
+  const ornekMetin = `📌 BAŞLIK: Kütahya Porselen Çiçek Desenli Kahve Fincanı 6'lı Set | 80ml | Altın Yaldızlı | Dishwasher Safe 🔹 ÖZELLİKLER: • Birinci Kalite Porselen — Kurşunsuz, gıda güvenli materyal; keskin ve ince yapı sayesinde zarif sunum sağlar. • 80ml Espresso Hacmi — Türk kahvesi, espresso ve menengiç kahvesi için ideal boyut; ağza yayılmayan sıcaklık tutma özelliği. • El Yapımı Çiçek Deseni + Altın Yaldız — Her fincan benzersiz baskıyla işlenmiş; düğün, nişan ve özel gün hediyesi olarak tercih edilen estetik görünüm. • 6 Kişilik Komple Set — Fincan ve tabaklar dahil, ayrıca alım gerektirmez; özel hediye kutusunda teslim. • Bulaşık Makinesine Uyumlu — Yaldızlar bozulmadan yıkanabilir; günlük kullanıma dayanıklı üretim standardı. 📄 AÇIKLAMA: Kütahya'nın 500 yıllık porselen geleneğinden ilham alarak tasarlanan bu 6'lı fincan seti, hem estetik hem de işlevselliği bir arada sunar. Birinci kalite kurşunsuz porselen hamuru kullanılarak üretilen fincanlar, ince cidarlı yapısıyla sıcaklığı uzun süre korurken seramik soğukluğunu hissettirmez. El baskısı çiçek deseni ve altın yaldız detaylar, her fincanı özel kılar. Düğün, nişan, bayram veya iş hediyesi olarak özel kutusunda sunulan bu set, alıcıda kalıcı bir izlenim bırakır. Trendyol'un "Hediye Ürün" filtresinde öne çıkmak için ürün başlığına "hediye" kelimesini eklemenizi öneririz. Bulaşık makinesinde yüksek ısıya dayanıklı özel sır kaplama sayesinde yaldızlar solmaz, renkler canlılığını korur. Günlük kullanım ya da özel anlar için vazgeçilmez bir tercih. 🏷️ ARAMA ETİKETLERİ: porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızlı fincan, 6lı fincan seti, türk kahvesi fincanı, düğün hediyesi fincan, çiçek desenli fincan, dishwasher safe fincan, espresso fincanı`;
 
   return (
     <main className="min-h-screen bg-white font-sans">
-
       {/* HEADER */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100 px-6 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
           <div className="flex gap-2">
-            <button onClick={() => { setMod("giris"); document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" }); }}
-              className="text-sm text-gray-500 hover:text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <button
+              onClick={() => {
+                handleModDegistir("giris");
+                document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="text-sm text-gray-500 hover:text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
               Giriş Yap
             </button>
-            <button onClick={() => { setMod("kayit"); document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" }); }}
-              className="text-sm bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium">
+            <button
+              onClick={() => {
+                handleModDegistir("kayit");
+                document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="text-sm bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium"
+            >
               Ücretsiz Başla
             </button>
           </div>
@@ -78,19 +102,25 @@ porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızl�
           <span className="text-orange-500">tek çözüm</span>
         </h1>
         <p className="text-lg text-gray-500 mb-4 max-w-2xl mx-auto leading-relaxed">
-          Platforma ürün yüklemek için hem <strong className="text-gray-700">optimize metin</strong> hem de <strong className="text-gray-700">profesyonel görsel</strong> gerekir.
-          yzliste ikisini de tek yerden, ayrı ayrı veya birlikte üretir.
+          Platforma ürün yüklemek için hem <strong className="text-gray-700">optimize metin</strong> hem de <strong className="text-gray-700">profesyonel görsel</strong> gerekir. yzliste ikisini de tek yerden, ayrı ayrı veya birlikte üretir.
         </p>
         <p className="text-sm text-gray-400 mb-8 max-w-xl mx-auto">
           Ürün fotoğrafını yükle ya da barkod tara — gerisini YZ halleder.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <button onClick={() => { setMod("kayit"); document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" }); }}
-            className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
+          <button
+            onClick={() => {
+              handleModDegistir("kayit");
+              document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100"
+          >
             3 Ücretsiz Hakla Başla →
           </button>
-          <button onClick={() => document.getElementById("nasil-calisir")?.scrollIntoView({ behavior: "smooth" })}
-            className="text-gray-500 hover:text-gray-800 font-medium px-8 py-4 rounded-xl border border-gray-200 hover:border-gray-300 transition-colors text-base">
+          <button
+            onClick={() => document.getElementById("nasil-calisir")?.scrollIntoView({ behavior: "smooth" })}
+            className="text-gray-500 hover:text-gray-800 font-medium px-8 py-4 rounded-xl border border-gray-200 hover:border-gray-300 transition-colors text-base"
+          >
             Nasıl çalışır?
           </button>
         </div>
@@ -106,7 +136,6 @@ porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızl�
             Metin, görsel ya da her ikisi — ayrı ayrı veya birlikte kullanabilirsin
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-
             {/* Sadece Metin */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="bg-blue-50 px-5 pt-6 pb-4">
@@ -128,7 +157,6 @@ porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızl�
                 </ul>
               </div>
             </div>
-
             {/* Sadece Görsel */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="bg-purple-50 px-5 pt-6 pb-4">
@@ -157,7 +185,6 @@ porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızl�
                 <p className="text-xs text-gray-400">Beğendiğini indir — hak yalnızca indirmede düşer</p>
               </div>
             </div>
-
             {/* İkisi Birden */}
             <div className="bg-white rounded-2xl border-2 border-orange-200 shadow-sm overflow-hidden">
               <div className="bg-orange-50 px-5 pt-6 pb-4">
@@ -186,7 +213,6 @@ porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızl�
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </section>
@@ -203,7 +229,6 @@ porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızl�
           <p className="text-center text-xs text-orange-600 font-medium mb-10">
             💡 İstersen kendi prompt'unu da girebilirsin: "ahşap zemin, sonbahar tonları, minimalist..."
           </p>
-
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="space-y-2">
               <div className="relative rounded-2xl overflow-hidden border-2 border-gray-300">
@@ -217,7 +242,6 @@ porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızl�
                 <p className="text-[10px] text-red-400 mt-0.5">Platform reddedebilir</p>
               </div>
             </div>
-
             {[
               { src: "/ornek_beyaz.png", etiket: "⬜ Beyaz Zemin", aciklama: "✓ Trendyol standart", alt: "beyaz" },
               { src: "/ornek_koyu.png", etiket: "⬛ Koyu Zemin", aciklama: "✓ Premium his", alt: "koyu" },
@@ -337,16 +361,29 @@ porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızl�
               </p>
             </div>
             <div className="space-y-3">
-              <input type="email" placeholder="E-posta" value={email} onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent" />
-              <input type="password" placeholder="Şifre" value={sifre} onChange={(e) => setSifre(e.target.value)}
+              <input
+                type="email"
+                placeholder="E-posta"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+              />
+              <input
+                type="password"
+                placeholder="Şifre"
+                value={sifre}
+                onChange={(e) => setSifre(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent" />
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+              />
               {mesaj && (
                 <p className={`text-xs ${mesaj.includes("başarılı") ? "text-green-600" : "text-red-500"}`}>{mesaj}</p>
               )}
-              <button onClick={handleSubmit} disabled={yukleniyor || !email || !sifre}
-                className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors text-sm">
+              <button
+                onClick={handleSubmit}
+                disabled={yukleniyor}
+                className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors text-sm"
+              >
                 {yukleniyor ? "..." : mod === "kayit" ? "Ücretsiz Hesap Oluştur" : "Giriş Yap"}
               </button>
             </div>
@@ -354,8 +391,11 @@ porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızl�
               <p className="text-xs text-gray-400 text-center mt-4">Kayıt olunca 3 ücretsiz kullanım hakkı alırsınız</p>
             )}
             <div className="text-center mt-5 pt-4 border-t border-gray-100">
-              <button onClick={() => setMod(mod === "giris" ? "kayit" : "giris")}
-                className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
+              {/* FIX: handleModDegistir kullanılıyor - form sıfırlanıyor */}
+              <button
+                onClick={() => handleModDegistir(mod === "giris" ? "kayit" : "giris")}
+                className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+              >
                 {mod === "giris" ? "Hesabın yok mu? Kaydol →" : "Zaten hesabın var mı? Giriş yap →"}
               </button>
             </div>
@@ -363,8 +403,9 @@ porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızl�
         </div>
       </section>
 
+      {/* FIX: Footer © eklendi */}
       <footer className="text-center py-6 text-xs text-gray-400 border-t border-gray-100">
-        2026 yzliste
+        © 2026 yzliste
       </footer>
     </main>
   );
