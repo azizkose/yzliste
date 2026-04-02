@@ -403,9 +403,33 @@ export default function AuthPage() {
         </div>
       </section>
 
-      {/* FIX: Footer © eklendi */}
-      <footer className="text-center py-6 text-xs text-gray-400 border-t border-gray-100">
-        © 2026 yzliste
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-100 px-6 py-8">
+        <div className="max-w-4xl mx-auto space-y-6">
+          {/* Yasal linkler */}
+          <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
+            <a href="/hakkimizda" className="hover:text-orange-500">Hakkımızda</a>
+            <span>·</span>
+            <a href="/gizlilik" className="hover:text-orange-500">Gizlilik Politikası</a>
+            <span>·</span>
+            <a href="/mesafeli-satis" className="hover:text-orange-500">Mesafeli Satış Sözleşmesi</a>
+            <span>·</span>
+            <a href="/teslimat-iade" className="hover:text-orange-500">Teslimat ve İade</a>
+            <span>·</span>
+            <a href="mailto:destek@yzliste.com" className="hover:text-orange-500">destek@yzliste.com</a>
+          </div>
+
+          {/* Ödeme logoları */}
+          <div className="flex flex-wrap justify-center items-center gap-4">
+            <img src="/iyzico_footer_logo.png" alt="iyzico ile öde" className="h-8" />
+            <div className="flex items-center gap-2">
+              <div className="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded" style={{fontFamily: "serif", fontSize: "11px", letterSpacing: "0.5px"}}>VISA</div>
+              <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded" style={{fontSize: "9px"}}>MasterCard</div>
+            </div>
+          </div>
+
+          <p className="text-center text-xs text-gray-400">© 2026 YZListe · Türk e-ticaret satıcıları için yapay zeka asistanı</p>
+        </div>
       </footer>
     </main>
   );
