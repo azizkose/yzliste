@@ -282,9 +282,7 @@ export default function AuthPage() {
                   ))}
                 </ul>
               </div>
-              <div className="px-5 pb-5">
-                <button onClick={hemenAlTikla} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors">Hemen Al</button>
-              </div>
+             
             </div>
 
             {/* Sadece Görsel */}
@@ -306,9 +304,7 @@ export default function AuthPage() {
                 </div>
                 <p className="text-xs text-gray-400">Beğendiğini indir — hak yalnızca indirmede düşer</p>
               </div>
-              <div className="px-5 pb-5">
-                <button onClick={hemenAlTikla} className="w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors">Hemen Al</button>
-              </div>
+              
             </div>
 
             {/* İkisi Birden */}
@@ -316,7 +312,6 @@ export default function AuthPage() {
               <div className="bg-orange-50 px-5 pt-6 pb-4">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">✨</span>
-                  <span className="text-xs bg-orange-500 text-white px-2 py-0.5 rounded-full font-medium">Önerilen</span>
                 </div>
                 <h3 className="font-bold text-gray-800">Metin + Görsel</h3>
                 <p className="text-xs text-gray-500 mt-1">Ayrı ayrı kullanım hakkı · En yüksek değer</p>
@@ -336,10 +331,17 @@ export default function AuthPage() {
                   ))}
                 </div>
               </div>
-              <div className="px-5 pb-5">
-                <button onClick={hemenAlTikla} className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors">Hemen Al</button>
-              </div>
+              
             </div>
+          </div>
+          <div className="mt-8 text-center">
+            <button
+              onClick={hemenAlTikla}
+              className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-orange-100"
+            >
+              Paket Satın Al — 29₺'den başlıyor
+            </button>
+            <p className="text-xs text-gray-400 mt-3">veya 3 ücretsiz hakla başla, kredi kartı gerekmez</p>
           </div>
         </div>
       </section>
