@@ -366,16 +366,33 @@ export default function Home() {
     setGorselYukleniyor(true);
     setGorselSonuclar([]);
     try {
+      // Fotografi max 1024px resize et
+      const resizeFoto = (base64: string, maxSize = 1024): Promise<string> => new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let w = img.width, h = img.height;
+          if (w > maxSize || h > maxSize) {
+            if (w > h) { h = Math.round(h * maxSize / w); w = maxSize; }
+            else { w = Math.round(w * maxSize / h); h = maxSize; }
+          }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext("2d")?.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL("image/jpeg", 0.85));
+        };
+        img.src = base64;
+      });
+      const resizedFoto = await resizeFoto(fotolar[0]);
       const res = await fetch("/api/gorsel", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ foto: fotolar[0], ekPrompt: gorselEkPrompt, stiller: seciliStiller, userId: kullanici?.id }),
+        body: JSON.stringify({ foto: resizedFoto, ekPrompt: gorselEkPrompt, stiller: seciliStiller, userId: kullanici?.id }),
       });
       const data = await res.json();
       if (data.sonuclar) {
         setGorselSonuclar(data.sonuclar);
         if (!kullanici.is_admin) {
-          setKullanici((prev) => prev ? { ...prev, kredi: prev.kredi - seciliStiller.length, toplam_kullanilan: prev.toplam_kullanilan + seciliStiller.length } : prev);
+        // Kredi indirmede duser - setKullanici((prev) => prev ? { ...prev, kredi: prev.kredi - seciliStiller.length, toplam_kullanilan: prev.toplam_kullanilan + seciliStiller.length } : prev);
         }
       } else { alert("Görsel üretilemedi. Tekrar deneyin."); }
     } catch { alert("Hata oluştu."); }
