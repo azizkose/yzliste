@@ -111,10 +111,11 @@ function sonucuBolumle(sonuc: string): SonucBolum[] {
   return bolumler;
 }
 
-function KopyalaButon({ metin }: { metin: string }) {
+function KopyalaButon({ metin, getDuzenlenmisMevin }: { metin: string; getDuzenlenmisMevin?: () => string }) {
   const [kopyalandi, setKopyalandi] = useState(false);
   const kopyala = () => {
-    navigator.clipboard.writeText(metin);
+    const kopyalanacak = getDuzenlenmisMevin ? getDuzenlenmisMevin() : metin;
+    navigator.clipboard.writeText(kopyalanacak);
     setKopyalandi(true);
     setTimeout(() => setKopyalandi(false), 2000);
   };
@@ -1070,19 +1071,42 @@ export default function Home() {
                   <h2 className="text-base font-semibold text-gray-800">✅ Üretilen İçerik</h2>
                   <KopyalaButon metin={sonuc} />
                 </div>
-                {sonucBolumleri.map((bolum, i) => (
-                  <div key={i} className="bg-white rounded-2xl shadow p-5">
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-sm font-semibold text-gray-700">
-                        {bolum.ikon} {bolum.baslik}
-                      </span>
-                      <KopyalaButon metin={bolum.icerik} />
-                    </div>
-                    <pre className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed font-sans">
-                      {bolum.icerik}
-                    </pre>
-                  </div>
-                ))}
+                {sonucBolumleri.map((bolum, i) => {
+  const ref = { current: null as HTMLDivElement | null };
+  return (
+    <div key={i} className="bg-white rounded-2xl shadow p-5">
+      <div className="flex justify-between items-center mb-3">
+        <span className="text-sm font-semibold text-gray-700">
+          {bolum.ikon} {bolum.baslik}
+        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-300">✎ düzenlenebilir</span>
+          <KopyalaButon
+            metin={bolum.icerik}
+            getDuzenlenmisMevin={() => ref.current?.innerText || bolum.icerik}
+          />
+        </div>
+      </div>
+      <div
+        ref={ref}
+        contentEditable
+        suppressContentEditableWarning
+        onFocus={(e) => {
+          e.currentTarget.style.outline = "2px solid #f97316";
+          e.currentTarget.style.borderRadius = "8px";
+          e.currentTarget.style.padding = "8px";
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.outline = "none";
+          e.currentTarget.style.padding = "0";
+        }}
+        className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed font-sans cursor-text"
+      >
+        {bolum.icerik}
+      </div>
+    </div>
+  );
+})}
               </div>
             )}
           </div>
