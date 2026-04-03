@@ -346,6 +346,7 @@ export default function Home() {
   const [gorselYukleniyor, setGorselYukleniyor] = useState(false);
   const [gorselSonuclar, setGorselSonuclar] = useState<{ stil: string; label: string; gorseller: string[] }[]>([]);
   const [paketModalAcik, setPaketModalAcik] = useState(false);
+  const [hata, setHata] = useState<string | null>(null);
 
   const scannerRef = useRef<unknown>(null);
   const scannerBaslatildi = useRef(false);
@@ -533,7 +534,7 @@ export default function Home() {
       gecmisiYukle(kullanici.id);
     } catch {
       if (mesajInterval.current) clearInterval(mesajInterval.current);
-      alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+      setHata("İçerik üretilemedi. Lütfen tekrar deneyin.");
     }
 
     setYukleniyor(false);
@@ -587,10 +588,10 @@ export default function Home() {
       if (data.sonuclar) {
         setGorselSonuclar(data.sonuclar);
       } else {
-        alert("Görsel üretilemedi. Tekrar deneyin.");
+        setHata("Görsel üretilemedi. Tekrar deneyin.");
       }
     } catch {
-      alert("Hata oluştu.");
+      setHata("Bir hata oluştu. Lütfen tekrar deneyin.");
     }
     setGorselYukleniyor(false);
   };
@@ -1050,7 +1051,15 @@ export default function Home() {
                 </div>
               )}
             </div>
-
+{hata && (
+              <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-xl flex-shrink-0">⚠️</span>
+                  <p className="text-sm text-red-700">{hata}</p>
+                </div>
+                <button onClick={() => setHata(null)} className="text-red-400 hover:text-red-600 text-xl flex-shrink-0">×</button>
+              </div>
+            )}
             {/* Loading */}
             {yukleniyor && (
               <div className="bg-white rounded-2xl shadow p-8 text-center" id="sonuc-alani">
