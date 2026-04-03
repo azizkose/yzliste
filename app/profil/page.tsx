@@ -137,8 +137,8 @@ export default function ProfilPage() {
           <div className="flex-1">
             <p className="text-sm text-gray-600">Kullanim haklariniz metin ve gorsel uretimi icin kullanilir.</p>
           </div>
-          <a href="/" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap">
-            + Hak Al
+          <a href="/?paket=ac" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap">
+          + Hak Al
           </a>
         </div>
 

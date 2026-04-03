@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
+
 type Uretim = {
   id: string;
   urun_adi: string;
@@ -110,7 +111,50 @@ function sonucuBolumle(sonuc: string): SonucBolum[] {
   }
   return bolumler;
 }
+async function docxIndir(bolumler: SonucBolum[], urunAdi: string) {
+  const { Document, Packer, Paragraph, TextRun, HeadingLevel } = await import("docx");
+  const { saveAs } = await import("file-saver");
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const paragraflar: any[] = [];
+
+  bolumler.forEach((bolum) => {
+    paragraflar.push(
+      new Paragraph({
+        text: `${bolum.ikon} ${bolum.baslik}`,
+        heading: HeadingLevel.HEADING_2,
+        spacing: { before: 300, after: 100 },
+      })
+    );
+    bolum.icerik.split("\n").forEach((satir) => {
+      if (satir.trim()) {
+        paragraflar.push(
+          new Paragraph({
+            children: [new TextRun({ text: satir, size: 22 })],
+            spacing: { after: 80 },
+          })
+        );
+      }
+    });
+  });
+
+  const doc = new Document({
+    sections: [{
+      properties: {},
+      children: [
+        new Paragraph({
+          text: `yzliste — ${urunAdi}`,
+          heading: HeadingLevel.HEADING_1,
+          spacing: { after: 200 },
+        }),
+        ...paragraflar,
+      ],
+    }],
+  });
+
+  const blob = await Packer.toBlob(doc);
+  saveAs(blob, `${urunAdi || "listing"}.docx`);
+}
 function KopyalaButon({ metin, getDuzenlenmisMevin }: { metin: string; getDuzenlenmisMevin?: () => string }) {
   const [kopyalandi, setKopyalandi] = useState(false);
   const kopyala = () => {
@@ -360,6 +404,14 @@ export default function Home() {
   useEffect(() => {
     kullaniciyiKontrolEt();
     const params = new URLSearchParams(window.location.search);
+    if (params.get("paket") === "ac") {
+    setPaketModalAcik(true);
+    window.history.replaceState({}, "", "/");
+   }
+   if (params.get("paket") === "ac") {
+    setPaketModalAcik(true);
+    window.history.replaceState({}, "", "/");
+  }
     if (params.get("odeme") === "basarili") {
       alert("🎉 Ödeme başarılı! Kredileriniz hesabınıza eklendi.");
       window.history.replaceState({}, "", "/");
@@ -1078,7 +1130,15 @@ export default function Home() {
               <div id="sonuc-alani" className="space-y-3">
                 <div className="flex justify-between items-center px-1">
                   <h2 className="text-base font-semibold text-gray-800">✅ Üretilen İçerik</h2>
-                  <KopyalaButon metin={sonuc} />
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-300 hidden sm:block">✎ düzenlenebilir</span>
+                    <button
+                      onClick={() => docxIndir(sonucBolumleri, urunAdi || "listing")}
+                      className="flex items-center gap-1.5 text-xs bg-blue-50 hover:bg-blue-100 text-blue-600 font-medium px-3 py-1.5 rounded-lg transition-colors border border-blue-200"
+                    >
+                      📄 Word İndir
+                    </button>
+                  </div>
                 </div>
                 {sonucBolumleri.map((bolum, i) => {
   const ref = { current: null as HTMLDivElement | null };
@@ -1164,24 +1224,24 @@ export default function Home() {
                         })}
                       </div>
                       {seciliUretim?.id === u.id && (
-                        <div className="mt-3 pt-3 border-t border-orange-200">
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="text-xs text-gray-500">İçerik</span>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                navigator.clipboard.writeText(u.sonuc);
-                              }}
-                              className="text-xs text-orange-500 hover:text-orange-600"
-                            >
-                              Kopyala
-                            </button>
+                      <div className="mt-3 pt-3 border-t border-orange-200 space-y-2">
+                        {sonucuBolumle(u.sonuc).map((bolum, bi) => (
+                          <div key={bi} className="bg-gray-50 rounded-xl p-3">
+                            <div className="flex items-center justify-between mb-1.5">
+                              <span className="text-xs font-semibold text-gray-600">{bolum.ikon} {bolum.baslik}</span>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(bolum.icerik); }}
+                                className="text-xs text-orange-500 hover:text-orange-600"
+                              >
+                                Kopyala
+                              </button>
+                            </div>
+                            <p className="text-xs text-gray-600 leading-relaxed whitespace-pre-line line-clamp-4">{bolum.icerik}</p>
                           </div>
-                          <pre className="text-xs text-gray-600 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto">
-                            {u.sonuc}
-                          </pre>
-                        </div>
-                      )}
+                        ))}
+                      </div>
+                    )}
+                     
                     </button>
                   ))}
                 </div>
