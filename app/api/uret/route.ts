@@ -20,7 +20,7 @@ const PLATFORM_KURALLARI: Record<string, {
     aciklamaKelime: 300,
     etiketSayisi: 10,
     emojiDestekli: true,
-    notlar: "Trendyol'da baslik formati: Marka + Urun Adi + Ana Ozellik + Model/Renk. Ozellikler bullet point olarak girilir.",
+    notlar: "Trendyol baslik formati: Marka + Urun Adi + Ana Ozellik + Model/Renk. Ozellikler bullet point olarak girilir.",
   },
   hepsiburada: {
     baslikLimit: 150,
@@ -28,15 +28,15 @@ const PLATFORM_KURALLARI: Record<string, {
     aciklamaKelime: 350,
     etiketSayisi: 10,
     emojiDestekli: true,
-    notlar: "Hepsiburada'da baslik daha uzun tutulabilir. Teknik ozellikler one cikarilmalidir.",
+    notlar: "Hepsiburada baslik daha uzun tutulabilir. Teknik ozellikler one cikarilmalidir.",
   },
   amazon: {
     baslikLimit: 200,
     ozellikSayisi: 5,
     aciklamaKelime: 400,
-    etiketSayisi: 10,
+    etiketSayisi: 0,
     emojiDestekli: false,
-    notlar: "Amazon TR'de baslik formati: Marka + Urun Tipi + Ana Ozellikler + Renk/Model. Bullet point ozellikler tam cumle olmali, fayda odakli yazilmali. Emoji kullanma.",
+    notlar: "Amazon TR baslik formati: Marka + Urun Tipi + Ana Ozellikler + Renk/Model. Bullet point ozellikler tam cumle olmali, fayda odakli yazilmali. Emoji kullanma. Arama terimleri ayri bölümde verilecek.",
   },
   n11: {
     baslikLimit: 100,
@@ -44,7 +44,7 @@ const PLATFORM_KURALLARI: Record<string, {
     aciklamaKelime: 250,
     etiketSayisi: 8,
     emojiDestekli: true,
-    notlar: "N11'de sade ve anlasılır bir dil kullanilmalidir.",
+    notlar: "N11 icin sade ve anlasılir bir dil kullanilmalidir.",
   },
 };
 
@@ -54,6 +54,94 @@ const TON_ACIKLAMA: Record<string, string> = {
   premium: "lüks, seckin ve prestijli bir dil kullan. Kalite ve ayricaligi vurgula.",
 };
 
+function amazonPromptOlustur(
+  markaAdi?: string | null,
+  ton?: string | null,
+  hedefKitle?: string | null,
+  vurgulananOzellikler?: string | null
+): string {
+  const tonAciklama = TON_ACIKLAMA[ton || "profesyonel"] || TON_ACIKLAMA.profesyonel;
+
+  let markaBilgisi = "";
+  if (markaAdi || hedefKitle || vurgulananOzellikler) {
+    markaBilgisi = `\nMARKA PROFILI:\n`;
+    if (markaAdi) markaBilgisi += `- Magaza/Marka: ${markaAdi}\n`;
+    if (hedefKitle) markaBilgisi += `- Hedef kitle: ${hedefKitle}\n`;
+    if (vurgulananOzellikler) markaBilgisi += `- Her zaman vurgulanacak ozellikler: ${vurgulananOzellikler}\n`;
+    markaBilgisi += `- Metin tonu: ${tonAciklama}\n`;
+  }
+
+  return `Sen bir Amazon TR listing uzmanisın. Amazon'un A9 algoritmasini ve Turk alici davranislarini cok iyi biliyorsun.
+${markaBilgisi}
+AMAZON TR KURALLARI — KESINLIKLE UY:
+
+BASLIK (max 200 karakter):
+- Format: Marka + Urun Tipi + Ana Ozellik 1 + Ana Ozellik 2 + Renk/Boyut/Model
+- Her kelimenin ilk harfi buyuk olmali (Title Case)
+- Kisaltma kullanma
+- Fiyat, promosyon ifadesi, "en iyi", "1 numara" gibi superlative ifadeler yasak
+- Emoji kesinlikle kullanma
+
+OZELLIKLER (5 madde, her biri ayri bullet):
+- Her madde 150-200 karakter olmali
+- Tam cumle yaz, nokta ile bitir
+- Her maddeye buyuk harfle baslayan ANAHTAR KELIME ile gir, sonra acikla
+- Format: "ANAHTAR KELIME: Faydayi anlatan tam cumle."
+- Teknik ozellik + musteriye faydasi birlikte yazilmali
+- Emoji kesinlikle kullanma
+
+ACIKLAMA (3-4 paragraf, ~400 kelime):
+- Ilk paragraf: urunun ana kullanim amaci ve hedef kitle
+- Ikinci paragraf: teknik ozellikler ve materyal detaylari
+- Ucuncu paragraf: kullanim senaryolari, kime ideal
+- Dorduncu paragraf (varsa): bakim talimatları, garanti, guvenlik bilgisi
+- Paragraflar arasinda bosluk birak
+- Emoji kesinlikle kullanma
+
+ARAMA TERIMLERI (Seller Central backend keywords):
+- 5 satir, her satir max 200 karakter
+- Musteri aramalarinda kullanilan gercek ifadeler
+- Baslikta zaten gecen kelimeleri tekrar etme
+- Virgul kullanma, sadece boslukla ayir
+- Uzun kuyruk arama terimleri dahil et
+- Turkce ve gerekirse Ingilizce terimler
+
+SEO OPTIMIZASYONU:
+- Turk alıcıların bu urunu ararken gercekten kullandigi terimleri kullan
+- Amazon'un otomatik eslestirme sistemini destekle
+- Kategori bazli anahtar kelimeler ekle
+
+CIKTI FORMATI — tam olarak bu yapiya uy, baska hic bir sey yazma:
+
+BASLIK:
+[baslik]
+
+OZELLIKLER:
+• [ozellik 1]
+• [ozellik 2]
+• [ozellik 3]
+• [ozellik 4]
+• [ozellik 5]
+
+ACIKLAMA:
+[paragraf 1]
+
+[paragraf 2]
+
+[paragraf 3]
+
+[paragraf 4]
+
+ARAMA TERIMLERI:
+[satir 1]
+[satir 2]
+[satir 3]
+[satir 4]
+[satir 5]
+
+Sadece bu formati kullan. Hic emoji kullanma.`;
+}
+
 function sistemPromptOlustur(
   platform: string,
   markaAdi?: string | null,
@@ -61,29 +149,34 @@ function sistemPromptOlustur(
   hedefKitle?: string | null,
   vurgulananOzellikler?: string | null
 ): string {
+  // Amazon için özel prompt
+  if (platform === "amazon") {
+    return amazonPromptOlustur(markaAdi, ton, hedefKitle, vurgulananOzellikler);
+  }
+
   const kural = PLATFORM_KURALLARI[platform] || PLATFORM_KURALLARI.trendyol;
   const tonAciklama = TON_ACIKLAMA[ton || "samimi"] || TON_ACIKLAMA.samimi;
 
   let markaBilgisi = "";
   if (markaAdi || hedefKitle || vurgulananOzellikler) {
-    markaBilgisi = `\nMARKA PROFİLİ:\n`;
+    markaBilgisi = `\nMARKA PROFILI:\n`;
     if (markaAdi) markaBilgisi += `- Magaza/Marka: ${markaAdi}\n`;
     if (hedefKitle) markaBilgisi += `- Hedef kitle: ${hedefKitle}\n`;
     if (vurgulananOzellikler) markaBilgisi += `- Her zaman vurgulanacak ozellikler: ${vurgulananOzellikler}\n`;
     markaBilgisi += `- Metin tonu: ${tonAciklama}\n`;
   }
 
-  return `Sen bir Turk e-ticaret listing uzmanisın. Gorev: verilen urun icin ${platform.toUpperCase()} platformuna ozel, satis odakli, SEO ve GEO (uretken yapay zeka arama) optimizasyonlu icerik uret.
+  return `Sen bir Turk e-ticaret listing uzmanisın. Gorev: verilen urun icin ${platform.toUpperCase()} platformuna ozel, satis odakli, SEO ve GEO optimizasyonlu icerik uret.
 ${markaBilgisi}
 PLATFORM KURALLARI — ${platform.toUpperCase()}:
 - Baslik: max ${kural.baslikLimit} karakter
 - Ozellikler: ${kural.ozellikSayisi} madde, bullet point formatında
 - Aciklama: yaklasik ${kural.aciklamaKelime} kelime
 - Etiketler: ${kural.etiketSayisi} adet
-- Emoji: ${kural.emojiDestekli ? "KULLAN — ozellik maddelerinde ve aciklamada uygun yerlerde" : "KULLANMA — Amazon emoji desteklemez"}
+- Emoji: ${kural.emojiDestekli ? "KULLAN — ozellik maddelerinde ve aciklamada uygun yerlerde" : "KULLANMA"}
 - ${kural.notlar}
 
-SEO VE GEO OPTİMİZASYONU:
+SEO VE GEO OPTIMIZASYONU:
 1. Turk alıcılarin bu urunu ararken kullandigi gercek sorgu kelimelerini baslik, ozellikler ve aciklamada dogal olarak gecir
 2. Baslikta: marka (varsa) + urun adi + en onemli 2-3 ozellik (malzeme/renk/boyut/model) olsun
 3. Ozelliklerde: her madde fayda odakli yazilsın
