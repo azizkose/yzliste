@@ -396,6 +396,24 @@ export default function Home() {
   const [gorselYukleniyor, setGorselYukleniyor] = useState(false);
   const [gorselSonuclar, setGorselSonuclar] = useState<{ stil: string; label: string; gorseller: string[] }[]>([]);
   const [paketModalAcik, setPaketModalAcik] = useState(false);
+  const paketModalAc = async () => {
+    if (!kullanici) return;
+    const { data: profil } = await supabase
+      .from("profiles")
+      .select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no")
+      .eq("id", kullanici.id)
+      .single();
+    const eksik =
+      !profil?.ad_soyad ||
+      (profil?.fatura_tipi === "bireysel" && !profil?.tc_kimlik) ||
+      (profil?.fatura_tipi === "kurumsal" && !profil?.vergi_no);
+    if (eksik) {
+      const git = confirm("Ödeme yapabilmek için fatura bilgilerinizi doldurmanız gerekiyor. Profil sayfasına gitmek ister misiniz?");
+      if (git) router.push("/profil");
+      return;
+    }
+    setPaketModalAcik(true);
+  };
   const [hata, setHata] = useState<string | null>(null);
 
   const scannerRef = useRef<unknown>(null);
@@ -411,11 +429,11 @@ export default function Home() {
     kullaniciyiKontrolEt();
     const params = new URLSearchParams(window.location.search);
     if (params.get("paket") === "ac") {
-    setPaketModalAcik(true);
+    paketModalAc()
     window.history.replaceState({}, "", "/");
    }
    if (params.get("paket") === "ac") {
-    setPaketModalAcik(true);
+    paketModalAc()
     window.history.replaceState({}, "", "/");
   }
     if (params.get("odeme") === "basarili") {
@@ -432,7 +450,25 @@ export default function Home() {
     };
   }, []);
 
-  const kullaniciyiKontrolEt = async () => {
+   const kullaniciyiKontrolEt = async () => {
+    const paketModalAc = async () => {
+    if (!kullanici) return;
+    const { data: profil } = await supabase
+      .from("profiles")
+      .select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no")
+      .eq("id", kullanici.id)
+      .single();
+    const eksik =
+      !profil?.ad_soyad ||
+      (profil?.fatura_tipi === "bireysel" && !profil?.tc_kimlik) ||
+      (profil?.fatura_tipi === "kurumsal" && !profil?.vergi_no);
+    if (eksik) {
+      const git = confirm("Ödeme yapabilmek için fatura bilgilerinizi doldurmanız gerekiyor. Profil sayfasına gitmek ister misiniz?");
+      if (git) router.push("/profil");
+      return;
+    }
+    paketModalAc()
+  };
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push("/auth"); return; }
     const { data: profil } = await supabase
@@ -554,7 +590,7 @@ export default function Home() {
   const icerikUret = async () => {
     if (!kullanici) return;
     if (!kullanici.is_admin && kullanici.kredi <= 0) {
-      setPaketModalAcik(true);
+      paketModalAc()
       return;
     }
     if (girisTipi === "manuel" && (!urunAdi || !kategori)) return;
@@ -578,7 +614,7 @@ export default function Home() {
       if (mesajInterval.current) clearInterval(mesajInterval.current);
 
       if (res.status === 402) {
-        setPaketModalAcik(true);
+        paketModalAc()
         setYukleniyor(false);
         return;
       }
@@ -611,7 +647,7 @@ export default function Home() {
       return;
     }
     if (!kullanici || (!kullanici.is_admin && kullanici.kredi < seciliStiller.length)) {
-      setPaketModalAcik(true);
+      paketModalAc()
       return;
     }
 
@@ -681,7 +717,7 @@ export default function Home() {
             <div className="flex items-center gap-3">
               {/* Kredi göstergesi — her zaman görünür */}
               <button
-                onClick={() => setPaketModalAcik(true)}
+                onClick={() => paketModalAc()}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-sm font-semibold transition-colors ${
                   krediDusuk
                     ? "bg-red-50 border-red-200 text-red-600 hover:bg-red-100 animate-pulse"
@@ -717,7 +753,7 @@ export default function Home() {
               </div>
             </div>
             <button
-              onClick={() => setPaketModalAcik(true)}
+              onClick={() => paketModalAc()}
               className="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap flex-shrink-0"
             >
               Hak Yükle
@@ -1285,7 +1321,7 @@ export default function Home() {
                 </div>
               </div>
               <button
-                onClick={() => setPaketModalAcik(true)}
+                onClick={() => paketModalAc()}
                 className="w-full mt-3 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors"
               >
                 + Kullanım Hakkı Al
