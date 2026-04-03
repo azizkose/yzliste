@@ -94,6 +94,8 @@ const PLATFORM_PLACEHOLDER: Record<string, { urun: string; kategori: string; oze
 
 function sonucuBolumle(sonuc: string): SonucBolum[] {
   if (!sonuc) return [];
+  // ** markdown kaldir
+  sonuc = sonuc.replace(/\*\*/g, "").replace(/\*/g, "");
   const bolumler: SonucBolum[] = [];
 
   const baslikMatch = sonuc.match(/(?:📌\s*)?(?:BAŞLIK|Başlık)[:\n]+([^\n🔹📄🏷]+)/i);
