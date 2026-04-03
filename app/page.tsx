@@ -1237,7 +1237,19 @@ export default function Home() {
                             <div className="flex items-center justify-between mb-1.5">
                               <span className="text-xs font-semibold text-gray-600">{bolum.ikon} {bolum.baslik}</span>
                               <button
-                                onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(bolum.icerik); }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigator.clipboard.writeText(bolum.icerik);
+                                  const btn = e.currentTarget as HTMLButtonElement;
+                                  btn.textContent = "✓ Kopyalandı";
+                                  btn.style.color = "#16a34a";
+                                  btn.style.background = "#dcfce7";
+                                  setTimeout(() => {
+                                    btn.textContent = "Kopyala";
+                                    btn.style.color = "";
+                                    btn.style.background = "";
+                                  }, 2000);
+                                }}
                                 className="text-xs text-orange-500 hover:text-orange-600"
                               >
                                 Kopyala
