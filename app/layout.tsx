@@ -13,9 +13,27 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
 export const metadata: Metadata = {
-  title: "yzliste",
-  description: "Yapay zeka destekli urun listesi olusturma araci",
+  title: "yzliste — E-ticaret listing için en kolay çözüm",
+  description: "Trendyol, Hepsiburada, Amazon TR ve N11 için AI ile optimize listing metni ve stüdyo görseli üret. Fotoğraf yükle veya barkod tara, gerisini YZ halleder.",
+  metadataBase: new URL("https://www.yzliste.com"),
+  openGraph: {
+    title: "yzliste — E-ticaret listing için en kolay çözüm",
+    description: "Trendyol, Hepsiburada, Amazon TR ve N11 için AI ile optimize listing metni ve stüdyo görseli üret.",
+    url: "https://www.yzliste.com",
+    siteName: "yzliste",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "yzliste" }],
+    locale: "tr_TR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "yzliste — E-ticaret listing için en kolay çözüm",
+    description: "Trendyol, Hepsiburada, Amazon TR ve N11 için AI ile optimize listing metni üret.",
+    images: ["/og-image.png"],
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
