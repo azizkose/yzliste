@@ -20,7 +20,7 @@ const PLATFORM_KURALLARI: Record<string, {
     aciklamaKelime: 300,
     etiketSayisi: 10,
     emojiDestekli: true,
-    notlar: "Trendyol'da başlık formatı genellikle: Marka + Ürün Adı + Ana Özellik + Model/Renk şeklindedir. Özellikler bullet point olarak girilir.",
+    notlar: "Trendyol'da baslik formati: Marka + Urun Adi + Ana Ozellik + Model/Renk. Ozellikler bullet point olarak girilir.",
   },
   hepsiburada: {
     baslikLimit: 150,
@@ -28,7 +28,7 @@ const PLATFORM_KURALLARI: Record<string, {
     aciklamaKelime: 350,
     etiketSayisi: 10,
     emojiDestekli: true,
-    notlar: "Hepsiburada'da başlık daha uzun tutulabilir. Teknik özellikler öne çıkarılmalıdır.",
+    notlar: "Hepsiburada'da baslik daha uzun tutulabilir. Teknik ozellikler one cikarilmalidir.",
   },
   amazon: {
     baslikLimit: 200,
@@ -36,7 +36,7 @@ const PLATFORM_KURALLARI: Record<string, {
     aciklamaKelime: 400,
     etiketSayisi: 10,
     emojiDestekli: false,
-    notlar: "Amazon TR'de başlık formatı: Marka + Ürün Tipi + Ana Özellikler (virgülle ayrılmış) + Renk/Model. Bullet point özellikler tam cümle olmalı, fayda odaklı yazılmalı. Emoji kullanma.",
+    notlar: "Amazon TR'de baslik formati: Marka + Urun Tipi + Ana Ozellikler + Renk/Model. Bullet point ozellikler tam cumle olmali, fayda odakli yazilmali. Emoji kullanma.",
   },
   n11: {
     baslikLimit: 100,
@@ -44,49 +44,71 @@ const PLATFORM_KURALLARI: Record<string, {
     aciklamaKelime: 250,
     etiketSayisi: 8,
     emojiDestekli: true,
-    notlar: "N11'de sade ve anlaşılır bir dil kullanılmalıdır.",
+    notlar: "N11'de sade ve anlasılır bir dil kullanilmalidir.",
   },
 };
 
-function sistemPromptOlustur(platform: string): string {
+const TON_ACIKLAMA: Record<string, string> = {
+  samimi: "sicak, samimi ve yakin bir dil kullan. Okuyucuya direkt hitap et.",
+  profesyonel: "resmi, kurumsal ve guvenilir bir dil kullan. Teknik detaylari on plana cikart.",
+  premium: "lüks, seckin ve prestijli bir dil kullan. Kalite ve ayricaligi vurgula.",
+};
+
+function sistemPromptOlustur(
+  platform: string,
+  markaAdi?: string | null,
+  ton?: string | null,
+  hedefKitle?: string | null,
+  vurgulananOzellikler?: string | null
+): string {
   const kural = PLATFORM_KURALLARI[platform] || PLATFORM_KURALLARI.trendyol;
+  const tonAciklama = TON_ACIKLAMA[ton || "samimi"] || TON_ACIKLAMA.samimi;
 
-  return `Sen bir Türk e-ticaret listing uzmanısın. Görevin verilen ürün için ${platform.toUpperCase()} platformuna özel, satışa hazır, SEO ve GEO (üretken yapay zeka arama) optimizasyonlu içerik üretmek.
+  let markaBilgisi = "";
+  if (markaAdi || hedefKitle || vurgulananOzellikler) {
+    markaBilgisi = `\nMARKA PROFİLİ:\n`;
+    if (markaAdi) markaBilgisi += `- Magaza/Marka: ${markaAdi}\n`;
+    if (hedefKitle) markaBilgisi += `- Hedef kitle: ${hedefKitle}\n`;
+    if (vurgulananOzellikler) markaBilgisi += `- Her zaman vurgulanacak ozellikler: ${vurgulananOzellikler}\n`;
+    markaBilgisi += `- Metin tonu: ${tonAciklama}\n`;
+  }
 
+  return `Sen bir Turk e-ticaret listing uzmanisın. Gorev: verilen urun icin ${platform.toUpperCase()} platformuna ozel, satis odakli, SEO ve GEO (uretken yapay zeka arama) optimizasyonlu icerik uret.
+${markaBilgisi}
 PLATFORM KURALLARI — ${platform.toUpperCase()}:
-- Başlık: max ${kural.baslikLimit} karakter
-- Özellikler: ${kural.ozellikSayisi} madde, bullet point formatında
-- Açıklama: yaklaşık ${kural.aciklamaKelime} kelime
+- Baslik: max ${kural.baslikLimit} karakter
+- Ozellikler: ${kural.ozellikSayisi} madde, bullet point formatında
+- Aciklama: yaklasik ${kural.aciklamaKelime} kelime
 - Etiketler: ${kural.etiketSayisi} adet
-- Emoji: ${kural.emojiDestekli ? "KULLAN — özellik maddelerinde ve açıklamada uygun yerlerde" : "KULLANMA — Amazon emoji desteklemez"}
+- Emoji: ${kural.emojiDestekli ? "KULLAN — ozellik maddelerinde ve aciklamada uygun yerlerde" : "KULLANMA — Amazon emoji desteklemez"}
 - ${kural.notlar}
 
 SEO VE GEO OPTİMİZASYONU:
-1. Türk alıcıların bu ürünü ararken kullandığı gerçek sorgu kelimelerini başlık, özellikler ve açıklamada doğal olarak geçir
-2. Başlıkta: marka (varsa) + ürün adı + en önemli 2-3 özellik (malzeme/renk/boyut/model) olsun
-3. Özelliklerde: her madde fayda odaklı yazılsın ("Deri malzeme" değil, "Hakiki deri malzeme — uzun ömürlü ve doğal görünüm")
-4. Açıklamada: ürünün kim için ideal olduğu, ne zaman / nerede kullanılacağı, rakiplerinden farkı
-5. Güvenlik / uyarı bilgisi varsa mutlaka ekle (özellikle elektrikli ürünler, bebek ürünleri, gıda)
-6. Etiketler: hem genel ("bot") hem spesifik ("hakiki deri erkek bot") hem de uzun kuyruk ("kışlık su geçirmez erkek bot") kelimeler içersin
+1. Turk alıcılarin bu urunu ararken kullandigi gercek sorgu kelimelerini baslik, ozellikler ve aciklamada dogal olarak gecir
+2. Baslikta: marka (varsa) + urun adi + en onemli 2-3 ozellik (malzeme/renk/boyut/model) olsun
+3. Ozelliklerde: her madde fayda odakli yazilsın
+4. Aciklamada: urunun kim icin ideal oldugu, ne zaman / nerede kullanilacagi belirtilsin
+5. Guvenlik / uyari bilgisi varsa mutlaka ekle
+6. Etiketler: hem genel hem spesifik hem de uzun kuyruk kelimeler icersin
 
-ÇIKTI FORMATI — kesinlikle bu yapıya uy:
+CIKTI FORMATI — kesinlikle bu yapiya uy:
 📌 BAŞLIK:
-[başlık — max ${kural.baslikLimit} karakter]
+[baslik]
 
 🔹 ÖZELLİKLER:
-• [özellik 1 — fayda odaklı${kural.emojiDestekli ? ", emoji ile başla" : ""}]
-• [özellik 2]
-• [özellik 3]
-• [özellik 4]
-• [özellik 5]
+• [ozellik 1]
+• [ozellik 2]
+• [ozellik 3]
+• [ozellik 4]
+• [ozellik 5]
 
 📄 AÇIKLAMA:
-[açıklama — paragraflar halinde, keyword'ler doğal geçişli]
+[aciklama]
 
 🏷️ ETİKETLER:
-[etiket1, etiket2, etiket3, ...]
+[etiket1, etiket2, ...]
 
-Sadece bu formatı kullan. Başka açıklama ekleme.`;
+Sadece bu formati kullan.`;
 }
 
 type MessageContent =
@@ -103,7 +125,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")
-    .select("kredi, is_admin")
+    .select("kredi, is_admin, marka_adi, ton, hedef_kitle, vurgulanan_ozellikler")
     .eq("id", userId)
     .single();
 
@@ -136,11 +158,11 @@ export async function POST(req: NextRequest) {
   let kullaniciBilgi = "";
 
   if (girisTipi === "foto") {
-    kullaniciBilgi = `Bu ürün fotoğrafına bakarak içerik üret.\nKategori: ${kategori || "belirtilmedi"}\nEk bilgi: ${ozellikler || "yok"}`;
+    kullaniciBilgi = `Bu urun fotografina bakarak icerik uret.\nKategori: ${kategori || "belirtilmedi"}\nEk bilgi: ${ozellikler || "yok"}`;
   } else if (girisTipi === "barkod" && barkodBilgi) {
-    kullaniciBilgi = `Ürün adı: ${barkodBilgi.isim}\nMarka: ${barkodBilgi.marka || "belirtilmedi"}\nKategori: ${kategori || "belirtilmedi"}\nAçıklama: ${barkodBilgi.aciklama || "yok"}\nRenk: ${barkodBilgi.renk || "belirtilmedi"}\nBoyut: ${barkodBilgi.boyut || "belirtilmedi"}`;
+    kullaniciBilgi = `Urun adi: ${barkodBilgi.isim}\nMarka: ${barkodBilgi.marka || "belirtilmedi"}\nKategori: ${kategori || "belirtilmedi"}\nAciklama: ${barkodBilgi.aciklama || "yok"}\nRenk: ${barkodBilgi.renk || "belirtilmedi"}\nBoyut: ${barkodBilgi.boyut || "belirtilmedi"}`;
   } else {
-    kullaniciBilgi = `Ürün adı: ${urunAdi}\nKategori: ${kategori}\nEk özellikler ve bilgiler: ${ozellikler || "belirtilmedi"}`;
+    kullaniciBilgi = `Urun adi: ${urunAdi}\nKategori: ${kategori}\nEk ozellikler ve bilgiler: ${ozellikler || "belirtilmedi"}`;
   }
 
   mesajIcerikleri.push({ type: "text", text: kullaniciBilgi });
@@ -155,13 +177,19 @@ export async function POST(req: NextRequest) {
     body: JSON.stringify({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 2000,
-      system: sistemPromptOlustur(platform),
+      system: sistemPromptOlustur(
+        platform,
+        profil.marka_adi,
+        profil.ton,
+        profil.hedef_kitle,
+        profil.vurgulanan_ozellikler
+      ),
       messages: [{ role: "user", content: mesajIcerikleri }],
     }),
   });
 
   const data = await response.json();
-  const icerik = data.content?.[0]?.text || "İçerik üretilemedi, tekrar deneyin.";
+  const icerik = data.content?.[0]?.text || "Icerik uretilemedi, tekrar deneyin.";
 
   if (!isAdmin) {
     await supabaseAdmin

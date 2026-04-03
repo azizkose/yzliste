@@ -13,6 +13,10 @@ type Profil = {
   tc_kimlik: string | null;
   vergi_no: string | null;
   vergi_dairesi: string | null;
+  marka_adi: string | null;
+  ton: string | null;
+  hedef_kitle: string | null;
+  vurgulanan_ozellikler: string | null;
 };
 
 export default function ProfilPage() {
@@ -23,7 +27,7 @@ export default function ProfilPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const router = useRouter();
 
-  // Form state
+  // Kisisel bilgi alanlari
   const [adSoyad, setAdSoyad] = useState("");
   const [telefon, setTelefon] = useState("");
   const [adres, setAdres] = useState("");
@@ -32,18 +36,24 @@ export default function ProfilPage() {
   const [vergiNo, setVergiNo] = useState("");
   const [vergiDairesi, setVergiDairesi] = useState("");
 
+  // Marka profili alanlari
+  const [markaAdi, setMarkaAdi] = useState("");
+  const [ton, setTon] = useState("samimi");
+  const [hedefKitle, setHedefKitle] = useState("");
+  const [vurgulananlalar, setVurgulananlar] = useState("");
+
   useEffect(() => {
-    profilYukle();
+    yukle();
   }, []);
 
-  const profilYukle = async () => {
+  const yukle = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push("/auth"); return; }
     setUserId(user.id);
 
     const { data } = await supabase
       .from("profiles")
-      .select("email, kredi, ad_soyad, telefon, adres, fatura_tipi, tc_kimlik, vergi_no, vergi_dairesi")
+      .select("email, kredi, ad_soyad, telefon, adres, fatura_tipi, tc_kimlik, vergi_no, vergi_dairesi, marka_adi, ton, hedef_kitle, vurgulanan_ozellikler")
       .eq("id", user.id)
       .single();
 
@@ -56,6 +66,10 @@ export default function ProfilPage() {
       setTcKimlik(data.tc_kimlik || "");
       setVergiNo(data.vergi_no || "");
       setVergiDairesi(data.vergi_dairesi || "");
+      setMarkaAdi(data.marka_adi || "");
+      setTon(data.ton || "samimi");
+      setHedefKitle(data.hedef_kitle || "");
+      setVurgulananlar(data.vurgulanan_ozellikler || "");
     }
     setYukleniyor(false);
   };
@@ -68,20 +82,25 @@ export default function ProfilPage() {
     const { error } = await supabase
       .from("profiles")
       .update({
-        ad_soyad: adSoyad,
-        telefon,
-        adres,
+        ad_soyad: adSoyad || null,
+        telefon: telefon || null,
+        adres: adres || null,
         fatura_tipi: faturaTipi,
-        tc_kimlik: faturaTipi === "bireysel" ? tcKimlik : null,
-        vergi_no: faturaTipi === "kurumsal" ? vergiNo : null,
-        vergi_dairesi: faturaTipi === "kurumsal" ? vergiDairesi : null,
+        tc_kimlik: tcKimlik || null,
+        vergi_no: vergiNo || null,
+        vergi_dairesi: vergiDairesi || null,
+        marka_adi: markaAdi || null,
+        ton: ton,
+        hedef_kitle: hedefKitle || null,
+        vurgulanan_ozellikler: vurgulananlalar || null,
       })
       .eq("id", userId);
 
     if (error) {
-      setMesaj("Hata olustu, tekrar deneyin.");
+      setMesaj("Kayit sirasinda hata olustu.");
     } else {
-      setMesaj("Bilgileriniz kaydedildi.");
+      setMesaj("Profil basariyla kaydedildi.");
+      setTimeout(() => setMesaj(""), 3000);
     }
     setKaydediliyor(false);
   };
@@ -96,170 +115,228 @@ export default function ProfilPage() {
 
   return (
     <main className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto space-y-6">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <a href="/" className="text-gray-400 hover:text-gray-600 text-sm">← Ana Sayfa</a>
-            <span className="text-gray-300">|</span>
-            <h1 className="text-lg font-bold text-gray-900">Profil ve Fatura Bilgileri</h1>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold text-gray-900">Profilim</h1>
+            <p className="text-sm text-gray-500 mt-0.5">{profil?.email}</p>
           </div>
-          <div className="bg-orange-50 rounded-xl px-4 py-2 text-center">
-            <div className="text-xl font-bold text-orange-500">{profil?.kredi ?? 0}</div>
+          <a href="/" className="text-sm text-gray-400 hover:text-gray-600">
+            Ana sayfaya don
+          </a>
+        </div>
+
+        {/* Kredi ozeti */}
+        <div className="bg-white rounded-2xl shadow p-5 flex items-center gap-4">
+          <div className="bg-orange-50 rounded-xl px-5 py-3 text-center">
+            <div className="text-2xl font-bold text-orange-500">{profil?.kredi ?? 0}</div>
             <div className="text-xs text-gray-500">Kalan hak</div>
           </div>
-        </div>
-
-        {/* Hesap Bilgisi */}
-        <div className="bg-white rounded-2xl shadow p-6 mb-4">
-          <h2 className="text-sm font-semibold text-gray-700 mb-4">Hesap Bilgisi</h2>
-          <div className="bg-gray-50 rounded-xl px-4 py-3">
-            <p className="text-xs text-gray-500">E-posta</p>
-            <p className="text-sm font-medium text-gray-800">{profil?.email}</p>
+          <div className="flex-1">
+            <p className="text-sm text-gray-600">Kullanim haklariniz metin ve gorsel uretimi icin kullanilir.</p>
           </div>
+          <a href="/" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap">
+            + Hak Al
+          </a>
         </div>
 
-        {/* Fatura Bilgileri */}
+        {/* Marka Profili - EN USTE ALINDI */}
         <div className="bg-white rounded-2xl shadow p-6 space-y-4">
-          <h2 className="text-sm font-semibold text-gray-700">Fatura Bilgileri</h2>
-          <p className="text-xs text-gray-400">Bu bilgiler satın alma faturalarında kullanilacaktir.</p>
+          <div>
+            <h2 className="text-base font-semibold text-gray-800">Marka Profili</h2>
+            <p className="text-xs text-gray-400 mt-0.5">
+              Bu bilgiler her uretimde AI prompta otomatik eklenir — cikti kalitenizi arttirir.
+            </p>
+          </div>
 
-          {/* Ad Soyad */}
+          <div className="bg-orange-50 border border-orange-100 rounded-xl p-3 text-xs text-orange-700 leading-relaxed">
+            Marka profilinizi doldurunca AI metinleri sizin dilinizde, hedef kitlenize gore yazar. Orn: "Kadin modasi, 25-35 yas" yazarsaniz AI bu kitlenin anlayacagi bir dil kullanir.
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Magaza / Marka Adi</label>
+            <input
+              type="text"
+              value={markaAdi}
+              onChange={(e) => setMarkaAdi(e.target.value)}
+              placeholder="orn: Ayse Tekstil, TechStore TR"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Metin Tonu</label>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { id: "samimi", label: "Samimi", aciklama: "Sıcak, yakın dil" },
+                { id: "profesyonel", label: "Profesyonel", aciklama: "Resmi, kurumsal" },
+                { id: "premium", label: "Premium", aciklama: "Lüks, seçkin" },
+              ].map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setTon(t.id)}
+                  className={`p-3 rounded-xl border-2 text-left transition-all ${
+                    ton === t.id
+                      ? "border-orange-400 bg-orange-50"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
+                >
+                  <p className={`text-xs font-semibold ${ton === t.id ? "text-orange-600" : "text-gray-700"}`}>
+                    {t.label}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">{t.aciklama}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Ad Soyad <span className="text-red-400">*</span>
+              Hedef Kitle <span className="text-gray-400 font-normal">(istege bagli)</span>
             </label>
             <input
               type="text"
-              value={adSoyad}
-              onChange={(e) => setAdSoyad(e.target.value)}
-              placeholder="Ad Soyad"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm"
+              value={hedefKitle}
+              onChange={(e) => setHedefKitle(e.target.value)}
+              placeholder="orn: 25-40 yas kadinlar, ev hanımlari, spor yapanlar"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
           </div>
 
-          {/* Telefon */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
-            <input
-              type="tel"
-              value={telefon}
-              onChange={(e) => setTelefon(e.target.value)}
-              placeholder="05xx xxx xx xx"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm"
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              One Cikarmak Istediginiz Ozellikler <span className="text-gray-400 font-normal">(istege bagli)</span>
+            </label>
+            <textarea
+              value={vurgulananlalar}
+              onChange={(e) => setVurgulananlar(e.target.value)}
+              placeholder="orn: hizli kargo, iade garantisi, yerli uretim, organik malzeme"
+              rows={2}
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
+            <p className="text-xs text-gray-400 mt-1">Her urunde vurgulanmasini istediginiz marka degerlerinizi yazin.</p>
+          </div>
+        </div>
+
+        {/* Kisisel Bilgiler */}
+        <div className="bg-white rounded-2xl shadow p-6 space-y-4">
+          <h2 className="text-base font-semibold text-gray-800">Kisisel Bilgiler</h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Ad Soyad</label>
+              <input
+                type="text"
+                value={adSoyad}
+                onChange={(e) => setAdSoyad(e.target.value)}
+                placeholder="Ad Soyad"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
+              <input
+                type="tel"
+                value={telefon}
+                onChange={(e) => setTelefon(e.target.value)}
+                placeholder="05xx xxx xx xx"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              />
+            </div>
           </div>
 
-          {/* Adres */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Adres</label>
             <textarea
               value={adres}
               onChange={(e) => setAdres(e.target.value)}
-              placeholder="Fatura adresi"
+              placeholder="Tam adresiniz"
               rows={2}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
           </div>
+        </div>
 
-          {/* Fatura Tipi */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Fatura Tipi</label>
-            <div className="flex gap-3">
+        {/* Fatura Bilgileri */}
+        <div className="bg-white rounded-2xl shadow p-6 space-y-4">
+          <h2 className="text-base font-semibold text-gray-800">Fatura Bilgileri</h2>
+
+          <div className="flex gap-3">
+            {["bireysel", "kurumsal"].map((tip) => (
               <button
-                onClick={() => setFaturaTipi("bireysel")}
-                className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ${
-                  faturaTipi === "bireysel"
-                    ? "bg-orange-500 text-white border-orange-500"
-                    : "bg-white text-gray-600 border-gray-200 hover:border-orange-300"
+                key={tip}
+                onClick={() => setFaturaTipi(tip)}
+                className={`flex-1 py-2 rounded-lg text-sm font-medium border-2 transition-all ${
+                  faturaTipi === tip
+                    ? "border-orange-400 bg-orange-50 text-orange-600"
+                    : "border-gray-200 text-gray-600 hover:border-gray-300"
                 }`}
               >
-                Bireysel
+                {tip === "bireysel" ? "Bireysel" : "Kurumsal"}
               </button>
-              <button
-                onClick={() => setFaturaTipi("kurumsal")}
-                className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ${
-                  faturaTipi === "kurumsal"
-                    ? "bg-orange-500 text-white border-orange-500"
-                    : "bg-white text-gray-600 border-gray-200 hover:border-orange-300"
-                }`}
-              >
-                Kurumsal
-              </button>
-            </div>
+            ))}
           </div>
 
-          {/* Bireysel alanlar */}
-          {faturaTipi === "bireysel" && (
+          {faturaTipi === "bireysel" ? (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                TC Kimlik No <span className="text-red-400">*</span>
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">TC Kimlik No</label>
               <input
                 type="text"
                 value={tcKimlik}
-                onChange={(e) => setTcKimlik(e.target.value.replace(/\D/g, "").slice(0, 11))}
+                onChange={(e) => setTcKimlik(e.target.value)}
                 placeholder="11 haneli TC kimlik no"
                 maxLength={11}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
               />
             </div>
-          )}
-
-          {/* Kurumsal alanlar */}
-          {faturaTipi === "kurumsal" && (
-            <>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Vergi No <span className="text-red-400">*</span>
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Vergi No</label>
                 <input
                   type="text"
                   value={vergiNo}
-                  onChange={(e) => setVergiNo(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                  onChange={(e) => setVergiNo(e.target.value)}
                   placeholder="10 haneli vergi no"
                   maxLength={10}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Vergi Dairesi <span className="text-red-400">*</span>
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Vergi Dairesi</label>
                 <input
                   type="text"
                   value={vergiDairesi}
                   onChange={(e) => setVergiDairesi(e.target.value)}
-                  placeholder="örn: Kadikoy"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm"
+                  placeholder="Vergi dairesi adi"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
               </div>
-            </>
+            </div>
           )}
-
-          {mesaj && (
-            <p className={`text-sm font-medium ${mesaj.includes("kaydedildi") ? "text-green-600" : "text-red-500"}`}>
-              {mesaj.includes("kaydedildi") ? "✓ " : "✗ "}{mesaj}
-            </p>
-          )}
-
-          <button
-            onClick={kaydet}
-            disabled={kaydediliyor || !adSoyad}
-            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-lg transition-colors text-sm"
-          >
-            {kaydediliyor ? "Kaydediliyor..." : "Bilgileri Kaydet"}
-          </button>
         </div>
 
-        {/* Odeme Gecmisi linki */}
-        <div className="mt-4 text-center">
-          <p className="text-xs text-gray-400">
-            Odeme gecmisinizi görmek için{" "}
-            <a href="/" className="text-orange-500 hover:underline">Ana Sayfa</a>'ya donun.
-          </p>
-        </div>
+        {/* Kaydet */}
+        {mesaj && (
+          <div className={`rounded-xl p-3 text-sm text-center ${
+            mesaj.includes("basarı") || mesaj.includes("basarıyla") || mesaj.includes("basariyla")
+              ? "bg-green-50 text-green-700 border border-green-200"
+              : "bg-red-50 text-red-700 border border-red-200"
+          }`}>
+            {mesaj}
+          </div>
+        )}
+
+        <button
+          onClick={kaydet}
+          disabled={kaydediliyor}
+          className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors"
+        >
+          {kaydediliyor ? "Kaydediliyor..." : "Kaydet"}
+        </button>
+
       </div>
     </main>
   );
