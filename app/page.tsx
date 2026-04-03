@@ -168,13 +168,17 @@ function KopyalaButon({ metin, getDuzenlenmisMevin }: { metin: string; getDuzenl
   return (
     <button
       onClick={kopyala}
-      className={`text-xs font-medium px-3 py-1 rounded-lg transition-colors ${
-        kopyalandi
-          ? "bg-green-100 text-green-600"
-          : "bg-gray-100 text-gray-500 hover:bg-orange-50 hover:text-orange-600"
+      className={`text-xs font-medium px-3 py-1 rounded-lg transition-all duration-200 ${
+    kopyalandi
+      ? "bg-green-100 text-green-700 border border-green-300 scale-95"
+      : "bg-gray-100 text-gray-500 hover:bg-orange-50 hover:text-orange-600"
       }`}
     >
-      {kopyalandi ? "✓ Kopyalandı" : "Kopyala"}
+      {kopyalandi ? (
+        <span className="flex items-center gap-1 text-green-600">
+          <span>✓</span> Kopyalandı
+        </span>
+      ) : "Kopyala"}
     </button>
   );
 }
@@ -1219,6 +1223,7 @@ export default function Home() {
                       </div>
                       <div className="text-xs text-gray-400 mt-1">
                         {new Date(u.created_at).toLocaleDateString("tr-TR", {
+                          timeZone: "Europe/Istanbul",
                           day: "numeric",
                           month: "short",
                           hour: "2-digit",
