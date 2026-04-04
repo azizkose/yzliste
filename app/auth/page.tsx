@@ -76,9 +76,36 @@ export default function AuthPage() {
     setSozlesmeOnay(false); setSifreSifirlamaGonderildi(false);
   };
 
-  const hemenAlTikla = () => {
-    setModalMod(oturum ? "paket" : "uye");
-    setModalAcik(true); setOdemeForm(null); setSeciliPaket(null); setModalMesaj("");
+    const hemenAlTikla = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setModalMod("uye");
+      setModalAcik(true);
+      setOdemeForm(null);
+      setSeciliPaket(null);
+      setModalMesaj("");
+      return;
+    }
+    // Giriş yapmış — fatura kontrolü
+    const { data: profil } = await supabase
+      .from("profiles")
+      .select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no")
+      .eq("id", user.id)
+      .single();
+    const eksik =
+      !profil?.ad_soyad ||
+      (profil?.fatura_tipi === "bireysel" && !profil?.tc_kimlik) ||
+      (profil?.fatura_tipi === "kurumsal" && !profil?.vergi_no);
+    if (eksik) {
+      alert("Ödeme yapabilmek için önce profil sayfasından fatura bilgilerinizi doldurmanız gerekiyor.");
+      window.location.href = "/profil";
+      return;
+    }
+    setModalMod("paket");
+    setModalAcik(true);
+    setOdemeForm(null);
+    setSeciliPaket(null);
+    setModalMesaj("");
   };
 
   const modalUyeGiris = async () => {
