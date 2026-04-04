@@ -964,8 +964,10 @@ export default function Home() {
                 <h2 className="text-base font-semibold text-gray-800">✨ Ürün Görseli Üret</h2>
                 <p className="text-xs text-gray-400 mt-0.5">
                   Tek fotoğraftan 3 farklı stüdyo görseli. Her stilden{" "}
-                  <strong>4 varyasyon</strong> üretilir — inceleme ücretsiz, indirince 1 kredi düşer. <br /> Örneğin 1 stil seçersen 4 görsel üretir
-                  indirdiğinde 1 kredi düşer. 2 still seçerek ilerlersen 8 görsel üretir, indirdiğinde 2 kredi düşer.
+                  <strong>4 varyasyon</strong> üretilir — inceleme ücretsiz, indirince 1 kredi düşer. <br /> 
+                  <br />
+                  Örneğin 1 stil seçersen 4 görsel üretir, indirdiğinde 1 kredi düşer. <br /> 
+                  2 still seçerek ilerlersen 8 görsel üretir, indirdiğinde 2 kredi düşer.
                 </p>
               </div>
 
