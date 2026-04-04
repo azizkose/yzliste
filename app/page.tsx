@@ -997,10 +997,10 @@ export default function Home() {
 
               {/* Stil seçimi */}
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-2">
+                <p className="block text-xs font-medium text-gray-600 mb-2">
                   Stil seç{" "}
                   <span className="text-gray-400 font-normal">(birden fazla stil seçebilirsin — indirirsen her biri için 1 kredi)</span>
-                </label>
+                  </p>
                 <div className="grid grid-cols-3 gap-2">
                   {(
                     [
