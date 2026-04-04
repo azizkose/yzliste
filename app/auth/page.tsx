@@ -303,7 +303,7 @@ export default function AuthPage() {
         <p className="text-sm text-gray-400 mb-8 max-w-xl mx-auto">İster açıklama gir, ister ürün fotoğrafını yükle ya da barkod tara — gerisini YZ halleder.</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button onClick={() => { handleModDegistir("kayit"); document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" }); }} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
-            3 Ücretsiz Hakla Başla →
+            3 Ücretsiz Deneme Kredisi, Başla →
           </button>
           <button onClick={() => document.getElementById("nasil-calisir")?.scrollIntoView({ behavior: "smooth" })} className="text-gray-500 hover:text-gray-700 font-medium px-8 py-4 rounded-xl text-base transition-colors underline underline-offset-4">
             Nasıl çalışır?
@@ -351,13 +351,13 @@ export default function AuthPage() {
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Neye ihtiyacın var?</h2>
           <p className="text-center text-sm text-gray-400 mb-6">Metin, görsel ya da her ikisi — ayrı ayrı veya birlikte kullanabilirsin</p>
           <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-8 shadow-sm">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Kullanım hakkı nasıl çalışır?</h3>
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">İçerik üretim kredileri nasıl çalışır?</h3>
             <ul className="space-y-2">
               {[
                 { ikon: "🎁", metin: "Kayıt olunca 3 ücretsiz içerik üretim kredisi hediye edilir — kredi kartı gerekmez." },
                 { ikon: "📝", metin: "Her listing metni üretimi 1 kredi tüketir. Başlık, özellikler, açıklama ve etiketlerin tamamı tek kredide gelir." },
                 { ikon: "🖼️", metin: "Görsel üretimi stil başına 1 kredi tüketir. Her stilden 4 varyasyon üretilir — beğenmezsen kredi düşmez, sadece indirince düşer." },
-                { ikon: "💳", metin: "Haklar biter bitmez istediğin paketi satın al. 29₺'den başlayan paketler, abonelik yok." },
+                { ikon: "💳", metin: "Kredilerin biter bitmez istediğin paketi satın al. 29₺'den başlayan paketler, abonelik yok." },
               ].map((m, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm text-gray-500">
                   <span className="text-base flex-shrink-0">{m.ikon}</span>
@@ -425,7 +425,7 @@ export default function AuthPage() {
             <button onClick={hemenAlTikla} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-orange-100">
               Paket Satın Al — 29₺'den başlıyor
             </button>
-            <p className="text-xs text-gray-400 mt-3">veya 3 ücretsiz hakla başla, kredi kartı gerekmez</p>
+            <p className="text-xs text-gray-400 mt-3">veya 3 ücretsiz deneme kredisi ile başla, kredi kartı gerekmez</p>
           </div>
         </div>
       </section>
@@ -588,7 +588,7 @@ export default function AuthPage() {
               { ikon: "🎯", baslik: "Platform şablonları", aciklama: "Trendyol, Hepsiburada, Amazon TR ve N11 için ayrı format." },
               { ikon: "🖼️", baslik: "AI görsel + prompt", aciklama: "Beyaz, koyu, lifestyle — her stilden 4 varyasyon. Kendi sahneni yaz." },
               { ikon: "💎", baslik: "Kredi sadece indirmede düşer", aciklama: "Görsel üretilir, beğenmezsen kredinizi kaybetmezsiniz." },
-              { ikon: "💰", baslik: "Kullandığın kadar öde", aciklama: "Aylık abonelik yok. 3 ücretsiz hakla başla." },
+              { ikon: "💰", baslik: "Kullandığın kadar öde", aciklama: "Aylık abonelik yok. 3 ücretsiz deneme kredisi ile başla." },
             ].map((o, i) => (
               <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <div className="text-2xl mb-3">{o.ikon}</div>

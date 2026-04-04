@@ -247,7 +247,7 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
           <div>
             <h2 className="text-lg font-bold text-gray-900">Kullanım Hakkı Satın Al</h2>
             <p className="text-xs text-gray-500 mt-0.5">
-              Mevcut hakkın: <span className="font-semibold text-orange-500">{kullanici.kredi}</span>
+              Mevcut kredilerin: <span className="font-semibold text-orange-500">{kullanici.kredi}</span>
             </p>
           </div>
           <button onClick={onKapat} className="text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
@@ -725,7 +725,7 @@ export default function Home() {
                 }`}
               >
                 <span>{kullanici.is_admin ? "∞" : kullanici.kredi}</span>
-                <span className="text-xs font-normal opacity-75">hak</span>
+                <span className="text-xs font-normal opacity-75">kredi</span>
                 {krediDusuk && <span className="text-xs">— Yükle</span>}
               </button>
               <span className="text-xs text-gray-400 hidden sm:block">{kullanici.email}</span>
@@ -746,7 +746,7 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <span className="text-xl">⚠️</span>
               <div>
-                <p className="text-sm font-semibold text-red-800">Kullanım hakkınız azalıyor</p>
+                <p className="text-sm font-semibold text-red-800">İçerik üretme krediniz azalıyor</p>
                 <p className="text-xs text-red-600 mt-0.5">
                   {kullanici?.kredi} kredi kaldı — tükenince içerik ve görsel üretemezsiniz.
                 </p>
@@ -769,7 +769,7 @@ export default function Home() {
               <div className="flex items-center justify-between">
                 <h2 className="text-base font-semibold text-gray-800">📝 Listing İçeriği Üret</h2>
                 <span className="text-xs bg-orange-50 text-orange-600 px-2 py-1 rounded-lg font-medium">
-                  1 kredi
+                  1 kredi tüketir
                 </span>
               </div>
 
@@ -964,7 +964,8 @@ export default function Home() {
                 <h2 className="text-base font-semibold text-gray-800">✨ Ürün Görseli Üret</h2>
                 <p className="text-xs text-gray-400 mt-0.5">
                   Tek fotoğraftan 3 farklı stüdyo görseli. Her stilden{" "}
-                  <strong>4 varyasyon</strong> üretilir — inceleme ücretsiz, indirince 1 kredi düşer.
+                  <strong>4 varyasyon</strong> üretilir — inceleme ücretsiz, indirince 1 kredi düşer. <br /> Örneğin 1 stil seçersen 4 görsel üretir
+                  indirdiğinde 1 kredi düşer. 2 still seçerek ilerlersen 8 görsel üretir, indirdiğinde 2 kredi düşer.
                 </p>
               </div>
 
@@ -996,7 +997,7 @@ export default function Home() {
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-2">
                   Stil seç{" "}
-                  <span className="text-gray-400 font-normal">(birden fazla — her biri 1 kredi)</span>
+                  <span className="text-gray-400 font-normal">(birden fazla stil seçebilirsin — indirirsen her biri için 1 kredi)</span>
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {(
@@ -1324,7 +1325,7 @@ export default function Home() {
                 onClick={() => paketModalAc()}
                 className="w-full mt-3 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors"
               >
-                + Kullanım Hakkı Al
+                + İçerik üretim kredisi al
               </button>
             </div>
           </div>
