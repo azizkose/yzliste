@@ -199,9 +199,9 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
   const formRef = useRef<HTMLDivElement>(null);
 
   const paketler = [
-    { id: "baslangic", isim: "Başlangıç", fiyat: "₺29", kredi: "10 kullanım hakkı", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
-    { id: "populer", isim: "Popüler", fiyat: "₺79", kredi: "30 kullanım hakkı", renk: "border-orange-400 ring-2 ring-orange-400", butonRenk: "bg-orange-500 hover:bg-orange-600", rozet: true },
-    { id: "buyuk", isim: "Büyük", fiyat: "₺149", kredi: "100 kullanım hakkı", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
+    { id: "baslangic", isim: "Başlangıç", fiyat: "₺29", kredi: "10 kredi", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
+    { id: "populer", isim: "Popüler", fiyat: "₺79", kredi: "30 kredi", renk: "border-orange-400 ring-2 ring-orange-400", butonRenk: "bg-orange-500 hover:bg-orange-600", rozet: true },
+    { id: "buyuk", isim: "Büyük", fiyat: "₺149", kredi: "100 kredi", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
   ];
 
   const odemeBaslat = async (paketId: string) => {
@@ -748,7 +748,7 @@ export default function Home() {
               <div>
                 <p className="text-sm font-semibold text-red-800">Kullanım hakkınız azalıyor</p>
                 <p className="text-xs text-red-600 mt-0.5">
-                  {kullanici?.kredi} hak kaldı — tükenince içerik ve görsel üretemezsiniz.
+                  {kullanici?.kredi} kredi kaldı — tükenince içerik ve görsel üretemezsiniz.
                 </p>
               </div>
             </div>
@@ -756,7 +756,7 @@ export default function Home() {
               onClick={() => paketModalAc()}
               className="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap flex-shrink-0"
             >
-              Hak Yükle
+              Kredi Yükle
             </button>
           </div>
         )}
@@ -769,7 +769,7 @@ export default function Home() {
               <div className="flex items-center justify-between">
                 <h2 className="text-base font-semibold text-gray-800">📝 Listing İçeriği Üret</h2>
                 <span className="text-xs bg-orange-50 text-orange-600 px-2 py-1 rounded-lg font-medium">
-                  1 kullanım hakkı
+                  1 kredi
                 </span>
               </div>
 
@@ -954,7 +954,7 @@ export default function Home() {
               >
                 {yukleniyor
                   ? "⏳ Üretiliyor..."
-                  : `İçerik Üret — ${kullanici?.is_admin ? "∞" : kullanici?.kredi || 0} kullanım hakkı kaldı`}
+                  : `İçerik Üret — ${kullanici?.is_admin ? "∞" : kullanici?.kredi || 0} kredi kaldı`}
               </button>
             </div>
 
@@ -964,7 +964,7 @@ export default function Home() {
                 <h2 className="text-base font-semibold text-gray-800">✨ Ürün Görseli Üret</h2>
                 <p className="text-xs text-gray-400 mt-0.5">
                   Tek fotoğraftan 3 farklı stüdyo görseli. Her stilden{" "}
-                  <strong>4 varyasyon</strong> üretilir — inceleme ücretsiz, indirince 1 hak düşer.
+                  <strong>4 varyasyon</strong> üretilir — inceleme ücretsiz, indirince 1 kredi düşer.
                 </p>
               </div>
 
@@ -996,7 +996,7 @@ export default function Home() {
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-2">
                   Stil seç{" "}
-                  <span className="text-gray-400 font-normal">(birden fazla — her biri 1 kullanım hakkı)</span>
+                  <span className="text-gray-400 font-normal">(birden fazla — her biri 1 kredi)</span>
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {(
@@ -1038,7 +1038,7 @@ export default function Home() {
                 </div>
                 {seciliStiller.length > 0 && (
                   <p className="text-xs text-purple-600 font-medium mt-2 text-center">
-                    {seciliStiller.length} stil → {seciliStiller.length * 4} görsel · {seciliStiller.length} kullanım hakkı
+                    {seciliStiller.length} stil → {seciliStiller.length * 4} görsel · {seciliStiller.length} kredi
                   </p>
                 )}
               </div>
@@ -1072,7 +1072,7 @@ export default function Home() {
                   ? "Önce fotoğraf ekle ↑"
                   : seciliStiller.length === 0
                   ? "Bir stil seç"
-                  : `✨ ${seciliStiller.length * 4} Görsel Üret — ${seciliStiller.length} kullanım hakkı`}
+                  : `✨ ${seciliStiller.length * 4} Görsel Üret — ${seciliStiller.length} kredi`}
               </button>
 
               {/* Görsel sonuçları */}
@@ -1115,7 +1115,7 @@ export default function Home() {
                       }}
                       className="text-xs bg-purple-500 hover:bg-purple-600 text-white px-3 py-1.5 rounded-lg font-medium transition-colors"
                     >
-                      ⬇ Hepsini İndir ({gorselSonuclar.reduce((t, s) => t + s.gorseller.length, 0)}) — {seciliStiller.length} hak
+                      ⬇ Hepsini İndir ({gorselSonuclar.reduce((t, s) => t + s.gorseller.length, 0)}) — {seciliStiller.length} kredi
                     </button>
                   </div>
                   {gorselSonuclar.map((grup) => (
@@ -1311,7 +1311,7 @@ export default function Home() {
                   <div className="text-xl font-bold text-orange-500">
                     {kullanici?.is_admin ? "∞" : kullanici?.kredi ?? "–"}
                   </div>
-                  <div className="text-xs text-gray-500">Kalan hak</div>
+                  <div className="text-xs text-gray-500">Kalan kredi</div>
                 </div>
                 <div className="flex-1 bg-gray-50 rounded-xl px-3 py-2 text-center">
                   <div className="text-xl font-bold text-gray-700">

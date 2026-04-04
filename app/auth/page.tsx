@@ -178,9 +178,9 @@ export default function AuthPage() {
   };
 
   const paketler = [
-    { id: "baslangic", isim: "Başlangıç", fiyat: "₺29", kredi: "10 kullanım hakkı", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
-    { id: "populer", isim: "Popüler", fiyat: "₺79", kredi: "30 kullanım hakkı", renk: "border-orange-400 ring-2 ring-orange-400", butonRenk: "bg-orange-500 hover:bg-orange-600", rozet: true },
-    { id: "buyuk", isim: "Büyük", fiyat: "₺149", kredi: "100 kullanım hakkı", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
+    { id: "baslangic", isim: "Başlangıç", fiyat: "₺29", kredi: "10 kredi", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
+    { id: "populer", isim: "Popüler", fiyat: "₺79", kredi: "30 kredi", renk: "border-orange-400 ring-2 ring-orange-400", butonRenk: "bg-orange-500 hover:bg-orange-600", rozet: true },
+    { id: "buyuk", isim: "Büyük", fiyat: "₺149", kredi: "100 kredi", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
   ];
 
   const yorumlar = [
@@ -354,9 +354,9 @@ export default function AuthPage() {
             <h3 className="text-sm font-semibold text-gray-700 mb-3">Kullanım hakkı nasıl çalışır?</h3>
             <ul className="space-y-2">
               {[
-                { ikon: "🎁", metin: "Kayıt olunca 3 ücretsiz kullanım hakkı hediye edilir — kredi kartı gerekmez." },
-                { ikon: "📝", metin: "Her listing metni üretimi 1 hak tüketir. Başlık, özellikler, açıklama ve etiketlerin tamamı tek hakla gelir." },
-                { ikon: "🖼️", metin: "Görsel üretimi stil başına 1 hak tüketir. Her stilden 4 varyasyon üretilir — beğenmezsen hak düşmez, sadece indirince düşer." },
+                { ikon: "🎁", metin: "Kayıt olunca 3 ücretsiz içerik üretim kredisi hediye edilir — kredi kartı gerekmez." },
+                { ikon: "📝", metin: "Her listing metni üretimi 1 kredi tüketir. Başlık, özellikler, açıklama ve etiketlerin tamamı tek kredide gelir." },
+                { ikon: "🖼️", metin: "Görsel üretimi stil başına 1 kredi tüketir. Her stilden 4 varyasyon üretilir — beğenmezsen kredi düşmez, sadece indirince düşer." },
                 { ikon: "💳", metin: "Haklar biter bitmez istediğin paketi satın al. 29₺'den başlayan paketler, abonelik yok." },
               ].map((m, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm text-gray-500">
@@ -371,7 +371,7 @@ export default function AuthPage() {
               <div className="bg-blue-50 px-5 pt-6 pb-4">
                 <div className="text-2xl mb-2">📝</div>
                 <h3 className="font-bold text-gray-800">Sadece Listing Metni</h3>
-                <p className="text-xs text-gray-500 mt-1">1 kullanım hakkı</p>
+                <p className="text-xs text-gray-500 mt-1">1 kredi</p>
               </div>
               <div className="p-5 flex-1">
                 <p className="text-sm text-gray-600 leading-relaxed mb-3">Platforma özel optimize başlık, madde madde özellikler, satışa dönen açıklama ve arama etiketleri.</p>
@@ -388,7 +388,7 @@ export default function AuthPage() {
               <div className="bg-purple-50 px-5 pt-6 pb-4">
                 <div className="text-2xl mb-2">🖼️</div>
                 <h3 className="font-bold text-gray-800">Sadece Görsel</h3>
-                <p className="text-xs text-gray-500 mt-1">Stil başına 1 hak · Her stilden 4 varyasyon</p>
+                <p className="text-xs text-gray-500 mt-1">Stil başına 1 kredi · Her stilden 4 varyasyon</p>
               </div>
               <div className="p-5 flex-1">
                 <p className="text-sm text-gray-600 leading-relaxed mb-3">Tek fotoğraftan 3 farklı stilde stüdyo görseli.</p>
@@ -400,14 +400,14 @@ export default function AuthPage() {
                     </div>
                   ))}
                 </div>
-                <p className="text-xs text-gray-400">İndirince 1 hak düşer — inceleme ücretsiz</p>
+                <p className="text-xs text-gray-400">İndirince 1 kredi düşer — inceleme ücretsiz</p>
               </div>
             </div>
             <div className="bg-white rounded-2xl border-2 border-orange-200 shadow-sm overflow-hidden flex flex-col">
               <div className="bg-orange-50 px-5 pt-6 pb-4">
                 <div className="text-2xl mb-2">✨</div>
                 <h3 className="font-bold text-gray-800">Metin + Görsel</h3>
-                <p className="text-xs text-gray-500 mt-1">Ayrı ayrı kullanım hakkı</p>
+                <p className="text-xs text-gray-500 mt-1">Ayrı ayrı kredi</p>
               </div>
               <div className="p-5 flex-1">
                 <p className="text-sm text-gray-600 leading-relaxed mb-3">Trendyol ve Hepsiburada'da hem metin hem görsel zorunlu. İkisini aynı anda üret.</p>
@@ -587,7 +587,7 @@ export default function AuthPage() {
               { ikon: "📦", baslik: "Barkod tarama", aciklama: "Barkodu tarat, ürün bilgilerini veritabanından çek, listing üret." },
               { ikon: "🎯", baslik: "Platform şablonları", aciklama: "Trendyol, Hepsiburada, Amazon TR ve N11 için ayrı format." },
               { ikon: "🖼️", baslik: "AI görsel + prompt", aciklama: "Beyaz, koyu, lifestyle — her stilden 4 varyasyon. Kendi sahneni yaz." },
-              { ikon: "💎", baslik: "Hak sadece indirmede düşer", aciklama: "Görsel üretilir, beğenmezsen hakkını kaybetmezsin." },
+              { ikon: "💎", baslik: "Kredi sadece indirmede düşer", aciklama: "Görsel üretilir, beğenmezsen kredinizi kaybetmezsiniz." },
               { ikon: "💰", baslik: "Kullandığın kadar öde", aciklama: "Aylık abonelik yok. 3 ücretsiz hakla başla." },
             ].map((o, i) => (
               <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -609,7 +609,7 @@ export default function AuthPage() {
                 {mod === "kayit" ? "Ücretsiz hesap oluştur" : "Tekrar hoş geldin"}
               </h2>
               <p className="text-sm text-gray-400">
-                {mod === "kayit" ? "3 ücretsiz kullanım hakkı hediye" : "Hesabına giriş yap"}
+                {mod === "kayit" ? "3 ücretsiz içerik üretim kredisi" : "Hesabına giriş yap"}
               </p>
             </div>
 
@@ -659,7 +659,7 @@ export default function AuthPage() {
 
             {!sifreSifirlamaGonderildi && (
               <>
-                {mod === "kayit" && <p className="text-xs text-gray-400 text-center mt-4">Kayıt olunca 3 ücretsiz kullanım hakkı alırsınız</p>}
+                {mod === "kayit" && <p className="text-xs text-gray-400 text-center mt-4">Kayıt olunca 3 ücretsiz içerik üretim kredisi alırsınız</p>}
                 <div className="text-center mt-5 pt-4 border-t border-gray-100">
                   <button onClick={() => handleModDegistir(mod === "giris" ? "kayit" : "giris")} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
                     {mod === "giris" ? "Hesabın yok mu? Kaydol →" : "Zaten hesabın var mı? Giriş yap →"}

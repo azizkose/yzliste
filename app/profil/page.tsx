@@ -132,13 +132,13 @@ export default function ProfilPage() {
         <div className="bg-white rounded-2xl shadow p-5 flex items-center gap-4">
           <div className="bg-orange-50 rounded-xl px-5 py-3 text-center">
             <div className="text-2xl font-bold text-orange-500">{profil?.kredi ?? 0}</div>
-            <div className="text-xs text-gray-500">Kalan hak</div>
+            <div className="text-xs text-gray-500">Kalan kredi</div>
           </div>
           <div className="flex-1">
             <p className="text-sm text-gray-600">Kullanim haklariniz metin ve gorsel uretimi icin kullanilir.</p>
           </div>
           <a href="/?paket=ac" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap">
-          + Hak Al
+          + Kredi Al
           </a>
         </div>
 
