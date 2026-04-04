@@ -76,9 +76,10 @@ export default function AuthPage() {
     setSozlesmeOnay(false); setSifreSifirlamaGonderildi(false);
   };
 
-    const hemenAlTikla = async () => {
+      const hemenAlTikla = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
+      // Giriş yok — önce üye ekranını göster
       setModalMod("uye");
       setModalAcik(true);
       setOdemeForm(null);
@@ -86,7 +87,7 @@ export default function AuthPage() {
       setModalMesaj("");
       return;
     }
-    // Giriş yapmış — fatura kontrolü
+    // Giriş var — fatura kontrolü
     const { data: profil } = await supabase
       .from("profiles")
       .select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no")
@@ -101,6 +102,7 @@ export default function AuthPage() {
       window.location.href = "/profil";
       return;
     }
+    // Her şey tamam — paket seçim ekranı
     setModalMod("paket");
     setModalAcik(true);
     setOdemeForm(null);
