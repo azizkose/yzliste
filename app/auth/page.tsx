@@ -98,7 +98,7 @@ export default function AuthPage() {
       (profil?.fatura_tipi === "bireysel" && !profil?.tc_kimlik) ||
       (profil?.fatura_tipi === "kurumsal" && !profil?.vergi_no);
     if (eksik) {
-      alert("Ödeme yapabilmek için önce profil sayfasından fatura bilgilerinizi doldurmanız gerekiyor.");
+      alert("Ödeme yapabilmek için önce profil sayfasından fatura bilgilerinizi doldurmanız gerekiyor. Bu alana yönlendirileceksiniz");
       window.location.href = "/profil";
       return;
     }
