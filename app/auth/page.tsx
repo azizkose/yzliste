@@ -118,9 +118,29 @@ export default function AuthPage() {
       if (error) { setModalMesaj(turkceHata(error.message)); }
       else { setModalMesaj("Kayıt başarılı! E-postanızı doğrulayın."); }
     } else {
-      const { error } = await supabase.auth.signInWithPassword({ email: modalEmail, password: modalSifre });
+         const { error, data } = await supabase.auth.signInWithPassword({ email: modalEmail, password: modalSifre });
       if (error) { setModalMesaj("E-posta veya şifre hatalı."); }
-      else { setOturum(true); setModalMod("paket"); setModalMesaj(""); }
+      else {
+        setOturum(true);
+        // Fatura bilgisi kontrolü
+        const { data: profil } = await supabase
+          .from("profiles")
+          .select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no")
+          .eq("id", data.user.id)
+          .single();
+        const eksik =
+          !profil?.ad_soyad ||
+          (profil?.fatura_tipi === "bireysel" && !profil?.tc_kimlik) ||
+          (profil?.fatura_tipi === "kurumsal" && !profil?.vergi_no);
+        if (eksik) {
+          setModalAcik(false);
+          alert("Ödeme yapabilmek için önce fatura bilgilerinizi doldurmanız gerekiyor.");
+          window.location.href = "/profil";
+          return;
+        }
+        setModalMod("paket");
+        setModalMesaj("");
+      }
     }
     setModalYukleniyor(false);
   };
