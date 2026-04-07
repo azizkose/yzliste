@@ -59,11 +59,11 @@ export async function POST(req: NextRequest) {
       prompt: videoPrompt,
       image_url: imageUrl,
       duration: "5",
-      aspect_ratio: "9:16", // Instagram Reels / TikTok formatı
+      //aspect_ratio: "9:16", // Instagram Reels / TikTok formatı
       negative_prompt: "blur, distort, low quality, watermark, text overlay",
       cfg_scale: 0.5,
     },
-  }) as { video: { url: string } };
+  }) as unknown as { video: { url: string } };
 
   const videoUrl = result?.video?.url;
 
