@@ -743,11 +743,11 @@ export default function Home() {
             <div style={{display: anaSekme === "gorsel" ? "block" : "none"}} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-base font-semibold text-gray-800">🖼️ Ürün Görseli Üret</h2>
-                <span className="text-xs text-purple-500 font-medium">Stil başına 1 kredi · Her stilden 4 varyasyon</span>
+                <span className="text-xs text-orange-500 font-medium">Stil başına 1 kredi · Her stilden 4 varyasyon</span>
               </div>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-600">
                 Tek fotoğraftan 3 farklı stüdyo görseli. Her stilden 4 varyasyon üretilir — inceleme ücretsiz, indirince kredi düşer.{" "}
-                <span className="font-medium text-gray-500">1 stil seçersen → 4 görsel, 1 kredi · 2 stil → 8 görsel, 2 kredi</span>
+                <span className="text-xs text-gray-400">  <br /> Örnek: 1 stil seçersen → 4 görsel, 1 kredi <br />2 stil seçersen → 8 görsel, 2 kredi</span>
               </p>
 
               {fotolar.length === 0 ? (
@@ -1083,3 +1083,7 @@ export default function Home() {
     </main>
   );
 }
+
+
+
+
