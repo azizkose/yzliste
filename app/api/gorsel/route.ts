@@ -11,54 +11,43 @@ const supabaseAdmin = createClient(
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { foto, stiller, ekPrompt, ozellikler, userId, action } = body;
+  const { foto, stiller, ekPrompt, userId, action } = body;
 
-  // Hak dusurme islemi - ayri endpoint olarak cagrilir
-  // action === "indir" olunca kredi dusur
+  // Kredi dusurme - sadece indir aksiyonunda
   if (action === "indir") {
     if (!userId) return NextResponse.json({ hata: "Giris yapilmadi" }, { status: 401 });
-    const { data: profil } = await supabaseAdmin
-      .from("profiles")
-      .select("kredi, is_admin")
-      .eq("id", userId)
-      .single();
+    const { data: profil } = await supabaseAdmin.from("profiles").select("kredi, is_admin").eq("id", userId).single();
     if (!profil) return NextResponse.json({ hata: "Kullanici bulunamadi" }, { status: 404 });
     if (!profil.is_admin) {
       const { stilSayisi } = body;
-      await supabaseAdmin
-        .from("profiles")
-        .update({ kredi: Math.max(0, profil.kredi - (stilSayisi || 1)) })
-        .eq("id", userId);
+      await supabaseAdmin.from("profiles").update({ kredi: Math.max(0, profil.kredi - (stilSayisi || 1)) }).eq("id", userId);
     }
     return NextResponse.json({ ok: true });
   }
 
-  // Normal gorsel uretim - kredi dusurme YOK
   if (!foto) return NextResponse.json({ hata: "Fotograf gerekli" }, { status: 400 });
 
-  // Admin kontrolu
   let isAdmin = false;
   if (userId) {
-    const { data: profil } = await supabaseAdmin
-      .from("profiles")
-      .select("kredi, is_admin")
-      .eq("id", userId)
-      .single();
+    const { data: profil } = await supabaseAdmin.from("profiles").select("kredi, is_admin").eq("id", userId).single();
     if (profil) {
       isAdmin = profil.is_admin === true;
       if (!isAdmin && profil.kredi <= 0) {
-        return NextResponse.json({ hata: "Krediniz bitti. Lutfen kredi satin alin." }, { status: 402 });
+        return NextResponse.json({ hata: "Krediniz bitti." }, { status: 402 });
       }
     }
   }
 
+  // STİL SAHNELERİ — sadece arka planı/ortamı tanımla, ürüne dokunma
+  // Kritik kural: fal.ai'ya sadece sahne/ortam bilgisi ver, ürünü değiştirme
   const stilSahneleri: Record<string, string> = {
-    beyaz: "pure white seamless background, clean studio lighting, professional e-commerce product photo, sharp focus",
-    koyu: "dark black seamless background, dramatic studio lighting, soft spotlight on product, premium luxury product photography",
-    lifestyle: "cozy modern living room, natural daylight from window, plants and home decor around, lifestyle interior photography",
+    beyaz: "pure white seamless studio background, soft even lighting, no shadows, professional product photography, isolated product, keep the original product exactly as is",
+    koyu: "dark matte black seamless background, dramatic studio lighting with soft spotlight directly on product, luxury product photography style, keep the original product exactly as is",
+    lifestyle: "cozy modern interior living space, warm natural daylight from a side window, subtle background with plants and neutral home decor, the product is the clear focal point, keep the original product exactly as is",
   };
 
   try {
+    // Base64 → blob → fal storage
     const base64 = foto.split(",")[1];
     const mediaType = foto.split(";")[0].split(":")[1];
     const binaryStr = atob(base64);
@@ -68,7 +57,6 @@ export async function POST(req: NextRequest) {
     const imageUrl = await fal.storage.upload(blob);
 
     const stilListesi: string[] = stiller && stiller.length > 0 ? stiller : ["beyaz"];
-    const ekAciklama = ekPrompt || ozellikler || "";
 
     const stilEtiketleri: Record<string, string> = {
       beyaz: "Beyaz Zemin",
@@ -77,10 +65,15 @@ export async function POST(req: NextRequest) {
     };
 
     const sonuclar = [];
+
     for (const s of stilListesi) {
-      const sahne = ekAciklama
-        ? `${stilSahneleri[s] || stilSahneleri.beyaz}, ${ekAciklama}`
-        : stilSahneleri[s] || stilSahneleri.beyaz;
+      // Temel sahne
+      let sahne = stilSahneleri[s] || stilSahneleri.beyaz;
+
+      // Kullanıcı ek prompt vermişse ekle — ama ürünü değiştirme uyarısı koru
+      if (ekPrompt && ekPrompt.trim()) {
+        sahne = `${sahne}, ${ekPrompt.trim()}`;
+      }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const result = await fal.subscribe("fal-ai/bria/product-shot", {
@@ -102,7 +95,6 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ sonuclar, isAdmin });
-
   } catch (e: any) {
     console.error("FAL HATA:", e?.message || JSON.stringify(e));
     return NextResponse.json({ hata: "Gorsel uretim hatasi: " + (e?.message || "bilinmiyor") }, { status: 500 });

@@ -292,7 +292,7 @@ export default function AuthPage() {
 
       {/* HERO */}
       <section className="px-4 sm:px-6 pt-12 sm:pt-16 pb-10 text-center max-w-3xl mx-auto">
-        <span className="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-5 tracking-wide uppercase">Trendyol · Hepsiburada · Amazon TR · N11</span>
+        <span className="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-5 tracking-wide uppercase">Trendyol · Hepsiburada · Amazon TR · N11 · Etsy · Amazon USA</span>
         <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-5">
           E-ticaret listing için<br />
           <span className="text-orange-500">en kolay çözüm</span>
@@ -303,7 +303,7 @@ export default function AuthPage() {
         <p className="text-sm text-gray-400 mb-8 max-w-xl mx-auto">İster açıklama gir, ister ürün fotoğrafını yükle ya da barkod tara — gerisini YZ halleder.</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button onClick={() => { handleModDegistir("kayit"); document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" }); }} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
-            3 Ücretsiz Deneme Kredisi, Başla →
+            3 Ücretsiz İçerik Üretim Kredisi, Başla →
           </button>
           <button onClick={() => document.getElementById("nasil-calisir")?.scrollIntoView({ behavior: "smooth" })} className="text-gray-500 hover:text-gray-700 font-medium px-8 py-4 rounded-xl text-base transition-colors underline underline-offset-4">
             Nasıl çalışır?
@@ -356,7 +356,7 @@ export default function AuthPage() {
               {[
                 { ikon: "🎁", metin: "Kayıt olunca 3 ücretsiz içerik üretim kredisi hediye edilir — kredi kartı gerekmez." },
                 { ikon: "📝", metin: "Her listing metni üretimi 1 kredi tüketir. Başlık, özellikler, açıklama ve etiketlerin tamamı tek kredide gelir." },
-                { ikon: "🖼️", metin: "Görsel üretimi stil başına 1 kredi tüketir. Her stilden 4 varyasyon üretilir — beğenmezsen kredi düşmez, sadece indirince düşer." },
+                { ikon: "📷", metin: "Görsel üretimi stil başına 1 kredi tüketir. Her stilden 4 varyasyon üretilir — inceleme ücretsiz, sadece indirince kredi düşer. 1 stil → 4 görsel → 1 kredi · 2 stil → 8 görsel → 2 kredi." },
                 { ikon: "💳", metin: "Kredilerin biter bitmez istediğin paketi satın al. 29₺'den başlayan paketler, abonelik yok." },
               ].map((m, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm text-gray-500">
@@ -386,12 +386,12 @@ export default function AuthPage() {
             </div>
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
               <div className="bg-purple-50 px-5 pt-6 pb-4">
-                <div className="text-2xl mb-2">🖼️</div>
+                <div className="text-2xl mb-2">📷</div>
                 <h3 className="font-bold text-gray-800">Sadece Görsel</h3>
                 <p className="text-xs text-gray-500 mt-1">Stil başına 1 kredi · Her stilden 4 varyasyon</p>
               </div>
               <div className="p-5 flex-1">
-                <p className="text-sm text-gray-600 leading-relaxed mb-3">Tek fotoğraftan 3 farklı stilde stüdyo görseli.</p>
+                <p className="text-sm text-gray-600 leading-relaxed mb-3">Tek fotoğraftan 3 farklı stüdyo görseli — her stilden 4 varyasyon. 1 stil → 4 görsel → 1 kredi. İnceleme ücretsiz, indirince kredi düşer.</p>
                 <div className="grid grid-cols-3 gap-1.5 mb-3">
                   {[{ src: "/ornek_beyaz.jpg", label: "Beyaz" }, { src: "/ornek_koyu.jpg", label: "Koyu" }, { src: "/ornek_lifestyle.jpg", label: "Lifestyle" }].map(s => (
                     <div key={s.label} className="relative rounded-lg overflow-hidden">
@@ -400,7 +400,7 @@ export default function AuthPage() {
                     </div>
                   ))}
                 </div>
-                <p className="text-xs text-gray-400">İndirince 1 kredi düşer — inceleme ücretsiz</p>
+                <p className="text-xs text-gray-400">İnceleme ücretsiz · İndirince 1 kredi · 1 stil = 4 görsel</p>
               </div>
             </div>
             <div className="bg-white rounded-2xl border-2 border-orange-200 shadow-sm overflow-hidden flex flex-col">
@@ -425,7 +425,7 @@ export default function AuthPage() {
             <button onClick={hemenAlTikla} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-orange-100">
               Paket Satın Al — 29₺'den başlıyor
             </button>
-            <p className="text-xs text-gray-400 mt-3">veya 3 ücretsiz deneme kredisi ile başla, kredi kartı gerekmez</p>
+            <p className="text-xs text-gray-400 mt-3">veya 3 ücretsiz içerik üretim kredisi ile başla, kredi kartı gerekmez</p>
           </div>
         </div>
       </section>
@@ -433,8 +433,8 @@ export default function AuthPage() {
       {/* GÖRSEL ÖNCESİ / SONRASI */}
       <section className="px-4 sm:px-6 py-16">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Tek fotoğraftan 3 farklı stüdyo görseli</h2>
-          <p className="text-center text-sm text-gray-400 mb-10">AI arka planı kaldırır, istediğin ortama yerleştirir — her stilden 4 varyasyon</p>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">📷 Tek fotoğraftan 3 farklı stüdyo görseli</h2>
+          <p className="text-center text-sm text-gray-400 mb-10">AI arka planı kaldırır, istediğin ortama yerleştirir — her stilden 4 varyasyon üretir. İnceleme ücretsiz, indirince 1 kredi düşer.</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="space-y-2">
               <div className="relative rounded-2xl overflow-hidden border-2 border-gray-300">
@@ -562,9 +562,9 @@ export default function AuthPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
               { no: "1", ikon: "📦", baslik: "Ürünü tanımla", aciklama: "Ürün adı yaz, fotoğraf yükle ya da barkod tara." },
-              { no: "2", ikon: "🛒", baslik: "Platform seç", aciklama: "Trendyol, Hepsiburada, Amazon TR veya N11." },
+              { no: "2", ikon: "🛒", baslik: "Platform seç", aciklama: "Trendyol, HB, Amazon TR, N11, Etsy veya Amazon USA." },
               { no: "3", ikon: "📝", baslik: "Listing metnini al", aciklama: "Optimize başlık, özellikler, açıklama ve etiketler." },
-              { no: "4", ikon: "🖼️", baslik: "Görsel üret", aciklama: "3 stilde stüdyo görseli. Kendi prompt'unu gir." },
+              { no: "4", ikon: "📷", baslik: "Görsel üret", aciklama: "3 stilde stüdyo görseli. Kendi prompt'unu gir." },
             ].map((adim) => (
               <div key={adim.no} className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
                 <div className="text-2xl sm:text-3xl mb-3">{adim.ikon}</div>
@@ -586,7 +586,7 @@ export default function AuthPage() {
               { ikon: "📸", baslik: "Fotoğraftan analiz", aciklama: "Ürün fotoğrafını yükle, YZ ürünü tanısın ve listing metnini otomatik oluştursun." },
               { ikon: "📦", baslik: "Barkod tarama", aciklama: "Barkodu tarat, ürün bilgilerini veritabanından çek, listing üret." },
               { ikon: "🎯", baslik: "Platform şablonları", aciklama: "Trendyol, Hepsiburada, Amazon TR ve N11 için ayrı format." },
-              { ikon: "🖼️", baslik: "AI görsel + prompt", aciklama: "Beyaz, koyu, lifestyle — her stilden 4 varyasyon. Kendi sahneni yaz." },
+              { ikon: "📷", baslik: "AI görsel + prompt", aciklama: "Beyaz, koyu, lifestyle — her stilden 4 varyasyon. Kendi sahneni yaz." },
               { ikon: "💎", baslik: "Kredi sadece indirmede düşer", aciklama: "Görsel üretilir, beğenmezsen kredinizi kaybetmezsiniz." },
               { ikon: "💰", baslik: "Kullandığın kadar öde", aciklama: "Aylık abonelik yok. 3 ücretsiz deneme kredisi ile başla." },
             ].map((o, i) => (

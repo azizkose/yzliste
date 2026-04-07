@@ -4,7 +4,7 @@ import crypto from "crypto";
 
 const IYZICO_API_KEY = process.env.IYZICO_API_KEY!;
 const IYZICO_SECRET_KEY = process.env.IYZICO_SECRET_KEY!;
-const IYZICO_BASE_URL = "https://sandbox-api.iyzipay.com";
+const IYZICO_BASE_URL = "https://api.iyzipay.com"; // LIVE
 const URI_PATH = "/payment/iyzipos/checkoutform/initialize/auth/ecom";
 
 const PAKETLER: Record<string, { isim: string; kredi: number; tutar: number }> = {
@@ -30,14 +30,19 @@ export async function POST(req: NextRequest) {
   const { paket, userId, email } = await req.json();
 
   const paketBilgi = PAKETLER[paket];
-  if (!paketBilgi) {
-    return NextResponse.json({ hata: "Gecersiz paket" }, { status: 400 });
-  }
+  if (!paketBilgi) return NextResponse.json({ hata: "Gecersiz paket" }, { status: 400 });
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_KEY!
   );
+
+  // Profil bilgileri — fatura için
+  const { data: profil } = await supabase
+    .from("profiles")
+    .select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no, adres, sehir")
+    .eq("id", userId)
+    .single();
 
   const { data: odeme } = await supabase
     .from("payments")
@@ -46,8 +51,17 @@ export async function POST(req: NextRequest) {
     .single();
 
   const conversationId = randomString(12);
-  const callbackBase = "https://yzliste.vercel.app";
+  const callbackBase = process.env.NEXT_PUBLIC_SITE_URL || "https://yzliste.com";
   const randomKey = randomString(20);
+
+  // Kimlik numarası — TC veya vergi no
+  const identityNumber = profil?.tc_kimlik || profil?.vergi_no || "74300864791";
+  const adSoyad = profil?.ad_soyad || email.split("@")[0];
+  const adParcalari = adSoyad.split(" ");
+  const ad = adParcalari[0] || adSoyad;
+  const soyad = adParcalari.slice(1).join(" ") || "Kullanici";
+  const adres = profil?.adres || "Istanbul";
+  const sehir = profil?.sehir || "Istanbul";
 
   const requestBody = {
     locale: "tr",
@@ -61,20 +75,26 @@ export async function POST(req: NextRequest) {
     enabledInstallments: [1, 2, 3, 6, 9],
     buyer: {
       id: userId,
-      name: email.split("@")[0],
-      surname: "Kullanici",
+      name: ad,
+      surname: soyad,
       gsmNumber: "+905350000000",
       email,
-      identityNumber: "74300864791",
-      registrationAddress: "Istanbul",
+      identityNumber,
+      registrationAddress: adres,
       ip: req.headers.get("x-forwarded-for") || "85.34.78.112",
-      city: "Istanbul",
+      city: sehir,
       country: "Turkey",
     },
-    shippingAddress: { contactName: email.split("@")[0], city: "Istanbul", country: "Turkey", address: "Istanbul" },
-    billingAddress: { contactName: email.split("@")[0], city: "Istanbul", country: "Turkey", address: "Istanbul" },
+    shippingAddress: { contactName: adSoyad, city: sehir, country: "Turkey", address: adres },
+    billingAddress: { contactName: adSoyad, city: sehir, country: "Turkey", address: adres },
     basketItems: [
-      { id: paket, name: paketBilgi.isim, category1: "Dijital Urun", itemType: "VIRTUAL", price: paketBilgi.tutar.toFixed(2) },
+      {
+        id: paket,
+        name: paketBilgi.isim,
+        category1: "Dijital Urun",
+        itemType: "VIRTUAL",
+        price: paketBilgi.tutar.toFixed(2),
+      },
     ],
   };
 
