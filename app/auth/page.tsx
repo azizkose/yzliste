@@ -24,12 +24,22 @@ export default function AuthPage() {
   const [seciliPaket, setSeciliPaket] = useState<string | null>(null);
   const [sifreSifirlamaGonderildi, setSifreSifirlamaGonderildi] = useState(false);
   const [sifreSifirlamaYukleniyor, setSifreSifirlamaYukleniyor] = useState(false);
+  const [anonimKullanici, setAnonimKullanici] = useState(false);
   const odemeRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setOturum(!!user);
+      const anonim = user?.is_anonymous ?? false;
+      setAnonimKullanici(anonim);
+      // ?kayit=1 ile gelindi — modal'ı kayıt modunda aç
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("kayit") === "1") {
+        setModalUyeMod("kayit");
+        setModalMod("uye");
+        setModalAcik(true);
+      }
     });
   }, []);
 
@@ -76,7 +86,21 @@ export default function AuthPage() {
     setSozlesmeOnay(false); setSifreSifirlamaGonderildi(false);
   };
 
-      const hemenAlTikla = async () => {
+      const handleAnonimBasla = async () => {
+    const { data, error } = await supabase.auth.signInAnonymously();
+    if (error || !data.user) {
+      // Anonim giriş başarısız → popup aç kayıt moduyla
+      setModalUyeMod("kayit");
+      setModalMod("uye");
+      setModalAcik(true);
+      return;
+    }
+    // Profil yoksa oluştur (3 başlangıç kredisi)
+    await supabase.from("profiles").insert({ id: data.user.id, kredi: 3 });
+    router.push("/");
+  };
+
+  const hemenAlTikla = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       // Giriş yok — önce üye ekranını göster
@@ -116,9 +140,16 @@ export default function AuthPage() {
     if (modalUyeMod === "kayit" && !modalSozlesme) { setModalMesaj("Sözleşmeleri kabul edin."); return; }
     setModalYukleniyor(true); setModalMesaj("");
     if (modalUyeMod === "kayit") {
-      const { error } = await supabase.auth.signUp({ email: modalEmail, password: modalSifre });
-      if (error) { setModalMesaj(turkceHata(error.message)); }
-      else { setModalMesaj("Kayıt başarılı! E-postanızı doğrulayın."); }
+      if (anonimKullanici) {
+        // Anonim hesabı gerçek hesaba bağla (user ID ve krediler korunur)
+        const { error } = await supabase.auth.updateUser({ email: modalEmail, password: modalSifre });
+        if (error) { setModalMesaj(turkceHata(error.message)); }
+        else { setModalMesaj("Hesabınız oluşturuldu! E-postanızı doğrulayın, ardından giriş yapın."); }
+      } else {
+        const { error } = await supabase.auth.signUp({ email: modalEmail, password: modalSifre });
+        if (error) { setModalMesaj(turkceHata(error.message)); }
+        else { setModalMesaj("Kayıt başarılı! E-postanızı doğrulayın."); }
+      }
     } else {
          const { error, data } = await supabase.auth.signInWithPassword({ email: modalEmail, password: modalSifre });
       if (error) { setModalMesaj("E-posta veya şifre hatalı."); }
@@ -283,9 +314,13 @@ export default function AuthPage() {
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <a href="/auth"><img src="/yzliste_logo.png" alt="yzliste" className="h-8" /></a>
+          <nav className="hidden sm:flex items-center gap-1 text-sm text-gray-500">
+            <a href="/fiyatlar" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors">Fiyatlar</a>
+            <a href="/blog" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors">Blog</a>
+          </nav>
           <div className="flex gap-2">
-            <button onClick={() => { handleModDegistir("giris"); document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" }); }} className="text-sm text-gray-500 hover:text-gray-800 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Giriş Yap</button>
-            <button onClick={() => { handleModDegistir("kayit"); document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" }); }} className="text-sm bg-orange-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium">Ücretsiz Başla</button>
+            <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); }} className="text-sm text-gray-500 hover:text-gray-800 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Giriş Yap</button>
+            <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="text-sm bg-orange-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium">Ücretsiz Başla</button>
           </div>
         </div>
       </header>
@@ -302,46 +337,12 @@ export default function AuthPage() {
         </p>
         <p className="text-sm text-gray-400 mb-8 max-w-xl mx-auto">İster açıklama gir, ister ürün fotoğrafını yükle ya da barkod tara — gerisini YZ halleder.</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <button onClick={() => { handleModDegistir("kayit"); document.getElementById("auth-form")?.scrollIntoView({ behavior: "smooth" }); }} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
+          <button onClick={handleAnonimBasla} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
             3 Ücretsiz İçerik Üretim Kredisi, Başla →
           </button>
           <button onClick={() => document.getElementById("nasil-calisir")?.scrollIntoView({ behavior: "smooth" })} className="text-gray-500 hover:text-gray-700 font-medium px-8 py-4 rounded-xl text-base transition-colors underline underline-offset-4">
             Nasıl çalışır?
           </button>
-        </div>
-      </section>
-
-      {/* SOSYAL KANIT */}
-      <section className="px-4 sm:px-6 py-10 bg-orange-50 border-y border-orange-100">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex flex-wrap justify-center gap-8 sm:gap-16 mb-10">
-            {[
-              { sayi: "500+", label: "Beta kullanıcısı" },
-              { sayi: "10.000+", label: "Üretilen listing" },
-              { sayi: "4.9/5", label: "Kullanıcı memnuniyeti" },
-            ].map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="text-2xl sm:text-3xl font-extrabold text-orange-500">{s.sayi}</div>
-                <div className="text-xs text-gray-500 mt-1">{s.label}</div>
-              </div>
-            ))}
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {yorumlar.map((y, i) => (
-              <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-orange-100">
-                <div className="flex gap-0.5 mb-3">
-                  {Array.from({ length: y.puan }).map((_, j) => (
-                    <span key={j} className="text-orange-400 text-sm">★</span>
-                  ))}
-                </div>
-                <p className="text-sm text-gray-600 leading-relaxed mb-4">"{y.yorum}"</p>
-                <div>
-                  <p className="text-xs font-semibold text-gray-800">{y.isim}</p>
-                  <p className="text-xs text-gray-400">{y.magaza}</p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -600,73 +601,42 @@ export default function AuthPage() {
         </div>
       </section>
 
-      {/* AUTH FORMU */}
-      <section id="auth-form" className="px-4 sm:px-6 py-16 bg-gray-50">
-        <div className="max-w-md mx-auto">
-          <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6 sm:p-8">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-1">
-                {mod === "kayit" ? "Ücretsiz hesap oluştur" : "Tekrar hoş geldin"}
-              </h2>
-              <p className="text-sm text-gray-400">
-                {mod === "kayit" ? "3 ücretsiz içerik üretim kredisi" : "Hesabına giriş yap"}
-              </p>
-            </div>
-
-            {sifreSifirlamaGonderildi ? (
-              <div className="text-center space-y-4 py-4">
-                <div className="text-4xl">📧</div>
-                <p className="text-sm font-semibold text-gray-800">Şifre sıfırlama e-postası gönderildi</p>
-                <p className="text-xs text-gray-500"><strong>{email}</strong> adresine bağlantı gönderdik.</p>
-                <button onClick={() => { setSifreSifirlamaGonderildi(false); setMod("giris"); }} className="text-xs text-orange-500 hover:text-orange-700 underline">
-                  Giriş sayfasına dön
-                </button>
+      {/* SOSYAL KANIT / TESTİMONY */}
+      <section className="px-4 sm:px-6 py-10 bg-orange-50 border-y border-orange-100">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-8 sm:gap-16 mb-10">
+            {[
+              { sayi: "500+", label: "Beta kullanıcısı" },
+              { sayi: "10.000+", label: "Üretilen listing" },
+              { sayi: "4.9/5", label: "Kullanıcı memnuniyeti" },
+            ].map((s) => (
+              <div key={s.label} className="text-center">
+                <div className="text-2xl sm:text-3xl font-extrabold text-orange-500">{s.sayi}</div>
+                <div className="text-xs text-gray-500 mt-1">{s.label}</div>
               </div>
-            ) : (
-              <div className="space-y-3">
-                <input type="email" placeholder="E-posta" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
-                <div className="space-y-1">
-                  <input type="password" placeholder="Şifre" value={sifre} onChange={(e) => setSifre(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                    autoComplete={mod === "kayit" ? "new-password" : "current-password"}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
-                  {mod === "giris" && (
-                    <div className="flex justify-end">
-                      <button onClick={handleSifreSifirla} disabled={sifreSifirlamaYukleniyor} className="text-xs text-gray-400 hover:text-orange-500 transition-colors disabled:opacity-50">
-                        {sifreSifirlamaYukleniyor ? "Gönderiliyor..." : "Şifremi unuttum"}
-                      </button>
-                    </div>
-                  )}
+            ))}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {yorumlar.map((y, i) => (
+              <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-orange-100">
+                <div className="flex gap-0.5 mb-3">
+                  {Array.from({ length: y.puan }).map((_, j) => (
+                    <span key={j} className="text-orange-400 text-sm">★</span>
+                  ))}
                 </div>
-                {mod === "kayit" && (
-                  <label className="flex items-start gap-3 cursor-pointer mt-1">
-                    <input type="checkbox" checked={sozlesmeOnay} onChange={(e) => setSozlesmeOnay(e.target.checked)}
-                      className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0" />
-                    <span className="text-xs text-gray-500 leading-relaxed">
-                      <a href="/gizlilik" target="_blank" className="text-orange-500 hover:underline font-medium">Gizlilik Politikası</a>,{" "}
-                      <a href="/mesafeli-satis" target="_blank" className="text-orange-500 hover:underline font-medium">Mesafeli Satış Sözleşmesi</a> ve{" "}
-                      <a href="/teslimat-iade" target="_blank" className="text-orange-500 hover:underline font-medium">Teslimat ve İade Şartları</a>'nı okudum, kabul ediyorum.
-                    </span>
-                  </label>
-                )}
-                {mesaj && <p className={`text-xs ${mesaj.includes("başarılı") ? "text-green-600" : "text-red-500"}`}>{mesaj}</p>}
-                <button onClick={handleSubmit} disabled={yukleniyor || (mod === "kayit" && !sozlesmeOnay)}
-                  className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors text-sm">
-                  {yukleniyor ? "..." : mod === "kayit" ? "Ücretsiz Hesap Oluştur" : "Giriş Yap"}
-                </button>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">"{y.yorum}"</p>
+                <div>
+                  <p className="text-xs font-semibold text-gray-800">{y.isim}</p>
+                  <p className="text-xs text-gray-400">{y.magaza}</p>
+                </div>
               </div>
-            )}
-
-            {!sifreSifirlamaGonderildi && (
-              <>
-                {mod === "kayit" && <p className="text-xs text-gray-400 text-center mt-4">Kayıt olunca 3 ücretsiz içerik üretim kredisi alırsınız</p>}
-                <div className="text-center mt-5 pt-4 border-t border-gray-100">
-                  <button onClick={() => handleModDegistir(mod === "giris" ? "kayit" : "giris")} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
-                    {mod === "giris" ? "Hesabın yok mu? Kaydol →" : "Zaten hesabın var mı? Giriş yap →"}
-                  </button>
-                </div>
-              </>
-            )}
+            ))}
+          </div>
+          <div className="mt-10 text-center">
+            <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
+              Ücretsiz Başla →
+            </button>
+            <p className="text-xs text-gray-400 mt-3">3 ücretsiz içerik üretim kredisi · Kredi kartı gerekmez</p>
           </div>
         </div>
       </section>
@@ -675,6 +645,10 @@ export default function AuthPage() {
       <footer className="bg-white border-t border-gray-100 px-4 sm:px-6 py-8">
         <div className="max-w-4xl mx-auto space-y-6">
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4 text-xs text-gray-400">
+            <a href="/fiyatlar" className="hover:text-orange-500">Fiyatlar</a>
+            <span>·</span>
+            <a href="/blog" className="hover:text-orange-500">Blog</a>
+            <span>·</span>
             <a href="/hakkimizda" className="hover:text-orange-500">Hakkımızda</a>
             <span>·</span>
             <a href="/gizlilik" className="hover:text-orange-500">Gizlilik Politikası</a>
