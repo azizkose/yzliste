@@ -30,10 +30,10 @@ const paketler = [
     aciklama: "Birkaç ürün denemek isteyenler için ideal başlangıç noktası.",
     ozellikler: [
       "10 kredi (istediğin gibi kullan)",
-      "Metin üretimi: 10 listing",
-      "Görsel üretimi: 10 farklı stil (her stilden 4 varyasyon)",
+      "Metin üretimi: 1 kredi",
+      "Görsel üretimi: 1 kredi, 4 farklı stil (her stilden 4 varyasyon)",
       "Tüm platformlar: Trendyol, HB, Amazon, N11, Etsy, Amazon USA",
-      "Krediler sona erene kadar geçerli, süre sınırı yok",
+      "1 ay kullanım süresi, 1 içinde kullanılmazsa krediler silinir",
     ],
   },
   {
@@ -47,8 +47,8 @@ const paketler = [
     aciklama: "Aktif satıcılar için en çok tercih edilen paket.",
     ozellikler: [
       "30 kredi (istediğin gibi kullan)",
-      "Metin üretimi: 30 listing",
-      "Görsel üretimi: 30 farklı stil (her stilden 4 varyasyon)",
+      "Metin üretimi: 1 kredi",
+      "Görsel üretimi: 1 kredi, 4 farklı stil (her stilden 4 varyasyon)",
       "Metin + Görsel karışık kullanım serbesttir",
       "Tüm platformlar desteklenir",
       "Krediler sona erene kadar geçerli, süre sınırı yok",
@@ -64,8 +64,8 @@ const paketler = [
     aciklama: "Toplu yükleme yapan mağazalar ve profesyonel satıcılar için.",
     ozellikler: [
       "100 kredi (istediğin gibi kullan)",
-      "Metin üretimi: 100 listing",
-      "Görsel üretimi: 100 farklı stil (her stilden 4 varyasyon)",
+      "Metin üretimi: 1 kredi",
+      "Görsel üretimi: 1 kredi, 4 farklı stil (her stilden 4 varyasyon)",
       "Toplu kullanım için en ekonomik seçenek",
       "Tüm platformlar desteklenir",
       "Krediler sona erene kadar geçerli, süre sınırı yok",
