@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { yazilar, yaziGetir, type BlogBolum } from "../icerikler";
 
 // Statik sayfalar oluştur (SSG)
@@ -155,17 +156,17 @@ export default async function BlogYaziPage({
 
       {/* HEADER */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-3">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <a href="/auth">
-            <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
+          <a href="/auth" className="flex-shrink-0">
+            <Image src="/yzliste_logo.png" alt="yzliste" width={32} height={32} className="h-8 w-auto" priority />
           </a>
-          <nav className="hidden sm:flex items-center gap-1 text-sm text-gray-500">
-            <a href="/fiyatlar" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors">Fiyatlar</a>
-            <a href="/blog" className="px-3 py-2 rounded-lg hover:bg-gray-100 text-orange-600 font-medium">Blog</a>
+          <nav className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 flex-1 justify-center sm:flex-none sm:justify-start">
+            <a href="/fiyatlar" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
+            <a href="/blog" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 text-orange-600 font-medium whitespace-nowrap">Blog</a>
           </nav>
-          <div className="flex gap-2">
-            <a href="/auth" className="text-sm text-gray-500 hover:text-gray-800 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Giriş Yap</a>
-            <a href="/auth" className="text-sm bg-orange-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium">Ücretsiz Başla</a>
+          <div className="flex gap-1 sm:gap-2 flex-shrink-0">
+            <a href="/auth" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</a>
+            <a href="/auth" className="text-xs sm:text-sm bg-orange-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla</a>
           </div>
         </div>
       </header>
