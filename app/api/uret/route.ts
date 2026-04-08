@@ -54,6 +54,7 @@ const PLATFORM_KURALLARI: Record<Platform, {
 const HALLUCINATION_KURALLARI = `
 KRITIK KURALLAR — KESINLIKLE UY:
 - Sadece kullanici tarafindan verilen bilgileri kullan. Verilmeyeni ASLA uydurma.
+- Eksik bilgi varsa kullanicidan bilgi isteme — elindeki bilgilerle en iyi icerigi uret.
 - Ürün bilgisinde belirtilmeyen ozellik, renk, boyut, malzeme, fiyat, garanti suresi YAZMA.
 - "Muhtemelen", "olabilir", "gibi gorunuyor" gibi belirsiz ifadeler kullanma.
 - Rakip marka ismi yazma.

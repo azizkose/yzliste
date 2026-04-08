@@ -42,7 +42,7 @@ const PLATFORM_BILGI: Record<string, {
 }> = {
   trendyol: { baslikLimit: 100, ozellikSayisi: 5, aciklamaKelime: 300, etiketSayisi: 10, renk: "bg-orange-50 text-orange-700 border-orange-200", aciklama: "Emoji destekli · Marka + Ürün + Özellik formatı", dil: "tr" },
   hepsiburada: { baslikLimit: 150, ozellikSayisi: 5, aciklamaKelime: 350, etiketSayisi: 10, renk: "bg-orange-50 text-orange-600 border-orange-200", aciklama: "Emoji destekli · Teknik detay odaklı", dil: "tr" },
-  amazon: { baslikLimit: 200, ozellikSayisi: 5, aciklamaKelime: 400, etiketSayisi: 10, renk: "bg-yellow-50 text-yellow-700 border-yellow-200", aciklama: "Emoji kullanılmaz · Amazon TR standart bullet format", dil: "tr" },
+  amazon: { baslikLimit: 200, ozellikSayisi: 5, aciklamaKelime: 400, etiketSayisi: 0, renk: "bg-yellow-50 text-yellow-700 border-yellow-200", aciklama: "Emoji kullanılmaz · Title Case · Backend arama terimleri", dil: "tr" },
   n11: { baslikLimit: 100, ozellikSayisi: 5, aciklamaKelime: 250, etiketSayisi: 8, renk: "bg-blue-50 text-blue-700 border-blue-200", aciklama: "Emoji destekli · Sade ve anlaşılır dil", dil: "tr" },
   etsy: { baslikLimit: 140, ozellikSayisi: 0, aciklamaKelime: 300, etiketSayisi: 13, renk: "bg-orange-50 text-orange-800 border-orange-300", aciklama: "Natural English · 13 multi-word tags · No keyword stuffing", dil: "en" },
   amazon_usa: { baslikLimit: 200, ozellikSayisi: 5, aciklamaKelime: 400, etiketSayisi: 0, renk: "bg-blue-50 text-blue-800 border-blue-300", aciklama: "Title Case · No emoji · Benefit-first bullets · Backend search terms", dil: "en" },
@@ -106,7 +106,7 @@ function KopyalaButon({ metin, getDuzenlenmisMevin }: { metin: string; getDuzenl
 
 const yukleniyorMesajlari = [
   "Ürün analiz ediliyor...",
-  "Türk alıcı arama alışkanlıkları inceleniyor...",
+  "Alıcı arama alışkanlıkları inceleniyor...",
   "Platform kuralları uygulanıyor...",
   "SEO ve GEO optimizasyonu yapılıyor...",
   "Anahtar kelimeler yerleştiriliyor...",
@@ -688,9 +688,9 @@ export default function Home() {
                 <div className={`mt-2 flex flex-wrap gap-2 text-xs px-3 py-2 rounded-lg border ${platformBilgi.renk}`}>
                   <span>📌 Başlık max {platformBilgi.baslikLimit} karakter</span>
                   <span>·</span>
-                  {platformBilgi.ozellikSayisi > 0
-                    ? <span>🔹 {platformBilgi.ozellikSayisi} özellik maddesi</span>
-                    : <span>🏷️ {platformBilgi.etiketSayisi} tag</span>}
+                  {platformBilgi.ozellikSayisi > 0 && <span>🔹 {platformBilgi.ozellikSayisi} özellik maddesi</span>}
+                  {platformBilgi.ozellikSayisi > 0 && platformBilgi.etiketSayisi > 0 && <span>·</span>}
+                  {platformBilgi.etiketSayisi > 0 && <span>🏷️ {platformBilgi.etiketSayisi} etiket</span>}
                   <span>·</span>
                   <span>{platformBilgi.aciklama}</span>
                   <span>·</span>
@@ -710,9 +710,9 @@ export default function Home() {
                     <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder={platformPh.kategori} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı — ne kadar çok, o kadar iyi)</span></label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
                     <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)} placeholder={platformPh.ozellik} rows={3} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
-                    <p className="text-xs text-gray-400 mt-1">💡 Renk, beden, malzeme, garanti, kutu içeriği, güvenlik bilgisi — hepsini ekle, AI kullanacak</p>
+                    <p className="text-xs text-gray-400 mt-1">💡 Renk, beden, malzeme, garanti, kutu içeriği, güvenlik bilgisi — ne kadar çok bilgi girersen içerik o kadar spesifik olur; az bilgide sonuç genel kalabilir</p>
                   </div>
                 </>
               )}
@@ -752,6 +752,8 @@ export default function Home() {
               <button onClick={icerikUret} disabled={!uretButonAktif} className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
                 {yukleniyor ? `⏳ ${yukleniyorMesajlari[yukleniyorMesaj]}` : `İçerik Üret — ${kullanici?.is_admin ? "∞" : "1"} kredi`}
               </button>
+
+              <p className="text-xs text-gray-400 text-center">⚠️ AI hata yapabilir — üretilen içeriği yayınlamadan önce kontrol edin</p>
 
               {!yukleniyor && !kullanici?.is_admin && (kullanici?.kredi ?? 0) <= 0 && (
                 <p className="text-center text-xs text-red-500">İçerik üretim krediniz bitti. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
@@ -813,6 +815,12 @@ export default function Home() {
               ) : (
                 <FotoThumbnail src={fotolar[0]} onKaldir={() => fotoKaldir(0)} renk="green" />
               )}
+              <p className="text-xs text-gray-400">
+                📸 En iyi sonuç için nasıl fotoğraf çekilmeli?{" "}
+                <a href="/blog/ai-gorsel-uretimi-e-ticaret" target="_blank" className="text-purple-500 hover:underline font-medium">
+                  Rehberi oku →
+                </a>
+              </p>
 
               <div>
                 <p className="block text-xs font-medium text-gray-600 mb-2">Stil seç <span className="text-gray-400 font-normal">(birden fazla seçebilirsin — indirirsen her biri için 1 kredi)</span></p>
@@ -824,16 +832,16 @@ export default function Home() {
                     { id: "ozel", label: "✏️ Kendi Sahneni", aciklama: "Prompt yaz", img: null },
                   ] as const).map((s) => (
                     <button key={s.id} onClick={() => setSeciliStiller((prev) => prev.includes(s.id) ? prev.filter((x) => x !== s.id) : [...prev, s.id])}
-                      className={`rounded-xl overflow-hidden border-2 transition-all text-left ${seciliStiller.includes(s.id) ? "border-purple-500 shadow-md" : "border-gray-200 hover:border-purple-300"}`}>
+                      className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${seciliStiller.includes(s.id) ? "border-purple-500 shadow-md" : "border-gray-200 hover:border-purple-300"}`}>
                       {s.img ? (
-                        <div className="aspect-video overflow-hidden relative">
+                        <div className="aspect-video w-full overflow-hidden relative">
                           <img src={s.img} alt={s.label} className="w-full h-full object-cover" />
                           {seciliStiller.includes(s.id) && <div className="absolute inset-0 bg-purple-500/20 flex items-center justify-center"><span className="bg-purple-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">✓</span></div>}
                         </div>
                       ) : (
-                        <div className={`aspect-video flex items-center justify-center text-2xl ${seciliStiller.includes(s.id) ? "bg-purple-100" : "bg-gray-50"}`}>✏️</div>
+                        <div className={`aspect-video w-full flex items-center justify-center text-2xl ${seciliStiller.includes(s.id) ? "bg-purple-100" : "bg-gray-50"}`}>✏️</div>
                       )}
-                      <div className="p-2 bg-white">
+                      <div className="p-2 bg-white w-full">
                         <p className={`text-xs font-semibold ${seciliStiller.includes(s.id) ? "text-purple-600" : "text-gray-700"}`}>{s.label}</p>
                         <p className="text-xs text-gray-400">{s.aciklama}</p>
                       </div>
@@ -854,6 +862,8 @@ export default function Home() {
                 className="w-full bg-purple-500 hover:bg-purple-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
                 {gorselYukleniyor ? `⏳ ${seciliStiller.length * 4} görsel üretiliyor...` : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : seciliStiller.length === 0 ? "Bir stil seç" : `✨ ${seciliStiller.length * 4} Görsel Üret — ${seciliStiller.length} kredi`}
               </button>
+
+              <p className="text-xs text-gray-400 text-center">⚠️ AI hata yapabilir — üretilen görselleri yayınlamadan önce kontrol edin</p>
 
               {gorselSonuclar.length > 0 && (
                 <div className="space-y-5">
@@ -1104,13 +1114,13 @@ export default function Home() {
                             <div key={bi} className="bg-gray-50 rounded-xl p-3">
                               <div className="flex items-center justify-between mb-1.5">
                                 <span className="text-xs font-semibold text-gray-600">{bolum.ikon} {bolum.baslik}</span>
-                                <button onClick={(e) => {
+                                <span role="button" tabIndex={0} onClick={(e) => {
                                   e.stopPropagation();
                                   navigator.clipboard.writeText(bolum.icerik);
-                                  const btn = e.currentTarget as HTMLButtonElement;
-                                  btn.textContent = "✓ Kopyalandı"; btn.style.color = "#16a34a"; btn.style.background = "#dcfce7";
-                                  setTimeout(() => { btn.textContent = "Kopyala"; btn.style.color = ""; btn.style.background = ""; }, 2000);
-                                }} className="text-xs text-orange-500 hover:text-orange-600">Kopyala</button>
+                                  const el = e.currentTarget as HTMLSpanElement;
+                                  el.textContent = "✓ Kopyalandı"; el.style.color = "#16a34a"; el.style.background = "#dcfce7";
+                                  setTimeout(() => { el.textContent = "Kopyala"; el.style.color = ""; el.style.background = ""; }, 2000);
+                                }} className="text-xs text-orange-500 hover:text-orange-600 cursor-pointer">Kopyala</span>
                               </div>
                               <p className="text-xs text-gray-600 leading-relaxed whitespace-pre-line line-clamp-4">{bolum.icerik}</p>
                             </div>

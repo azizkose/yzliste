@@ -23,6 +23,12 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://yzliste.com/blog",
   },
+  robots: { index: true, follow: true },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog | yzliste",
+    description: "E-ticaret satıcıları için listing, görsel ve platform rehberleri.",
+  },
 };
 
 // JSON-LD: Blog listing sayfası

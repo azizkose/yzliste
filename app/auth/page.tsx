@@ -320,7 +320,7 @@ export default function AuthPage() {
           </nav>
           <div className="flex gap-2">
             <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); }} className="text-sm text-gray-500 hover:text-gray-800 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Giriş Yap</button>
-            <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="text-sm bg-orange-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium">Ücretsiz Başla</button>
+            <button onClick={handleAnonimBasla} className="text-sm bg-orange-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium">3 Ücretsiz İçerik Üretim Kredisi, Başla →</button>
           </div>
         </div>
       </header>
@@ -395,9 +395,9 @@ export default function AuthPage() {
                 <p className="text-sm text-gray-600 leading-relaxed mb-3">Tek fotoğraftan 3 farklı stüdyo görseli — her stilden 4 varyasyon. 1 stil → 4 görsel → 1 kredi. İnceleme ücretsiz, indirince kredi düşer.</p>
                 <div className="grid grid-cols-3 gap-1.5 mb-3">
                   {[{ src: "/ornek_beyaz.jpg", label: "Beyaz" }, { src: "/ornek_koyu.jpg", label: "Koyu" }, { src: "/ornek_lifestyle.jpg", label: "Lifestyle" }].map(s => (
-                    <div key={s.label} className="relative rounded-lg overflow-hidden">
-                      <img src={s.src} alt={s.label} className="w-full aspect-square object-cover" />
-                      <span className="absolute bottom-0 inset-x-0 bg-black/40 text-white text-[9px] text-center py-0.5">{s.label}</span>
+                    <div key={s.label} className="rounded-lg overflow-hidden">
+                      <img src={s.src} alt={s.label} className="w-full aspect-square object-cover rounded-lg" />
+                      <p className="text-[9px] text-center text-gray-500 mt-0.5">{s.label}</p>
                     </div>
                   ))}
                 </div>
@@ -453,11 +453,11 @@ export default function AuthPage() {
               { src: "/ornek_lifestyle.jpg", etiket: "🏠 Lifestyle", aciklama: "✓ Doğal ortam" },
             ].map((item) => (
               <div key={item.etiket} className="space-y-2">
-                <div className="relative rounded-2xl overflow-hidden border-2 border-green-200">
+                <div className="rounded-2xl overflow-hidden border-2 border-green-200">
                   <img src={item.src} alt={item.etiket} className="w-full aspect-square object-cover" />
-                  <div className="absolute top-2 left-2"><span className="bg-white/90 text-gray-700 text-[10px] px-2 py-1 rounded-full">{item.etiket}</span></div>
                 </div>
                 <div className="bg-green-50 rounded-xl p-2.5 border border-green-100">
+                  <p className="text-[11px] text-gray-700 font-semibold mb-0.5">{item.etiket}</p>
                   <p className="text-[11px] text-green-600 font-medium">{item.aciklama}</p>
                   <p className="text-[10px] text-green-400 mt-0.5">4 varyasyon üretilir</p>
                 </div>
@@ -633,8 +633,8 @@ export default function AuthPage() {
             ))}
           </div>
           <div className="mt-10 text-center">
-            <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
-              Ücretsiz Başla →
+            <button onClick={handleAnonimBasla} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
+              3 Ücretsiz İçerik Üretim Kredisi, Başla →
             </button>
             <p className="text-xs text-gray-400 mt-3">3 ücretsiz içerik üretim kredisi · Kredi kartı gerekmez</p>
           </div>
