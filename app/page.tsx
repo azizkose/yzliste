@@ -914,35 +914,7 @@ export default function Home() {
                               draggable={false}
                               onContextMenu={(e) => e.preventDefault()}
                             />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                              <button
-                                onClick={async () => {
-                                  const tekIslem = async () => {
-                                    try {
-                                      const res = await fetch(url);
-                                      const blob = await res.blob();
-                                      const blobUrl = URL.createObjectURL(blob);
-                                      const a = document.createElement("a");
-                                      a.href = blobUrl;
-                                      a.download = `gorsel-${stil.stil}-${i + 1}.jpg`;
-                                      a.click();
-                                      URL.revokeObjectURL(blobUrl);
-                                      indirmeHakiKullan();
-                                      if (kullanici && !kullanici.is_admin) {
-                                        await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: kullanici.id, action: "indir", stil: stil.stil }) });
-                                        setKullanici((k) => k ? { ...k, kredi: k.kredi - 1 } : k);
-                                      }
-                                    } catch { /* sessizce geç */ }
-                                  };
-                                  if (!indirmeHakkiVarMi()) {
-                                    if (kullanici?.anonim) { setGorselUyariAcik(true); }
-                                    else { setKrediOnayIslem(() => tekIslem); setKrediOnayAcik(true); }
-                                    return;
-                                  }
-                                  await tekIslem();
-                                }}
-                                className="bg-white text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-lg">📷 İndir</button>
-                            </div>
+                            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                           </div>
                         ))}
                       </div>
