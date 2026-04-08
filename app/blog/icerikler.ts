@@ -18,7 +18,7 @@ export type BlogBolum = {
   metin?: string; // "paragraf", "giris", "bilgi-kutusu", "sonuc" için
   maddeler?: string[]; // "liste" tipi için
 };
-
+"aaaaaaaaaaaaaaaa"
 // ============================================================
 // YAZILARI BURAYA EKLE
 // Her yazı için bir obje ekle. slug URL'de kullanılır (küçük harf, tire ile).
