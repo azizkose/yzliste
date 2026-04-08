@@ -18,10 +18,11 @@ type Uretim = {
 
 type Kullanici = {
   id: string;
-  email: string;
+  email: string | null;
   kredi: number;
   toplam_kullanilan: number;
   is_admin: boolean;
+  anonim?: boolean;
 };
 
 type SonucBolum = {
@@ -363,9 +364,15 @@ export default function Home() {
   const kullaniciyiKontrolEt = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push("/auth"); return; }
+    const anonim = user.is_anonymous ?? false;
     const { data: profil } = await supabase.from("profiles").select("email, kredi, is_admin").eq("id", user.id).single();
     const { count } = await supabase.from("uretimler").select("*", { count: "exact", head: true }).eq("user_id", user.id);
-    if (profil) setKullanici({ id: user.id, email: profil.email, kredi: profil.kredi, toplam_kullanilan: count || 0, is_admin: profil.is_admin || false });
+    if (profil) setKullanici({ id: user.id, email: profil.email ?? null, kredi: profil.kredi, toplam_kullanilan: count || 0, is_admin: profil.is_admin || false, anonim });
+    else if (anonim) {
+      // Profil henüz oluşmamış — yeni anonim kullanıcı
+      await supabase.from("profiles").insert({ id: user.id, kredi: 3 });
+      setKullanici({ id: user.id, email: null, kredi: 3, toplam_kullanilan: 0, is_admin: false, anonim: true });
+    }
     gecmisiYukle(user.id);
   };
 
@@ -534,13 +541,30 @@ export default function Home() {
               <button onClick={() => paketModalAc()} className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-colors ${kullanici.is_admin ? "bg-purple-100 text-purple-700" : krediDusuk ? "bg-red-100 text-red-600 animate-pulse" : "bg-orange-100 text-orange-600 hover:bg-orange-200"}`}>
                 {kullanici.is_admin ? "∞" : kullanici.kredi} kredi
               </button>
-              <span className="text-sm text-gray-400 hidden sm:block">{kullanici.email}</span>
+              {kullanici.anonim
+                ? <a href="/auth" className="text-xs bg-orange-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-orange-600 transition-colors">Hesap Oluştur</a>
+                : <span className="text-sm text-gray-400 hidden sm:block">{kullanici.email}</span>
+              }
               {kullanici.is_admin && <a href="/admin" className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-lg font-medium">Admin</a>}
-              <a href="/profil" className="text-sm text-gray-400 hover:text-gray-600">Profil</a>
+              {!kullanici.anonim && <a href="/profil" className="text-sm text-gray-400 hover:text-gray-600">Profil</a>}
               <button onClick={cikisYap} className="text-sm text-gray-400 hover:text-gray-600">Çıkış</button>
             </div>
           )}
         </div>
+
+        {/* Anonim kullanıcı banner */}
+        {kullanici?.anonim && (
+          <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">👤</span>
+              <div>
+                <p className="text-sm font-semibold text-orange-800">Misafir olarak kullanıyorsunuz</p>
+                <p className="text-xs text-orange-600 mt-0.5">Ücretsiz hesap oluşturarak kredilerinizi ve geçmişinizi kaydedin.</p>
+              </div>
+            </div>
+            <a href="/auth" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap flex-shrink-0">Hesap Oluştur</a>
+          </div>
+        )}
 
         {/* Kredi düşük banner */}
         {krediDusuk && (
