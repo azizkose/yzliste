@@ -324,6 +324,8 @@ export default function Home() {
   const [gorselYukleniyor, setGorselYukleniyor] = useState(false);
   const [gorselSonuclar, setGorselSonuclar] = useState<{ stil: string; label: string; gorseller: string[] }[]>([]);
   const [gorselUyariAcik, setGorselUyariAcik] = useState(false);
+  const [krediOnayAcik, setKrediOnayAcik] = useState(false);
+  const [krediOnayIslem, setKrediOnayIslem] = useState<(() => Promise<void>) | null>(null);
 
   // Video sekmesi
   const [videoFoto, setVideoFoto] = useState<string | null>(null);
@@ -483,6 +485,21 @@ export default function Home() {
     const gun = new Date().toISOString().split("T")[0];
     const kullanilan = parseInt(localStorage.getItem(`gih_${gun}`) || "0", 10);
     return kullanilan < 3;
+  };
+
+  const indirmeHakiSifirla = () => {
+    const gun = new Date().toISOString().split("T")[0];
+    localStorage.setItem(`gih_${gun}`, "0");
+  };
+
+  const krediOnayla = async () => {
+    if (!kullanici) return;
+    // 1 kredi düş — 3 yeni indirme hakkı açılır
+    await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: kullanici.id, action: "indir", stil: "unlock" }) });
+    setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - 1) } : k);
+    indirmeHakiSifirla();
+    setKrediOnayAcik(false);
+    if (krediOnayIslem) { await krediOnayIslem(); setKrediOnayIslem(null); }
   };
 
   const gorselUret = async () => {
@@ -844,34 +861,40 @@ export default function Home() {
                     <p className="text-xs text-gray-500 font-medium">✅ {gorselSonuclar.reduce((t, s) => t + s.gorseller.length, 0)} görsel hazır — inceleme ücretsiz</p>
                     <button
                       onClick={async () => {
-                        if (!indirmeHakkiVarMi()) { setGorselUyariAcik(true); return; }
-                        // JSZip ile tüm görselleri zip'le
-                        const JSZip = (await import("jszip")).default;
-                        const { saveAs } = await import("file-saver");
-                        const zip = new JSZip();
-                        const folder = zip.folder("yzliste-gorseller");
-                        let sayac = 0;
-                        for (const stil of gorselSonuclar) {
-                          for (let i = 0; i < stil.gorseller.length; i++) {
-                            const url = stil.gorseller[i];
-                            try {
-                              const res = await fetch(url);
-                              const blob = await res.blob();
-                              folder?.file(`${stil.stil}-${i + 1}.jpg`, blob);
-                              sayac++;
-                            } catch (e) { console.error("ZIP indirme hatası:", e); }
+                        const zipIslem = async () => {
+                          const JSZip = (await import("jszip")).default;
+                          const { saveAs } = await import("file-saver");
+                          const zip = new JSZip();
+                          const folder = zip.folder("yzliste-gorseller");
+                          let sayac = 0;
+                          for (const stil of gorselSonuclar) {
+                            for (let i = 0; i < stil.gorseller.length; i++) {
+                              const url = stil.gorseller[i];
+                              try {
+                                const res = await fetch(url);
+                                const blob = await res.blob();
+                                folder?.file(`${stil.stil}-${i + 1}.jpg`, blob);
+                                sayac++;
+                              } catch (e) { console.error("ZIP indirme hatası:", e); }
+                            }
                           }
-                        }
-                        if (sayac > 0) {
-                          const zipBlob = await zip.generateAsync({ type: "blob" });
-                          saveAs(zipBlob, "yzliste-gorseller.zip");
-                          indirmeHakiKullan(); // hakkı tüket
-                          if (kullanici && !kullanici.is_admin) {
-                            const stilSayisi = gorselSonuclar.length;
-                            await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: kullanici.id, action: "indir", stilSayisi }) });
-                            setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - stilSayisi) } : k);
+                          if (sayac > 0) {
+                            const zipBlob = await zip.generateAsync({ type: "blob" });
+                            saveAs(zipBlob, "yzliste-gorseller.zip");
+                            indirmeHakiKullan();
+                            if (kullanici && !kullanici.is_admin) {
+                              const stilSayisi = gorselSonuclar.length;
+                              await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: kullanici.id, action: "indir", stilSayisi }) });
+                              setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - stilSayisi) } : k);
+                            }
                           }
+                        };
+                        if (!indirmeHakkiVarMi()) {
+                          if (kullanici?.anonim) { setGorselUyariAcik(true); }
+                          else { setKrediOnayIslem(() => zipIslem); setKrediOnayAcik(true); }
+                          return;
                         }
+                        await zipIslem();
                       }}
                       className="flex items-center gap-1.5 text-xs bg-purple-500 hover:bg-purple-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors"
                     >
@@ -894,23 +917,29 @@ export default function Home() {
                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                               <button
                                 onClick={async () => {
-                                  if (!indirmeHakkiVarMi()) { setGorselUyariAcik(true); return; }
-                                  // Blob üzerinden indir — URL'yi DOM'a açma
-                                  try {
-                                    const res = await fetch(url);
-                                    const blob = await res.blob();
-                                    const blobUrl = URL.createObjectURL(blob);
-                                    const a = document.createElement("a");
-                                    a.href = blobUrl;
-                                    a.download = `gorsel-${stil.stil}-${i + 1}.jpg`;
-                                    a.click();
-                                    URL.revokeObjectURL(blobUrl);
-                                    indirmeHakiKullan(); // hakkı tüket
-                                    if (kullanici && !kullanici.is_admin) {
-                                      await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: kullanici.id, action: "indir", stil: stil.stil }) });
-                                      setKullanici((k) => k ? { ...k, kredi: k.kredi - 1 } : k);
-                                    }
-                                  } catch { /* sessizce geç */ }
+                                  const tekIslem = async () => {
+                                    try {
+                                      const res = await fetch(url);
+                                      const blob = await res.blob();
+                                      const blobUrl = URL.createObjectURL(blob);
+                                      const a = document.createElement("a");
+                                      a.href = blobUrl;
+                                      a.download = `gorsel-${stil.stil}-${i + 1}.jpg`;
+                                      a.click();
+                                      URL.revokeObjectURL(blobUrl);
+                                      indirmeHakiKullan();
+                                      if (kullanici && !kullanici.is_admin) {
+                                        await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: kullanici.id, action: "indir", stil: stil.stil }) });
+                                        setKullanici((k) => k ? { ...k, kredi: k.kredi - 1 } : k);
+                                      }
+                                    } catch { /* sessizce geç */ }
+                                  };
+                                  if (!indirmeHakkiVarMi()) {
+                                    if (kullanici?.anonim) { setGorselUyariAcik(true); }
+                                    else { setKrediOnayIslem(() => tekIslem); setKrediOnayAcik(true); }
+                                    return;
+                                  }
+                                  await tekIslem();
                                 }}
                                 className="bg-white text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-lg">📷 İndir</button>
                             </div>
@@ -1144,6 +1173,37 @@ export default function Home() {
         </div>
 
         {paketModalAcik && kullanici && <PaketModal kullanici={kullanici} onKapat={() => setPaketModalAcik(false)} />}
+
+        {/* Görsel indirme — kayıtlı kullanıcı kredi onayı */}
+        {krediOnayAcik && kullanici && (
+          <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => { setKrediOnayAcik(false); setKrediOnayIslem(null); }}>
+            <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center" onClick={(e) => e.stopPropagation()}>
+              <div className="text-4xl mb-4">🔄</div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Denemeye devam et?</h3>
+              <p className="text-sm text-gray-500 mb-1 leading-relaxed">
+                Günlük ücretsiz indirme hakkın bitti.
+              </p>
+              <p className="text-sm font-semibold text-orange-600 mb-6">
+                1 kredi düşeceğiz — 3 indirme hakkı daha açılır.
+              </p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { setKrediOnayAcik(false); setKrediOnayIslem(null); }}
+                  className="flex-1 border border-gray-200 text-gray-600 font-semibold py-2.5 rounded-xl text-sm hover:bg-gray-50 transition-colors"
+                >
+                  İptal
+                </button>
+                <button
+                  onClick={krediOnayla}
+                  disabled={!kullanici.is_admin && kullanici.kredi < 1}
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
+                >
+                  {!kullanici.is_admin && kullanici.kredi < 1 ? "Kredi yetersiz" : "Onayla — 1 kredi"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Görsel indirme — günlük hak uyarısı */}
         {gorselUyariAcik && (
