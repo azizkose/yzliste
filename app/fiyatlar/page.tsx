@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Fiyatlar | yzliste — E-ticaret Listing Üretici",
@@ -156,22 +157,65 @@ const sss = [
   },
 ];
 
+// JSON-LD: Pricing schema
+function PricingJsonLd() {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "AggregateOffer",
+          priceCurrency: "TRY",
+          offers: [
+            {
+              "@type": "Offer",
+              name: "Başlangıç Paketi",
+              description: "Birkaç ürün denemek isteyenler için ideal başlangıç noktası.",
+              price: "29",
+              priceCurrency: "TRY",
+              availability: "https://schema.org/InStock",
+            },
+            {
+              "@type": "Offer",
+              name: "Popüler Paketi",
+              description: "Aktif satıcılar için en çok tercih edilen paket.",
+              price: "79",
+              priceCurrency: "TRY",
+              availability: "https://schema.org/InStock",
+            },
+            {
+              "@type": "Offer",
+              name: "Büyük Paketi",
+              description: "Toplu yükleme yapan mağazalar ve profesyonel satıcılar için.",
+              price: "149",
+              priceCurrency: "TRY",
+              availability: "https://schema.org/InStock",
+            },
+          ],
+        }),
+      }}
+    />
+  );
+}
+
 export default function FiyatlarPage() {
   return (
     <main className="min-h-screen bg-white font-sans">
+      <PricingJsonLd />
       {/* HEADER */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-3">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <a href="/auth">
-            <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
+          <a href="/auth" className="flex-shrink-0">
+            <Image src="/yzliste_logo.png" alt="yzliste" width={32} height={32} className="h-8 w-auto" priority />
           </a>
-          <nav className="hidden sm:flex items-center gap-1 text-sm text-gray-500">
-            <a href="/fiyatlar" className="px-3 py-2 rounded-lg text-orange-600 font-medium">Fiyatlar</a>
-            <a href="/blog" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors">Blog</a>
+          <nav className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 flex-1 justify-center sm:flex-none sm:justify-start">
+            <a href="/fiyatlar" className="px-2 sm:px-3 py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Fiyatlar</a>
+            <a href="/blog" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
           </nav>
-          <div className="flex gap-2">
-            <a href="/auth" className="text-sm text-gray-500 hover:text-gray-800 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Giriş Yap</a>
-            <a href="/auth" className="text-sm bg-orange-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium">Ücretsiz Başla</a>
+          <div className="flex gap-1 sm:gap-2 flex-shrink-0">
+            <a href="/auth" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</a>
+            <a href="/auth" className="text-xs sm:text-sm bg-orange-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla</a>
           </div>
         </div>
       </header>
@@ -328,7 +372,7 @@ export default function FiyatlarPage() {
             <a href="mailto:destek@yzliste.com" className="hover:text-orange-500">destek@yzliste.com</a>
           </div>
           <div className="flex justify-center">
-            <img src="/iyzico_footer_logo.png" alt="iyzico ile öde" className="h-10" />
+            <Image src="/iyzico_footer_logo.png" alt="iyzico ile öde" width={100} height={40} className="h-10 w-auto" />
           </div>
           <p className="text-center text-xs text-gray-400">© 2026 yzliste · SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI</p>
         </div>

@@ -44,6 +44,79 @@ export const metadata: Metadata = {
   },
 };
 
+// JSON-LD: Organization + SoftwareApplication
+function RootJsonLd() {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://www.yzliste.com/#organization",
+              name: "yzliste",
+              url: "https://www.yzliste.com",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://www.yzliste.com/yzliste_logo.png",
+                width: 200,
+                height: 60,
+              },
+              description:
+                "E-ticaret listing metni ve AI görsel üretim aracı",
+              contactPoint: {
+                "@type": "ContactPoint",
+                telephone: "",
+                contactType: "Customer Service",
+                email: "destek@yzliste.com",
+              },
+            },
+            {
+              "@type": "SoftwareApplication",
+              "@id": "https://www.yzliste.com/#software",
+              name: "yzliste",
+              description:
+                "Trendyol, Hepsiburada, Amazon TR ve N11 için AI ile optimize listing metni ve stüdyo görseli üret. Fotoğraf yükle veya barkod tara.",
+              url: "https://www.yzliste.com",
+              applicationCategory: "BusinessApplication",
+              offers: {
+                "@type": "AggregateOffer",
+                priceCurrency: "TRY",
+                highPrice: "149",
+                lowPrice: "0",
+                offerCount: "4",
+              },
+              featureList: [
+                "AI listing metni üretimi",
+                "AI görsel üretimi",
+                "Trendyol, Hepsiburada, Amazon, N11, Etsy desteği",
+                "Barkod tarama",
+              ],
+              screenshot: "https://www.yzliste.com/og-image.png",
+              publisher: {
+                "@type": "Organization",
+                "@id": "https://www.yzliste.com/#organization",
+              },
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://www.yzliste.com/#website",
+              url: "https://www.yzliste.com",
+              name: "yzliste",
+              inLanguage: "tr",
+              isPartOf: {
+                "@id": "https://www.yzliste.com/#organization",
+              },
+            },
+          ],
+        }),
+      }}
+    />
+  );
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -54,6 +127,9 @@ export default function RootLayout({
       lang="tr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <RootJsonLd />
+      </head>
       <body className="min-h-full flex flex-col">
         {children}
         <ChatWidget />
