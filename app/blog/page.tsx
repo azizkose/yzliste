@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { getYazilar, kategoriler } from "./icerikler";
 
@@ -127,12 +126,11 @@ export default async function BlogPage() {
                 className="group bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
               >
                 {yazi.kapakGorsel && (
-                  <Image
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
                     src={yazi.kapakGorsel}
                     alt={yazi.baslik}
-                    width={500}
-                    height={200}
-                    className="w-full h-40 object-cover"
+                    style={{ width: "100%", height: "176px", objectFit: "cover", display: "block" }}
                   />
                 )}
                 {!yazi.kapakGorsel && (

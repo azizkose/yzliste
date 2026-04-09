@@ -392,15 +392,7 @@ export default function AuthPage() {
                 <p className="text-xs text-gray-500 mt-1">Stil başına 1 kredi · Her stilden 4 varyasyon</p>
               </div>
               <div className="p-5 flex-1">
-                <p className="text-sm text-gray-600 leading-relaxed mb-3">Tek fotoğraftan 3 farklı stüdyo görseli — her stilden 4 varyasyon. 1 stil → 4 görsel → 1 kredi. İnceleme ücretsiz, indirince kredi düşer.</p>
-                <div className="grid grid-cols-3 gap-1.5 mb-3">
-                  {[{ src: "/ornek_beyaz.jpg", label: "Beyaz" }, { src: "/ornek_koyu.jpg", label: "Koyu" }, { src: "/ornek_lifestyle.jpg", label: "Lifestyle" }].map(s => (
-                    <div key={s.label} className="rounded-lg overflow-hidden">
-                      <img src={s.src} alt={s.label} className="w-full aspect-square object-cover rounded-lg" />
-                      <p className="text-[9px] text-center text-gray-500 mt-0.5">{s.label}</p>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-sm text-gray-600 leading-relaxed mb-3">Tek fotoğraftan 7 farklı stüdyo görseli — her stilden 4 varyasyon. 1 stil → 4 görsel → 1 kredi. İnceleme ücretsiz, indirince kredi düşer.</p>
                 <p className="text-xs text-gray-400">İnceleme ücretsiz · İndirince 1 kredi · 1 stil = 4 görsel</p>
               </div>
             </div>
@@ -434,15 +426,34 @@ export default function AuthPage() {
       {/* GÖRSEL ÖNCESİ / SONRASI */}
       <section className="px-4 sm:px-6 py-16">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">📷 Tek fotoğraftan 3 farklı stüdyo görseli</h2>
-          <p className="text-center text-sm text-gray-400 mb-10">AI arka planı kaldırır, istediğin ortama yerleştirir — her stilden 4 varyasyon üretir. İnceleme ücretsiz, indirince 1 kredi düşer.</p>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">📷 Tek fotoğraftan 7 farklı stüdyo görseli</h2>
+          <p className="text-center text-sm text-gray-400 mb-6">AI arka planı kaldırır, istediğin ortama yerleştirir — her stilden 4 varyasyon üretir. İnceleme ücretsiz, indirince 1 kredi düşer.</p>
+          <div className="bg-orange-50 rounded-2xl border border-orange-200 p-4 mb-10">
+            <p className="text-center text-sm text-orange-800"><strong>📸 Sana özel fotoğraf çıkaralım</strong></p>
+            <p className="text-center text-xs text-orange-700 mt-1"><strong>3 seçeneğin var:</strong></p>
+            <div className="text-xs text-orange-700 mt-2 space-y-1.5">
+              <div className="flex items-start gap-2">
+                <span className="font-bold flex-shrink-0">1️⃣</span>
+                <span><strong>Ön seçimli stiller:</strong> Beyaz, Koyu, Lifestyle gibi hazır stillerden seç</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="font-bold flex-shrink-0">2️⃣</span>
+                <span><strong>Metinle tanımla:</strong> "Mermerli masada sofistike ışıklandırma" gibi kendi sahneni yazarak prompt'la tanımla</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="font-bold flex-shrink-0">3️⃣</span>
+                <span><strong>Arka plan fotoğrafı ver:</strong> Ürünü bu arka plana yerleştirelim — örneğin dükkanının, evinizin, açık alanın fotoğrafı</span>
+              </div>
+            </div>
+          </div>
+          {/* Öncesi / Sonrası — ilk satır */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="space-y-2">
-              <div className="relative rounded-2xl overflow-hidden border-2 border-gray-300">
-                <img src="/ornek_once.jpg" alt="önce" className="w-full aspect-square object-cover" />
+            <div className="flex flex-col">
+              <div className="relative rounded-2xl overflow-hidden border-2 border-gray-300 bg-gray-100">
+                <img src="/ornek_once.jpg" alt="önce" className="w-full aspect-square object-contain" />
                 <div className="absolute top-2 left-2"><span className="bg-gray-800/80 text-white text-[10px] px-2 py-1 rounded-full">Ham fotoğraf</span></div>
               </div>
-              <div className="bg-red-50 rounded-xl p-2.5 border border-red-100">
+              <div className="bg-red-50 rounded-xl p-2.5 border border-red-100 mt-2">
                 <p className="text-[11px] text-red-600 font-medium">✗ Dağınık arka plan</p>
                 <p className="text-[10px] text-red-400 mt-0.5">Platform reddedebilir</p>
               </div>
@@ -452,11 +463,31 @@ export default function AuthPage() {
               { src: "/ornek_koyu.jpg", etiket: "⬛ Koyu Zemin", aciklama: "✓ Premium his" },
               { src: "/ornek_lifestyle.jpg", etiket: "🏠 Lifestyle", aciklama: "✓ Doğal ortam" },
             ].map((item) => (
-              <div key={item.etiket} className="space-y-2">
-                <div className="rounded-2xl overflow-hidden border-2 border-green-200">
-                  <img src={item.src} alt={item.etiket} className="w-full aspect-square object-cover" />
+              <div key={item.etiket} className="flex flex-col">
+                <div className="rounded-2xl overflow-hidden border-2 border-green-200 bg-gray-50">
+                  <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" />
                 </div>
-                <div className="bg-green-50 rounded-xl p-2.5 border border-green-100">
+                <div className="bg-green-50 rounded-xl p-2.5 border border-green-100 mt-2">
+                  <p className="text-[11px] text-gray-700 font-semibold mb-0.5">{item.etiket}</p>
+                  <p className="text-[11px] text-green-600 font-medium">{item.aciklama}</p>
+                  <p className="text-[10px] text-green-400 mt-0.5">4 varyasyon üretilir</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Yeni stiller — ikinci satır */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
+            {[
+              { src: "/ornek_mermer.jpg", etiket: "🪨 Mermer", aciklama: "✓ Lüks / kozmetik" },
+              { src: "/ornek_ahsap.jpg", etiket: "🪵 Ahşap", aciklama: "✓ El yapımı / organik" },
+              { src: "/ornek_gradient.jpg", etiket: "🎨 Gradient", aciklama: "✓ Modern / teknoloji" },
+              { src: "/ornek_dogal.jpg", etiket: "🌿 Doğal", aciklama: "✓ Açık hava / taze" },
+            ].map((item) => (
+              <div key={item.etiket} className="flex flex-col">
+                <div className="rounded-2xl overflow-hidden border-2 border-green-200 bg-gray-50">
+                  <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" />
+                </div>
+                <div className="bg-green-50 rounded-xl p-2.5 border border-green-100 mt-2">
                   <p className="text-[11px] text-gray-700 font-semibold mb-0.5">{item.etiket}</p>
                   <p className="text-[11px] text-green-600 font-medium">{item.aciklama}</p>
                   <p className="text-[10px] text-green-400 mt-0.5">4 varyasyon üretilir</p>
@@ -565,7 +596,7 @@ export default function AuthPage() {
               { no: "1", ikon: "📦", baslik: "Ürünü tanımla", aciklama: "Ürün adı yaz, fotoğraf yükle ya da barkod tara." },
               { no: "2", ikon: "🛒", baslik: "Platform seç", aciklama: "Trendyol, HB, Amazon TR, N11, Etsy veya Amazon USA." },
               { no: "3", ikon: "📝", baslik: "Listing metnini al", aciklama: "Optimize başlık, özellikler, açıklama ve etiketler." },
-              { no: "4", ikon: "📷", baslik: "Görsel üret", aciklama: "3 stilde stüdyo görseli. Kendi prompt'unu gir." },
+              { no: "4", ikon: "📷", baslik: "Görsel üret", aciklama: "7+ stilde stüdyo görseli. Kendi prompt'unu gir." },
             ].map((adim) => (
               <div key={adim.no} className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
                 <div className="text-2xl sm:text-3xl mb-3">{adim.ikon}</div>
@@ -616,7 +647,7 @@ export default function AuthPage() {
               </div>
             ))}
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="hidden grid grid-cols-1 sm:grid-cols-3 gap-4">
             {yorumlar.map((y, i) => (
               <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-orange-100">
                 <div className="flex gap-0.5 mb-3">

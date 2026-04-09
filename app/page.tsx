@@ -23,6 +23,7 @@ type Kullanici = {
   toplam_kullanilan: number;
   is_admin: boolean;
   anonim?: boolean;
+  ton?: string;
 };
 
 type SonucBolum = {
@@ -326,6 +327,7 @@ export default function Home() {
   const [gorselUyariAcik, setGorselUyariAcik] = useState(false);
   const [krediOnayAcik, setKrediOnayAcik] = useState(false);
   const [krediOnayIslem, setKrediOnayIslem] = useState<(() => Promise<void>) | null>(null);
+  const [referansGorsel, setReferansGorsel] = useState<string | null>(null);
 
   // Video sekmesi
   const [videoFoto, setVideoFoto] = useState<string | null>(null);
@@ -368,9 +370,9 @@ export default function Home() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push("/auth"); return; }
     const anonim = user.is_anonymous ?? false;
-    const { data: profil } = await supabase.from("profiles").select("email, kredi, is_admin").eq("id", user.id).single();
+    const { data: profil } = await supabase.from("profiles").select("email, kredi, is_admin, ton").eq("id", user.id).single();
     const { count } = await supabase.from("uretimler").select("*", { count: "exact", head: true }).eq("user_id", user.id);
-    if (profil) setKullanici({ id: user.id, email: profil.email ?? null, kredi: profil.kredi, toplam_kullanilan: count || 0, is_admin: profil.is_admin || false, anonim });
+    if (profil) setKullanici({ id: user.id, email: profil.email ?? null, kredi: profil.kredi, toplam_kullanilan: count || 0, is_admin: profil.is_admin || false, anonim, ton: profil.ton ?? undefined });
     else if (anonim) {
       // Profil henüz oluşmamış — yeni anonim kullanıcı
       await supabase.from("profiles").insert({ id: user.id, kredi: 3 });
@@ -458,7 +460,7 @@ export default function Home() {
     setYukleniyorMesaj(0);
     mesajInterval.current = setInterval(() => setYukleniyorMesaj((prev) => (prev + 1) % yukleniyorMesajlari.length), 1800);
     try {
-      const res = await fetch("/api/uret", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi, userId: kullanici.id, dil: platformDil }) });
+      const res = await fetch("/api/uret", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi, userId: kullanici.id, dil: platformDil, ton: kullanici.ton }) });
       const data = await res.json();
       if (mesajInterval.current) clearInterval(mesajInterval.current);
       if (res.status === 402) { paketModalAc(); setYukleniyor(false); return; }
@@ -523,7 +525,7 @@ export default function Home() {
           img.src = base64;
         });
       const resizedFoto = await resizeFoto(fotolar[0]);
-      const res = await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: resizedFoto, ekPrompt: gorselEkPrompt, stiller: seciliStiller, userId: kullanici?.id }) });
+      const res = await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: resizedFoto, ekPrompt: gorselEkPrompt, stiller: seciliStiller, userId: kullanici?.id, referansGorsel }) });
       const data = await res.json();
       if (data.sonuclar) setGorselSonuclar(data.sonuclar);
       else setHata("Görsel üretilemedi. Tekrar deneyin.");
@@ -806,12 +808,12 @@ export default function Home() {
                 <span className="text-xs text-orange-500 font-medium">Stil başına 1 kredi · Her stilden 4 varyasyon</span>
               </div>
               <p className="text-xs text-gray-600">
-                Tek fotoğraftan 3 farklı stüdyo görseli. Her stilden 4 varyasyon üretilir — inceleme ücretsiz, indirince kredi düşer.{" "}
+                Tek fotoğraftan 7+ farklı stüdyo görseli. Her stilden 4 varyasyon üretilir — inceleme ücretsiz, indirince kredi düşer.{" "}
                 <span className="text-xs text-gray-400">  <br /> Örnek: 1 stil seçersen → 4 görsel, 1 kredi <br />2 stil seçersen → 8 görsel, 2 kredi</span>
               </p>
 
               {fotolar.length === 0 ? (
-                <FotoEkleAlani id="gorsel-foto-input" onChange={fotoSec} renk="purple" metin="Ürün fotoğrafı yükle" ikon="📷" altMetin="Arka planı kaldırıp 3 stilden 4'er varyasyon üretiriz" />
+                <FotoEkleAlani id="gorsel-foto-input" onChange={fotoSec} renk="purple" metin="Ürün fotoğrafı yükle" ikon="📷" altMetin="Arka planı kaldırıp 7+ stilden 4'er varyasyon üretiriz" />
               ) : (
                 <FotoThumbnail src={fotolar[0]} onKaldir={() => fotoKaldir(0)} renk="green" />
               )}
@@ -829,17 +831,22 @@ export default function Home() {
                     { id: "beyaz", label: "⬜ Beyaz Zemin", aciklama: "Trendyol standart", img: "/ornek_beyaz.jpg" },
                     { id: "koyu", label: "⬛ Koyu Zemin", aciklama: "Premium / elektronik", img: "/ornek_koyu.jpg" },
                     { id: "lifestyle", label: "🏠 Lifestyle", aciklama: "Gerçek ortam", img: "/ornek_lifestyle.jpg" },
-                    { id: "ozel", label: "✏️ Kendi Sahneni", aciklama: "Prompt yaz", img: null },
+                    { id: "mermer", label: "🪨 Mermer", aciklama: "Lüks / kozmetik", img: "/ornek_mermer.jpg" },
+                    { id: "ahsap", label: "🪵 Ahşap", aciklama: "El yapımı / organik", img: "/ornek_ahsap.jpg" },
+                    { id: "gradient", label: "🎨 Gradient", aciklama: "Modern / teknoloji", img: "/ornek_gradient.jpg" },
+                    { id: "dogal", label: "🌿 Doğal", aciklama: "Açık hava / taze", img: "/ornek_dogal.jpg" },
+                    { id: "ozel", label: "✏️ Sahneni Yaz", aciklama: "Prompt ile tanımla", img: null },
+                    { id: "referans", label: "🖼️ Arka Plan", aciklama: "Fotoğraf yükle", img: null },
                   ] as const).map((s) => (
                     <button key={s.id} onClick={() => setSeciliStiller((prev) => prev.includes(s.id) ? prev.filter((x) => x !== s.id) : [...prev, s.id])}
                       className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${seciliStiller.includes(s.id) ? "border-purple-500 shadow-md" : "border-gray-200 hover:border-purple-300"}`}>
                       {s.img ? (
-                        <div className="aspect-video w-full overflow-hidden relative">
-                          <img src={s.img} alt={s.label} className="w-full h-full object-cover" />
+                        <div className="aspect-square w-full overflow-hidden relative bg-gray-50">
+                          <img src={s.img} alt={s.label} className="w-full h-full object-contain" />
                           {seciliStiller.includes(s.id) && <div className="absolute inset-0 bg-purple-500/20 flex items-center justify-center"><span className="bg-purple-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">✓</span></div>}
                         </div>
                       ) : (
-                        <div className={`aspect-video w-full flex items-center justify-center text-2xl ${seciliStiller.includes(s.id) ? "bg-purple-100" : "bg-gray-50"}`}>✏️</div>
+                        <div className={`aspect-square w-full flex items-center justify-center text-2xl ${seciliStiller.includes(s.id) ? "bg-purple-100" : "bg-gray-50"}`}>{s.id === "ozel" ? "✏️" : "🖼️"}</div>
                       )}
                       <div className="p-2 bg-white w-full">
                         <p className={`text-xs font-semibold ${seciliStiller.includes(s.id) ? "text-purple-600" : "text-gray-700"}`}>{s.label}</p>
@@ -855,8 +862,31 @@ export default function Home() {
 
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1">Görsel yönlendirmesi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="örn: deniz kenarında, ahşap masa üzerinde, sonbahar tonları, minimalist..." rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
+                <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="Sahneyi İngilizce tanımla — örn: on a marble table with soft window light, surrounded by green plants / wooden rustic shelf with warm candle light / pastel pink gradient background, floating soap bubbles" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
               </div>
+
+              {seciliStiller.includes("referans") && (
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Arka plan fotoğrafı <span className="text-gray-400 font-normal">(ürünü bu arka plana yerleştirelim)</span></label>
+                  {referansGorsel ? (
+                    <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2 border-purple-300">
+                      <img src={referansGorsel} alt="Referans" className="w-full h-full object-cover" />
+                      <button onClick={() => setReferansGorsel(null)} className="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center">×</button>
+                    </div>
+                  ) : (
+                    <label className="flex items-center justify-center w-full h-24 border-2 border-dashed border-purple-300 rounded-xl cursor-pointer hover:bg-purple-50 transition-colors">
+                      <span className="text-sm text-purple-400">🖼️ Arka plan fotoğrafı yükle</span>
+                      <input type="file" accept="image/*" className="hidden" onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const reader = new FileReader();
+                        reader.onload = () => setReferansGorsel(reader.result as string);
+                        reader.readAsDataURL(file);
+                      }} />
+                    </label>
+                  )}
+                </div>
+              )}
 
               <button onClick={gorselUret} disabled={gorselYukleniyor || seciliStiller.length === 0 || fotolar.length === 0}
                 className="w-full bg-purple-500 hover:bg-purple-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">

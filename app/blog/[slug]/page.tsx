@@ -103,9 +103,12 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
       );
     case "baslik":
       return (
-        <h2 className="text-xl font-bold text-gray-800 mt-8 mb-3 pt-4 border-t border-gray-100">
-          {bolum.baslik}
-        </h2>
+        <div className="mt-8 pt-4 border-t border-gray-100">
+          <h2 className="text-xl font-bold text-gray-800 mb-3">{bolum.baslik}</h2>
+          {bolum.metin && (
+            <p className="text-sm text-gray-600 leading-relaxed">{bolum.metin}</p>
+          )}
+        </div>
       );
     case "paragraf":
       return (
