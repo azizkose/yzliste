@@ -311,16 +311,16 @@ export default function AuthPage() {
       )}
 
       {/* HEADER */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-3">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <a href="/auth"><img src="/yzliste_logo.png" alt="yzliste" className="h-8" /></a>
-          <nav className="hidden sm:flex items-center gap-1 text-sm text-gray-500">
-            <a href="/fiyatlar" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors">Fiyatlar</a>
-            <a href="/blog" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors">Blog</a>
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-2.5">
+        <div className="max-w-6xl mx-auto flex items-center gap-2">
+          <a href="/auth" className="flex-shrink-0 mr-1"><img src="/yzliste_logo.png" alt="yzliste" className="h-8" /></a>
+          <nav className="flex items-center gap-0.5 text-xs sm:text-sm text-gray-500">
+            <a href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
+            <a href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
           </nav>
-          <div className="flex gap-2 ml-auto">
-            <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); }} className="hidden sm:block text-sm text-gray-500 hover:text-gray-800 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</button>
-            <button onClick={handleAnonimBasla} className="text-sm bg-orange-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap"><span className="hidden sm:inline">3 Ücretsiz İçerik Üretim Kredisi, </span>Başla →</button>
+          <div className="flex gap-1 sm:gap-2 ml-auto items-center">
+            <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); }} className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</button>
+            <button onClick={handleAnonimBasla} className="text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap"><span className="hidden sm:inline">3 Ücretsiz Kredi, </span>Başla →</button>
           </div>
         </div>
       </header>
@@ -691,7 +691,7 @@ export default function AuthPage() {
             <a href="mailto:destek@yzliste.com" className="hover:text-orange-500">destek@yzliste.com</a>
           </div>
           <div className="flex justify-center">
-            <img src="/iyzico_footer_logo.png" alt="iyzico ile öde" className="h-10" />
+            <img src="/iyzico_footer_logo.png" alt="iyzico ile öde" className="w-44 h-auto" />
           </div>
           <p className="text-center text-xs text-gray-400">© 2026 yzliste · SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI</p>
         </div>
