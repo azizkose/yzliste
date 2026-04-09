@@ -12,9 +12,10 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const yazi = yaziGetir(params.slug);
+  const { slug } = await params;
+  const yazi = yaziGetir(slug);
   if (!yazi) return { title: "Yazı bulunamadı | yzliste" };
 
   return {
@@ -43,6 +44,7 @@ export async function generateMetadata({
     alternates: {
       canonical: `https://yzliste.com/blog/${yazi.slug}`,
     },
+    robots: { index: true, follow: true },
   };
 }
 
@@ -136,12 +138,13 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
   }
 }
 
-export default function BlogYaziPage({
+export default async function BlogYaziPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const yazi = yaziGetir(params.slug);
+  const { slug } = await params;
+  const yazi = yaziGetir(slug);
   if (!yazi) notFound();
 
   const digerYazilar = yazilar.filter((y) => y.slug !== yazi.slug).slice(0, 3);

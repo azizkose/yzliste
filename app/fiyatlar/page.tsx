@@ -16,7 +16,18 @@ export const metadata: Metadata = {
     title: "Fiyatlar | yzliste",
     description: "Kullandığın kadar öde. 3 ücretsiz kredi, abonelik yok.",
     url: "https://yzliste.com/fiyatlar",
+    type: "website",
+    siteName: "yzliste",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fiyatlar | yzliste",
+    description: "Kullandığın kadar öde. 3 ücretsiz kredi, abonelik yok.",
+  },
+  alternates: {
+    canonical: "https://yzliste.com/fiyatlar",
+  },
+  robots: { index: true, follow: true },
 };
 
 const paketler = [
