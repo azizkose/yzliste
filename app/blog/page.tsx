@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
-import { yazilar, kategoriler } from "./icerikler";
+import { getYazilar, kategoriler } from "./icerikler";
+
+export const revalidate = 3600; // 1 saat ISR cache
 
 export const metadata: Metadata = {
   title: "Blog | yzliste — E-ticaret Listing ve AI Görsel Rehberleri",
@@ -64,8 +65,9 @@ function BlogJsonLd() {
   );
 }
 
-export default function BlogPage() {
-  const cats = kategoriler();
+export default async function BlogPage() {
+  const yazilar = await getYazilar();
+  const cats = await kategoriler();
 
   return (
     <main className="min-h-screen bg-white font-sans">
