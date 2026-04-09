@@ -1,6 +1,4 @@
-import { trendyolListingNasilYazilir } from "./posts/trendyol-listing-nasil-yazilir";
-import { aiGorselUretimi } from "./posts/ai-gorsel-uretimi-e-ticaret";
-import { etsyListingIngilizce } from "./posts/etsy-listing-ingilizce-nasil-yazilir";
+import { loadBlogPostsFromMarkdown } from "@/lib/blog-parser";
 
 export type BlogYazisi = {
   slug: string;
@@ -24,22 +22,31 @@ export type BlogBolum = {
 };
 
 // YENİ YAZILARI EKLEMEK İÇİN:
-// 1. app/blog/posts/ klasörüne {slug}.ts dosyası oluştur
-// 2. BlogYazisi objesini export et (const adı camelCase)
-// 3. Burada import et ve yazilar dizisine ekle
+// 1. app/blog/posts/ klasörüne {slug}.md dosyası oluştur
+// 2. DETAYLI_SABLON.md'yi rehber olarak kullan
+// 3. Metadata + içerik doldur
+// 4. Bana gönder — otomatik parse edilip siteye eklenecek
 
-export const yazilar: BlogYazisi[] = [
-  trendyolListingNasilYazilir,
-  aiGorselUretimi,
-  etsyListingIngilizce,
-];
+/**
+ * Tüm blog yazılarını app/blog/posts/*.md dosyalarından yükle
+ * Build-time'da cached, ISR ile 1 saat sonra revalidate
+ */
+export async function getYazilar(): Promise<BlogYazisi[]> {
+  return await loadBlogPostsFromMarkdown();
+}
 
-// Slug'a göre tek yazı döndür
-export function yaziGetir(slug: string): BlogYazisi | undefined {
+/**
+ * Slug'a göre tek yazı döndür
+ */
+export async function yaziGetir(slug: string): Promise<BlogYazisi | undefined> {
+  const yazilar = await getYazilar();
   return yazilar.find((y) => y.slug === slug);
 }
 
-// Kategori listesi
-export function kategoriler(): string[] {
+/**
+ * Kategori listesi
+ */
+export async function kategoriler(): Promise<string[]> {
+  const yazilar = await getYazilar();
   return [...new Set(yazilar.map((y) => y.kategori))];
 }

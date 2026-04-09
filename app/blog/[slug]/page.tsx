@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { yazilar, yaziGetir, type BlogBolum } from "../icerikler";
+import { getYazilar, yaziGetir, type BlogBolum } from "../icerikler";
+
+export const revalidate = 3600; // 1 saat ISR cache
 
 // Statik sayfalar oluştur (SSG)
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const yazilar = await getYazilar();
   return yazilar.map((y) => ({ slug: y.slug }));
 }
 
@@ -15,7 +18,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const yazi = yaziGetir(slug);
+  const yazi = await yaziGetir(slug);
   if (!yazi) return { title: "Yazı bulunamadı | yzliste" };
 
   return {
@@ -144,9 +147,10 @@ export default async function BlogYaziPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const yazi = yaziGetir(slug);
+  const yazi = await yaziGetir(slug);
   if (!yazi) notFound();
 
+  const yazilar = await getYazilar();
   const digerYazilar = yazilar.filter((y) => y.slug !== yazi.slug).slice(0, 3);
 
   return (
