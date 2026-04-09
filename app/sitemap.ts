@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
-import { yazilar } from "./blog/icerikler";
+import { getYazilar } from "./blog/icerikler";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.yzliste.com";
 
   // Ana sayfalar
@@ -27,6 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   // Blog yazıları — dinamik
+  const yazilar = await getYazilar();
   const blogPages: MetadataRoute.Sitemap = yazilar.map((yazi) => ({
     url: `${baseUrl}/blog/${yazi.slug}`,
     changeFrequency: "monthly" as const,
