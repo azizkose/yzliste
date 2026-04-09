@@ -14,40 +14,28 @@ kapakGorsel:
 
 Trendyol'da yüz binlerce ürün arasından öne çıkmak için iyi bir fotoğraf tek başına yetmez. Platforma özel formatlanmış, arama motorlarının ve Trendyol algoritmasının anlayacağı şekilde yazılmış bir listing şarttır. Bu rehberde Trendyol listing'inin her bölümünü nasıl yazacağını öğreneceksin.
 
----
+## Trendyol'un 100 Karakterlik Başlık Formülü
 
-## 1. Başlık: Trendyol'un 100 karakterlik formülü
+Trendyol başlıkları en fazla 100 karakter kabul eder. Formatın şu sırayla gitmesi gerekir: Marka + Ürün Adı + Ana Özellik + İkincil Özellik. Emoji kullanımı Trendyol'da serbesttir ve dikkat çekicidir. Örnek: Columbia Erkek Su Geçirmez Bot 🥾 Hakiki Deri | Kışlık | 42 Numara
 
-Trendyol başlıkları en fazla 100 karakter kabul eder. Formatın şu sırayla gitmesi gerekir: Marka + Ürün Adı + Ana Özellik + İkincil Özellik. Emoji kullanımı Trendyol'da serbesttir ve dikkat çekicidir. Örnek: 'Columbia Erkek Su Geçirmez Bot 🥾 Hakiki Deri | Kışlık | 42 Numara'
+## Özellikler: Madde Madde, Emoji Destekli
 
----
+Trendyol'da ürün özellikleri en fazla 5 madde olarak girilir. Her maddenin başına uygun bir emoji koyarak görsel zenginlik yaratabilirsin. Önemli olan özelliklerin alıcıya fayda odaklı olması: Hakiki deri yerine Hakiki deri — uzun yıllar dayanır gibi bir ifade dönüşümü satışları artırır.
 
-## 2. Özellikler: Madde madde, emoji destekli
+## Açıklama: 300 Kelimeyi Verimli Kullan
 
-Trendyol'da ürün özellikleri en fazla 5 madde olarak girilir. Her maddenin başına uygun bir emoji koyarak görsel zenginlik yaratabilirsin. Önemli olan özelliklerin alıcıya fayda odaklı olması: 'Hakiki deri' yerine 'Hakiki deri — uzun yıllar dayanır' gibi bir ifade dönüşümü artırır.
+Trendyol açıklamasında yaklaşık 300 kelime hedefle. İlk iki cümle en önemli kısmıdır çünkü alıcı Devamını Gör butonuna basmadan önce sadece bunları okur. Ürünün hikayesini anlat, kullanım senaryosu yaz, rakiplerden farkını belirt.
 
----
-
-## 3. Açıklama: 300 kelimeyi verimli kullan
-
-Trendyol açıklamasında yaklaşık 300 kelime hedefle. İlk iki cümle en önemli kısmıdır çünkü alıcı 'Devamını gör' butonuna basmadan önce sadece bunları okur. Ürünün hikayesini anlat, kullanım senaryosu yaz, rakiplerden farkını belirt.
-
----
-
-## 4. Arama etiketleri: Uzun kuyruklu anahtar kelimeler
+## Arama Etiketleri: Uzun Kuyruklu Anahtar Kelimeler
 
 - Trendyol'da 10 etiket girebilirsin — tamamını doldur.
-- Genel terimler (örn: 'bot') yerine uzun kuyruklu terimler kullan (örn: 'kışlık erkek bot 42 numara').
+- Genel terimler (örn: bot) yerine uzun kuyruklu terimler kullan (örn: kışlık erkek bot 42 numara).
 - Rakip markaların ürün isimlerini etiket olarak kullanmak Trendyol'da yasaklanmıştır.
 - Etiketleri test et: 2 haftada bir farklı kombinasyonlar dene ve tıklama oranını karşılaştır.
-
----
 
 ## BİLGİ KUTUSU
 
 💡 İpucu: yzliste'yi kullanarak platform bazında optimize edilmiş başlık, özellik, açıklama ve etiket içeriklerini saniyeler içinde üretebilirsin. Ürün fotoğrafını yükle ya da barkod tara, gerisini YZ halleder.
-
----
 
 ## SONUÇ
 
