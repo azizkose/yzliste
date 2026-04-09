@@ -52,7 +52,7 @@ export async function generateMetadata({
 }
 
 // JSON-LD: Article schema
-function ArticleJsonLd({ yazi }: { yazi: NonNullable<ReturnType<typeof yaziGetir>> }) {
+function ArticleJsonLd({ yazi }: { yazi: Awaited<NonNullable<Awaited<ReturnType<typeof yaziGetir>>>> }) {
   return (
     <script
       type="application/ld+json"
