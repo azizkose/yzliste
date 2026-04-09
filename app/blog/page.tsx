@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { getYazilar, kategoriler } from "./icerikler";
 
@@ -34,7 +35,8 @@ export const metadata: Metadata = {
 };
 
 // JSON-LD: Blog listing sayfası
-function BlogJsonLd() {
+async function BlogJsonLd() {
+  const yazilar = await getYazilar();
   return (
     <script
       type="application/ld+json"
