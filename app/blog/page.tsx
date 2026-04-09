@@ -79,7 +79,7 @@ export default async function BlogPage() {
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-3 sm:px-6 py-2 sm:py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 sm:gap-4">
           <a href="/" className="flex-shrink-0">
-            <Image src="/yzliste_logo.png" alt="yzliste" width={64} height={64} className="h-10 w-auto" priority />
+            <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
           </a>
           <nav className="hidden sm:flex items-center gap-1 text-sm text-gray-500">
             <a href="/fiyatlar" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
@@ -87,7 +87,7 @@ export default async function BlogPage() {
           </nav>
           <div className="flex gap-1 sm:gap-2 flex-shrink-0 ml-auto">
             <a href="/auth" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</a>
-            <a href="/auth" className="text-xs sm:text-sm bg-orange-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla</a>
+            <a href="/auth" className="hidden md:inline-block text-xs sm:text-sm bg-orange-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla</a>
           </div>
         </div>
       </header>
