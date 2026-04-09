@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getYazilar, yaziGetir, type BlogBolum } from "../icerikler";
+import { getYazilar, yaziGetir, type BlogYazisi, type BlogBolum } from "../icerikler";
 
 export const revalidate = 3600; // 1 saat ISR cache
 
@@ -52,7 +52,7 @@ export async function generateMetadata({
 }
 
 // JSON-LD: Article schema
-function ArticleJsonLd({ yazi }: { yazi: NonNullable<ReturnType<typeof yaziGetir>> }) {
+function ArticleJsonLd({ yazi }: { yazi: BlogYazisi }) {
   return (
     <script
       type="application/ld+json"

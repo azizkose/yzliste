@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 };
 
 // JSON-LD: Blog listing sayfası
-function BlogJsonLd() {
+function BlogJsonLd({ yazilar }: { yazilar: Awaited<ReturnType<typeof getYazilar>> }) {
   return (
     <script
       type="application/ld+json"
@@ -71,7 +71,7 @@ export default async function BlogPage() {
 
   return (
     <main className="min-h-screen bg-white font-sans">
-      <BlogJsonLd />
+      <BlogJsonLd yazilar={yazilar} />
 
       {/* HEADER */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-3">
