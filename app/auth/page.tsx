@@ -318,9 +318,9 @@ export default function AuthPage() {
             <a href="/fiyatlar" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors">Fiyatlar</a>
             <a href="/blog" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors">Blog</a>
           </nav>
-          <div className="flex gap-2">
-            <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); }} className="text-sm text-gray-500 hover:text-gray-800 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Giriş Yap</button>
-            <button onClick={handleAnonimBasla} className="text-sm bg-orange-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium">3 Ücretsiz İçerik Üretim Kredisi, Başla →</button>
+          <div className="flex gap-2 ml-auto">
+            <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); }} className="hidden sm:block text-sm text-gray-500 hover:text-gray-800 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</button>
+            <button onClick={handleAnonimBasla} className="text-sm bg-orange-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap"><span className="hidden sm:inline">3 Ücretsiz İçerik Üretim Kredisi, </span>Başla →</button>
           </div>
         </div>
       </header>
