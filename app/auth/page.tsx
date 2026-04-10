@@ -14,6 +14,7 @@ export default function AuthPage() {
   const [modalAcik, setModalAcik] = useState(false);
   const [modalMod, setModalMod] = useState<"paket" | "uye">("paket");
   const [modalUyeMod, setModalUyeMod] = useState<"giris" | "kayit">("kayit");
+  const [modalAmac, setModalAmac] = useState<"auth" | "satin_al">("auth");
   const [modalEmail, setModalEmail] = useState("");
   const [modalSifre, setModalSifre] = useState("");
   const [modalSozlesme, setModalSozlesme] = useState(false);
@@ -36,9 +37,15 @@ export default function AuthPage() {
       // ?kayit=1 ile gelindi — modal'ı kayıt modunda aç
       const params = new URLSearchParams(window.location.search);
       if (params.get("kayit") === "1") {
-        setMod("kayit");
+        setModalUyeMod("kayit");
+        setModalMod("uye");
+        setModalAmac("auth");
+        setModalAcik(true);
       } else if (params.get("giris") === "1") {
-        setMod("giris");
+        setModalUyeMod("giris");
+        setModalMod("uye");
+        setModalAmac("auth");
+        setModalAcik(true);
       }
     });
   }, []);
@@ -116,6 +123,7 @@ export default function AuthPage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       // Giriş yok — önce üye ekranını göster
+      setModalAmac("satin_al");
       setModalMod("uye");
       setModalAcik(true);
       setOdemeForm(null);
@@ -123,6 +131,7 @@ export default function AuthPage() {
       setModalMesaj("");
       return;
     }
+    setModalAmac("satin_al");
     // Giriş var — fatura kontrolü
     const { data: profil } = await supabase
       .from("profiles")
@@ -163,28 +172,16 @@ export default function AuthPage() {
         else { setModalMesaj("Kayıt başarılı! E-postanızı doğrulayın."); }
       }
     } else {
-         const { error, data } = await supabase.auth.signInWithPassword({ email: modalEmail, password: modalSifre });
+      const { error } = await supabase.auth.signInWithPassword({ email: modalEmail, password: modalSifre });
       if (error) { setModalMesaj("E-posta veya şifre hatalı."); }
       else {
         setOturum(true);
-        // Fatura bilgisi kontrolü
-        const { data: profil } = await supabase
-          .from("profiles")
-          .select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no")
-          .eq("id", data.user.id)
-          .single();
-        const eksik =
-          !profil?.ad_soyad ||
-          (profil?.fatura_tipi === "bireysel" && !profil?.tc_kimlik) ||
-          (profil?.fatura_tipi === "kurumsal" && !profil?.vergi_no);
-        if (eksik) {
-          setModalAcik(false);
-          alert("Ödeme yapabilmek için önce fatura bilgilerinizi doldurmanız gerekiyor.");
-          window.location.href = "/profil";
-          return;
+        if (modalAmac === "auth") {
+          router.push("/");
+        } else {
+          setModalMod("paket");
+          setModalMesaj("");
         }
-        setModalMod("paket");
-        setModalMesaj("");
       }
     }
     setModalYukleniyor(false);

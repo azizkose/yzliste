@@ -128,6 +128,15 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
   ];
 
   const odemeBaslat = async (paketId: string) => {
+    // Fatura bilgisi kontrolü — ödeme başlamadan önce
+    const { data: profilKontrol } = await supabase.from("profiles").select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no").eq("id", kullanici.id).single();
+    const eksik = !profilKontrol?.ad_soyad || (profilKontrol?.fatura_tipi === "bireysel" && !profilKontrol?.tc_kimlik) || (profilKontrol?.fatura_tipi === "kurumsal" && !profilKontrol?.vergi_no);
+    if (eksik) {
+      onKapat();
+      alert("Ödeme yapabilmek için önce profil sayfasından fatura bilgilerinizi doldurun.");
+      window.location.href = "/profil";
+      return;
+    }
     setSeciliPaket(paketId);
     setYukleniyor(true);
     try {
@@ -360,11 +369,8 @@ export default function Home() {
   const sonucBolumleri = sonucuBolumle(sonuc);
   const platformRenk: Record<string, string> = { trendyol: "bg-orange-100 text-orange-700", hepsiburada: "bg-orange-100 text-orange-600", amazon: "bg-yellow-100 text-yellow-700", n11: "bg-blue-100 text-blue-700" };
 
-  const paketModalAc = async () => {
+  const paketModalAc = () => {
     if (!kullanici) return;
-    const { data: profil } = await supabase.from("profiles").select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no").eq("id", kullanici.id).single();
-    const eksik = !profil?.ad_soyad || (profil?.fatura_tipi === "bireysel" && !profil?.tc_kimlik) || (profil?.fatura_tipi === "kurumsal" && !profil?.vergi_no);
-    if (eksik) { setHata("Ödeme yapabilmek için önce profil sayfasından fatura bilgilerinizi doldurun."); setTimeout(() => router.push("/profil"), 2500); return; }
     setPaketModalAcik(true);
   };
 
