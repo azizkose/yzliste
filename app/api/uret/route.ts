@@ -342,7 +342,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")
-    .select("kredi, is_admin")
+    .select("kredi, is_admin, marka_adi, hedef_kitle, vurgulanan_ozellikler")
     .eq("id", userId)
     .single();
 
@@ -378,6 +378,18 @@ export async function POST(req: NextRequest) {
     } else {
       kullaniciBilgi = `Urun adi: ${urunAdi}\nKategori: ${kategori}\nEk ozellikler ve bilgiler: ${ozellikler || "belirtilmedi"}`;
     }
+  }
+
+  // Marka bağlamı — dolu olan alanlar prompta eklenir
+  const platformDilOnceki: "tr" | "en" = ["etsy", "amazon_usa"].includes(platform) ? "en" : (dil || "tr");
+  const markaBaglami: string[] = [];
+  if (profil.marka_adi) markaBaglami.push(platformDilOnceki === "en" ? `Brand: ${profil.marka_adi}` : `Marka: ${profil.marka_adi}`);
+  if (profil.hedef_kitle) markaBaglami.push(platformDilOnceki === "en" ? `Target audience: ${profil.hedef_kitle}` : `Hedef kitle: ${profil.hedef_kitle}`);
+  if (profil.vurgulanan_ozellikler) markaBaglami.push(platformDilOnceki === "en" ? `Key selling points to emphasize: ${profil.vurgulanan_ozellikler}` : `Vurgulanacak ozellikler: ${profil.vurgulanan_ozellikler}`);
+  if (markaBaglami.length > 0) {
+    kullaniciBilgi += platformDilOnceki === "en"
+      ? `\n\nBrand context:\n${markaBaglami.join("\n")}`
+      : `\n\nMarka baglami:\n${markaBaglami.join("\n")}`;
   }
 
   mesajIcerikleri.push({ type: "text", text: kullaniciBilgi });

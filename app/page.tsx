@@ -24,6 +24,7 @@ type Kullanici = {
   is_admin: boolean;
   anonim?: boolean;
   ton?: string;
+  marka_adi?: string;
 };
 
 type SonucBolum = {
@@ -302,6 +303,7 @@ export default function Home() {
   const [seciliUretim, setSeciliUretim] = useState<Uretim | null>(null);
   const [paketModalAcik, setPaketModalAcik] = useState(false);
   const [hata, setHata] = useState<string | null>(null);
+  const [profilBannerKapatildi, setProfilBannerKapatildi] = useState(false);
 
   // Metin sekmesi
   const [urunAdi, setUrunAdi] = useState("");
@@ -370,9 +372,9 @@ export default function Home() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push("/auth"); return; }
     const anonim = user.is_anonymous ?? false;
-    const { data: profil } = await supabase.from("profiles").select("email, kredi, is_admin, ton").eq("id", user.id).single();
+    const { data: profil } = await supabase.from("profiles").select("email, kredi, is_admin, ton, marka_adi").eq("id", user.id).single();
     const { count } = await supabase.from("uretimler").select("*", { count: "exact", head: true }).eq("user_id", user.id);
-    if (profil) setKullanici({ id: user.id, email: profil.email ?? null, kredi: profil.kredi, toplam_kullanilan: count || 0, is_admin: profil.is_admin || false, anonim, ton: profil.ton ?? undefined });
+    if (profil) setKullanici({ id: user.id, email: profil.email ?? null, kredi: profil.kredi, toplam_kullanilan: count || 0, is_admin: profil.is_admin || false, anonim, ton: profil.ton ?? undefined, marka_adi: profil.marka_adi ?? undefined });
     else if (anonim) {
       // Profil henüz oluşmamış — yeni anonim kullanıcı
       await supabase.from("profiles").insert({ id: user.id, kredi: 3 });
@@ -602,6 +604,23 @@ export default function Home() {
           </div>
         )}
 
+        {/* Profil eksik banner */}
+        {kullanici && !kullanici.anonim && !kullanici.marka_adi && !profilBannerKapatildi && (
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-xl flex-shrink-0">💡</span>
+              <div>
+                <p className="text-sm font-semibold text-blue-800">Marka profilinizi doldurun</p>
+                <p className="text-xs text-blue-600 mt-0.5">Marka adı, hedef kitle ve ton bilgileri girilince AI metinleri ve görseller çok daha kaliteli sonuç verir.</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <a href="/profil" className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap transition-colors">Profili Düzenle</a>
+              <button onClick={() => setProfilBannerKapatildi(true)} className="text-blue-400 hover:text-blue-600 text-xl leading-none">×</button>
+            </div>
+          </div>
+        )}
+
         {/* Kredi düşük banner */}
         {krediDusuk && (
           <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4">
@@ -666,7 +685,6 @@ export default function Home() {
                     <button key={tip} onClick={() => setGirisTipi(tip)}
                       className={`flex-1 py-2 px-3 rounded-xl border-2 text-xs font-semibold transition-all ${girisTipi === tip ? "border-orange-400 bg-orange-50 text-orange-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
                       {tip === "manuel" ? "✏️ Manuel" : tip === "foto" ? "📷 Fotoğraf" : "🔍 Barkod"}
-                      {tip === "barkod" && <span className="ml-1 text-gray-400 font-normal">(yakında)</span>}
                     </button>
                   ))}
                 </div>
@@ -743,10 +761,36 @@ export default function Home() {
 
               {/* Barkod */}
               {girisTipi === "barkod" && (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 text-center space-y-2">
-                  <div className="text-3xl">🔍</div>
-                  <p className="text-sm font-semibold text-amber-700">Barkod ile Tanıma — Yakında</p>
-                  <p className="text-xs text-amber-600">Bu özellik çok yakında aktif olacak. Manuel ya da fotoğraf seçeneğini kullanabilirsiniz.</p>
+                <div className="space-y-3">
+                  {!kameraAcik && !barkodBilgi && (
+                    <div className="bg-orange-50 border border-orange-200 rounded-xl p-5 text-center space-y-3">
+                      <div className="text-3xl">🔍</div>
+                      <p className="text-sm text-gray-600">Ürünün barkodunu kameraya göster, bilgiler otomatik dolacak.</p>
+                      <button onClick={kameraAc} className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-5 py-2 rounded-xl transition-colors">
+                        📷 Kamerayı Aç
+                      </button>
+                    </div>
+                  )}
+                  {kameraAcik && (
+                    <div className="space-y-2">
+                      <div id="barkod-okuyucu" className="w-full rounded-xl overflow-hidden" />
+                      {barkodYukleniyor && <p className="text-center text-sm text-gray-500 animate-pulse">🔄 Ürün sorgulanıyor...</p>}
+                      <button onClick={kameraKapat} className="w-full text-xs text-gray-400 hover:text-gray-600 py-1 transition-colors">
+                        ✕ Kamerayı Kapat
+                      </button>
+                    </div>
+                  )}
+                  {barkodBilgi && (
+                    <div className="bg-green-50 border border-green-200 rounded-xl p-4 space-y-1">
+                      <p className="text-sm font-semibold text-green-700">✅ Ürün Tanındı</p>
+                      <p className="text-sm text-gray-700"><span className="font-medium">İsim:</span> {barkodBilgi.isim}</p>
+                      {barkodBilgi.marka && <p className="text-sm text-gray-600"><span className="font-medium">Marka:</span> {barkodBilgi.marka}</p>}
+                      {barkodBilgi.kategori && <p className="text-sm text-gray-600"><span className="font-medium">Kategori:</span> {barkodBilgi.kategori}</p>}
+                      <button onClick={() => { setBarkodBilgi(null); setUrunAdi(""); setKategori(""); setOzellikler(""); }} className="text-xs text-orange-500 hover:text-orange-700 underline mt-1 transition-colors">
+                        Tekrar Tara
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 
