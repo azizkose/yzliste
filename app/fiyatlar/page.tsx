@@ -210,6 +210,8 @@ export default function FiyatlarPage() {
             <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
           </a>
           <nav className="flex items-center gap-0.5 text-xs sm:text-sm text-gray-500">
+            <a href="/auth" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</a>
+            <a href="/" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</a>
             <a href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Fiyatlar</a>
             <a href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
           </nav>
@@ -348,7 +350,7 @@ export default function FiyatlarPage() {
         <h2 className="text-2xl font-bold text-gray-900 mb-3">Hemen ücretsiz dene</h2>
         <p className="text-gray-500 text-sm mb-6">3 kredi, kredi kartı yok. İstersen kayıt bile olmadan misafir olarak başla.</p>
         <a
-          href="/auth?kayit=1"
+          href="/?anonim=1"
           className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-orange-100"
         >
           3 Ücretsiz Kredi ile Başla →

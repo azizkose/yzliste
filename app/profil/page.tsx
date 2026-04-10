@@ -138,7 +138,7 @@ export default function ProfilPage() {
             <p className="text-sm text-gray-600">Kullanim haklariniz metin ve gorsel uretimi icin kullanilir.</p>
           </div>
           <a href="/?paket=ac" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap">
-          + Kredi Al
+            İçerik Üretim Kredisi Al
           </a>
         </div>
 
