@@ -169,20 +169,70 @@ export default function TopluPage() {
 
         {/* ADIM 1 — Dosya Yükle */}
         {adim === "yukle" && (
-          <div className="bg-white rounded-2xl shadow p-8 text-center">
-            <div className="text-4xl mb-4">📂</div>
-            <h2 className="text-base font-semibold text-gray-800 mb-2">Excel veya CSV Yükle</h2>
-            <p className="text-sm text-gray-500 mb-6">
-              Dosyanızda ürün adı, kategori, açıklama gibi sütunlar varsa otomatik algılanır. Şablon gerekmez.
-            </p>
-            <button
-              onClick={() => dosyaRef.current?.click()}
-              className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition-colors"
-            >
-              Dosya Seç
-            </button>
-            <input ref={dosyaRef} type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={dosyaSec} />
-            <p className="text-xs text-gray-400 mt-4">Desteklenen formatlar: .xlsx, .xls, .csv</p>
+          <div className="space-y-4">
+
+            {/* Bilgilendirme kartları */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-white rounded-2xl shadow p-4">
+                <div className="text-2xl mb-2">💳</div>
+                <p className="text-xs font-semibold text-gray-800 mb-1">Kredi nasıl işler?</p>
+                <p className="text-xs text-gray-500">Her ürün için <span className="font-semibold text-orange-600">1 kredi</span> düşer. 50 ürünlük bir dosya 50 kredi harcar. İşlem başlamadan önce toplam kredi gösterilir.</p>
+              </div>
+              <div className="bg-white rounded-2xl shadow p-4">
+                <div className="text-2xl mb-2">📊</div>
+                <p className="text-xs font-semibold text-gray-800 mb-1">Ne alacaksın?</p>
+                <p className="text-xs text-gray-500">Orijinal dosyan + üretilen listing metinleri tek bir <span className="font-semibold">.xlsx</span> dosyasında. Her ürün satırına platform içeriği eklenir.</p>
+              </div>
+              <div className="bg-white rounded-2xl shadow p-4">
+                <div className="text-2xl mb-2">⚠️</div>
+                <p className="text-xs font-semibold text-gray-800 mb-1">Sayfayı kapatma!</p>
+                <p className="text-xs text-gray-500">İşlem sırasında bu sekmeyi kapatırsan üretim yarıda kesilir. Excel tamamlanana kadar bekle, sonra indir.</p>
+              </div>
+              <div className="bg-white rounded-2xl shadow p-4">
+                <div className="text-2xl mb-2">🏷️</div>
+                <p className="text-xs font-semibold text-gray-800 mb-1">Limit var mı?</p>
+                <p className="text-xs text-gray-500">Tek seferde <span className="font-semibold">mevcut kredin kadar</span> ürün işleyebilirsin. Kredi yetersizse önce <a href="/fiyatlar" className="text-orange-500 underline">paket satın al</a>.</p>
+              </div>
+            </div>
+
+            {/* Dosya formatı açıklaması */}
+            <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+              <p className="text-xs font-semibold text-blue-800 mb-2">📋 Dosyanda ne olmalı?</p>
+              <p className="text-xs text-blue-700 mb-3">Sütun adları Türkçe veya İngilizce olabilir — sistem otomatik algılar. Şablon indirmene gerek yok.</p>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                {[
+                  ["Ürün Adı / Product Name", "zorunlu"],
+                  ["Kategori / Category", "önerilir"],
+                  ["Açıklama / Description", "önerilir"],
+                  ["Marka / Brand", "isteğe bağlı"],
+                  ["Renk / Color", "isteğe bağlı"],
+                  ["Boyut / Size", "isteğe bağlı"],
+                ].map(([alan, durum]) => (
+                  <div key={alan} className="flex items-center gap-1.5 text-xs text-blue-700">
+                    <span className={durum === "zorunlu" ? "text-green-600 font-bold" : durum === "önerilir" ? "text-blue-600" : "text-gray-400"}>•</span>
+                    <span>{alan}</span>
+                    <span className={`ml-auto text-[10px] ${durum === "zorunlu" ? "text-green-600 font-semibold" : "text-gray-400"}`}>{durum}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Dosya yükle kutusu */}
+            <div className="bg-white rounded-2xl shadow p-8 text-center">
+              <div className="text-4xl mb-4">📂</div>
+              <h2 className="text-base font-semibold text-gray-800 mb-2">Excel veya CSV Yükle</h2>
+              <p className="text-sm text-gray-500 mb-6">
+                Dosyanızda ürün adı, kategori, açıklama gibi sütunlar varsa otomatik algılanır. Şablon gerekmez.
+              </p>
+              <button
+                onClick={() => dosyaRef.current?.click()}
+                className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition-colors"
+              >
+                Dosya Seç
+              </button>
+              <input ref={dosyaRef} type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={dosyaSec} />
+              <p className="text-xs text-gray-400 mt-4">Desteklenen formatlar: .xlsx, .xls, .csv</p>
+            </div>
           </div>
         )}
 
@@ -313,6 +363,13 @@ export default function TopluPage() {
 
         {/* ADIM 3 — İşlem */}
         {(adim === "islem" || adim === "tamamlandi") && (
+          <div className="space-y-4">
+          {adim === "islem" && (
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+              <span className="text-xl flex-shrink-0">⚠️</span>
+              <p className="text-sm text-amber-800">Üretim devam ediyor — bu sekmeyi kapatma veya sayfadan ayrılma. İşlem bitince Excel dosyası hazır olacak.</p>
+            </div>
+          )}
           <div className="bg-white rounded-2xl shadow p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-semibold text-gray-800">
@@ -373,6 +430,7 @@ export default function TopluPage() {
                 </button>
               </div>
             )}
+          </div>
           </div>
         )}
       </div>
