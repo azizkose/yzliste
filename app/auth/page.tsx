@@ -101,16 +101,15 @@ export default function AuthPage() {
   };
 
   const handleGoogleGiris = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user?.is_anonymous) {
-      // Anonim hesabı Google ile bağla — user ID ve krediler korunur
-      await supabase.auth.linkIdentity({ provider: "google" });
-    } else {
-      await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo: `${window.location.origin}/` },
-      });
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/` },
+    });
+    if (error) {
+      setModalMesaj("Google ile giriş başlatılamadı: " + error.message);
+      return;
     }
+    if (data?.url) window.location.href = data.url;
   };
 
   const hemenAlTikla = async () => {
