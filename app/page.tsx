@@ -580,10 +580,14 @@ export default function Home() {
                 {kullanici.is_admin ? "∞" : kullanici.kredi} kredi
               </button>
               {kullanici.anonim
-                ? <a href="/auth?kayit=1" className="text-xs bg-orange-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-orange-600 transition-colors">Hesap Oluştur</a>
+                ? <>
+                    <a href="/auth?giris=1" className="text-xs text-gray-500 hover:text-gray-700 font-medium transition-colors">Giriş Yap</a>
+                    <a href="/auth?kayit=1" className="text-xs bg-orange-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-orange-600 transition-colors">Hesap Oluştur</a>
+                  </>
                 : <span className="text-sm text-gray-400 hidden sm:block">{kullanici.email}</span>
               }
               {kullanici.is_admin && <a href="/admin" className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-lg font-medium">Admin</a>}
+              {!kullanici.anonim && <a href="/toplu" className="text-sm text-gray-400 hover:text-gray-600">Toplu</a>}
               {!kullanici.anonim && <a href="/profil" className="text-sm text-gray-400 hover:text-gray-600">Profil</a>}
               <button onClick={cikisYap} className="text-sm text-gray-400 hover:text-gray-600">Çıkış</button>
             </div>
@@ -600,7 +604,10 @@ export default function Home() {
                 <p className="text-xs text-orange-600 mt-0.5">Ücretsiz hesap oluşturarak kredilerinizi ve geçmişinizi kaydedin.</p>
               </div>
             </div>
-            <a href="/auth?kayit=1" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap flex-shrink-0">Hesap Oluştur</a>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <a href="/auth?giris=1" className="text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap border border-orange-300 text-orange-600 hover:bg-orange-50 transition-colors">Giriş Yap</a>
+              <a href="/auth?kayit=1" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap transition-colors">Hesap Oluştur</a>
+            </div>
           </div>
         )}
 

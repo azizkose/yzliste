@@ -36,9 +36,9 @@ export default function AuthPage() {
       // ?kayit=1 ile gelindi — modal'ı kayıt modunda aç
       const params = new URLSearchParams(window.location.search);
       if (params.get("kayit") === "1") {
-        setModalUyeMod("kayit");
-        setModalMod("uye");
-        setModalAcik(true);
+        setMod("kayit");
+      } else if (params.get("giris") === "1") {
+        setMod("giris");
       }
     });
   }, []);
