@@ -4,8 +4,8 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
-      disallow: ["/api/", "/auth", "/admin"],
+      allow: ["/","/auth"],
+      disallow: ["/api/", "/admin"],
     },
     sitemap: "https://www.yzliste.com/sitemap.xml",
   };
