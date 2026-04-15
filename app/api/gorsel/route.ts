@@ -9,9 +9,16 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_KEY!
 );
 
+// sosyalFormat: "1:1" | "9:16" | "16:9" — sosyal medya görsel üretimi için
+const FORMAT_BOYUT: Record<string, [number, number]> = {
+  "1:1":  [1000, 1000],
+  "9:16": [1000, 1778],
+  "16:9": [1778, 1000],
+};
+
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { foto, stiller, ekPrompt, userId, action, referansGorsel } = body;
+  const { foto, stiller, ekPrompt, userId, action, referansGorsel, sosyalFormat } = body;
 
   // Kredi dusurme - sadece indir aksiyonunda
   if (action === "indir") {
@@ -72,6 +79,8 @@ export async function POST(req: NextRequest) {
     const imageUrl = await fal.storage.upload(blob);
 
     const stilListesi: string[] = stiller && stiller.length > 0 ? stiller : ["beyaz"];
+    // Sosyal medya formatı varsa shot_size buna göre ayarla, yoksa varsayılan kare
+    const shotSize: [number, number] = sosyalFormat ? (FORMAT_BOYUT[sosyalFormat] || [1000, 1000]) : [1000, 1000];
 
     const stilEtiketleri: Record<string, string> = {
       beyaz: "Beyaz Zemin",
@@ -113,7 +122,7 @@ export async function POST(req: NextRequest) {
             fast: false,
             placement_type: "manual_padding",
             padding_values: [80, 80, 80, 80],
-            shot_size: [1000, 1000],
+            shot_size: shotSize,
           },
         }) as any;
 
@@ -143,7 +152,7 @@ export async function POST(req: NextRequest) {
           fast: false,
           placement_type: "manual_padding",
           padding_values: padding,
-          shot_size: [1000, 1000],
+          shot_size: shotSize,
         },
       }) as any;
 

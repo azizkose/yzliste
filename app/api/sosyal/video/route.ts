@@ -9,10 +9,11 @@ const supabaseAdmin = createClient(
 
 fal.config({ credentials: process.env.FAL_KEY });
 
-const VIDEO_KREDI = 5;
+// sure: "5" → 5 kredi, "10" → 8 kredi
+const VIDEO_KREDI: Record<string, number> = { "5": 5, "10": 8 };
 
 export async function POST(req: NextRequest) {
-  const { foto, prompt, userId } = await req.json();
+  const { foto, prompt, userId, sure = "5", format = "9:16" } = await req.json();
 
   if (!userId) {
     return NextResponse.json({ hata: "Giris yapilmadi" }, { status: 401 });
@@ -21,6 +22,10 @@ export async function POST(req: NextRequest) {
   if (!foto) {
     return NextResponse.json({ hata: "Fotograf gerekli" }, { status: 400 });
   }
+
+  const sureDeger = ["5", "10"].includes(sure) ? sure : "5";
+  const formatDeger = ["9:16", "16:9", "1:1"].includes(format) ? format : "9:16";
+  const gereken_kredi = VIDEO_KREDI[sureDeger] ?? 5;
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")
@@ -34,9 +39,9 @@ export async function POST(req: NextRequest) {
 
   const isAdmin = profil.is_admin === true;
 
-  if (!isAdmin && profil.kredi < VIDEO_KREDI) {
+  if (!isAdmin && profil.kredi < gereken_kredi) {
     return NextResponse.json(
-      { hata: `Video üretimi ${VIDEO_KREDI} kullanım hakkı gerektirir. Mevcut: ${profil.kredi}` },
+      { hata: `Video üretimi ${gereken_kredi} kredi gerektirir. Mevcut: ${profil.kredi}` },
       { status: 402 }
     );
   }
@@ -51,18 +56,21 @@ export async function POST(req: NextRequest) {
 
   // Video prompt — kullanıcı yazmadıysa otomatik
   const videoPrompt = prompt?.trim() ||
-    "Product showcase with smooth slow rotation, cinematic lighting, clean white background, professional e-commerce video";
+    "Product showcase with smooth slow rotation, cinematic lighting, professional e-commerce video";
 
-  // Kling v2.1 standard — 5 saniyelik video
+  // Kling v2.1 standard
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result = await fal.subscribe("fal-ai/kling-video/v2.1/standard/image-to-video", {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     input: {
       prompt: videoPrompt,
       image_url: imageUrl,
-      duration: "5",
-      //aspect_ratio: "9:16", // Instagram Reels / TikTok formatı
+      duration: sureDeger,
+      aspect_ratio: formatDeger,
       negative_prompt: "blur, distort, low quality, watermark, text overlay",
       cfg_scale: 0.5,
-    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any,
   }) as unknown as { video: { url: string } };
 
   const videoUrl = result?.video?.url;
@@ -75,9 +83,9 @@ export async function POST(req: NextRequest) {
   if (!isAdmin) {
     await supabaseAdmin
       .from("profiles")
-      .update({ kredi: profil.kredi - VIDEO_KREDI })
+      .update({ kredi: profil.kredi - gereken_kredi })
       .eq("id", userId);
   }
 
-  return NextResponse.json({ videoUrl, isAdmin });
+  return NextResponse.json({ videoUrl, isAdmin, kullanilanKredi: gereken_kredi });
 }

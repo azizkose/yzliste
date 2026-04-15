@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 type Profil = {
   email: string;
   kredi: number;
+  is_admin?: boolean;
+  toplam_kullanilan?: number;
   ad_soyad: string | null;
   telefon: string | null;
   adres: string | null;
@@ -19,12 +21,54 @@ type Profil = {
   vurgulanan_ozellikler: string | null;
 };
 
+type Uretim = {
+  id: string;
+  urun_adi: string;
+  platform: string;
+  giris_tipi: string;
+  sonuc: string;
+  created_at: string;
+};
+
+type SonucBolum = { baslik: string; ikon: string; icerik: string };
+
+function sonucuBolumle(sonuc: string): SonucBolum[] {
+  if (!sonuc) return [];
+  sonuc = sonuc.replace(/\*\*/g, "").replace(/\*/g, "");
+  const bolumler: SonucBolum[] = [];
+  const baslikMatch = sonuc.match(/(?:📌\s*)?(?:BAŞLIK|Başlık)[:\n]+([^\n🔹📄🏷]+)/i);
+  const ozellikMatch = sonuc.match(/(?:🔹\s*)?(?:ÖZELLİKLER|Özellikler)[:\n]+([\s\S]+?)(?=📄|🏷|$)/i);
+  const aciklamaMatch = sonuc.match(/(?:📄\s*)?(?:AÇIKLAMA|Açıklama)[:\n]+([\s\S]+?)(?=🏷|$)/i);
+  const etiketMatch = sonuc.match(/(?:🏷️?\s*)?(?:ETİKETLER|Etiketler)[:\n]+([\s\S]+?)$/i);
+  if (baslikMatch) bolumler.push({ baslik: "Başlık", ikon: "📌", icerik: baslikMatch[1].trim() });
+  if (ozellikMatch) bolumler.push({ baslik: "Özellikler", ikon: "🔹", icerik: ozellikMatch[1].trim() });
+  if (aciklamaMatch) bolumler.push({ baslik: "Açıklama", ikon: "📄", icerik: aciklamaMatch[1].trim() });
+  if (etiketMatch) bolumler.push({ baslik: "Arama Etiketleri", ikon: "🏷️", icerik: etiketMatch[1].trim() });
+  if (bolumler.length === 0) bolumler.push({ baslik: "İçerik", ikon: "📋", icerik: sonuc });
+  return bolumler;
+}
+
+const platformRenk: Record<string, string> = {
+  trendyol: "bg-orange-100 text-orange-700",
+  hepsiburada: "bg-orange-100 text-orange-600",
+  amazon: "bg-yellow-100 text-yellow-700",
+  n11: "bg-blue-100 text-blue-700",
+};
+
 export default function ProfilPage() {
   const [profil, setProfil] = useState<Profil | null>(null);
   const [yukleniyor, setYukleniyor] = useState(true);
   const [kaydediliyor, setKaydediliyor] = useState(false);
   const [mesaj, setMesaj] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
+
+  // Uretimler
+  const [uretimler, setUretimler] = useState<Uretim[]>([]);
+  const [uretimYukleniyor, setUretimYukleniyor] = useState(false);
+  const [seciliUretim, setSeciliUretim] = useState<Uretim | null>(null);
+  const [sayfaNo, setSayfaNo] = useState(0);
+  const SAYFA_BOYUTU = 20;
+
   const router = useRouter();
 
   // Kisisel bilgi alanlari
@@ -53,12 +97,17 @@ export default function ProfilPage() {
 
     const { data } = await supabase
       .from("profiles")
-      .select("email, kredi, ad_soyad, telefon, adres, fatura_tipi, tc_kimlik, vergi_no, vergi_dairesi, marka_adi, ton, hedef_kitle, vurgulanan_ozellikler")
+      .select("email, kredi, is_admin, ad_soyad, telefon, adres, fatura_tipi, tc_kimlik, vergi_no, vergi_dairesi, marka_adi, ton, hedef_kitle, vurgulanan_ozellikler")
       .eq("id", user.id)
       .single();
 
+    const { count } = await supabase
+      .from("uretimler")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id);
+
     if (data) {
-      setProfil(data);
+      setProfil({ ...data, toplam_kullanilan: count || 0 });
       setAdSoyad(data.ad_soyad || "");
       setTelefon(data.telefon || "");
       setAdres(data.adres || "");
@@ -71,7 +120,32 @@ export default function ProfilPage() {
       setHedefKitle(data.hedef_kitle || "");
       setVurgulananlar(data.vurgulanan_ozellikler || "");
     }
+
+    // Üretimleri de yükle
+    await uretimYukle(user.id, 0);
     setYukleniyor(false);
+  };
+
+  const uretimYukle = async (uid: string, sayfa: number) => {
+    setUretimYukleniyor(true);
+    const { data } = await supabase
+      .from("uretimler")
+      .select("*")
+      .eq("user_id", uid)
+      .order("created_at", { ascending: false })
+      .range(sayfa * SAYFA_BOYUTU, (sayfa + 1) * SAYFA_BOYUTU - 1);
+    if (data) {
+      if (sayfa === 0) setUretimler(data);
+      else setUretimler((prev) => [...prev, ...data]);
+    }
+    setUretimYukleniyor(false);
+  };
+
+  const dahaFazlaYukle = async () => {
+    if (!userId) return;
+    const yeniSayfa = sayfaNo + 1;
+    setSayfaNo(yeniSayfa);
+    await uretimYukle(userId, yeniSayfa);
   };
 
   const kaydet = async () => {
@@ -115,7 +189,7 @@ export default function ProfilPage() {
 
   return (
     <main className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6">
 
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -124,22 +198,109 @@ export default function ProfilPage() {
             <p className="text-sm text-gray-500 mt-0.5">{profil?.email}</p>
           </div>
           <a href="/" className="text-sm text-gray-400 hover:text-gray-600">
-            Ana sayfaya don
+            ← İçerik Sayfası
           </a>
         </div>
 
-        {/* Kredi ozeti */}
-        <div className="bg-white rounded-2xl shadow p-5 flex items-center gap-4">
-          <div className="bg-orange-50 rounded-xl px-5 py-3 text-center">
-            <div className="text-2xl font-bold text-orange-500">{profil?.kredi ?? 0}</div>
-            <div className="text-xs text-gray-500">Kalan kredi</div>
+        {/* Kredi + Kullanım özeti */}
+        <div className="bg-white rounded-2xl shadow p-5">
+          <h2 className="text-sm font-semibold text-gray-700 mb-3">Kullanım Özeti</h2>
+          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+            <div className="flex gap-3 flex-1">
+              <div className="bg-orange-50 rounded-xl px-5 py-3 text-center">
+                <div className={`text-2xl font-bold ${profil?.is_admin ? "text-purple-500" : "text-orange-500"}`}>
+                  {profil?.is_admin ? "∞" : (profil?.kredi ?? 0)}
+                </div>
+                <div className="text-xs text-gray-500">Kalan kredi</div>
+              </div>
+              <div className="bg-gray-50 rounded-xl px-5 py-3 text-center">
+                <div className="text-2xl font-bold text-gray-700">{profil?.toplam_kullanilan ?? 0}</div>
+                <div className="text-xs text-gray-500">Toplam üretim</div>
+              </div>
+            </div>
+            <a href="/?paket=ac" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl whitespace-nowrap transition-colors">
+              + İçerik Üretim Kredisi Al
+            </a>
           </div>
-          <div className="flex-1">
-            <p className="text-sm text-gray-600">Kullanim haklariniz metin ve gorsel uretimi icin kullanilir.</p>
+          <p className="text-xs text-gray-400 mt-3">Kullanım hakları metin, görsel, video ve sosyal medya içerik üretimi için kullanılır.</p>
+        </div>
+
+        {/* SON ÜRETİMLER */}
+        <div className="bg-white rounded-2xl shadow p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-base font-semibold text-gray-800">📋 Son Üretimler</h2>
+            <span className="text-xs text-gray-400">{profil?.toplam_kullanilan ?? 0} toplam</span>
           </div>
-          <a href="/?paket=ac" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap">
-            İçerik Üretim Kredisi Al
-          </a>
+
+          {uretimler.length === 0 ? (
+            <div className="text-center py-10 space-y-3">
+              <div className="text-4xl">📝</div>
+              <p className="text-sm text-gray-500">Henüz hiç içerik üretmediniz.</p>
+              <a href="/" className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors">İçerik Üret →</a>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {uretimler.map((u) => {
+                const bolumler = sonucuBolumle(u.sonuc);
+                const acik = seciliUretim?.id === u.id;
+                return (
+                  <div key={u.id} className={`rounded-xl border transition-all ${acik ? "border-orange-300 bg-orange-50" : "border-gray-100 bg-white hover:bg-gray-50"}`}>
+                    <button
+                      onClick={() => setSeciliUretim(acik ? null : u)}
+                      className="w-full text-left p-4"
+                    >
+                      <div className="flex justify-between items-start gap-3">
+                        <div className="flex-1 min-w-0">
+                          <span className="text-sm font-medium text-gray-800 block truncate">{u.urun_adi || "İsimsiz ürün"}</span>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className={`text-xs px-2 py-0.5 rounded-full ${platformRenk[u.platform] || "bg-gray-100 text-gray-600"}`}>{u.platform}</span>
+                            <span className="text-xs text-gray-400">
+                              {new Date(u.created_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" })}
+                            </span>
+                          </div>
+                        </div>
+                        <span className={`text-xs text-gray-400 flex-shrink-0 transition-transform ${acik ? "rotate-180" : ""}`}>▼</span>
+                      </div>
+                    </button>
+
+                    {acik && (
+                      <div className="px-4 pb-4 space-y-2 border-t border-orange-200 pt-3">
+                        {bolumler.map((bolum, bi) => (
+                          <div key={bi} className="bg-white rounded-xl border border-gray-100 p-4">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-sm font-semibold text-gray-700">{bolum.ikon} {bolum.baslik}</span>
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(bolum.icerik);
+                                }}
+                                className="text-xs text-orange-500 hover:text-orange-600 font-medium px-2 py-1 rounded-lg hover:bg-orange-50 transition-colors"
+                              >
+                                Kopyala
+                              </button>
+                            </div>
+                            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{bolum.icerik}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Daha Fazla Yükle */}
+              {uretimler.length >= (sayfaNo + 1) * SAYFA_BOYUTU && (
+                <div className="text-center pt-2">
+                  <button
+                    onClick={dahaFazlaYukle}
+                    disabled={uretimYukleniyor}
+                    className="text-sm text-orange-500 hover:text-orange-700 font-medium disabled:opacity-50"
+                  >
+                    {uretimYukleniyor ? "Yükleniyor..." : "Daha fazla göster ↓"}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Marka Profili - EN USTE ALINDI */}
