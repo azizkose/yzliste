@@ -24,6 +24,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
       lastModified: new Date(),
     },
+    {
+      url: `${baseUrl}/auth`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+      lastModified: new Date(),
+    },
   ];
 
   // Blog yazıları — dinamik

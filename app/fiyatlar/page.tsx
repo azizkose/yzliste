@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import HeaderAuthButtons from "@/components/HeaderAuthButtons";
 
 export const metadata: Metadata = {
   title: "Fiyatlar | yzliste — E-ticaret Listing Üretici",
@@ -210,13 +211,12 @@ export default function FiyatlarPage() {
             <Image src="/yzliste_logo.png" alt="yzliste" width={32} height={32} className="h-8 w-auto" priority />
           </a>
           <nav className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 flex-1 justify-center sm:flex-none sm:justify-start">
+            <a href="/auth" className="hidden sm:block px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</a>
+            <a href="/" className="hidden sm:block px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</a>
             <a href="/fiyatlar" className="px-2 sm:px-3 py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Fiyatlar</a>
             <a href="/blog" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
           </nav>
-          <div className="flex gap-1 sm:gap-2 flex-shrink-0">
-            <a href="/auth" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</a>
-            <a href="/auth" className="text-xs sm:text-sm bg-orange-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla</a>
-          </div>
+          <HeaderAuthButtons />
         </div>
       </header>
 
@@ -348,7 +348,7 @@ export default function FiyatlarPage() {
         <h2 className="text-2xl font-bold text-gray-900 mb-3">Hemen ücretsiz dene</h2>
         <p className="text-gray-500 text-sm mb-6">3 kredi, kredi kartı yok. İstersen kayıt bile olmadan misafir olarak başla.</p>
         <a
-          href="/auth"
+          href="/?anonim=1"
           className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-orange-100"
         >
           3 Ücretsiz Kredi ile Başla →
@@ -372,7 +372,7 @@ export default function FiyatlarPage() {
             <a href="mailto:destek@yzliste.com" className="hover:text-orange-500">destek@yzliste.com</a>
           </div>
           <div className="flex justify-center">
-            <Image src="/iyzico_footer_logo.png" alt="iyzico ile öde" width={100} height={40} className="h-10 w-auto" />
+            <Image src="/iyzico_footer_logo.png" alt="iyzico ile öde" width={429} height={32} className="w-44 h-auto" />
           </div>
           <p className="text-center text-xs text-gray-400">© 2026 yzliste · SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI</p>
         </div>
