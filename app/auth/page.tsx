@@ -121,9 +121,10 @@ export default function AuthPage() {
 
   const hemenAlTikla = async () => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      // Giriş yok — önce üye ekranını göster
+    if (!user || user.is_anonymous) {
+      // Giriş yok veya anonim — önce üye ekranını göster
       setModalAmac("satin_al");
+      setModalUyeMod("giris");
       setModalMod("uye");
       setModalAcik(true);
       setOdemeForm(null);
@@ -143,8 +144,7 @@ export default function AuthPage() {
       (profil?.fatura_tipi === "bireysel" && !profil?.tc_kimlik) ||
       (profil?.fatura_tipi === "kurumsal" && !profil?.vergi_no);
     if (eksik) {
-      alert("Ödeme yapabilmek için önce profil sayfasından fatura bilgilerinizi doldurmanız gerekiyor. Bu alana yönlendirileceksiniz");
-      window.location.href = "/profil";
+      window.location.href = "/profil#fatura";
       return;
     }
     // Her şey tamam — paket seçim ekranı
@@ -347,8 +347,17 @@ export default function AuthPage() {
             <a href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
           </nav>
           <div className="flex gap-1 sm:gap-2 ml-auto items-center">
-            <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); }} className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</button>
-            <button onClick={handleAnonimBasla} className="text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap"><span className="hidden sm:inline">3 Ücretsiz Kredi, </span>Başla →</button>
+            {oturum && !anonimKullanici ? (
+              <>
+                <a href="/profil" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Profil</a>
+                <a href="/" className="text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">İçerik Üret →</a>
+              </>
+            ) : (
+              <>
+                <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); }} className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</button>
+                <button onClick={handleAnonimBasla} className="text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap"><span className="hidden sm:inline">3 Ücretsiz Kredi, </span>Başla →</button>
+              </>
+            )}
           </div>
         </div>
       </header>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import HeaderAuthButtons from "@/components/HeaderAuthButtons";
 
 export const metadata: Metadata = {
   title: "Fiyatlar | yzliste — E-ticaret Listing Üretici",
@@ -215,10 +216,7 @@ export default function FiyatlarPage() {
             <a href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Fiyatlar</a>
             <a href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
           </nav>
-          <div className="flex gap-1 sm:gap-2 ml-auto items-center">
-            <a href="/auth?giris=1" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</a>
-            <a href="/auth?kayit=1" className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla</a>
-          </div>
+          <HeaderAuthButtons />
         </div>
       </header>
 

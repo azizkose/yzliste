@@ -1,10 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 type AktifSayfa = "ana" | "icerik" | "fiyatlar" | "blog" | "toplu" | "profil";
 
 export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) {
   const [menuAcik, setMenuAcik] = useState(false);
+  const [girisVar, setGirisVar] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setGirisVar(!!user && !user.is_anonymous);
+    });
+  }, []);
 
   const navLinks = [
     { href: "/", label: "İçerik", id: "icerik" as AktifSayfa },
@@ -41,18 +49,37 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
 
         {/* Auth buttons */}
         <div className="flex gap-1 sm:gap-2 ml-auto items-center">
-          <a
-            href="/auth?giris=1"
-            className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
-          >
-            Giriş Yap
-          </a>
-          <a
-            href="/auth?kayit=1"
-            className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap"
-          >
-            Ücretsiz Başla
-          </a>
+          {girisVar ? (
+            <>
+              <a
+                href="/profil"
+                className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
+              >
+                Profil
+              </a>
+              <a
+                href="/"
+                className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap"
+              >
+                İçerik Üret →
+              </a>
+            </>
+          ) : (
+            <>
+              <a
+                href="/auth?giris=1"
+                className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
+              >
+                Giriş Yap
+              </a>
+              <a
+                href="/auth?kayit=1"
+                className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap"
+              >
+                Ücretsiz Başla
+              </a>
+            </>
+          )}
           {/* Mobile hamburger */}
           <button
             onClick={() => setMenuAcik(!menuAcik)}

@@ -220,7 +220,7 @@ export default function ProfilPage() {
         </div>
 
         {/* Kişisel Bilgiler + Fatura Bilgileri — TEK KART */}
-        <div className="bg-white rounded-2xl shadow p-6 space-y-5">
+        <div id="fatura" className="bg-white rounded-2xl shadow p-6 space-y-5">
           <h2 className="text-base font-semibold text-gray-800">Kişisel ve Fatura Bilgileri</h2>
 
           {/* Kişisel */}
