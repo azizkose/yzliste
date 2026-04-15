@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getYazilar, kategoriler } from "./icerikler";
+import SiteHeader from "@/components/SiteHeader";
 
 export const revalidate = 3600; // 1 saat ISR cache
 
@@ -74,24 +75,7 @@ export default async function BlogPage() {
     <main className="min-h-screen bg-white font-sans">
       <BlogJsonLd />
 
-      {/* HEADER */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-2.5">
-        <div className="max-w-6xl mx-auto flex items-center gap-2">
-          <a href="/" className="flex-shrink-0 mr-1">
-            <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
-          </a>
-          <nav className="flex items-center gap-0.5 text-xs sm:text-sm text-gray-500">
-            <a href="/auth" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</a>
-            <a href="/" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</a>
-            <a href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
-            <a href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Blog</a>
-          </nav>
-          <div className="flex gap-1 sm:gap-2 ml-auto items-center">
-            <a href="/auth?giris=1" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</a>
-            <a href="/auth?kayit=1" className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla</a>
-          </div>
-        </div>
-      </header>
+      <SiteHeader aktifSayfa="blog" />
 
       {/* HERO */}
       <section className="px-4 sm:px-6 pt-14 pb-8 max-w-3xl mx-auto text-center">

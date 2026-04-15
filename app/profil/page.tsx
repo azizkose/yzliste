@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import SiteHeader from "@/components/SiteHeader";
 
 type Profil = {
   email: string;
@@ -188,18 +189,15 @@ export default function ProfilPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 py-8 px-4">
+    <main className="min-h-screen bg-gray-50">
+      <SiteHeader aktifSayfa="profil" />
+      <div className="py-8 px-4">
       <div className="max-w-4xl mx-auto space-y-6">
 
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">Profilim</h1>
-            <p className="text-sm text-gray-500 mt-0.5">{profil?.email}</p>
-          </div>
-          <a href="/" className="text-sm text-gray-400 hover:text-gray-600">
-            ← İçerik Sayfası
-          </a>
+        <div>
+          <h1 className="text-xl font-bold text-gray-900">Profilim</h1>
+          <p className="text-sm text-gray-500 mt-0.5">{profil?.email}</p>
         </div>
 
         {/* Kredi + Kullanım özeti */}
@@ -498,6 +496,7 @@ export default function ProfilPage() {
           {kaydediliyor ? "Kaydediliyor..." : "Kaydet"}
         </button>
 
+      </div>
       </div>
     </main>
   );

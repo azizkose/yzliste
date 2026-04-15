@@ -126,12 +126,23 @@ export function excelOlustur(
   sonuclar: string[],
   platform: string,
 ): ArrayBuffer {
-  const veri = satirlar.map((satir, i) => ({
-    ...Object.fromEntries(
-      Object.entries(satir).filter(([k]) => !k.startsWith("_ek_"))
-    ),
-    [`${platform}_icerigi`]: sonuclar[i] ?? "",
-  }));
+  const veri = satirlar.map((satir, i) => {
+    const sonuc = sonuclar[i] ?? "";
+    const baslikMatch = sonuc.match(/(?:📌\s*)?(?:BAŞLIK|Başlık)[:\n]+([^\n🔹📄🏷]+)/i);
+    const ozellikMatch = sonuc.match(/(?:🔹\s*)?(?:ÖZELLİKLER|Özellikler)[:\n]+([\s\S]+?)(?=📄|🏷|$)/i);
+    const aciklamaMatch = sonuc.match(/(?:📄\s*)?(?:AÇIKLAMA|Açıklama)[:\n]+([\s\S]+?)(?=🏷|$)/i);
+    const etiketMatch = sonuc.match(/(?:🏷️?\s*)?(?:ETİKETLER|Etiketler)[:\n]+([\s\S]+?)$/i);
+
+    return {
+      ...Object.fromEntries(
+        Object.entries(satir).filter(([k]) => !k.startsWith("_ek_"))
+      ),
+      [`${platform}_baslik`]: baslikMatch ? baslikMatch[1].trim() : "",
+      [`${platform}_ozellikler`]: ozellikMatch ? ozellikMatch[1].trim() : "",
+      [`${platform}_aciklama`]: aciklamaMatch ? aciklamaMatch[1].trim() : "",
+      [`${platform}_etiketler`]: etiketMatch ? etiketMatch[1].trim() : sonuc,
+    };
+  });
 
   const ws = XLSX.utils.json_to_sheet(veri);
   const wb = XLSX.utils.book_new();

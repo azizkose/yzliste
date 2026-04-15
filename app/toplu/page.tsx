@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { parseExcel, excelOlustur, type ParseSonucu } from "@/lib/excel-parser";
 import * as XLSX from "xlsx";
+import SiteHeader from "@/components/SiteHeader";
 
 type Adim = "yukle" | "onizleme" | "islem" | "tamamlandi";
 type Platform = "trendyol" | "hepsiburada" | "amazon" | "n11" | "etsy" | "amazon_usa";
@@ -150,15 +151,12 @@ export default function TopluPage() {
   const hatali = ilerlemeler.filter((i) => i.durum === "hata").length;
 
   return (
+    <>
+    <SiteHeader aktifSayfa="toplu" />
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-2xl mx-auto">
 
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-8">
-          <a href="/" className="text-gray-400 hover:text-gray-600 text-sm">← Ana Sayfa</a>
-          <span className="text-gray-300">/</span>
-          <h1 className="text-lg font-semibold text-gray-800">Toplu İçerik Üretimi</h1>
-        </div>
+        <h1 className="text-xl font-bold text-gray-800 mb-6">Toplu İçerik Üretimi</h1>
 
         {hata && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center justify-between gap-3">
@@ -435,5 +433,6 @@ export default function TopluPage() {
         )}
       </div>
     </div>
+    </>
   );
 }
