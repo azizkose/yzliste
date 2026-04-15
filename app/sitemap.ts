@@ -7,6 +7,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Ana sayfalar
   const mainPages: MetadataRoute.Sitemap = [
     {
+      url: `${baseUrl}/auth`,
+      changeFrequency: "daily",
+      priority: 1,
+      lastModified: new Date(),
+    },
+    {
       url: baseUrl,
       changeFrequency: "daily",
       priority: 1,

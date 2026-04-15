@@ -10,6 +10,7 @@ etiketler: trendyol,listing,ürün açıklaması,e-ticaret,seo
 kapakGorsel: 
 ---
 
+
 # GİRİŞ
 
 Trendyol'da yüz binlerce ürün arasından öne çıkmak için iyi bir fotoğraf tek başına yetmez. Platforma özel formatlanmış, arama motorlarının ve Trendyol algoritmasının anlayacağı şekilde yazılmış bir listing şarttır. Bu rehberde Trendyol listing'inin her bölümünü nasıl yazacağını öğreneceksin.
