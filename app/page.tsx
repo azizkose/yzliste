@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import SiteFooter from "@/components/SiteFooter";
+import { PAKET_LISTESI } from "@/lib/paketler";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
 type SosyalPlatform = "instagram_tiktok" | "facebook" | "twitter";
@@ -122,11 +123,8 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
   const [odemeAcik, setOdemeAcik] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
 
-  const paketler = [
-    { id: "baslangic", isim: "Başlangıç", fiyat: "₺29", kredi: "10 kredi", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
-    { id: "populer", isim: "Popüler", fiyat: "₺79", kredi: "30 kredi", renk: "border-orange-400 ring-2 ring-orange-400", butonRenk: "bg-orange-500 hover:bg-orange-600", rozet: true },
-    { id: "buyuk", isim: "Büyük", fiyat: "₺149", kredi: "100 kredi", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
-  ];
+  // Paketler lib/paketler.ts'den geliyor
+  const paketler = PAKET_LISTESI;
 
   const odemeBaslat = async (paketId: string) => {
     // Fatura bilgisi kontrolü — ödeme başlamadan önce
@@ -182,9 +180,9 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-semibold text-gray-800">{p.isim}</p>
-                    <p className="text-sm text-gray-500">{p.kredi}</p>
+                    <p className="text-sm text-gray-500">{p.krediStr}</p>
                   </div>
-                  <p className="text-2xl font-bold text-gray-900">{p.fiyat}</p>
+                  <p className="text-2xl font-bold text-gray-900">{p.fiyatStr}</p>
                 </div>
                 <button onClick={() => odemeBaslat(p.id)} disabled={yukleniyor} className={`w-full mt-4 ${p.butonRenk} text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:bg-gray-300`}>
                   {yukleniyor && seciliPaket === p.id ? "⏳ Yükleniyor..." : "Satın Al"}

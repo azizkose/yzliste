@@ -85,7 +85,7 @@ function RootJsonLd() {
               offers: {
                 "@type": "AggregateOffer",
                 priceCurrency: "TRY",
-                highPrice: "149",
+                highPrice: "249",
                 lowPrice: "0",
                 offerCount: "4",
               },

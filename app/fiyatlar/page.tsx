@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import { PAKET_LISTESI, MIN_FIYAT, MAX_FIYAT } from "@/lib/paketler";
 
 export const metadata: Metadata = {
   title: "Fiyatlar | yzliste — E-ticaret Listing Üretici",
@@ -33,59 +34,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const paketler = [
-  {
-    id: "baslangic",
-    isim: "Başlangıç",
-    fiyat: "₺29",
-    kredi: 10,
-    renk: "border-gray-200",
-    butonRenk: "bg-gray-800 hover:bg-gray-900",
-    aciklama: "Birkaç ürün denemek isteyenler için ideal başlangıç noktası.",
-    ozellikler: [
-      "10 kredi (tüm içerik türlerinde kullan)",
-      "📝 Listing metni: 1 kredi / ürün",
-      "📷 AI görsel: 1 kredi / stil · 4 varyasyon",
-      "🎬 Video: 5sn=5 kredi, 10sn=8 kredi",
-      "📱 Sosyal medya: 1 kredi / platform seti",
-    ],
-  },
-  {
-    id: "populer",
-    isim: "Popüler",
-    fiyat: "₺79",
-    kredi: 30,
-    renk: "border-orange-400 ring-2 ring-orange-400",
-    butonRenk: "bg-orange-500 hover:bg-orange-600",
-    rozet: true,
-    aciklama: "Aktif satıcılar için en çok tercih edilen paket.",
-    ozellikler: [
-      "30 kredi (tüm içerik türlerinde kullan)",
-      "📝 Listing metni: 30 ürün",
-      "📷 AI görsel: 30 stil · her stilden 4 varyasyon",
-      "🎬 Video: 6 adet 5sn video veya 3 adet 10sn video",
-      "📱 Sosyal medya: 30 platform içerik seti",
-      "Tüm platformlar · Süre sınırı yok",
-    ],
-  },
-  {
-    id: "buyuk",
-    isim: "Büyük",
-    fiyat: "₺149",
-    kredi: 100,
-    renk: "border-gray-200",
-    butonRenk: "bg-gray-800 hover:bg-gray-900",
-    aciklama: "Toplu yükleme yapan mağazalar ve profesyonel satıcılar için.",
-    ozellikler: [
-      "100 kredi (tüm içerik türlerinde kullan)",
-      "📝 Listing metni: 100 ürün",
-      "📷 AI görsel: 100 stil · her stilden 4 varyasyon",
-      "🎬 Video: 20 adet 5sn video veya 12 adet 10sn video",
-      "📱 Sosyal medya: 100 platform içerik seti",
-      "Toplu kullanım için en ekonomik · Süre sınırı yok",
-    ],
-  },
-];
+// Paketler lib/paketler.ts'den geliyor — fiyat değişikliği için orayı güncelle
+const paketler = PAKET_LISTESI;
 
 const krediAciklamalari = [
   {
@@ -196,7 +146,7 @@ function PricingJsonLd() {
               "@type": "Offer",
               name: "Başlangıç Paketi",
               description: "Birkaç ürün denemek isteyenler için ideal başlangıç noktası.",
-              price: "29",
+              price: String(MIN_FIYAT),
               priceCurrency: "TRY",
               availability: "https://schema.org/InStock",
             },
@@ -204,7 +154,7 @@ function PricingJsonLd() {
               "@type": "Offer",
               name: "Popüler Paketi",
               description: "Aktif satıcılar için en çok tercih edilen paket.",
-              price: "79",
+              price: "99",
               priceCurrency: "TRY",
               availability: "https://schema.org/InStock",
             },
@@ -212,7 +162,7 @@ function PricingJsonLd() {
               "@type": "Offer",
               name: "Büyük Paketi",
               description: "Toplu yükleme yapan mağazalar ve profesyonel satıcılar için.",
-              price: "149",
+              price: String(MAX_FIYAT),
               priceCurrency: "TRY",
               availability: "https://schema.org/InStock",
             },
@@ -319,12 +269,12 @@ export default function FiyatlarPage() {
               </thead>
               <tbody className="divide-y divide-orange-100">
                 {[
-                  { senaryo: "10 ürün için listing metni", kredi: "10 kredi", paket: "Başlangıç (₺29)" },
-                  { senaryo: "5 ürün metin + 5 stil görsel", kredi: "10 kredi", paket: "Başlangıç (₺29)" },
-                  { senaryo: "2 adet 5sn ürün videosu", kredi: "10 kredi", paket: "Başlangıç (₺29)" },
-                  { senaryo: "20 ürün metin + 10 stil görsel", kredi: "30 kredi", paket: "Popüler (₺79)" },
-                  { senaryo: "30 ürün listing metni + 30 sosyal medya seti", kredi: "60 kredi", paket: "Büyük (₺149)" },
-                  { senaryo: "100 ürün listing metni (toplu)", kredi: "100 kredi", paket: "Büyük (₺149)" },
+                  { senaryo: "10 ürün için listing metni", kredi: "10 kredi", paket: "Başlangıç (₺39)" },
+                  { senaryo: "5 ürün metin + 5 stil görsel", kredi: "10 kredi", paket: "Başlangıç (₺39)" },
+                  { senaryo: "2 adet 5sn ürün videosu", kredi: "10 kredi", paket: "Başlangıç (₺39)" },
+                  { senaryo: "20 ürün metin + 10 stil görsel", kredi: "30 kredi", paket: "Popüler (₺99)" },
+                  { senaryo: "30 ürün listing metni + 30 sosyal medya seti", kredi: "60 kredi", paket: "Büyük (₺249)" },
+                  { senaryo: "100 ürün listing metni (toplu)", kredi: "100 kredi", paket: "Büyük (₺249)" },
                 ].map((row, i) => (
                   <tr key={i} className="bg-white/60">
                     <td className="py-3 px-4 text-gray-700">{row.senaryo}</td>

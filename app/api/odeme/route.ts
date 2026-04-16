@@ -7,10 +7,12 @@ const IYZICO_SECRET_KEY = process.env.IYZICO_SECRET_KEY!;
 const IYZICO_BASE_URL = "https://api.iyzipay.com"; // LIVE
 const URI_PATH = "/payment/iyzipos/checkoutform/initialize/auth/ecom";
 
+import { PAKETLER as PAKET_TANIM } from "@/lib/paketler";
+
 const PAKETLER: Record<string, { isim: string; kredi: number; tutar: number }> = {
-  baslangic: { isim: "Baslangic Paketi", kredi: 10, tutar: 29 },
-  populer: { isim: "Populer Paket", kredi: 30, tutar: 79 },
-  buyuk: { isim: "Buyuk Paket", kredi: 100, tutar: 149 },
+  baslangic: { isim: PAKET_TANIM.baslangic.isimApi, kredi: PAKET_TANIM.baslangic.kredi, tutar: PAKET_TANIM.baslangic.fiyat },
+  populer:   { isim: PAKET_TANIM.populer.isimApi,   kredi: PAKET_TANIM.populer.kredi,   tutar: PAKET_TANIM.populer.fiyat   },
+  buyuk:     { isim: PAKET_TANIM.buyuk.isimApi,     kredi: PAKET_TANIM.buyuk.kredi,     tutar: PAKET_TANIM.buyuk.fiyat     },
 };
 
 function randomString(length: number): string {

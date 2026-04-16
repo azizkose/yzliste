@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import SiteFooter from "@/components/SiteFooter";
+import { PAKET_LISTESI, MIN_FIYAT } from "@/lib/paketler";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
@@ -206,11 +207,8 @@ export default function AuthPage() {
     setOdemeYukleniyor(false);
   };
 
-  const paketler = [
-    { id: "baslangic", isim: "Başlangıç", fiyat: "₺29", kredi: "10 kredi", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
-    { id: "populer", isim: "Popüler", fiyat: "₺79", kredi: "30 kredi", renk: "border-orange-400 ring-2 ring-orange-400", butonRenk: "bg-orange-500 hover:bg-orange-600", rozet: true },
-    { id: "buyuk", isim: "Büyük", fiyat: "₺149", kredi: "100 kredi", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
-  ];
+  // Paketler lib/paketler.ts'den geliyor
+  const paketler = PAKET_LISTESI;
 
   const yorumlar = [
     { isim: "Ayşe K.", magaza: "Trendyol satıcısı", yorum: "30 dakikada 50 ürünün listing'ini bitirdim. Daha önce günlük işti.", puan: 5 },
@@ -307,8 +305,8 @@ export default function AuthPage() {
                   <div key={p.id} className={`border-2 ${p.renk} rounded-2xl p-5 relative`}>
                     {p.rozet && <span className="absolute -top-3 left-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">En Popüler</span>}
                     <div className="flex items-center justify-between">
-                      <div><p className="font-semibold text-gray-800">{p.isim}</p><p className="text-sm text-gray-500">{p.kredi}</p></div>
-                      <p className="text-2xl font-bold text-gray-900">{p.fiyat}</p>
+                      <div><p className="font-semibold text-gray-800">{p.isim}</p><p className="text-sm text-gray-500">{p.krediStr}</p></div>
+                      <p className="text-2xl font-bold text-gray-900">{p.fiyatStr}</p>
                     </div>
                     <button onClick={() => odemeBaslat(p.id)} disabled={odemeYukleniyor} className={`w-full mt-4 ${p.butonRenk} text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:bg-gray-300`}>
                       {odemeYukleniyor && seciliPaket === p.id ? "⏳ Yükleniyor..." : "Satın Al"}
@@ -716,7 +714,7 @@ export default function AuthPage() {
 
           <div className="mt-8 text-center">
             <button onClick={hemenAlTikla} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-orange-100">
-              Paket Satın Al — 29₺&apos;den başlıyor
+              Paket Satın Al — {MIN_FIYAT}₺&apos;den başlıyor
             </button>
             <p className="text-xs text-gray-400 mt-3">veya 3 ücretsiz kredi ile başla, kredi kartı gerekmez</p>
           </div>
