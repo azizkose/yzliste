@@ -354,11 +354,11 @@ export default function AuthPage() {
       <section className="px-4 sm:px-6 pt-12 sm:pt-16 pb-10 text-center max-w-3xl mx-auto">
         <span className="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-5 tracking-wide uppercase">Trendyol · Hepsiburada · Amazon TR · N11 · Etsy · Amazon USA</span>
         <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-5">
-          E-ticaret listing için<br />
-          <span className="text-orange-500">en kolay çözüm</span>
+          Ürün fotoğrafından<br />
+          <span className="text-orange-500">platforma hazır içerik</span>
         </h1>
         <p className="text-base sm:text-lg text-gray-500 mb-4 max-w-2xl mx-auto leading-relaxed">
-          Platforma ürün yüklemek için hem <strong className="text-gray-700">optimize metin</strong> hem de <strong className="text-gray-700">profesyonel görsel</strong> gerekir. yzliste ikisini de tek yerden üretir.
+          Listing metni, stüdyo görseli, sosyal medya içeriği ve video — hepsi tek yerden. <strong className="text-gray-700">Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA</strong> için platforma özel format.
         </p>
         <p className="text-sm text-gray-400 mb-8 max-w-xl mx-auto">İster açıklama gir, ister ürün fotoğrafını yükle ya da barkod tara — gerisini YZ halleder.</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -382,7 +382,9 @@ export default function AuthPage() {
               {[
                 { ikon: "🎁", metin: "Kayıt olunca 3 ücretsiz içerik üretim kredisi hediye edilir — kredi kartı gerekmez." },
                 { ikon: "📝", metin: "Her listing metni üretimi 1 kredi tüketir. Başlık, özellikler, açıklama ve etiketlerin tamamı tek kredide gelir." },
-                { ikon: "📷", metin: "Görsel üretimi stil başına 1 kredi tüketir. Her stilden 4 varyasyon üretilir — inceleme ücretsiz, sadece indirince kredi düşer. 1 stil → 4 görsel → 1 kredi · 2 stil → 8 görsel → 2 kredi." },
+                { ikon: "📷", metin: "Görsel üretimi stil başına 1 kredi tüketir. Her stilden 4 varyasyon üretilir — inceleme ücretsiz, sadece indirince kredi düşer. 1 stil → 4 görsel → 1 kredi." },
+                { ikon: "🎬", metin: "Video üretimi 5 veya 8 kredi tüketir. 5 saniyelik video 5 kredi, 10 saniyelik video 8 kredi. Instagram Reels ve TikTok için ideal." },
+                { ikon: "📱", metin: "Sosyal medya içeriği (caption + hashtag) 1 kredi. Instagram, TikTok, Facebook ve Twitter/X için platform tonuna uygun." },
                 { ikon: "💳", metin: "Kredilerin biter bitmez istediğin paketi satın al. 29₺'den başlayan paketler, abonelik yok." },
               ].map((m, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm text-gray-500">
@@ -611,7 +613,7 @@ export default function AuthPage() {
             {[
               { ikon: "📸", baslik: "Fotoğraftan analiz", aciklama: "Ürün fotoğrafını yükle, YZ ürünü tanısın ve listing metnini otomatik oluştursun." },
               { ikon: "📦", baslik: "Barkod tarama", aciklama: "Barkodu tarat, ürün bilgilerini veritabanından çek, listing üret." },
-              { ikon: "🎯", baslik: "Platform şablonları", aciklama: "Trendyol, Hepsiburada, Amazon TR ve N11 için ayrı format." },
+              { ikon: "🎯", baslik: "Platform şablonları", aciklama: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA için ayrı format ve dil desteği." },
               { ikon: "📷", baslik: "AI görsel + prompt", aciklama: "Beyaz, koyu, lifestyle — her stilden 4 varyasyon. Kendi sahneni yaz." },
               { ikon: "💎", baslik: "Kredi sadece indirmede düşer", aciklama: "Görsel üretilir, beğenmezsen kredinizi kaybetmezsiniz." },
               { ikon: "💰", baslik: "Kullandığın kadar öde", aciklama: "Aylık abonelik yok. 3 ücretsiz deneme kredisi ile başla." },

@@ -61,9 +61,9 @@ const paketler = [
     ozellikler: [
       "30 kredi (istediğin gibi kullan)",
       "Metin üretimi: 30 listing",
-      "Görsel üretimi: 30 farklı stil (her stilden 4 varyasyon)",
-      "Metin + Görsel karışık kullanım serbesttir",
-      "Tüm platformlar desteklenir",
+      "Görsel üretimi: 30 stil (her stilden 4 varyasyon)",
+      "Video, sosyal medya ve görsel için de kullanılır",
+      "Tüm platformlar: Trendyol, HB, Amazon TR, N11, Etsy, Amazon USA",
       "Krediler sona erene kadar geçerli, süre sınırı yok",
     ],
   },
@@ -78,9 +78,9 @@ const paketler = [
     ozellikler: [
       "100 kredi (istediğin gibi kullan)",
       "Metin üretimi: 100 listing",
-      "Görsel üretimi: 100 farklı stil (her stilden 4 varyasyon)",
-      "Toplu kullanım için en ekonomik seçenek",
-      "Tüm platformlar desteklenir",
+      "Görsel üretimi: 100 stil (her stilden 4 varyasyon)",
+      "Video, sosyal medya ve görsel için de kullanılır",
+      "Tüm platformlar: Trendyol, HB, Amazon TR, N11, Etsy, Amazon USA",
       "Krediler sona erene kadar geçerli, süre sınırı yok",
     ],
   },
@@ -104,6 +104,18 @@ const krediAciklamalari = [
     baslik: "AI görsel — stil başına 1 kredi",
     icerik:
       "Her stil seçiminde (Beyaz Zemin, Koyu Zemin, Lifestyle) 4 farklı varyasyon üretilir. Beğendiğini seçip indirince kredi düşer; sadece inceleme ücretsizdir. 1 stil = 4 görsel = 1 kredi.",
+  },
+  {
+    ikon: "🎬",
+    baslik: "Video üretimi — 5 veya 8 kredi",
+    icerik:
+      "Tek ürün fotoğrafından kısa tanıtım videosu üretilir. 5 saniyelik video 5 kredi, 10 saniyelik video 8 kredi tüketir. Instagram Reels, TikTok ve ürün sayfaları için ideal.",
+  },
+  {
+    ikon: "📱",
+    baslik: "Sosyal medya içeriği — 1 kredi",
+    icerik:
+      "Instagram, TikTok, Facebook ve Twitter/X için hazır caption metni ve hashtag listesi. Her üretim 1 kredi tüketir. Platform, ton ve marka profiline göre özelleşir.",
   },
   {
     ikon: "🔀",

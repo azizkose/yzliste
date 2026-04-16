@@ -13,10 +13,9 @@ export async function POST(req: NextRequest) {
     process.env.SUPABASE_SERVICE_KEY!
   );
 
-  // Admin kontrolü
   const { data: profil } = await supabase
     .from("profiles")
-    .select("kredi, is_admin")
+    .select("kredi, is_admin, marka_adi, hedef_kitle, vurgulanan_ozellikler, ton")
     .eq("id", userId)
     .single();
 
@@ -28,7 +27,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "Yetersiz kredi" }, { status: 402 });
   }
 
-  // Platform prompt
   const platformAdi =
     platform === "instagram_tiktok"
       ? "Instagram ve TikTok"
@@ -46,7 +44,19 @@ export async function POST(req: NextRequest) {
   const karakterLimit =
     platform === "twitter" ? "280 karakter altında" : "150-300 kelime";
 
-  const sistem = `Sen bir e-ticaret sosyal medya uzmanısın. Türk e-ticaret satıcıları için ${platformAdi} paylaşım metni ve hashtag üretiyorsun.`;
+  // Marka bağlamı
+  const markaSatiri = profil.marka_adi ? `Marka: ${profil.marka_adi}` : "";
+  const hedefSatiri = profil.hedef_kitle ? `Hedef kitle: ${profil.hedef_kitle}` : "";
+  const vurgulananSatiri = profil.vurgulanan_ozellikler ? `Öne çıkarılacak özellikler: ${profil.vurgulanan_ozellikler}` : "";
+  // Profil tonu yoksa kullanıcının seçtiği tonu kullan
+  const profilTonu = profil.ton || ton;
+  const tonSatiri = profilTonu ? `Marka tonu: ${profilTonu}` : "";
+
+  const markaBaglami = [markaSatiri, hedefSatiri, vurgulananSatiri, tonSatiri]
+    .filter(Boolean)
+    .join("\n");
+
+  const sistem = `Sen bir e-ticaret sosyal medya uzmanısın. Türk e-ticaret satıcıları için ${platformAdi} paylaşım metni ve hashtag üretiyorsun.${markaBaglami ? `\n\nMarka bilgileri:\n${markaBaglami}` : ""}`;
 
   const prompt = `Şu ürün için ${platformAdi} paylaşım metni yaz:
 
@@ -59,6 +69,7 @@ Kurallar:
 - Emoji kullan ama abartma
 - Türkçe, doğal ve çekici dil
 - Harekete geçirici son cümle (satın al, incele, DM at vb.)
+${markaBaglami ? "- Marka bilgilerini metne doğal şekilde yansıt" : ""}
 
 Yanıtı tam olarak şu formatta ver:
 CAPTION:
@@ -75,7 +86,7 @@ HASHTAG:
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: "claude-haiku-4-5",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 1024,
       system: sistem,
       messages: [{ role: "user", content: prompt }],
@@ -85,14 +96,12 @@ HASHTAG:
   const data = await response.json();
   const metin = data.content?.[0]?.text || "";
 
-  // Parse
   const captionMatch = metin.match(/CAPTION:\s*([\s\S]+?)(?=HASHTAG:|$)/i);
   const hashtagMatch = metin.match(/HASHTAG:\s*([\s\S]+?)$/i);
 
   const caption = captionMatch ? captionMatch[1].trim() : metin;
   const hashtag = hashtagMatch ? hashtagMatch[1].trim() : "";
 
-  // Kredi düş (admin değilse)
   if (!profil.is_admin) {
     await supabase
       .from("profiles")

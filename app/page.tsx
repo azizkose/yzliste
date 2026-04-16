@@ -341,13 +341,15 @@ export default function Home() {
   const [krediOnayIslem, setKrediOnayIslem] = useState<(() => Promise<void>) | null>(null);
 
   // Video sekmesi
-  const [videoFoto, setVideoFoto] = useState<string | null>(null);
+  // videoFoto kaldırıldı — tüm sekmeler fotolar[0] paylaşır
   const [videoPrompt, setVideoPrompt] = useState("");
+  const [videoSure, setVideoSure] = useState<"5" | "10">("5");
+  const [videoFormat, setVideoFormat] = useState<"9:16" | "16:9" | "1:1">("9:16");
   const [videoYukleniyor, setVideoYukleniyor] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
 
   // Sosyal sekmesi
-  const [sosyalFoto, setSosyalFoto] = useState<string | null>(null);
+  // sosyalFoto kaldırıldı — tüm sekmeler fotolar[0] paylaşır
   const [sosyalUrunAdi, setSosyalUrunAdi] = useState("");
   const [sosyalEkBilgi, setSosyalEkBilgi] = useState("");
   const [sosyalPlatform, setSosyalPlatform] = useState<SosyalPlatform>("instagram_tiktok");
@@ -355,6 +357,11 @@ export default function Home() {
   const [captionYukleniyor, setCaptionYukleniyor] = useState(false);
   const [sosyalCaption, setSosyalCaption] = useState("");
   const [sosyalHashtag, setSosyalHashtag] = useState("");
+  // Sosyal görsel
+  const [sosyalGorselFormat, setSosyalGorselFormat] = useState<"1:1" | "9:16" | "16:9">("1:1");
+  const [sosyalGorselStil, setSosyalGorselStil] = useState("beyaz");
+  const [sosyalGorselYukleniyor, setSosyalGorselYukleniyor] = useState(false);
+  const [sosyalGorselSonuclar, setSosyalGorselSonuclar] = useState<string[]>([]);
 
   // Refs
   const scannerRef = useRef<unknown>(null);
@@ -492,6 +499,31 @@ export default function Home() {
 
   const fotoKaldir = (index: number) => { setFotolar((prev) => prev.filter((_, i) => i !== index)); setGorselSonuclar([]); };
 
+  // Fotoğraf boyutlandır — API'ye göndermeden önce
+  const resizeFoto = (base64: string, maxSize = 1024): Promise<string> =>
+    new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let w = img.width, h = img.height;
+        if (w > maxSize || h > maxSize) { if (w > h) { h = Math.round(h * maxSize / w); w = maxSize; } else { w = Math.round(w * maxSize / h); h = maxSize; } }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext("2d")?.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", 0.85));
+      };
+      img.src = base64;
+    });
+
+  // Tek fotoğraf seç — görsel/video/sosyal sekmeleri için (mevcut fotoğrafın üzerine yazar)
+  const tekFotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const dosya = e.target.files?.[0];
+    if (!dosya) return;
+    const reader = new FileReader();
+    reader.onload = () => { setFotolar([reader.result as string]); setGorselSonuclar([]); };
+    reader.readAsDataURL(dosya);
+    e.target.value = "";
+  };
+
   const barkodSorgula = async (kod: string) => {
     if (!kod || kod.length < 8 || sorguCalisiyor.current) return;
     sorguCalisiyor.current = true;
@@ -594,19 +626,6 @@ export default function Home() {
     setGorselYukleniyor(true);
     setGorselSonuclar([]);
     try {
-      const resizeFoto = (base64: string, maxSize = 1024): Promise<string> =>
-        new Promise((resolve) => {
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement("canvas");
-            let w = img.width, h = img.height;
-            if (w > maxSize || h > maxSize) { if (w > h) { h = Math.round(h * maxSize / w); w = maxSize; } else { w = Math.round(w * maxSize / h); h = maxSize; } }
-            canvas.width = w; canvas.height = h;
-            canvas.getContext("2d")?.drawImage(img, 0, 0, w, h);
-            resolve(canvas.toDataURL("image/jpeg", 0.85));
-          };
-          img.src = base64;
-        });
       const resizedFoto = await resizeFoto(fotolar[0]);
       const res = await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: resizedFoto, ekPrompt: gorselEkPrompt, stiller: seciliStiller, userId: kullanici?.id }) });
       const data = await res.json();
@@ -618,14 +637,15 @@ export default function Home() {
 
   const videoUret = async () => {
     if (!kullanici || kullanici.anonim) { setAuthPopupMod("kayit"); setAuthPopupAcik(true); return; }
-    if (!videoFoto) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
-    if (!kullanici.is_admin && kullanici.kredi < 5) { paketModalAc(); return; }
+    if (!fotolar[0]) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
+    const videoKredi = videoSure === "10" ? 8 : 5;
+    if (!kullanici.is_admin && kullanici.kredi < videoKredi) { paketModalAc(); return; }
     setVideoYukleniyor(true);
     setVideoUrl(null);
     try {
-      const res = await fetch("/api/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: videoFoto, prompt: videoPrompt, userId: kullanici.id }) });
+      const res = await fetch("/api/sosyal/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: fotolar[0], prompt: videoPrompt, userId: kullanici.id, sure: videoSure, format: videoFormat }) });
       const data = await res.json();
-      if (data.videoUrl) { setVideoUrl(data.videoUrl); if (!kullanici.is_admin) setKullanici({ ...kullanici, kredi: kullanici.kredi - 5 }); }
+      if (data.videoUrl) { setVideoUrl(data.videoUrl); if (!kullanici.is_admin) setKullanici({ ...kullanici, kredi: kullanici.kredi - (data.kullanilanKredi ?? videoKredi) }); }
       else setHata("Video üretilemedi. Tekrar deneyin.");
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setVideoYukleniyor(false);
@@ -646,6 +666,35 @@ export default function Home() {
       if (!kullanici.is_admin) setKullanici({ ...kullanici, kredi: kullanici.kredi - 1 });
     } catch { setHata("Paylaşım metni üretilemedi. Tekrar deneyin."); }
     setCaptionYukleniyor(false);
+  };
+
+  const sosyalGorselUret = async () => {
+    if (!kullanici || kullanici.anonim) { setAuthPopupMod("kayit"); setAuthPopupAcik(true); return; }
+    if (!fotolar[0]) { alert("Önce ürün fotoğrafı yükle."); return; }
+    if (!kullanici.is_admin && kullanici.kredi <= 0) { paketModalAc(); return; }
+    setSosyalGorselYukleniyor(true);
+    setSosyalGorselSonuclar([]);
+    try {
+      const resizedFoto = await resizeFoto(fotolar[0]);
+      const res = await fetch("/api/gorsel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ foto: resizedFoto, stiller: [sosyalGorselStil], sosyalFormat: sosyalGorselFormat, userId: kullanici.id }),
+      });
+      const data = await res.json();
+      const gorseller: string[] = data.sonuclar?.[0]?.gorseller || [];
+      if (gorseller.length > 0) {
+        setSosyalGorselSonuclar(gorseller);
+        // Kredi düş: üretimde 1 kredi (görsel sekmesinin indir mantığı yerine)
+        if (!kullanici.is_admin) {
+          await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: kullanici.id, action: "indir", stilSayisi: 1 }) });
+          setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - 1) } : k);
+        }
+      } else {
+        setHata("Görsel üretilemedi. Tekrar deneyin.");
+      }
+    } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
+    setSosyalGorselYukleniyor(false);
   };
 
   return (
@@ -763,6 +812,47 @@ export default function Home() {
               ))}
             </div>
 
+            {/* PAYLAŞILAN ÜRÜN FOTOĞRAFI — tüm sekmelerde geçerli */}
+            <div className="mt-3 bg-white rounded-2xl shadow p-4">
+              {fotolar[0] ? (
+                <div className="flex items-center gap-3">
+                  <img src={fotolar[0]} alt="ürün" className="w-14 h-14 rounded-xl object-cover border border-gray-100 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-gray-700">Ürün Fotoğrafı</p>
+                    <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                      {[
+                        { id: "metin", label: "📝 Metin", renk: "bg-orange-100 text-orange-600" },
+                        { id: "gorsel", label: "📷 Görsel", renk: "bg-purple-100 text-purple-600" },
+                        { id: "video", label: "🎬 Video", renk: "bg-red-100 text-red-600" },
+                        { id: "sosyal", label: "📱 Sosyal", renk: "bg-pink-100 text-pink-600" },
+                      ].map((s) => (
+                        <span key={s.id} className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${s.renk}`}>{s.label}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                    <label className="text-xs text-blue-500 hover:text-blue-700 cursor-pointer font-medium">
+                      Değiştir
+                      <input type="file" accept="image/*" className="hidden" onChange={tekFotoSec} />
+                    </label>
+                    <button onClick={() => { setFotolar([]); setGorselSonuclar([]); }} className="text-xs text-gray-400 hover:text-red-500 transition-colors">Kaldır</button>
+                  </div>
+                </div>
+              ) : (
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 group-hover:border-orange-300 flex items-center justify-center transition-colors flex-shrink-0">
+                    <span className="text-xl">📷</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-600 group-hover:text-orange-600 transition-colors">Ürün fotoğrafı yükle</p>
+                    <p className="text-xs text-gray-400 mt-0.5">Metin, Görsel, Video ve Sosyal sekmelerin hepsinde kullanılır</p>
+                  </div>
+                  <span className="text-xs text-gray-400 group-hover:text-orange-500 transition-colors flex-shrink-0">Seç →</span>
+                  <input type="file" accept="image/*" className="hidden" onChange={tekFotoSec} />
+                </label>
+              )}
+            </div>
+
             {/* ===== METİN SEKMESİ ===== */}
             <div style={{display: anaSekme === "metin" ? "block" : "none"}} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
               <div className="flex items-center justify-between">
@@ -844,9 +934,11 @@ export default function Home() {
                     <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder="örn: Ayakkabı & Çanta / Erkek Bot" className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Ürün Fotoğrafı (max 3)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Ürün Fotoğrafı</label>
                     {fotolar.length === 0 ? (
-                      <FotoEkleAlani id="metin-foto-input" onChange={fotoSec} renk="gray" metin="Fotoğraf ekle" ikon="📷" />
+                      <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-4 text-center text-xs text-gray-400">
+                        Yukarıdan ürün fotoğrafı yükle ↑
+                      </div>
                     ) : (
                       <FotoThumbnail src={fotolar[0]} onKaldir={() => fotoKaldir(0)} renk="green" />
                     )}
@@ -924,13 +1016,24 @@ export default function Home() {
                 <h2 className="text-base font-semibold text-gray-800">🖼️ Ürün Görseli Üret</h2>
                 <span className="text-xs text-orange-500 font-medium">Stil başına 1 kredi · Her stilden 4 varyasyon</span>
               </div>
+
+              {/* Profil eksik uyarısı */}
+              {kullanici && !kullanici.anonim && !kullanici.marka_adi && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex items-center justify-between gap-3">
+                  <p className="text-xs text-yellow-700">💡 <span className="font-semibold">Marka profili eksik</span> — Ton bilgisi girilince görsel stili markanla uyumlu hale getirilir.</p>
+                  <a href="/profil" className="text-xs text-yellow-700 font-semibold underline whitespace-nowrap">Profili doldur →</a>
+                </div>
+              )}
+
               <p className="text-xs text-gray-600">
                 Tek fotoğraftan 3 farklı stüdyo görseli. Her stilden 4 varyasyon üretilir — inceleme ücretsiz, indirince kredi düşer.{" "}
                 <span className="text-xs text-gray-400">  <br /> Örnek: 1 stil seçersen → 4 görsel, 1 kredi <br />2 stil seçersen → 8 görsel, 2 kredi</span>
               </p>
 
               {fotolar.length === 0 ? (
-                <FotoEkleAlani id="gorsel-foto-input" onChange={fotoSec} renk="purple" metin="Ürün fotoğrafı yükle" ikon="📷" altMetin="Arka planı kaldırıp 3 stilden 4'er varyasyon üretiriz" />
+                <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-4 text-center text-xs text-gray-400">
+                  Yukarıdan ürün fotoğrafı yükle ↑
+                </div>
               ) : (
                 <FotoThumbnail src={fotolar[0]} onKaldir={() => fotoKaldir(0)} renk="green" />
               )}
@@ -973,8 +1076,8 @@ export default function Home() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Görsel yönlendirmesi <span className="text-gray-400 font-normal">(isteğe bağlı)</span> <span className="text-amber-500 font-medium">— İngilizce yazın</span></label>
-                <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="e.g. on a wooden table, by the sea, autumn tones, minimalist..." rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
+                <label className="block text-xs font-medium text-gray-600 mb-1">Görsel yönlendirmesi <span className="text-gray-400 font-normal">(isteğe bağlı — Türkçe veya İngilizce)</span></label>
+                <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="örn: ahşap masada, deniz kıyısında, sonbahar tonları, minimalist..." rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
               </div>
 
               <button onClick={gorselUret} disabled={gorselYukleniyor || seciliStiller.length === 0 || fotolar.length === 0}
@@ -1057,37 +1160,107 @@ export default function Home() {
             <div style={{display: anaSekme === "video" ? "block" : "none"}} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-base font-semibold text-gray-800">🎬 Ürün Videosu Üret</h2>
-                <span className="text-xs text-red-500 font-medium">5 içerik üretim kredisi</span>
+                <span className="text-xs text-red-500 font-medium">{videoSure === "10" ? "8" : "5"} içerik üretim kredisi</span>
               </div>
-              <p className="text-xs text-gray-400">Fotoğraftan 5 saniyelik ürün tanıtım videosu — Instagram Reels / TikTok formatı (9:16)</p>
+
+              {/* Profil eksik uyarısı */}
+              {kullanici && !kullanici.anonim && !kullanici.marka_adi && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex items-center justify-between gap-3">
+                  <p className="text-xs text-yellow-700">💡 <span className="font-semibold">Marka profili eksik</span> — Ton ve marka bilgisi girilince video prompt otomatik kişiselleştirilir.</p>
+                  <a href="/profil" className="text-xs text-yellow-700 font-semibold underline whitespace-nowrap">Profili doldur →</a>
+                </div>
+              )}
 
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2">
                 <span className="text-amber-500 flex-shrink-0 mt-0.5">⚡</span>
                 <div>
-                  <p className="text-xs font-semibold text-amber-700">5 içerik üretim kredisi — üretilince kredi düşer</p>
+                  <p className="text-xs font-semibold text-amber-700">{videoSure === "10" ? "8" : "5"} içerik üretim kredisi — üretilince kredi düşer</p>
                   <p className="text-xs text-amber-600 mt-0.5">Video AI işlem gücü gerektiriyor. Üretim ~2 dakika sürer.</p>
                 </div>
               </div>
 
-              {!videoFoto ? (
-                <FotoEkleAlani id="video-foto-input" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onload = () => setVideoFoto(r.result as string); r.readAsDataURL(f); } }} renk="red" metin="Ürün fotoğrafı yükle" ikon="🎬" altMetin="Temiz arka planlı fotoğraf en iyi sonucu verir" />
+              {!fotolar[0] ? (
+                <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-4 text-center text-xs text-gray-400">
+                  Yukarıdan ürün fotoğrafı yükle ↑
+                </div>
               ) : (
-                <FotoThumbnail src={videoFoto} onKaldir={() => setVideoFoto(null)} renk="green" />
+                <FotoThumbnail src={fotolar[0]} onKaldir={() => { setFotolar([]); setGorselSonuclar([]); }} renk="green" />
               )}
 
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Hareket tarifi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                <textarea value={videoPrompt} onChange={(e) => setVideoPrompt(e.target.value)} placeholder="örn: Ürün yavaşça dönsün, sinematik ışıklandırma, beyaz arka plan" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
-                <p className="text-xs text-gray-400 mt-1">Boş bırakırsan otomatik profesyonel ürün videosu üretilir</p>
+              {/* Format ve süre seçimi */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Format</label>
+                  <div className="flex gap-1.5">
+                    {(["9:16", "16:9", "1:1"] as const).map((f) => (
+                      <button key={f} onClick={() => setVideoFormat(f)}
+                        className={`flex-1 py-1.5 rounded-lg text-xs font-medium border transition-all ${videoFormat === f ? "bg-red-500 text-white border-red-500" : "bg-white text-gray-600 border-gray-200 hover:border-red-300"}`}>
+                        {f === "9:16" ? "9:16 Reels" : f === "16:9" ? "16:9 Yatay" : "1:1 Kare"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Süre</label>
+                  <div className="flex gap-1.5">
+                    {(["5", "10"] as const).map((s) => (
+                      <button key={s} onClick={() => setVideoSure(s)}
+                        className={`flex-1 py-1.5 rounded-lg text-xs font-medium border transition-all ${videoSure === s ? "bg-red-500 text-white border-red-500" : "bg-white text-gray-600 border-gray-200 hover:border-red-300"}`}>
+                        {s === "5" ? "5 sn · 5 kredi" : "10 sn · 8 kredi"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              <button onClick={videoUret} disabled={videoYukleniyor || !videoFoto || (!kullanici?.is_admin && (kullanici?.kredi ?? 0) < 5)}
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Hareket & sahne tarifi <span className="text-gray-400 font-normal">(isteğe bağlı — Türkçe yazabilirsin)</span></label>
+                <textarea value={videoPrompt} onChange={(e) => setVideoPrompt(e.target.value)} placeholder="örn: Ürün yavaşça dönsün, dramatik ışıklandırma, siyah arka plan" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  {[
+                    {
+                      etiket: "360° Dönüş",
+                      aciklama: "Ürün kendi ekseni etrafında yavaşça döner. Tüm açılar görünür.",
+                      ikon: "🔄",
+                      deger: "Smooth slow 360 degree product rotation, studio lighting, clean background",
+                    },
+                    {
+                      etiket: "Zoom Yaklaşım",
+                      aciklama: "Kamera ürüne doğru yavaş yaklaşır. Detay ve doku hissi verir.",
+                      ikon: "🔍",
+                      deger: "Gentle cinematic zoom in towards the product, soft focus background, detail reveal",
+                    },
+                    {
+                      etiket: "Dramatik Işık",
+                      aciklama: "Karanlık sahnede ürüne spotlight açılır. Premium ve güçlü görünüm.",
+                      ikon: "💡",
+                      deger: "Dramatic lighting reveal, dark background, single spotlight effect on product, luxury feel",
+                    },
+                    {
+                      etiket: "Doğal Ortam",
+                      aciklama: "Yapraklar hafifçe sallanır, ışık oynar. Organik ve sıcak his.",
+                      ikon: "🌿",
+                      deger: "Product in natural outdoor setting, soft golden hour light, gentle breeze moving leaves, organic feel",
+                    },
+                  ].map((p) => (
+                    <button key={p.etiket} onClick={() => setVideoPrompt(p.deger)}
+                      className={`text-left p-2.5 rounded-xl border-2 transition-all ${videoPrompt === p.deger ? "border-red-400 bg-red-50" : "border-gray-200 hover:border-red-200 hover:bg-red-50/50"}`}>
+                      <p className={`text-xs font-semibold ${videoPrompt === p.deger ? "text-red-700" : "text-gray-700"}`}>{p.ikon} {p.etiket}</p>
+                      <p className="text-[10px] text-gray-500 mt-0.5 leading-relaxed">{p.aciklama}</p>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-400 mt-1.5">💡 Boş bırakırsan marka bilgine göre otomatik oluşturulur — genellikle iyi sonuç verir</p>
+                <a href="/blog/ai-urun-videosu-hareket-secenekleri" className="inline-block mt-2 text-xs text-red-500 hover:text-red-700 hover:underline">Bu hareketler ne anlama gelir? Ürün kategorine göre hangisi uygun? →</a>
+              </div>
+
+              <button onClick={videoUret} disabled={videoYukleniyor || !fotolar[0] || (!kullanici?.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 8 : 5))}
                 className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
-                {videoYukleniyor ? "⏳ Video üretiliyor... (~2 dakika)" : !videoFoto ? "Önce fotoğraf ekle ↑" : `🎬 Video Üret — ${kullanici?.is_admin ? "∞" : "5"} kredi`}
+                {videoYukleniyor ? "⏳ Video üretiliyor... (~2 dakika)" : !fotolar[0] ? "Önce fotoğraf ekle ↑" : `🎬 Video Üret — ${kullanici?.is_admin ? "∞" : (videoSure === "10" ? "8" : "5")} kredi`}
               </button>
 
-              {!kullanici?.is_admin && (kullanici?.kredi ?? 0) < 5 && !videoYukleniyor && (
-                <p className="text-center text-xs text-red-500">En az 5 içerik üretim kredisi gerekli. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
+              {!kullanici?.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 8 : 5) && !videoYukleniyor && (
+                <p className="text-center text-xs text-red-500">En az {videoSure === "10" ? "8" : "5"} içerik üretim kredisi gerekli. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
               )}
 
               {videoYukleniyor && (
@@ -1102,11 +1275,11 @@ export default function Home() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between px-1">
                     <span className="text-sm font-semibold text-gray-800">✅ Videonuz Hazır</span>
-                    <span className="text-xs text-gray-400">9:16 · 5 saniye</span>
+                    <span className="text-xs text-gray-400">{videoFormat} · {videoSure} saniye</span>
                   </div>
                   <video src={videoUrl} controls autoPlay loop className="w-full rounded-xl max-h-96 object-contain bg-black" />
                   <a href={videoUrl} download="urun-video.mp4" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 rounded-xl text-sm transition-colors">⬇️ Videoyu İndir</a>
-                  <button onClick={() => { setVideoUrl(null); setVideoFoto(null); setVideoPrompt(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni video üret</button>
+                  <button onClick={() => { setVideoUrl(null); setVideoPrompt(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni video üret</button>
                 </div>
               )}
             </div>
@@ -1118,6 +1291,14 @@ export default function Home() {
                 <span className="text-xs text-pink-500 font-medium">1 içerik üretim kredisi</span>
               </div>
 
+              {/* Profil eksik uyarısı */}
+              {kullanici && !kullanici.anonim && !kullanici.marka_adi && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex items-center justify-between gap-3">
+                  <p className="text-xs text-yellow-700">💡 <span className="font-semibold">Marka profili eksik</span> — Marka adı, hedef kitle ve ton girilince caption çok daha özgün olur.</p>
+                  <a href="/profil" className="text-xs text-yellow-700 font-semibold underline whitespace-nowrap">Profili doldur →</a>
+                </div>
+              )}
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Adı <span className="text-red-400">*</span></label>
                 <input type="text" value={sosyalUrunAdi} onChange={(e) => setSosyalUrunAdi(e.target.value)} placeholder="örn: Bakır Cezve Set, Kadın Deri Çanta" className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400" />
@@ -1128,14 +1309,12 @@ export default function Home() {
                 <textarea value={sosyalEkBilgi} onChange={(e) => setSosyalEkBilgi(e.target.value)} placeholder="örn: %20 indirimde, yeni sezon, el yapımı, hediye seçeneği" rows={2} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400" />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Fotoğraf <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                {!sosyalFoto ? (
-                  <FotoEkleAlani id="sosyal-foto-input" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onload = () => setSosyalFoto(r.result as string); r.readAsDataURL(f); } }} renk="pink" metin="Fotoğraf ekle" ikon="📸" altMetin="İsteğe bağlı — caption üretimi için gerekli değil" />
-                ) : (
-                  <FotoThumbnail src={sosyalFoto} onKaldir={() => setSosyalFoto(null)} renk="green" />
-                )}
-              </div>
+              {fotolar[0] && (
+                <div className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2 border border-gray-100">
+                  <img src={fotolar[0]} alt="ürün" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+                  <p className="text-xs text-gray-500 flex-1">Ürün fotoğrafı hazır — görsel üretmek için Görsel sekmesine geç</p>
+                </div>
+              )}
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Platform</label>
@@ -1202,6 +1381,85 @@ export default function Home() {
                   <button onClick={() => { setSosyalCaption(""); setSosyalHashtag(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni metin üret</button>
                 </div>
               )}
+
+              {/* ── SOSYAL MEDYA GÖRSELİ ── */}
+              <div className="border-t border-gray-100 pt-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-gray-700">📸 Sosyal Medya Görseli Üret</h3>
+                  <span className="text-xs text-pink-500 font-medium">1 kredi</span>
+                </div>
+                <p className="text-xs text-gray-400">Ürün fotoğrafını seçtiğin platforma uygun boyuta getirir, arka planı değiştirir.</p>
+
+                {/* Platform / Format seçici */}
+                <div>
+                  <p className="text-xs font-medium text-gray-600 mb-1.5">Platform Formatı</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {([
+                      { id: "1:1",  label: "⬜ 1:1",  aciklama: "Instagram Gönderi",   boyut: "1080×1080" },
+                      { id: "9:16", label: "📱 9:16", aciklama: "Reels & TikTok",      boyut: "1080×1920" },
+                      { id: "16:9", label: "🖥️ 16:9", aciklama: "Twitter / LinkedIn",  boyut: "1920×1080" },
+                    ] as { id: "1:1"|"9:16"|"16:9"; label: string; aciklama: string; boyut: string }[]).map((f) => (
+                      <button key={f.id} onClick={() => setSosyalGorselFormat(f.id)}
+                        className={`p-2.5 rounded-xl border-2 text-left transition-all ${sosyalGorselFormat === f.id ? "border-pink-400 bg-pink-50" : "border-gray-200 hover:border-gray-300"}`}>
+                        <p className={`text-xs font-semibold ${sosyalGorselFormat === f.id ? "text-pink-700" : "text-gray-700"}`}>{f.label}</p>
+                        <p className="text-[10px] text-gray-500 mt-0.5">{f.aciklama}</p>
+                        <p className="text-[10px] text-gray-400">{f.boyut}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Stil seçici — sosyal medya için curated 4 stil */}
+                <div>
+                  <p className="text-xs font-medium text-gray-600 mb-1.5">Görsel Stili</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {([
+                      { id: "beyaz",     label: "⬜ Beyaz Zemin",  aciklama: "Trendyol & pazaryeri standart" },
+                      { id: "lifestyle", label: "🏠 Lifestyle",    aciklama: "Organik, gerçek yaşam hissi" },
+                      { id: "gradient",  label: "🎨 Gradient",     aciklama: "Modern, göze çarpan arka plan" },
+                      { id: "koyu",      label: "⬛ Koyu Zemin",   aciklama: "Premium, elektronik, lüks ürün" },
+                    ] as { id: string; label: string; aciklama: string }[]).map((s) => (
+                      <button key={s.id} onClick={() => setSosyalGorselStil(s.id)}
+                        className={`p-2.5 rounded-xl border-2 text-left transition-all ${sosyalGorselStil === s.id ? "border-pink-400 bg-pink-50" : "border-gray-200 hover:border-gray-300"}`}>
+                        <p className={`text-xs font-semibold ${sosyalGorselStil === s.id ? "text-pink-700" : "text-gray-700"}`}>{s.label}</p>
+                        <p className="text-[10px] text-gray-500 mt-0.5">{s.aciklama}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <button onClick={sosyalGorselUret}
+                  disabled={sosyalGorselYukleniyor || !fotolar[0] || (!kullanici?.is_admin && (kullanici?.kredi ?? 0) <= 0)}
+                  className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all text-sm">
+                  {sosyalGorselYukleniyor ? "⏳ Görsel üretiliyor..." : !fotolar[0] ? "Önce fotoğraf yükle ↑" : `📸 Görsel Üret — ${kullanici?.is_admin ? "∞" : "1"} kredi`}
+                </button>
+
+                {sosyalGorselYukleniyor && (
+                  <div className="flex items-center justify-center gap-3 py-4">
+                    <div className="w-6 h-6 border-3 border-pink-200 border-t-pink-500 rounded-full animate-spin" />
+                    <p className="text-sm text-pink-600">4 varyasyon üretiliyor...</p>
+                  </div>
+                )}
+
+                {sosyalGorselSonuclar.length > 0 && !sosyalGorselYukleniyor && (
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold text-gray-700">✅ {sosyalGorselSonuclar.length} varyasyon hazır</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {sosyalGorselSonuclar.map((url, i) => (
+                        <div key={i} className="relative group rounded-xl overflow-hidden border border-gray-100">
+                          <img src={url} alt={`varyasyon ${i + 1}`} className="w-full object-cover" />
+                          <a href={url} download={`sosyal-gorsel-${i + 1}.jpg`} target="_blank" rel="noopener noreferrer"
+                            className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold rounded-xl">
+                            ⬇️ İndir
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                    <button onClick={() => setSosyalGorselSonuclar([])} className="w-full text-xs text-gray-400 hover:text-gray-600 py-1.5 transition-colors">Yeni görsel üret</button>
+                  </div>
+                )}
+              </div>
+
             </div>
 
           </div>
