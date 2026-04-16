@@ -360,6 +360,8 @@ export default function Home() {
   const [videoYukleniyor, setVideoYukleniyor] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
 
+  // Video + Sosyal sekmesi ortak foto state'leri
+  const [videoFoto, setVideoFoto] = useState<string | null>(null);
   // Sosyal sekmesi
   const [sosyalFoto, setSosyalFoto] = useState<string | null>(null);
   const [sosyalUrunAdi, setSosyalUrunAdi] = useState("");
@@ -653,6 +655,7 @@ export default function Home() {
 
   const gorselUret = async () => {
     if (!loginGerekli()) return;
+    if (!kullanici) return;
     if (fotolar.length === 0) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
     if (seciliStiller.length === 0) { alert("En az bir stil seçin."); return; }
     if (!kullanici.is_admin && kullanici.kredi < seciliStiller.length) { paketModalAc(); return; }
@@ -688,6 +691,7 @@ export default function Home() {
 
   const captionUret = async () => {
     if (!loginGerekli()) return;
+    if (!kullanici) return;
     if (!sosyalUrunAdi.trim()) return;
     if (!kullanici.is_admin && kullanici.kredi <= 0) { paketModalAc(); return; }
     setCaptionYukleniyor(true);
@@ -698,7 +702,7 @@ export default function Home() {
       const data = await res.json();
       if (data.caption) setSosyalCaption(data.caption);
       if (data.hashtag) setSosyalHashtag(data.hashtag);
-      if (!kullanici.is_admin) setKullanici({ ...kullanici, kredi: kullanici.kredi - 1 });
+      if (!kullanici.is_admin) setKullanici(k => k ? { ...k, kredi: k.kredi - 1 } : k);
     } catch { setHata("Paylaşım metni üretilemedi. Tekrar deneyin."); }
     setCaptionYukleniyor(false);
   };

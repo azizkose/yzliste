@@ -443,22 +443,30 @@ export async function POST(req: NextRequest) {
   const platformKey = (platform as Platform) || "trendyol";
   const platformDil: "tr" | "en" = ["etsy", "amazon_usa"].includes(platformKey) ? "en" : (dil || "tr");
 
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": process.env.ANTHROPIC_API_KEY || "",
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-6",
-      max_tokens: 2000,
-      system: sistemPromptOlustur(platformKey, platformDil, ton),
-      messages: [{ role: "user", content: mesajIcerikleri }],
-    }),
-  });
+  let response: Response;
+  try {
+    response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY || "",
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 2000,
+        system: sistemPromptOlustur(platformKey, platformDil, ton),
+        messages: [{ role: "user", content: mesajIcerikleri }],
+      }),
+    });
+  } catch {
+    if (!isAdmin) {
+      await supabaseAdmin.from("profiles").update({ kredi: profil.kredi }).eq("id", userId);
+    }
+    return NextResponse.json({ hata: "İçerik üretilemedi, lütfen tekrar deneyin." }, { status: 502 });
+  }
 
-  const data = await llmResponse.json();
+  const data = await response.json();
   const icerik = data.content?.[0]?.text;
 
   if (!icerik) {

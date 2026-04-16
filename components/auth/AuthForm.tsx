@@ -3,7 +3,6 @@
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import { analytics } from '@/lib/analytics'
 import TurnstileWidget from './TurnstileWidget'
 
 type AuthMode = 'giris' | 'kayit'
@@ -59,7 +58,7 @@ export default function AuthForm({ defaultMode = 'kayit', redirectTo = '/', onSu
       options: { redirectTo: `${window.location.origin}${redirectTo}` },
     })
     if (error) { setMesaj('Google ile giriş başlatılamadı.'); return }
-    analytics.signupCompleted({ method: 'google' })
+    
     if (data?.url) window.location.href = data.url
   }
 
@@ -69,8 +68,7 @@ export default function AuthForm({ defaultMode = 'kayit', redirectTo = '/', onSu
     if (mod === 'kayit' && !sozlesme) { setMesaj('Devam etmek için sözleşmeleri kabul edin.'); return }
     if (turnstileEnabled && !turnstileToken) { setMesaj('Lütfen robot olmadığınızı doğrulayın.'); return }
 
-    analytics.signupStarted()
-    setYukleniyor(true)
+setYukleniyor(true)
     setMesaj('')
 
     // Turnstile sunucu tarafı doğrulama
@@ -92,7 +90,6 @@ export default function AuthForm({ defaultMode = 'kayit', redirectTo = '/', onSu
       const { error } = await supabase.auth.signUp({ email, password: sifre })
       if (error) { setMesaj(turkceHata(error.message)) }
       else {
-        analytics.signupCompleted({ method: 'email' })
         setMesaj('Kayıt başarılı! E-postanızı doğrulayın.')
       }
     } else {

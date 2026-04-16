@@ -51,17 +51,20 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ hata: "Krediniz bitti." }, { status: 402 });
       }
 
-      // Marka bağlamını İngilizce sahne ipuçlarına dönüştür
+      // Marka bağlamını sahne ipuçlarına dönüştür
+      const tonEnMap: Record<string, string> = {
+        profesyonel: "professional and premium brand tone",
+        samimi: "warm and friendly brand tone",
+        eglenceli: "fun and playful brand tone",
+        lüks: "luxury and elegant brand tone",
+        minimal: "clean and minimal brand tone",
+      };
       const ctxParcalar: string[] = [];
-      if (profil.ton && TON_INGILIZCE[profil.ton]) {
-        ctxParcalar.push(TON_INGILIZCE[profil.ton]);
+      if (profil.ton && tonEnMap[profil.ton]) {
+        ctxParcalar.push(tonEnMap[profil.ton]);
       }
       if (profil.hedef_kitle) {
-        // Hedef kitle Türkçeyse İngilizce'ye çevir
-        const hedefEn = turkceIceriyorMu(profil.hedef_kitle)
-          ? await ingilizceyCevir(`targeted at: ${profil.hedef_kitle}`)
-          : `targeted at: ${profil.hedef_kitle}`;
-        ctxParcalar.push(hedefEn);
+        ctxParcalar.push(`targeted at: ${profil.hedef_kitle}`);
       }
       if (ctxParcalar.length > 0) {
         brandContext = `, ${ctxParcalar.join(", ")}`;
@@ -174,16 +177,16 @@ export async function POST(req: NextRequest) {
 
       if (s === "ozel") {
         // Özel sahne: kullanıcının ekPrompt'u
-        sahne = ekPromptEn || "clean studio background, professional product photography, keep the original product exactly as is";
+        sahne = ekPrompt || "clean studio background, professional product photography, keep the original product exactly as is";
       } else if (s === "referans") {
         // Referans stil: referans görselin stilini kopyala
-        sahne = ekPromptEn
-          ? `Match the style and lighting of the reference image, ${ekPromptEn}, keep the original product exactly as is`
+        sahne = ekPrompt
+          ? `Match the style and lighting of the reference image, ${ekPrompt}, keep the original product exactly as is`
           : "Match the background style and lighting conditions of the reference image, keep the original product exactly as is";
       } else {
         // Standart stiller + marka bağlamı + ek prompt
-        sahne = `${STIL_SAHNELERI[s] || STIL_SAHNELERI.beyaz}${brandContext}`;
-        if (ekPromptEn) sahne = `${sahne}, ${ekPromptEn}`;
+        sahne = `${stilSahneleri[s] || stilSahneleri.beyaz}${brandContext}`;
+        if (ekPrompt) sahne = `${sahne}, ${ekPrompt}`;
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -205,7 +208,7 @@ export async function POST(req: NextRequest) {
         result?.images?.map((img: any) => img.url) ||
         [];
 
-      sonuclar.push({ stil: s, label: STIL_ETIKETLERI[s] || s, gorseller });
+      sonuclar.push({ stil: s, label: stilEtiketleri[s] || s, gorseller });
     }
 
     return NextResponse.json({ sonuclar, isAdmin });
