@@ -678,7 +678,8 @@ export default function Home() {
     setVideoYukleniyor(true);
     setVideoUrl(null);
     try {
-      const res = await fetch("/api/sosyal/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: fotolar[0], prompt: videoPrompt, userId: kullanici.id, sure: videoSure, format: videoFormat }) });
+      const resizedFoto = await resizeFoto(fotolar[0]);
+      const res = await fetch("/api/sosyal/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: resizedFoto, prompt: videoPrompt, userId: kullanici.id, sure: videoSure, format: videoFormat }) });
       const data = await res.json();
       if (res.status === 402) { paketModalAc(); setVideoYukleniyor(false); return; }
       if (data.videoUrl) { setVideoUrl(data.videoUrl); if (!kullanici.is_admin) setKullanici({ ...kullanici, kredi: kullanici.kredi - videoKredi }); }
