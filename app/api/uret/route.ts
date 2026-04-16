@@ -1,10 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!
 );
+
+// Rate limiter — opsiyonel: Upstash env yoksa devre dışı
+let ratelimit: Ratelimit | null = null;
+if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+  const redis = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  });
+  ratelimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(60, "1 m"),
+    prefix: "rl:uret",
+  });
+}
 
 // Desteklenen platformlar
 type Platform = "trendyol" | "hepsiburada" | "amazon" | "n11" | "etsy" | "amazon_usa";
@@ -269,6 +285,24 @@ export async function POST(req: NextRequest) {
 
   if (!userId) return NextResponse.json({ hata: "Giris yapilmadi" }, { status: 401 });
 
+  // Rate limiting — kullanıcı başına 60 istek/dk
+  if (ratelimit) {
+    const { success, limit, remaining, reset } = await ratelimit.limit(userId);
+    if (!success) {
+      return NextResponse.json(
+        { hata: "Çok fazla istek gönderdiniz. Lütfen bir dakika bekleyin." },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": String(limit),
+            "X-RateLimit-Remaining": String(remaining),
+            "X-RateLimit-Reset": String(reset),
+          },
+        }
+      );
+    }
+  }
+
   const { data: profil } = await supabaseAdmin
     .from("profiles")
     .select("kredi, is_admin, marka_adi, hedef_kitle, vurgulanan_ozellikler")
@@ -278,8 +312,20 @@ export async function POST(req: NextRequest) {
   if (!profil) return NextResponse.json({ hata: "Kullanici bulunamadi" }, { status: 404 });
 
   const isAdmin = profil.is_admin === true;
-  if (!isAdmin && profil.kredi <= 0) {
-    return NextResponse.json({ hata: "Krediniz bitti. Lutfen kredi satin alin." }, { status: 402 });
+
+  // Atomik kredi düşme: kredi > 0 olanı tek sorguda düş, başarısız olursa 402
+  if (!isAdmin) {
+    const { data: updated } = await supabaseAdmin
+      .from("profiles")
+      .update({ kredi: profil.kredi - 1 })
+      .eq("id", userId)
+      .gt("kredi", 0)
+      .select("kredi")
+      .single();
+
+    if (!updated) {
+      return NextResponse.json({ hata: "Krediniz bitti. Lutfen kredi satin alin." }, { status: 402 });
+    }
   }
 
   const mesajIcerikleri: MessageContent[] = [];
@@ -326,26 +372,45 @@ export async function POST(req: NextRequest) {
   const platformKey = (platform as Platform) || "trendyol";
   const platformDil: "tr" | "en" = ["etsy", "amazon_usa"].includes(platformKey) ? "en" : (dil || "tr");
 
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": process.env.ANTHROPIC_API_KEY || "",
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 2000,
-      system: sistemPromptOlustur(platformKey, platformDil),
-      messages: [{ role: "user", content: mesajIcerikleri }],
-    }),
-  });
+  let llmResponse: Response;
+  try {
+    llmResponse = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY || "",
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 2000,
+        system: sistemPromptOlustur(platformKey, platformDil),
+        messages: [{ role: "user", content: mesajIcerikleri }],
+      }),
+    });
+  } catch {
+    // LLM isteği başarısız — krediyi geri yükle
+    if (!isAdmin) {
+      await supabaseAdmin
+        .from("profiles")
+        .update({ kredi: profil.kredi })
+        .eq("id", userId);
+    }
+    return NextResponse.json({ hata: "İçerik üretilemedi, lütfen tekrar deneyin." }, { status: 502 });
+  }
 
-  const data = await response.json();
-  const icerik = data.content?.[0]?.text || "Icerik uretilemedi, tekrar deneyin.";
+  const data = await llmResponse.json();
+  const icerik = data.content?.[0]?.text;
 
-  if (!isAdmin) {
-    await supabaseAdmin.from("profiles").update({ kredi: profil.kredi - 1 }).eq("id", userId);
+  if (!icerik) {
+    // LLM boş döndü — krediyi geri yükle
+    if (!isAdmin) {
+      await supabaseAdmin
+        .from("profiles")
+        .update({ kredi: profil.kredi })
+        .eq("id", userId);
+    }
+    return NextResponse.json({ hata: "İçerik üretilemedi, lütfen tekrar deneyin." }, { status: 502 });
   }
 
   await supabaseAdmin.from("uretimler").insert({
