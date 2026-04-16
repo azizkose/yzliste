@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Hakkımızda — yzliste',
@@ -12,7 +13,7 @@ export default function HakkimizdaPage() {
     <main className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-3xl mx-auto">
         <div className="mb-8">
-          <a href="/" className="text-sm text-gray-400 hover:text-orange-500">← Ana Sayfa</a>
+          <Link href="/" className="text-sm text-gray-400 hover:text-orange-500">← Ana Sayfa</Link>
         </div>
         <div className="bg-white rounded-2xl shadow p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Hakkımızda</h1>
@@ -23,7 +24,7 @@ export default function HakkimizdaPage() {
               SaaS platformudur.
             </p>
             <p>
-              Trendyol, Hepsiburada, Amazon TR ve N11 gibi Türkiye'nin önde gelen e-ticaret
+              Trendyol, Hepsiburada, Amazon TR ve N11 gibi Türkiye&apos;nin önde gelen e-ticaret
               platformlarına özel, Türk alıcı davranışına göre optimize edilmiş ürün başlıkları,
               açıklamaları, özellik maddeleri ve arama etiketleri saniyeler içinde üretilmektedir.
             </p>

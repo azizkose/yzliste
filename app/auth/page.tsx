@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
@@ -291,7 +292,7 @@ export default function AuthPage() {
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input type="checkbox" checked={modalSozlesme} onChange={(e) => setModalSozlesme(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0" />
                     <span className="text-xs text-gray-500 leading-relaxed">
-                      <a href="/gizlilik" target="_blank" className="text-orange-500 hover:underline">Gizlilik Politikası</a> ve <a href="/mesafeli-satis" target="_blank" className="text-orange-500 hover:underline">Mesafeli Satış Sözleşmesi</a>'ni okudum.
+                      <a href="/gizlilik" target="_blank" className="text-orange-500 hover:underline">Gizlilik Politikası</a> ve <a href="/mesafeli-satis" target="_blank" className="text-orange-500 hover:underline">Mesafeli Satış Sözleşmesi</a>&apos;ni okudum.
                     </span>
                   </label>
                 )}
@@ -327,18 +328,18 @@ export default function AuthPage() {
       {/* HEADER */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-2.5">
         <div className="max-w-6xl mx-auto flex items-center gap-2">
-          <a href="/auth" className="flex-shrink-0 mr-1"><img src="/yzliste_logo.png" alt="yzliste" className="h-8" /></a>
+          <Link href="/auth" className="flex-shrink-0 mr-1"><img src="/yzliste_logo.png" alt="yzliste" className="h-8" /></Link>
           <nav className="flex items-center gap-0.5 text-xs sm:text-sm text-gray-500">
-            <a href="/auth" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Ana Sayfa</a>
-            <a href="/" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</a>
-            <a href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
-            <a href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
+            <Link href="/auth" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Ana Sayfa</Link>
+            <Link href="/" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</Link>
+            <Link href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</Link>
+            <Link href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</Link>
           </nav>
           <div className="flex gap-1 sm:gap-2 ml-auto items-center">
             {oturum && !anonimKullanici ? (
               <>
-                <a href="/profil" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Profil</a>
-                <a href="/" className="text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">İçerik Üret →</a>
+                <Link href="/profil" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Profil</Link>
+                <Link href="/" className="text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">İçerik Üret →</Link>
               </>
             ) : (
               <>
@@ -438,7 +439,7 @@ export default function AuthPage() {
                 <p className="text-xs text-gray-500 mt-1">Ayrı ayrı kredi</p>
               </div>
               <div className="p-5 flex-1">
-                <p className="text-sm text-gray-600 leading-relaxed mb-3">Trendyol ve Hepsiburada'da hem metin hem görsel zorunlu. İkisini aynı anda üret.</p>
+                <p className="text-sm text-gray-600 leading-relaxed mb-3">Trendyol ve Hepsiburada&apos;da hem metin hem görsel zorunlu. İkisini aynı anda üret.</p>
                 <div className="space-y-2">
                   {["Optimize listing metni", "4 stüdyo görseli — beğendiğini indir", "Platforma hazır, düzenleme gerektirmez"].map((t, i) => (
                     <div key={i} className="flex items-start gap-2 text-xs text-gray-600">
@@ -451,7 +452,7 @@ export default function AuthPage() {
           </div>
           <div className="mt-8 text-center">
             <button onClick={hemenAlTikla} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-orange-100">
-              Paket Satın Al — 29₺'den başlıyor
+              Paket Satın Al — 29₺&apos;den başlıyor
             </button>
             <p className="text-xs text-gray-400 mt-3">veya 3 ücretsiz içerik üretim kredisi ile başla, kredi kartı gerekmez</p>
           </div>
@@ -651,7 +652,7 @@ export default function AuthPage() {
                     <span key={j} className="text-orange-400 text-sm">★</span>
                   ))}
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed mb-4">"{y.yorum}"</p>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">&quot;{y.yorum}&quot;</p>
                 <div>
                   <p className="text-xs font-semibold text-gray-800">{y.isim}</p>
                   <p className="text-xs text-gray-400">{y.magaza}</p>
@@ -672,15 +673,15 @@ export default function AuthPage() {
       <footer className="bg-white border-t border-gray-100 px-4 sm:px-6 py-8">
         <div className="max-w-4xl mx-auto space-y-6">
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4 text-xs text-gray-400">
-            <a href="/fiyatlar" className="hover:text-orange-500">Fiyatlar</a>
+            <Link href="/fiyatlar" className="hover:text-orange-500">Fiyatlar</Link>
             <span>·</span>
-            <a href="/blog" className="hover:text-orange-500">Blog</a>
+            <Link href="/blog" className="hover:text-orange-500">Blog</Link>
             <span>·</span>
-            <a href="/hakkimizda" className="hover:text-orange-500">Hakkımızda</a>
+            <Link href="/hakkimizda" className="hover:text-orange-500">Hakkımızda</Link>
             <span>·</span>
-            <a href="/gizlilik" className="hover:text-orange-500">Gizlilik Politikası</a>
+            <Link href="/gizlilik" className="hover:text-orange-500">Gizlilik Politikası</Link>
             <span>·</span>
-            <a href="/mesafeli-satis" className="hover:text-orange-500">Mesafeli Satış</a>
+            <Link href="/mesafeli-satis" className="hover:text-orange-500">Mesafeli Satış</Link>
             <span>·</span>
             <a href="/teslimat-iade" className="hover:text-orange-500">Teslimat ve İade</a>
             <span>·</span>

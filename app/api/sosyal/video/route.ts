@@ -81,6 +81,7 @@ export async function POST(req: NextRequest) {
       aspect_ratio: format,
       negative_prompt: "blur, distort, low quality, watermark, text overlay, shaky camera",
       cfg_scale: 0.5,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any,
   }) as unknown as { video: { url: string } };
 

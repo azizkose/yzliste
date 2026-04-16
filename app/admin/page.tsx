@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Metrik = {
   toplamKullanici: number;
@@ -22,18 +23,7 @@ export default function AdminPage() {
   const [yukleniyor, setYukleniyor] = useState(true);
   const router = useRouter();
 
-  useEffect(() => { adminKontrol(); }, []);
-
-  const adminKontrol = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user || user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-      router.push("/");
-      return;
-    }
-    metrikleriYukle();
-  };
-
-  const metrikleriYukle = async () => {
+  const metrikleriYukle = useCallback(async () => {
     setYukleniyor(true);
 
     const { count: toplamKullanici } = await supabase
@@ -91,7 +81,19 @@ export default function AdminPage() {
     });
 
     setYukleniyor(false);
-  };
+  }, []);
+
+  const adminKontrol = useCallback(async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user || user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+      router.push("/");
+      return;
+    }
+    metrikleriYukle();
+  }, [router, metrikleriYukle]);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { adminKontrol(); }, [adminKontrol]);
 
   if (yukleniyor) {
     return (
@@ -123,9 +125,9 @@ export default function AdminPage() {
               className="text-sm bg-white border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50">
               Yenile
             </button>
-            <a href="/" className="text-sm bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
+            <Link href="/" className="text-sm bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
               Uygulamaya Dön
-            </a>
+            </Link>
           </div>
         </div>
 

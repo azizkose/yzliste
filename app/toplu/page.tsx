@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { parseExcel, excelOlustur, type ParseSonucu } from "@/lib/excel-parser";
 import * as XLSX from "xlsx";
@@ -160,9 +161,9 @@ export default function TopluPage() {
           </a>
           <nav className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 flex-1 justify-center sm:flex-none sm:justify-start">
             <a href="/auth" className="hidden sm:block px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</a>
-            <a href="/" className="hidden sm:block px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</a>
-            <a href="/fiyatlar" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
-            <a href="/blog" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
+            <Link href="/" className="hidden sm:block px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</Link>
+            <Link href="/fiyatlar" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</Link>
+            <Link href="/blog" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</Link>
           </nav>
           <HeaderAuthButtons />
         </div>
@@ -172,7 +173,7 @@ export default function TopluPage() {
 
         {/* Breadcrumb */}
         <div className="flex items-center gap-3 mb-8">
-          <a href="/" className="text-gray-400 hover:text-gray-600 text-sm">← İçerik</a>
+          <Link href="/" className="text-gray-400 hover:text-gray-600 text-sm">← İçerik</Link>
           <span className="text-gray-300">/</span>
           <h1 className="text-lg font-semibold text-gray-800">Toplu İçerik Üretimi</h1>
         </div>
@@ -208,7 +209,7 @@ export default function TopluPage() {
               <div className="bg-white rounded-2xl shadow p-4">
                 <div className="text-2xl mb-2">🏷️</div>
                 <p className="text-xs font-semibold text-gray-800 mb-1">Limit var mı?</p>
-                <p className="text-xs text-gray-500">Tek seferde <span className="font-semibold">mevcut kredin kadar</span> ürün işleyebilirsin. Kredi yetersizse önce <a href="/?paket=ac" className="text-orange-500 underline">İçerik Üretim Kredisi Al</a>.</p>
+                <p className="text-xs text-gray-500">Tek seferde <span className="font-semibold">mevcut kredin kadar</span> ürün işleyebilirsin. Kredi yetersizse önce <Link href="/?paket=ac" className="text-orange-500 underline">İçerik Üretim Kredisi Al</Link>.</p>
               </div>
             </div>
 
@@ -270,7 +271,7 @@ export default function TopluPage() {
                   <div key={k.hedef} className="flex items-center gap-2 text-sm">
                     <span className="text-green-500">✓</span>
                     <span className="font-medium text-gray-700">{k.etiket}</span>
-                    <span className="text-gray-400">← "{k.kaynak}"</span>
+                    <span className="text-gray-400">← &quot;{k.kaynak}&quot;</span>
                   </div>
                 ))}
                 {parse.tespit_edilemeyen.length > 0 && (

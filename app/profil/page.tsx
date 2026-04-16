@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Profil = {
   email: string;
@@ -42,11 +43,7 @@ export default function ProfilPage() {
   const [hedefKitle, setHedefKitle] = useState("");
   const [vurgulananlalar, setVurgulananlar] = useState("");
 
-  useEffect(() => {
-    yukle();
-  }, []);
-
-  const yukle = async () => {
+  const yukle = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push("/auth"); return; }
     setUserId(user.id);
@@ -72,7 +69,12 @@ export default function ProfilPage() {
       setVurgulananlar(data.vurgulanan_ozellikler || "");
     }
     setYukleniyor(false);
-  };
+  }, [router]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    yukle();
+  }, [yukle]);
 
   const kaydet = async () => {
     if (!userId) return;
@@ -123,9 +125,9 @@ export default function ProfilPage() {
             <h1 className="text-xl font-bold text-gray-900">Profilim</h1>
             <p className="text-sm text-gray-500 mt-0.5">{profil?.email}</p>
           </div>
-          <a href="/" className="text-sm text-gray-400 hover:text-gray-600">
+          <Link href="/" className="text-sm text-gray-400 hover:text-gray-600">
             Ana sayfaya don
-          </a>
+          </Link>
         </div>
 
         {/* Kredi ozeti */}
@@ -137,9 +139,9 @@ export default function ProfilPage() {
           <div className="flex-1">
             <p className="text-sm text-gray-600">Kullanim haklariniz metin ve gorsel uretimi icin kullanilir.</p>
           </div>
-          <a href="/?paket=ac" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap">
+          <Link href="/?paket=ac" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap">
             İçerik Üretim Kredisi Al
-          </a>
+          </Link>
         </div>
 
         {/* Marka Profili - EN USTE ALINDI */}
@@ -152,7 +154,7 @@ export default function ProfilPage() {
           </div>
 
           <div className="bg-orange-50 border border-orange-100 rounded-xl p-3 text-xs text-orange-700 leading-relaxed">
-            Marka profilinizi doldurunca AI metinleri sizin dilinizde, hedef kitlenize gore yazar. Orn: "Kadin modasi, 25-35 yas" yazarsaniz AI bu kitlenin anlayacagi bir dil kullanir.
+            Marka profilinizi doldurunca AI metinleri sizin dilinizde, hedef kitlenize gore yazar. Orn: &quot;Kadin modasi, 25-35 yas&quot; yazarsaniz AI bu kitlenin anlayacagi bir dil kullanir.
           </div>
 
           <div>

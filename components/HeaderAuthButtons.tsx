@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
 type Durum = "yukleniyor" | "giris_yok" | "giris_var";
@@ -33,12 +34,12 @@ export default function HeaderAuthButtons() {
         >
           Profil
         </a>
-        <a
+        <Link
           href="/"
           className="text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap"
         >
           İçerik Üret
-        </a>
+        </Link>
       </div>
     );
   }

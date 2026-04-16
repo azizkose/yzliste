@@ -87,7 +87,17 @@ export async function POST(req: NextRequest) {
     if (!profil) return NextResponse.json({ hata: "Kullanici bulunamadi" }, { status: 404 });
     if (!profil.is_admin) {
       const { stilSayisi } = body;
-      await supabaseAdmin.from("profiles").update({ kredi: Math.max(0, profil.kredi - (stilSayisi || 1)) }).eq("id", userId);
+      const adet = stilSayisi || 1;
+      const { data: updated } = await supabaseAdmin
+        .from("profiles")
+        .update({ kredi: profil.kredi - adet })
+        .eq("id", userId)
+        .gt("kredi", 0)
+        .select("kredi")
+        .single();
+      if (!updated) {
+        return NextResponse.json({ hata: "Krediniz bitti." }, { status: 402 });
+      }
     }
     return NextResponse.json({ ok: true });
   }
@@ -202,16 +212,20 @@ export async function POST(req: NextRequest) {
       const result = await fal.subscribe("fal-ai/bria/product-shot", { input: falInput as any }) as any;
 
       const gorseller =
-        result?.data?.images?.map((img: any) => img.url) ||
-        result?.images?.map((img: any) => img.url) ||
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (result as any)?.data?.images?.map((img: { url: string }) => img.url) ||
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (result as any)?.images?.map((img: { url: string }) => img.url) ||
         [];
 
       sonuclar.push({ stil: s, label: STIL_ETIKETLERI[s] || s, gorseller });
     }
 
     return NextResponse.json({ sonuclar, isAdmin });
-  } catch (e: any) {
-    console.error("FAL HATA:", e?.message || JSON.stringify(e));
-    return NextResponse.json({ hata: "Gorsel uretim hatasi: " + (e?.message || "bilinmiyor") }, { status: 500 });
+  } catch (e: unknown) {
+    const err = e as { message?: string };
+    console.error("FAL HATA:", err?.message || JSON.stringify(e));
+    const err2 = e as { message?: string };
+    return NextResponse.json({ hata: "Gorsel uretim hatasi: " + (err2?.message || "bilinmiyor") }, { status: 500 });
   }
 }

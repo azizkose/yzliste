@@ -413,13 +413,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "İçerik üretilemedi, lütfen tekrar deneyin." }, { status: 502 });
   }
 
-  await supabaseAdmin.from("uretimler").insert({
+  const { error: insertError } = await supabaseAdmin.from("uretimler").insert({
     user_id: userId,
     urun_adi: urunAdi || barkodBilgi?.isim || "Fotograf ile uretim",
     platform,
     sonuc: icerik,
     giris_tipi: girisTipi,
   });
+
+  if (insertError) {
+    console.error("Üretim kaydı oluşturulamadı:", insertError.message);
+    // Krediyi geri yükle — içerik üretildi ama kaydedilemedi
+    if (!isAdmin) {
+      await supabaseAdmin
+        .from("profiles")
+        .update({ kredi: profil.kredi })
+        .eq("id", userId);
+    }
+    return NextResponse.json({ hata: "İçerik kaydedilemedi, lütfen tekrar deneyin." }, { status: 500 });
+  }
 
   return NextResponse.json({ icerik, isAdmin });
 }

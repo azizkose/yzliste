@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
+import QueryProvider from "@/components/providers/QueryProvider";
+import PostHogProvider from "@/components/providers/PostHogProvider";
+import PostHogPageView from "@/components/analytics/PostHogPageView";
+import CookieConsentBanner from "@/components/consent/CookieConsent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -119,8 +123,10 @@ function RootJsonLd() {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal?: React.ReactNode;
 }>) {
   return (
     <html
@@ -129,10 +135,31 @@ export default function RootLayout({
     >
       <head>
         <RootJsonLd />
+        {/* Google Consent Mode v2 — GA yüklenmeden önce default reddedildi */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('consent', 'default', {
+                analytics_storage: 'denied',
+                ad_storage: 'denied',
+                wait_for_update: 500
+              });
+            `,
+          }}
+        />
       </head>
       <body className="min-h-full flex flex-col">
-        {children}
-        <ChatWidget />
+        <PostHogProvider>
+          <QueryProvider>
+            {children}
+            {modal}
+            <ChatWidget />
+            <PostHogPageView />
+            <CookieConsentBanner />
+          </QueryProvider>
+        </PostHogProvider>
       </body>
     </html>
   );

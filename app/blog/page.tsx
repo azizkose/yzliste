@@ -79,14 +79,14 @@ export default async function BlogPage() {
       {/* HEADER */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
-          <a href="/auth" className="flex-shrink-0">
+          <Link href="/auth" className="flex-shrink-0">
             <Image src="/yzliste_logo.png" alt="yzliste" width={32} height={32} className="h-8 w-auto" priority />
-          </a>
+          </Link>
           <nav className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 flex-1 justify-center sm:flex-none sm:justify-start">
-            <a href="/auth" className="hidden sm:block px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</a>
-            <a href="/" className="hidden sm:block px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</a>
-            <a href="/fiyatlar" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
-            <a href="/blog" className="px-2 sm:px-3 py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Blog</a>
+            <Link href="/auth" className="hidden sm:block px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</Link>
+            <Link href="/" className="hidden sm:block px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</Link>
+            <Link href="/fiyatlar" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</Link>
+            <Link href="/blog" className="px-2 sm:px-3 py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Blog</Link>
           </nav>
           <HeaderAuthButtons />
         </div>
@@ -99,7 +99,7 @@ export default async function BlogPage() {
           <span className="text-orange-500">pratik rehberler</span>
         </h1>
         <p className="text-gray-500 text-base">
-          Trendyol, Hepsiburada, Amazon ve Etsy'de listing yazma, AI görsel kullanımı ve platform stratejileri.
+          Trendyol, Hepsiburada, Amazon ve Etsy&apos;de listing yazma, AI görsel kullanımı ve platform stratejileri.
         </p>
       </section>
 
@@ -183,25 +183,25 @@ export default async function BlogPage() {
       <section className="px-4 sm:px-6 py-14 bg-orange-50 border-y border-orange-100 text-center">
         <h2 className="text-xl font-bold text-gray-800 mb-3">Okuduktan sonra dene</h2>
         <p className="text-sm text-gray-500 mb-6">3 ücretsiz kredi ile listing ve görsel üret. Kayıt bile olmadan misafir olarak başla.</p>
-        <a
+        <Link
           href="/?anonim=1"
           className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-orange-100"
         >
           3 Ücretsiz Kredi ile Başla →
-        </a>
+        </Link>
       </section>
 
       {/* FOOTER */}
       <footer className="bg-white border-t border-gray-100 px-4 sm:px-6 py-8">
         <div className="max-w-4xl mx-auto space-y-4">
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4 text-xs text-gray-400">
-            <a href="/fiyatlar" className="hover:text-orange-500">Fiyatlar</a>
+            <Link href="/fiyatlar" className="hover:text-orange-500">Fiyatlar</Link>
             <span>·</span>
-            <a href="/blog" className="hover:text-orange-500">Blog</a>
+            <Link href="/blog" className="hover:text-orange-500">Blog</Link>
             <span>·</span>
-            <a href="/hakkimizda" className="hover:text-orange-500">Hakkımızda</a>
+            <Link href="/hakkimizda" className="hover:text-orange-500">Hakkımızda</Link>
             <span>·</span>
-            <a href="/gizlilik" className="hover:text-orange-500">Gizlilik Politikası</a>
+            <Link href="/gizlilik" className="hover:text-orange-500">Gizlilik Politikası</Link>
             <span>·</span>
             <a href="mailto:destek@yzliste.com" className="hover:text-orange-500">destek@yzliste.com</a>
           </div>
