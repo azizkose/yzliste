@@ -1267,16 +1267,42 @@ export default function Home() {
 
               {/* Hareket tarifi */}
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-2">Hareket Tarifi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                <div className="flex flex-wrap gap-1.5 mb-2">
-                  {["Yavaş 360° döndür", "Zoom in yaklaşım", "Parallax derinlik", "Sinematik ışık", "Yüzen / floating"].map((p) => (
-                    <button key={p} onClick={() => setVideoPrompt(p)}
-                      className={`text-xs px-2.5 py-1 rounded-full border transition-all ${videoPrompt === p ? "bg-red-500 text-white border-red-500" : "border-gray-200 text-gray-500 hover:border-red-300 hover:text-red-600"}`}>
-                      {p}
+                <label className="block text-xs font-medium text-gray-600 mb-1">Hareket & sahne tarifi <span className="text-gray-400 font-normal">(isteğe bağlı — Türkçe yazabilirsin)</span></label>
+                <div className="grid grid-cols-2 gap-2 mb-2">
+                  {[
+                    {
+                      etiket: "360° Dönüş",
+                      aciklama: "Ürün kendi ekseni etrafında yavaşça döner. Tüm açılar görünür.",
+                      ikon: "🔄",
+                      deger: "Smooth slow 360 degree product rotation, studio lighting, clean background",
+                    },
+                    {
+                      etiket: "Zoom Yaklaşım",
+                      aciklama: "Kamera ürüne doğru yavaş yaklaşır. Detay ve doku hissi verir.",
+                      ikon: "🔍",
+                      deger: "Gentle cinematic zoom in towards the product, soft focus background, detail reveal",
+                    },
+                    {
+                      etiket: "Dramatik Işık",
+                      aciklama: "Karanlık sahnede ürüne spotlight açılır. Premium ve güçlü görünüm.",
+                      ikon: "💡",
+                      deger: "Dramatic lighting reveal, dark background, single spotlight effect on product, luxury feel",
+                    },
+                    {
+                      etiket: "Doğal Ortam",
+                      aciklama: "Yapraklar hafifçe sallanır, ışık oynar. Organik ve sıcak his.",
+                      ikon: "🌿",
+                      deger: "Product in natural outdoor setting, soft golden hour light, gentle breeze moving leaves, organic feel",
+                    },
+                  ].map((p) => (
+                    <button key={p.etiket} onClick={() => setVideoPrompt(p.deger)}
+                      className={`text-left p-2.5 rounded-xl border-2 transition-all ${videoPrompt === p.deger ? "border-red-400 bg-red-50" : "border-gray-200 hover:border-red-200 hover:bg-red-50/50"}`}>
+                      <p className={`text-xs font-semibold ${videoPrompt === p.deger ? "text-red-700" : "text-gray-700"}`}>{p.ikon} {p.etiket}</p>
+                      <p className="text-[10px] text-gray-500 mt-0.5 leading-relaxed">{p.aciklama}</p>
                     </button>
                   ))}
                 </div>
-                <textarea value={videoPrompt} onChange={(e) => setVideoPrompt(e.target.value)} placeholder="örn: Ürün yavaşça dönsün, sinematik ışıklandırma, beyaz arka plan" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+                <textarea value={videoPrompt} onChange={(e) => setVideoPrompt(e.target.value)} placeholder="örn: Ürün yavaşça dönsün, dramatik ışıklandırma, siyah arka plan" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
                 <p className="text-xs text-gray-400 mt-1">Boş bırakırsan marka bilgine göre otomatik oluşturulur — genellikle iyi sonuç verir</p>
                 <a href="/blog/ai-urun-videosu-hareket-secenekleri" className="inline-block mt-2 text-xs text-red-500 hover:text-red-700 hover:underline">Bu hareketler ne anlama gelir? Ürün kategorine göre hangisi uygun? →</a>
               </div>

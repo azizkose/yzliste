@@ -385,7 +385,7 @@ export default function AuthPage() {
       {/* HERO */}
       <section className="px-4 sm:px-6 pt-12 sm:pt-16 pb-12 text-center max-w-3xl mx-auto">
         <div className="flex flex-wrap justify-center gap-2 mb-6">
-          <span className="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">Trendyol · Hepsiburada · Amazon · N11 · Etsy</span>
+          <span className="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">Trendyol · Hepsiburada · Amazon TR · N11 · Etsy · Amazon USA</span>
           <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">🆕 Video + Sosyal Medya</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-5">
