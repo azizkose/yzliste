@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import HeaderAuthButtons from "@/components/HeaderAuthButtons";
+import SiteHeader from "@/components/SiteHeader";
 
 export const metadata: Metadata = {
   title: "Fiyatlar | yzliste — E-ticaret Listing Üretici",
@@ -204,21 +204,7 @@ export default function FiyatlarPage() {
   return (
     <main className="min-h-screen bg-white font-sans">
       <PricingJsonLd />
-      {/* HEADER */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-2.5">
-        <div className="max-w-6xl mx-auto flex items-center gap-2">
-          <a href="/" className="flex-shrink-0 mr-1">
-            <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
-          </a>
-          <nav className="flex items-center gap-0.5 text-xs sm:text-sm text-gray-500">
-            <a href="/auth" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</a>
-            <a href="/" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</a>
-            <a href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Fiyatlar</a>
-            <a href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
-          </nav>
-          <HeaderAuthButtons />
-        </div>
-      </header>
+      <SiteHeader aktifSayfa="fiyatlar" />
 
       {/* HERO */}
       <section className="px-4 sm:px-6 pt-14 pb-10 text-center max-w-2xl mx-auto">

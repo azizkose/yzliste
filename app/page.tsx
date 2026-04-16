@@ -303,6 +303,9 @@ function FotoEkleAlani({ id, onChange, renk = "gray", metin = "Fotoğraf ekle", 
 export default function Home() {
   const router = useRouter();
 
+  // Mobil menü
+  const [mobileMenuAcik, setMobileMenuAcik] = useState(false);
+
   // Sekme
   const [anaSekme, setAnaSekme] = useState<AnaSekme>("metin");
 
@@ -712,37 +715,71 @@ export default function Home() {
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}
-        <div className="flex justify-between items-center mb-6 gap-2">
-          <a href="/auth" className="flex-shrink-0">
-            <img src="/yzliste_logo.png" alt="yzliste" className="h-9" />
-          </a>
-          <nav className="hidden sm:flex items-center gap-0.5 text-sm text-gray-500 flex-1">
-            <a href="/auth" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</a>
-            <a href="/" className="px-3 py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">İçerik</a>
-            <a href="/fiyatlar" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
-            <a href="/blog" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
-          </nav>
-          <div className="flex items-center gap-3 flex-shrink-0">
-            {kullanici ? (
-              <>
-                <button onClick={() => paketModalAc()} className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-colors ${kullanici.is_admin ? "bg-purple-100 text-purple-700" : krediDusuk ? "bg-red-100 text-red-600 animate-pulse" : "bg-orange-100 text-orange-600 hover:bg-orange-200"}`}>
-                  {kullanici.is_admin ? "∞" : kullanici.kredi} kredi
-                </button>
-                {kullanici.anonim
-                  ? <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-xs bg-orange-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-orange-600 transition-colors">Hesap Oluştur</button>
-                  : <span className="text-sm text-gray-400 hidden sm:block">{kullanici.email}</span>
-                }
-                {kullanici.is_admin && <a href="/admin" className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-lg font-medium">Admin</a>}
-                {!kullanici.anonim && <a href="/profil" className="text-sm text-gray-400 hover:text-gray-600">Profil</a>}
-                {!kullanici.anonim && <button onClick={cikisYap} className="text-sm text-gray-400 hover:text-gray-600">Çıkış</button>}
-              </>
-            ) : (
-              <>
-                <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="text-sm text-gray-500 hover:text-gray-700 font-medium hidden sm:block">Giriş Yap</button>
-                <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-sm bg-orange-500 hover:bg-orange-600 text-white font-semibold px-4 py-1.5 rounded-lg transition-colors">Ücretsiz Başla</button>
-              </>
-            )}
+        <div className="mb-6">
+          <div className="flex justify-between items-center gap-2">
+            <a href="/auth" className="flex-shrink-0">
+              <img src="/yzliste_logo.png" alt="yzliste" className="h-9" />
+            </a>
+            <nav className="hidden sm:flex items-center gap-0.5 text-sm text-gray-500 flex-1">
+              <a href="/auth" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</a>
+              <a href="/" className="px-3 py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">İçerik</a>
+              <a href="/fiyatlar" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
+              <a href="/blog" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
+            </nav>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {kullanici ? (
+                <>
+                  <button onClick={() => paketModalAc()} className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-colors ${kullanici.is_admin ? "bg-purple-100 text-purple-700" : krediDusuk ? "bg-red-100 text-red-600 animate-pulse" : "bg-orange-100 text-orange-600 hover:bg-orange-200"}`}>
+                    {kullanici.is_admin ? "∞" : kullanici.kredi} kredi
+                  </button>
+                  {kullanici.anonim
+                    ? <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-xs bg-orange-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-orange-600 transition-colors">Hesap Oluştur</button>
+                    : <span className="text-sm text-gray-400 hidden sm:block">{kullanici.email}</span>
+                  }
+                  {kullanici.is_admin && <a href="/admin" className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-lg font-medium">Admin</a>}
+                  {!kullanici.anonim && <a href="/profil" className="text-sm text-gray-400 hover:text-gray-600 hidden sm:block">Profil</a>}
+                  {!kullanici.anonim && <button onClick={cikisYap} className="text-sm text-gray-400 hover:text-gray-600 hidden sm:block">Çıkış</button>}
+                </>
+              ) : (
+                <>
+                  <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="text-sm text-gray-500 hover:text-gray-700 font-medium hidden sm:block">Giriş Yap</button>
+                  <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-sm bg-orange-500 hover:bg-orange-600 text-white font-semibold px-4 py-1.5 rounded-lg transition-colors hidden sm:block">Ücretsiz Başla</button>
+                </>
+              )}
+              {/* Mobil hamburger */}
+              <button
+                onClick={() => setMobileMenuAcik(!mobileMenuAcik)}
+                className="sm:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+                aria-label="Menü"
+              >
+                {mobileMenuAcik ? "✕" : "☰"}
+              </button>
+            </div>
           </div>
+
+          {/* Mobil dropdown */}
+          {mobileMenuAcik && (
+            <div className="sm:hidden mt-1 bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden">
+              <nav className="px-2 py-3 space-y-1">
+                <a href="/auth" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">Ana Sayfa</a>
+                <a href="/" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-orange-600 font-medium bg-orange-50">İçerik</a>
+                <a href="/fiyatlar" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">Fiyatlar</a>
+                <a href="/blog" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">Blog</a>
+                {kullanici && !kullanici.anonim && (
+                  <div className="border-t border-gray-200 pt-2 mt-1 space-y-1">
+                    <a href="/profil" className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Profil</a>
+                    <button onClick={cikisYap} className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Çıkış</button>
+                  </div>
+                )}
+                {(!kullanici || kullanici.anonim) && (
+                  <div className="border-t border-gray-200 pt-2 mt-1 space-y-1">
+                    <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); setMobileMenuAcik(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Giriş Yap</button>
+                    <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); setMobileMenuAcik(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium bg-orange-500 text-white text-center hover:bg-orange-600 transition-colors rounded-lg">Ücretsiz Başla</button>
+                  </div>
+                )}
+              </nav>
+            </div>
+          )}
         </div>
 
         {/* Giriş yok / anonim banner */}
