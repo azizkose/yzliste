@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")
-    .select("kredi, is_admin")
+    .select("kredi, is_admin, marka_adi, ton")
     .eq("id", userId)
     .single();
 
@@ -54,9 +54,20 @@ export async function POST(req: NextRequest) {
   const uploadResult = await fal.storage.upload(blob);
   const imageUrl = uploadResult;
 
-  // Video prompt — kullanıcı yazmadıysa otomatik
-  const videoPrompt = prompt?.trim() ||
-    "Product showcase with smooth slow rotation, cinematic lighting, professional e-commerce video";
+  // Video prompt — kullanıcı yazmadıysa marka bilgisine göre otomatik
+  let videoPrompt: string;
+  if (prompt?.trim()) {
+    videoPrompt = prompt.trim();
+  } else {
+    const TON_VIDEO: Record<string, string> = {
+      samimi: "friendly warm product showcase",
+      profesyonel: "clean professional corporate product video",
+      premium: "luxury cinematic high-end product film",
+    };
+    const stilIpucu = profil.ton ? (TON_VIDEO[profil.ton] || "professional product showcase") : "professional product showcase";
+    const markaIpucu = profil.marka_adi ? ` for ${profil.marka_adi}` : "";
+    videoPrompt = `${stilIpucu}${markaIpucu}, smooth cinematic camera movement, professional lighting, clean background, high quality e-commerce video`;
+  }
 
   // Kling v2.1 standard
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

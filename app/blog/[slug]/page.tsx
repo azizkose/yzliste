@@ -141,6 +141,29 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
           <p className="text-sm text-gray-700 leading-relaxed">{bolum.metin}</p>
         </div>
       );
+    case "video-grid":
+      return (
+        <div className="grid grid-cols-2 gap-3 my-6">
+          {(bolum.maddeler ?? []).map((madde, i) => {
+            const [src, etiket] = madde.split("|");
+            return (
+              <div key={i} className="rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                <video
+                  src={src?.trim()}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full aspect-video object-cover"
+                />
+                {etiket && (
+                  <p className="text-xs text-center text-gray-500 py-1.5">{etiket.trim()}</p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      );
     default:
       return null;
   }

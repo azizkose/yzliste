@@ -1277,7 +1277,8 @@ export default function Home() {
                   ))}
                 </div>
                 <textarea value={videoPrompt} onChange={(e) => setVideoPrompt(e.target.value)} placeholder="örn: Ürün yavaşça dönsün, sinematik ışıklandırma, beyaz arka plan" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
-                <p className="text-xs text-gray-400 mt-1">Boş bırakırsan otomatik profesyonel ürün videosu üretilir</p>
+                <p className="text-xs text-gray-400 mt-1">Boş bırakırsan marka bilgine göre otomatik oluşturulur — genellikle iyi sonuç verir</p>
+                <a href="/blog/ai-urun-videosu-hareket-secenekleri" className="inline-block mt-2 text-xs text-red-500 hover:text-red-700 hover:underline">Bu hareketler ne anlama gelir? Ürün kategorine göre hangisi uygun? →</a>
               </div>
 
               <button onClick={videoUret} disabled={videoYukleniyor || !videoFoto || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 8 : 5))}

@@ -13,10 +13,10 @@ export async function POST(req: NextRequest) {
     process.env.SUPABASE_SERVICE_KEY!
   );
 
-  // Admin kontrolü
+  // Admin kontrolü + marka bilgisi
   const { data: profil } = await supabase
     .from("profiles")
-    .select("kredi, is_admin")
+    .select("kredi, is_admin, marka_adi, hedef_kitle, vurgulanan_ozellikler, ton")
     .eq("id", userId)
     .single();
 
@@ -46,7 +46,15 @@ export async function POST(req: NextRequest) {
   const karakterLimit =
     platform === "twitter" ? "280 karakter altında" : "150-300 kelime";
 
-  const sistem = `Sen bir e-ticaret sosyal medya uzmanısın. Türk e-ticaret satıcıları için ${platformAdi} paylaşım metni ve hashtag üretiyorsun.`;
+  // Marka bağlamı
+  const markaSatiri = profil.marka_adi ? `Marka: ${profil.marka_adi}` : "";
+  const hedefSatiri = profil.hedef_kitle ? `Hedef kitle: ${profil.hedef_kitle}` : "";
+  const vurgulananSatiri = profil.vurgulanan_ozellikler ? `Öne çıkarılacak özellikler: ${profil.vurgulanan_ozellikler}` : "";
+  const profilTonu = profil.ton || ton;
+  const tonSatiri = profilTonu ? `Marka tonu: ${profilTonu}` : "";
+  const markaBaglami = [markaSatiri, hedefSatiri, vurgulananSatiri, tonSatiri].filter(Boolean).join("\n");
+
+  const sistem = `Sen bir e-ticaret sosyal medya uzmanısın. Türk e-ticaret satıcıları için ${platformAdi} paylaşım metni ve hashtag üretiyorsun.${markaBaglami ? `\n\nMarka bilgileri:\n${markaBaglami}` : ""}`;
 
   const prompt = `Şu ürün için ${platformAdi} paylaşım metni yaz:
 
@@ -59,6 +67,7 @@ Kurallar:
 - Emoji kullan ama abartma
 - Türkçe, doğal ve çekici dil
 - Harekete geçirici son cümle (satın al, incele, DM at vb.)
+${markaBaglami ? "- Marka bilgilerini metne doğal şekilde yansıt" : ""}
 
 Yanıtı tam olarak şu formatta ver:
 CAPTION:

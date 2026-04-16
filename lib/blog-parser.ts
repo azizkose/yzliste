@@ -84,7 +84,7 @@ function parseContent(body: string): BlogBolum[] {
   const flushSection = () => {
     if (!currentSection) return;
 
-    if (currentSection.tip === "liste" && currentMaddeler.length > 0) {
+    if ((currentSection.tip === "liste" || currentSection.tip === "video-grid") && currentMaddeler.length > 0) {
       currentSection.maddeler = currentMaddeler;
       sections.push(currentSection as BlogBolum);
     } else if (currentText.trim()) {
@@ -116,6 +116,8 @@ function parseContent(body: string): BlogBolum[] {
         currentSection = { tip: "bilgi-kutusu" };
       } else if (heading.match(/^SONUÇ/i)) {
         currentSection = { tip: "sonuc" };
+      } else if (heading.match(/^V[İI]DEO/i)) {
+        currentSection = { tip: "video-grid" };
       } else {
         currentSection = { tip: "baslik", baslik: heading };
       }
@@ -126,7 +128,7 @@ function parseContent(body: string): BlogBolum[] {
     if (line.match(/^-\s+/)) {
       const madde = line.replace(/^-\s+/, "").trim();
 
-      if (currentSection?.tip !== "liste") {
+      if (currentSection?.tip !== "liste" && currentSection?.tip !== "video-grid") {
         flushSection();
         currentSection = { tip: "liste" };
         currentMaddeler = [];
