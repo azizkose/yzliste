@@ -359,11 +359,9 @@ export default function Home() {
   const [videoFormat, setVideoFormat] = useState<"9:16" | "16:9" | "1:1">("9:16");
   const [videoYukleniyor, setVideoYukleniyor] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const [videoSure, setVideoSure] = useState<"5" | "10">("5");
-  const [videoFormat, setVideoFormat] = useState<"9:16" | "16:9">("9:16");
 
   // Sosyal sekmesi
-  // sosyalFoto kaldırıldı — tüm sekmeler fotolar[0] paylaşır
+  const [sosyalFoto, setSosyalFoto] = useState<string | null>(null);
   const [sosyalUrunAdi, setSosyalUrunAdi] = useState("");
   const [sosyalEkBilgi, setSosyalEkBilgi] = useState("");
   const [sosyalPlatform, setSosyalPlatform] = useState<SosyalPlatform>("instagram_tiktok");
@@ -688,23 +686,6 @@ export default function Home() {
     setVideoYukleniyor(false);
   };
 
-  const sosyalGorselUret = async () => {
-    if (!loginGerekli()) return;
-    if (!sosyalFoto) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
-    if (!kullanici) return;
-    if (!kullanici.is_admin && kullanici.kredi < 1) { paketModalAc(); return; }
-    setSosyalGorselYukleniyor(true);
-    setSosyalGorselSonuclar([]);
-    try {
-      const res = await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: sosyalFoto, stiller: [sosyalGorselStil], ekPrompt: sosyalGorselPrompt, userId: kullanici.id, sosyalFormat: sosyalGorselFormat }) });
-      const data = await res.json();
-      if (res.status === 402) { paketModalAc(); setSosyalGorselYukleniyor(false); return; }
-      if (data.sonuclar) setSosyalGorselSonuclar(data.sonuclar);
-      else setHata("Görsel üretilemedi. Tekrar deneyin.");
-    } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
-    setSosyalGorselYukleniyor(false);
-  };
-
   const captionUret = async () => {
     if (!loginGerekli()) return;
     if (!sosyalUrunAdi.trim()) return;
@@ -724,29 +705,21 @@ export default function Home() {
 
   const sosyalGorselUret = async () => {
     if (!kullanici || kullanici.anonim) { setAuthPopupMod("kayit"); setAuthPopupAcik(true); return; }
-    if (!fotolar[0]) { alert("Önce ürün fotoğrafı yükle."); return; }
+    if (!sosyalFoto) { alert("Önce ürün fotoğrafı yükle."); return; }
     if (!kullanici.is_admin && kullanici.kredi <= 0) { paketModalAc(); return; }
     setSosyalGorselYukleniyor(true);
     setSosyalGorselSonuclar([]);
     try {
-      const resizedFoto = await resizeFoto(fotolar[0]);
+      const resizedFoto = await resizeFoto(sosyalFoto);
       const res = await fetch("/api/gorsel", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ foto: resizedFoto, stiller: [sosyalGorselStil], sosyalFormat: sosyalGorselFormat, userId: kullanici.id }),
+        body: JSON.stringify({ foto: resizedFoto, stiller: [sosyalGorselStil], ekPrompt: sosyalGorselPrompt, sosyalFormat: sosyalGorselFormat, userId: kullanici.id }),
       });
       const data = await res.json();
-      const gorseller: string[] = data.sonuclar?.[0]?.gorseller || [];
-      if (gorseller.length > 0) {
-        setSosyalGorselSonuclar(gorseller);
-        // Kredi düş: üretimde 1 kredi (görsel sekmesinin indir mantığı yerine)
-        if (!kullanici.is_admin) {
-          await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: kullanici.id, action: "indir", stilSayisi: 1 }) });
-          setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - 1) } : k);
-        }
-      } else {
-        setHata("Görsel üretilemedi. Tekrar deneyin.");
-      }
+      if (res.status === 402) { paketModalAc(); setSosyalGorselYukleniyor(false); return; }
+      if (data.sonuclar) setSosyalGorselSonuclar(data.sonuclar);
+      else setHata("Görsel üretilemedi. Tekrar deneyin.");
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setSosyalGorselYukleniyor(false);
   };
@@ -819,11 +792,6 @@ export default function Home() {
                   </div>
                 )}
               </nav>
-            </div>
-          ) : (
-            <div className="flex gap-1 sm:gap-2 flex-shrink-0">
-              <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</button>
-              <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla</button>
             </div>
           )}
         </div>
