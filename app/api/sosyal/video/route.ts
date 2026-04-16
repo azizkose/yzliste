@@ -46,13 +46,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Base64'ü fal.ai storage'a yükle
+  // Base64 → FAL storage
   const base64Data = foto.split(",")[1];
   const mediaType = foto.split(";")[0].split(":")[1];
   const buffer = Buffer.from(base64Data, "base64");
   const blob = new Blob([buffer], { type: mediaType });
-  const uploadResult = await fal.storage.upload(blob);
-  const imageUrl = uploadResult;
+  const imageUrl = await fal.storage.upload(blob);
 
   // Video prompt — kullanıcı yazmadıysa marka bilgisine göre otomatik
   let videoPrompt: string;
@@ -90,7 +89,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "Video üretilemedi, tekrar deneyin." }, { status: 500 });
   }
 
-  // Kredi düş
   if (!isAdmin) {
     await supabaseAdmin
       .from("profiles")

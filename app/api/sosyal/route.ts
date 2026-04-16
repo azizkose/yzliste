@@ -28,7 +28,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "Yetersiz kredi" }, { status: 402 });
   }
 
-  // Platform prompt
   const platformAdi =
     platform === "instagram_tiktok"
       ? "Instagram ve TikTok"
@@ -84,7 +83,7 @@ HASHTAG:
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: "claude-haiku-4-5",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 1024,
       system: sistem,
       messages: [{ role: "user", content: prompt }],
@@ -94,14 +93,12 @@ HASHTAG:
   const data = await response.json();
   const metin = data.content?.[0]?.text || "";
 
-  // Parse
   const captionMatch = metin.match(/CAPTION:\s*([\s\S]+?)(?=HASHTAG:|$)/i);
   const hashtagMatch = metin.match(/HASHTAG:\s*([\s\S]+?)$/i);
 
   const caption = captionMatch ? captionMatch[1].trim() : metin;
   const hashtag = hashtagMatch ? hashtagMatch[1].trim() : "";
 
-  // Kredi düş (admin değilse)
   if (!profil.is_admin) {
     await supabase
       .from("profiles")

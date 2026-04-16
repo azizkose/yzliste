@@ -872,7 +872,7 @@ export default function AuthPage() {
             <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
               Ücretsiz Hesap Oluştur →
             </button>
-            <p className="text-xs text-gray-400 mt-3">3 ücretsiz içerik üretim kredisi · Kredi kartı gerekmez</p>
+            <p className="text-xs text-gray-400 mt-3">Ücretsiz kayıt · Kredi kartı gerekmez</p>
           </div>
         </div>
       </section>
