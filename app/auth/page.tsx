@@ -13,6 +13,7 @@ export default function AuthPage() {
   const [sozlesmeOnay, setSozlesmeOnay] = useState(false);
   const [oturum, setOturum] = useState<boolean | null>(null);
   const [menuAcik, setMenuAcik] = useState(false);
+  const [ozellikTab, setOzellikTab] = useState(0);
   const [modalAcik, setModalAcik] = useState(false);
   const [modalMod, setModalMod] = useState<"paket" | "uye">("paket");
   const [modalUyeMod, setModalUyeMod] = useState<"giris" | "kayit">("kayit");
@@ -404,19 +405,287 @@ export default function AuthPage() {
         </div>
       </section>
 
-      {/* 3 SEÇENEK */}
+      {/* 4 ÖZELLİK + TAB ÖRNEKLERİ */}
       <section className="px-4 sm:px-6 py-16 bg-gray-50">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Neye ihtiyacın var?</h2>
-          <p className="text-center text-sm text-gray-400 mb-6">Metin, görsel ya da her ikisi — ayrı ayrı veya birlikte kullanabilirsin</p>
-          <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-8 shadow-sm">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">İçerik üretim kredileri nasıl çalışır?</h3>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Tek platformda 4 içerik türü</h2>
+          <p className="text-center text-sm text-gray-400 mb-8">İhtiyacın olanı seç — örnek çıktıyı hemen gör</p>
+
+          {/* 4 Kutu */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+            {[
+              {
+                idx: 0,
+                ikon: "📝",
+                baslik: "Listing Metni",
+                aciklama: "Başlık, özellikler, açıklama, etiketler",
+                kredi: "1 kredi",
+                renk: "blue",
+                ring: "ring-blue-400",
+                bg: "bg-blue-50",
+                badge: "text-blue-600 bg-blue-100",
+              },
+              {
+                idx: 1,
+                ikon: "📷",
+                baslik: "Görsel",
+                aciklama: "7 stil, her stilden 4 varyasyon",
+                kredi: "Stil başına 1 kredi",
+                renk: "purple",
+                ring: "ring-purple-400",
+                bg: "bg-purple-50",
+                badge: "text-purple-600 bg-purple-100",
+              },
+              {
+                idx: 2,
+                ikon: "🎬",
+                baslik: "Video",
+                aciklama: "Ürün tanıtım videosu, 1080p",
+                kredi: "5sn veya 10sn",
+                renk: "pink",
+                ring: "ring-pink-400",
+                bg: "bg-pink-50",
+                badge: "text-pink-600 bg-pink-100",
+              },
+              {
+                idx: 3,
+                ikon: "📱",
+                baslik: "Sosyal Medya",
+                aciklama: "Caption + hashtag, tüm platformlar",
+                kredi: "1 kredi",
+                renk: "green",
+                ring: "ring-green-400",
+                bg: "bg-green-50",
+                badge: "text-green-600 bg-green-100",
+              },
+            ].map((k) => (
+              <button
+                key={k.idx}
+                onClick={() => setOzellikTab(k.idx)}
+                className={`text-left rounded-2xl border-2 overflow-hidden transition-all shadow-sm hover:shadow-md ${
+                  ozellikTab === k.idx ? `border-transparent ring-2 ${k.ring} ${k.bg}` : "border-gray-100 bg-white hover:border-gray-200"
+                }`}
+              >
+                <div className="px-4 pt-5 pb-4">
+                  <div className="text-2xl mb-2">{k.ikon}</div>
+                  <p className="font-bold text-gray-800 text-sm">{k.baslik}</p>
+                  <p className="text-xs text-gray-400 mt-1 leading-snug">{k.aciklama}</p>
+                  <span className={`inline-block mt-2 text-[11px] font-semibold px-2 py-0.5 rounded-full ${k.badge}`}>{k.kredi}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Tab içeriği */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+
+            {/* Listing Metni */}
+            {ozellikTab === 0 && (
+              <div className="p-5 sm:p-7">
+                <div className="flex items-center gap-2 mb-5">
+                  <span className="w-2 h-2 rounded-full bg-orange-400 flex-shrink-0" />
+                  <span className="text-xs font-semibold text-orange-700">Trendyol formatında örnek çıktı</span>
+                </div>
+                <div className="space-y-3">
+                  {ornekBolumler.map((bolum, i) => (
+                    <div key={i} className={`rounded-xl border-l-4 ${bolum.renk} border border-gray-100 bg-gray-50 p-4`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-semibold text-gray-700">{bolum.ikon} {bolum.baslik}</span>
+                        <span className="text-xs bg-white border border-gray-200 text-gray-400 px-2 py-0.5 rounded-lg">Kopyala</span>
+                      </div>
+                      <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{bolum.icerik}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-5 pt-4 border-t border-gray-100 flex flex-wrap gap-3 text-xs text-gray-500">
+                  <span className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[9px]">✓</span>Manuel metin girişi</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[9px]">✓</span>Fotoğraftan otomatik analiz</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[9px]">✓</span>Barkod ile ürün tanıma</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[9px]">✓</span>6 platform desteği</span>
+                </div>
+              </div>
+            )}
+
+            {/* Görsel */}
+            {ozellikTab === 1 && (
+              <div className="p-5 sm:p-7">
+                <p className="text-sm font-semibold text-gray-700 mb-1">Tek fotoğraftan 7 farklı stüdyo stili</p>
+                <p className="text-xs text-gray-400 mb-5">İnceleme ücretsiz — beğendiğini indirince 1 kredi düşer · Her stilden 4 varyasyon</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="flex flex-col">
+                    <div className="relative rounded-xl overflow-hidden border-2 border-gray-200 bg-gray-100">
+                      <img src="/ornek_once.jpg" alt="önce" className="w-full aspect-square object-contain" />
+                      <div className="absolute top-2 left-2"><span className="bg-gray-800/80 text-white text-[10px] px-2 py-1 rounded-full">Ham fotoğraf</span></div>
+                    </div>
+                    <div className="bg-red-50 rounded-lg p-2 border border-red-100 mt-2">
+                      <p className="text-[11px] text-red-600 font-medium">✗ Dağınık arka plan</p>
+                    </div>
+                  </div>
+                  {[
+                    { src: "/ornek_beyaz.jpg", etiket: "⬜ Beyaz Zemin" },
+                    { src: "/ornek_koyu.jpg", etiket: "⬛ Koyu Zemin" },
+                    { src: "/ornek_lifestyle.jpg", etiket: "🏠 Lifestyle" },
+                  ].map((item) => (
+                    <div key={item.etiket} className="flex flex-col">
+                      <div className="rounded-xl overflow-hidden border-2 border-green-200 bg-gray-50">
+                        <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" />
+                      </div>
+                      <div className="bg-green-50 rounded-lg p-2 border border-green-100 mt-2">
+                        <p className="text-[11px] text-gray-700 font-semibold">{item.etiket}</p>
+                        <p className="text-[10px] text-green-500 mt-0.5">4 varyasyon</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
+                  {[
+                    { src: "/ornek_mermer.jpg", etiket: "🪨 Mermer" },
+                    { src: "/ornek_ahsap.jpg", etiket: "🪵 Ahşap" },
+                    { src: "/ornek_gradient.jpg", etiket: "🎨 Gradient" },
+                    { src: "/ornek_dogal.jpg", etiket: "🌿 Doğal" },
+                  ].map((item) => (
+                    <div key={item.etiket} className="flex flex-col">
+                      <div className="rounded-xl overflow-hidden border-2 border-green-200 bg-gray-50">
+                        <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" />
+                      </div>
+                      <div className="bg-green-50 rounded-lg p-2 border border-green-100 mt-2">
+                        <p className="text-[11px] text-gray-700 font-semibold">{item.etiket}</p>
+                        <p className="text-[10px] text-green-500 mt-0.5">4 varyasyon</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-5 pt-4 border-t border-gray-100">
+                  <p className="text-xs text-gray-500 font-medium mb-2">3 farklı yöntemle sahne oluştur:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {["Hazır stiller (Beyaz, Koyu…)", "Kendi promptunu yaz", "Arka plan fotoğrafı ver"].map((t, i) => (
+                      <span key={i} className="text-xs bg-purple-50 text-purple-700 px-3 py-1 rounded-full border border-purple-100">{i + 1}. {t}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Video */}
+            {ozellikTab === 2 && (
+              <div className="p-5 sm:p-7">
+                <p className="text-sm font-semibold text-gray-700 mb-1">Ürün fotoğrafından tanıtım videosu</p>
+                <p className="text-xs text-gray-400 mb-6">Ürünü hareket ettiren, platform uyumlu dikey/kare video — MP4 olarak indir</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {[
+                    {
+                      ikon: "⏱️",
+                      baslik: "5 saniyelik video",
+                      aciklama: "Hızlı tanıtım, story ve reels için ideal. Ürün hareketi + efekt.",
+                      etiket: "Hızlı",
+                      renkBg: "bg-pink-50",
+                      renkBorder: "border-pink-100",
+                      renkText: "text-pink-600",
+                    },
+                    {
+                      ikon: "🎬",
+                      baslik: "10 saniyelik video",
+                      aciklama: "Detay gösterimi, özellik vurgusu, ürün döndürme efekti.",
+                      etiket: "Detaylı",
+                      renkBg: "bg-pink-50",
+                      renkBorder: "border-pink-100",
+                      renkText: "text-pink-600",
+                    },
+                    {
+                      ikon: "📐",
+                      baslik: "Format seçimi",
+                      aciklama: "Dikey (9:16 · Reels/TikTok), Kare (1:1 · Feed), Yatay (16:9 · YouTube).",
+                      etiket: "Çok format",
+                      renkBg: "bg-pink-50",
+                      renkBorder: "border-pink-100",
+                      renkText: "text-pink-600",
+                    },
+                  ].map((v, i) => (
+                    <div key={i} className={`rounded-xl border ${v.renkBorder} ${v.renkBg} p-4`}>
+                      <div className="text-2xl mb-2">{v.ikon}</div>
+                      <p className="text-sm font-semibold text-gray-800 mb-1">{v.baslik}</p>
+                      <p className="text-xs text-gray-500 leading-relaxed mb-2">{v.aciklama}</p>
+                      <span className={`text-[11px] font-semibold ${v.renkText} bg-white border ${v.renkBorder} px-2 py-0.5 rounded-full`}>{v.etiket}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-5 pt-4 border-t border-gray-100 bg-gray-50 rounded-xl p-4">
+                  <p className="text-xs font-semibold text-gray-600 mb-2">Nasıl çalışır?</p>
+                  <div className="space-y-1.5">
+                    {[
+                      "Ürün fotoğrafını yükle",
+                      "Süre ve format seç (5sn / 10sn · dikey / kare / yatay)",
+                      "AI ürünü animasyonlu videoya dönüştürür",
+                      "MP4 olarak indir, platforma yükle",
+                    ].map((s, i) => (
+                      <div key={i} className="flex items-start gap-2 text-xs text-gray-600">
+                        <span className="w-4 h-4 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-[9px] font-bold flex-shrink-0 mt-0.5">{i + 1}</span>
+                        {s}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Sosyal Medya */}
+            {ozellikTab === 3 && (
+              <div className="p-5 sm:p-7">
+                <p className="text-sm font-semibold text-gray-700 mb-1">Platform uyumlu caption + hashtag seti</p>
+                <p className="text-xs text-gray-400 mb-5">Instagram, TikTok, Facebook, Twitter/X — her platform için ayrı format · 1 kredi</p>
+
+                {/* Platform sekmeleri görünümü */}
+                <div className="flex gap-2 mb-4 flex-wrap">
+                  {["📸 Instagram", "🎵 TikTok", "👥 Facebook", "🐦 Twitter/X"].map((p) => (
+                    <span key={p} className="text-xs bg-green-50 text-green-700 border border-green-200 px-3 py-1 rounded-full font-medium">{p}</span>
+                  ))}
+                </div>
+
+                {/* Örnek çıktı */}
+                <div className="space-y-3">
+                  <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-semibold text-gray-600">📸 Instagram Caption</span>
+                      <span className="text-xs bg-white border border-gray-200 text-gray-400 px-2 py-0.5 rounded-lg">Kopyala</span>
+                    </div>
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      Kütahya&apos;nın 500 yıllık geleneğiyle yapılmış bu porselen fincan setini görünce kendinizi bir Osmanlı sarayında hissedeceksiniz ✨☕{"\n\n"}
+                      El yapımı çiçek deseni ve altın yaldızlarıyla her sofrayı şölen sofrasına dönüştürün. Sevdiklerinize en güzel hediye — 6 kişilik komple set, özel kutusunda! 🎁
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-semibold text-gray-600">🏷️ Hashtag Seti</span>
+                      <span className="text-xs bg-white border border-gray-200 text-gray-400 px-2 py-0.5 rounded-lg">Kopyala</span>
+                    </div>
+                    <p className="text-sm text-green-700 leading-relaxed">
+                      #porselen #kahvefincanı #kütahyaporselen #altınyaldız #hediye #türkkahvesi #elyapımı #fincanSeti #çeyiz #düğünhediyesi #porseleneserleri #handmade
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-semibold text-gray-600">🐦 Twitter/X (280 karakter)</span>
+                      <span className="text-xs bg-white border border-gray-200 text-gray-400 px-2 py-0.5 rounded-lg">Kopyala</span>
+                    </div>
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      Kütahya porseleni + altın yaldız + 6 kişilik set = mükemmel hediye 🎁☕ Her sipariş özel kutusunda geliyor. #porselen #hediye
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Kredi bilgisi */}
+          <div className="mt-6 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">Kredi nasıl çalışır?</h3>
             <ul className="space-y-2">
               {[
-                { ikon: "🎁", metin: "Kayıt olunca 3 ücretsiz içerik üretim kredisi hediye edilir — kredi kartı gerekmez." },
-                { ikon: "📝", metin: "Her listing metni üretimi 1 kredi tüketir. Başlık, özellikler, açıklama ve etiketlerin tamamı tek kredide gelir." },
-                { ikon: "📷", metin: "Görsel üretimi stil başına 1 kredi tüketir. Her stilden 4 varyasyon üretilir — inceleme ücretsiz, sadece indirince kredi düşer. 1 stil → 4 görsel → 1 kredi · 2 stil → 8 görsel → 2 kredi." },
-                { ikon: "💳", metin: "Kredilerin biter bitmez istediğin paketi satın al. 29₺'den başlayan paketler, abonelik yok." },
+                { ikon: "🎁", metin: "Kayıt olunca 3 ücretsiz kredi — kredi kartı gerekmez." },
+                { ikon: "📝", metin: "Listing metni: 1 kredi → başlık + özellikler + açıklama + etiketler" },
+                { ikon: "📷", metin: "Görsel: stil başına 1 kredi → 4 varyasyon. İnceleme ücretsiz, indirince düşer." },
+                { ikon: "🎬", metin: "Video: 5sn veya 10sn — kredi miktarı süreye göre" },
+                { ikon: "📱", metin: "Sosyal medya: 1 kredi → caption + hashtag seti, tüm platformlar" },
               ].map((m, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm text-gray-500">
                   <span className="text-base flex-shrink-0">{m.ikon}</span>
@@ -425,161 +694,12 @@ export default function AuthPage() {
               ))}
             </ul>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-              <div className="bg-blue-50 px-5 pt-6 pb-4">
-                <div className="text-2xl mb-2">📝</div>
-                <h3 className="font-bold text-gray-800">Sadece Listing Metni</h3>
-                <p className="text-xs text-gray-500 mt-1">1 kredi</p>
-              </div>
-              <div className="p-5 flex-1">
-                <p className="text-sm text-gray-600 leading-relaxed mb-3">Platforma özel optimize başlık, madde madde özellikler, satışa dönen açıklama ve arama etiketleri.</p>
-                <ul className="space-y-1.5">
-                  {["Manuel metin girişi", "Fotoğraftan otomatik analiz", "Barkod ile ürün tanıma"].map(f => (
-                    <li key={f} className="flex items-center gap-2 text-xs text-gray-500">
-                      <span className="w-4 h-4 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[10px]">✓</span>{f}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-              <div className="bg-purple-50 px-5 pt-6 pb-4">
-                <div className="text-2xl mb-2">📷</div>
-                <h3 className="font-bold text-gray-800">Sadece Görsel</h3>
-                <p className="text-xs text-gray-500 mt-1">Stil başına 1 kredi · Her stilden 4 varyasyon</p>
-              </div>
-              <div className="p-5 flex-1">
-                <p className="text-sm text-gray-600 leading-relaxed mb-3">Tek fotoğraftan 7 farklı stüdyo görseli — her stilden 4 varyasyon. 1 stil → 4 görsel → 1 kredi. İnceleme ücretsiz, indirince kredi düşer.</p>
-                <p className="text-xs text-gray-400">İnceleme ücretsiz · İndirince 1 kredi · 1 stil = 4 görsel</p>
-              </div>
-            </div>
-            <div className="bg-white rounded-2xl border-2 border-orange-200 shadow-sm overflow-hidden flex flex-col">
-              <div className="bg-orange-50 px-5 pt-6 pb-4">
-                <div className="text-2xl mb-2">✨</div>
-                <h3 className="font-bold text-gray-800">Metin + Görsel</h3>
-                <p className="text-xs text-gray-500 mt-1">Ayrı ayrı kredi</p>
-              </div>
-              <div className="p-5 flex-1">
-                <p className="text-sm text-gray-600 leading-relaxed mb-3">Trendyol ve Hepsiburada'da hem metin hem görsel zorunlu. İkisini aynı anda üret.</p>
-                <div className="space-y-2">
-                  {["Optimize listing metni", "4 stüdyo görseli — beğendiğini indir", "Platforma hazır, düzenleme gerektirmez"].map((t, i) => (
-                    <div key={i} className="flex items-start gap-2 text-xs text-gray-600">
-                      <span className="w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">{i + 1}</span>{t}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+
           <div className="mt-8 text-center">
             <button onClick={hemenAlTikla} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-orange-100">
-              Paket Satın Al — 29₺'den başlıyor
+              Paket Satın Al — 29₺&apos;den başlıyor
             </button>
-            <p className="text-xs text-gray-400 mt-3">veya 3 ücretsiz içerik üretim kredisi ile başla, kredi kartı gerekmez</p>
-          </div>
-        </div>
-      </section>
-
-      {/* GÖRSEL ÖNCESİ / SONRASI */}
-      <section className="px-4 sm:px-6 py-16">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">📷 Tek fotoğraftan 7 farklı stüdyo görseli</h2>
-          <p className="text-center text-sm text-gray-400 mb-6">AI arka planı kaldırır, istediğin ortama yerleştirir — her stilden 4 varyasyon üretir. İnceleme ücretsiz, indirince 1 kredi düşer.</p>
-          <div className="bg-orange-50 rounded-2xl border border-orange-200 p-4 mb-10">
-            <p className="text-center text-sm text-orange-800"><strong>📸 Sana özel fotoğraf çıkaralım</strong></p>
-            <p className="text-center text-xs text-orange-700 mt-1"><strong>3 seçeneğin var:</strong></p>
-            <div className="text-xs text-orange-700 mt-2 space-y-1.5">
-              <div className="flex items-start gap-2">
-                <span className="font-bold flex-shrink-0">1️⃣</span>
-                <span><strong>Ön seçimli stiller:</strong> Beyaz, Koyu, Lifestyle gibi hazır stillerden seç</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="font-bold flex-shrink-0">2️⃣</span>
-                <span><strong>Metinle tanımla:</strong> "Mermerli masada sofistike ışıklandırma" gibi kendi sahneni yazarak prompt'la tanımla</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="font-bold flex-shrink-0">3️⃣</span>
-                <span><strong>Arka plan fotoğrafı ver:</strong> Ürünü bu arka plana yerleştirelim — örneğin dükkanının, evinizin, açık alanın fotoğrafı</span>
-              </div>
-            </div>
-          </div>
-          {/* Öncesi / Sonrası — ilk satır */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="flex flex-col">
-              <div className="relative rounded-2xl overflow-hidden border-2 border-gray-300 bg-gray-100">
-                <img src="/ornek_once.jpg" alt="önce" className="w-full aspect-square object-contain" />
-                <div className="absolute top-2 left-2"><span className="bg-gray-800/80 text-white text-[10px] px-2 py-1 rounded-full">Ham fotoğraf</span></div>
-              </div>
-              <div className="bg-red-50 rounded-xl p-2.5 border border-red-100 mt-2">
-                <p className="text-[11px] text-red-600 font-medium">✗ Dağınık arka plan</p>
-                <p className="text-[10px] text-red-400 mt-0.5">Platform reddedebilir</p>
-              </div>
-            </div>
-            {[
-              { src: "/ornek_beyaz.jpg", etiket: "⬜ Beyaz Zemin", aciklama: "✓ Trendyol standart" },
-              { src: "/ornek_koyu.jpg", etiket: "⬛ Koyu Zemin", aciklama: "✓ Premium his" },
-              { src: "/ornek_lifestyle.jpg", etiket: "🏠 Lifestyle", aciklama: "✓ Doğal ortam" },
-            ].map((item) => (
-              <div key={item.etiket} className="flex flex-col">
-                <div className="rounded-2xl overflow-hidden border-2 border-green-200 bg-gray-50">
-                  <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" />
-                </div>
-                <div className="bg-green-50 rounded-xl p-2.5 border border-green-100 mt-2">
-                  <p className="text-[11px] text-gray-700 font-semibold mb-0.5">{item.etiket}</p>
-                  <p className="text-[11px] text-green-600 font-medium">{item.aciklama}</p>
-                  <p className="text-[10px] text-green-400 mt-0.5">4 varyasyon üretilir</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          {/* Yeni stiller — ikinci satır */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
-            {[
-              { src: "/ornek_mermer.jpg", etiket: "🪨 Mermer", aciklama: "✓ Lüks / kozmetik" },
-              { src: "/ornek_ahsap.jpg", etiket: "🪵 Ahşap", aciklama: "✓ El yapımı / organik" },
-              { src: "/ornek_gradient.jpg", etiket: "🎨 Gradient", aciklama: "✓ Modern / teknoloji" },
-              { src: "/ornek_dogal.jpg", etiket: "🌿 Doğal", aciklama: "✓ Açık hava / taze" },
-            ].map((item) => (
-              <div key={item.etiket} className="flex flex-col">
-                <div className="rounded-2xl overflow-hidden border-2 border-green-200 bg-gray-50">
-                  <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" />
-                </div>
-                <div className="bg-green-50 rounded-xl p-2.5 border border-green-100 mt-2">
-                  <p className="text-[11px] text-gray-700 font-semibold mb-0.5">{item.etiket}</p>
-                  <p className="text-[11px] text-green-600 font-medium">{item.aciklama}</p>
-                  <p className="text-[10px] text-green-400 mt-0.5">4 varyasyon üretilir</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ÖRNEK LİSTİNG — BÖLÜMLÜ KUTULAR */}
-      <section className="px-4 sm:px-6 py-16 bg-gray-50">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Böyle bir metin alırsın</h2>
-          <p className="text-center text-sm text-gray-400 mb-8">
-            Her bölüm ayrı kutu — platforma yapıştırmaya hazır, tek tıkla kopyalanır
-          </p>
-
-          <div className="space-y-3">
-            {/* Platform etiketi */}
-            <div className="flex items-center gap-2 px-1">
-              <span className="w-2 h-2 rounded-full bg-orange-400 flex-shrink-0" />
-              <span className="text-xs font-semibold text-orange-700">Trendyol formatında örnek çıktı</span>
-            </div>
-
-            {ornekBolumler.map((bolum, i) => (
-              <div key={i} className={`bg-white rounded-2xl shadow-sm border-l-4 ${bolum.renk} border border-gray-100 p-5`}>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-semibold text-gray-700">{bolum.ikon} {bolum.baslik}</span>
-                  <span className="text-xs bg-gray-100 text-gray-400 px-2 py-0.5 rounded-lg">Kopyala</span>
-                </div>
-                <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{bolum.icerik}</p>
-              </div>
-            ))}
+            <p className="text-xs text-gray-400 mt-3">veya 3 ücretsiz kredi ile başla, kredi kartı gerekmez</p>
           </div>
         </div>
       </section>
