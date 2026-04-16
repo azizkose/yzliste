@@ -385,24 +385,43 @@ export default function AuthPage() {
       </header>
 
       {/* HERO */}
-      <section className="px-4 sm:px-6 pt-12 sm:pt-16 pb-10 text-center max-w-3xl mx-auto">
-        <span className="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-5 tracking-wide uppercase">Trendyol · Hepsiburada · Amazon TR · N11 · Etsy · Amazon USA</span>
+      <section className="px-4 sm:px-6 pt-12 sm:pt-16 pb-12 text-center max-w-3xl mx-auto">
+        <div className="flex flex-wrap justify-center gap-2 mb-6">
+          <span className="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">Trendyol · Hepsiburada · Amazon · N11 · Etsy</span>
+          <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">🆕 Video + Sosyal Medya</span>
+        </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-5">
-          E-ticaret listing için<br />
-          <span className="text-orange-500">en kolay çözüm</span>
+          Ürünün için her içeriği<br />
+          <span className="text-orange-500">tek platformda üret</span>
         </h1>
-        <p className="text-base sm:text-lg text-gray-500 mb-4 max-w-2xl mx-auto leading-relaxed">
-          Platforma ürün yüklemek için hem <strong className="text-gray-700">optimize metin</strong> hem de <strong className="text-gray-700">profesyonel görsel</strong> gerekir. yzliste ikisini de tek yerden üretir.
+        <p className="text-base sm:text-lg text-gray-500 mb-6 max-w-2xl mx-auto leading-relaxed">
+          Listing metni, stüdyo görseli, ürün videosu, sosyal medya içeriği —<br className="hidden sm:block" />
+          <strong className="text-gray-700">fotoğraf yükle ya da barkod tara</strong>, gerisini YZ halleder.
         </p>
-        <p className="text-sm text-gray-400 mb-8 max-w-xl mx-auto">İster açıklama gir, ister ürün fotoğrafını yükle ya da barkod tara — gerisini YZ halleder.</p>
+        {/* 4 özellik rozeti */}
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {[
+            { ikon: "📝", label: "Listing Metni", sub: "1 kredi" },
+            { ikon: "📷", label: "AI Görsel", sub: "1 kredi / stil" },
+            { ikon: "🎬", label: "Video", sub: "5–8 kredi" },
+            { ikon: "📱", label: "Sosyal Medya", sub: "1 kredi" },
+          ].map((f) => (
+            <div key={f.label} className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-full px-3 py-1.5 shadow-sm">
+              <span className="text-base">{f.ikon}</span>
+              <span className="text-xs font-semibold text-gray-700">{f.label}</span>
+              <span className="text-[11px] text-gray-400">· {f.sub}</span>
+            </div>
+          ))}
+        </div>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
-            Ücretsiz Hesap Oluştur →
+            Ücretsiz Başla — 3 Kredi Hediye →
           </button>
-          <button onClick={() => document.getElementById("nasil-calisir")?.scrollIntoView({ behavior: "smooth" })} className="text-gray-500 hover:text-gray-700 font-medium px-8 py-4 rounded-xl text-base transition-colors underline underline-offset-4">
+          <button onClick={() => document.getElementById("nasil-calisir")?.scrollIntoView({ behavior: "smooth" })} className="text-gray-500 hover:text-gray-700 font-medium px-8 py-4 rounded-xl text-base transition-colors border border-gray-200 hover:border-gray-300">
             Nasıl çalışır?
           </button>
         </div>
+        <p className="text-xs text-gray-400 mt-4">Kredi kartı gerekmez · Hesap oluşturunca 3 kredi hemen tanımlanır</p>
       </section>
 
       {/* 4 ÖZELLİK + TAB ÖRNEKLERİ */}
@@ -577,7 +596,7 @@ export default function AuthPage() {
                       ikon: "⏱️",
                       baslik: "5 saniyelik video",
                       aciklama: "Hızlı tanıtım, story ve reels için ideal. Ürün hareketi + efekt.",
-                      etiket: "Hızlı",
+                      etiket: "5 kredi",
                       renkBg: "bg-pink-50",
                       renkBorder: "border-pink-100",
                       renkText: "text-pink-600",
@@ -586,7 +605,7 @@ export default function AuthPage() {
                       ikon: "🎬",
                       baslik: "10 saniyelik video",
                       aciklama: "Detay gösterimi, özellik vurgusu, ürün döndürme efekti.",
-                      etiket: "Detaylı",
+                      etiket: "8 kredi",
                       renkBg: "bg-pink-50",
                       renkBorder: "border-pink-100",
                       renkText: "text-pink-600",
@@ -768,19 +787,26 @@ export default function AuthPage() {
       {/* NASIL ÇALIŞIR */}
       <section id="nasil-calisir" className="px-4 sm:px-6 py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-10">4 adımda hazır</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Dakikalar içinde hazır</h2>
+          <p className="text-center text-sm text-gray-400 mb-10">Metin, görsel, video, sosyal medya — hepsi aynı ürün bilgisinden</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { no: "1", ikon: "📦", baslik: "Ürünü tanımla", aciklama: "Ürün adı yaz, fotoğraf yükle ya da barkod tara." },
-              { no: "2", ikon: "🛒", baslik: "Platform seç", aciklama: "Trendyol, HB, Amazon TR, N11, Etsy veya Amazon USA." },
-              { no: "3", ikon: "📝", baslik: "Listing metnini al", aciklama: "Optimize başlık, özellikler, açıklama ve etiketler." },
-              { no: "4", ikon: "📷", baslik: "Görsel üret", aciklama: "7+ stilde stüdyo görseli. Kendi prompt'unu gir." },
+              { no: "1", ikon: "📦", baslik: "Ürünü tanımla", aciklama: "Ürün adı yaz, fotoğraf yükle ya da barkod tara. YZ ürünü otomatik analiz eder.", renk: "bg-blue-50 text-blue-600" },
+              { no: "2", ikon: "🛒", baslik: "Platform seç", aciklama: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy veya Amazon USA. Her platform için ayrı format.", renk: "bg-purple-50 text-purple-600" },
+              { no: "3", ikon: "📝", baslik: "Listing metnini al", aciklama: "Optimize başlık, madde madde özellikler, açıklama ve arama etiketleri — tek kredide.", renk: "bg-orange-50 text-orange-600" },
+              { no: "4", ikon: "📷", baslik: "Görsel üret", aciklama: "7 farklı stüdyo stili. Kendi sahne promptunu yaz ya da arka plan fotoğrafı ver.", renk: "bg-green-50 text-green-600" },
+              { no: "5", ikon: "🎬", baslik: "Video üret", aciklama: "Ürün fotoğrafından 5sn/10sn tanıtım videosu. Dikey, kare veya yatay format — platforma hazır.", renk: "bg-pink-50 text-pink-600" },
+              { no: "6", ikon: "📱", baslik: "Sosyal medya", aciklama: "Instagram, TikTok, Facebook, Twitter/X için caption + hashtag seti. Platform diline göre ayrı içerik.", renk: "bg-teal-50 text-teal-600" },
             ].map((adim) => (
-              <div key={adim.no} className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
-                <div className="text-2xl sm:text-3xl mb-3">{adim.ikon}</div>
-                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-orange-100 text-orange-600 text-xs font-bold flex items-center justify-center mb-3">{adim.no}</div>
-                <h3 className="font-semibold text-gray-800 text-sm mb-1">{adim.baslik}</h3>
-                <p className="text-xs text-gray-400 leading-relaxed">{adim.aciklama}</p>
+              <div key={adim.no} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex gap-4">
+                <div className={`w-10 h-10 rounded-xl ${adim.renk} flex items-center justify-center text-xl flex-shrink-0`}>{adim.ikon}</div>
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded ${adim.renk}`}>{adim.no}</span>
+                    <h3 className="font-semibold text-gray-800 text-sm">{adim.baslik}</h3>
+                  </div>
+                  <p className="text-xs text-gray-400 leading-relaxed">{adim.aciklama}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -790,17 +816,20 @@ export default function AuthPage() {
       {/* ÖZELLİKLER */}
       <section className="px-4 sm:px-6 py-16">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-10">Neden yzliste?</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-3">Neden yzliste?</h2>
+          <p className="text-center text-sm text-gray-400 mb-10">Rakipler tek bir şey yapar. yzliste dördünü birden yapar.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { ikon: "📸", baslik: "Fotoğraftan analiz", aciklama: "Ürün fotoğrafını yükle, YZ ürünü tanısın ve listing metnini otomatik oluştursun." },
-              { ikon: "📦", baslik: "Barkod tarama", aciklama: "Barkodu tarat, ürün bilgilerini veritabanından çek, listing üret." },
-              { ikon: "🎯", baslik: "Platform şablonları", aciklama: "Trendyol, Hepsiburada, Amazon TR ve N11 için ayrı format." },
-              { ikon: "📷", baslik: "AI görsel + prompt", aciklama: "Beyaz, koyu, lifestyle — her stilden 4 varyasyon. Kendi sahneni yaz." },
-              { ikon: "💎", baslik: "Kredi sadece indirmede düşer", aciklama: "Görsel üretilir, beğenmezsen kredinizi kaybetmezsiniz." },
-              { ikon: "💰", baslik: "Kullandığın kadar öde", aciklama: "Aylık abonelik yok. 3 ücretsiz deneme kredisi ile başla." },
+              { ikon: "📸", baslik: "Fotoğraftan analiz", aciklama: "Ürün fotoğrafını yükle, YZ ürünü tanısın, listing metnini otomatik oluştursun." },
+              { ikon: "📦", baslik: "Barkod tarama", aciklama: "Barkodu tarat, ürün bilgilerini veritabanından çek, listing üret — klavyeye gerek yok." },
+              { ikon: "🎯", baslik: "6 platform desteği", aciklama: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy, Amazon USA — her platform için ayrı format." },
+              { ikon: "📷", baslik: "7 stilden görsel", aciklama: "Beyaz, koyu, lifestyle, mermer, ahşap, gradient, doğal — her stilden 4 varyasyon." },
+              { ikon: "🎬", baslik: "Ürün videosu", aciklama: "5sn veya 10sn tanıtım videosu. Dikey/kare/yatay format. Reels, TikTok ve pazaryeri için hazır." },
+              { ikon: "📱", baslik: "Sosyal medya içeriği", aciklama: "Instagram, TikTok, Facebook, Twitter/X için ayrı caption + hashtag seti." },
+              { ikon: "💎", baslik: "Görsel kredi garantisi", aciklama: "Görsel üretilir, beğenmezsen indirmezsin — kredin yanmaz." },
+              { ikon: "💰", baslik: "Kullandığın kadar öde", aciklama: "Aylık abonelik yok. 3 ücretsiz kredi ile başla, istediğin zaman paket al." },
             ].map((o, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
                 <div className="text-2xl mb-3">{o.ikon}</div>
                 <h3 className="font-semibold text-gray-800 text-sm mb-1">{o.baslik}</h3>
                 <p className="text-xs text-gray-400 leading-relaxed">{o.aciklama}</p>

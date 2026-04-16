@@ -43,11 +43,11 @@ const paketler = [
     butonRenk: "bg-gray-800 hover:bg-gray-900",
     aciklama: "Birkaç ürün denemek isteyenler için ideal başlangıç noktası.",
     ozellikler: [
-      "10 kredi (istediğin gibi kullan)",
-      "Metin üretimi: Her listing için 1 kredi",
-      "Görsel üretimi: Her listing için 1 kredi 8 farklı stil (her stilden 4 varyasyon)",
-      "Deneme için küçük başlangıç",
-      "Krediler tükenince üretilen içerik silinir",
+      "10 kredi (tüm içerik türlerinde kullan)",
+      "📝 Listing metni: 1 kredi / ürün",
+      "📷 AI görsel: 1 kredi / stil · 4 varyasyon",
+      "🎬 Video: 5sn=5 kredi, 10sn=8 kredi",
+      "📱 Sosyal medya: 1 kredi / platform seti",
     ],
   },
   {
@@ -60,12 +60,12 @@ const paketler = [
     rozet: true,
     aciklama: "Aktif satıcılar için en çok tercih edilen paket.",
     ozellikler: [
-      "30 kredi (istediğin gibi kullan)",
-      "Metin üretimi: 30 listing",
-      "Metin üretimi: Her listing için 1 kredi",
-      "Görsel üretimi: Her listing için 1 kredi 8 farklı stil (her stilden 4 varyasyon)",
-      "Tüm platformlar desteklenir",
-      "Krediler sona erene kadar geçerli, süre sınırı yok",
+      "30 kredi (tüm içerik türlerinde kullan)",
+      "📝 Listing metni: 30 ürün",
+      "📷 AI görsel: 30 stil · her stilden 4 varyasyon",
+      "🎬 Video: 6 adet 5sn video veya 3 adet 10sn video",
+      "📱 Sosyal medya: 30 platform içerik seti",
+      "Tüm platformlar · Süre sınırı yok",
     ],
   },
   {
@@ -77,12 +77,12 @@ const paketler = [
     butonRenk: "bg-gray-800 hover:bg-gray-900",
     aciklama: "Toplu yükleme yapan mağazalar ve profesyonel satıcılar için.",
     ozellikler: [
-      "100 kredi (istediğin gibi kullan)",
-      "Metin üretimi: Her listing için 1 kredi",
-      "Görsel üretimi: Her listing için 1 kredi 8 farklı stil (her stilden 4 varyasyon)",
-      "Toplu kullanım için en ekonomik seçenek",
-      "Tüm platformlar desteklenir",
-      "Krediler sona erene kadar geçerli, süre sınırı yok",
+      "100 kredi (tüm içerik türlerinde kullan)",
+      "📝 Listing metni: 100 ürün",
+      "📷 AI görsel: 100 stil · her stilden 4 varyasyon",
+      "🎬 Video: 20 adet 5sn video veya 12 adet 10sn video",
+      "📱 Sosyal medya: 100 platform içerik seti",
+      "Toplu kullanım için en ekonomik · Süre sınırı yok",
     ],
   },
 ];
@@ -92,25 +92,37 @@ const krediAciklamalari = [
     ikon: "🎁",
     baslik: "3 ücretsiz kredi ile başla",
     icerik:
-      "Kayıt olunca ya da misafir olarak denerken 3 ücretsiz kredi verilir. Kredi kartı gerekmez. İstediğin özelliği (metin veya görsel) denemek için kullanabilirsin.",
+      "Kayıt olunca 3 ücretsiz kredi tanımlanır — kredi kartı gerekmez. İstediğin içerik türünü (metin, görsel, video, sosyal medya) denemek için kullanabilirsin.",
   },
   {
     ikon: "📝",
     baslik: "Listing metni — 1 kredi",
     icerik:
-      "Her üretimde başlık, madde madde özellikler, açıklama ve arama etiketlerinin tamamı tek seferde gelir. Hepsi ayrı kutularda, tek tıkla kopyalanır. 1 kredi = 1 ürün için tam listing metni.",
+      "1 kredi = 1 ürün için tam listing metni. Başlık, madde madde özellikler, açıklama ve arama etiketlerinin tamamı tek seferde gelir. Hepsi ayrı kutularda, tek tıkla kopyalanır.",
   },
   {
     ikon: "📷",
     baslik: "AI görsel — stil başına 1 kredi",
     icerik:
-      "Her stil seçiminde (Beyaz Zemin, Koyu Zemin, Lifestyle) 4 farklı varyasyon üretilir. Beğendiğini seçip indirince kredi düşer; sadece inceleme ücretsizdir. 1 stil = 4 görsel = 1 kredi.",
+      "7 farklı stil (Beyaz, Koyu, Lifestyle, Mermer, Ahşap, Gradient, Doğal) — her stilden 4 varyasyon üretilir. İnceleme ücretsiz, beğendiğini indirince 1 kredi düşer. 1 stil = 4 görsel = 1 kredi.",
+  },
+  {
+    ikon: "🎬",
+    baslik: "Video — 5sn: 5 kredi · 10sn: 8 kredi",
+    icerik:
+      "Ürün fotoğrafından tanıtım videosu üretilir. 5 saniyelik video için 5 kredi, 10 saniyelik için 8 kredi. Dikey (9:16 · Reels/TikTok), kare (1:1 · Feed) veya yatay (16:9 · YouTube) format seçilebilir.",
+  },
+  {
+    ikon: "📱",
+    baslik: "Sosyal medya — 1 kredi",
+    icerik:
+      "1 kredi = Instagram, TikTok, Facebook ve Twitter/X için platform uyumlu caption + hashtag seti. Her platform için ayrı ton ve format ayarlanır.",
   },
   {
     ikon: "🔀",
-    baslik: "Karışık kullanım serbesttir",
+    baslik: "Tüm içerik türleri aynı krediden",
     icerik:
-      "Kredileri metin ve görsel üretimi arasında dilediğin gibi bölebilirsin. 10 kredilik paketi 5 listing metni + 5 görsel stil olarak da kullanabilirsin. Hiçbir kısıtlama yok.",
+      "Kredileri listing metni, görsel, video ve sosyal medya arasında dilediğin gibi kullanabilirsin. Hiçbir kategori kısıtlaması yok.",
   },
   {
     ikon: "♾️",
@@ -138,9 +150,19 @@ const sss = [
       "Görsel üretimde önce seçtiğin stil için 4 varyasyon ücretsiz olarak önizlenir. İndirmek istediğin görseli seçince 1 kredi düşer. Beğenmezsen indirmeden çıkabilirsin, kredin yanmaz.",
   },
   {
-    soru: "Metin + görsel aynı anda üretebilir miyim?",
+    soru: "Video üretimi kaç kredi tutar?",
     cevap:
-      "Evet. Bir üretimde hem listing metnini hem görseli aynı anda talep edebilirsin. Her biri kendi kredisini tüketir: 1 metin + 1 görsel stili = 2 kredi.",
+      "5 saniyelik video 5 kredi, 10 saniyelik video 8 kredi tüketir. Dikey (9:16 · Reels/TikTok), kare (1:1 · Feed) veya yatay (16:9 · YouTube) format seçebilirsin. Video MP4 formatında indirilir.",
+  },
+  {
+    soru: "Sosyal medya içeriği hangi platformları kapsıyor?",
+    cevap:
+      "Instagram, TikTok, Facebook ve Twitter/X için ayrı caption + hashtag seti üretilir. Her platform için uygun ton ve karakter sayısı otomatik ayarlanır.",
+  },
+  {
+    soru: "Metin + görsel + video aynı anda üretebilir miyim?",
+    cevap:
+      "Her içerik türü ayrı üretilir ancak aynı ürün bilgisini kullanabilirsin. Önce listing metni, ardından görsel, video ve sosyal medya içeriğini sırayla üretebilirsin. Her biri kendi kredisini tüketir.",
   },
   {
     soru: "Paket satın almak için ne gerekiyor?",
@@ -214,7 +236,7 @@ export default function FiyatlarPage() {
           <span className="text-orange-500">abonelik yok</span>
         </h1>
         <p className="text-gray-500 text-base mb-6">
-          3 ücretsiz krediyle başla, beğenince istediğin paketi al. Krediler metin ve görsel üretimi arasında serbestçe kullanılır.
+          3 ücretsiz krediyle başla, beğenince istediğin paketi al. Krediler listing metni, görsel, video ve sosyal medya içeriği arasında serbestçe kullanılır.
         </p>
         <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 text-sm font-medium px-4 py-2 rounded-full border border-green-200">
           🎁 Yeni kayıtta 3 ücretsiz kredi · Kredi kartı gerekmez
@@ -297,11 +319,12 @@ export default function FiyatlarPage() {
               </thead>
               <tbody className="divide-y divide-orange-100">
                 {[
-                  { senaryo: "10 ürün için sadece listing metni", kredi: "10 kredi", paket: "Başlangıç (₺29)" },
-                  { senaryo: "10 ürün metin + her biri için 1 stil görsel", kredi: "20 kredi", paket: "Popüler (₺79)" },
-                  { senaryo: "30 ürün için sadece listing metni", kredi: "30 kredi", paket: "Popüler (₺79)" },
-                  { senaryo: "20 ürün metin + 2 stil görsel (her ürüne)", kredi: "60 kredi", paket: "Büyük (₺149)" },
-                  { senaryo: "100 ürün toplu listing metni", kredi: "100 kredi", paket: "Büyük (₺149)" },
+                  { senaryo: "10 ürün için listing metni", kredi: "10 kredi", paket: "Başlangıç (₺29)" },
+                  { senaryo: "5 ürün metin + 5 stil görsel", kredi: "10 kredi", paket: "Başlangıç (₺29)" },
+                  { senaryo: "2 adet 5sn ürün videosu", kredi: "10 kredi", paket: "Başlangıç (₺29)" },
+                  { senaryo: "20 ürün metin + 10 stil görsel", kredi: "30 kredi", paket: "Popüler (₺79)" },
+                  { senaryo: "30 ürün listing metni + 30 sosyal medya seti", kredi: "60 kredi", paket: "Büyük (₺149)" },
+                  { senaryo: "100 ürün listing metni (toplu)", kredi: "100 kredi", paket: "Büyük (₺149)" },
                 ].map((row, i) => (
                   <tr key={i} className="bg-white/60">
                     <td className="py-3 px-4 text-gray-700">{row.senaryo}</td>
@@ -333,12 +356,12 @@ export default function FiyatlarPage() {
       {/* CTA */}
       <section className="px-4 sm:px-6 py-14 bg-gray-50 border-t border-gray-100 text-center">
         <h2 className="text-2xl font-bold text-gray-900 mb-3">Hemen ücretsiz dene</h2>
-        <p className="text-gray-500 text-sm mb-6">3 kredi, kredi kartı yok. İstersen kayıt bile olmadan misafir olarak başla.</p>
+        <p className="text-gray-500 text-sm mb-6">3 kredi, kredi kartı yok. Hesap oluştur, hemen başla.</p>
         <a
-          href="/?anonim=1"
+          href="/auth?kayit=1"
           className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-orange-100"
         >
-          3 Ücretsiz Kredi ile Başla →
+          Ücretsiz Başla — 3 Kredi Hediye →
         </a>
       </section>
 
