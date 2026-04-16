@@ -1,4 +1,12 @@
-"use client";
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Teslimat ve İade — yzliste',
+  description: 'yzliste dijital hizmet teslimatı ve iade politikası. Satın alınan kredilerin iadesi hakkında bilgi.',
+  alternates: { canonical: 'https://www.yzliste.com/teslimat-iade' },
+  robots: { index: false, follow: false },
+}
+
 export default function TeslimatIadePage() {
   return (
     <main className="min-h-screen bg-gray-50 py-12 px-4">

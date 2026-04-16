@@ -1,4 +1,12 @@
-"use client";
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Mesafeli Satış Sözleşmesi — yzliste',
+  description: 'yzliste kredi paketleri için mesafeli satış sözleşmesi. 6502 sayılı TKHK kapsamında yasal metin.',
+  alternates: { canonical: 'https://www.yzliste.com/mesafeli-satis' },
+  robots: { index: false, follow: false },
+}
+
 export default function MesafeliSatisPage() {
   return (
     <main className="min-h-screen bg-gray-50 py-12 px-4">

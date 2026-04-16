@@ -1,4 +1,12 @@
-"use client";
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Hakkımızda — yzliste',
+  description: 'yzliste, Türk e-ticaret satıcıları için AI destekli listing metni ve görsel üretim platformudur. SIMOON PAZARLAMA VE DANISMANLIK LTD. ŞTİ. tarafından geliştirilmektedir.',
+  alternates: { canonical: 'https://www.yzliste.com/hakkimizda' },
+  robots: { index: true, follow: true },
+}
+
 export default function HakkimizdaPage() {
   return (
     <main className="min-h-screen bg-gray-50 py-12 px-4">
