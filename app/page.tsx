@@ -2,8 +2,11 @@
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
 import { PAKET_LISTESI } from "@/lib/paketler";
+import { useInvalidateCredits } from "@/lib/hooks/useCredits";
+import { analytics } from "@/lib/analytics";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
 type SosyalPlatform = "instagram_tiktok" | "facebook" | "twitter";
@@ -138,6 +141,8 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
     }
     setSeciliPaket(paketId);
     setYukleniyor(true);
+    const fiyatMap: Record<string, number> = { baslangic: 29, populer: 79, buyuk: 149 };
+    analytics.creditPurchaseStarted({ package_id: paketId, price: fiyatMap[paketId] ?? 0 });
     try {
       const res = await fetch("/api/odeme", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ paket: paketId, userId: kullanici.id, email: kullanici.email }) });
       const data = await res.json();
@@ -301,6 +306,7 @@ function FotoEkleAlani({ id, onChange, renk = "gray", metin = "Fotoğraf ekle", 
 
 export default function Home() {
   const router = useRouter();
+  const invalidateCredits = useInvalidateCredits();
 
   // Mobil menü
   const [mobileMenuAcik, setMobileMenuAcik] = useState(false);
@@ -478,8 +484,10 @@ export default function Home() {
     const anonim = user.is_anonymous ?? false;
     const { data: profil } = await supabase.from("profiles").select("email, kredi, is_admin, ton, marka_adi").eq("id", user.id).single();
     const { count } = await supabase.from("uretimler").select("*", { count: "exact", head: true }).eq("user_id", user.id);
-    if (profil) setKullanici({ id: user.id, email: profil.email ?? null, kredi: profil.kredi, toplam_kullanilan: count || 0, is_admin: profil.is_admin || false, anonim, ton: profil.ton ?? undefined, marka_adi: profil.marka_adi ?? undefined });
-    else if (anonim) {
+    if (profil) {
+      setKullanici({ id: user.id, email: profil.email ?? null, kredi: profil.kredi, toplam_kullanilan: count || 0, is_admin: profil.is_admin || false, anonim, ton: profil.ton ?? undefined, marka_adi: profil.marka_adi ?? undefined });
+      if (!anonim) analytics.identify(user.id, { email: profil.email ?? '', total_generations: count || 0 });
+    } else if (anonim) {
       await supabase.from("profiles").insert({ id: user.id, kredi: 3 });
       setKullanici({ id: user.id, email: null, kredi: 3, toplam_kullanilan: 0, is_admin: false, anonim: true });
     }
@@ -605,17 +613,20 @@ export default function Home() {
     setYukleniyor(true);
     setSonuc("");
     setYukleniyorMesaj(0);
+    analytics.generationStarted({ platform, type: 'metin' });
     mesajInterval.current = setInterval(() => setYukleniyorMesaj((prev) => (prev + 1) % yukleniyorMesajlari.length), 1800);
     try {
       const res = await fetch("/api/uret", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi, userId: kullanici.id, dil: platformDil, ton: kullanici.ton }) });
       const data = await res.json();
       if (mesajInterval.current) clearInterval(mesajInterval.current);
-      if (res.status === 402) { paketModalAc(); setYukleniyor(false); return; }
+      if (res.status === 402) { analytics.creditExhausted(); paketModalAc(); setYukleniyor(false); return; }
       setSonuc(data.icerik);
       if (kullanici.is_admin) setKullanici({ ...kullanici, toplam_kullanilan: kullanici.toplam_kullanilan + 1 });
       else setKullanici({ ...kullanici, kredi: kullanici.kredi - 1, toplam_kullanilan: kullanici.toplam_kullanilan + 1 });
+      analytics.generationCompleted({ platform, type: 'metin', credits_remaining: kullanici.kredi - 1 });
+      invalidateCredits();
       gecmisiYukle(kullanici.id);
-    } catch { if (mesajInterval.current) clearInterval(mesajInterval.current); setHata("İçerik üretilemedi. Lütfen tekrar deneyin."); }
+    } catch { if (mesajInterval.current) clearInterval(mesajInterval.current); analytics.generationFailed({ platform, type: 'metin', error: 'network' }); setHata("İçerik üretilemedi. Lütfen tekrar deneyin."); }
     setYukleniyor(false);
     setTimeout(() => document.getElementById("sonuc-alani")?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
   };
@@ -646,6 +657,7 @@ export default function Home() {
     // 1 kredi düş — 3 yeni indirme hakkı açılır
     await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: kullanici.id, action: "indir", stil: "unlock" }) });
     setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - 1) } : k);
+    invalidateCredits();
     indirmeHakiSifirla();
     setKrediOnayAcik(false);
     if (krediOnayIslem) { await krediOnayIslem(); setKrediOnayIslem(null); }
@@ -682,7 +694,7 @@ export default function Home() {
       const res = await fetch("/api/sosyal/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: resizedFoto, prompt: videoPrompt, userId: kullanici.id, sure: videoSure, format: videoFormat }) });
       const data = await res.json();
       if (res.status === 402) { paketModalAc(); setVideoYukleniyor(false); return; }
-      if (data.videoUrl) { setVideoUrl(data.videoUrl); if (!kullanici.is_admin) setKullanici({ ...kullanici, kredi: kullanici.kredi - videoKredi }); }
+      if (data.videoUrl) { setVideoUrl(data.videoUrl); if (!kullanici.is_admin) { setKullanici({ ...kullanici, kredi: kullanici.kredi - (data.kullanilanKredi ?? videoKredi) }); invalidateCredits(); } }
       else setHata("Video üretilemedi. Tekrar deneyin.");
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setVideoYukleniyor(false);
@@ -701,7 +713,7 @@ export default function Home() {
       const data = await res.json();
       if (data.caption) setSosyalCaption(data.caption);
       if (data.hashtag) setSosyalHashtag(data.hashtag);
-      if (!kullanici.is_admin) setKullanici(k => k ? { ...k, kredi: k.kredi - 1 } : k);
+      if (!kullanici.is_admin) { setKullanici({ ...kullanici, kredi: kullanici.kredi - 1 }); invalidateCredits(); }
     } catch { setHata("Paylaşım metni üretilemedi. Tekrar deneyin."); }
     setCaptionYukleniyor(false);
   };
@@ -734,14 +746,14 @@ export default function Home() {
         {/* Header */}
         <div className="mb-6">
           <div className="flex justify-between items-center gap-2">
-            <a href="/auth" className="flex-shrink-0">
+            <Link href="/auth" className="flex-shrink-0">
               <img src="/yzliste_logo.png" alt="yzliste" className="h-9" />
-            </a>
+            </Link>
             <nav className="hidden sm:flex items-center gap-0.5 text-sm text-gray-500 flex-1">
-              <a href="/auth" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</a>
-              <a href="/" className="px-3 py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">İçerik</a>
-              <a href="/fiyatlar" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
-              <a href="/blog" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
+              <Link href="/auth" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</Link>
+              <Link href="/" className="px-3 py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">İçerik</Link>
+              <Link href="/fiyatlar" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</Link>
+              <Link href="/blog" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</Link>
             </nav>
             <div className="flex items-center gap-2 flex-shrink-0">
               {kullanici ? (
@@ -754,7 +766,7 @@ export default function Home() {
                     : <span className="text-sm text-gray-400 hidden sm:block">{kullanici.email}</span>
                   }
                   {kullanici.is_admin && <a href="/admin" className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-lg font-medium">Admin</a>}
-                  {!kullanici.anonim && <a href="/profil" className="text-sm text-gray-400 hover:text-gray-600 hidden sm:block">Profil</a>}
+                  {!kullanici.anonim && <Link href="/profil" className="text-sm text-gray-400 hover:text-gray-600 hidden sm:block">Profil</Link>}
                   {!kullanici.anonim && <button onClick={cikisYap} className="text-sm text-gray-400 hover:text-gray-600 hidden sm:block">Çıkış</button>}
                 </>
               ) : (
@@ -1383,7 +1395,7 @@ export default function Home() {
                 </div>
                 <textarea value={videoPrompt} onChange={(e) => setVideoPrompt(e.target.value)} placeholder="örn: Ürün yavaşça dönsün, dramatik ışıklandırma, siyah arka plan" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
                 <p className="text-xs text-gray-400 mt-1">Boş bırakırsan marka bilgine göre otomatik oluşturulur — genellikle iyi sonuç verir</p>
-                <a href="/blog/ai-urun-videosu-hareket-secenekleri" className="inline-block mt-2 text-xs text-red-500 hover:text-red-700 hover:underline">Bu hareketler ne anlama gelir? Ürün kategorine göre hangisi uygun? →</a>
+                <Link href="/blog/ai-urun-videosu-hareket-secenekleri" className="inline-block mt-2 text-xs text-red-500 hover:text-red-700 hover:underline">Bu hareketler ne anlama gelir? Ürün kategorine göre hangisi uygun? →</Link>
               </div>
 
               <button onClick={videoUret} disabled={videoYukleniyor || fotolar.length === 0 || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 8 : 5))}

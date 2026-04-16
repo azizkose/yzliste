@@ -186,18 +186,18 @@ export default async function BlogYaziPage({
       <ArticleJsonLd yazi={yazi} />
 
       {/* HEADER */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-2.5">
-        <div className="max-w-6xl mx-auto flex items-center gap-2">
-          <a href="/" className="flex-shrink-0 mr-1">
-            <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
-          </a>
-          <nav className="flex items-center gap-0.5 text-xs sm:text-sm text-gray-500">
-            <a href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
-            <a href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Blog</a>
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-3">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
+          <Link href="/auth" className="flex-shrink-0">
+            <Image src="/yzliste_logo.png" alt="yzliste" width={32} height={32} className="h-8 w-auto" priority />
+          </Link>
+          <nav className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 flex-1 justify-center sm:flex-none sm:justify-start">
+            <Link href="/fiyatlar" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</Link>
+            <Link href="/blog" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 text-orange-600 font-medium whitespace-nowrap">Blog</Link>
           </nav>
-          <div className="flex gap-1 sm:gap-2 ml-auto items-center">
-            <a href="/auth" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</a>
-            <a href="/auth" className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla</a>
+          <div className="flex gap-1 sm:gap-2 flex-shrink-0">
+            <Link href="/auth" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</Link>
+            <Link href="/auth" className="text-xs sm:text-sm bg-orange-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla</Link>
           </div>
         </div>
       </header>
@@ -205,9 +205,9 @@ export default async function BlogYaziPage({
       {/* BREADCRUMB */}
       <div className="px-4 sm:px-6 py-4 max-w-3xl mx-auto">
         <nav aria-label="Breadcrumb" className="text-xs text-gray-400 flex items-center gap-1.5">
-          <a href="/" className="hover:text-orange-500">Ana Sayfa</a>
+          <Link href="/" className="hover:text-orange-500">Ana Sayfa</Link>
           <span>›</span>
-          <a href="/blog" className="hover:text-orange-500">Blog</a>
+          <Link href="/blog" className="hover:text-orange-500">Blog</Link>
           <span>›</span>
           <span className="text-gray-600 truncate max-w-[200px]">{yazi.baslik}</span>
         </nav>

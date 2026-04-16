@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -90,11 +91,7 @@ export default function ProfilPage() {
   const [hedefKitle, setHedefKitle] = useState("");
   const [vurgulananlalar, setVurgulananlar] = useState("");
 
-  useEffect(() => {
-    yukle();
-  }, []);
-
-  const yukle = async () => {
+  const yukle = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push("/auth"); return; }
     setUserId(user.id);
@@ -128,7 +125,12 @@ export default function ProfilPage() {
     // Üretimleri de yükle
     await uretimYukle(user.id, 0);
     setYukleniyor(false);
-  };
+  }, [router]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    yukle();
+  }, [yukle]);
 
   const uretimYukle = async (uid: string, sayfa: number) => {
     setUretimYukleniyor(true);
@@ -214,9 +216,9 @@ export default function ProfilPage() {
               <div className="text-xl font-bold text-gray-700">{profil?.toplam_kullanilan ?? 0}</div>
               <div className="text-xs text-gray-500">Toplam üretim</div>
             </div>
-            <a href="/?paket=ac" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl whitespace-nowrap transition-colors">
+            <Link href="/?paket=ac" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl whitespace-nowrap transition-colors">
               + Kredi Al
-            </a>
+            </Link>
           </div>
         </div>
 

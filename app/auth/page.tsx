@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
 import { PAKET_LISTESI, MIN_FIYAT } from "@/lib/paketler";
 
@@ -290,7 +291,7 @@ export default function AuthPage() {
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input type="checkbox" checked={modalSozlesme} onChange={(e) => setModalSozlesme(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0" />
                     <span className="text-xs text-gray-500 leading-relaxed">
-                      <a href="/gizlilik" target="_blank" className="text-orange-500 hover:underline">Gizlilik Politikası</a> ve <a href="/mesafeli-satis" target="_blank" className="text-orange-500 hover:underline">Mesafeli Satış Sözleşmesi</a>'ni okudum.
+                      <a href="/gizlilik" target="_blank" className="text-orange-500 hover:underline">Gizlilik Politikası</a> ve <a href="/mesafeli-satis" target="_blank" className="text-orange-500 hover:underline">Mesafeli Satış Sözleşmesi</a>&apos;ni okudum.
                     </span>
                   </label>
                 )}
@@ -324,20 +325,20 @@ export default function AuthPage() {
       )}
 
       {/* HEADER */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-2">
-          <a href="/auth" className="flex-shrink-0 mr-1"><img src="/yzliste_logo.png" alt="yzliste" className="h-8" /></a>
-          <nav className="hidden sm:flex items-center gap-0.5 text-xs sm:text-sm text-gray-500 flex-1">
-            <a href="/auth" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Ana Sayfa</a>
-            <a href="/" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</a>
-            <a href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
-            <a href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-2.5">
+        <div className="max-w-6xl mx-auto flex items-center gap-2">
+          <Link href="/auth" className="flex-shrink-0 mr-1"><img src="/yzliste_logo.png" alt="yzliste" className="h-8" /></Link>
+          <nav className="flex items-center gap-0.5 text-xs sm:text-sm text-gray-500">
+            <Link href="/auth" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Ana Sayfa</Link>
+            <Link href="/" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</Link>
+            <Link href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</Link>
+            <Link href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</Link>
           </nav>
           <div className="flex gap-1 sm:gap-2 ml-auto items-center">
             {oturum && !anonimKullanici ? (
               <>
-                <a href="/profil" className="hidden sm:block text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Profil</a>
-                <a href="/" className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">İçerik Üret →</a>
+                <Link href="/profil" className="hidden sm:block text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Profil</Link>
+                <Link href="/" className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">İçerik Üret →</Link>
               </>
             ) : (
               <>
@@ -711,7 +712,61 @@ export default function AuthPage() {
               ))}
             </ul>
           </div>
-
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+              <div className="bg-blue-50 px-5 pt-6 pb-4">
+                <div className="text-2xl mb-2">📝</div>
+                <h3 className="font-bold text-gray-800">Sadece Listing Metni</h3>
+                <p className="text-xs text-gray-500 mt-1">1 kredi</p>
+              </div>
+              <div className="p-5 flex-1">
+                <p className="text-sm text-gray-600 leading-relaxed mb-3">Platforma özel optimize başlık, madde madde özellikler, satışa dönen açıklama ve arama etiketleri.</p>
+                <ul className="space-y-1.5">
+                  {["Manuel metin girişi", "Fotoğraftan otomatik analiz", "Barkod ile ürün tanıma"].map(f => (
+                    <li key={f} className="flex items-center gap-2 text-xs text-gray-500">
+                      <span className="w-4 h-4 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[10px]">✓</span>{f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+              <div className="bg-purple-50 px-5 pt-6 pb-4">
+                <div className="text-2xl mb-2">📷</div>
+                <h3 className="font-bold text-gray-800">Sadece Görsel</h3>
+                <p className="text-xs text-gray-500 mt-1">Stil başına 1 kredi · Her stilden 4 varyasyon</p>
+              </div>
+              <div className="p-5 flex-1">
+                <p className="text-sm text-gray-600 leading-relaxed mb-3">Tek fotoğraftan 3 farklı stüdyo görseli — her stilden 4 varyasyon. 1 stil → 4 görsel → 1 kredi. İnceleme ücretsiz, indirince kredi düşer.</p>
+                <div className="grid grid-cols-3 gap-1.5 mb-3">
+                  {[{ src: "/ornek_beyaz.jpg", label: "Beyaz" }, { src: "/ornek_koyu.jpg", label: "Koyu" }, { src: "/ornek_lifestyle.jpg", label: "Lifestyle" }].map(s => (
+                    <div key={s.label} className="rounded-lg overflow-hidden">
+                      <img src={s.src} alt={s.label} className="w-full aspect-square object-cover rounded-lg" />
+                      <p className="text-[9px] text-center text-gray-500 mt-0.5">{s.label}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-400">İnceleme ücretsiz · İndirince 1 kredi · 1 stil = 4 görsel</p>
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl border-2 border-orange-200 shadow-sm overflow-hidden flex flex-col">
+              <div className="bg-orange-50 px-5 pt-6 pb-4">
+                <div className="text-2xl mb-2">✨</div>
+                <h3 className="font-bold text-gray-800">Metin + Görsel</h3>
+                <p className="text-xs text-gray-500 mt-1">Ayrı ayrı kredi</p>
+              </div>
+              <div className="p-5 flex-1">
+                <p className="text-sm text-gray-600 leading-relaxed mb-3">Trendyol ve Hepsiburada&apos;da hem metin hem görsel zorunlu. İkisini aynı anda üret.</p>
+                <div className="space-y-2">
+                  {["Optimize listing metni", "4 stüdyo görseli — beğendiğini indir", "Platforma hazır, düzenleme gerektirmez"].map((t, i) => (
+                    <div key={i} className="flex items-start gap-2 text-xs text-gray-600">
+                      <span className="w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">{i + 1}</span>{t}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="mt-8 text-center">
             <button onClick={hemenAlTikla} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-orange-100">
               Paket Satın Al — {MIN_FIYAT}₺&apos;den başlıyor
@@ -860,7 +915,7 @@ export default function AuthPage() {
                     <span key={j} className="text-orange-400 text-sm">★</span>
                   ))}
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed mb-4">"{y.yorum}"</p>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">&quot;{y.yorum}&quot;</p>
                 <div>
                   <p className="text-xs font-semibold text-gray-800">{y.isim}</p>
                   <p className="text-xs text-gray-400">{y.magaza}</p>

@@ -1,11 +1,21 @@
-"use client";
-import SiteHeader from "@/components/SiteHeader";
+import type { Metadata } from 'next'
+import Link from 'next/link'
 import SiteFooter from "@/components/SiteFooter";
+
+export const metadata: Metadata = {
+  title: 'Mesafeli Satış Sözleşmesi — yzliste',
+  description: 'yzliste kredi paketleri için mesafeli satış sözleşmesi. 6502 sayılı TKHK kapsamında yasal metin.',
+  alternates: { canonical: 'https://www.yzliste.com/mesafeli-satis' },
+  robots: { index: false, follow: false },
+}
+
 export default function MesafeliSatisPage() {
   return (
-    <main className="min-h-screen bg-gray-50">
-      <SiteHeader />
-      <div className="max-w-3xl mx-auto py-12 px-4">
+    <main className="min-h-screen bg-gray-50 py-12 px-4">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-8">
+          <Link href="/" className="text-sm text-gray-400 hover:text-orange-500">← Ana Sayfa</Link>
+        </div>
         <div className="bg-white rounded-2xl shadow p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Mesafeli Satış Sözleşmesi</h1>
           <p className="text-xs text-gray-400 mb-6">Son güncelleme: Nisan 2026</p>
@@ -65,7 +75,7 @@ export default function MesafeliSatisPage() {
             <div>
               <h2 className="text-base font-semibold text-gray-800 mb-2">6. Cayma Hakkı</h2>
               <p>
-                6502 sayılı Tüketicinin Korunması Hakkında Kanun'un 49. maddesi ve Mesafeli
+                6502 sayılı Tüketicinin Korunması Hakkında Kanun&apos;un 49. maddesi ve Mesafeli
                 Sözleşmeler Yönetmeliği uyarınca; dijital içerik ve hizmetler, tüketicinin
                 onayıyla ifaya başlandığı andan itibaren cayma hakkı kapsamı dışında tutulabilir.
               </p>

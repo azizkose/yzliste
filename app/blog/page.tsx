@@ -85,7 +85,7 @@ export default async function BlogPage() {
           <span className="text-orange-500">pratik rehberler</span>
         </h1>
         <p className="text-gray-500 text-base">
-          Trendyol, Hepsiburada, Amazon ve Etsy'de listing yazma, AI görsel kullanımı ve platform stratejileri.
+          Trendyol, Hepsiburada, Amazon ve Etsy&apos;de listing yazma, AI görsel kullanımı ve platform stratejileri.
         </p>
       </section>
 
@@ -168,12 +168,12 @@ export default async function BlogPage() {
       <section className="px-4 sm:px-6 py-14 bg-orange-50 border-y border-orange-100 text-center">
         <h2 className="text-xl font-bold text-gray-800 mb-3">Okuduktan sonra dene</h2>
         <p className="text-sm text-gray-500 mb-6">3 ücretsiz kredi ile listing ve görsel üret. Kayıt bile olmadan misafir olarak başla.</p>
-        <a
+        <Link
           href="/?anonim=1"
           className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-orange-100"
         >
           3 Ücretsiz Kredi ile Başla →
-        </a>
+        </Link>
       </section>
 
       {/* FOOTER */}

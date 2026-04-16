@@ -1,11 +1,21 @@
-"use client";
-import SiteHeader from "@/components/SiteHeader";
+import type { Metadata } from 'next'
+import Link from 'next/link'
 import SiteFooter from "@/components/SiteFooter";
+
+export const metadata: Metadata = {
+  title: 'Teslimat ve İade — yzliste',
+  description: 'yzliste dijital hizmet teslimatı ve iade politikası. Satın alınan kredilerin iadesi hakkında bilgi.',
+  alternates: { canonical: 'https://www.yzliste.com/teslimat-iade' },
+  robots: { index: false, follow: false },
+}
+
 export default function TeslimatIadePage() {
   return (
-    <main className="min-h-screen bg-gray-50">
-      <SiteHeader />
-      <div className="max-w-3xl mx-auto py-12 px-4">
+    <main className="min-h-screen bg-gray-50 py-12 px-4">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-8">
+          <Link href="/" className="text-sm text-gray-400 hover:text-orange-500">← Ana Sayfa</Link>
+        </div>
         <div className="bg-white rounded-2xl shadow p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Teslimat ve İade Şartları</h1>
           <div className="space-y-6 text-gray-600 text-sm leading-relaxed">
@@ -29,7 +39,7 @@ export default function TeslimatIadePage() {
               <p>
                 Dijital hizmet niteliğinde olan kullanım hakları, teslim edildiği andan
                 itibaren kullanılabilir durumdadır. Bu nedenle, 6502 sayılı Tüketicinin
-                Korunması Hakkında Kanun'un 49. maddesi uyarınca dijital içerik ve
+                Korunması Hakkında Kanun&apos;un 49. maddesi uyarınca dijital içerik ve
                 hizmetlerde cayma hakkı kullanılamaz.
               </p>
               <p className="mt-2">
