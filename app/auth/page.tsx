@@ -39,19 +39,6 @@ export default function AuthPage() {
       setOturum(!!user);
       const anonim = user?.is_anonymous ?? false;
       setAnonimKullanici(anonim);
-      // ?kayit=1 ile gelindi — modal'ı kayıt modunda aç
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("kayit") === "1") {
-        setModalUyeMod("kayit");
-        setModalMod("uye");
-        setModalAmac("auth");
-        setModalAcik(true);
-      } else if (params.get("giris") === "1") {
-        setModalUyeMod("giris");
-        setModalMod("uye");
-        setModalAmac("auth");
-        setModalAcik(true);
-      }
     });
   }, []);
 
@@ -342,8 +329,8 @@ export default function AuthPage() {
               </>
             ) : (
               <>
-                <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); }} className="hidden sm:block text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</button>
-                <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla →</button>
+                <Link href="/giris" className="hidden sm:block text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</Link>
+                <Link href="/kayit" className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla →</Link>
               </>
             )}
             {/* Mobil hamburger */}
@@ -373,8 +360,8 @@ export default function AuthPage() {
                   </>
                 ) : (
                   <>
-                    <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); setMenuAcik(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Giriş Yap</button>
-                    <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); setMenuAcik(false); }} className="block w-full text-center px-3 py-2 rounded-lg text-sm font-medium bg-orange-500 text-white hover:bg-orange-600 transition-colors">Ücretsiz Başla →</button>
+                    <Link href="/giris" onClick={() => setMenuAcik(false)} className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Giriş Yap</Link>
+                    <Link href="/kayit" onClick={() => setMenuAcik(false)} className="block w-full text-center px-3 py-2 rounded-lg text-sm font-medium bg-orange-500 text-white hover:bg-orange-600 transition-colors">Ücretsiz Başla →</Link>
                   </>
                 )}
               </div>
@@ -413,9 +400,9 @@ export default function AuthPage() {
           ))}
         </div>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
+          <Link href="/kayit" className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
             Ücretsiz Başla — 3 Kredi Hediye →
-          </button>
+          </Link>
           <button onClick={() => document.getElementById("nasil-calisir")?.scrollIntoView({ behavior: "smooth" })} className="text-gray-500 hover:text-gray-700 font-medium px-8 py-4 rounded-xl text-base transition-colors border border-gray-200 hover:border-gray-300">
             Nasıl çalışır?
           </button>
@@ -924,9 +911,9 @@ export default function AuthPage() {
             ))}
           </div>
           <div className="mt-10 text-center">
-            <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
+            <Link href="/kayit" className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
               Ücretsiz Hesap Oluştur →
-            </button>
+            </Link>
             <p className="text-xs text-gray-400 mt-3">Ücretsiz kayıt · Kredi kartı gerekmez</p>
           </div>
         </div>

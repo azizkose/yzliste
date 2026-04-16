@@ -9,7 +9,7 @@ import { useInvalidateCredits } from "@/lib/hooks/useCredits";
 import { analytics } from "@/lib/analytics";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
-type SosyalPlatform = "instagram_tiktok" | "facebook" | "twitter";
+type SosyalPlatform = "instagram" | "tiktok" | "facebook" | "twitter";
 type SosyalTon = "tanitim" | "indirim" | "hikaye";
 
 type Uretim = {
@@ -370,7 +370,7 @@ export default function Home() {
   const [sosyalFoto, setSosyalFoto] = useState<string | null>(null);
   const [sosyalUrunAdi, setSosyalUrunAdi] = useState("");
   const [sosyalEkBilgi, setSosyalEkBilgi] = useState("");
-  const [sosyalPlatform, setSosyalPlatform] = useState<SosyalPlatform>("instagram_tiktok");
+  const [sosyalPlatform, setSosyalPlatform] = useState<SosyalPlatform>("instagram");
   const [sosyalTon, setSosyalTon] = useState<SosyalTon>("tanitim");
   const [captionYukleniyor, setCaptionYukleniyor] = useState(false);
   const [sosyalCaption, setSosyalCaption] = useState("");
@@ -762,7 +762,7 @@ export default function Home() {
                     {kullanici.is_admin ? "∞" : kullanici.kredi} kredi
                   </button>
                   {kullanici.anonim
-                    ? <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-xs bg-orange-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-orange-600 transition-colors">Hesap Oluştur</button>
+                    ? <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-xs bg-orange-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-orange-600 transition-colors">Ücretsiz Başla</button>
                     : <span className="text-sm text-gray-400 hidden sm:block">{kullanici.email}</span>
                   }
                   {kullanici.is_admin && <a href="/admin" className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-lg font-medium">Admin</a>}
@@ -822,7 +822,7 @@ export default function Home() {
               </div>
             </div>
             <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap transition-colors flex-shrink-0">
-              Hesap Oluştur
+              Ücretsiz Başla
             </button>
           </div>
         )}
@@ -1186,7 +1186,7 @@ export default function Home() {
 
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1">Görsel yönlendirmesi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="Sahneyi İngilizce tanımla — örn: on a marble table with soft window light, surrounded by green plants / wooden rustic shelf with warm candle light / pastel pink gradient background, floating soap bubbles" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
+                <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="Sahneyi tanımla — örn: mermer masa üzerinde yumuşak pencere ışığı, yeşil bitkilerle / rustik ahşap raf, sıcak mum ışığı / pastel pembe gradyan arka plan, uçuşan balonlar" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
               </div>
 
               {seciliStiller.includes("referans") && (
@@ -1461,9 +1461,10 @@ export default function Home() {
                 {/* Platform seçimi */}
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-2">Platform</label>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     {([
-                      { id: "instagram_tiktok", label: "📸 Instagram & TikTok" },
+                      { id: "instagram", label: "📸 Instagram" },
+                      { id: "tiktok", label: "🎵 TikTok" },
                       { id: "facebook", label: "👥 Facebook" },
                       { id: "twitter", label: "🐦 Twitter/X" },
                     ] as { id: SosyalPlatform; label: string }[]).map((p) => (
@@ -1477,13 +1478,13 @@ export default function Home() {
                   {/* Platform boyut rehberi */}
                   {sosyalIcerikTipi === "gorsel" && (
                     <div className={`mt-2 rounded-xl border p-3 text-xs space-y-1 ${
-                      sosyalPlatform === "instagram_tiktok" ? "bg-pink-50 border-pink-200" :
+                      (sosyalPlatform === "instagram" || sosyalPlatform === "tiktok") ? "bg-pink-50 border-pink-200" :
                       sosyalPlatform === "facebook" ? "bg-blue-50 border-blue-200" :
                       "bg-sky-50 border-sky-200"
                     }`}>
                       <p className="font-semibold text-gray-700">📐 Önerilen Boyutlar</p>
-                      {sosyalPlatform === "instagram_tiktok" && (
-                        <div className="grid grid-cols-3 gap-2 text-gray-600 mt-1">
+                      {sosyalPlatform === "instagram" && (
+                        <div className="grid grid-cols-2 gap-2 text-gray-600 mt-1">
                           <div className="bg-white rounded-lg p-2 text-center border border-pink-100">
                             <p className="font-bold text-pink-600">1:1</p>
                             <p>Feed Post</p>
@@ -1494,10 +1495,19 @@ export default function Home() {
                             <p>Story / Reels</p>
                             <p className="text-gray-400">1080×1920</p>
                           </div>
+                        </div>
+                      )}
+                      {sosyalPlatform === "tiktok" && (
+                        <div className="grid grid-cols-2 gap-2 text-gray-600 mt-1">
                           <div className="bg-white rounded-lg p-2 text-center border border-pink-100">
-                            <p className="font-bold text-pink-600">16:9</p>
-                            <p>TikTok</p>
-                            <p className="text-gray-400">1920×1080</p>
+                            <p className="font-bold text-pink-600">9:16</p>
+                            <p>Dikey Video</p>
+                            <p className="text-gray-400">1080×1920</p>
+                          </div>
+                          <div className="bg-white rounded-lg p-2 text-center border border-pink-100">
+                            <p className="font-bold text-pink-600">1:1</p>
+                            <p>Kare</p>
+                            <p className="text-gray-400">1080×1080</p>
                           </div>
                         </div>
                       )}

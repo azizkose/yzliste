@@ -67,13 +67,13 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
           ) : (
             <>
               <a
-                href="/auth?giris=1"
+                href="/giris"
                 className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
               >
                 Giriş Yap
               </a>
               <a
-                href="/auth?kayit=1"
+                href="/kayit"
                 className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap"
               >
                 Ücretsiz Başla
@@ -111,7 +111,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
             ))}
             <div className="border-t border-gray-100 pt-2 mt-2">
               <a
-                href="/auth?kayit=1"
+                href="/kayit"
                 className="block px-3 py-2 rounded-lg text-sm font-medium bg-orange-500 text-white text-center hover:bg-orange-600 transition-colors"
               >
                 Ücretsiz Başla

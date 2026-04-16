@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getYazilar, yaziGetir, type BlogYazisi, type BlogBolum } from "../icerikler";
+import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
 export const revalidate = 3600; // 1 saat ISR cache
@@ -93,13 +93,31 @@ function ArticleJsonLd({ yazi }: { yazi: BlogYazisi }) {
   );
 }
 
+// "yzliste" metnini / linkine çevirir
+function MetinLink({ text }: { text: string }) {
+  const parts = text.split(/(yzliste)/gi);
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === "yzliste" ? (
+          <Link key={i} href="/" className="text-orange-500 hover:underline font-medium">
+            yzliste
+          </Link>
+        ) : (
+          part
+        )
+      )}
+    </>
+  );
+}
+
 // İçerik bölümü render'ı
 function Bolum({ bolum }: { bolum: BlogBolum }) {
   switch (bolum.tip) {
     case "giris":
       return (
         <p className="text-base text-gray-600 leading-relaxed font-medium border-l-4 border-orange-300 pl-4 italic">
-          {bolum.metin}
+          <MetinLink text={bolum.metin ?? ""} />
         </p>
       );
     case "baslik":
@@ -107,13 +125,13 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
         <div className="mt-8 pt-4 border-t border-gray-100">
           <h2 className="text-xl font-bold text-gray-800 mb-3">{bolum.baslik}</h2>
           {bolum.metin && (
-            <p className="text-sm text-gray-600 leading-relaxed">{bolum.metin}</p>
+            <p className="text-sm text-gray-600 leading-relaxed"><MetinLink text={bolum.metin} /></p>
           )}
         </div>
       );
     case "paragraf":
       return (
-        <p className="text-sm text-gray-600 leading-relaxed">{bolum.metin}</p>
+        <p className="text-sm text-gray-600 leading-relaxed"><MetinLink text={bolum.metin ?? ""} /></p>
       );
     case "liste":
       return (
@@ -123,7 +141,7 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
               <span className="w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">
                 {i + 1}
               </span>
-              {madde}
+              <MetinLink text={madde} />
             </li>
           ))}
         </ul>
@@ -131,14 +149,14 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
     case "bilgi-kutusu":
       return (
         <div className="bg-orange-50 border border-orange-200 rounded-2xl p-5 my-4">
-          <p className="text-sm text-orange-800 leading-relaxed">{bolum.metin}</p>
+          <p className="text-sm text-orange-800 leading-relaxed"><MetinLink text={bolum.metin ?? ""} /></p>
         </div>
       );
     case "sonuc":
       return (
         <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 my-4">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Sonuç</p>
-          <p className="text-sm text-gray-700 leading-relaxed">{bolum.metin}</p>
+          <p className="text-sm text-gray-700 leading-relaxed"><MetinLink text={bolum.metin ?? ""} /></p>
         </div>
       );
     case "video-grid":
@@ -185,22 +203,7 @@ export default async function BlogYaziPage({
     <main className="min-h-screen bg-white font-sans">
       <ArticleJsonLd yazi={yazi} />
 
-      {/* HEADER */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-3">
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
-          <Link href="/auth" className="flex-shrink-0">
-            <Image src="/yzliste_logo.png" alt="yzliste" width={32} height={32} className="h-8 w-auto" priority />
-          </Link>
-          <nav className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 flex-1 justify-center sm:flex-none sm:justify-start">
-            <Link href="/fiyatlar" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</Link>
-            <Link href="/blog" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 text-orange-600 font-medium whitespace-nowrap">Blog</Link>
-          </nav>
-          <div className="flex gap-1 sm:gap-2 flex-shrink-0">
-            <Link href="/auth" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2 sm:px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</Link>
-            <Link href="/auth" className="text-xs sm:text-sm bg-orange-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla</Link>
-          </div>
-        </div>
-      </header>
+      <SiteHeader aktifSayfa="blog" />
 
       {/* BREADCRUMB */}
       <div className="px-4 sm:px-6 py-4 max-w-3xl mx-auto">

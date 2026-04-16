@@ -10,13 +10,21 @@ const PLATFORM_KURALLAR: Record<string, {
   format: string;
   ekKurallar: string;
 }> = {
-  instagram_tiktok: {
-    adi: "Instagram ve TikTok",
-    uzunluk: "Instagram için 150-220 kelime. İlk 125 karakter özellikle önemli — 'daha fazla' katlanmadan önce görünen kısım bu.",
+  instagram: {
+    adi: "Instagram",
+    uzunluk: "150-220 kelime. İlk 125 karakter çok önemli — 'daha fazla' katlanmadan önce görünen kısım bu.",
     hashtagSayisi: "7-10 hashtag",
-    hashtagStrateji: "Karışım: 2-3 yüksek hacimli (#moda, #alisveris), 3-4 orta niş (#turkishfashion, #trendyolda), 2-3 çok spesifik (#yazlikelbise2025). Her birini yeni satıra değil, bitişik yaz.",
+    hashtagStrateji: "Karışım: 2-3 yüksek hacimli (#moda, #alisveris), 3-4 orta niş (#turkishfashion, #trendyolda), 2-3 çok spesifik (#yazlikelbise2025). Bitişik yaz, her biri yeni satıra değil.",
     format: "Hook cümlesi (soru veya güçlü iddia) → Ürün faydaları → Duygusal bağ → CTA",
-    ekKurallar: "İlk cümle dikkat çekici olmalı. TikTok'ta kısa enerjik cümleler tercih edilir — uzun paragraflardan kaçın.",
+    ekKurallar: "İlk cümle dikkat çekici olmalı. Görseli tamamlar metin yaz, görsel ile aynı şeyi tekrarlama.",
+  },
+  tiktok: {
+    adi: "TikTok",
+    uzunluk: "80-120 kelime. Kısa, enerjik ve hızlı okunabilir olmalı.",
+    hashtagSayisi: "5-7 hashtag",
+    hashtagStrateji: "TikTok'ta trend ve niş tagları karıştır: 2-3 trend (#fyp, #kesfet, #viral), 3-4 ürün/kategori (#moda, #alışveriş). Kısa taglar tercih edilir.",
+    format: "Dikkat çekici ilk cümle → Ürün özelliği/faydası → Kıtlık/merak ögesi → CTA",
+    ekKurallar: "Kısa cümleler ve paragraflar. Konuşma dili. Trend bir soru veya challenge ile bitirebilirsin.",
   },
   facebook: {
     adi: "Facebook",
@@ -63,7 +71,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "Yetersiz kredi" }, { status: 402 });
   }
 
-  const kural = PLATFORM_KURALLAR[platform] ?? PLATFORM_KURALLAR.instagram_tiktok;
+  const kural = PLATFORM_KURALLAR[platform] ?? PLATFORM_KURALLAR.instagram;
 
   const tonAciklama =
     ton === "tanitim"

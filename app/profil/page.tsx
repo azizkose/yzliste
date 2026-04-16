@@ -91,6 +91,17 @@ export default function ProfilPage() {
   const [hedefKitle, setHedefKitle] = useState("");
   const [vurgulananlalar, setVurgulananlar] = useState("");
 
+  // Şifre değiştirme
+  const [yeniSifre, setYeniSifre] = useState("");
+  const [yeniSifreTekrar, setYeniSifreTekrar] = useState("");
+  const [sifreDegistiriliyor, setSifreDegistiriliyor] = useState(false);
+  const [sifreMesaj, setSifreMesaj] = useState("");
+
+  // Hesap silme
+  const [silmeOnayMetni, setSilmeOnayMetni] = useState("");
+  const [siliniyor, setSiliniyor] = useState(false);
+  const [silmeMesaj, setSilmeMesaj] = useState("");
+
   const yukle = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push("/auth"); return; }
@@ -183,6 +194,31 @@ export default function ProfilPage() {
       setTimeout(() => setMesaj(""), 3000);
     }
     setKaydediliyor(false);
+  };
+
+  const sifreDegistir = async () => {
+    if (!yeniSifre) { setSifreMesaj("Yeni şifre girin."); return; }
+    if (yeniSifre.length < 6) { setSifreMesaj("Şifre en az 6 karakter olmalı."); return; }
+    if (yeniSifre !== yeniSifreTekrar) { setSifreMesaj("Şifreler eşleşmiyor."); return; }
+    setSifreDegistiriliyor(true); setSifreMesaj("");
+    const { error } = await supabase.auth.updateUser({ password: yeniSifre });
+    if (error) setSifreMesaj("Şifre değiştirilemedi: " + error.message);
+    else { setSifreMesaj("Şifre başarıyla değiştirildi."); setYeniSifre(""); setYeniSifreTekrar(""); }
+    setSifreDegistiriliyor(false);
+  };
+
+  const hesapSil = async () => {
+    if (silmeOnayMetni !== "SİL") { setSilmeMesaj("Onay için 'SİL' yazın."); return; }
+    setSiliniyor(true); setSilmeMesaj("");
+    const res = await fetch("/api/hesap-sil", { method: "DELETE" });
+    if (res.ok) {
+      await supabase.auth.signOut();
+      router.push("/auth");
+    } else {
+      const data = await res.json();
+      setSilmeMesaj(data.hata || "Hesap silinemedi.");
+      setSiliniyor(false);
+    }
   };
 
   if (yukleniyor) {
@@ -410,6 +446,48 @@ export default function ProfilPage() {
               )}
             </div>
           )}
+        </div>
+
+        {/* Hesap Güvenliği */}
+        <div className="bg-white rounded-2xl shadow p-6 space-y-6">
+          <h2 className="text-base font-semibold text-gray-800">Hesap Güvenliği</h2>
+
+          {/* Şifre Değiştir */}
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-gray-700">Şifre Değiştir</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <input type="password" value={yeniSifre} onChange={(e) => setYeniSifre(e.target.value)}
+                placeholder="Yeni şifre (min. 6 karakter)"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+              <input type="password" value={yeniSifreTekrar} onChange={(e) => setYeniSifreTekrar(e.target.value)}
+                placeholder="Yeni şifre tekrar"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+            </div>
+            {sifreMesaj && (
+              <p className={`text-xs ${sifreMesaj.includes("başarı") ? "text-green-600" : "text-red-500"}`}>{sifreMesaj}</p>
+            )}
+            <button onClick={sifreDegistir} disabled={sifreDegistiriliyor}
+              className="bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+              {sifreDegistiriliyor ? "Değiştiriliyor..." : "Şifreyi Değiştir"}
+            </button>
+          </div>
+
+          {/* Hesap Sil */}
+          <div className="border-t border-red-100 pt-5 space-y-3">
+            <p className="text-sm font-medium text-red-700">Hesabı Sil</p>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              Hesabınız ve tüm üretimleriniz kalıcı olarak silinir. Bu işlem geri alınamaz.
+              Onaylamak için aşağıya <strong>SİL</strong> yazın.
+            </p>
+            <input type="text" value={silmeOnayMetni} onChange={(e) => setSilmeOnayMetni(e.target.value)}
+              placeholder="SİL"
+              className="w-full sm:w-48 border border-red-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+            {silmeMesaj && <p className="text-xs text-red-500">{silmeMesaj}</p>}
+            <button onClick={hesapSil} disabled={siliniyor || silmeOnayMetni !== "SİL"}
+              className="bg-red-500 hover:bg-red-600 disabled:bg-gray-200 disabled:text-gray-400 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+              {siliniyor ? "Siliniyor..." : "Hesabı Kalıcı Olarak Sil"}
+            </button>
+          </div>
         </div>
 
       </div>
