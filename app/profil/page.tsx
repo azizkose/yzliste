@@ -73,6 +73,8 @@ export default function ProfilPage() {
 
   const router = useRouter();
 
+  const [profilSekme, setProfilSekme] = useState<"marka" | "uretimler">("marka");
+
   // Kisisel bilgi alanlari
   const [adSoyad, setAdSoyad] = useState("");
   const [telefon, setTelefon] = useState("");
@@ -188,8 +190,6 @@ export default function ProfilPage() {
       </div>
     );
   }
-
-  const [profilSekme, setProfilSekme] = useState<"marka" | "uretimler">("marka");
 
   return (
     <main className="min-h-screen bg-gray-50">
