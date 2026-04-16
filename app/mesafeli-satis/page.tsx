@@ -1,11 +1,11 @@
 "use client";
+import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
 export default function MesafeliSatisPage() {
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-3xl mx-auto">
-        <div className="mb-8">
-          <a href="/" className="text-sm text-gray-400 hover:text-orange-500">← Ana Sayfa</a>
-        </div>
+    <main className="min-h-screen bg-gray-50">
+      <SiteHeader />
+      <div className="max-w-3xl mx-auto py-12 px-4">
         <div className="bg-white rounded-2xl shadow p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Mesafeli Satış Sözleşmesi</h1>
           <p className="text-xs text-gray-400 mb-6">Son güncelleme: Nisan 2026</p>
@@ -98,6 +98,7 @@ export default function MesafeliSatisPage() {
           </div>
         </div>
       </div>
+      <SiteFooter />
     </main>
   );
 }

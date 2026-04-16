@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getYazilar, yaziGetir, type BlogYazisi, type BlogBolum } from "../icerikler";
+import SiteFooter from "@/components/SiteFooter";
 
 export const revalidate = 3600; // 1 saat ISR cache
 
@@ -301,22 +302,7 @@ export default async function BlogYaziPage({
       )}
 
       {/* FOOTER */}
-      <footer className="bg-white border-t border-gray-100 px-4 sm:px-6 py-8">
-        <div className="max-w-4xl mx-auto space-y-4">
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 text-xs text-gray-400">
-            <a href="/fiyatlar" className="hover:text-orange-500">Fiyatlar</a>
-            <span>·</span>
-            <a href="/blog" className="hover:text-orange-500">Blog</a>
-            <span>·</span>
-            <a href="/hakkimizda" className="hover:text-orange-500">Hakkımızda</a>
-            <span>·</span>
-            <a href="/gizlilik" className="hover:text-orange-500">Gizlilik Politikası</a>
-            <span>·</span>
-            <a href="mailto:destek@yzliste.com" className="hover:text-orange-500">destek@yzliste.com</a>
-          </div>
-          <p className="text-center text-xs text-gray-400">© 2026 yzliste · SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }

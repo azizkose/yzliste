@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Fiyatlar | yzliste — E-ticaret Listing Üretici",
@@ -341,28 +342,7 @@ export default function FiyatlarPage() {
         </a>
       </section>
 
-      {/* FOOTER */}
-      <footer className="bg-white border-t border-gray-100 px-4 sm:px-6 py-8">
-        <div className="max-w-4xl mx-auto space-y-4">
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 text-xs text-gray-400">
-            <a href="/fiyatlar" className="hover:text-orange-500">Fiyatlar</a>
-            <span>·</span>
-            <a href="/blog" className="hover:text-orange-500">Blog</a>
-            <span>·</span>
-            <a href="/hakkimizda" className="hover:text-orange-500">Hakkımızda</a>
-            <span>·</span>
-            <a href="/gizlilik" className="hover:text-orange-500">Gizlilik Politikası</a>
-            <span>·</span>
-            <a href="/mesafeli-satis" className="hover:text-orange-500">Mesafeli Satış</a>
-            <span>·</span>
-            <a href="mailto:destek@yzliste.com" className="hover:text-orange-500">destek@yzliste.com</a>
-          </div>
-          <div className="flex justify-center">
-            <Image src="/iyzico_footer_logo.png" alt="iyzico ile öde" width={429} height={32} className="w-44 h-auto" />
-          </div>
-          <p className="text-center text-xs text-gray-400">© 2026 yzliste · SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
 
 type Profil = {
   email: string;
@@ -411,6 +412,7 @@ export default function ProfilPage() {
 
       </div>
       </div>
+      <SiteFooter />
     </main>
   );
 }

@@ -15,8 +15,8 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
   }, []);
 
   const navLinks = [
+    { href: "/auth", label: "Ana Sayfa", id: "ana" as AktifSayfa },
     { href: "/", label: "İçerik", id: "icerik" as AktifSayfa },
-    { href: "/toplu", label: "Toplu", id: "toplu" as AktifSayfa },
     { href: "/fiyatlar", label: "Fiyatlar", id: "fiyatlar" as AktifSayfa },
     { href: "/blog", label: "Blog", id: "blog" as AktifSayfa },
   ];

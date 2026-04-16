@@ -1,11 +1,11 @@
 "use client";
+import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
 export default function TeslimatIadePage() {
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-3xl mx-auto">
-        <div className="mb-8">
-          <a href="/" className="text-sm text-gray-400 hover:text-orange-500">← Ana Sayfa</a>
-        </div>
+    <main className="min-h-screen bg-gray-50">
+      <SiteHeader />
+      <div className="max-w-3xl mx-auto py-12 px-4">
         <div className="bg-white rounded-2xl shadow p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Teslimat ve İade Şartları</h1>
           <div className="space-y-6 text-gray-600 text-sm leading-relaxed">
@@ -54,6 +54,7 @@ export default function TeslimatIadePage() {
           </div>
         </div>
       </div>
+      <SiteFooter />
     </main>
   );
 }

@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import SiteFooter from "@/components/SiteFooter";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
 type SosyalPlatform = "instagram_tiktok" | "facebook" | "twitter";
@@ -1725,6 +1726,7 @@ export default function Home() {
 
         <ChatWidget />
       </div>
+      <SiteFooter />
     </main>
   );
 }

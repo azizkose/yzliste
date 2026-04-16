@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { parseExcel, excelOlustur, type ParseSonucu } from "@/lib/excel-parser";
 import * as XLSX from "xlsx";
 import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
 
 type Adim = "yukle" | "onizleme" | "islem" | "tamamlandi";
 type Platform = "trendyol" | "hepsiburada" | "amazon" | "n11" | "etsy" | "amazon_usa";
@@ -433,6 +434,7 @@ export default function TopluPage() {
         )}
       </div>
     </div>
+    <SiteFooter />
     </>
   );
 }

@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import SiteFooter from "@/components/SiteFooter";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ export default function AuthPage() {
   const [mesaj, setMesaj] = useState("");
   const [sozlesmeOnay, setSozlesmeOnay] = useState(false);
   const [oturum, setOturum] = useState<boolean | null>(null);
+  const [menuAcik, setMenuAcik] = useState(false);
   const [modalAcik, setModalAcik] = useState(false);
   const [modalMod, setModalMod] = useState<"paket" | "uye">("paket");
   const [modalUyeMod, setModalUyeMod] = useState<"giris" | "kayit">("kayit");
@@ -323,29 +325,62 @@ export default function AuthPage() {
       )}
 
       {/* HEADER */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-2.5">
-        <div className="max-w-6xl mx-auto flex items-center gap-2">
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-2">
           <a href="/auth" className="flex-shrink-0 mr-1"><img src="/yzliste_logo.png" alt="yzliste" className="h-8" /></a>
-          <nav className="flex items-center gap-0.5 text-xs sm:text-sm text-gray-500">
+          <nav className="hidden sm:flex items-center gap-0.5 text-xs sm:text-sm text-gray-500 flex-1">
             <a href="/auth" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Ana Sayfa</a>
-            <a href="/" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</a>
+            <a href="/" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</a>
             <a href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
             <a href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
           </nav>
           <div className="flex gap-1 sm:gap-2 ml-auto items-center">
             {oturum && !anonimKullanici ? (
               <>
-                <a href="/profil" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Profil</a>
-                <a href="/" className="text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">İçerik Üret →</a>
+                <a href="/profil" className="hidden sm:block text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Profil</a>
+                <a href="/" className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">İçerik Üret →</a>
               </>
             ) : (
               <>
-                <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); }} className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</button>
-                <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla →</button>
+                <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); }} className="hidden sm:block text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</button>
+                <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla →</button>
               </>
             )}
+            {/* Mobil hamburger */}
+            <button
+              onClick={() => setMenuAcik(!menuAcik)}
+              className="sm:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+              aria-label="Menü"
+            >
+              {menuAcik ? "✕" : "☰"}
+            </button>
           </div>
         </div>
+
+        {/* Mobil dropdown */}
+        {menuAcik && (
+          <div className="sm:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg z-50">
+            <nav className="px-4 py-3 space-y-1">
+              <a href="/auth" onClick={() => setMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-orange-600 font-medium bg-orange-50">Ana Sayfa</a>
+              <a href="/" onClick={() => setMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">İçerik</a>
+              <a href="/fiyatlar" onClick={() => setMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Fiyatlar</a>
+              <a href="/blog" onClick={() => setMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Blog</a>
+              <div className="border-t border-gray-100 pt-2 mt-2 space-y-1">
+                {oturum && !anonimKullanici ? (
+                  <>
+                    <a href="/profil" className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Profil</a>
+                    <a href="/" className="block px-3 py-2 rounded-lg text-sm font-medium bg-orange-500 text-white text-center hover:bg-orange-600 transition-colors">İçerik Üret →</a>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); setMenuAcik(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Giriş Yap</button>
+                    <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); setMenuAcik(false); }} className="block w-full text-center px-3 py-2 rounded-lg text-sm font-medium bg-orange-500 text-white hover:bg-orange-600 transition-colors">Ücretsiz Başla →</button>
+                  </>
+                )}
+              </div>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* HERO */}
@@ -696,29 +731,7 @@ export default function AuthPage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-white border-t border-gray-100 px-4 sm:px-6 py-8">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 text-xs text-gray-400">
-            <a href="/fiyatlar" className="hover:text-orange-500">Fiyatlar</a>
-            <span>·</span>
-            <a href="/blog" className="hover:text-orange-500">Blog</a>
-            <span>·</span>
-            <a href="/hakkimizda" className="hover:text-orange-500">Hakkımızda</a>
-            <span>·</span>
-            <a href="/gizlilik" className="hover:text-orange-500">Gizlilik Politikası</a>
-            <span>·</span>
-            <a href="/mesafeli-satis" className="hover:text-orange-500">Mesafeli Satış</a>
-            <span>·</span>
-            <a href="/teslimat-iade" className="hover:text-orange-500">Teslimat ve İade</a>
-            <span>·</span>
-            <a href="mailto:destek@yzliste.com" className="hover:text-orange-500">destek@yzliste.com</a>
-          </div>
-          <div className="flex justify-center">
-            <img src="/iyzico_footer_logo.png" alt="iyzico ile öde" className="w-44 h-auto" />
-          </div>
-          <p className="text-center text-xs text-gray-400">© 2026 yzliste · SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI</p>
-        </div>
-      </footer>
+      <SiteFooter />
 
     </main>
   );
