@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { parseExcel, excelOlustur, type ParseSonucu } from "@/lib/excel-parser";
 import * as XLSX from "xlsx";
+import HeaderAuthButtons from "@/components/HeaderAuthButtons";
 
 type Adim = "yukle" | "onizleme" | "islem" | "tamamlandi";
 type Platform = "trendyol" | "hepsiburada" | "amazon" | "n11" | "etsy" | "amazon_usa";
@@ -49,7 +50,7 @@ export default function TopluPage() {
 
       // Kullanıcı kontrolü
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { setHata("Giriş yapmanız gerekiyor."); return; }
+      if (!user || user.is_anonymous) { window.location.href = "/auth?kayit=1"; return; }
       const { data: profil } = await supabase.from("profiles").select("kredi, is_admin").eq("id", user.id).single();
       setUserId(user.id);
       setKredi(profil?.is_admin ? Infinity : (profil?.kredi ?? 0));
@@ -150,12 +151,28 @@ export default function TopluPage() {
   const hatali = ilerlemeler.filter((i) => i.durum === "hata").length;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gray-50">
+      {/* HEADER */}
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-3">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
+          <a href="/auth" className="flex-shrink-0">
+            <img src="/yzliste_logo.png" alt="yzliste" className="h-8 w-auto" />
+          </a>
+          <nav className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 flex-1 justify-center sm:flex-none sm:justify-start">
+            <a href="/auth" className="hidden sm:block px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</a>
+            <a href="/" className="hidden sm:block px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</a>
+            <a href="/fiyatlar" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
+            <a href="/blog" className="px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</a>
+          </nav>
+          <HeaderAuthButtons />
+        </div>
+      </header>
 
-        {/* Header */}
+      <div className="max-w-2xl mx-auto py-8 px-4">
+
+        {/* Breadcrumb */}
         <div className="flex items-center gap-3 mb-8">
-          <a href="/" className="text-gray-400 hover:text-gray-600 text-sm">← Ana Sayfa</a>
+          <a href="/" className="text-gray-400 hover:text-gray-600 text-sm">← İçerik</a>
           <span className="text-gray-300">/</span>
           <h1 className="text-lg font-semibold text-gray-800">Toplu İçerik Üretimi</h1>
         </div>
