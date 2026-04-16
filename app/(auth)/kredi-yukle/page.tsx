@@ -18,6 +18,10 @@ export default function KrediYuklePage() {
   const [yukleniyor, setYukleniyor] = useState<string | null>(null)
   const [odemeForm, setOdemeForm] = useState<string | null>(null)
   const [hata, setHata] = useState('')
+  const [sozlesmeOnay, setSozlesmeOnay] = useState(false)
+  const [mesafeliOnay, setMesafeliOnay] = useState(false)
+  const [kvkkOnay, setKvkkOnay] = useState(false)
+  const tumOnaylar = sozlesmeOnay && mesafeliOnay && kvkkOnay
 
   const odemeBaslat = async (paketId: string) => {
     setHata('')
@@ -86,14 +90,56 @@ export default function KrediYuklePage() {
                 </div>
                 <button
                   onClick={() => odemeBaslat(p.id)}
-                  disabled={yukleniyor !== null}
-                  className={`w-full mt-4 ${p.butonRenk} text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:bg-gray-300`}
+                  disabled={yukleniyor !== null || !tumOnaylar}
+                  className={`w-full mt-4 ${p.butonRenk} text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed`}
                 >
                   {yukleniyor === p.id ? '⏳ Yükleniyor...' : 'Satın Al'}
                 </button>
               </div>
             ))}
             {hata && <p className="text-xs text-red-500 text-center">{hata}</p>}
+
+            {/* F-07d: 3 yasal onay checkbox'u */}
+            <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-3">
+              <p className="text-xs font-semibold text-gray-600 mb-1">Satın almak için aşağıdakileri onaylayın:</p>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={sozlesmeOnay}
+                  onChange={(e) => setSozlesmeOnay(e.target.checked)}
+                  className="mt-0.5 accent-orange-500"
+                />
+                <span className="text-xs text-gray-600">
+                  <Link href="/kosullar" target="_blank" className="text-orange-500 hover:underline font-medium">Kullanım Koşulları</Link>&#39;nı okudum ve kabul ediyorum.
+                </span>
+              </label>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={mesafeliOnay}
+                  onChange={(e) => setMesafeliOnay(e.target.checked)}
+                  className="mt-0.5 accent-orange-500"
+                />
+                <span className="text-xs text-gray-600">
+                  <Link href="/mesafeli-satis" target="_blank" className="text-orange-500 hover:underline font-medium">Mesafeli Satış Sözleşmesi</Link>&#39;ni okudum ve kabul ediyorum.
+                </span>
+              </label>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={kvkkOnay}
+                  onChange={(e) => setKvkkOnay(e.target.checked)}
+                  className="mt-0.5 accent-orange-500"
+                />
+                <span className="text-xs text-gray-600">
+                  <Link href="/kvkk-aydinlatma" target="_blank" className="text-orange-500 hover:underline font-medium">KVKK Aydınlatma Metni</Link>&#39;ni okudum, kişisel verilerimin işlenmesini kabul ediyorum.
+                </span>
+              </label>
+              {!tumOnaylar && (
+                <p className="text-xs text-amber-600 pt-1">Satın almak için tüm sözleşmeleri onaylamanız gerekiyor.</p>
+              )}
+            </div>
+
             <p className="text-xs text-gray-400 text-center pt-2">🔒 Güvenli ödeme — iyzico altyapısı</p>
           </div>
         )}

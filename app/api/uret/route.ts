@@ -8,17 +8,23 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_KEY!
 );
 
-// Rate limiter — opsiyonel: Upstash env yoksa devre dışı
-let ratelimit: Ratelimit | null = null;
+// Rate limiters — opsiyonel: Upstash env yoksa devre dışı
+let rlDakika: Ratelimit | null = null; // per-user 60 req/dk
+let rlGunluk: Ratelimit | null = null; // per-user 500 req/gün
 if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
   const redis = new Redis({
     url: process.env.UPSTASH_REDIS_REST_URL,
     token: process.env.UPSTASH_REDIS_REST_TOKEN,
   });
-  ratelimit = new Ratelimit({
+  rlDakika = new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(60, "1 m"),
-    prefix: "rl:uret",
+    prefix: "rl:uret:dk",
+  });
+  rlGunluk = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(500, "1 d"),
+    prefix: "rl:uret:gun",
   });
 }
 
@@ -356,20 +362,22 @@ export async function POST(req: NextRequest) {
 
   if (!userId) return NextResponse.json({ hata: "Giris yapilmadi" }, { status: 401 });
 
-  // Rate limiting — kullanıcı başına 60 istek/dk
-  if (ratelimit) {
-    const { success, limit, remaining, reset } = await ratelimit.limit(userId);
+  // Rate limiting — per-user: 60 req/dk + 500 req/gün
+  if (rlDakika) {
+    const { success, limit, remaining, reset } = await rlDakika.limit(userId);
     if (!success) {
       return NextResponse.json(
         { hata: "Çok fazla istek gönderdiniz. Lütfen bir dakika bekleyin." },
-        {
-          status: 429,
-          headers: {
-            "X-RateLimit-Limit": String(limit),
-            "X-RateLimit-Remaining": String(remaining),
-            "X-RateLimit-Reset": String(reset),
-          },
-        }
+        { status: 429, headers: { "X-RateLimit-Limit": String(limit), "X-RateLimit-Remaining": String(remaining), "X-RateLimit-Reset": String(reset) } }
+      );
+    }
+  }
+  if (rlGunluk) {
+    const { success } = await rlGunluk.limit(userId);
+    if (!success) {
+      return NextResponse.json(
+        { hata: "Günlük üretim limitine ulaştınız. Yarın tekrar deneyin." },
+        { status: 429 }
       );
     }
   }

@@ -20,7 +20,10 @@ const geistMono = Geist_Mono({
 
 
 export const metadata: Metadata = {
-  title: "yzliste — E-ticaret listing için en kolay çözüm",
+  title: {
+    default: "yzliste — E-ticaret listing için en kolay çözüm",
+    template: "%s | yzliste",
+  },
   description: "Trendyol, Hepsiburada, Amazon TR ve N11 için AI ile optimize listing metni ve stüdyo görseli üret. Fotoğraf yükle veya barkod tara, gerisini YZ halleder.",
   metadataBase: new URL("https://www.yzliste.com"),
   openGraph: {
