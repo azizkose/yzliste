@@ -360,8 +360,6 @@ export default function Home() {
   const [videoYukleniyor, setVideoYukleniyor] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
 
-  // Video + Sosyal sekmesi ortak foto state'leri
-  const [videoFoto, setVideoFoto] = useState<string | null>(null);
   // Sosyal sekmesi
   const [sosyalFoto, setSosyalFoto] = useState<string | null>(null);
   const [sosyalUrunAdi, setSosyalUrunAdi] = useState("");
@@ -673,14 +671,14 @@ export default function Home() {
 
   const videoUret = async () => {
     if (!loginGerekli()) return;
-    if (!videoFoto) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
+    if (!fotolar[0]) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
     if (!kullanici) return;
     const videoKredi = videoSure === "10" ? 8 : 5;
     if (!kullanici.is_admin && kullanici.kredi < videoKredi) { paketModalAc(); return; }
     setVideoYukleniyor(true);
     setVideoUrl(null);
     try {
-      const res = await fetch("/api/sosyal/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: videoFoto, prompt: videoPrompt, userId: kullanici.id, sure: videoSure, format: videoFormat }) });
+      const res = await fetch("/api/sosyal/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: fotolar[0], prompt: videoPrompt, userId: kullanici.id, sure: videoSure, format: videoFormat }) });
       const data = await res.json();
       if (res.status === 402) { paketModalAc(); setVideoYukleniyor(false); return; }
       if (data.videoUrl) { setVideoUrl(data.videoUrl); if (!kullanici.is_admin) setKullanici({ ...kullanici, kredi: kullanici.kredi - videoKredi }); }
@@ -1267,7 +1265,14 @@ export default function Home() {
                               draggable={false}
                               onContextMenu={(e) => e.preventDefault()}
                             />
-                            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2">
+                              <button
+                                onClick={() => navigator.clipboard.writeText(url)}
+                                className="bg-white/90 hover:bg-white text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-lg shadow transition-all"
+                              >
+                                🔗 Linki Kopyala
+                              </button>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -1380,9 +1385,9 @@ export default function Home() {
                 <a href="/blog/ai-urun-videosu-hareket-secenekleri" className="inline-block mt-2 text-xs text-red-500 hover:text-red-700 hover:underline">Bu hareketler ne anlama gelir? Ürün kategorine göre hangisi uygun? →</a>
               </div>
 
-              <button onClick={videoUret} disabled={videoYukleniyor || !videoFoto || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 8 : 5))}
+              <button onClick={videoUret} disabled={videoYukleniyor || fotolar.length === 0 || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 8 : 5))}
                 className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
-                {videoYukleniyor ? "⏳ Video üretiliyor... (~2 dakika)" : !videoFoto ? "Önce fotoğraf ekle ↑" : !kullanici ? "🎬 Video Üret — Giriş Gerekli" : `🎬 Video Üret — ${kullanici.is_admin ? "∞" : (videoSure === "10" ? 8 : 5)} kredi`}
+                {videoYukleniyor ? "⏳ Video üretiliyor... (~2 dakika)" : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : !kullanici ? "🎬 Video Üret — Giriş Gerekli" : `🎬 Video Üret — ${kullanici.is_admin ? "∞" : (videoSure === "10" ? 8 : 5)} kredi`}
               </button>
 
               {kullanici && !kullanici.is_admin && (kullanici.kredi ?? 0) < (videoSure === "10" ? 8 : 5) && !videoYukleniyor && (
