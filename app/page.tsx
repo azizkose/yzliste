@@ -494,9 +494,9 @@ export default function Home() {
     }
   };
 
-  // Üretim butonları için login kontrolü — giriş yoksa popup aç
+  // Üretim butonları için login kontrolü — giriş yoksa veya anonim ise popup aç
   const loginGerekli = (): boolean => {
-    if (!kullanici) {
+    if (!kullanici || kullanici.anonim) {
       setAuthPopupMod("kayit");
       setAuthPopupAcik(true);
       return false;
@@ -745,16 +745,19 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Anonim kullanıcı banner */}
-        {kullanici?.anonim && (
-          <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 mb-5">
+        {/* Giriş yok / anonim banner */}
+        {(!kullanici || kullanici.anonim) && (
+          <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <span className="text-xl">👤</span>
+              <span className="text-xl flex-shrink-0">🔒</span>
               <div>
-                <p className="text-sm font-semibold text-orange-800">Misafir olarak kullanıyorsunuz</p>
-                <p className="text-xs text-orange-600 mt-0.5">Ücretsiz hesap oluşturarak kredilerinizi ve geçmişinizi kaydedin.</p>
+                <p className="text-sm font-semibold text-orange-800">İçerik üretmek için hesap gereklidir</p>
+                <p className="text-xs text-orange-600 mt-0.5">Ücretsiz hesap oluşturun, 3 kredi hediye edilsin — kredi kartı gerekmez.</p>
               </div>
             </div>
+            <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap transition-colors flex-shrink-0">
+              Hesap Oluştur
+            </button>
           </div>
         )}
 

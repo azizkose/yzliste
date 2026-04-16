@@ -93,20 +93,6 @@ export default function AuthPage() {
     setSozlesmeOnay(false); setSifreSifirlamaGonderildi(false);
   };
 
-      const handleAnonimBasla = async () => {
-    const { data, error } = await supabase.auth.signInAnonymously();
-    if (error || !data.user) {
-      // Anonim giriş başarısız → popup aç kayıt moduyla
-      setModalUyeMod("kayit");
-      setModalMod("uye");
-      setModalAcik(true);
-      return;
-    }
-    // Profil yoksa oluştur (3 başlangıç kredisi)
-    await supabase.from("profiles").insert({ id: data.user.id, kredi: 3 });
-    router.push("/");
-  };
-
   const handleGoogleGiris = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -355,7 +341,7 @@ export default function AuthPage() {
             ) : (
               <>
                 <button onClick={() => { setModalUyeMod("giris"); setModalMod("uye"); setModalAcik(true); }} className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</button>
-                <button onClick={handleAnonimBasla} className="text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap"><span className="hidden sm:inline">3 Ücretsiz Kredi, </span>Başla →</button>
+                <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla →</button>
               </>
             )}
           </div>
@@ -374,8 +360,8 @@ export default function AuthPage() {
         </p>
         <p className="text-sm text-gray-400 mb-8 max-w-xl mx-auto">İster açıklama gir, ister ürün fotoğrafını yükle ya da barkod tara — gerisini YZ halleder.</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <button onClick={handleAnonimBasla} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
-            3 Ücretsiz İçerik Üretim Kredisi, Başla →
+          <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
+            Ücretsiz Hesap Oluştur →
           </button>
           <button onClick={() => document.getElementById("nasil-calisir")?.scrollIntoView({ behavior: "smooth" })} className="text-gray-500 hover:text-gray-700 font-medium px-8 py-4 rounded-xl text-base transition-colors underline underline-offset-4">
             Nasıl çalışır?
@@ -701,8 +687,8 @@ export default function AuthPage() {
             ))}
           </div>
           <div className="mt-10 text-center">
-            <button onClick={handleAnonimBasla} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
-              3 Ücretsiz İçerik Üretim Kredisi, Başla →
+            <button onClick={() => { setModalUyeMod("kayit"); setModalMod("uye"); setModalAcik(true); }} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
+              Ücretsiz Hesap Oluştur →
             </button>
             <p className="text-xs text-gray-400 mt-3">3 ücretsiz içerik üretim kredisi · Kredi kartı gerekmez</p>
           </div>

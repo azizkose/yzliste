@@ -48,9 +48,9 @@ export default function TopluPage() {
       const sonuc = parseExcel(buffer);
       if (sonuc.toplam === 0) { setHata("Dosyada geçerli ürün satırı bulunamadı."); return; }
 
-      // Kullanıcı kontrolü
+      // Kullanıcı kontrolü — anonim de dahil, üye olmayan üretemez
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { setHata("Giriş yapmanız gerekiyor."); return; }
+      if (!user || user.is_anonymous) { window.location.href = "/auth?kayit=1"; return; }
       const { data: profil } = await supabase.from("profiles").select("kredi, is_admin").eq("id", user.id).single();
       setUserId(user.id);
       setKredi(profil?.is_admin ? Infinity : (profil?.kredi ?? 0));
