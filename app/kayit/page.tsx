@@ -22,7 +22,7 @@ export default function KayitPage() {
           </p>
           <p className="text-sm text-gray-400 mt-1">
             Zaten hesabın var mı?{' '}
-            <Link href="/giris" className="text-orange-500 hover:underline font-medium">
+            <Link href="/giris" className="text-indigo-500 hover:underline font-medium">
               Giriş yap
             </Link>
           </p>

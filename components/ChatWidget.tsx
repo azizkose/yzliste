@@ -69,7 +69,7 @@ export default function ChatWidget() {
     <div className="fixed bottom-6 right-6 z-50">
       {acik && (
         <div className="mb-3 bg-white rounded-2xl shadow-2xl border border-gray-100 w-80 flex flex-col overflow-hidden">
-          <div className="bg-orange-500 px-4 py-3 flex items-center justify-between">
+          <div className="bg-indigo-500 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
               <span className="text-white text-sm font-semibold">yzliste</span>
@@ -91,7 +91,7 @@ export default function ChatWidget() {
                 <div
                   className={`max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed whitespace-pre-wrap ${
                     m.rol === "kullanici"
-                      ? "bg-orange-500 text-white"
+                      ? "bg-indigo-500 text-white"
                       : "bg-white text-gray-700 border border-gray-100 shadow-sm"
                   }`}
                 >
@@ -122,12 +122,12 @@ export default function ChatWidget() {
               onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && gonder()}
               placeholder="Mesajinizi yazin..."
               disabled={yukleniyor}
-              className="flex-1 text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-orange-400 disabled:bg-gray-50"
+              className="flex-1 text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-400 disabled:bg-gray-50"
             />
             <button
               onClick={gonder}
               disabled={yukleniyor || !input.trim()}
-              className="bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white px-3 py-2 rounded-lg text-xs font-medium transition-colors"
+              className="bg-indigo-500 hover:bg-indigo-600 disabled:bg-indigo-300 text-white px-3 py-2 rounded-lg text-xs font-medium transition-colors"
             >
               Gonder
             </button>
@@ -137,7 +137,7 @@ export default function ChatWidget() {
 
       <button
         onClick={() => setAcik(!acik)}
-        className="bg-orange-500 hover:bg-orange-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl transition-all hover:scale-105"
+        className="bg-indigo-500 hover:bg-indigo-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl transition-all hover:scale-105"
         title="yzliste destek"
       >
         💬

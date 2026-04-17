@@ -125,7 +125,7 @@ export default function AdminPage() {
               className="text-sm bg-white border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50">
               Yenile
             </button>
-            <Link href="/" className="text-sm bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
+            <Link href="/" className="text-sm bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600">
               Uygulamaya Dön
             </Link>
           </div>
@@ -135,9 +135,9 @@ export default function AdminPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {[
             { label: "Toplam Kullanıcı", value: metrik.toplamKullanici, renk: "text-blue-600" },
-            { label: "Toplam Üretim", value: metrik.toplamUretim, renk: "text-orange-600" },
+            { label: "Toplam Üretim", value: metrik.toplamUretim, renk: "text-indigo-600" },
             { label: "Bugün Üretim", value: metrik.bugunUretim, renk: "text-green-600" },
-            { label: "Bu Hafta", value: metrik.buHaftaUretim, renk: "text-purple-600" },
+            { label: "Bu Hafta", value: metrik.buHaftaUretim, renk: "text-violet-600" },
           ].map((m) => (
             <div key={m.label} className="bg-white rounded-2xl shadow p-5">
               <div className={`text-3xl font-bold ${m.renk}`}>{m.value}</div>
@@ -154,8 +154,8 @@ export default function AdminPage() {
               <div className="text-xl font-bold text-blue-600">{metrik.toplamInputToken.toLocaleString()}</div>
               <div className="text-xs text-gray-500 mt-1">Input Token</div>
             </div>
-            <div className="bg-purple-50 rounded-xl p-4">
-              <div className="text-xl font-bold text-purple-600">{metrik.toplamOutputToken.toLocaleString()}</div>
+            <div className="bg-violet-50 rounded-xl p-4">
+              <div className="text-xl font-bold text-violet-600">{metrik.toplamOutputToken.toLocaleString()}</div>
               <div className="text-xs text-gray-500 mt-1">Output Token</div>
             </div>
             <div className="bg-red-50 rounded-xl p-4">
@@ -166,8 +166,8 @@ export default function AdminPage() {
               <div className="text-xl font-bold text-yellow-600">${uretimBasiMaliyet.toFixed(5)}</div>
               <div className="text-xs text-gray-500 mt-1">Üretim Başı</div>
             </div>
-            <div className="bg-orange-50 rounded-xl p-4">
-              <div className="text-xl font-bold text-orange-600">{metrik.toplamKredi}</div>
+            <div className="bg-indigo-50 rounded-xl p-4">
+              <div className="text-xl font-bold text-indigo-600">{metrik.toplamKredi}</div>
               <div className="text-xs text-gray-500 mt-1">Kalan Kredi</div>
             </div>
           </div>
@@ -187,7 +187,7 @@ export default function AdminPage() {
                   <span className="text-sm text-gray-600 capitalize">{platform}</span>
                   <div className="flex items-center gap-2">
                     <div className="w-24 bg-gray-100 rounded-full h-2">
-                      <div className="bg-orange-400 h-2 rounded-full"
+                      <div className="bg-indigo-400 h-2 rounded-full"
                         style={{ width: `${metrik.toplamUretim > 0 ? (sayi / metrik.toplamUretim) * 100 : 0}%` }} />
                     </div>
                     <span className="text-sm font-medium text-gray-700 w-6 text-right">{sayi}</span>
@@ -208,7 +208,7 @@ export default function AdminPage() {
                   </span>
                   <div className="flex items-center gap-2">
                     <div className="w-24 bg-gray-100 rounded-full h-2">
-                      <div className="bg-orange-400 h-2 rounded-full"
+                      <div className="bg-indigo-400 h-2 rounded-full"
                         style={{ width: `${metrik.toplamUretim > 0 ? (sayi / metrik.toplamUretim) * 100 : 0}%` }} />
                     </div>
                     <span className="text-sm font-medium text-gray-700 w-6 text-right">{sayi}</span>
@@ -233,7 +233,7 @@ export default function AdminPage() {
                       {new Date(k.created_at).toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" })}
                     </div>
                   </div>
-                  <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full">
+                  <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full">
                     {k.kredi} kredi
                   </span>
                 </div>

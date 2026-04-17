@@ -96,14 +96,14 @@ export default function AyarlarPage() {
               placeholder="Yeni şifre"
               value={yeniSifre}
               onChange={(e) => setYeniSifre(e.target.value)}
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
             <input
               type="password"
               placeholder="Yeni şifre (tekrar)"
               value={yeniSifreTekrar}
               onChange={(e) => setYeniSifreTekrar(e.target.value)}
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
             {sifreMesaj && (
               <p className={`text-xs ${sifreMesaj.includes('başarıyla') ? 'text-green-600' : 'text-red-500'}`}>

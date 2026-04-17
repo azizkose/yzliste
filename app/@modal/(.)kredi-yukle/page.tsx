@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 const PAKETLER = [
   { id: 'baslangic', isim: 'Başlangıç', fiyat: '₺29', kredi: 10, renk: 'border-gray-200', butonRenk: 'bg-gray-800 hover:bg-gray-900' },
-  { id: 'populer', isim: 'Popüler', fiyat: '₺79', kredi: 30, renk: 'border-orange-400 ring-2 ring-orange-400', butonRenk: 'bg-orange-500 hover:bg-orange-600', rozet: true },
+  { id: 'populer', isim: 'Popüler', fiyat: '₺79', kredi: 30, renk: 'border-indigo-400 ring-2 ring-indigo-400', butonRenk: 'bg-indigo-500 hover:bg-indigo-600', rozet: true },
   { id: 'buyuk', isim: 'Büyük', fiyat: '₺149', kredi: 100, renk: 'border-gray-200', butonRenk: 'bg-gray-800 hover:bg-gray-900' },
 ]
 
@@ -15,7 +15,7 @@ export default function KrediYukleModal() {
         {PAKETLER.map((p) => (
           <div key={p.id} className={`border-2 ${p.renk} rounded-2xl p-4 relative`}>
             {p.rozet && (
-              <span className="absolute -top-3 left-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+              <span className="absolute -top-3 left-4 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                 En Popüler
               </span>
             )}
@@ -30,7 +30,7 @@ export default function KrediYukleModal() {
         ))}
         <Link
           href="/kredi-yukle"
-          className="block w-full text-center bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
+          className="block w-full text-center bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
         >
           Satın Al →
         </Link>

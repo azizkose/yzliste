@@ -14,7 +14,7 @@ export default function MesafeliSatisPage() {
     <main className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-3xl mx-auto">
         <div className="mb-8">
-          <Link href="/" className="text-sm text-gray-400 hover:text-orange-500">← Ana Sayfa</Link>
+          <Link href="/" className="text-sm text-gray-400 hover:text-indigo-500">← Ana Sayfa</Link>
         </div>
         <div className="bg-white rounded-2xl shadow p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Mesafeli Satış Sözleşmesi</h1>
@@ -29,7 +29,7 @@ export default function MesafeliSatisPage() {
                 <p><span className="font-medium text-gray-700">Adres:</span> Mehmet Akif Mah. Ulubatlı Hasan Cad. Paradise City Sitesi C1 Blok No: 43L İç Kapı No: 31 Çekmeköy / İstanbul</p>
                 <p><span className="font-medium text-gray-700">Vergi Dairesi / No:</span> Sarıgazi / 7701113995</p>
                 <p><span className="font-medium text-gray-700">E-posta:</span>{" "}
-                  <a href="mailto:destek@yzliste.com" className="text-orange-500 hover:underline">destek@yzliste.com</a>
+                  <a href="mailto:destek@yzliste.com" className="text-indigo-500 hover:underline">destek@yzliste.com</a>
                 </p>
                 <p className="mt-2"><span className="font-medium text-gray-700">Alıcı:</span> Platforma kayıtlı kullanıcı</p>
               </div>

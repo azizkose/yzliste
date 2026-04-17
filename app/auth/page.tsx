@@ -210,7 +210,7 @@ export default function AuthPage() {
       ikon: "📌",
       baslik: "Başlık",
       icerik: "Kütahya Porselen Çiçek Desenli Kahve Fincanı 6'lı Set | 80ml | Altın Yaldızlı | Dishwasher Safe",
-      renk: "border-l-orange-400",
+      renk: "border-l-blue-400",
     },
     {
       ikon: "🔹",
@@ -232,7 +232,7 @@ export default function AuthPage() {
       ikon: "🏷️",
       baslik: "Arama Etiketleri",
       icerik: "porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızlı fincan, 6lı fincan seti, türk kahvesi fincanı, düğün hediyesi fincan, çeyiz fincan seti",
-      renk: "border-l-purple-400",
+      renk: "border-l-violet-400",
     },
   ];
 
@@ -269,21 +269,21 @@ export default function AuthPage() {
                   <div className="flex-1 h-px bg-gray-100" />
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => setModalUyeMod("kayit")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${modalUyeMod === "kayit" ? "bg-orange-500 text-white border-orange-500" : "bg-white text-orange-500 border-orange-200"}`}>🎁 Kayıt Ol</button>
+                  <button onClick={() => setModalUyeMod("kayit")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${modalUyeMod === "kayit" ? "bg-indigo-500 text-white border-indigo-500" : "bg-white text-indigo-500 border-indigo-200"}`}>🎁 Kayıt Ol</button>
                   <button onClick={() => setModalUyeMod("giris")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${modalUyeMod === "giris" ? "bg-gray-800 text-white border-gray-800" : "bg-white text-gray-600 border-gray-200"}`}>Giriş Yap</button>
                 </div>
-                <input type="email" placeholder="E-posta" value={modalEmail} onChange={(e) => setModalEmail(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
-                <input type="password" placeholder="Şifre" value={modalSifre} onChange={(e) => setModalSifre(e.target.value)} onKeyDown={(e) => e.key === "Enter" && modalUyeGiris()} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                <input type="email" placeholder="E-posta" value={modalEmail} onChange={(e) => setModalEmail(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                <input type="password" placeholder="Şifre" value={modalSifre} onChange={(e) => setModalSifre(e.target.value)} onKeyDown={(e) => e.key === "Enter" && modalUyeGiris()} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
                 {modalUyeMod === "kayit" && (
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input type="checkbox" checked={modalSozlesme} onChange={(e) => setModalSozlesme(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0" />
                     <span className="text-xs text-gray-500 leading-relaxed">
-                      <a href="/gizlilik" target="_blank" className="text-orange-500 hover:underline">Gizlilik Politikası</a> ve <a href="/mesafeli-satis" target="_blank" className="text-orange-500 hover:underline">Mesafeli Satış Sözleşmesi</a>&apos;ni okudum.
+                      <a href="/gizlilik" target="_blank" className="text-indigo-500 hover:underline">Gizlilik Politikası</a> ve <a href="/mesafeli-satis" target="_blank" className="text-indigo-500 hover:underline">Mesafeli Satış Sözleşmesi</a>&apos;ni okudum.
                     </span>
                   </label>
                 )}
                 {modalMesaj && <p className={`text-xs ${modalMesaj.includes("başarılı") ? "text-green-600" : "text-red-500"}`}>{modalMesaj}</p>}
-                <button onClick={modalUyeGiris} disabled={modalYukleniyor || (modalUyeMod === "kayit" && !modalSozlesme)} className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl text-sm transition-colors">
+                <button onClick={modalUyeGiris} disabled={modalYukleniyor || (modalUyeMod === "kayit" && !modalSozlesme)} className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl text-sm transition-colors">
                   {modalYukleniyor ? "..." : modalUyeMod === "kayit" ? "Ücretsiz Hesap Oluştur" : "Giriş Yap"}
                 </button>
               </div>
@@ -291,7 +291,7 @@ export default function AuthPage() {
               <div className="p-6 space-y-4">
                 {paketler.map((p) => (
                   <div key={p.id} className={`border-2 ${p.renk} rounded-2xl p-5 relative`}>
-                    {p.rozet && <span className="absolute -top-3 left-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">En Popüler</span>}
+                    {p.rozet && <span className="absolute -top-3 left-4 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">En Popüler</span>}
                     <div className="flex items-center justify-between">
                       <div><p className="font-semibold text-gray-800">{p.isim}</p><p className="text-sm text-gray-500">{p.krediStr}</p></div>
                       <p className="text-2xl font-bold text-gray-900">{p.fiyatStr}</p>
@@ -316,7 +316,7 @@ export default function AuthPage() {
         <div className="max-w-6xl mx-auto flex items-center gap-2">
           <Link href="/auth" className="flex-shrink-0 mr-1"><img src="/yzliste_logo.png" alt="yzliste" className="h-8" /></Link>
           <nav className="flex items-center gap-0.5 text-xs sm:text-sm text-gray-500">
-            <Link href="/auth" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Ana Sayfa</Link>
+            <Link href="/auth" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-indigo-600 font-medium whitespace-nowrap">Ana Sayfa</Link>
             <Link href="/" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</Link>
             <Link href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</Link>
             <Link href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</Link>
@@ -325,12 +325,12 @@ export default function AuthPage() {
             {oturum && !anonimKullanici ? (
               <>
                 <Link href="/profil" className="hidden sm:block text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Profil</Link>
-                <Link href="/" className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">İçerik Üret →</Link>
+                <Link href="/" className="hidden sm:block text-xs sm:text-sm bg-indigo-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-600 transition-colors font-medium whitespace-nowrap">İçerik Üret →</Link>
               </>
             ) : (
               <>
                 <Link href="/giris" className="hidden sm:block text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</Link>
-                <Link href="/kayit" className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla →</Link>
+                <Link href="/kayit" className="hidden sm:block text-xs sm:text-sm bg-indigo-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla →</Link>
               </>
             )}
             {/* Mobil hamburger */}
@@ -348,7 +348,7 @@ export default function AuthPage() {
         {menuAcik && (
           <div className="sm:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg z-50">
             <nav className="px-4 py-3 space-y-1">
-              <a href="/auth" onClick={() => setMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-orange-600 font-medium bg-orange-50">Ana Sayfa</a>
+              <a href="/auth" onClick={() => setMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-indigo-600 font-medium bg-indigo-50">Ana Sayfa</a>
               <a href="/" onClick={() => setMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">İçerik</a>
               <a href="/fiyatlar" onClick={() => setMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Fiyatlar</a>
               <a href="/blog" onClick={() => setMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Blog</a>
@@ -356,12 +356,12 @@ export default function AuthPage() {
                 {oturum && !anonimKullanici ? (
                   <>
                     <a href="/profil" className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Profil</a>
-                    <a href="/" className="block px-3 py-2 rounded-lg text-sm font-medium bg-orange-500 text-white text-center hover:bg-orange-600 transition-colors">İçerik Üret →</a>
+                    <a href="/" className="block px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white text-center hover:bg-indigo-600 transition-colors">İçerik Üret →</a>
                   </>
                 ) : (
                   <>
                     <Link href="/giris" onClick={() => setMenuAcik(false)} className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Giriş Yap</Link>
-                    <Link href="/kayit" onClick={() => setMenuAcik(false)} className="block w-full text-center px-3 py-2 rounded-lg text-sm font-medium bg-orange-500 text-white hover:bg-orange-600 transition-colors">Ücretsiz Başla →</Link>
+                    <Link href="/kayit" onClick={() => setMenuAcik(false)} className="block w-full text-center px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white hover:bg-indigo-600 transition-colors">Ücretsiz Başla →</Link>
                   </>
                 )}
               </div>
@@ -373,12 +373,12 @@ export default function AuthPage() {
       {/* HERO */}
       <section className="px-4 sm:px-6 pt-12 sm:pt-16 pb-12 text-center max-w-3xl mx-auto">
         <div className="flex flex-wrap justify-center gap-2 mb-6">
-          <span className="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">Trendyol · Hepsiburada · Amazon TR · N11 · Etsy · Amazon USA</span>
+          <span className="inline-block bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">Trendyol · Hepsiburada · Amazon TR · N11 · Etsy · Amazon USA</span>
           <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">🆕 Video + Sosyal Medya</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-5">
           Ürünün için her içeriği<br />
-          <span className="text-orange-500">tek platformda üret</span>
+          <span className="text-indigo-500">tek platformda üret</span>
         </h1>
         <p className="text-base sm:text-lg text-gray-500 mb-6 max-w-2xl mx-auto leading-relaxed">
           Listing metni, stüdyo görseli, ürün videosu, sosyal medya içeriği —<br className="hidden sm:block" />
@@ -400,7 +400,7 @@ export default function AuthPage() {
           ))}
         </div>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href="/kayit" className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
+          <Link href="/kayit" className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-indigo-100">
             Ücretsiz Başla — 3 Kredi Hediye →
           </Link>
           <button onClick={() => document.getElementById("nasil-calisir")?.scrollIntoView({ behavior: "smooth" })} className="text-gray-500 hover:text-gray-700 font-medium px-8 py-4 rounded-xl text-base transition-colors border border-gray-200 hover:border-gray-300">
@@ -437,9 +437,9 @@ export default function AuthPage() {
                 aciklama: "7 stil, her stilden 4 varyasyon",
                 kredi: "Stil başına 1 kredi",
                 renk: "purple",
-                ring: "ring-purple-400",
-                bg: "bg-purple-50",
-                badge: "text-purple-600 bg-purple-100",
+                ring: "ring-violet-400",
+                bg: "bg-violet-50",
+                badge: "text-violet-600 bg-violet-100",
               },
               {
                 idx: 2,
@@ -447,10 +447,10 @@ export default function AuthPage() {
                 baslik: "Video",
                 aciklama: "Ürün tanıtım videosu, 1080p",
                 kredi: "5sn veya 10sn",
-                renk: "pink",
-                ring: "ring-pink-400",
-                bg: "bg-pink-50",
-                badge: "text-pink-600 bg-pink-100",
+                renk: "amber",
+                ring: "ring-amber-400",
+                bg: "bg-amber-50",
+                badge: "text-amber-600 bg-amber-100",
               },
               {
                 idx: 3,
@@ -488,8 +488,8 @@ export default function AuthPage() {
             {ozellikTab === 0 && (
               <div className="p-5 sm:p-7">
                 <div className="flex items-center gap-2 mb-5">
-                  <span className="w-2 h-2 rounded-full bg-orange-400 flex-shrink-0" />
-                  <span className="text-xs font-semibold text-orange-700">Trendyol formatında örnek çıktı</span>
+                  <span className="w-2 h-2 rounded-full bg-blue-400 flex-shrink-0" />
+                  <span className="text-xs font-semibold text-blue-700">Trendyol formatında örnek çıktı</span>
                 </div>
                 <div className="space-y-3">
                   {ornekBolumler.map((bolum, i) => (
@@ -564,7 +564,7 @@ export default function AuthPage() {
                   <p className="text-xs text-gray-500 font-medium mb-2">3 farklı yöntemle sahne oluştur:</p>
                   <div className="flex flex-wrap gap-2">
                     {["Hazır stiller (Beyaz, Koyu…)", "Kendi promptunu yaz", "Arka plan fotoğrafı ver"].map((t, i) => (
-                      <span key={i} className="text-xs bg-purple-50 text-purple-700 px-3 py-1 rounded-full border border-purple-100">{i + 1}. {t}</span>
+                      <span key={i} className="text-xs bg-violet-50 text-violet-700 px-3 py-1 rounded-full border border-violet-100">{i + 1}. {t}</span>
                     ))}
                   </div>
                 </div>
@@ -585,7 +585,7 @@ export default function AuthPage() {
                     { src: "/video-ornekler/dramatik-isik.mp4", ikon: "💡", baslik: "Dramatik Işık", aciklama: "Karanlık sahnede spotlight açılır. Premium ve lüks his. Kozmetik ve elektronik için etkili." },
                     { src: "/video-ornekler/dogal-ortam.mp4", ikon: "🌿", baslik: "Doğal Ortam", aciklama: "Yapraklar sallanır, ışık oynar. Organik ve sıcak his. Gıda, bitki, doğal ürünler için ideal." },
                   ].map((v, i) => (
-                    <div key={i} className="flex gap-3 rounded-xl border border-pink-100 bg-pink-50 p-3">
+                    <div key={i} className="flex gap-3 rounded-xl border border-amber-100 bg-amber-50 p-3">
                       <video
                         src={v.src}
                         autoPlay
@@ -609,11 +609,11 @@ export default function AuthPage() {
                     { ikon: "🎞️", baslik: "10 saniyelik", aciklama: "Showcase · Pazaryeri", etiket: "8 kredi" },
                     { ikon: "📐", baslik: "3 format", aciklama: "9:16 · 1:1 · 16:9", etiket: "Tüm platformlar" },
                   ].map((v, i) => (
-                    <div key={i} className="rounded-xl border border-pink-100 bg-pink-50 p-3 text-center">
+                    <div key={i} className="rounded-xl border border-amber-100 bg-amber-50 p-3 text-center">
                       <div className="text-xl mb-1">{v.ikon}</div>
                       <p className="text-xs font-semibold text-gray-800">{v.baslik}</p>
                       <p className="text-[10px] text-gray-400 mb-1">{v.aciklama}</p>
-                      <span className="text-[10px] font-semibold text-pink-600 bg-white border border-pink-100 px-1.5 py-0.5 rounded-full">{v.etiket}</span>
+                      <span className="text-[10px] font-semibold text-amber-600 bg-white border border-amber-100 px-1.5 py-0.5 rounded-full">{v.etiket}</span>
                     </div>
                   ))}
                 </div>
@@ -623,7 +623,7 @@ export default function AuthPage() {
                   <div className="space-y-1.5">
                     {["Ürün fotoğrafını yükle", "Süre ve format seç", "AI ürünü animasyonlu videoya dönüştürür (~2 dk)", "MP4 olarak indir, platforma yükle"].map((s, i) => (
                       <div key={i} className="flex items-start gap-2 text-xs text-gray-600">
-                        <span className="w-4 h-4 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-[9px] font-bold flex-shrink-0 mt-0.5">{i + 1}</span>
+                        <span className="w-4 h-4 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-[9px] font-bold flex-shrink-0 mt-0.5">{i + 1}</span>
                         {s}
                       </div>
                     ))}
@@ -717,7 +717,7 @@ export default function AuthPage() {
               </div>
             </div>
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-              <div className="bg-purple-50 px-5 pt-6 pb-4">
+              <div className="bg-violet-50 px-5 pt-6 pb-4">
                 <div className="text-2xl mb-2">📷</div>
                 <h3 className="font-bold text-gray-800">Sadece Görsel</h3>
                 <p className="text-xs text-gray-500 mt-1">Stil başına 1 kredi · Her stilden 4 varyasyon</p>
@@ -735,8 +735,8 @@ export default function AuthPage() {
                 <p className="text-xs text-gray-400">İnceleme ücretsiz · İndirince 1 kredi · 1 stil = 4 görsel</p>
               </div>
             </div>
-            <div className="bg-white rounded-2xl border-2 border-orange-200 shadow-sm overflow-hidden flex flex-col">
-              <div className="bg-orange-50 px-5 pt-6 pb-4">
+            <div className="bg-white rounded-2xl border-2 border-indigo-200 shadow-sm overflow-hidden flex flex-col">
+              <div className="bg-indigo-50 px-5 pt-6 pb-4">
                 <div className="text-2xl mb-2">✨</div>
                 <h3 className="font-bold text-gray-800">Metin + Görsel</h3>
                 <p className="text-xs text-gray-500 mt-1">Ayrı ayrı kredi</p>
@@ -746,7 +746,7 @@ export default function AuthPage() {
                 <div className="space-y-2">
                   {["Optimize listing metni", "4 stüdyo görseli — beğendiğini indir", "Platforma hazır, düzenleme gerektirmez"].map((t, i) => (
                     <div key={i} className="flex items-start gap-2 text-xs text-gray-600">
-                      <span className="w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">{i + 1}</span>{t}
+                      <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">{i + 1}</span>{t}
                     </div>
                   ))}
                 </div>
@@ -754,7 +754,7 @@ export default function AuthPage() {
             </div>
           </div>
           <div className="mt-8 text-center">
-            <button onClick={hemenAlTikla} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-orange-100">
+            <button onClick={hemenAlTikla} className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-indigo-100">
               Paket Satın Al — {MIN_FIYAT}₺&apos;den başlıyor
             </button>
             <p className="text-xs text-gray-400 mt-3">veya 3 ücretsiz kredi ile başla, kredi kartı gerekmez</p>
@@ -765,13 +765,13 @@ export default function AuthPage() {
       {/* MARKA PROFİLİ TANITIM */}
       <section className="px-4 sm:px-6 py-16">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-3xl border border-orange-100 p-8 sm:p-10">
+          <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-3xl border border-indigo-100 p-8 sm:p-10">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
               <div className="flex-1">
-                <span className="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1 rounded-full mb-3">✨ Yeni özellik</span>
+                <span className="inline-block bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full mb-3">✨ Yeni özellik</span>
                 <h2 className="text-2xl font-bold text-gray-900 mb-3">
                   Marka bilgilerini gir,<br />
-                  <span className="text-orange-500">sana özel içerikler al</span>
+                  <span className="text-indigo-500">sana özel içerikler al</span>
                 </h2>
                 <p className="text-gray-600 text-sm leading-relaxed mb-4">
                   Profilinden mağaza adını, hedef kitlenini ve metin tonunu belirle. Bundan sonra her üretimde AI bu bilgileri kullanır — metinler artık senin marka dilinle konuşur.
@@ -793,17 +793,17 @@ export default function AuthPage() {
 
               {/* Sağ taraf — mini mockup */}
               <div className="w-full sm:w-72 flex-shrink-0">
-                <div className="bg-white rounded-2xl shadow-sm border border-orange-100 p-5 space-y-4">
+                <div className="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 space-y-4">
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Marka Profili</p>
                   <div className="space-y-3">
                     <div>
                       <p className="text-xs text-gray-400 mb-1">Mağaza adı</p>
-                      <div className="bg-orange-50 border border-orange-200 rounded-lg px-3 py-2 text-sm text-orange-700 font-medium">Ayşe Tekstil</div>
+                      <div className="bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-2 text-sm text-indigo-700 font-medium">Ayşe Tekstil</div>
                     </div>
                     <div>
                       <p className="text-xs text-gray-400 mb-1">Metin tonu</p>
                       <div className="flex gap-2">
-                        <div className="bg-orange-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg">Samimi</div>
+                        <div className="bg-indigo-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg">Samimi</div>
                         <div className="bg-gray-100 text-gray-500 text-xs px-3 py-1.5 rounded-lg">Profesyonel</div>
                         <div className="bg-gray-100 text-gray-500 text-xs px-3 py-1.5 rounded-lg">Premium</div>
                       </div>
@@ -831,10 +831,10 @@ export default function AuthPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { no: "1", ikon: "📦", baslik: "Ürünü tanımla", aciklama: "Ürün adı yaz, fotoğraf yükle ya da barkod tara. YZ ürünü otomatik analiz eder.", renk: "bg-blue-50 text-blue-600" },
-              { no: "2", ikon: "🛒", baslik: "Platform seç", aciklama: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy veya Amazon USA. Her platform için ayrı format.", renk: "bg-purple-50 text-purple-600" },
-              { no: "3", ikon: "📝", baslik: "Listing metnini al", aciklama: "Optimize başlık, madde madde özellikler, açıklama ve arama etiketleri — tek kredide.", renk: "bg-orange-50 text-orange-600" },
+              { no: "2", ikon: "🛒", baslik: "Platform seç", aciklama: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy veya Amazon USA. Her platform için ayrı format.", renk: "bg-violet-50 text-violet-600" },
+              { no: "3", ikon: "📝", baslik: "Listing metnini al", aciklama: "Optimize başlık, madde madde özellikler, açıklama ve arama etiketleri — tek kredide.", renk: "bg-indigo-50 text-indigo-600" },
               { no: "4", ikon: "📷", baslik: "Görsel üret", aciklama: "7 farklı stüdyo stili. Kendi sahne promptunu yaz ya da arka plan fotoğrafı ver.", renk: "bg-green-50 text-green-600" },
-              { no: "5", ikon: "🎬", baslik: "Video üret", aciklama: "Ürün fotoğrafından 5sn/10sn tanıtım videosu. Dikey, kare veya yatay format — platforma hazır.", renk: "bg-pink-50 text-pink-600" },
+              { no: "5", ikon: "🎬", baslik: "Video üret", aciklama: "Ürün fotoğrafından 5sn/10sn tanıtım videosu. Dikey, kare veya yatay format — platforma hazır.", renk: "bg-amber-50 text-amber-600" },
               { no: "6", ikon: "📱", baslik: "Sosyal medya", aciklama: "Instagram, TikTok, Facebook, Twitter/X için caption + hashtag seti. Platform diline göre ayrı içerik.", renk: "bg-teal-50 text-teal-600" },
             ].map((adim) => (
               <div key={adim.no} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex gap-4">
@@ -879,7 +879,7 @@ export default function AuthPage() {
       </section>
 
       {/* SOSYAL KANIT / TESTİMONY */}
-      <section className="px-4 sm:px-6 py-10 bg-orange-50 border-y border-orange-100">
+      <section className="px-4 sm:px-6 py-10 bg-indigo-50 border-y border-indigo-100">
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-wrap justify-center gap-8 sm:gap-16 mb-10">
             {[
@@ -888,17 +888,17 @@ export default function AuthPage() {
               { sayi: "4.9/5", label: "Kullanıcı memnuniyeti" },
             ].map((s) => (
               <div key={s.label} className="text-center">
-                <div className="text-2xl sm:text-3xl font-extrabold text-orange-500">{s.sayi}</div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-indigo-500">{s.sayi}</div>
                 <div className="text-xs text-gray-500 mt-1">{s.label}</div>
               </div>
             ))}
           </div>
           <div className="hidden grid grid-cols-1 sm:grid-cols-3 gap-4">
             {yorumlar.map((y, i) => (
-              <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-orange-100">
+              <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-indigo-100">
                 <div className="flex gap-0.5 mb-3">
                   {Array.from({ length: y.puan }).map((_, j) => (
-                    <span key={j} className="text-orange-400 text-sm">★</span>
+                    <span key={j} className="text-amber-400 text-sm">★</span>
                   ))}
                 </div>
                 <p className="text-sm text-gray-600 leading-relaxed mb-4">&quot;{y.yorum}&quot;</p>
@@ -910,7 +910,7 @@ export default function AuthPage() {
             ))}
           </div>
           <div className="mt-10 text-center">
-            <Link href="/kayit" className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-orange-100">
+            <Link href="/kayit" className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-indigo-100">
               Ücretsiz Hesap Oluştur →
             </Link>
             <p className="text-xs text-gray-400 mt-3">Ücretsiz kayıt · Kredi kartı gerekmez</p>

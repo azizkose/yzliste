@@ -23,7 +23,7 @@ export default function GirisPage({
           <h1 className="text-2xl font-bold text-gray-900 mt-4">Giriş Yap</h1>
           <p className="text-sm text-gray-500 mt-1">
             Hesabın yok mu?{' '}
-            <Link href="/kayit" className="text-orange-500 hover:underline font-medium">
+            <Link href="/kayit" className="text-indigo-500 hover:underline font-medium">
               Ücretsiz oluştur
             </Link>
           </p>

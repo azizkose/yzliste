@@ -37,9 +37,9 @@ export default async function KredilerPage() {
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-6 flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500">Mevcut Kredi</p>
-            <p className="text-3xl font-bold text-orange-500 mt-1">{profil?.kredi ?? 0}</p>
+            <p className="text-3xl font-bold text-indigo-500 mt-1">{profil?.kredi ?? 0}</p>
           </div>
-          <Link href="/kredi-yukle" className="bg-orange-500 text-white text-sm font-semibold px-5 py-3 rounded-xl hover:bg-orange-600 transition-colors">
+          <Link href="/kredi-yukle" className="bg-indigo-500 text-white text-sm font-semibold px-5 py-3 rounded-xl hover:bg-indigo-600 transition-colors">
             Kredi Yükle →
           </Link>
         </div>

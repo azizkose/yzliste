@@ -8,7 +8,7 @@ import { useInvalidateCredits } from '@/lib/hooks/useCredits'
 
 const PAKETLER = [
   { id: 'baslangic', isim: 'Başlangıç', fiyat: '₺29', kredi: 10, renk: 'border-gray-200', butonRenk: 'bg-gray-800 hover:bg-gray-900' },
-  { id: 'populer', isim: 'Popüler', fiyat: '₺79', kredi: 30, renk: 'border-orange-400 ring-2 ring-orange-400', butonRenk: 'bg-orange-500 hover:bg-orange-600', rozet: true },
+  { id: 'populer', isim: 'Popüler', fiyat: '₺79', kredi: 30, renk: 'border-indigo-400 ring-2 ring-indigo-400', butonRenk: 'bg-indigo-500 hover:bg-indigo-600', rozet: true },
   { id: 'buyuk', isim: 'Büyük', fiyat: '₺149', kredi: 100, renk: 'border-gray-200', butonRenk: 'bg-gray-800 hover:bg-gray-900' },
 ]
 
@@ -77,7 +77,7 @@ export default function KrediYuklePage() {
             {PAKETLER.map((p) => (
               <div key={p.id} className={`bg-white border-2 ${p.renk} rounded-2xl p-5 relative`}>
                 {p.rozet && (
-                  <span className="absolute -top-3 left-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                  <span className="absolute -top-3 left-4 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                     En Popüler
                   </span>
                 )}
@@ -107,10 +107,10 @@ export default function KrediYuklePage() {
                   type="checkbox"
                   checked={sozlesmeOnay}
                   onChange={(e) => setSozlesmeOnay(e.target.checked)}
-                  className="mt-0.5 accent-orange-500"
+                  className="mt-0.5 accent-indigo-500"
                 />
                 <span className="text-xs text-gray-600">
-                  <Link href="/kosullar" target="_blank" className="text-orange-500 hover:underline font-medium">Kullanım Koşulları</Link>&#39;nı okudum ve kabul ediyorum.
+                  <Link href="/kosullar" target="_blank" className="text-indigo-500 hover:underline font-medium">Kullanım Koşulları</Link>&#39;nı okudum ve kabul ediyorum.
                 </span>
               </label>
               <label className="flex items-start gap-3 cursor-pointer">
@@ -118,10 +118,10 @@ export default function KrediYuklePage() {
                   type="checkbox"
                   checked={mesafeliOnay}
                   onChange={(e) => setMesafeliOnay(e.target.checked)}
-                  className="mt-0.5 accent-orange-500"
+                  className="mt-0.5 accent-indigo-500"
                 />
                 <span className="text-xs text-gray-600">
-                  <Link href="/mesafeli-satis" target="_blank" className="text-orange-500 hover:underline font-medium">Mesafeli Satış Sözleşmesi</Link>&#39;ni okudum ve kabul ediyorum.
+                  <Link href="/mesafeli-satis" target="_blank" className="text-indigo-500 hover:underline font-medium">Mesafeli Satış Sözleşmesi</Link>&#39;ni okudum ve kabul ediyorum.
                 </span>
               </label>
               <label className="flex items-start gap-3 cursor-pointer">
@@ -129,10 +129,10 @@ export default function KrediYuklePage() {
                   type="checkbox"
                   checked={kvkkOnay}
                   onChange={(e) => setKvkkOnay(e.target.checked)}
-                  className="mt-0.5 accent-orange-500"
+                  className="mt-0.5 accent-indigo-500"
                 />
                 <span className="text-xs text-gray-600">
-                  <Link href="/kvkk-aydinlatma" target="_blank" className="text-orange-500 hover:underline font-medium">KVKK Aydınlatma Metni</Link>&#39;ni okudum, kişisel verilerimin işlenmesini kabul ediyorum.
+                  <Link href="/kvkk-aydinlatma" target="_blank" className="text-indigo-500 hover:underline font-medium">KVKK Aydınlatma Metni</Link>&#39;ni okudum, kişisel verilerimin işlenmesini kabul ediyorum.
                 </span>
               </label>
               {!tumOnaylar && (

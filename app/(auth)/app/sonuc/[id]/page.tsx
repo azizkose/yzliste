@@ -46,7 +46,7 @@ export default async function SonucPage({
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <span className="text-xs bg-orange-100 text-orange-700 font-semibold px-2 py-1 rounded-full uppercase">
+              <span className="text-xs bg-indigo-100 text-indigo-700 font-semibold px-2 py-1 rounded-full uppercase">
                 {uretim.platform}
               </span>
               <p className="text-xs text-gray-400 mt-2">
@@ -67,7 +67,7 @@ export default async function SonucPage({
             <CopyButton text={uretim.output ?? uretim.sonuc ?? ''} />
             <Link
               href="/"
-              className="text-sm bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl transition-colors font-medium"
+              className="text-sm bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-xl transition-colors font-medium"
             >
               Yeni Üretim →
             </Link>

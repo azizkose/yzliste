@@ -84,7 +84,7 @@ export default function SSSPage() {
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Sık Sorulan Sorular</h1>
-        <p className="text-gray-500 mb-10">Aklınızdaki soruların cevabını burada bulamazsanız <a href="mailto:destek@yzliste.com" className="text-orange-500 hover:underline">destek@yzliste.com</a> adresine yazın.</p>
+        <p className="text-gray-500 mb-10">Aklınızdaki soruların cevabını burada bulamazsanız <a href="mailto:destek@yzliste.com" className="text-indigo-500 hover:underline">destek@yzliste.com</a> adresine yazın.</p>
 
         <div className="space-y-4">
           {SORULAR.map((item, i) => (
@@ -100,12 +100,12 @@ export default function SSSPage() {
           ))}
         </div>
 
-        <div className="mt-12 text-center bg-orange-50 rounded-2xl p-8 border border-orange-100">
+        <div className="mt-12 text-center bg-indigo-50 rounded-2xl p-8 border border-indigo-100">
           <p className="text-gray-700 font-semibold mb-2">Hâlâ sorunuz mu var?</p>
           <p className="text-sm text-gray-500 mb-4">Yanıt süremiz 24 saattir.</p>
           <a
             href="mailto:destek@yzliste.com"
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-colors"
+            className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-colors"
           >
             destek@yzliste.com
           </a>

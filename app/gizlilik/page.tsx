@@ -106,15 +106,15 @@ export default function GizlilikPage() {
         <section>
           <h2 className="text-base font-bold text-gray-800 mb-2">7. Başvuru Yolu</h2>
           <p>
-            KVKK taleplerinizi <a href="mailto:destek@yzliste.com" className="text-orange-500 hover:underline">destek@yzliste.com</a> adresine
+            KVKK taleplerinizi <a href="mailto:destek@yzliste.com" className="text-indigo-500 hover:underline">destek@yzliste.com</a> adresine
             &quot;KVKK Başvurusu&quot; konu başlığıyla iletebilirsiniz. 30 gün içinde yanıtlanır.
           </p>
         </section>
 
         <div className="flex flex-wrap gap-4 pt-4 border-t border-gray-100 text-xs">
-          <Link href="/cerez-politikasi" className="text-orange-500 hover:underline">Çerez Politikası</Link>
-          <Link href="/kvkk-aydinlatma" className="text-orange-500 hover:underline">KVKK Aydınlatma Metni</Link>
-          <Link href="/kosullar" className="text-orange-500 hover:underline">Kullanım Koşulları</Link>
+          <Link href="/cerez-politikasi" className="text-indigo-500 hover:underline">Çerez Politikası</Link>
+          <Link href="/kvkk-aydinlatma" className="text-indigo-500 hover:underline">KVKK Aydınlatma Metni</Link>
+          <Link href="/kosullar" className="text-indigo-500 hover:underline">Kullanım Koşulları</Link>
         </div>
       </div>
       <SiteFooter />

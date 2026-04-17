@@ -224,7 +224,7 @@ export default function ProfilPage() {
   if (yukleniyor) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-indigo-200 border-t-indigo-500 rounded-full animate-spin" />
       </div>
     );
   }
@@ -242,8 +242,8 @@ export default function ProfilPage() {
             <p className="text-sm text-gray-500 mt-0.5">{profil?.email}</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="bg-orange-50 rounded-xl px-4 py-2 text-center">
-              <div className={`text-xl font-bold ${profil?.is_admin ? "text-purple-500" : "text-orange-500"}`}>
+            <div className="bg-indigo-50 rounded-xl px-4 py-2 text-center">
+              <div className={`text-xl font-bold ${profil?.is_admin ? "text-violet-500" : "text-indigo-500"}`}>
                 {profil?.is_admin ? "∞" : (profil?.kredi ?? 0)}
               </div>
               <div className="text-xs text-gray-500">Kalan kredi</div>
@@ -252,7 +252,7 @@ export default function ProfilPage() {
               <div className="text-xl font-bold text-gray-700">{profil?.toplam_kullanilan ?? 0}</div>
               <div className="text-xs text-gray-500">Toplam üretim</div>
             </div>
-            <Link href="/?paket=ac" className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl whitespace-nowrap transition-colors">
+            <Link href="/?paket=ac" className="bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl whitespace-nowrap transition-colors">
               + Kredi Al
             </Link>
           </div>
@@ -267,18 +267,18 @@ export default function ProfilPage() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Ad Soyad</label>
               <input type="text" value={adSoyad} onChange={(e) => setAdSoyad(e.target.value)} placeholder="Ad Soyad"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
               <input type="tel" value={telefon} onChange={(e) => setTelefon(e.target.value)} placeholder="05xx xxx xx xx"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
             </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Adres</label>
             <textarea value={adres} onChange={(e) => setAdres(e.target.value)} placeholder="Tam adresiniz" rows={2}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
           </div>
 
           {/* Fatura */}
@@ -287,7 +287,7 @@ export default function ProfilPage() {
             <div className="flex gap-3 mb-4">
               {["bireysel", "kurumsal"].map((tip) => (
                 <button key={tip} onClick={() => setFaturaTipi(tip)}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium border-2 transition-all ${faturaTipi === tip ? "border-orange-400 bg-orange-50 text-orange-600" : "border-gray-200 text-gray-600 hover:border-gray-300"}`}>
+                  className={`flex-1 py-2 rounded-lg text-sm font-medium border-2 transition-all ${faturaTipi === tip ? "border-indigo-400 bg-indigo-50 text-indigo-600" : "border-gray-200 text-gray-600 hover:border-gray-300"}`}>
                   {tip === "bireysel" ? "Bireysel" : "Kurumsal"}
                 </button>
               ))}
@@ -296,19 +296,19 @@ export default function ProfilPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">TC Kimlik No</label>
                 <input type="text" value={tcKimlik} onChange={(e) => setTcKimlik(e.target.value)} placeholder="11 haneli TC kimlik no" maxLength={11}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Vergi No</label>
                   <input type="text" value={vergiNo} onChange={(e) => setVergiNo(e.target.value)} placeholder="10 haneli vergi no" maxLength={10}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Vergi Dairesi</label>
                   <input type="text" value={vergiDairesi} onChange={(e) => setVergiDairesi(e.target.value)} placeholder="Vergi dairesi adı"
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
                 </div>
               </div>
             )}
@@ -321,7 +321,7 @@ export default function ProfilPage() {
             </div>
           )}
           <button onClick={kaydet} disabled={kaydediliyor}
-            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
+            className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
             {kaydediliyor ? "Kaydediliyor..." : "Kaydet"}
           </button>
         </div>
@@ -330,11 +330,11 @@ export default function ProfilPage() {
         <div className="bg-white rounded-2xl shadow overflow-hidden">
           <div className="flex border-b border-gray-100">
             <button onClick={() => setProfilSekme("marka")}
-              className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${profilSekme === "marka" ? "text-orange-600 border-b-2 border-orange-500 bg-orange-50" : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}>
+              className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${profilSekme === "marka" ? "text-indigo-600 border-b-2 border-indigo-500 bg-indigo-50" : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}>
               🏪 Marka Profili
             </button>
             <button onClick={() => setProfilSekme("uretimler")}
-              className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${profilSekme === "uretimler" ? "text-orange-600 border-b-2 border-orange-500 bg-orange-50" : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}>
+              className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${profilSekme === "uretimler" ? "text-indigo-600 border-b-2 border-indigo-500 bg-indigo-50" : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}>
               📋 Önceki Üretimler <span className="text-xs text-gray-400 font-normal">({profil?.toplam_kullanilan ?? 0})</span>
             </button>
           </div>
@@ -342,21 +342,21 @@ export default function ProfilPage() {
           {/* Marka Profili Tab */}
           {profilSekme === "marka" && (
             <div className="p-6 space-y-4">
-              <div className="bg-orange-50 border border-orange-100 rounded-xl p-3 text-xs text-orange-700 leading-relaxed">
+              <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-xs text-indigo-700 leading-relaxed">
                 Marka profilinizi doldurunca AI metinleri sizin dilinizde, hedef kitlenize göre yazar. Örn: "Kadın modası, 25-35 yaş" yazarsanız AI bu kitlenin anlayacağı bir dil kullanır.
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Mağaza / Marka Adı</label>
                 <input type="text" value={markaAdi} onChange={(e) => setMarkaAdi(e.target.value)} placeholder="örn: Ayşe Tekstil, TechStore TR"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Metin Tonu</label>
                 <div className="grid grid-cols-3 gap-2">
                   {[{ id: "samimi", label: "Samimi", aciklama: "Sıcak, yakın dil" }, { id: "profesyonel", label: "Profesyonel", aciklama: "Resmi, kurumsal" }, { id: "premium", label: "Premium", aciklama: "Lüks, seçkin" }].map((t) => (
                     <button key={t.id} onClick={() => setTon(t.id)}
-                      className={`p-3 rounded-xl border-2 text-left transition-all ${ton === t.id ? "border-orange-400 bg-orange-50" : "border-gray-200 hover:border-gray-300"}`}>
-                      <p className={`text-xs font-semibold ${ton === t.id ? "text-orange-600" : "text-gray-700"}`}>{t.label}</p>
+                      className={`p-3 rounded-xl border-2 text-left transition-all ${ton === t.id ? "border-indigo-400 bg-indigo-50" : "border-gray-200 hover:border-gray-300"}`}>
+                      <p className={`text-xs font-semibold ${ton === t.id ? "text-indigo-600" : "text-gray-700"}`}>{t.label}</p>
                       <p className="text-xs text-gray-400 mt-0.5">{t.aciklama}</p>
                     </button>
                   ))}
@@ -365,12 +365,12 @@ export default function ProfilPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Hedef Kitle <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
                 <input type="text" value={hedefKitle} onChange={(e) => setHedefKitle(e.target.value)} placeholder="örn: 25-40 yaş kadınlar, ev hanımları, spor yapanlar"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Öne Çıkarmak İstediğiniz Özellikler <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
                 <textarea value={vurgulananlalar} onChange={(e) => setVurgulananlar(e.target.value)} placeholder="örn: hızlı kargo, iade garantisi, yerli üretim, organik malzeme" rows={2}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
                 <p className="text-xs text-gray-400 mt-1">Her ürünlede vurgulanmasını istediğiniz marka değerlerinizi yazın.</p>
               </div>
               {mesaj && (
@@ -379,7 +379,7 @@ export default function ProfilPage() {
                 </div>
               )}
               <button onClick={kaydet} disabled={kaydediliyor}
-                className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
+                className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
                 {kaydediliyor ? "Kaydediliyor..." : "Marka Profilini Kaydet"}
               </button>
             </div>
@@ -392,7 +392,7 @@ export default function ProfilPage() {
                 <div className="text-center py-10 space-y-3">
                   <div className="text-4xl">📝</div>
                   <p className="text-sm text-gray-500">Henüz hiç içerik üretmediniz.</p>
-                  <a href="/" className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors">İçerik Üret →</a>
+                  <a href="/" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors">İçerik Üret →</a>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -400,7 +400,7 @@ export default function ProfilPage() {
                     const bolumler = sonucuBolumle(u.sonuc);
                     const acik = seciliUretim?.id === u.id;
                     return (
-                      <div key={u.id} className={`rounded-xl border transition-all ${acik ? "border-orange-300 bg-orange-50" : "border-gray-100 bg-white hover:bg-gray-50"}`}>
+                      <div key={u.id} className={`rounded-xl border transition-all ${acik ? "border-indigo-300 bg-indigo-50" : "border-gray-100 bg-white hover:bg-gray-50"}`}>
                         <button onClick={() => setSeciliUretim(acik ? null : u)} className="w-full text-left p-4">
                           <div className="flex justify-between items-start gap-3">
                             <div className="flex-1 min-w-0">
@@ -416,13 +416,13 @@ export default function ProfilPage() {
                           </div>
                         </button>
                         {acik && (
-                          <div className="px-4 pb-4 space-y-2 border-t border-orange-200 pt-3">
+                          <div className="px-4 pb-4 space-y-2 border-t border-indigo-200 pt-3">
                             {bolumler.map((bolum, bi) => (
                               <div key={bi} className="bg-white rounded-xl border border-gray-100 p-4">
                                 <div className="flex items-center justify-between mb-2">
                                   <span className="text-sm font-semibold text-gray-700">{bolum.ikon} {bolum.baslik}</span>
                                   <button onClick={() => navigator.clipboard.writeText(bolum.icerik)}
-                                    className="text-xs text-orange-500 hover:text-orange-600 font-medium px-2 py-1 rounded-lg hover:bg-orange-50 transition-colors">
+                                    className="text-xs text-indigo-500 hover:text-indigo-600 font-medium px-2 py-1 rounded-lg hover:bg-indigo-50 transition-colors">
                                     Kopyala
                                   </button>
                                 </div>
@@ -437,7 +437,7 @@ export default function ProfilPage() {
                   {uretimler.length >= (sayfaNo + 1) * SAYFA_BOYUTU && (
                     <div className="text-center pt-2">
                       <button onClick={dahaFazlaYukle} disabled={uretimYukleniyor}
-                        className="text-sm text-orange-500 hover:text-orange-700 font-medium disabled:opacity-50">
+                        className="text-sm text-indigo-500 hover:text-indigo-700 font-medium disabled:opacity-50">
                         {uretimYukleniyor ? "Yükleniyor..." : "Daha fazla göster ↓"}
                       </button>
                     </div>
@@ -458,10 +458,10 @@ export default function ProfilPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <input type="password" value={yeniSifre} onChange={(e) => setYeniSifre(e.target.value)}
                 placeholder="Yeni şifre (min. 6 karakter)"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
               <input type="password" value={yeniSifreTekrar} onChange={(e) => setYeniSifreTekrar(e.target.value)}
                 placeholder="Yeni şifre tekrar"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
             </div>
             {sifreMesaj && (
               <p className={`text-xs ${sifreMesaj.includes("başarı") ? "text-green-600" : "text-red-500"}`}>{sifreMesaj}</p>

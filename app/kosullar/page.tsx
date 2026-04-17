@@ -42,7 +42,7 @@ export default function KosullarPage() {
         </ul>
 
         <h2 className="text-lg font-bold text-gray-800 mt-6">4. Kredi ve Ödeme</h2>
-        <p>Satın alınan kredilerin son kullanma tarihi yoktur. İade koşulları için <Link href="/teslimat-iade" className="text-orange-500 hover:underline">İade Politikası</Link> sayfasına bakın.</p>
+        <p>Satın alınan kredilerin son kullanma tarihi yoktur. İade koşulları için <Link href="/teslimat-iade" className="text-indigo-500 hover:underline">İade Politikası</Link> sayfasına bakın.</p>
 
         <h2 className="text-lg font-bold text-gray-800 mt-6">5. Fikri Mülkiyet</h2>
         <p>Kullanıcı tarafından yüklenen içerikler kullanıcıya aittir. yzliste tarafından üretilen içerikler, kredi karşılığı kullanıcıya lisanslanır.</p>
@@ -54,7 +54,7 @@ export default function KosullarPage() {
         <p>yzliste bu koşulları önceden bildirimde bulunarak değiştirme hakkını saklı tutar. Değişiklikler yayınlandıktan sonra hizmet kullanımına devam etmek, yeni koşulların kabulü anlamına gelir.</p>
 
         <h2 className="text-lg font-bold text-gray-800 mt-6">8. İletişim</h2>
-        <p><a href="mailto:destek@yzliste.com" className="text-orange-500 hover:underline">destek@yzliste.com</a></p>
+        <p><a href="mailto:destek@yzliste.com" className="text-indigo-500 hover:underline">destek@yzliste.com</a></p>
       </div>
     </main>
   )

@@ -27,7 +27,7 @@ export default async function HesapPage() {
             <h1 className="text-2xl font-bold text-gray-900">Hesabım</h1>
             <p className="text-sm text-gray-400 mt-1">{user.email}</p>
           </div>
-          <Link href="/" className="text-sm bg-orange-500 text-white px-4 py-2 rounded-xl hover:bg-orange-600 transition-colors font-medium">
+          <Link href="/" className="text-sm bg-indigo-500 text-white px-4 py-2 rounded-xl hover:bg-indigo-600 transition-colors font-medium">
             İçerik Üret →
           </Link>
         </div>
@@ -35,7 +35,7 @@ export default async function HesapPage() {
         {/* Metrik kartları */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           {[
-            { etiket: 'Kalan Kredi', deger: profil?.kredi ?? 0, renk: 'text-orange-500', ikon: '💳' },
+            { etiket: 'Kalan Kredi', deger: profil?.kredi ?? 0, renk: 'text-indigo-500', ikon: '💳' },
             { etiket: 'Toplam Üretim', deger: profil?.toplam_kullanilan ?? 0, renk: 'text-blue-500', ikon: '📝' },
             { etiket: 'Marka', deger: profil?.marka_adi ?? '—', renk: 'text-gray-700', ikon: '🏪' },
             { etiket: 'Tahmini Tasarruf', deger: `~${Math.round((profil?.toplam_kullanilan ?? 0) * 0.5)}sa`, renk: 'text-green-500', ikon: '⏱️' },
@@ -55,9 +55,9 @@ export default async function HesapPage() {
             { href: '/hesap/krediler', baslik: 'Krediler', aciklama: 'Kredi geçmişi ve satın alma', ikon: '💳' },
             { href: '/hesap/ayarlar', baslik: 'Ayarlar', aciklama: 'E-posta ve şifre değiştir', ikon: '⚙️' },
           ].map((l) => (
-            <Link key={l.href} href={l.href} className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm hover:border-orange-200 hover:shadow-md transition-all group">
+            <Link key={l.href} href={l.href} className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm hover:border-indigo-200 hover:shadow-md transition-all group">
               <div className="text-2xl mb-3">{l.ikon}</div>
-              <p className="font-semibold text-gray-800 group-hover:text-orange-600 transition-colors">{l.baslik}</p>
+              <p className="font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors">{l.baslik}</p>
               <p className="text-xs text-gray-400 mt-1">{l.aciklama}</p>
             </Link>
           ))}
@@ -65,12 +65,12 @@ export default async function HesapPage() {
 
         {/* Kredi azaldı uyarısı */}
         {(profil?.kredi ?? 0) > 0 && (profil?.kredi ?? 0) < ((profil?.toplam_kullanilan ?? 0) * 0.2 + 2) && (
-          <div className="mt-6 bg-orange-50 border border-orange-200 rounded-2xl p-4 flex items-center justify-between">
+          <div className="mt-6 bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-orange-800">Krediniz azalıyor!</p>
-              <p className="text-xs text-orange-600 mt-0.5">+50 kredi %15 indirimle satın alın</p>
+              <p className="text-sm font-semibold text-amber-800">Krediniz azalıyor!</p>
+              <p className="text-xs text-amber-600 mt-0.5">+50 kredi %15 indirimle satın alın</p>
             </div>
-            <Link href="/kredi-yukle" className="text-sm bg-orange-500 text-white px-4 py-2 rounded-xl hover:bg-orange-600 transition-colors font-medium flex-shrink-0">
+            <Link href="/kredi-yukle" className="text-sm bg-amber-500 text-white px-4 py-2 rounded-xl hover:bg-amber-600 transition-colors font-medium flex-shrink-0">
               Kredi Yükle
             </Link>
           </div>

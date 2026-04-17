@@ -10,7 +10,7 @@ export default function NotFound() {
           </Link>
         </div>
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-10">
-          <p className="text-6xl font-extrabold text-orange-400 mb-4">404</p>
+          <p className="text-6xl font-extrabold text-indigo-400 mb-4">404</p>
           <h1 className="text-xl font-bold text-gray-900 mb-2">Sayfa bulunamadı</h1>
           <p className="text-sm text-gray-500 mb-8">
             Aradığınız sayfa taşınmış, silinmiş ya da hiç olmamış olabilir.
@@ -18,7 +18,7 @@ export default function NotFound() {
           <div className="flex flex-col gap-3">
             <Link
               href="/"
-              className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
+              className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
             >
               Ana Sayfaya Dön →
             </Link>

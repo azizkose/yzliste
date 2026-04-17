@@ -90,7 +90,7 @@ export default function KVKKAydinlatmaPage() {
         <section>
           <h2 className="text-base font-bold text-gray-800 mb-2">G. Başvuru Yöntemi</h2>
           <p>
-            Başvurularınızı <a href="mailto:destek@yzliste.com" className="text-orange-500 hover:underline">destek@yzliste.com</a> adresine
+            Başvurularınızı <a href="mailto:destek@yzliste.com" className="text-indigo-500 hover:underline">destek@yzliste.com</a> adresine
             &quot;KVKK Başvurusu&quot; konu başlığıyla yazılı olarak iletebilirsiniz.
             Başvurular en geç <strong>30 gün</strong> içinde yanıtlanır; talep gereği ücretsizdir,
             işlemin ayrıca bir maliyet gerektirmesi halinde Kurul tarifesi uygulanır.
@@ -98,8 +98,8 @@ export default function KVKKAydinlatmaPage() {
         </section>
 
         <div className="flex flex-wrap gap-4 pt-4 border-t border-gray-100 text-xs">
-          <Link href="/gizlilik" className="text-orange-500 hover:underline">Gizlilik Politikası</Link>
-          <Link href="/cerez-politikasi" className="text-orange-500 hover:underline">Çerez Politikası</Link>
+          <Link href="/gizlilik" className="text-indigo-500 hover:underline">Gizlilik Politikası</Link>
+          <Link href="/cerez-politikasi" className="text-indigo-500 hover:underline">Çerez Politikası</Link>
         </div>
       </div>
     </main>

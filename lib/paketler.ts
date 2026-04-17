@@ -49,8 +49,8 @@ export const PAKETLER: Record<PaketId, Paket> = {
     fiyatStr: "₺99",
     kredi: 30,
     krediStr: "30 kredi",
-    renk: "border-orange-400 ring-2 ring-orange-400",
-    butonRenk: "bg-orange-500 hover:bg-orange-600",
+    renk: "border-indigo-400 ring-2 ring-indigo-400",
+    butonRenk: "bg-indigo-500 hover:bg-indigo-600",
     rozet: true,
     aciklama: "Aktif satıcılar için en çok tercih edilen paket.",
     ozellikler: [

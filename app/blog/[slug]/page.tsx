@@ -100,7 +100,7 @@ function MetinLink({ text }: { text: string }) {
     <>
       {parts.map((part, i) =>
         part.toLowerCase() === "yzliste" ? (
-          <Link key={i} href="/" className="text-orange-500 hover:underline font-medium">
+          <Link key={i} href="/" className="text-indigo-500 hover:underline font-medium">
             yzliste
           </Link>
         ) : (
@@ -116,7 +116,7 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
   switch (bolum.tip) {
     case "giris":
       return (
-        <p className="text-base text-gray-600 leading-relaxed font-medium border-l-4 border-orange-300 pl-4 italic">
+        <p className="text-base text-gray-600 leading-relaxed font-medium border-l-4 border-indigo-300 pl-4 italic">
           <MetinLink text={bolum.metin ?? ""} />
         </p>
       );
@@ -138,7 +138,7 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
         <ul className="space-y-2 my-2">
           {(bolum.maddeler ?? []).map((madde, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-gray-600">
-              <span className="w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">
+              <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">
                 {i + 1}
               </span>
               <MetinLink text={madde} />
@@ -148,8 +148,8 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
       );
     case "bilgi-kutusu":
       return (
-        <div className="bg-orange-50 border border-orange-200 rounded-2xl p-5 my-4">
-          <p className="text-sm text-orange-800 leading-relaxed"><MetinLink text={bolum.metin ?? ""} /></p>
+        <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-5 my-4">
+          <p className="text-sm text-indigo-800 leading-relaxed"><MetinLink text={bolum.metin ?? ""} /></p>
         </div>
       );
     case "sonuc":
@@ -211,9 +211,9 @@ export default async function BlogYaziPage({
       {/* BREADCRUMB */}
       <div className="px-4 sm:px-6 py-4 max-w-3xl mx-auto">
         <nav aria-label="Breadcrumb" className="text-xs text-gray-400 flex items-center gap-1.5">
-          <Link href="/" className="hover:text-orange-500">Ana Sayfa</Link>
+          <Link href="/" className="hover:text-indigo-500">Ana Sayfa</Link>
           <span>›</span>
-          <Link href="/blog" className="hover:text-orange-500">Blog</Link>
+          <Link href="/blog" className="hover:text-indigo-500">Blog</Link>
           <span>›</span>
           <span className="text-gray-600 truncate max-w-[200px]">{yazi.baslik}</span>
         </nav>
@@ -224,7 +224,7 @@ export default async function BlogYaziPage({
         {/* Meta bilgi */}
         <header className="mb-8">
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            <span className="text-xs bg-orange-50 text-orange-600 border border-orange-100 px-3 py-1 rounded-full font-medium">
+            <span className="text-xs bg-indigo-50 text-indigo-600 border border-indigo-100 px-3 py-1 rounded-full font-medium">
               {yazi.kategori}
             </span>
             <span className="text-xs text-gray-400">{yazi.okumaSuresi} dakika okuma</span>
@@ -293,14 +293,14 @@ export default async function BlogYaziPage({
       </article>
 
       {/* CTA */}
-      <section className="px-4 sm:px-6 py-12 bg-orange-50 border-y border-orange-100 text-center">
+      <section className="px-4 sm:px-6 py-12 bg-indigo-50 border-y border-indigo-100 text-center">
         <h2 className="text-xl font-bold text-gray-800 mb-2">Okuduktan sonra dene</h2>
         <p className="text-sm text-gray-500 mb-5">
           3 ücretsiz kredi ile listing metni ve AI görsel üret. Kayıt olmadan misafir olarak başla.
         </p>
         <a
           href="/auth"
-          className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-orange-100"
+          className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-indigo-100"
         >
           Ücretsiz Dene →
         </a>
@@ -318,11 +318,11 @@ export default async function BlogYaziPage({
                   href={`/blog/${y.slug}`}
                   className="group border border-gray-100 rounded-2xl p-4 hover:shadow-md transition-shadow bg-white"
                 >
-                  <span className="text-xs text-orange-600 font-medium">{y.kategori}</span>
-                  <h3 className="text-sm font-semibold text-gray-800 mt-1 group-hover:text-orange-600 transition-colors line-clamp-3">
+                  <span className="text-xs text-indigo-600 font-medium">{y.kategori}</span>
+                  <h3 className="text-sm font-semibold text-gray-800 mt-1 group-hover:text-indigo-600 transition-colors line-clamp-3">
                     {y.baslik}
                   </h3>
-                  <p className="text-xs text-orange-500 mt-2 font-medium">Oku →</p>
+                  <p className="text-xs text-indigo-500 mt-2 font-medium">Oku →</p>
                 </Link>
               ))}
             </div>

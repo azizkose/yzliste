@@ -21,7 +21,7 @@ export default function OdemeHataPage() {
           <div className="flex flex-col gap-3">
             <Link
               href="/kredi-yukle"
-              className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
+              className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
             >
               Tekrar Dene →
             </Link>

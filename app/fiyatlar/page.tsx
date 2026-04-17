@@ -195,7 +195,7 @@ export default function FiyatlarPage() {
       <section className="px-4 sm:px-6 pt-14 pb-10 text-center max-w-2xl mx-auto">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
           Kullandığın kadar öde,<br />
-          <span className="text-orange-500">abonelik yok</span>
+          <span className="text-indigo-500">abonelik yok</span>
         </h1>
         <p className="text-gray-500 text-base mb-6">
           3 ücretsiz krediyle başla, beğenince istediğin paketi al. Krediler listing metni, görsel, video ve sosyal medya içeriği arasında serbestçe kullanılır.
@@ -232,7 +232,7 @@ export default function FiyatlarPage() {
             {paketler.map((p) => (
               <div key={p.id} className={`border-2 ${p.renk} rounded-2xl p-6 relative flex flex-col`}>
                 {p.rozet && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-xs font-bold px-4 py-1 rounded-full">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-500 text-white text-xs font-bold px-4 py-1 rounded-full">
                     En Popüler
                   </span>
                 )}
@@ -266,20 +266,20 @@ export default function FiyatlarPage() {
       </section>
 
       {/* KREDİ HESAPLAYICI — basit örnek tablo */}
-      <section className="px-4 sm:px-6 py-14 bg-orange-50 border-y border-orange-100">
+      <section className="px-4 sm:px-6 py-14 bg-indigo-50 border-y border-indigo-100">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-xl font-bold text-gray-800 text-center mb-2">Örnek kullanım senaryoları</h2>
           <p className="text-center text-sm text-gray-400 mb-8">Kredileri metin ve görsel arasında dilediğin gibi bölebilirsin</p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-orange-200">
+                <tr className="border-b border-indigo-200">
                   <th className="text-left py-3 px-4 text-gray-600 font-semibold">Senaryo</th>
                   <th className="text-center py-3 px-4 text-gray-600 font-semibold">Kullanılan kredi</th>
                   <th className="text-center py-3 px-4 text-gray-600 font-semibold">Önerilen paket</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-orange-100">
+              <tbody className="divide-y divide-indigo-100">
                 {[
                   { senaryo: "10 ürün için listing metni", kredi: "10 kredi", paket: "Başlangıç (₺39)" },
                   { senaryo: "5 ürün metin + 5 stil görsel", kredi: "10 kredi", paket: "Başlangıç (₺39)" },
@@ -290,7 +290,7 @@ export default function FiyatlarPage() {
                 ].map((row, i) => (
                   <tr key={i} className="bg-white/60">
                     <td className="py-3 px-4 text-gray-700">{row.senaryo}</td>
-                    <td className="py-3 px-4 text-center font-semibold text-orange-600">{row.kredi}</td>
+                    <td className="py-3 px-4 text-center font-semibold text-indigo-600">{row.kredi}</td>
                     <td className="py-3 px-4 text-center text-gray-500">{row.paket}</td>
                   </tr>
                 ))}
@@ -321,7 +321,7 @@ export default function FiyatlarPage() {
         <p className="text-gray-500 text-sm mb-6">3 kredi, kredi kartı yok. Hesap oluştur, hemen başla.</p>
         <a
           href="/auth?kayit=1"
-          className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-orange-100"
+          className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-indigo-100"
         >
           Ücretsiz Başla — 3 Kredi Hediye →
         </a>

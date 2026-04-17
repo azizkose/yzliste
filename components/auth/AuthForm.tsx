@@ -143,7 +143,7 @@ setYukleniyor(true)
         <button
           onClick={() => handleModDegistir('kayit')}
           className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${
-            mod === 'kayit' ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-orange-500 border-orange-200'
+            mod === 'kayit' ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-white text-indigo-500 border-indigo-200'
           }`}
         >
           🎁 Kayıt Ol
@@ -164,7 +164,7 @@ setYukleniyor(true)
         placeholder="E-posta"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
       />
       <input
         type="password"
@@ -172,7 +172,7 @@ setYukleniyor(true)
         value={sifre}
         onChange={(e) => setSifre(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
       />
 
       {/* Kayıt: sözleşme */}
@@ -185,8 +185,8 @@ setYukleniyor(true)
             className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0"
           />
           <span className="text-xs text-gray-500 leading-relaxed">
-            <a href="/gizlilik" target="_blank" className="text-orange-500 hover:underline">Gizlilik Politikası</a> ve{' '}
-            <a href="/mesafeli-satis" target="_blank" className="text-orange-500 hover:underline">Mesafeli Satış Sözleşmesi</a>
+            <a href="/gizlilik" target="_blank" className="text-indigo-500 hover:underline">Gizlilik Politikası</a> ve{' '}
+            <a href="/mesafeli-satis" target="_blank" className="text-indigo-500 hover:underline">Mesafeli Satış Sözleşmesi</a>
             &apos;ni okudum, kabul ediyorum.
           </span>
         </label>
@@ -216,7 +216,7 @@ setYukleniyor(true)
       <button
         onClick={handleSubmit}
         disabled={yukleniyor || (mod === 'kayit' && !sozlesme) || (turnstileEnabled && !turnstileToken)}
-        className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
+        className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
       >
         {yukleniyor ? '...' : mod === 'kayit' ? 'Ücretsiz Hesap Oluştur' : 'Giriş Yap'}
       </button>

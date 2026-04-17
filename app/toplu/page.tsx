@@ -176,7 +176,7 @@ export default function TopluPage() {
               <div className="bg-white rounded-2xl shadow p-4">
                 <div className="text-2xl mb-2">💳</div>
                 <p className="text-xs font-semibold text-gray-800 mb-1">Kredi nasıl işler?</p>
-                <p className="text-xs text-gray-500">Her ürün için <span className="font-semibold text-orange-600">1 kredi</span> düşer. 50 ürünlük bir dosya 50 kredi harcar. İşlem başlamadan önce toplam kredi gösterilir.</p>
+                <p className="text-xs text-gray-500">Her ürün için <span className="font-semibold text-indigo-600">1 kredi</span> düşer. 50 ürünlük bir dosya 50 kredi harcar. İşlem başlamadan önce toplam kredi gösterilir.</p>
               </div>
               <div className="bg-white rounded-2xl shadow p-4">
                 <div className="text-2xl mb-2">📊</div>
@@ -191,7 +191,7 @@ export default function TopluPage() {
               <div className="bg-white rounded-2xl shadow p-4">
                 <div className="text-2xl mb-2">🏷️</div>
                 <p className="text-xs font-semibold text-gray-800 mb-1">Limit var mı?</p>
-                <p className="text-xs text-gray-500">Tek seferde <span className="font-semibold">mevcut kredin kadar</span> ürün işleyebilirsin. Kredi yetersizse önce <Link href="/?paket=ac" className="text-orange-500 underline">İçerik Üretim Kredisi Al</Link>.</p>
+                <p className="text-xs text-gray-500">Tek seferde <span className="font-semibold">mevcut kredin kadar</span> ürün işleyebilirsin. Kredi yetersizse önce <Link href="/?paket=ac" className="text-indigo-500 underline">İçerik Üretim Kredisi Al</Link>.</p>
               </div>
             </div>
 
@@ -226,7 +226,7 @@ export default function TopluPage() {
               </p>
               <button
                 onClick={() => dosyaRef.current?.click()}
-                className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition-colors"
+                className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-3 rounded-xl transition-colors"
               >
                 Dosya Seç
               </button>
@@ -244,7 +244,7 @@ export default function TopluPage() {
             <div className="bg-white rounded-2xl shadow p-6">
               <h2 className="text-base font-semibold text-gray-800 mb-4">Dosya Analizi</h2>
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-2xl font-bold text-orange-600">{parse.toplam}</span>
+                <span className="text-2xl font-bold text-indigo-600">{parse.toplam}</span>
                 <span className="text-sm text-gray-600">ürün bulundu</span>
               </div>
               <div className="space-y-1.5">
@@ -276,7 +276,7 @@ export default function TopluPage() {
                     key={p}
                     onClick={() => setPlatform(p)}
                     className={`py-2 px-3 rounded-xl text-sm font-medium border-2 transition-all ${
-                      platform === p ? "border-orange-400 bg-orange-50 text-orange-700" : "border-gray-200 text-gray-600 hover:border-gray-300"
+                      platform === p ? "border-indigo-400 bg-indigo-50 text-indigo-700" : "border-gray-200 text-gray-600 hover:border-gray-300"
                     }`}
                   >
                     {PLATFORM_ETIKET[p]}
@@ -298,10 +298,10 @@ export default function TopluPage() {
                     key={t.id}
                     onClick={() => setTon(t.id)}
                     className={`p-3 rounded-xl border-2 text-left transition-all ${
-                      ton === t.id ? "border-orange-400 bg-orange-50" : "border-gray-200 hover:border-gray-300"
+                      ton === t.id ? "border-indigo-400 bg-indigo-50" : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
-                    <p className={`text-xs font-semibold ${ton === t.id ? "text-orange-600" : "text-gray-700"}`}>{t.label}</p>
+                    <p className={`text-xs font-semibold ${ton === t.id ? "text-indigo-600" : "text-gray-700"}`}>{t.label}</p>
                     <p className="text-xs text-gray-400 mt-0.5">{t.aciklama}</p>
                   </button>
                 ))}
@@ -347,7 +347,7 @@ export default function TopluPage() {
               <button
                 onClick={islemeBaslat}
                 disabled={kredi !== null && kredi !== Infinity && kredi < parse.toplam}
-                className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors"
+                className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors"
               >
                 Başlat →
               </button>
@@ -381,7 +381,7 @@ export default function TopluPage() {
             {/* Progress bar */}
             <div className="h-2 bg-gray-100 rounded-full mb-6 overflow-hidden">
               <div
-                className="h-full bg-orange-500 rounded-full transition-all duration-500"
+                className="h-full bg-indigo-500 rounded-full transition-all duration-500"
                 style={{ width: ilerlemeler.length ? `${(tamamlanan / ilerlemeler.length) * 100}%` : "0%" }}
               />
             </div>
@@ -393,13 +393,13 @@ export default function TopluPage() {
                   <div className="w-5 flex-shrink-0 text-center">
                     {item.durum === "bekliyor" && <span className="text-gray-300">○</span>}
                     {item.durum === "isleniyor" && (
-                      <span className="inline-block w-4 h-4 border-2 border-orange-400 border-t-transparent rounded-full animate-spin" />
+                      <span className="inline-block w-4 h-4 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
                     )}
                     {item.durum === "tamam" && <span className="text-green-500">✓</span>}
                     {item.durum === "hata" && <span className="text-red-400">✗</span>}
                   </div>
                   <span className={`text-sm flex-1 truncate ${
-                    item.durum === "isleniyor" ? "text-orange-600 font-medium" :
+                    item.durum === "isleniyor" ? "text-indigo-600 font-medium" :
                     item.durum === "tamam" ? "text-gray-700" :
                     item.durum === "hata" ? "text-red-500" : "text-gray-400"
                   }`}>

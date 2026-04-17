@@ -50,7 +50,7 @@ export default function CerezPolitikasiPage() {
                 {CEREZLER.map(c => (
                   <tr key={c.isim}>
                     <td className="border border-gray-200 px-3 py-2">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${c.kategori === 'Zorunlu' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}`}>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${c.kategori === 'Zorunlu' ? 'bg-blue-100 text-blue-700' : 'bg-indigo-100 text-indigo-700'}`}>
                         {c.kategori}
                       </span>
                     </td>
@@ -72,8 +72,8 @@ export default function CerezPolitikasiPage() {
         </section>
 
         <div className="flex flex-wrap gap-4 pt-4 border-t border-gray-100 text-xs">
-          <Link href="/gizlilik" className="text-orange-500 hover:underline">Gizlilik Politikası</Link>
-          <Link href="/kvkk-aydinlatma" className="text-orange-500 hover:underline">KVKK Aydınlatma</Link>
+          <Link href="/gizlilik" className="text-indigo-500 hover:underline">Gizlilik Politikası</Link>
+          <Link href="/kvkk-aydinlatma" className="text-indigo-500 hover:underline">KVKK Aydınlatma</Link>
         </div>
       </div>
     </main>

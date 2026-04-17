@@ -105,7 +105,7 @@ function KopyalaButon({ metin, getDuzenlenmisMevin }: { metin: string; getDuzenl
     setTimeout(() => setKopyalandi(false), 2000);
   };
   return (
-    <button onClick={kopyala} className={`text-xs font-medium px-3 py-1 rounded-lg transition-all duration-200 ${kopyalandi ? "bg-green-100 text-green-700 border border-green-300 scale-95" : "bg-gray-100 text-gray-500 hover:bg-orange-50 hover:text-orange-600"}`}>
+    <button onClick={kopyala} className={`text-xs font-medium px-3 py-1 rounded-lg transition-all duration-200 ${kopyalandi ? "bg-green-100 text-green-700 border border-green-300 scale-95" : "bg-gray-100 text-gray-500 hover:bg-indigo-50 hover:text-indigo-600"}`}>
       {kopyalandi ? <span className="flex items-center gap-1 text-green-600"><span>✓</span> Kopyalandı</span> : "Kopyala"}
     </button>
   );
@@ -173,7 +173,7 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
           <div>
             <h2 className="text-lg font-bold text-gray-900">İçerik Üretim Kredisi Satın Al</h2>
-            <p className="text-xs text-gray-500 mt-0.5">Mevcut kredin: <span className="font-semibold text-orange-500">{kullanici.kredi}</span></p>
+            <p className="text-xs text-gray-500 mt-0.5">Mevcut kredin: <span className="font-semibold text-indigo-500">{kullanici.kredi}</span></p>
           </div>
           <button onClick={onKapat} className="text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
         </div>
@@ -181,7 +181,7 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
           <div className="p-6 space-y-4">
             {paketler.map((p) => (
               <div key={p.id} className={`border-2 ${p.renk} rounded-2xl p-5 relative`}>
-                {p.rozet && <span className="absolute -top-3 left-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">En Popüler</span>}
+                {p.rozet && <span className="absolute -top-3 left-4 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">En Popüler</span>}
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-semibold text-gray-800">{p.isim}</p>
@@ -227,7 +227,7 @@ function ChatWidget() {
     <div className="fixed bottom-6 right-6 z-50">
       {acik && (
         <div className="mb-3 bg-white rounded-2xl shadow-xl border border-gray-100 w-80 flex flex-col overflow-hidden">
-          <div className="bg-orange-500 px-4 py-3 flex items-center justify-between">
+          <div className="bg-indigo-500 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
               <span className="text-white text-sm font-semibold">yzliste destek</span>
@@ -237,7 +237,7 @@ function ChatWidget() {
           <div className="flex-1 p-4 space-y-3 max-h-72 overflow-y-auto bg-gray-50">
             {mesajlar.map((m, i) => (
               <div key={i} className={`flex ${m.rol === "kullanici" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed ${m.rol === "kullanici" ? "bg-orange-500 text-white" : "bg-white text-gray-700 border border-gray-100"}`}>
+                <div className={`max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed ${m.rol === "kullanici" ? "bg-indigo-500 text-white" : "bg-white text-gray-700 border border-gray-100"}`}>
                   {m.metin}
                 </div>
               </div>
@@ -245,12 +245,12 @@ function ChatWidget() {
             {yukleniyor && <div className="flex justify-start"><div className="bg-white border border-gray-100 px-3 py-2 rounded-xl text-xs text-gray-400">yazıyor...</div></div>}
           </div>
           <div className="p-3 border-t border-gray-100 bg-white flex gap-2">
-            <input type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && gonder()} placeholder="Mesajınızı yazın..." className="flex-1 text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-orange-400" />
-            <button onClick={gonder} className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-lg text-xs font-medium">Gönder</button>
+            <input type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && gonder()} placeholder="Mesajınızı yazın..." className="flex-1 text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-400" />
+            <button onClick={gonder} className="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-2 rounded-lg text-xs font-medium">Gönder</button>
           </div>
         </div>
       )}
-      <button onClick={() => setAcik(!acik)} className="bg-orange-500 hover:bg-orange-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl transition-all">
+      <button onClick={() => setAcik(!acik)} className="bg-indigo-500 hover:bg-indigo-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl transition-all">
         {acik ? "×" : "💬"}
       </button>
     </div>
@@ -261,8 +261,8 @@ function ChatWidget() {
 function FotoThumbnail({ src, onKaldir, renk = "green" }: { src: string; onKaldir: () => void; renk?: string }) {
   const renkler: Record<string, string> = {
     green: "bg-green-50 border-green-200 text-green-700 text-green-500",
-    red: "bg-red-50 border-red-200 text-red-700 text-red-400",
-    pink: "bg-pink-50 border-pink-200 text-pink-700 text-pink-400",
+    red: "bg-amber-50 border-amber-200 text-amber-700 text-amber-400",
+    pink: "bg-emerald-50 border-emerald-200 text-emerald-700 text-emerald-400",
   };
   const cls = renkler[renk] || renkler.green;
   const parts = cls.split(" ");
@@ -283,16 +283,16 @@ function FotoEkleAlani({ id, onChange, renk = "gray", metin = "Fotoğraf ekle", 
   renk?: string; metin?: string; ikon?: string; altMetin?: string;
 }) {
   const sinirRenk: Record<string, string> = {
-    gray: "border-gray-300 hover:border-orange-400 hover:bg-orange-50",
-    purple: "border-purple-300 hover:border-purple-400 hover:bg-purple-50",
-    red: "border-red-200 hover:border-red-400 hover:bg-red-50",
-    pink: "border-pink-200 hover:border-pink-400 hover:bg-pink-50",
+    gray: "border-gray-300 hover:border-indigo-400 hover:bg-indigo-50",
+    purple: "border-violet-300 hover:border-violet-400 hover:bg-violet-50",
+    red: "border-amber-200 hover:border-amber-400 hover:bg-amber-50",
+    pink: "border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50",
   };
   const metin_renk: Record<string, string> = {
-    gray: "text-gray-500", purple: "text-purple-700", red: "text-red-600", pink: "text-pink-500",
+    gray: "text-gray-500", purple: "text-violet-700", red: "text-amber-600", pink: "text-emerald-500",
   };
   const alt_renk: Record<string, string> = {
-    gray: "text-gray-400", purple: "text-purple-400", red: "text-red-400", pink: "text-pink-400",
+    gray: "text-gray-400", purple: "text-violet-400", red: "text-amber-400", pink: "text-emerald-400",
   };
   return (
     <label htmlFor={id} className={`block border-2 border-dashed ${sinirRenk[renk]} rounded-xl p-6 text-center cursor-pointer transition-all`}>
@@ -837,28 +837,28 @@ export default function Home() {
             </Link>
             <nav className="hidden sm:flex items-center gap-0.5 text-sm text-gray-500 flex-1">
               <Link href="/auth" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</Link>
-              <Link href="/" className="px-3 py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">İçerik</Link>
+              <Link href="/" className="px-3 py-2 rounded-lg text-indigo-600 font-medium whitespace-nowrap">İçerik</Link>
               <Link href="/fiyatlar" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</Link>
               <Link href="/blog" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</Link>
             </nav>
             <div className="flex items-center gap-2 flex-shrink-0">
               {kullanici ? (
                 <>
-                  <button onClick={() => paketModalAc()} className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-colors ${kullanici.is_admin ? "bg-purple-100 text-purple-700" : krediDusuk ? "bg-red-100 text-red-600 animate-pulse" : "bg-orange-100 text-orange-600 hover:bg-orange-200"}`}>
+                  <button onClick={() => paketModalAc()} className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-colors ${kullanici.is_admin ? "bg-violet-100 text-violet-700" : krediDusuk ? "bg-amber-100 text-amber-600 animate-pulse" : "bg-indigo-100 text-indigo-600 hover:bg-indigo-200"}`}>
                     {kullanici.is_admin ? "∞" : kullanici.kredi} kredi
                   </button>
                   {kullanici.anonim
-                    ? <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-xs bg-orange-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-orange-600 transition-colors">Ücretsiz Başla</button>
+                    ? <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-xs bg-indigo-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-indigo-600 transition-colors">Ücretsiz Başla</button>
                     : <span className="text-sm text-gray-400 hidden sm:block">{kullanici.email}</span>
                   }
-                  {kullanici.is_admin && <a href="/admin" className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-lg font-medium">Admin</a>}
+                  {kullanici.is_admin && <a href="/admin" className="text-xs bg-violet-100 text-violet-600 px-2 py-1 rounded-lg font-medium">Admin</a>}
                   {!kullanici.anonim && <Link href="/profil" className="text-sm text-gray-400 hover:text-gray-600 hidden sm:block">Profil</Link>}
                   {!kullanici.anonim && <button onClick={cikisYap} className="text-sm text-gray-400 hover:text-gray-600 hidden sm:block">Çıkış</button>}
                 </>
               ) : (
                 <>
                   <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="text-sm text-gray-500 hover:text-gray-700 font-medium hidden sm:block">Giriş Yap</button>
-                  <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-sm bg-orange-500 hover:bg-orange-600 text-white font-semibold px-4 py-1.5 rounded-lg transition-colors hidden sm:block">Ücretsiz Başla</button>
+                  <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-sm bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-4 py-1.5 rounded-lg transition-colors hidden sm:block">Ücretsiz Başla</button>
                 </>
               )}
               {/* Mobil hamburger */}
@@ -877,7 +877,7 @@ export default function Home() {
             <div className="sm:hidden mt-1 bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden">
               <nav className="px-2 py-3 space-y-1">
                 <a href="/auth" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">Ana Sayfa</a>
-                <a href="/" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-orange-600 font-medium bg-orange-50">İçerik</a>
+                <a href="/" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-indigo-600 font-medium bg-indigo-50">İçerik</a>
                 <a href="/fiyatlar" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">Fiyatlar</a>
                 <a href="/blog" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">Blog</a>
                 {kullanici && !kullanici.anonim && (
@@ -889,7 +889,7 @@ export default function Home() {
                 {(!kullanici || kullanici.anonim) && (
                   <div className="border-t border-gray-200 pt-2 mt-1 space-y-1">
                     <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); setMobileMenuAcik(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Giriş Yap</button>
-                    <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); setMobileMenuAcik(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium bg-orange-500 text-white text-center hover:bg-orange-600 transition-colors rounded-lg">Ücretsiz Başla</button>
+                    <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); setMobileMenuAcik(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white text-center hover:bg-indigo-600 transition-colors rounded-lg">Ücretsiz Başla</button>
                   </div>
                 )}
               </nav>
@@ -899,15 +899,15 @@ export default function Home() {
 
         {/* Giriş yok / anonim banner */}
         {(!kullanici || kullanici.anonim) && (
-          <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4">
+          <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <span className="text-xl flex-shrink-0">🔒</span>
               <div>
-                <p className="text-sm font-semibold text-orange-800">İçerik üretmek için hesap gereklidir</p>
-                <p className="text-xs text-orange-600 mt-0.5">Ücretsiz hesap oluşturun, 3 kredi hediye edilsin — kredi kartı gerekmez.</p>
+                <p className="text-sm font-semibold text-indigo-800">İçerik üretmek için hesap gereklidir</p>
+                <p className="text-xs text-indigo-600 mt-0.5">Ücretsiz hesap oluşturun, 3 kredi hediye edilsin — kredi kartı gerekmez.</p>
               </div>
             </div>
-            <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap transition-colors flex-shrink-0">
+            <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap transition-colors flex-shrink-0">
               Ücretsiz Başla
             </button>
           </div>
@@ -932,15 +932,15 @@ export default function Home() {
 
         {/* Kredi düşük banner */}
         {krediDusuk && (
-          <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4">
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <span className="text-xl">⚠️</span>
               <div>
-                <p className="text-sm font-semibold text-red-800">İçerik üretim krediniz azalıyor</p>
-                <p className="text-xs text-red-600 mt-0.5">{kullanici?.kredi} kredi kaldı — tükenince içerik üretemezsiniz.</p>
+                <p className="text-sm font-semibold text-amber-800">İçerik üretim krediniz azalıyor</p>
+                <p className="text-xs text-amber-600 mt-0.5">{kullanici?.kredi} kredi kaldı — tükenince içerik üretemezsiniz.</p>
               </div>
             </div>
-            <button onClick={() => paketModalAc()} className="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap flex-shrink-0">Kredi Yükle</button>
+            <button onClick={() => paketModalAc()} className="bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap flex-shrink-0">Kredi Yükle</button>
           </div>
         )}
 
@@ -961,10 +961,10 @@ export default function Home() {
             {/* SEKMELER */}
             <div className="bg-white rounded-2xl shadow p-1.5 flex gap-1">
               {([
-                { id: "metin", label: "📝 Metin", renk: "bg-orange-500", aktif: true },
-                { id: "gorsel", label: "📷 Görsel", renk: "bg-purple-500", aktif: true },
-                { id: "sosyal", label: "📱 Sosyal Medya", renk: "bg-pink-500", aktif: true },
-                { id: "video", label: "🎬 Video", renk: "bg-red-500", aktif: true },
+                { id: "metin", label: "📝 Metin", renk: "bg-blue-500", aktif: true },
+                { id: "gorsel", label: "📷 Görsel", renk: "bg-violet-500", aktif: true },
+                { id: "sosyal", label: "📱 Sosyal Medya", renk: "bg-emerald-500", aktif: true },
+                { id: "video", label: "🎬 Video", renk: "bg-amber-500", aktif: true },
               ] as { id: AnaSekme; label: string; renk: string; aktif: boolean }[]).map((s) => (
                 <button key={s.id}
                   onClick={() => { if (s.aktif) { setAnaSekme(s.id); window.scrollTo({ top: 0, behavior: "smooth" }); } }}
@@ -988,10 +988,10 @@ export default function Home() {
                     <p className="text-xs font-semibold text-gray-700">Ürün Fotoğrafı</p>
                     <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                       {[
-                        { id: "metin", label: "📝 Metin", renk: "bg-orange-100 text-orange-600" },
-                        { id: "gorsel", label: "📷 Görsel", renk: "bg-purple-100 text-purple-600" },
-                        { id: "video", label: "🎬 Video", renk: "bg-red-100 text-red-600" },
-                        { id: "sosyal", label: "📱 Sosyal", renk: "bg-pink-100 text-pink-600" },
+                        { id: "metin", label: "📝 Metin", renk: "bg-blue-100 text-blue-600" },
+                        { id: "gorsel", label: "📷 Görsel", renk: "bg-violet-100 text-violet-600" },
+                        { id: "video", label: "🎬 Video", renk: "bg-amber-100 text-amber-600" },
+                        { id: "sosyal", label: "📱 Sosyal", renk: "bg-emerald-100 text-emerald-600" },
                       ].map((s) => (
                         <span key={s.id} className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${s.renk}`}>{s.label}</span>
                       ))}
@@ -1007,14 +1007,14 @@ export default function Home() {
                 </div>
               ) : (
                 <label className="flex items-center gap-3 cursor-pointer group">
-                  <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 group-hover:border-orange-300 flex items-center justify-center transition-colors flex-shrink-0">
+                  <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 group-hover:border-indigo-300 flex items-center justify-center transition-colors flex-shrink-0">
                     <span className="text-xl">📷</span>
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-600 group-hover:text-orange-600 transition-colors">Ürün fotoğrafı yükle</p>
+                    <p className="text-sm font-medium text-gray-600 group-hover:text-indigo-600 transition-colors">Ürün fotoğrafı yükle</p>
                     <p className="text-xs text-gray-400 mt-0.5">Metin, Görsel, Video ve Sosyal sekmelerin hepsinde kullanılır</p>
                   </div>
-                  <span className="text-xs text-gray-400 group-hover:text-orange-500 transition-colors flex-shrink-0">Seç →</span>
+                  <span className="text-xs text-gray-400 group-hover:text-indigo-500 transition-colors flex-shrink-0">Seç →</span>
                   <input type="file" accept="image/*" className="hidden" onChange={tekFotoSec} />
                 </label>
               )}
@@ -1024,7 +1024,7 @@ export default function Home() {
             <div style={{display: anaSekme === "metin" ? "block" : "none"}} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-base font-semibold text-gray-800">📋 Listing İçeriği Üret</h2>
-                <span className="text-xs text-orange-500 font-medium">1 içerik üretim kredisi</span>
+                <span className="text-xs text-blue-500 font-medium">1 içerik üretim kredisi</span>
               </div>
 
               {/* Giriş tipi */}
@@ -1034,12 +1034,12 @@ export default function Home() {
                 <div className="grid grid-cols-4 gap-2">
                     {(["manuel", "foto", "barkod"] as const).map((tip) => (
                     <button key={tip} onClick={() => setGirisTipi(tip)}
-                      className={`py-2 px-2 rounded-xl border-2 text-xs font-semibold transition-all ${girisTipi === tip ? "border-orange-400 bg-orange-50 text-orange-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
+                      className={`py-2 px-2 rounded-xl border-2 text-xs font-semibold transition-all ${girisTipi === tip ? "border-blue-400 bg-blue-50 text-blue-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
                       {tip === "manuel" ? "✏️ Manuel" : tip === "foto" ? "📷 Fotoğraf" : "🔍 Barkod"}
                     </button>
                   ))}
                   <a href="/toplu"
-                    className="py-2 px-2 rounded-xl border-2 text-xs font-semibold transition-all border-gray-200 text-gray-500 hover:border-orange-300 hover:text-orange-600 hover:bg-orange-50 text-center">
+                    className="py-2 px-2 rounded-xl border-2 text-xs font-semibold transition-all border-gray-200 text-gray-500 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 text-center">
                     📊 Excel
                   </a>
                 </div>
@@ -1048,7 +1048,7 @@ export default function Home() {
               {/* Platform */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Platform</label>
-                <select value={platform} onChange={(e) => { setPlatform(e.target.value); setDil(PLATFORM_BILGI[e.target.value]?.dil || "tr"); }} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
+                <select value={platform} onChange={(e) => { setPlatform(e.target.value); setDil(PLATFORM_BILGI[e.target.value]?.dil || "tr"); }} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
                   <optgroup label="🇹🇷 Türk Pazaryerleri">
                     <option value="trendyol">Trendyol</option>
                     <option value="hepsiburada">Hepsiburada</option>
@@ -1078,22 +1078,22 @@ export default function Home() {
                 <>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Adı <span className="text-red-400">*</span></label>
-                    <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)} placeholder={platformPh.urun} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                    <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)} placeholder={platformPh.urun} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Kategori <span className="text-red-400">*</span></label>
-                    <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder={platformPh.kategori} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                    <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder={platformPh.kategori} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                    <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)} placeholder={platformPh.ozellik} rows={3} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                    <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)} placeholder={platformPh.ozellik} rows={3} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
                     <p className="text-xs text-gray-400 mt-1">💡 Renk, beden, malzeme, garanti, kutu içeriği, güvenlik bilgisi — ne kadar çok bilgi girersen içerik o kadar spesifik olur; az bilgide sonuç genel kalabilir</p>
                   </div>
 
                   {/* Hedef Kitle */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Hedef Kitle <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                    <select value={hedefKitle} onChange={(e) => setHedefKitle(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400">
+                    <select value={hedefKitle} onChange={(e) => setHedefKitle(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
                       <option value="genel">Genel</option>
                       <option value="kadinlar">Kadınlar</option>
                       <option value="erkekler">Erkekler</option>
@@ -1110,7 +1110,7 @@ export default function Home() {
                     <div className="grid grid-cols-3 gap-2">
                       {(["butce", "orta", "premium"] as const).map((seg) => (
                         <button key={seg} type="button" onClick={() => setFiyatSegmenti(seg)}
-                          className={`py-2 rounded-xl border-2 text-xs font-semibold transition-all ${fiyatSegmenti === seg ? "border-orange-400 bg-orange-50 text-orange-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
+                          className={`py-2 rounded-xl border-2 text-xs font-semibold transition-all ${fiyatSegmenti === seg ? "border-blue-400 bg-blue-50 text-blue-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
                           {seg === "butce" ? "💰 Bütçe" : seg === "orta" ? "⚖️ Orta" : "👑 Premium"}
                         </button>
                       ))}
@@ -1122,7 +1122,7 @@ export default function Home() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Anahtar Kelimeler <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
                     <input type="text" value={anahtarKelimeler} onChange={(e) => setAnahtarKelimeler(e.target.value)}
                       placeholder="örn: kışlık bot, su geçirmez ayakkabı, erkek outdoor"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
                     <p className="text-xs text-gray-400 mt-1">💡 Arama sonuçlarında çıkmak istediğin kelimeler — AI bunları başlık ve açıklamaya doğal yerleştirir</p>
                   </div>
                 </>
@@ -1133,7 +1133,7 @@ export default function Home() {
                 <div className="space-y-3">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Kategori <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                    <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder="örn: Ayakkabı & Çanta / Erkek Bot" className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                    <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder="örn: Ayakkabı & Çanta / Erkek Bot" className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Ürün Fotoğrafı</label>
@@ -1147,7 +1147,7 @@ export default function Home() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                    <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)} placeholder="örn: kışlık, su geçirmez, 42 numara, garanti belgeli" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                    <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)} placeholder="örn: kışlık, su geçirmez, 42 numara, garanti belgeli" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
                   </div>
                 </div>
               )}
@@ -1156,10 +1156,10 @@ export default function Home() {
               {girisTipi === "barkod" && (
                 <div className="space-y-3">
                   {!kameraAcik && !barkodBilgi && (
-                    <div className="bg-orange-50 border border-orange-200 rounded-xl p-5 text-center space-y-3">
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 text-center space-y-3">
                       <div className="text-3xl">🔍</div>
                       <p className="text-sm text-gray-600">Ürünün barkodunu kameraya göster, bilgiler otomatik dolacak.</p>
-                      <button onClick={kameraAc} className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-5 py-2 rounded-xl transition-colors">
+                      <button onClick={kameraAc} className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-5 py-2 rounded-xl transition-colors">
                         📷 Kamerayı Aç
                       </button>
                     </div>
@@ -1179,7 +1179,7 @@ export default function Home() {
                       <p className="text-sm text-gray-700"><span className="font-medium">İsim:</span> {barkodBilgi.isim}</p>
                       {barkodBilgi.marka && <p className="text-sm text-gray-600"><span className="font-medium">Marka:</span> {barkodBilgi.marka}</p>}
                       {barkodBilgi.kategori && <p className="text-sm text-gray-600"><span className="font-medium">Kategori:</span> {barkodBilgi.kategori}</p>}
-                      <button onClick={() => { setBarkodBilgi(null); setUrunAdi(""); setKategori(""); setOzellikler(""); }} className="text-xs text-orange-500 hover:text-orange-700 underline mt-1 transition-colors">
+                      <button onClick={() => { setBarkodBilgi(null); setUrunAdi(""); setKategori(""); setOzellikler(""); }} className="text-xs text-blue-500 hover:text-blue-700 underline mt-1 transition-colors">
                         Tekrar Tara
                       </button>
                     </div>
@@ -1188,7 +1188,7 @@ export default function Home() {
               )}
 
               {/* Üret butonu */}
-              <button onClick={icerikUret} disabled={!uretButonAktif} className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
+              <button onClick={icerikUret} disabled={!uretButonAktif} className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
                 {yukleniyor ? `⏳ ${yukleniyorMesajlari[yukleniyorMesaj]}` : `İçerik Üret — ${kullanici?.is_admin ? "∞" : "1"} kredi`}
               </button>
 
@@ -1200,7 +1200,7 @@ export default function Home() {
 
               {yukleniyor && (
                 <div className="bg-white rounded-2xl shadow p-8 text-center space-y-4">
-                  <div className="flex justify-center"><div className="w-10 h-10 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin" /></div>
+                  <div className="flex justify-center"><div className="w-10 h-10 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin" /></div>
                   <p className="text-gray-600 font-medium animate-pulse">{yukleniyorMesajlari[yukleniyorMesaj]}</p>
                   <p className="text-gray-400 text-sm">Bu birkaç saniye sürebilir...</p>
                 </div>
@@ -1242,7 +1242,7 @@ export default function Home() {
             <div style={{display: anaSekme === "gorsel" ? "block" : "none"}} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-base font-semibold text-gray-800">🖼️ Ürün Görseli Üret</h2>
-                <span className="text-xs text-orange-500 font-medium">Stil başına 1 kredi · Her stilden 4 varyasyon</span>
+                <span className="text-xs text-violet-500 font-medium">Stil başına 1 kredi · Her stilden 4 varyasyon</span>
               </div>
 
               {/* Profil eksik uyarısı */}
@@ -1265,7 +1265,7 @@ export default function Home() {
               )}
               <p className="text-xs text-gray-400">
                 📸 En iyi sonuç için nasıl fotoğraf çekilmeli?{" "}
-                <a href="/blog/ai-gorsel-uretimi-e-ticaret" target="_blank" className="text-purple-500 hover:underline font-medium">
+                <a href="/blog/ai-gorsel-uretimi-e-ticaret" target="_blank" className="text-violet-500 hover:underline font-medium">
                   Rehberi oku →
                 </a>
               </p>
@@ -1306,17 +1306,17 @@ export default function Home() {
                       : GORSEL_STILLER;
                     return sirali.map((s) => (
                     <button key={s.id} onClick={() => setSeciliStil(s.id)}
-                      className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${seciliStil === s.id ? "border-purple-500 shadow-md" : "border-gray-200 hover:border-purple-300"}`}>
+                      className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${seciliStil === s.id ? "border-violet-500 shadow-md" : "border-gray-200 hover:border-violet-300"}`}>
                       {s.img ? (
                         <div className="aspect-square w-full overflow-hidden relative bg-gray-50">
                           <img src={s.img} alt={s.label} className="w-full h-full object-contain" />
-                          {seciliStil === s.id && <div className="absolute inset-0 bg-purple-500/20 flex items-center justify-center"><span className="bg-purple-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">✓</span></div>}
+                          {seciliStil === s.id && <div className="absolute inset-0 bg-violet-500/20 flex items-center justify-center"><span className="bg-violet-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">✓</span></div>}
                         </div>
                       ) : (
-                        <div className={`aspect-square w-full flex items-center justify-center text-2xl ${seciliStil === s.id ? "bg-purple-100" : "bg-gray-50"}`}>{s.id === "ozel" ? "✏️" : "🖼️"}</div>
+                        <div className={`aspect-square w-full flex items-center justify-center text-2xl ${seciliStil === s.id ? "bg-violet-100" : "bg-gray-50"}`}>{s.id === "ozel" ? "✏️" : "🖼️"}</div>
                       )}
                       <div className="p-2 bg-white w-full">
-                        <p className={`text-xs font-semibold ${seciliStil === s.id ? "text-purple-600" : "text-gray-700"}`}>{s.label}</p>
+                        <p className={`text-xs font-semibold ${seciliStil === s.id ? "text-violet-600" : "text-gray-700"}`}>{s.label}</p>
                         <p className="text-xs text-gray-400">{s.aciklama}</p>
                       </div>
                     </button>
@@ -1327,20 +1327,20 @@ export default function Home() {
 
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1">Görsel yönlendirmesi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="Sahneyi tanımla — örn: mermer masa üzerinde yumuşak pencere ışığı, yeşil bitkilerle / rustik ahşap raf, sıcak mum ışığı / pastel pembe gradyan arka plan, uçuşan balonlar" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
+                <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="Sahneyi tanımla — örn: mermer masa üzerinde yumuşak pencere ışığı, yeşil bitkilerle / rustik ahşap raf, sıcak mum ışığı / pastel pembe gradyan arka plan, uçuşan balonlar" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-400" />
               </div>
 
               {seciliStil === "referans" && (
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">Arka plan fotoğrafı <span className="text-gray-400 font-normal">(ürünü bu arka plana yerleştirelim)</span></label>
                   {referansGorsel ? (
-                    <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2 border-purple-300">
+                    <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2 border-violet-300">
                       <img src={referansGorsel} alt="Referans" className="w-full h-full object-cover" />
                       <button onClick={() => setReferansGorsel(null)} className="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center">×</button>
                     </div>
                   ) : (
-                    <label className="flex items-center justify-center w-full h-24 border-2 border-dashed border-purple-300 rounded-xl cursor-pointer hover:bg-purple-50 transition-colors">
-                      <span className="text-sm text-purple-400">🖼️ Arka plan fotoğrafı yükle</span>
+                    <label className="flex items-center justify-center w-full h-24 border-2 border-dashed border-violet-300 rounded-xl cursor-pointer hover:bg-violet-50 transition-colors">
+                      <span className="text-sm text-violet-400">🖼️ Arka plan fotoğrafı yükle</span>
                       <input type="file" accept="image/*" className="hidden" onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (!file) return;
@@ -1354,12 +1354,12 @@ export default function Home() {
               )}
 
               <button onClick={gorselUret} disabled={gorselYukleniyor || !seciliStil || fotolar.length === 0}
-                className="w-full bg-purple-500 hover:bg-purple-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
+                className="w-full bg-violet-500 hover:bg-violet-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
                 {gorselYukleniyor ? "⏳ 4 görsel üretiliyor..." : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : !seciliStil ? "Bir stil seç" : "✨ 4 Görsel Üret — 1 kredi (indirirken düşer)"}
               </button>
 
               {gorselYukleniyor && (
-                <p className="text-xs text-purple-600 text-center">Sayfayı kapatmayın — görsel üretimi yaklaşık 1 dakika sürer</p>
+                <p className="text-xs text-violet-600 text-center">Sayfayı kapatmayın — görsel üretimi yaklaşık 1 dakika sürer</p>
               )}
 
               <p className="text-xs text-gray-400 text-center">⚠️ AI hata yapabilir — üretilen görselleri yayınlamadan önce kontrol edin</p>
@@ -1392,7 +1392,7 @@ export default function Home() {
                         }
                         await yapIndir();
                       }}
-                      className="flex items-center gap-1.5 text-xs bg-purple-500 hover:bg-purple-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors"
+                      className="flex items-center gap-1.5 text-xs bg-violet-500 hover:bg-violet-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors"
                     >
                       📦 ZIP İndir — 1 kredi
                     </button>
@@ -1419,7 +1419,7 @@ export default function Home() {
             <div style={{display: anaSekme === "video" ? "block" : "none"}} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-base font-semibold text-gray-800">🎬 Ürün Videosu Üret</h2>
-                <span className="text-xs text-red-500 font-medium">{videoSure === "10" ? "8" : "5"} içerik üretim kredisi</span>
+                <span className="text-xs text-amber-500 font-medium">{videoSure === "10" ? "8" : "5"} içerik üretim kredisi</span>
               </div>
               <p className="text-xs text-gray-400">Ürün fotoğrafından kısa tanıtım videosu — pazaryerleri, Reels, TikTok ve YouTube için</p>
 
@@ -1448,8 +1448,8 @@ export default function Home() {
                     { id: "16:9", label: "🖥️ Yatay (16:9)", aciklama: "YouTube · Facebook · Pazaryeri" },
                   ] as { id: "9:16" | "16:9"; label: string; aciklama: string }[]).map((f) => (
                     <button key={f.id} onClick={() => setVideoFormat(f.id)}
-                      className={`p-3 rounded-xl border-2 text-left transition-all ${videoFormat === f.id ? "border-red-400 bg-red-50" : "border-gray-200 hover:border-gray-300"}`}>
-                      <p className={`text-xs font-semibold ${videoFormat === f.id ? "text-red-700" : "text-gray-700"}`}>{f.label}</p>
+                      className={`p-3 rounded-xl border-2 text-left transition-all ${videoFormat === f.id ? "border-amber-400 bg-amber-50" : "border-gray-200 hover:border-gray-300"}`}>
+                      <p className={`text-xs font-semibold ${videoFormat === f.id ? "text-amber-700" : "text-gray-700"}`}>{f.label}</p>
                       <p className="text-xs text-gray-400 mt-0.5">{f.aciklama}</p>
                     </button>
                   ))}
@@ -1465,10 +1465,10 @@ export default function Home() {
                     { id: "10", label: "🎞️ 10 Saniye", kredi: 8, aciklama: "Detaylı showcase · Pazaryeri" },
                   ] as { id: "5" | "10"; label: string; kredi: number; aciklama: string }[]).map((s) => (
                     <button key={s.id} onClick={() => setVideoSure(s.id)}
-                      className={`p-3 rounded-xl border-2 text-left transition-all ${videoSure === s.id ? "border-red-400 bg-red-50" : "border-gray-200 hover:border-gray-300"}`}>
+                      className={`p-3 rounded-xl border-2 text-left transition-all ${videoSure === s.id ? "border-amber-400 bg-amber-50" : "border-gray-200 hover:border-gray-300"}`}>
                       <div className="flex items-center justify-between mb-0.5">
-                        <p className={`text-xs font-semibold ${videoSure === s.id ? "text-red-700" : "text-gray-700"}`}>{s.label}</p>
-                        <span className={`text-xs font-bold ${videoSure === s.id ? "text-red-500" : "text-gray-400"}`}>{s.kredi} kredi</span>
+                        <p className={`text-xs font-semibold ${videoSure === s.id ? "text-amber-700" : "text-gray-700"}`}>{s.label}</p>
+                        <span className={`text-xs font-bold ${videoSure === s.id ? "text-amber-500" : "text-gray-400"}`}>{s.kredi} kredi</span>
                       </div>
                       <p className="text-xs text-gray-400">{s.aciklama}</p>
                     </button>
@@ -1514,21 +1514,21 @@ export default function Home() {
                     <div className="grid grid-cols-2 gap-2 mb-2">
                       {gosterilecekler.map((p) => (
                         <button key={p.etiket} onClick={() => setVideoPrompt(p.deger)}
-                          className={`text-left p-2.5 rounded-xl border-2 transition-all ${videoPrompt === p.deger ? "border-red-400 bg-red-50" : "border-gray-200 hover:border-red-200 hover:bg-red-50/50"}`}>
-                          <p className={`text-xs font-semibold ${videoPrompt === p.deger ? "text-red-700" : "text-gray-700"}`}>{p.ikon} {p.etiket}</p>
+                          className={`text-left p-2.5 rounded-xl border-2 transition-all ${videoPrompt === p.deger ? "border-amber-400 bg-amber-50" : "border-gray-200 hover:border-amber-200 hover:bg-amber-50/50"}`}>
+                          <p className={`text-xs font-semibold ${videoPrompt === p.deger ? "text-amber-700" : "text-gray-700"}`}>{p.ikon} {p.etiket}</p>
                           <p className="text-[10px] text-gray-500 mt-0.5 leading-relaxed">{p.aciklama}</p>
                         </button>
                       ))}
                     </div>
                   );
                 })()}
-                <textarea value={videoPrompt} onChange={(e) => setVideoPrompt(e.target.value)} placeholder="örn: Ürün yavaşça dönsün, dramatik ışıklandırma, siyah arka plan" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+                <textarea value={videoPrompt} onChange={(e) => setVideoPrompt(e.target.value)} placeholder="örn: Ürün yavaşça dönsün, dramatik ışıklandırma, siyah arka plan" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" />
                 <p className="text-xs text-gray-400 mt-1">Boş bırakırsan marka bilgine göre otomatik oluşturulur — genellikle iyi sonuç verir</p>
-                <Link href="/blog/ai-urun-videosu-hareket-secenekleri" className="inline-block mt-2 text-xs text-red-500 hover:text-red-700 hover:underline">Bu hareketler ne anlama gelir? Ürün kategorine göre hangisi uygun? →</Link>
+                <Link href="/blog/ai-urun-videosu-hareket-secenekleri" className="inline-block mt-2 text-xs text-amber-500 hover:text-amber-700 hover:underline">Bu hareketler ne anlama gelir? Ürün kategorine göre hangisi uygun? →</Link>
               </div>
 
               <button onClick={videoUret} disabled={videoYukleniyor || fotolar.length === 0 || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 8 : 5))}
-                className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
+                className="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
                 {videoYukleniyor ? "⏳ Video üretiliyor... (~2 dakika)" : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : !kullanici ? "🎬 Video Üret — Giriş Gerekli" : `🎬 Video Üret — ${kullanici.is_admin ? "∞" : (videoSure === "10" ? 8 : 5)} kredi`}
               </button>
 
@@ -1537,10 +1537,10 @@ export default function Home() {
               )}
 
               {videoYukleniyor && (
-                <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 text-center space-y-2">
-                  <div className="flex justify-center"><div className="w-8 h-8 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin" /></div>
-                  <p className="text-sm font-medium text-orange-700">AI videonuzu üretiyor</p>
-                  <p className="text-xs text-orange-500">Sayfayı kapatmayın, yaklaşık 2 dakika sürer</p>
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center space-y-2">
+                  <div className="flex justify-center"><div className="w-8 h-8 border-4 border-amber-200 border-t-amber-500 rounded-full animate-spin" /></div>
+                  <p className="text-sm font-medium text-amber-700">AI videonuzu üretiyor</p>
+                  <p className="text-xs text-amber-500">Sayfayı kapatmayın, yaklaşık 2 dakika sürer</p>
                 </div>
               )}
 
@@ -1573,28 +1573,28 @@ export default function Home() {
             <div style={{display: anaSekme === "sosyal" ? "block" : "none"}} className="mt-4 space-y-4">
 
               {/* Video linki */}
-              <div className="bg-red-50 border border-red-200 rounded-2xl p-3 flex items-center justify-between gap-3">
+              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">🎬</span>
-                  <p className="text-xs text-red-700 font-medium">Sosyal medya videosu üretmek için <span className="font-bold">Video sekmesini</span> kullan — Reels, TikTok ve Stories formatları destekleniyor.</p>
+                  <p className="text-xs text-amber-700 font-medium">Sosyal medya videosu üretmek için <span className="font-bold">Video sekmesini</span> kullan — Reels, TikTok ve Stories formatları destekleniyor.</p>
                 </div>
-                <button onClick={() => setAnaSekme("video")} className="text-xs bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">Video Sekmesi →</button>
+                <button onClick={() => setAnaSekme("video")} className="text-xs bg-amber-500 hover:bg-amber-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">Video Sekmesi →</button>
               </div>
 
               {/* İçerik tipi: Metin / Görsel */}
               <div className="bg-white rounded-2xl shadow p-6 space-y-4">
                 <div className="flex items-center justify-between">
                   <h2 className="text-base font-semibold text-gray-800">📱 Sosyal Medya İçeriği Üret</h2>
-                  <span className="text-xs text-pink-500 font-medium">1 kredi</span>
+                  <span className="text-xs text-emerald-500 font-medium">1 kredi</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   <button onClick={() => setSosyalIcerikTipi("metin")}
-                    className={`py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${sosyalIcerikTipi === "metin" ? "border-pink-400 bg-pink-50 text-pink-700" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
+                    className={`py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${sosyalIcerikTipi === "metin" ? "border-emerald-400 bg-emerald-50 text-emerald-700" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
                     ✍️ Caption + Hashtag
                   </button>
                   <button onClick={() => setSosyalIcerikTipi("gorsel")}
-                    className={`py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${sosyalIcerikTipi === "gorsel" ? "border-pink-400 bg-pink-50 text-pink-700" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
+                    className={`py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${sosyalIcerikTipi === "gorsel" ? "border-emerald-400 bg-emerald-50 text-emerald-700" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
                     🖼️ Ürün Görseli
                   </button>
                 </div>
@@ -1610,7 +1610,7 @@ export default function Home() {
                       { id: "twitter", label: "🐦 Twitter/X" },
                     ] as { id: SosyalPlatform; label: string }[]).map((p) => (
                       <button key={p.id} onClick={() => setSosyalPlatform(p.id)}
-                        className={`flex-1 py-2 px-2 rounded-xl border-2 text-xs font-semibold transition-all ${sosyalPlatform === p.id ? "border-pink-400 bg-pink-50 text-pink-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
+                        className={`flex-1 py-2 px-2 rounded-xl border-2 text-xs font-semibold transition-all ${sosyalPlatform === p.id ? "border-emerald-400 bg-emerald-50 text-emerald-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
                         {p.label}
                       </button>
                     ))}
@@ -1619,20 +1619,20 @@ export default function Home() {
                   {/* Platform boyut rehberi */}
                   {sosyalIcerikTipi === "gorsel" && (
                     <div className={`mt-2 rounded-xl border p-3 text-xs space-y-1 ${
-                      (sosyalPlatform === "instagram" || sosyalPlatform === "tiktok") ? "bg-pink-50 border-pink-200" :
+                      (sosyalPlatform === "instagram" || sosyalPlatform === "tiktok") ? "bg-emerald-50 border-emerald-200" :
                       sosyalPlatform === "facebook" ? "bg-blue-50 border-blue-200" :
                       "bg-sky-50 border-sky-200"
                     }`}>
                       <p className="font-semibold text-gray-700">📐 Önerilen Boyutlar</p>
                       {sosyalPlatform === "instagram" && (
                         <div className="grid grid-cols-2 gap-2 text-gray-600 mt-1">
-                          <div className="bg-white rounded-lg p-2 text-center border border-pink-100">
-                            <p className="font-bold text-pink-600">1:1</p>
+                          <div className="bg-white rounded-lg p-2 text-center border border-emerald-100">
+                            <p className="font-bold text-emerald-600">1:1</p>
                             <p>Feed Post</p>
                             <p className="text-gray-400">1080×1080</p>
                           </div>
-                          <div className="bg-white rounded-lg p-2 text-center border border-pink-100">
-                            <p className="font-bold text-pink-600">9:16</p>
+                          <div className="bg-white rounded-lg p-2 text-center border border-emerald-100">
+                            <p className="font-bold text-emerald-600">9:16</p>
                             <p>Story / Reels</p>
                             <p className="text-gray-400">1080×1920</p>
                           </div>
@@ -1640,13 +1640,13 @@ export default function Home() {
                       )}
                       {sosyalPlatform === "tiktok" && (
                         <div className="grid grid-cols-2 gap-2 text-gray-600 mt-1">
-                          <div className="bg-white rounded-lg p-2 text-center border border-pink-100">
-                            <p className="font-bold text-pink-600">9:16</p>
+                          <div className="bg-white rounded-lg p-2 text-center border border-emerald-100">
+                            <p className="font-bold text-emerald-600">9:16</p>
                             <p>Dikey Video</p>
                             <p className="text-gray-400">1080×1920</p>
                           </div>
-                          <div className="bg-white rounded-lg p-2 text-center border border-pink-100">
-                            <p className="font-bold text-pink-600">1:1</p>
+                          <div className="bg-white rounded-lg p-2 text-center border border-emerald-100">
+                            <p className="font-bold text-emerald-600">1:1</p>
                             <p>Kare</p>
                             <p className="text-gray-400">1080×1080</p>
                           </div>
@@ -1689,18 +1689,18 @@ export default function Home() {
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Adı <span className="text-red-400">*</span></label>
-                      <input type="text" value={sosyalUrunAdi} onChange={(e) => setSosyalUrunAdi(e.target.value)} placeholder="örn: Bakır Cezve Set, Kadın Deri Çanta" className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400" />
+                      <input type="text" value={sosyalUrunAdi} onChange={(e) => setSosyalUrunAdi(e.target.value)} placeholder="örn: Bakır Cezve Set, Kadın Deri Çanta" className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                      <textarea value={sosyalEkBilgi} onChange={(e) => setSosyalEkBilgi(e.target.value)} placeholder="örn: %20 indirimde, yeni sezon, el yapımı, hediye seçeneği" rows={2} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400" />
+                      <textarea value={sosyalEkBilgi} onChange={(e) => setSosyalEkBilgi(e.target.value)} placeholder="örn: %20 indirimde, yeni sezon, el yapımı, hediye seçeneği" rows={2} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Sezon / Etkinlik</label>
                       <select value={sosyalSezon} onChange={(e) => setSosyalSezon(e.target.value)}
-                        className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white">
+                        className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white">
                         <option value="normal">Normal (sezon yok)</option>
                         <option value="anneler_gunu">💐 Anneler Günü</option>
                         <option value="babalar_gunu">👔 Babalar Günü</option>
@@ -1720,8 +1720,8 @@ export default function Home() {
                           { id: "hikaye", label: "💫 Hikaye", aciklama: "Duygu bağı kur" },
                         ] as { id: SosyalTon; label: string; aciklama: string }[]).map((t) => (
                           <button key={t.id} onClick={() => setSosyalTon(t.id)}
-                            className={`p-3 rounded-xl border-2 text-left transition-all ${sosyalTon === t.id ? "border-pink-400 bg-pink-50" : "border-gray-200 hover:border-gray-300"}`}>
-                            <p className={`text-xs font-semibold ${sosyalTon === t.id ? "text-pink-700" : "text-gray-700"}`}>{t.label}</p>
+                            className={`p-3 rounded-xl border-2 text-left transition-all ${sosyalTon === t.id ? "border-emerald-400 bg-emerald-50" : "border-gray-200 hover:border-gray-300"}`}>
+                            <p className={`text-xs font-semibold ${sosyalTon === t.id ? "text-emerald-700" : "text-gray-700"}`}>{t.label}</p>
                             <p className="text-xs text-gray-400 mt-0.5">{t.aciklama}</p>
                           </button>
                         ))}
@@ -1729,12 +1729,12 @@ export default function Home() {
                     </div>
 
                     <button onClick={captionUret} disabled={captionYukleniyor || sosyalKitYukleniyor || !sosyalUrunAdi.trim() || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) <= 0)}
-                      className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
+                      className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
                       {captionYukleniyor ? "⏳ Üretiliyor..." : !kullanici ? "📱 Caption Üret — Giriş Gerekli" : `📱 ${["instagram","tiktok","facebook","twitter"].find(p => p === sosyalPlatform) ? (sosyalPlatform === "instagram" ? "Instagram" : sosyalPlatform === "tiktok" ? "TikTok" : sosyalPlatform === "facebook" ? "Facebook" : "Twitter/X") : "Caption"} Caption Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
                     </button>
 
                     <button onClick={kitUret} disabled={sosyalKitYukleniyor || captionYukleniyor || !sosyalUrunAdi.trim() || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < 4)}
-                      className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
+                      className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
                       {sosyalKitYukleniyor ? "⏳ Kit üretiliyor..." : !kullanici ? "🎁 Tüm Platformlar İçin Üret — Giriş Gerekli" : `🎁 Sosyal Medya Kiti — ${kullanici.is_admin ? "∞" : "4"} kredi`}
                     </button>
                     <p className="text-xs text-gray-400 text-center -mt-2">Instagram · TikTok · Facebook · Twitter/X aynı anda</p>
@@ -1746,21 +1746,21 @@ export default function Home() {
                     {(sosyalCaption || sosyalHashtag) && (
                       <div className="space-y-3">
                         {sosyalCaption && (
-                          <div className="bg-gray-50 rounded-2xl p-5 border-l-4 border-l-pink-400 border border-gray-100">
+                          <div className="bg-gray-50 rounded-2xl p-5 border-l-4 border-l-emerald-400 border border-gray-100">
                             <div className="flex items-center justify-between mb-3">
                               <span className="text-sm font-semibold text-gray-700">✍️ Paylaşım Metni</span>
-                              <button onClick={() => navigator.clipboard.writeText(sosyalCaption)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-white text-gray-500 hover:bg-pink-50 hover:text-pink-600 transition-all border border-gray-200">Kopyala</button>
+                              <button onClick={() => navigator.clipboard.writeText(sosyalCaption)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-white text-gray-500 hover:bg-emerald-50 hover:text-emerald-600 transition-all border border-gray-200">Kopyala</button>
                             </div>
                             <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{sosyalCaption}</p>
                           </div>
                         )}
                         {sosyalHashtag && (
-                          <div className="bg-gray-50 rounded-2xl p-5 border-l-4 border-l-purple-400 border border-gray-100">
+                          <div className="bg-gray-50 rounded-2xl p-5 border-l-4 border-l-emerald-400 border border-gray-100">
                             <div className="flex items-center justify-between mb-3">
                               <span className="text-sm font-semibold text-gray-700"># Hashtagler</span>
-                              <button onClick={() => navigator.clipboard.writeText(sosyalHashtag)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-white text-gray-500 hover:bg-purple-50 hover:text-purple-600 transition-all border border-gray-200">Kopyala</button>
+                              <button onClick={() => navigator.clipboard.writeText(sosyalHashtag)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-white text-gray-500 hover:bg-emerald-50 hover:text-emerald-600 transition-all border border-gray-200">Kopyala</button>
                             </div>
-                            <p className="text-sm text-purple-700 leading-relaxed">{sosyalHashtag}</p>
+                            <p className="text-sm text-emerald-700 leading-relaxed">{sosyalHashtag}</p>
                           </div>
                         )}
                         <button onClick={() => { setSosyalCaption(""); setSosyalHashtag(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni metin üret</button>
@@ -1796,7 +1796,7 @@ export default function Home() {
                                     <div>
                                       <div className="flex items-center justify-between mb-1">
                                         <span className="text-xs font-medium text-gray-600">Paylaşım Metni</span>
-                                        <button onClick={() => navigator.clipboard.writeText(sonuc.caption)} className="text-xs px-2 py-1 rounded bg-white border border-gray-200 text-gray-500 hover:text-pink-600 hover:border-pink-200 transition-all">Kopyala</button>
+                                        <button onClick={() => navigator.clipboard.writeText(sonuc.caption)} className="text-xs px-2 py-1 rounded bg-white border border-gray-200 text-gray-500 hover:text-emerald-600 hover:border-emerald-200 transition-all">Kopyala</button>
                                       </div>
                                       <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">{sonuc.caption}</p>
                                     </div>
@@ -1805,9 +1805,9 @@ export default function Home() {
                                     <div>
                                       <div className="flex items-center justify-between mb-1">
                                         <span className="text-xs font-medium text-gray-600">Hashtagler</span>
-                                        <button onClick={() => navigator.clipboard.writeText(sonuc.hashtag)} className="text-xs px-2 py-1 rounded bg-white border border-gray-200 text-gray-500 hover:text-purple-600 hover:border-purple-200 transition-all">Kopyala</button>
+                                        <button onClick={() => navigator.clipboard.writeText(sonuc.hashtag)} className="text-xs px-2 py-1 rounded bg-white border border-gray-200 text-gray-500 hover:text-emerald-600 hover:border-emerald-200 transition-all">Kopyala</button>
                                       </div>
-                                      <p className="text-sm text-purple-700">{sonuc.hashtag}</p>
+                                      <p className="text-sm text-emerald-700">{sonuc.hashtag}</p>
                                     </div>
                                   )}
                                 </div>
@@ -1827,6 +1827,7 @@ export default function Home() {
 
                     {!sosyalFoto ? (
                       <FotoEkleAlani id="sosyal-gorsel-foto-input" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onload = () => setSosyalFoto(r.result as string); r.readAsDataURL(f); } }} renk="pink" metin="Ürün fotoğrafı yükle" ikon="📸" altMetin="Temiz arka planlı fotoğraf en iyi sonucu verir" />
+
                     ) : (
                       <FotoThumbnail src={sosyalFoto} onKaldir={() => { setSosyalFoto(null); setSosyalGorselSonuclar([]); }} renk="green" />
                     )}
@@ -1841,8 +1842,8 @@ export default function Home() {
                           { id: "16:9", label: "16:9", aciklama: "Banner / YouTube" },
                         ] as { id: "1:1" | "9:16" | "16:9"; label: string; aciklama: string }[]).map((b) => (
                           <button key={b.id} onClick={() => setSosyalGorselFormat(b.id)}
-                            className={`p-2.5 rounded-xl border-2 text-center transition-all ${sosyalGorselFormat === b.id ? "border-pink-400 bg-pink-50" : "border-gray-200 hover:border-gray-300"}`}>
-                            <p className={`text-sm font-bold ${sosyalGorselFormat === b.id ? "text-pink-700" : "text-gray-700"}`}>{b.label}</p>
+                            className={`p-2.5 rounded-xl border-2 text-center transition-all ${sosyalGorselFormat === b.id ? "border-emerald-400 bg-emerald-50" : "border-gray-200 hover:border-gray-300"}`}>
+                            <p className={`text-sm font-bold ${sosyalGorselFormat === b.id ? "text-emerald-700" : "text-gray-700"}`}>{b.label}</p>
                             <p className="text-xs text-gray-400 mt-0.5">{b.aciklama}</p>
                           </button>
                         ))}
@@ -1863,7 +1864,7 @@ export default function Home() {
                           { id: "dogal", label: "🌿 Doğal" },
                         ]).map((s) => (
                           <button key={s.id} onClick={() => setSosyalGorselStil(s.id)}
-                            className={`py-2 px-1 rounded-xl border-2 text-xs font-medium transition-all ${sosyalGorselStil === s.id ? "border-pink-400 bg-pink-50 text-pink-700" : "border-gray-200 text-gray-600 hover:border-pink-200"}`}>
+                            className={`py-2 px-1 rounded-xl border-2 text-xs font-medium transition-all ${sosyalGorselStil === s.id ? "border-emerald-400 bg-emerald-50 text-emerald-700" : "border-gray-200 text-gray-600 hover:border-emerald-200"}`}>
                             {s.label}
                           </button>
                         ))}
@@ -1876,21 +1877,21 @@ export default function Home() {
                         value={sosyalGorselPrompt}
                         onChange={(e) => setSosyalGorselPrompt(e.target.value)}
                         placeholder="örn: Mermerli masada sofistike ışıklandırma, minimalist Japandi dekor..."
-                        className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none"
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 resize-none"
                         rows={2}
                       />
                     </div>
 
                     <button onClick={sosyalGorselUret} disabled={sosyalGorselYukleniyor || !sosyalFoto || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < 1)}
-                      className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
+                      className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
                       {sosyalGorselYukleniyor ? "⏳ Görsel üretiliyor..." : !kullanici ? "🖼️ Görsel Üret — Giriş Gerekli" : `🖼️ Sosyal Medya Görseli Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
                     </button>
 
                     {sosyalGorselYukleniyor && (
-                      <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 text-center space-y-2">
-                        <div className="flex justify-center"><div className="w-8 h-8 border-4 border-pink-200 border-t-pink-500 rounded-full animate-spin" /></div>
-                        <p className="text-sm font-medium text-pink-700">Görsel üretiliyor...</p>
-                        <p className="text-xs text-pink-500">Bu birkaç saniye sürebilir</p>
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center space-y-2">
+                        <div className="flex justify-center"><div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-500 rounded-full animate-spin" /></div>
+                        <p className="text-sm font-medium text-emerald-700">Görsel üretiliyor...</p>
+                        <p className="text-xs text-emerald-500">Bu birkaç saniye sürebilir</p>
                       </div>
                     )}
 
@@ -1925,8 +1926,8 @@ export default function Home() {
               {kullanici ? (
                 <>
                   <div className="flex gap-2">
-                    <div className="flex-1 bg-orange-50 rounded-xl px-2 py-2 text-center">
-                      <div className={`text-lg font-bold ${kullanici.is_admin ? "text-purple-500" : krediDusuk ? "text-red-500" : "text-orange-500"}`}>
+                    <div className="flex-1 bg-indigo-50 rounded-xl px-2 py-2 text-center">
+                      <div className={`text-lg font-bold ${kullanici.is_admin ? "text-violet-500" : krediDusuk ? "text-amber-500" : "text-indigo-500"}`}>
                         {kullanici.is_admin ? "∞" : kullanici.kredi}
                       </div>
                       <div className="text-xs text-gray-500">Kalan kredi</div>
@@ -1936,11 +1937,11 @@ export default function Home() {
                       <div className="text-xs text-gray-500">Kullanılan</div>
                     </div>
                   </div>
-                  <button onClick={() => paketModalAc()} className="w-full bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold py-2 rounded-xl transition-colors">
+                  <button onClick={() => paketModalAc()} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold py-2 rounded-xl transition-colors">
                     + Kredi Al
                   </button>
                   {!kullanici.anonim && (
-                    <a href="/profil" className="w-full flex items-center justify-center gap-1.5 text-xs text-gray-500 hover:text-orange-600 py-1.5 border border-gray-200 rounded-xl hover:border-orange-300 transition-colors">
+                    <a href="/profil" className="w-full flex items-center justify-center gap-1.5 text-xs text-gray-500 hover:text-indigo-600 py-1.5 border border-gray-200 rounded-xl hover:border-indigo-300 transition-colors">
                       📋 Geçmişimi Gör
                     </a>
                   )}
@@ -1948,7 +1949,7 @@ export default function Home() {
               ) : (
                 <div className="text-center space-y-2 py-1">
                   <p className="text-xs text-gray-500 leading-relaxed">Ücretsiz 3 kredi ile başla — kayıt gerekmiyor</p>
-                  <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="w-full bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold py-2 rounded-xl transition-colors">
+                  <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold py-2 rounded-xl transition-colors">
                     🎁 Ücretsiz Başla
                   </button>
                   <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="w-full text-xs text-gray-500 hover:text-gray-700 py-1 transition-colors">
@@ -1972,7 +1973,7 @@ export default function Home() {
               </div>
               <div className="p-5 space-y-3">
                 <div className="flex gap-2">
-                  <button onClick={() => setAuthPopupMod("kayit")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${authPopupMod === "kayit" ? "bg-orange-500 text-white border-orange-500" : "bg-white text-orange-500 border-orange-200"}`}>🎁 Kayıt Ol</button>
+                  <button onClick={() => setAuthPopupMod("kayit")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${authPopupMod === "kayit" ? "bg-indigo-500 text-white border-indigo-500" : "bg-white text-indigo-500 border-indigo-200"}`}>🎁 Kayıt Ol</button>
                   <button onClick={() => setAuthPopupMod("giris")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${authPopupMod === "giris" ? "bg-gray-800 text-white border-gray-800" : "bg-white text-gray-600 border-gray-200"}`}>Giriş Yap</button>
                 </div>
                 <button onClick={handleGoogleGiris} className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
@@ -1989,18 +1990,18 @@ export default function Home() {
                   <span className="text-xs text-gray-400">veya e-posta ile</span>
                   <div className="flex-1 h-px bg-gray-100" />
                 </div>
-                <input type="email" placeholder="E-posta" value={authPopupEmail} onChange={(e) => setAuthPopupEmail(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
-                <input type="password" placeholder="Şifre" value={authPopupSifre} onChange={(e) => setAuthPopupSifre(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleAuthPopupGiris()} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                <input type="email" placeholder="E-posta" value={authPopupEmail} onChange={(e) => setAuthPopupEmail(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                <input type="password" placeholder="Şifre" value={authPopupSifre} onChange={(e) => setAuthPopupSifre(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleAuthPopupGiris()} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
                 {authPopupMod === "kayit" && (
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input type="checkbox" checked={authPopupSozlesme} onChange={(e) => setAuthPopupSozlesme(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0" />
                     <span className="text-xs text-gray-500 leading-relaxed">
-                      <a href="/gizlilik" target="_blank" className="text-orange-500 hover:underline">Gizlilik Politikası</a> ve <a href="/mesafeli-satis" target="_blank" className="text-orange-500 hover:underline">Mesafeli Satış Sözleşmesi</a>&apos;ni okudum.
+                      <a href="/gizlilik" target="_blank" className="text-indigo-500 hover:underline">Gizlilik Politikası</a> ve <a href="/mesafeli-satis" target="_blank" className="text-indigo-500 hover:underline">Mesafeli Satış Sözleşmesi</a>&apos;ni okudum.
                     </span>
                   </label>
                 )}
                 {authPopupMesaj && <p className={`text-xs ${authPopupMesaj.includes("başarılı") || authPopupMesaj.includes("oluşturuldu") ? "text-green-600" : "text-red-500"}`}>{authPopupMesaj}</p>}
-                <button onClick={handleAuthPopupGiris} disabled={authPopupYukleniyor || (authPopupMod === "kayit" && !authPopupSozlesme)} className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl text-sm transition-colors">
+                <button onClick={handleAuthPopupGiris} disabled={authPopupYukleniyor || (authPopupMod === "kayit" && !authPopupSozlesme)} className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl text-sm transition-colors">
                   {authPopupYukleniyor ? "..." : authPopupMod === "kayit" ? "Ücretsiz Hesap Oluştur" : "Giriş Yap"}
                 </button>
               </div>
@@ -2019,7 +2020,7 @@ export default function Home() {
               <p className="text-sm text-gray-500 mb-1 leading-relaxed">
                 Günlük ücretsiz indirme hakkın bitti.
               </p>
-              <p className="text-sm font-semibold text-orange-600 mb-6">
+              <p className="text-sm font-semibold text-indigo-600 mb-6">
                 1 kredi düşeceğiz — 3 indirme hakkı daha açılır.
               </p>
               <div className="flex gap-2">
@@ -2032,7 +2033,7 @@ export default function Home() {
                 <button
                   onClick={krediOnayla}
                   disabled={!kullanici.is_admin && kullanici.kredi < 1}
-                  className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
+                  className="flex-1 bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
                 >
                   {!kullanici.is_admin && kullanici.kredi < 1 ? "Kredi yetersiz" : "Onayla — 1 kredi"}
                 </button>
@@ -2051,7 +2052,7 @@ export default function Home() {
                 Günlük görsel indirme hakkın doldu. Yarın tekrar deneyebilir ya da kredi satın alarak sınırsız indirebilirsin.
               </p>
               <div className="flex flex-col gap-2">
-                <button onClick={() => { setGorselUyariAcik(false); paketModalAc(); }} className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors">
+                <button onClick={() => { setGorselUyariAcik(false); paketModalAc(); }} className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors">
                   Kredi Satın Al
                 </button>
                 <button onClick={() => setGorselUyariAcik(false)} className="text-gray-400 hover:text-gray-600 text-sm py-2">

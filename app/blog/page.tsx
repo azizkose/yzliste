@@ -82,7 +82,7 @@ export default async function BlogPage() {
       <section className="px-4 sm:px-6 pt-14 pb-8 max-w-3xl mx-auto text-center">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
           E-ticaret satıcıları için<br />
-          <span className="text-orange-500">pratik rehberler</span>
+          <span className="text-indigo-500">pratik rehberler</span>
         </h1>
         <p className="text-gray-500 text-base">
           Trendyol, Hepsiburada, Amazon ve Etsy&apos;de listing yazma, AI görsel kullanımı ve platform stratejileri.
@@ -94,7 +94,7 @@ export default async function BlogPage() {
         <section className="px-4 sm:px-6 pb-6">
           <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-2">
             {cats.map((k) => (
-              <span key={k} className="text-xs bg-orange-50 text-orange-700 border border-orange-200 px-3 py-1.5 rounded-full font-medium">
+              <span key={k} className="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 px-3 py-1.5 rounded-full font-medium">
                 {k}
               </span>
             ))}
@@ -121,18 +121,18 @@ export default async function BlogPage() {
                   />
                 )}
                 {!yazi.kapakGorsel && (
-                  <div className="w-full h-40 bg-orange-50 flex items-center justify-center">
+                  <div className="w-full h-40 bg-indigo-50 flex items-center justify-center">
                     <span className="text-4xl">📝</span>
                   </div>
                 )}
                 <div className="p-5 flex flex-col flex-1">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs bg-orange-50 text-orange-600 border border-orange-100 px-2 py-0.5 rounded-full font-medium">
+                    <span className="text-xs bg-indigo-50 text-indigo-600 border border-indigo-100 px-2 py-0.5 rounded-full font-medium">
                       {yazi.kategori}
                     </span>
                     <span className="text-xs text-gray-400">{yazi.okumaSuresi} dk okuma</span>
                   </div>
-                  <h2 className="font-bold text-gray-800 text-sm leading-snug mb-2 group-hover:text-orange-600 transition-colors line-clamp-3">
+                  <h2 className="font-bold text-gray-800 text-sm leading-snug mb-2 group-hover:text-indigo-600 transition-colors line-clamp-3">
                     {yazi.baslik}
                   </h2>
                   <p className="text-xs text-gray-500 leading-relaxed flex-1 line-clamp-3">
@@ -146,7 +146,7 @@ export default async function BlogPage() {
                         year: "numeric",
                       })}
                     </span>
-                    <span className="text-xs text-orange-500 font-medium group-hover:underline">
+                    <span className="text-xs text-indigo-500 font-medium group-hover:underline">
                       Oku →
                     </span>
                   </div>
@@ -165,12 +165,12 @@ export default async function BlogPage() {
       </section>
 
       {/* CTA */}
-      <section className="px-4 sm:px-6 py-14 bg-orange-50 border-y border-orange-100 text-center">
+      <section className="px-4 sm:px-6 py-14 bg-indigo-50 border-y border-indigo-100 text-center">
         <h2 className="text-xl font-bold text-gray-800 mb-3">Okuduktan sonra dene</h2>
         <p className="text-sm text-gray-500 mb-6">3 ücretsiz kredi ile listing ve görsel üret. Kayıt bile olmadan misafir olarak başla.</p>
         <Link
           href="/?anonim=1"
-          className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-orange-100"
+          className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-indigo-100"
         >
           3 Ücretsiz Kredi ile Başla →
         </Link>

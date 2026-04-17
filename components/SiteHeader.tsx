@@ -38,7 +38,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               href={link.href}
               className={`px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-colors whitespace-nowrap ${
                 aktifSayfa === link.id
-                  ? "text-orange-600 font-medium"
+                  ? "text-indigo-600 font-medium"
                   : "hover:bg-gray-100 hover:text-gray-800"
               }`}
             >
@@ -59,7 +59,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               </a>
               <a
                 href="/"
-                className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap"
+                className="hidden sm:block text-xs sm:text-sm bg-indigo-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-600 transition-colors font-medium whitespace-nowrap"
               >
                 İçerik Üret →
               </a>
@@ -74,7 +74,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               </a>
               <a
                 href="/kayit"
-                className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap"
+                className="hidden sm:block text-xs sm:text-sm bg-indigo-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-600 transition-colors font-medium whitespace-nowrap"
               >
                 Ücretsiz Başla
               </a>
@@ -102,7 +102,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
                 onClick={() => setMenuAcik(false)}
                 className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
                   aktifSayfa === link.id
-                    ? "text-orange-600 font-medium bg-orange-50"
+                    ? "text-indigo-600 font-medium bg-indigo-50"
                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
                 }`}
               >
@@ -112,7 +112,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
             <div className="border-t border-gray-100 pt-2 mt-2">
               <a
                 href="/kayit"
-                className="block px-3 py-2 rounded-lg text-sm font-medium bg-orange-500 text-white text-center hover:bg-orange-600 transition-colors"
+                className="block px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white text-center hover:bg-indigo-600 transition-colors"
               >
                 Ücretsiz Başla
               </a>
