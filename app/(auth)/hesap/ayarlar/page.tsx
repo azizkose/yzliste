@@ -16,7 +16,7 @@ export default function AyarlarPage() {
   const [cikisYukleniyor, setCikisYukleniyor] = useState(false)
   const [exportYukleniyor, setExportYukleniyor] = useState(false)
   const [silmeModal, setSilmeModal] = useState(false)
-  const [silmeOnay, setSilmeOnay] = useState('')
+  const [silmeOnay, setSilmeOnay] = useState(false)
   const [silmeYukleniyor, setSilmeYukleniyor] = useState(false)
   const [silmeMesaj, setSilmeMesaj] = useState('')
 
@@ -56,7 +56,7 @@ export default function AyarlarPage() {
   }
 
   const handleHesapSil = async () => {
-    if (silmeOnay !== 'SİL') { setSilmeMesaj('"SİL" yazmanız gerekiyor.'); return }
+    if (!silmeOnay) { setSilmeMesaj('Onay kutusunu işaretlemeniz gerekiyor.'); return }
     setSilmeYukleniyor(true)
     setSilmeMesaj('')
     try {
@@ -154,7 +154,7 @@ export default function AyarlarPage() {
             Bu süre içinde geri almak için destek@yzliste.com adresine yazabilirsiniz.
           </p>
           <button
-            onClick={() => { setSilmeModal(true); setSilmeOnay(''); setSilmeMesaj('') }}
+            onClick={() => { setSilmeModal(true); setSilmeOnay(false); setSilmeMesaj('') }}
             className="w-full border border-red-300 text-red-500 hover:bg-red-50 font-medium py-3 rounded-xl text-sm transition-colors"
           >
             Hesabımı Sil
@@ -168,15 +168,17 @@ export default function AyarlarPage() {
           <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
             <h3 className="font-bold text-gray-900 mb-2">Hesabı silmek istediğinizden emin misiniz?</h3>
             <p className="text-xs text-gray-500 mb-4">
-              Bu işlem geri alınamaz. Onaylamak için aşağıya <strong>SİL</strong> yazın.
+              Bu işlem geri alınamaz. Hesabınız ve tüm verileriniz 30 gün içinde kalıcı olarak silinir.
             </p>
-            <input
-              type="text"
-              value={silmeOnay}
-              onChange={(e) => setSilmeOnay(e.target.value.toUpperCase())}
-              placeholder="SİL"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-red-400"
-            />
+            <label className="flex items-start gap-3 mb-4 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={silmeOnay}
+                onChange={(e) => setSilmeOnay(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-gray-300 text-red-500 focus:ring-red-400"
+              />
+              <span className="text-sm text-gray-700">Hesabımı silmek istediğimi onaylıyorum</span>
+            </label>
             {silmeMesaj && <p className="text-xs text-red-500 mb-3">{silmeMesaj}</p>}
             <div className="flex gap-3">
               <button

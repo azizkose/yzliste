@@ -3,8 +3,21 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const PROTECTED_PATHS = ['/app', '/hesap', '/kredi-yukle']
 
+const BOT_UA_PATTERN = /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|sogou|exabot|facebot|ia_archiver/i
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  // Crawler'lar korumalı sayfaya gelince redirect yerine 404 dön
+  const isProtectedEarly = PROTECTED_PATHS.some(
+    (p) => pathname === p || pathname.startsWith(p + '/')
+  )
+  if (isProtectedEarly) {
+    const ua = request.headers.get('user-agent') || ''
+    if (BOT_UA_PATTERN.test(ua)) {
+      return new NextResponse(null, { status: 404 })
+    }
+  }
 
   let response = NextResponse.next({ request })
 

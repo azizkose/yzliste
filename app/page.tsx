@@ -361,6 +361,7 @@ export default function Home() {
   // Video sekmesi
   // videoFoto kaldırıldı — tüm sekmeler fotolar[0] paylaşır
   const [videoPrompt, setVideoPrompt] = useState("");
+  const [videoPromptGoster, setVideoPromptGoster] = useState("");
   const [videoSure, setVideoSure] = useState<"5" | "10">("5");
   const [videoFormat, setVideoFormat] = useState<"9:16" | "16:9" | "1:1">("9:16");
   const [videoYukleniyor, setVideoYukleniyor] = useState(false);
@@ -693,6 +694,7 @@ export default function Home() {
 
       // Her iş için paralel poll — tamamlananlar anında gösterilir
       let tamamlananSayisi = 0;
+      const hataMesajlari: string[] = [];
       await Promise.all(
         data.jobs.map(async (job: { requestId: string; label: string; stil: string }) => {
           for (let deneme = 0; deneme < 40; deneme++) {
@@ -704,11 +706,20 @@ export default function Home() {
               setGorselJoblar(prev => [...prev, job]);
               break;
             }
+            if (pollData.status === "FAILED") {
+              const hataAciklama = pollData.hata || "Görsel üretilemedi";
+              hataMesajlari.push(`${job.label}: ${hataAciklama}`);
+              break;
+            }
           }
         })
       );
 
-      if (tamamlananSayisi === 0) setHata("Görsel üretilemedi, zaman aşımı.");
+      if (tamamlananSayisi === 0) {
+        setHata(hataMesajlari.length > 0 ? hataMesajlari[0] : "Görsel üretilemedi, zaman aşımı.");
+      } else if (hataMesajlari.length > 0) {
+        setHata(`${hataMesajlari.length} görsel üretilemedi: ${hataMesajlari[0]}`);
+      }
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setGorselYukleniyor(false);
   };
@@ -820,6 +831,11 @@ export default function Home() {
           tamamlandi = true;
           break;
         }
+        if (pollData.status === "FAILED") {
+          setHata(pollData.hata || "Görsel üretilemedi. Tekrar deneyin.");
+          tamamlandi = true;
+          break;
+        }
       }
       if (!tamamlandi) setHata("Görsel üretilemedi, zaman aşımı. Tekrar deneyin.");
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
@@ -897,6 +913,22 @@ export default function Home() {
             </div>
           )}
         </div>
+
+        {/* Compact hero — sadece giriş yapılmamışsa */}
+        {(!kullanici || kullanici.anonim) && (
+          <div className="bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 rounded-2xl px-6 py-7 mb-5 text-center">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">7 Pazaryeri için AI İçerik Üreticisi</h1>
+            <p className="text-sm text-gray-500 mb-5">Trendyol, Hepsiburada, Amazon, Etsy ve daha fazlası için — başlık, açıklama, görsel ve video tek platformda.</p>
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors">
+                Ücretsiz Başla — 3 Kredi Hediye
+              </button>
+              <a href="/auth" className="text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
+                Detaylı bilgi →
+              </a>
+            </div>
+          </div>
+        )}
 
         {/* Giriş yok / anonim banner */}
         {(!kullanici || kullanici.anonim) && (
@@ -1448,6 +1480,10 @@ export default function Home() {
                                 setGorselJoblar(prev => prev.map(j => j.requestId === job.requestId ? newJob : j));
                                 break;
                               }
+                              if (pollData.status === "FAILED") {
+                                alert(pollData.hata || "Görsel üretilemedi, tekrar deneyin.");
+                                break;
+                              }
                             }
                           }}
                             className="text-xs text-violet-400 hover:text-violet-600 transition-colors">
@@ -1527,20 +1563,20 @@ export default function Home() {
                 <label className="block text-xs font-medium text-gray-600 mb-1">Hareket & sahne tarifi <span className="text-gray-400 font-normal">(isteğe bağlı — Türkçe yazabilirsin)</span></label>
                 {(() => {
                   const VIDEO_PRESETLER = [
-                    { etiket: "360° Dönüş", aciklama: "Ürün kendi ekseni etrafında yavaşça döner. Tüm açılar görünür.", ikon: "🔄", deger: "Product slowly rotates 180 degrees on a clean surface, smooth and steady, then gently settles back to its original position, soft even studio lighting, white background", kategoriler: ["tumu"] },
-                    { etiket: "Zoom Yaklaşım", aciklama: "Kamera ürüne doğru yavaş yaklaşır. Detay ve doku hissi verir.", ikon: "🔍", deger: "Camera smoothly zooms in from medium shot to close-up over 3 seconds, revealing product texture and surface details, then holds steady for 2 seconds, soft focus background gradually blurs more", kategoriler: ["tumu"] },
-                    { etiket: "Dramatik Işık", aciklama: "Karanlık sahnede spotlight açılır. Premium görünüm.", ikon: "💡", deger: "Dark scene, then soft overhead light gradually fades in illuminating the product over 3 seconds, light reaches full brightness and holds steady, subtle reflection on surface beneath product, luxury cinematic feel", kategoriler: ["tumu"] },
-                    { etiket: "Doğal Ortam", aciklama: "Açık havada altın saat ışığında huzurlu sunum.", ikon: "🌿", deger: "Product sits on a natural stone surface outdoors, warm golden hour sunlight slowly shifts across the frame from left to right then settles, one single leaf gently drifts past in background and exits frame, scene becomes peaceful and still", kategoriler: ["tumu"] },
-                    { etiket: "Detay Tarama", aciklama: "Kamera yüzeyi tarayarak detayları gösterir.", ikon: "🔬", deger: "Camera slowly tracks across the product surface from left to right revealing textures and details, then pulls back slightly to show full product and holds, clean studio lighting", kategoriler: ["tumu", "elektronik"] },
-                    { etiket: "Parıltı Reveal", aciklama: "Altın parçacıklar arasında ürün beliriyor. Kozmetik & parfüm için.", ikon: "✨", deger: "Camera slowly moves in toward the product as soft golden particles drift downward for 3 seconds then fade away, product comes into sharp focus and holds steady, warm pink-toned beauty lighting", kategoriler: ["kozmetik"] },
-                    { etiket: "Lüks Mermer", aciklama: "Mermer yüzeyde zarif sunum. Premium kozmetik hissi.", ikon: "💎", deger: "Product sits on white marble surface, camera slowly pans from left to center over 3 seconds then stops, soft overhead light creates gentle reflection on marble, elegant minimal composition", kategoriler: ["kozmetik", "taki"] },
-                    { etiket: "Tech Reveal", aciklama: "Koyu arka planda LED vurgulu teknoloji sunumu.", ikon: "🔵", deger: "Dark scene, cool blue accent light glows briefly on one side of the product then fades to warm white, camera smoothly pans right revealing the product profile, then holds steady, dark background", kategoriler: ["elektronik"] },
-                    { etiket: "Kumaş Hareketi", aciklama: "Hafif rüzgar kumaşı oynatır. Giyim & tekstil için.", ikon: "👕", deger: "Soft breeze gently moves the fabric for 2 seconds creating natural drape movement, then fabric settles smoothly into place, clean studio lighting from the left, camera stays steady on tripod", kategoriler: ["giyim"] },
-                    { etiket: "Lezzet Çekimi", aciklama: "Üstten aşağı çekim, sıcak buhar efekti. Gıda için.", ikon: "🍽️", deger: "Camera slowly descends from directly above looking down at the product on warm wooden surface, gentle wisp of steam rises briefly then dissipates, warm appetizing golden lighting, scene becomes still", kategoriler: ["gida"] },
-                    { etiket: "Taze His", aciklama: "Doğal ışıkta taze ve organik sunum.", ikon: "🌱", deger: "Product on light surface with small green herb sprig beside it, soft natural daylight slowly brightens over 2 seconds then holds steady, fresh clean minimal composition, one water droplet visible on surface", kategoriler: ["gida"] },
-                    { etiket: "Işıltı Dönüş", aciklama: "Spotlight altında yavaş dönüş, pırıltı yansımaları.", ikon: "💍", deger: "Product on dark velvet surface rotates slowly 90 degrees, single spotlight creates sparkle reflections that shimmer across facets, then product settles and reflections calm, luxurious dark background", kategoriler: ["taki"] },
-                    { etiket: "Neşeli Sunum", aciklama: "Renkli ve eğlenceli, çocuk ürünleri için.", ikon: "🎈", deger: "Product bounces lightly once on soft surface and settles into place with a gentle wobble, 3 small colorful confetti pieces drift down briefly then scene clears, bright cheerful even studio lighting", kategoriler: ["cocuk"] },
-                    { etiket: "Dinamik Reveal", aciklama: "Enerjik ve hızlı, spor ürünleri için.", ikon: "⚡", deger: "Quick dynamic camera push toward the product then pulls back smoothly to reveal full view over 3 seconds, motion blur at start clears to sharp focus, energetic bright studio lighting, clean background", kategoriler: ["spor"] },
+                    { etiket: "360° Dönüş", aciklama: "Ürün kendi ekseni etrafında yavaşça döner. Tüm açılar görünür.", ikon: "🔄", goster: "Ürün temiz zemin üzerinde 180° yavaşça döner, yumuşak stüdyo ışığı, beyaz arka plan", deger: "Product slowly rotates 180 degrees on a clean surface, smooth and steady, then gently settles back to its original position, soft even studio lighting, white background", kategoriler: ["tumu"] },
+                    { etiket: "Zoom Yaklaşım", aciklama: "Kamera ürüne doğru yavaş yaklaşır. Detay ve doku hissi verir.", ikon: "🔍", goster: "Kamera 3 saniyede ürüne yaklaşır, doku ve yüzey detayları ortaya çıkar, arka plan yumuşak odak dışı", deger: "Camera smoothly zooms in from medium shot to close-up over 3 seconds, revealing product texture and surface details, then holds steady for 2 seconds, soft focus background gradually blurs more", kategoriler: ["tumu"] },
+                    { etiket: "Dramatik Işık", aciklama: "Karanlık sahnede spotlight açılır. Premium görünüm.", ikon: "💡", goster: "Karanlık sahne, yumuşak tepe ışığı 3 saniyede kademeli açılır, yüzeyde hafif yansıma, lüks sinematik his", deger: "Dark scene, then soft overhead light gradually fades in illuminating the product over 3 seconds, light reaches full brightness and holds steady, subtle reflection on surface beneath product, luxury cinematic feel", kategoriler: ["tumu"] },
+                    { etiket: "Doğal Ortam", aciklama: "Açık havada altın saat ışığında huzurlu sunum.", ikon: "🌿", goster: "Ürün doğal taş zemin üzerinde, altın saat güneşi soldan sağa kayar, arka planda tek yaprak geçer, huzurlu son sahne", deger: "Product sits on a natural stone surface outdoors, warm golden hour sunlight slowly shifts across the frame from left to right then settles, one single leaf gently drifts past in background and exits frame, scene becomes peaceful and still", kategoriler: ["tumu"] },
+                    { etiket: "Detay Tarama", aciklama: "Kamera yüzeyi tarayarak detayları gösterir.", ikon: "🔬", goster: "Kamera ürün yüzeyini soldan sağa yavaş tarar, doku detayları ortaya çıkar, sonra geri çekilerek tam görünüm", deger: "Camera slowly tracks across the product surface from left to right revealing textures and details, then pulls back slightly to show full product and holds, clean studio lighting", kategoriler: ["tumu", "elektronik"] },
+                    { etiket: "Parıltı Reveal", aciklama: "Altın parçacıklar arasında ürün beliriyor. Kozmetik & parfüm için.", ikon: "✨", goster: "Kamera ürüne yaklaşırken altın parçacıklar 3 saniye yavaşça düşer ve solar, ürün odağa gelir, sıcak pembe güzellik ışığı", deger: "Camera slowly moves in toward the product as soft golden particles drift downward for 3 seconds then fade away, product comes into sharp focus and holds steady, warm pink-toned beauty lighting", kategoriler: ["kozmetik"] },
+                    { etiket: "Lüks Mermer", aciklama: "Mermer yüzeyde zarif sunum. Premium kozmetik hissi.", ikon: "💎", goster: "Ürün beyaz mermer üzerinde, kamera 3 saniyede soldan merkeze kayar, mermer yüzeyde yumuşak yansıma, zarif minimal kompozisyon", deger: "Product sits on white marble surface, camera slowly pans from left to center over 3 seconds then stops, soft overhead light creates gentle reflection on marble, elegant minimal composition", kategoriler: ["kozmetik", "taki"] },
+                    { etiket: "Tech Reveal", aciklama: "Koyu arka planda LED vurgulu teknoloji sunumu.", ikon: "🔵", goster: "Koyu sahne, mavi LED ışık bir anda parlar ve beyaza döner, kamera sağa kayarak ürün profilini açar, koyu arka plan", deger: "Dark scene, cool blue accent light glows briefly on one side of the product then fades to warm white, camera smoothly pans right revealing the product profile, then holds steady, dark background", kategoriler: ["elektronik"] },
+                    { etiket: "Kumaş Hareketi", aciklama: "Hafif rüzgar kumaşı oynatır. Giyim & tekstil için.", ikon: "👕", goster: "Hafif esinti 2 saniye kumaşı hareket ettirir, doğal sarkma oluşturur, sonra yerleşir, soldaki stüdyo ışığı, sabit kamera", deger: "Soft breeze gently moves the fabric for 2 seconds creating natural drape movement, then fabric settles smoothly into place, clean studio lighting from the left, camera stays steady on tripod", kategoriler: ["giyim"] },
+                    { etiket: "Lezzet Çekimi", aciklama: "Üstten aşağı çekim, sıcak buhar efekti. Gıda için.", ikon: "🍽️", goster: "Kamera sıcak ahşap yüzeydeki ürünün tam üstünden yavaş iner, hafif buhar çıkar ve dağılır, altın iştah açıcı ışıklandırma", deger: "Camera slowly descends from directly above looking down at the product on warm wooden surface, gentle wisp of steam rises briefly then dissipates, warm appetizing golden lighting, scene becomes still", kategoriler: ["gida"] },
+                    { etiket: "Taze His", aciklama: "Doğal ışıkta taze ve organik sunum.", ikon: "🌱", goster: "Ürünün yanında küçük yeşil ot dalı, doğal gün ışığı 2 saniyede parlar, taze minimal kompozisyon, yüzeyde tek su damlası", deger: "Product on light surface with small green herb sprig beside it, soft natural daylight slowly brightens over 2 seconds then holds steady, fresh clean minimal composition, one water droplet visible on surface", kategoriler: ["gida"] },
+                    { etiket: "Işıltı Dönüş", aciklama: "Spotlight altında yavaş dönüş, pırıltı yansımaları.", ikon: "💍", goster: "Ürün koyu kadife üzerinde 90° döner, tek spot ışık yüzeyde pırıltılar oluşturur, sonra yerleşir, lüks koyu arka plan", deger: "Product on dark velvet surface rotates slowly 90 degrees, single spotlight creates sparkle reflections that shimmer across facets, then product settles and reflections calm, luxurious dark background", kategoriler: ["taki"] },
+                    { etiket: "Neşeli Sunum", aciklama: "Renkli ve eğlenceli, çocuk ürünleri için.", ikon: "🎈", goster: "Ürün yumuşak zemine hafifçe sekerler ve yerleşir, 3 renkli konfeti parçası kısa süre yağar ve kaybolur, neşeli stüdyo ışığı", deger: "Product bounces lightly once on soft surface and settles into place with a gentle wobble, 3 small colorful confetti pieces drift down briefly then scene clears, bright cheerful even studio lighting", kategoriler: ["cocuk"] },
+                    { etiket: "Dinamik Reveal", aciklama: "Enerjik ve hızlı, spor ürünleri için.", ikon: "⚡", goster: "Dinamik kamera itiş ve geri çekiliş 3 saniyede tam görünümü açar, hareket bulanıklığı keskin odağa döner, enerjik stüdyo ışığı", deger: "Quick dynamic camera push toward the product then pulls back smoothly to reveal full view over 3 seconds, motion blur at start clears to sharp focus, energetic bright studio lighting, clean background", kategoriler: ["spor"] },
                   ];
                   const seciliKategoriKodu = (() => {
                     const k = (kategori || "").toLowerCase();
@@ -1559,7 +1595,7 @@ export default function Home() {
                   return (
                     <div className="grid grid-cols-2 gap-2 mb-2">
                       {gosterilecekler.map((p) => (
-                        <button key={p.etiket} onClick={() => setVideoPrompt(p.deger)}
+                        <button key={p.etiket} onClick={() => { setVideoPrompt(p.deger); setVideoPromptGoster(p.goster); }}
                           className={`text-left p-2.5 rounded-xl border-2 transition-all ${videoPrompt === p.deger ? "border-amber-400 bg-amber-50" : "border-gray-200 hover:border-amber-200 hover:bg-amber-50/50"}`}>
                           <p className={`text-xs font-semibold ${videoPrompt === p.deger ? "text-amber-700" : "text-gray-700"}`}>{p.ikon} {p.etiket}</p>
                           <p className="text-[10px] text-gray-500 mt-0.5 leading-relaxed">{p.aciklama}</p>
@@ -1568,7 +1604,7 @@ export default function Home() {
                     </div>
                   );
                 })()}
-                <textarea value={videoPrompt} onChange={(e) => setVideoPrompt(e.target.value)} placeholder="örn: Ürün yavaşça dönsün, dramatik ışıklandırma, siyah arka plan" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" />
+                <textarea value={videoPromptGoster} onChange={(e) => { setVideoPromptGoster(e.target.value); setVideoPrompt(e.target.value); }} placeholder="örn: Ürün yavaşça dönsün, dramatik ışıklandırma, siyah arka plan" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" />
                 <p className="text-xs text-gray-400 mt-1">Boş bırakırsan marka bilgine göre otomatik oluşturulur — genellikle iyi sonuç verir</p>
                 <Link href="/blog/ai-urun-videosu-hareket-secenekleri" className="inline-block mt-2 text-xs text-amber-500 hover:text-amber-700 hover:underline">Bu hareketler ne anlama gelir? Ürün kategorine göre hangisi uygun? →</Link>
               </div>

@@ -13,6 +13,11 @@ export async function GET(req: NextRequest) {
 
   const status = await fal.queue.status(ENDPOINT, { requestId, logs: false });
 
-  // URL'leri frontend'e yansıtma — proxy üzerinden erişilecek
+  if (status.status === "FAILED") {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const errMsg = (status as any)?.error?.message || (status as any)?.error || "Görsel üretim başarısız";
+    return NextResponse.json({ status: "FAILED", hata: String(errMsg) });
+  }
+
   return NextResponse.json({ status: status.status });
 }
