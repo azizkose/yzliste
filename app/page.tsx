@@ -354,6 +354,8 @@ export default function Home() {
   const [gorselYukleniyor, setGorselYukleniyor] = useState(false);
   const [gorselJob, setGorselJob] = useState<{ requestId: string; label: string } | null>(null);
   const [gorselUyariAcik, setGorselUyariAcik] = useState(false);
+  const [krediOnayAcik, setKrediOnayAcik] = useState(false);
+  const [krediOnayIslem, setKrediOnayIslem] = useState<(() => Promise<void>) | null>(null);
   const [referansGorsel, setReferansGorsel] = useState<string | null>(null);
 
   // Video sekmesi
