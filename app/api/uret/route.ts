@@ -31,6 +31,21 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
 // Desteklenen platformlar
 type Platform = "trendyol" | "hepsiburada" | "amazon" | "n11" | "etsy" | "amazon_usa";
 
+// Kategori kodu çıkar — serbest metin girişinden
+function kategoriKoduBul(kategoriMetni: string): string | undefined {
+  if (!kategoriMetni) return undefined;
+  const k = kategoriMetni.toLowerCase();
+  if (/kozmetik|parfüm|cilt|bakım|makyaj|serum|krem|şampuan/i.test(k)) return "kozmetik";
+  if (/elektron|telefon|bilgisayar|tablet|kulaklık|şarj|kamera|tv|monitör/i.test(k)) return "elektronik";
+  if (/giyim|ayakkabı|çanta|elbise|tişört|pantolon|ceket|kazak|gömlek|bot|sneaker/i.test(k)) return "giyim";
+  if (/gıda|yiyecek|içecek|kahve|çay|bal|zeytinyağı|baharat|atıştırmalık/i.test(k)) return "gida";
+  if (/ev|mutfak|dekor|mobilya|aydınlatma|halı|perde|tencere|bardak/i.test(k)) return "ev";
+  if (/spor|fitness|outdoor|kamp|bisiklet|yoga|koşu|dağ/i.test(k)) return "spor";
+  if (/çocuk|bebek|oyuncak|mama|biberon|oto koltuk/i.test(k)) return "cocuk";
+  if (/takı|mücevher|yüzük|kolye|bilezik|küpe|aksesuar/i.test(k)) return "taki";
+  return undefined;
+}
+
 const PLATFORM_KURALLARI: Record<Platform, {
   baslikLimit: number;
   ozellikSayisi: number;
@@ -94,6 +109,171 @@ KOPYA KALITESI:
 - Her platformun karakter/kelime limitine KESINLIKLE uy. Limiti asma.
 `;
 
+const KATEGORI_KURALLARI: Record<string, { tr: string; en: string }> = {
+  kozmetik: {
+    tr: `KOZMETIK KURALLARI:
+- Tibbi iddia YAPMA: "sifalı", "tedavi eder", "cildi gençleştirir", "klinik kanıtlı" YASAK
+- Kullanılabilecek ifadeler: "nem dengesi sağlar", "bakımlı görünüm", "cilt bariyerini destekler"
+- İçerik/formül bilgisi varsa teknik ama anlaşılır yaz (Hyaluronic Acid → "nemlendirici hyaluronik asit")
+- Cilt tipi, yaş aralığı ve kullanım sıklığı belirtilmişse metne doğal ekle
+- Koku notu, doku (jel/krem/serum) gibi detaylar önemli — varsa vurgula
+- Vegan, cruelty-free, paraben-free gibi sertifikalar SADECE kullanıcı belirttiyse yaz`,
+    en: `COSMETICS RULES:
+- NO medical claims: "heals", "cures", "anti-aging miracle", "clinically proven" are BANNED
+- Acceptable: "supports skin barrier", "hydrating formula", "helps maintain moisture balance"
+- If ingredients mentioned, write technically but accessibly
+- Include skin type, texture, scent notes if provided
+- Only mention certifications (vegan, cruelty-free) if user specified`,
+  },
+  elektronik: {
+    tr: `ELEKTRONIK KURALLARI:
+- Spesifikasyonları doğru ve net yaz — sayıları yuvarlama, "yaklaşık" deme, kullanıcı verdiyse aynen yaz
+- Uyumluluk bilgisi kritik: hangi cihazlarla çalışır, voltaj, bağlantı tipi
+- "En hızlı", "en iyi performans" gibi kanıtlanamaz iddialar YASAK — somut spec ver
+- Kutu içeriği ve garanti süresi belirtilmişse mutlaka ekle
+- Karşılaştırmalı fayda yaz: "5000mAh batarya sayesinde 2 gün şarjsız kullanım" (spec → fayda)
+- CE, TSE, garanti belgesi SADECE kullanıcı belirttiyse yaz`,
+    en: `ELECTRONICS RULES:
+- Write specifications precisely — don't round numbers or use "approximately"
+- Compatibility info is critical: what devices it works with, voltage, connector type
+- NO unprovable claims like "fastest", "best performance" — use concrete specs
+- Include box contents and warranty if provided
+- Write comparative benefits: "5000mAh battery for 2 days of use" (spec → benefit)`,
+  },
+  giyim: {
+    tr: `GIYIM KURALLARI:
+- Beden bilgisi kritik: beden aralığı, kalıp tipi (regular/slim/oversize) belirtilmişse yaz
+- Kumaş bilgisi fayda olarak yaz: "%100 pamuk" → "%100 pamuk kumaşıyla gün boyu nefes alır"
+- Yıkama/bakım talimatı varsa kısa ekle
+- Sezon ve kombin önerisi vur: "kış aylarında mont altına ideal" (kullanım senaryosu)
+- "Orjinal" yazım hatası YAPMA, "orijinal" yaz. "Replika" veya "A kalite" GİBİ ifadeler YASAK
+- Renk ve desen açıklamaları net olsun: "lacivert" yeterli değil → "koyu lacivert, slim fit kesim"`,
+    en: `CLOTHING RULES:
+- Size info is critical: size range, fit type (regular/slim/oversized) if provided
+- Write fabric as benefit: "100% cotton" → "breathable 100% cotton for all-day comfort"
+- Include care instructions if provided
+- Add season and styling suggestions as use cases
+- Color and pattern descriptions should be specific and vivid`,
+  },
+  gida: {
+    tr: `GIDA KURALLARI:
+- Sağlık iddiası YASAK: "zayıflatır", "bağışıklığı güçlendirir", "şifalı" KULLANMA
+- Allerjen uyarısı belirtilmişse MUTLAKA yaz (gluten, fındık, süt, yumurta)
+- Tat profili ve kullanım önerisi yaz: "kahvaltıda taze ekmekle", "soğuk servis edilir"
+- Gramaj, porsiyon sayısı, son kullanma bilgisi varsa ekle
+- Organik, GDO'suz, helal, vegan gibi sertifikalar SADECE kullanıcı belirttiyse
+- "Ev yapımı tat" gibi duygusal ifadeler kullanılabilir ama abartma`,
+    en: `FOOD RULES:
+- NO health claims: "helps lose weight", "boosts immunity", "medicinal" are BANNED
+- Allergen warnings MUST be included if provided (gluten, nuts, dairy, eggs)
+- Write taste profile and serving suggestions
+- Include weight, servings, shelf life if provided
+- Only mention certifications (organic, non-GMO, halal) if user specified`,
+  },
+  ev: {
+    tr: `EV & YAŞAM KURALLARI:
+- Ölçüler net olsun: cm/mm cinsinden, "büyük boy" gibi göreceli ifadeler yetersiz
+- Malzeme ve dayanıklılık faydaya çevir: "paslanmaz çelik" → "paslanmaz çelik gövdesiyle uzun ömürlü"
+- Montaj bilgisi kritik: montaj gerekli mi, araçlar dahil mi, süre tahmini
+- Oda/ortam önerisi vur: "salon, yatak odası veya ofis için ideal boyut"
+- Ağırlık ve taşınabilirlik varsa belirt
+- Ateşe/suya dayanıklılık gibi güvenlik iddialarını SADECE kullanıcı belirttiyse yaz`,
+    en: `HOME & LIVING RULES:
+- Dimensions must be precise in cm/inches — avoid relative terms like "large"
+- Convert materials to benefits: "stainless steel" → "durable stainless steel body"
+- Assembly info is critical: required?, tools included?, estimated time?
+- Suggest room/setting: "perfect size for living room, bedroom or office"`,
+  },
+  spor: {
+    tr: `SPOR & OUTDOOR KURALLARI:
+- Performans faydası somut olsun: "hafif" → "sadece 280g ile uzun parkurlarda yorulmaz"
+- Aktivite tipi ve seviye belirt: "başlangıç seviyesi koşucular için" veya "profesyonel kullanıma uygun"
+- Hava koşulu/mevsim uyumu: "yağmura dayanıklı", "kış sporları için termal yalıtım"
+- "Profesyonel sporcu" ibaresi dikkatli kullan — sadece gerçekten o seviyedeyse
+- Bakım ve temizlik bilgisi varsa ekle`,
+    en: `SPORTS & OUTDOOR RULES:
+- Performance benefits must be concrete: "lightweight" → "only 280g for fatigue-free long runs"
+- Specify activity type and level if provided
+- Weather/season compatibility is important
+- Use "professional-grade" carefully — only if truly applicable`,
+  },
+  cocuk: {
+    tr: `ÇOCUK & BEBEK KURALLARI:
+- Yaş aralığı ZORUNLU belirt (kullanıcı verdiyse): "3-6 yaş", "0-12 ay" vb.
+- Güvenlik vurgusu kritik: "BPA-free", "küçük parça içermez", "CE belgeli" — SADECE kullanıcı belirttiyse
+- Eğitici/gelişimsel fayda yazılabilir: "ince motor becerilerini geliştirir" (genel kabul görmüş ifadeler OK)
+- Ebeveyn perspektifinden yaz: "annenin güvenle tercih edebileceği"
+- Parlak renk, eğlenceli dil kullan ama abartma
+- "Kesinlikle güvenli" gibi mutlak güvenlik iddiaları YASAK — "güvenlik standartlarına uygun" OK`,
+    en: `KIDS & BABY RULES:
+- Age range REQUIRED if provided: "ages 3-6", "0-12 months"
+- Safety emphasis critical: "BPA-free", "no small parts" — ONLY if user specified
+- Educational benefits OK if generally accepted: "develops fine motor skills"
+- Write from parent perspective
+- Avoid absolute safety claims — "meets safety standards" is OK`,
+  },
+  taki: {
+    tr: `TAKI & MÜCEVHER KURALLARI:
+- Malzeme ve ayar bilgisi kritik: "925 ayar gümüş", "18 ayar altın", "doğal taş" — sadece kullanıcı verdiyse
+- Boyut ve ağırlık bilgisi varsa ekle (mm, gram)
+- Kaplama/finish: "altın kaplama", "mat", "parlak" — belirtilmişse yaz
+- Hediye kullanımını vurgula: "sevgililer günü", "yıl dönümü", "doğum günü" hediyesi
+- "Elmas", "altın" gibi kelimeleri SADECE gerçekten o malzemeyse kullan — aldatıcı kullanım YASAK`,
+    en: `JEWELRY RULES:
+- Material and grade is critical: "925 sterling silver", "18k gold", "natural stone" — only if user specified
+- Include dimensions and weight if provided
+- Finish: "gold-plated", "matte", "polished" — if specified
+- Highlight gifting use: Valentine's Day, anniversary, birthday gift
+- Use "diamond", "gold" ONLY if truly that material — misleading use is BANNED`,
+  },
+};
+
+const YASAKLI_KELIMELER: Record<Platform, string[]> = {
+  trendyol: [
+    "en iyi", "en ucuz", "en kaliteli", "1 numara", "birinci", "lider",
+    "garantili iade", "ücretsiz kargo", "hemen al", "kaçırma", "son fırsat",
+    "replika", "A kalite", "süper", "mucize", "şifalı", "%100 etkili",
+    "kesin sonuç", "stoklar tükeniyor", "sadece bugün",
+  ],
+  hepsiburada: [
+    "en iyi", "en ucuz", "1 numara", "birinci", "süper fırsat",
+    "replika", "A kalite", "muadil", "şifalı", "tedavi",
+    "%100 sonuç", "kesin çözüm", "mucize", "sihirli",
+  ],
+  amazon: [
+    "en iyi", "birinci", "ücretsiz", "indirimli", "kampanya",
+    "fırsat", "promosyon", "replika", "şifalı", "tedavi eder",
+  ],
+  n11: [
+    "en iyi", "en ucuz", "süper", "harika", "muhteşem",
+    "replika", "A kalite", "şifalı", "kesin sonuç", "mucize",
+  ],
+  etsy: [
+    "best", "cheapest", "#1", "guaranteed results", "miracle",
+    "cure", "heal", "replica", "knock-off", "inspired by", "dupe",
+    "free shipping", "sale", "discount",
+  ],
+  amazon_usa: [
+    "best", "#1", "top rated", "cheapest", "guaranteed", "free",
+    "bonus", "limited time", "miracle", "cure", "replica", "knock-off",
+  ],
+};
+
+const FIYAT_SEGMENT_YONLENDIRME: Record<string, { tr: string; en: string }> = {
+  butce: {
+    tr: "Bu bütçe segmenti bir ürün. Fiyat-performans vurgula. 'Uygun fiyatlı', 'ekonomik', 'hesaplı' gibi ifadeler kullan. Premium dil kullanma.",
+    en: "This is a budget product. Emphasize value for money. Use terms like 'affordable', 'great value', 'budget-friendly'. Avoid premium language.",
+  },
+  orta: {
+    tr: "Bu orta segment bir ürün. Kalite ve güvenilirlik vurgula. Dengeli bir dil kullan — ne ucuz ne lüks hissettir.",
+    en: "This is a mid-range product. Emphasize quality and reliability. Use balanced language — neither cheap nor luxury.",
+  },
+  premium: {
+    tr: "Bu premium segment bir ürün. Kalite, özel tasarım, dayanıklılık ve prestij vurgula. Seçkin, özenli bir dil kullan.",
+    en: "This is a premium product. Emphasize quality, craftsmanship, durability and prestige. Use refined, sophisticated language.",
+  },
+};
+
 const TON_TANIMLARI: Record<string, { tr: string; en: string }> = {
   samimi: {
     tr: "Sicak, samimi ve yakin bir dil kullan. Seni-beni formunda yaz, gunluk konusma diline yakin ama profesyonellikten odun verme.",
@@ -109,14 +289,36 @@ const TON_TANIMLARI: Record<string, { tr: string; en: string }> = {
   },
 };
 
-function sistemPromptOlustur(platform: Platform, dil: "tr" | "en", ton?: string): string {
+function sistemPromptOlustur(
+  platform: Platform,
+  dil: "tr" | "en",
+  ton?: string,
+  kategoriKodu?: string,
+  fiyatSegmenti?: string,
+): string {
   const kural = PLATFORM_KURALLARI[platform];
   const tonTanimi = ton && TON_TANIMLARI[ton] ? TON_TANIMLARI[ton][dil] : "";
+
+  // Kategori ek kuralları
+  const kategoriEki = kategoriKodu && KATEGORI_KURALLARI[kategoriKodu]
+    ? `\n\n${KATEGORI_KURALLARI[kategoriKodu][dil]}`
+    : "";
+
+  // Fiyat segmenti yönlendirmesi
+  const fiyatEki = fiyatSegmenti && FIYAT_SEGMENT_YONLENDIRME[fiyatSegmenti]
+    ? `\n\nFIYAT SEGMENTİ: ${FIYAT_SEGMENT_YONLENDIRME[fiyatSegmenti][dil]}`
+    : "";
+
+  // Yasaklı kelimeler
+  const yasaklar = YASAKLI_KELIMELER[platform] ?? [];
+  const yasakEki = yasaklar.length > 0
+    ? `\n\nYASAKLI KELİMELER — bu ifadeleri KESİNLİKLE KULLANMA:\n${yasaklar.map((k) => `- "${k}"`).join("\n")}`
+    : "";
 
   // --- ETSY (İngilizce) ---
   if (platform === "etsy") {
     return `You are an elite Etsy listing copywriter with deep expertise in Etsy's search algorithm and buyer psychology. You craft listings that rank high AND convert browsers into buyers.
-${ICERIK_KURALLARI}
+${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}
 ${tonTanimi ? `BRAND VOICE:\n${tonTanimi}\n` : ""}
 
 ETSY LISTING RULES:
@@ -163,7 +365,7 @@ Only output this format. Nothing else.`;
   // --- AMAZON USA (İngilizce) ---
   if (platform === "amazon_usa") {
     return `You are an elite Amazon USA listing strategist. You deeply understand the A10 algorithm, conversion-optimized copywriting, and how to make listings that rank AND sell.
-${ICERIK_KURALLARI}
+${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}
 ${tonTanimi ? `BRAND VOICE:\n${tonTanimi}\n` : ""}
 
 AMAZON USA LISTING RULES:
@@ -229,7 +431,7 @@ Only output this format. No emojis.`;
   // --- AMAZON TR ---
   if (platform === "amazon") {
     return `Sen uzman bir Amazon TR listing stratejistisin. Amazon'un A9/A10 algoritmasini, Turk tuketici psikolojisini ve donusum optimizasyonunu cok iyi biliyorsun.
-${ICERIK_KURALLARI}
+${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}
 ${tonTanimi ? `MARKA TONU:\n${tonTanimi}\n` : ""}
 
 AMAZON TR KURALLARI:
@@ -293,7 +495,7 @@ Sadece bu formati kullan. Hic emoji kullanma.`;
 
   // --- TR PAZARYERLERİ (Trendyol, HB, N11) ---
   return `Sen uzman bir Turk e-ticaret metin yazarisın. ${platform.toUpperCase()} platformunun arama algoritmasini, Turk tuketici psikolojisini ve donusum optimizasyonunu derinlemesine biliyorsun. Gorev: verilen urun icin en yuksek tiklama ve satis orani getirecek listing icerigi uret.
-${ICERIK_KURALLARI}
+${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}
 ${tonTanimi ? `MARKA TONU:\n${tonTanimi}\n` : ""}
 
 PLATFORM KURALLARI — ${platform.toUpperCase()}:
@@ -358,6 +560,7 @@ export async function POST(req: NextRequest) {
   const {
     urunAdi, kategori, ozellikler, platform, fotolar,
     girisTipi, barkodBilgi, userId, dil, ton,
+    hedefKitle, fiyatSegmenti, anahtarKelimeler,
   } = await req.json();
 
   if (!userId) return NextResponse.json({ hata: "Giris yapilmadi" }, { status: 401 });
@@ -429,8 +632,14 @@ export async function POST(req: NextRequest) {
     const platformDil: "tr" | "en" = ["etsy", "amazon_usa"].includes(platform) ? "en" : (dil || "tr");
     if (platformDil === "en") {
       kullaniciBilgi = `Product name: ${urunAdi}\nCategory: ${kategori}\nAdditional details: ${ozellikler || "none provided"}`;
+      if (hedefKitle && hedefKitle !== "genel") kullaniciBilgi += `\nTarget audience: ${hedefKitle}`;
+      if (fiyatSegmenti) kullaniciBilgi += `\nPrice segment: ${fiyatSegmenti}`;
+      if (anahtarKelimeler) kullaniciBilgi += `\nPriority keywords (weave naturally into title and description): ${anahtarKelimeler}`;
     } else {
       kullaniciBilgi = `Urun adi: ${urunAdi}\nKategori: ${kategori}\nEk ozellikler ve bilgiler: ${ozellikler || "belirtilmedi"}`;
+      if (hedefKitle && hedefKitle !== "genel") kullaniciBilgi += `\nHedef kitle: ${hedefKitle}`;
+      if (fiyatSegmenti) kullaniciBilgi += `\nFiyat segmenti: ${fiyatSegmenti}`;
+      if (anahtarKelimeler) kullaniciBilgi += `\nOncelikli anahtar kelimeler (bunlari dogal sekilde baslik ve aciklamaya yerlestir): ${anahtarKelimeler}`;
     }
   }
 
@@ -463,7 +672,7 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
         max_tokens: 2000,
-        system: sistemPromptOlustur(platformKey, platformDil, ton),
+        system: sistemPromptOlustur(platformKey, platformDil, ton, kategoriKoduBul(kategori || ""), fiyatSegmenti),
         messages: [{ role: "user", content: mesajIcerikleri }],
       }),
     });

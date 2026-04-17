@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fal } from "@fal-ai/client";
 import { createClient } from "@supabase/supabase-js";
 
-export const maxDuration = 30; // fal storage upload + queue.submit — GPU bekleme yok
+export const maxDuration = 60; // fal storage upload + RMBG (~5s) + queue.submit — GPU bekleme yok
 
 fal.config({ credentials: process.env.FAL_KEY });
 
@@ -27,15 +27,6 @@ const stilSahneleri: Record<string, string> = {
   dogal: "outdoor natural setting with soft sunlight and green foliage in the background, shallow depth of field, product placed on a natural stone or wooden surface, fresh and organic product photography, product centered and filling the frame prominently, keep the original product exactly as is, do not alter modify or reimagine the product",
 };
 
-const stilPadding: Record<string, number[]> = {
-  beyaz:    [50, 50, 50, 50],
-  koyu:     [50, 50, 50, 50],
-  lifestyle:[100, 100, 80, 80],
-  mermer:   [60, 60, 60, 60],
-  ahsap:    [80, 80, 60, 60],
-  gradient: [50, 50, 50, 50],
-  dogal:    [100, 100, 80, 80],
-};
 
 const stilEtiketleri: Record<string, string> = {
   beyaz: "Beyaz Zemin", koyu: "Koyu Zemin", lifestyle: "Lifestyle",
@@ -89,7 +80,17 @@ export async function POST(req: NextRequest) {
 
     const secilenStil: string = stil || "beyaz";
     const shotSize: [number, number] = sosyalFormat ? (FORMAT_BOYUT[sosyalFormat] || [1000, 1000]) : [1000, 1000];
-    const padding = stilPadding[secilenStil] || stilPadding.beyaz;
+
+    // RMBG — arka planı kaldır, sonra product-shot'a temiz görsel gönder
+    let cleanImageUrl = imageUrl;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rmbgResult = await fal.subscribe("fal-ai/bria/rmbg", { input: { image_url: imageUrl } }) as any;
+      cleanImageUrl = rmbgResult?.data?.image?.url || imageUrl;
+    } catch {
+      // RMBG başarısız → orijinal görselle devam et
+      cleanImageUrl = imageUrl;
+    }
 
     let input: Record<string, unknown>;
 
@@ -101,13 +102,12 @@ export async function POST(req: NextRequest) {
       for (let i = 0; i < rbStr.length; i++) rb[i] = rbStr.charCodeAt(i);
       const refUrl = await fal.storage.upload(new Blob([rb], { type: rmt }));
       input = {
-        image_url: imageUrl,
+        image_url: cleanImageUrl,
         ref_image_url: refUrl,
         optimize_description: true,
-        num_results: 4,
+        num_results: 1,
         fast: false,
-        placement_type: "manual_padding",
-        padding_values: [80, 80, 80, 80],
+        placement_type: "automatic",
         shot_size: shotSize,
       };
     } else {
@@ -119,13 +119,12 @@ export async function POST(req: NextRequest) {
         if (ekPrompt) sahne = `${sahne}, ${ekPrompt}`;
       }
       input = {
-        image_url: imageUrl,
+        image_url: cleanImageUrl,
         scene_description: sahne,
         optimize_description: true,
-        num_results: 4,
+        num_results: 1,
         fast: false,
-        placement_type: "manual_padding",
-        padding_values: padding,
+        placement_type: "automatic",
         shot_size: shotSize,
       };
     }

@@ -61,13 +61,13 @@ export async function POST(req: NextRequest) {
     videoPrompt = prompt.trim();
   } else {
     const TON_VIDEO: Record<string, string> = {
-      samimi: "friendly warm product showcase",
-      profesyonel: "clean professional corporate product video",
-      premium: "luxury cinematic high-end product film",
+      samimi: "friendly warm product showcase, camera slowly pushes in then holds steady, soft natural lighting, clean background",
+      profesyonel: "clean professional product reveal, camera smoothly tracks right then stops, corporate studio lighting, white background",
+      premium: "luxury cinematic product film, dramatic light gradually illuminates the product then holds, dark elegant background, subtle reflections",
     };
     const stilIpucu = profil.ton ? (TON_VIDEO[profil.ton] || "professional product showcase") : "professional product showcase";
     const markaIpucu = profil.marka_adi ? ` for ${profil.marka_adi}` : "";
-    videoPrompt = `${stilIpucu}${markaIpucu}, smooth cinematic camera movement, professional lighting, clean background, high quality e-commerce video`;
+    videoPrompt = `professional product showcase${markaIpucu}, camera slowly zooms in and holds on product, clean studio lighting, white background, high quality e-commerce video`;
   }
 
   // Krediyi önceden düş — queue.submit sonucu beklemeden döner
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
       image_url: imageUrl,
       duration: sureDeger,
       aspect_ratio: formatDeger,
-      negative_prompt: "blur, distort, low quality, watermark, text overlay",
+      negative_prompt: "blur, distort, low quality, watermark, text overlay, static, jerky, pixelated, morphing, unnatural movement, deformed product",
       cfg_scale: 0.5,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any,
