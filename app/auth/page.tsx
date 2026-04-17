@@ -575,54 +575,53 @@ export default function AuthPage() {
             {ozellikTab === 2 && (
               <div className="p-5 sm:p-7">
                 <p className="text-sm font-semibold text-gray-700 mb-1">Ürün fotoğrafından tanıtım videosu</p>
-                <p className="text-xs text-gray-400 mb-6">Ürünü hareket ettiren, platform uyumlu dikey/kare video — MP4 olarak indir</p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <p className="text-xs text-gray-400 mb-5">Ürünü hareket ettiren, platform uyumlu dikey/kare video — MP4 olarak indir</p>
+
+                {/* Hareket örnekleri — video + açıklama yan yana */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
                   {[
-                    {
-                      ikon: "⏱️",
-                      baslik: "5 saniyelik video",
-                      aciklama: "Hızlı tanıtım, story ve reels için ideal. Ürün hareketi + efekt.",
-                      etiket: "5 kredi",
-                      renkBg: "bg-pink-50",
-                      renkBorder: "border-pink-100",
-                      renkText: "text-pink-600",
-                    },
-                    {
-                      ikon: "🎬",
-                      baslik: "10 saniyelik video",
-                      aciklama: "Detay gösterimi, özellik vurgusu, ürün döndürme efekti.",
-                      etiket: "8 kredi",
-                      renkBg: "bg-pink-50",
-                      renkBorder: "border-pink-100",
-                      renkText: "text-pink-600",
-                    },
-                    {
-                      ikon: "📐",
-                      baslik: "Format seçimi",
-                      aciklama: "Dikey (9:16 · Reels/TikTok), Kare (1:1 · Feed), Yatay (16:9 · YouTube).",
-                      etiket: "Çok format",
-                      renkBg: "bg-pink-50",
-                      renkBorder: "border-pink-100",
-                      renkText: "text-pink-600",
-                    },
+                    { src: "/video-ornekler/360-donus.mp4", ikon: "🔄", baslik: "360° Dönüş", aciklama: "Ürün kendi ekseni etrafında döner. Tüm açılar görünür. Takı, aksesuar, elektronik için ideal." },
+                    { src: "/video-ornekler/zoom-yaklasim.mp4", ikon: "🔍", baslik: "Zoom Yaklaşım", aciklama: "Kamera ürüne doğru yaklaşır. Doku ve detay hissi. El yapımı ve tekstil ürünler için güçlü." },
+                    { src: "/video-ornekler/dramatik-isik.mp4", ikon: "💡", baslik: "Dramatik Işık", aciklama: "Karanlık sahnede spotlight açılır. Premium ve lüks his. Kozmetik ve elektronik için etkili." },
+                    { src: "/video-ornekler/dogal-ortam.mp4", ikon: "🌿", baslik: "Doğal Ortam", aciklama: "Yapraklar sallanır, ışık oynar. Organik ve sıcak his. Gıda, bitki, doğal ürünler için ideal." },
                   ].map((v, i) => (
-                    <div key={i} className={`rounded-xl border ${v.renkBorder} ${v.renkBg} p-4`}>
-                      <div className="text-2xl mb-2">{v.ikon}</div>
-                      <p className="text-sm font-semibold text-gray-800 mb-1">{v.baslik}</p>
-                      <p className="text-xs text-gray-500 leading-relaxed mb-2">{v.aciklama}</p>
-                      <span className={`text-[11px] font-semibold ${v.renkText} bg-white border ${v.renkBorder} px-2 py-0.5 rounded-full`}>{v.etiket}</span>
+                    <div key={i} className="flex gap-3 rounded-xl border border-pink-100 bg-pink-50 p-3">
+                      <video
+                        src={v.src}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="w-24 h-24 rounded-lg object-cover flex-shrink-0 bg-black"
+                      />
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold text-gray-800 mb-1">{v.ikon} {v.baslik}</p>
+                        <p className="text-[11px] text-gray-500 leading-relaxed">{v.aciklama}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
-                <div className="mt-5 pt-4 border-t border-gray-100 bg-gray-50 rounded-xl p-4">
+
+                {/* Süre + format kartları */}
+                <div className="grid grid-cols-3 gap-3 mb-5">
+                  {[
+                    { ikon: "⏱️", baslik: "5 saniyelik", aciklama: "Story · Reels", etiket: "5 kredi" },
+                    { ikon: "🎞️", baslik: "10 saniyelik", aciklama: "Showcase · Pazaryeri", etiket: "8 kredi" },
+                    { ikon: "📐", baslik: "3 format", aciklama: "9:16 · 1:1 · 16:9", etiket: "Tüm platformlar" },
+                  ].map((v, i) => (
+                    <div key={i} className="rounded-xl border border-pink-100 bg-pink-50 p-3 text-center">
+                      <div className="text-xl mb-1">{v.ikon}</div>
+                      <p className="text-xs font-semibold text-gray-800">{v.baslik}</p>
+                      <p className="text-[10px] text-gray-400 mb-1">{v.aciklama}</p>
+                      <span className="text-[10px] font-semibold text-pink-600 bg-white border border-pink-100 px-1.5 py-0.5 rounded-full">{v.etiket}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-gray-50 rounded-xl p-4">
                   <p className="text-xs font-semibold text-gray-600 mb-2">Nasıl çalışır?</p>
                   <div className="space-y-1.5">
-                    {[
-                      "Ürün fotoğrafını yükle",
-                      "Süre ve format seç (5sn / 10sn · dikey / kare / yatay)",
-                      "AI ürünü animasyonlu videoya dönüştürür",
-                      "MP4 olarak indir, platforma yükle",
-                    ].map((s, i) => (
+                    {["Ürün fotoğrafını yükle", "Süre ve format seç", "AI ürünü animasyonlu videoya dönüştürür (~2 dk)", "MP4 olarak indir, platforma yükle"].map((s, i) => (
                       <div key={i} className="flex items-start gap-2 text-xs text-gray-600">
                         <span className="w-4 h-4 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-[9px] font-bold flex-shrink-0 mt-0.5">{i + 1}</span>
                         {s}

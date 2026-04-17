@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fal } from "@fal-ai/client";
 import { createClient } from "@supabase/supabase-js";
 
-export const maxDuration = 30; // sadece fal storage upload + queue.submit — GPU bekleme yok
+export const maxDuration = 30; // fal storage upload + queue.submit — GPU bekleme yok
 
 fal.config({ credentials: process.env.FAL_KEY });
 
@@ -11,42 +11,44 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_KEY!
 );
 
-// sosyalFormat: "1:1" | "9:16" | "16:9" — sosyal medya görsel üretimi için
 const FORMAT_BOYUT: Record<string, [number, number]> = {
   "1:1":  [1000, 1000],
   "9:16": [1000, 1778],
   "16:9": [1778, 1000],
 };
 
+const stilSahneleri: Record<string, string> = {
+  beyaz: "solid pure white (#FFFFFF) seamless studio cyclorama background, absolutely no gradients or off-white tones, professional e-commerce product photography, soft diffused even lighting from all sides, product centered and filling the frame prominently, very subtle soft contact shadow beneath product is allowed, keep the original product exactly as is, do not alter modify or reimagine the product",
+  koyu: "solid pure black (#000000) seamless studio background, absolutely no dark gray or gradients, no color halos or glowing effects, luxury product photography, product sitting on the dark surface not floating, soft subtle overhead studio light only, no dramatic spotlights or rim lights, product centered and filling the frame prominently, subtle soft contact shadow beneath product, keep the original product exactly as is, do not alter modify or reimagine the product",
+  lifestyle: "modern minimalist interior setting, product placed on a surface such as a table shelf or countertop not floating in air, warm natural daylight streaming from a large side window, shallow depth of field with softly blurred background featuring neutral decor and subtle greenery, product as the clear hero element filling the frame prominently, editorial lifestyle product photography, warm color palette, keep the original product exactly as is, do not alter modify or reimagine the product",
+  mermer: "elegant white marble surface with subtle gray veining, clean and luxurious product photography, soft overhead studio lighting with gentle reflections on marble, product centered and filling the frame prominently, premium cosmetics and jewelry aesthetic, keep the original product exactly as is, do not alter modify or reimagine the product",
+  ahsap: "warm natural wood table surface with visible grain texture, rustic artisan product photography, soft warm directional lighting from the side, shallow depth of field with blurred cozy background, product centered and filling the frame prominently, handcraft and organic aesthetic, keep the original product exactly as is, do not alter modify or reimagine the product",
+  gradient: "smooth modern gradient background transitioning from soft pastel tones, contemporary minimalist product photography, even studio lighting, product centered and filling the frame prominently, clean tech and lifestyle brand aesthetic, keep the original product exactly as is, do not alter modify or reimagine the product",
+  dogal: "outdoor natural setting with soft sunlight and green foliage in the background, shallow depth of field, product placed on a natural stone or wooden surface, fresh and organic product photography, product centered and filling the frame prominently, keep the original product exactly as is, do not alter modify or reimagine the product",
+};
+
+const stilPadding: Record<string, number[]> = {
+  beyaz:    [50, 50, 50, 50],
+  koyu:     [50, 50, 50, 50],
+  lifestyle:[100, 100, 80, 80],
+  mermer:   [60, 60, 60, 60],
+  ahsap:    [80, 80, 60, 60],
+  gradient: [50, 50, 50, 50],
+  dogal:    [100, 100, 80, 80],
+};
+
+const stilEtiketleri: Record<string, string> = {
+  beyaz: "Beyaz Zemin", koyu: "Koyu Zemin", lifestyle: "Lifestyle",
+  mermer: "Mermer", ahsap: "Ahşap", gradient: "Gradient",
+  dogal: "Doğal", referans: "Referans Sahne", ozel: "Özel Sahne",
+};
+
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { foto, stiller, ekPrompt, userId, action, referansGorsel, sosyalFormat } = body;
-
-  // Kredi düşürme — sadece indir aksiyonunda
-  if (action === "indir") {
-    if (!userId) return NextResponse.json({ hata: "Giris yapilmadi" }, { status: 401 });
-    const { data: profil } = await supabaseAdmin.from("profiles").select("kredi, is_admin").eq("id", userId).single();
-    if (!profil) return NextResponse.json({ hata: "Kullanici bulunamadi" }, { status: 404 });
-    if (!profil.is_admin) {
-      const { stilSayisi } = body;
-      const adet = stilSayisi || 1;
-      const { data: updated } = await supabaseAdmin
-        .from("profiles")
-        .update({ kredi: profil.kredi - adet })
-        .eq("id", userId)
-        .gt("kredi", 0)
-        .select("kredi")
-        .single();
-      if (!updated) {
-        return NextResponse.json({ hata: "Krediniz bitti." }, { status: 402 });
-      }
-    }
-    return NextResponse.json({ ok: true });
-  }
+  const { foto, stil, ekPrompt, userId, referansGorsel, sosyalFormat } = body;
 
   if (!foto) return NextResponse.json({ hata: "Fotograf gerekli" }, { status: 400 });
 
-  // Profil + kredi kontrolü + marka bilgisi
   let isAdmin = false;
   let brandContext = "";
 
@@ -62,8 +64,6 @@ export async function POST(req: NextRequest) {
       if (!isAdmin && profil.kredi <= 0) {
         return NextResponse.json({ hata: "Krediniz bitti." }, { status: 402 });
       }
-
-      // Marka bağlamını sahne ipuçlarına dönüştür
       const tonEnMap: Record<string, string> = {
         profesyonel: "professional and premium brand tone",
         samimi: "warm and friendly brand tone",
@@ -72,40 +72,11 @@ export async function POST(req: NextRequest) {
         minimal: "clean and minimal brand tone",
       };
       const ctxParcalar: string[] = [];
-      if (profil.ton && tonEnMap[profil.ton]) {
-        ctxParcalar.push(tonEnMap[profil.ton]);
-      }
-      if (profil.hedef_kitle) {
-        ctxParcalar.push(`targeted at: ${profil.hedef_kitle}`);
-      }
-      if (ctxParcalar.length > 0) {
-        brandContext = `, ${ctxParcalar.join(", ")}`;
-      }
+      if (profil.ton && tonEnMap[profil.ton]) ctxParcalar.push(tonEnMap[profil.ton]);
+      if (profil.hedef_kitle) ctxParcalar.push(`targeted at: ${profil.hedef_kitle}`);
+      if (ctxParcalar.length > 0) brandContext = `, ${ctxParcalar.join(", ")}`;
     }
   }
-
-  // STİL SAHNELERİ — sadece arka planı/ortamı tanımla, ürüne dokunma
-  // Kritik kural: fal.ai'ya sadece sahne/ortam bilgisi ver, ürünü değiştirme
-  const stilSahneleri: Record<string, string> = {
-    beyaz: "solid pure white (#FFFFFF) seamless studio cyclorama background, absolutely no gradients or off-white tones, professional e-commerce product photography, soft diffused even lighting from all sides, product centered and filling the frame prominently, very subtle soft contact shadow beneath product is allowed, keep the original product exactly as is, do not alter modify or reimagine the product",
-    koyu: "solid pure black (#000000) seamless studio background, absolutely no dark gray or gradients, no color halos or glowing effects, luxury product photography, product sitting on the dark surface not floating, soft subtle overhead studio light only, no dramatic spotlights or rim lights, product centered and filling the frame prominently, subtle soft contact shadow beneath product, keep the original product exactly as is, do not alter modify or reimagine the product",
-    lifestyle: "modern minimalist interior setting, product placed on a surface such as a table shelf or countertop not floating in air, warm natural daylight streaming from a large side window, shallow depth of field with softly blurred background featuring neutral decor and subtle greenery, product as the clear hero element filling the frame prominently, editorial lifestyle product photography, warm color palette, keep the original product exactly as is, do not alter modify or reimagine the product",
-    mermer: "elegant white marble surface with subtle gray veining, clean and luxurious product photography, soft overhead studio lighting with gentle reflections on marble, product centered and filling the frame prominently, premium cosmetics and jewelry aesthetic, keep the original product exactly as is, do not alter modify or reimagine the product",
-    ahsap: "warm natural wood table surface with visible grain texture, rustic artisan product photography, soft warm directional lighting from the side, shallow depth of field with blurred cozy background, product centered and filling the frame prominently, handcraft and organic aesthetic, keep the original product exactly as is, do not alter modify or reimagine the product",
-    gradient: "smooth modern gradient background transitioning from soft pastel tones, contemporary minimalist product photography, even studio lighting, product centered and filling the frame prominently, clean tech and lifestyle brand aesthetic, keep the original product exactly as is, do not alter modify or reimagine the product",
-    dogal: "outdoor natural setting with soft sunlight and green foliage in the background, shallow depth of field, product placed on a natural stone or wooden surface, fresh and organic product photography, product centered and filling the frame prominently, keep the original product exactly as is, do not alter modify or reimagine the product",
-  };
-
-  // Her stil için ürün yerleşim ve boyut ayarları
-  const stilPadding: Record<string, number[]> = {
-    beyaz: [50, 50, 50, 50],     // sıkı kırpım — ürün frame'in ~90%'ını kaplar
-    koyu: [50, 50, 50, 50],      // sıkı kırpım — ürün büyük ve belirgin
-    lifestyle: [100, 100, 80, 80], // biraz daha nefes alanı — ortam görünsün
-    mermer: [60, 60, 60, 60],     // lüks his — ürün belirgin
-    ahsap: [80, 80, 60, 60],     // yüzey görünsün ama ürün büyük
-    gradient: [50, 50, 50, 50],   // temiz ve sıkı — modern his
-    dogal: [100, 100, 80, 80],   // ortam atmosferi önemli
-  };
 
   try {
     // Ana fotoğraf → FAL storage
@@ -114,100 +85,59 @@ export async function POST(req: NextRequest) {
     const binaryStr = atob(base64);
     const bytes = new Uint8Array(binaryStr.length);
     for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
-    const blob = new Blob([bytes], { type: mediaType });
-    const imageUrl = await fal.storage.upload(blob);
+    const imageUrl = await fal.storage.upload(new Blob([bytes], { type: mediaType }));
 
-    // Referans görsel varsa yükle
-    let referansUrl: string | null = null;
-    if (referansGorsel) {
+    const secilenStil: string = stil || "beyaz";
+    const shotSize: [number, number] = sosyalFormat ? (FORMAT_BOYUT[sosyalFormat] || [1000, 1000]) : [1000, 1000];
+    const padding = stilPadding[secilenStil] || stilPadding.beyaz;
+
+    let input: Record<string, unknown>;
+
+    if (secilenStil === "referans" && referansGorsel) {
       const rb64 = referansGorsel.split(",")[1];
       const rmt = referansGorsel.split(";")[0].split(":")[1];
       const rbStr = atob(rb64);
       const rb = new Uint8Array(rbStr.length);
       for (let i = 0; i < rbStr.length; i++) rb[i] = rbStr.charCodeAt(i);
-      referansUrl = await fal.storage.upload(new Blob([rb], { type: rmt }));
+      const refUrl = await fal.storage.upload(new Blob([rb], { type: rmt }));
+      input = {
+        image_url: imageUrl,
+        ref_image_url: refUrl,
+        optimize_description: true,
+        num_results: 4,
+        fast: false,
+        placement_type: "manual_padding",
+        padding_values: [80, 80, 80, 80],
+        shot_size: shotSize,
+      };
+    } else {
+      let sahne: string;
+      if (secilenStil === "ozel") {
+        sahne = ekPrompt || "clean studio background, professional product photography, keep the original product exactly as is";
+      } else {
+        sahne = `${stilSahneleri[secilenStil] || stilSahneleri.beyaz}${brandContext}`;
+        if (ekPrompt) sahne = `${sahne}, ${ekPrompt}`;
+      }
+      input = {
+        image_url: imageUrl,
+        scene_description: sahne,
+        optimize_description: true,
+        num_results: 4,
+        fast: false,
+        placement_type: "manual_padding",
+        padding_values: padding,
+        shot_size: shotSize,
+      };
     }
 
-    const stilListesi: string[] = stiller && stiller.length > 0 ? stiller : ["beyaz"];
-    // Sosyal medya formatı varsa shot_size buna göre ayarla, yoksa varsayılan kare
-    const shotSize: [number, number] = sosyalFormat ? (FORMAT_BOYUT[sosyalFormat] || [1000, 1000]) : [1000, 1000];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const queued = await fal.queue.submit("fal-ai/bria/product-shot", { input } as any);
+    const label = stilEtiketleri[secilenStil] || secilenStil;
 
-    const stilEtiketleri: Record<string, string> = {
-      beyaz: "Beyaz Zemin",
-      koyu: "Koyu Zemin",
-      lifestyle: "Lifestyle",
-      mermer: "Mermer",
-      ahsap: "Ahşap",
-      gradient: "Gradient",
-      dogal: "Doğal",
-      referans: "Referans Sahne",
-    };
-
-    // Referans görseli varsa fal storage'a yükle
-    let refImageUrl: string | undefined;
-    if (referansGorsel && stilListesi.includes("referans")) {
-      const refBase64 = referansGorsel.split(",")[1];
-      const refMediaType = referansGorsel.split(";")[0].split(":")[1];
-      const refBinaryStr = atob(refBase64);
-      const refBytes = new Uint8Array(refBinaryStr.length);
-      for (let i = 0; i < refBinaryStr.length; i++) refBytes[i] = refBinaryStr.charCodeAt(i);
-      const refBlob = new Blob([refBytes], { type: refMediaType });
-      refImageUrl = await fal.storage.upload(refBlob);
-    }
-
-    // Tüm stiller paralel olarak kuyruğa gönderilir — GPU beklenmez
-    const jobs = await Promise.all(
-      stilListesi.map(async (s) => {
-        const padding = stilPadding[s] || stilPadding.beyaz;
-
-        let input: Record<string, unknown>;
-
-        if (s === "referans" && refImageUrl) {
-          input = {
-            image_url: imageUrl,
-            ref_image_url: refImageUrl,
-            optimize_description: true,
-            num_results: 4,
-            fast: false,
-            placement_type: "manual_padding",
-            padding_values: [80, 80, 80, 80],
-            shot_size: shotSize,
-          };
-        } else {
-          let sahne: string;
-          if (s === "ozel") {
-            sahne = ekPrompt || "clean studio background, professional product photography, keep the original product exactly as is";
-          } else if (s === "referans") {
-            sahne = ekPrompt
-              ? `Match the style and lighting of the reference image, ${ekPrompt}, keep the original product exactly as is`
-              : "Match the background style and lighting conditions of the reference image, keep the original product exactly as is";
-          } else {
-            sahne = `${stilSahneleri[s] || stilSahneleri.beyaz}${brandContext}`;
-            if (ekPrompt) sahne = `${sahne}, ${ekPrompt}`;
-          }
-          input = {
-            image_url: imageUrl,
-            scene_description: sahne,
-            optimize_description: true,
-            num_results: 4,
-            fast: false,
-            placement_type: "manual_padding",
-            padding_values: padding,
-            shot_size: shotSize,
-          };
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const queued = await fal.queue.submit("fal-ai/bria/product-shot", { input } as any);
-        return { stil: s, label: stilEtiketleri[s] || s, requestId: queued.request_id };
-      })
-    );
-
-    return NextResponse.json({ jobs, isAdmin });
+    return NextResponse.json({ requestId: queued.request_id, label, isAdmin });
   } catch (e: unknown) {
     const err = e as { message?: string };
     console.error("FAL HATA:", err?.message || JSON.stringify(e));
-    const err2 = e as { message?: string };
-    return NextResponse.json({ hata: "Gorsel uretim hatasi: " + (err2?.message || "bilinmiyor") }, { status: 500 });
+    return NextResponse.json({ hata: "Gorsel uretim hatasi: " + (err?.message || "bilinmiyor") }, { status: 500 });
   }
 }

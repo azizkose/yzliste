@@ -350,12 +350,10 @@ export default function Home() {
 
   // Görsel sekmesi
   const [gorselEkPrompt, setGorselEkPrompt] = useState("");
-  const [seciliStiller, setSeciliStiller] = useState<string[]>([]);
+  const [seciliStil, setSeciliStil] = useState<string>("");
   const [gorselYukleniyor, setGorselYukleniyor] = useState(false);
-  const [gorselSonuclar, setGorselSonuclar] = useState<{ stil: string; label: string; gorseller: string[] }[]>([]);
+  const [gorselJob, setGorselJob] = useState<{ requestId: string; label: string } | null>(null);
   const [gorselUyariAcik, setGorselUyariAcik] = useState(false);
-  const [krediOnayAcik, setKrediOnayAcik] = useState(false);
-  const [krediOnayIslem, setKrediOnayIslem] = useState<(() => Promise<void>) | null>(null);
   const [referansGorsel, setReferansGorsel] = useState<string | null>(null);
 
   // Video sekmesi
@@ -364,7 +362,7 @@ export default function Home() {
   const [videoSure, setVideoSure] = useState<"5" | "10">("5");
   const [videoFormat, setVideoFormat] = useState<"9:16" | "16:9" | "1:1">("9:16");
   const [videoYukleniyor, setVideoYukleniyor] = useState(false);
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [videoRequestId, setVideoRequestId] = useState<string | null>(null);
 
   // Sosyal sekmesi
   const [sosyalFoto, setSosyalFoto] = useState<string | null>(null);
@@ -667,37 +665,33 @@ export default function Home() {
     if (!loginGerekli()) return;
     if (!kullanici) return;
     if (fotolar.length === 0) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
-    if (seciliStiller.length === 0) { alert("En az bir stil seçin."); return; }
-    if (!kullanici.is_admin && kullanici.kredi < seciliStiller.length) { paketModalAc(); return; }
+    if (!seciliStil) { alert("Bir stil seçin."); return; }
+    if (!kullanici.is_admin && kullanici.kredi < 1) { paketModalAc(); return; }
     setGorselYukleniyor(true);
-    setGorselSonuclar([]);
+    setGorselJob(null);
     try {
       const resizedFoto = await resizeFoto(fotolar[0]);
-      const res = await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: resizedFoto, ekPrompt: gorselEkPrompt, stiller: seciliStiller, userId: kullanici?.id, referansGorsel }) });
+      const res = await fetch("/api/gorsel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ foto: resizedFoto, ekPrompt: gorselEkPrompt, stil: seciliStil, userId: kullanici?.id, referansGorsel }),
+      });
       const data = await res.json();
-      if (!data.jobs) { setHata("Görsel üretilemedi. Tekrar deneyin."); setGorselYukleniyor(false); return; }
+      if (!data.requestId) { setHata("Görsel üretilemedi. Tekrar deneyin."); setGorselYukleniyor(false); return; }
 
-      // Kuyruğa alındı — her job için poll et
-      const jobs: { stil: string; label: string; requestId: string }[] = data.jobs;
-      const sonuclar: { stil: string; label: string; gorseller: string[] }[] = [];
-
-      await Promise.all(jobs.map(async (job) => {
-        let tamamlandi = false;
-        for (let deneme = 0; deneme < 40; deneme++) {
-          await new Promise(r => setTimeout(r, 4000));
-          const pollRes = await fetch(`/api/gorsel/poll?requestId=${job.requestId}`);
-          const pollData = await pollRes.json();
-          if (pollData.status === "COMPLETED") {
-            sonuclar.push({ stil: job.stil, label: job.label, gorseller: pollData.gorseller || [] });
-            tamamlandi = true;
-            break;
-          }
+      // Poll et — URL yok, sadece status
+      let tamamlandi = false;
+      for (let deneme = 0; deneme < 40; deneme++) {
+        await new Promise(r => setTimeout(r, 4000));
+        const pollRes = await fetch(`/api/gorsel/poll?requestId=${data.requestId}`);
+        const pollData = await pollRes.json();
+        if (pollData.status === "COMPLETED") {
+          setGorselJob({ requestId: data.requestId, label: data.label });
+          tamamlandi = true;
+          break;
         }
-        if (!tamamlandi) sonuclar.push({ stil: job.stil, label: job.label, gorseller: [] });
-      }));
-
-      if (sonuclar.length > 0) setGorselSonuclar(sonuclar);
-      else setHata("Görsel üretilemedi. Tekrar deneyin.");
+      }
+      if (!tamamlandi) setHata("Görsel üretilemedi, zaman aşımı. Tekrar deneyin.");
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setGorselYukleniyor(false);
   };
@@ -709,7 +703,7 @@ export default function Home() {
     const videoKredi = videoSure === "10" ? 8 : 5;
     if (!kullanici.is_admin && kullanici.kredi < videoKredi) { paketModalAc(); return; }
     setVideoYukleniyor(true);
-    setVideoUrl(null);
+    setVideoRequestId(null);
     try {
       const resizedFoto = await resizeFoto(fotolar[0]);
       const res = await fetch("/api/sosyal/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: resizedFoto, prompt: videoPrompt, userId: kullanici.id, sure: videoSure, format: videoFormat }) });
@@ -726,7 +720,7 @@ export default function Home() {
         const pollRes = await fetch(`/api/sosyal/video/poll?requestId=${data.requestId}`);
         const pollData = await pollRes.json();
         if (pollData.status === "COMPLETED") {
-          setVideoUrl(pollData.videoUrl);
+          setVideoRequestId(data.requestId);
           tamamlandi = true;
           break;
         }
@@ -765,21 +759,21 @@ export default function Home() {
       const res = await fetch("/api/gorsel", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ foto: resizedFoto, stiller: [sosyalGorselStil], ekPrompt: sosyalGorselPrompt, sosyalFormat: sosyalGorselFormat, userId: kullanici.id }),
+        body: JSON.stringify({ foto: resizedFoto, stil: sosyalGorselStil, ekPrompt: sosyalGorselPrompt, sosyalFormat: sosyalGorselFormat, userId: kullanici.id }),
       });
       const data = await res.json();
       if (res.status === 402) { paketModalAc(); setSosyalGorselYukleniyor(false); return; }
-      if (!data.jobs) { setHata("Görsel üretilemedi. Tekrar deneyin."); setSosyalGorselYukleniyor(false); return; }
+      if (!data.requestId) { setHata("Görsel üretilemedi. Tekrar deneyin."); setSosyalGorselYukleniyor(false); return; }
 
-      // Poll et
-      const job = data.jobs[0];
+      // Poll et — COMPLETED olunca proxy URL'lerle göster
       let tamamlandi = false;
       for (let deneme = 0; deneme < 40; deneme++) {
         await new Promise(r => setTimeout(r, 4000));
-        const pollRes = await fetch(`/api/gorsel/poll?requestId=${job.requestId}`);
+        const pollRes = await fetch(`/api/gorsel/poll?requestId=${data.requestId}`);
         const pollData = await pollRes.json();
         if (pollData.status === "COMPLETED") {
-          setSosyalGorselSonuclar([{ stil: job.stil, label: job.label, gorseller: pollData.gorseller || [] }]);
+          const proxyGorseller = [0, 1, 2, 3].map((i) => `/api/gorsel/img?requestId=${data.requestId}&index=${i}`);
+          setSosyalGorselSonuclar([{ stil: sosyalGorselStil, label: data.label, gorseller: proxyGorseller }]);
           tamamlandi = true;
           break;
         }
@@ -1199,7 +1193,7 @@ export default function Home() {
               </p>
 
               <div>
-                <p className="block text-xs font-medium text-gray-600 mb-2">Stil seç <span className="text-gray-400 font-normal">(birden fazla seçebilirsin — indirirsen her biri için 1 kredi)</span></p>
+                <p className="block text-xs font-medium text-gray-600 mb-2">Stil seç <span className="text-gray-400 font-normal">(1 stil → 4 görsel · 1 kredi, indirirken düşer)</span></p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {([
                     { id: "beyaz", label: "⬜ Beyaz Zemin", aciklama: "Trendyol standart", img: "/ornek_beyaz.jpg" },
@@ -1212,26 +1206,23 @@ export default function Home() {
                     { id: "ozel", label: "✏️ Sahneni Yaz", aciklama: "Prompt ile tanımla", img: null },
                     { id: "referans", label: "🖼️ Arka Plan", aciklama: "Fotoğraf yükle", img: null },
                   ] as const).map((s) => (
-                    <button key={s.id} onClick={() => setSeciliStiller((prev) => prev.includes(s.id) ? prev.filter((x) => x !== s.id) : [...prev, s.id])}
-                      className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${seciliStiller.includes(s.id) ? "border-purple-500 shadow-md" : "border-gray-200 hover:border-purple-300"}`}>
+                    <button key={s.id} onClick={() => setSeciliStil(s.id)}
+                      className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${seciliStil === s.id ? "border-purple-500 shadow-md" : "border-gray-200 hover:border-purple-300"}`}>
                       {s.img ? (
                         <div className="aspect-square w-full overflow-hidden relative bg-gray-50">
                           <img src={s.img} alt={s.label} className="w-full h-full object-contain" />
-                          {seciliStiller.includes(s.id) && <div className="absolute inset-0 bg-purple-500/20 flex items-center justify-center"><span className="bg-purple-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">✓</span></div>}
+                          {seciliStil === s.id && <div className="absolute inset-0 bg-purple-500/20 flex items-center justify-center"><span className="bg-purple-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">✓</span></div>}
                         </div>
                       ) : (
-                        <div className={`aspect-square w-full flex items-center justify-center text-2xl ${seciliStiller.includes(s.id) ? "bg-purple-100" : "bg-gray-50"}`}>{s.id === "ozel" ? "✏️" : "🖼️"}</div>
+                        <div className={`aspect-square w-full flex items-center justify-center text-2xl ${seciliStil === s.id ? "bg-purple-100" : "bg-gray-50"}`}>{s.id === "ozel" ? "✏️" : "🖼️"}</div>
                       )}
                       <div className="p-2 bg-white w-full">
-                        <p className={`text-xs font-semibold ${seciliStiller.includes(s.id) ? "text-purple-600" : "text-gray-700"}`}>{s.label}</p>
+                        <p className={`text-xs font-semibold ${seciliStil === s.id ? "text-purple-600" : "text-gray-700"}`}>{s.label}</p>
                         <p className="text-xs text-gray-400">{s.aciklama}</p>
                       </div>
                     </button>
                   ))}
                 </div>
-                {seciliStiller.length > 0 && (
-                  <p className="text-xs text-purple-600 font-medium mt-2 text-center">{seciliStiller.length} stil → {seciliStiller.length * 4} görsel · {seciliStiller.length} kredi</p>
-                )}
               </div>
 
               <div>
@@ -1239,7 +1230,7 @@ export default function Home() {
                 <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="Sahneyi tanımla — örn: mermer masa üzerinde yumuşak pencere ışığı, yeşil bitkilerle / rustik ahşap raf, sıcak mum ışığı / pastel pembe gradyan arka plan, uçuşan balonlar" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
               </div>
 
-              {seciliStiller.includes("referans") && (
+              {seciliStil === "referans" && (
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">Arka plan fotoğrafı <span className="text-gray-400 font-normal">(ürünü bu arka plana yerleştirelim)</span></label>
                   {referansGorsel ? (
@@ -1262,9 +1253,9 @@ export default function Home() {
                 </div>
               )}
 
-              <button onClick={gorselUret} disabled={gorselYukleniyor || seciliStiller.length === 0 || fotolar.length === 0}
+              <button onClick={gorselUret} disabled={gorselYukleniyor || !seciliStil || fotolar.length === 0}
                 className="w-full bg-purple-500 hover:bg-purple-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
-                {gorselYukleniyor ? `⏳ ${seciliStiller.length * 4} görsel üretiliyor...` : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : seciliStiller.length === 0 ? "Bir stil seç" : `✨ ${seciliStiller.length * 4} Görsel Üret — ${seciliStiller.length} kredi`}
+                {gorselYukleniyor ? "⏳ 4 görsel üretiliyor..." : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : !seciliStil ? "Bir stil seç" : "✨ 4 Görsel Üret — 1 kredi (indirirken düşer)"}
               </button>
 
               {gorselYukleniyor && (
@@ -1273,78 +1264,53 @@ export default function Home() {
 
               <p className="text-xs text-gray-400 text-center">⚠️ AI hata yapabilir — üretilen görselleri yayınlamadan önce kontrol edin</p>
 
-              {gorselSonuclar.length > 0 && (
-                <div className="space-y-5">
+              {gorselJob && (
+                <div className="space-y-3">
                   <div className="flex items-center justify-between px-1">
-                    <p className="text-xs text-gray-500 font-medium">✅ {gorselSonuclar.reduce((t, s) => t + s.gorseller.length, 0)} görsel hazır — inceleme ücretsiz</p>
+                    <p className="text-xs text-gray-500 font-medium">✅ 4 görsel hazır — inceleme ücretsiz</p>
                     <button
                       onClick={async () => {
-                        const zipIslem = async () => {
-                          const JSZip = (await import("jszip")).default;
-                          const { saveAs } = await import("file-saver");
-                          const zip = new JSZip();
-                          const folder = zip.folder("yzliste-gorseller");
-                          let sayac = 0;
-                          for (const stil of gorselSonuclar) {
-                            for (let i = 0; i < stil.gorseller.length; i++) {
-                              const url = stil.gorseller[i];
-                              try {
-                                const res = await fetch(url);
-                                const blob = await res.blob();
-                                folder?.file(`${stil.stil}-${i + 1}.jpg`, blob);
-                                sayac++;
-                              } catch (e) { console.error("ZIP indirme hatası:", e); }
-                            }
-                          }
-                          if (sayac > 0) {
-                            const zipBlob = await zip.generateAsync({ type: "blob" });
-                            saveAs(zipBlob, "yzliste-gorseller.zip");
-                            indirmeHakiKullan();
-                            if (kullanici && !kullanici.is_admin) {
-                              const stilSayisi = gorselSonuclar.length;
-                              await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: kullanici.id, action: "indir", stilSayisi }) });
-                              setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - stilSayisi) } : k);
-                            }
-                          }
+                        if (!kullanici || !gorselJob) return;
+                        const yapIndir = async () => {
+                          indirmeHakiKullan();
+                          const res = await fetch("/api/gorsel/download", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ requestId: gorselJob.requestId, userId: kullanici.id }),
+                          });
+                          if (res.status === 402) { paketModalAc(); return; }
+                          const blob = await res.blob();
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement("a");
+                          a.href = url; a.download = "yzliste-gorseller.zip"; a.click();
+                          URL.revokeObjectURL(url);
+                          if (!kullanici.is_admin) setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - 1) } : k);
                         };
                         if (!indirmeHakkiVarMi()) {
-                          if (kullanici?.anonim) { setGorselUyariAcik(true); }
-                          else { setKrediOnayIslem(() => zipIslem); setKrediOnayAcik(true); }
-                          return;
+                          if (kullanici.anonim) { setGorselUyariAcik(true); return; }
+                          setKrediOnayIslem(() => yapIndir); setKrediOnayAcik(true); return;
                         }
-                        await zipIslem();
+                        await yapIndir();
                       }}
                       className="flex items-center gap-1.5 text-xs bg-purple-500 hover:bg-purple-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors"
                     >
-                      📦 Tümünü ZIP İndir — {gorselSonuclar.length} kredi
+                      📦 ZIP İndir — 1 kredi
                     </button>
                   </div>
-                  {gorselSonuclar.map((stil) => (
-                    <div key={stil.stil} className="space-y-2">
-                      <p className="text-xs font-semibold text-gray-600 px-1">{stil.label}</p>
-                      <div className="grid grid-cols-2 gap-2">
-                        {stil.gorseller.map((url, i) => (
-                          <div key={i} className="relative group rounded-xl overflow-hidden border border-gray-200">
-                            <img
-                              src={url}
-                              alt={`${stil.label} ${i + 1}`}
-                              className="w-full aspect-square object-cover select-none"
-                              draggable={false}
-                              onContextMenu={(e) => e.preventDefault()}
-                            />
-                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2">
-                              <button
-                                onClick={() => navigator.clipboard.writeText(url)}
-                                className="bg-white/90 hover:bg-white text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-lg shadow transition-all"
-                              >
-                                🔗 Linki Kopyala
-                              </button>
-                            </div>
-                          </div>
-                        ))}
+                  <p className="text-xs text-gray-400 px-1">{gorselJob.label} · 4 varyasyon</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[0, 1, 2, 3].map((i) => (
+                      <div key={i} className="rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                        <img
+                          src={`/api/gorsel/img?requestId=${gorselJob.requestId}&index=${i}`}
+                          alt={`${gorselJob.label} ${i + 1}`}
+                          className="w-full aspect-square object-cover select-none"
+                          draggable={false}
+                          onContextMenu={(e) => e.preventDefault()}
+                        />
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -1469,15 +1435,27 @@ export default function Home() {
                 </div>
               )}
 
-              {videoUrl && !videoYukleniyor && (
+              {videoRequestId && !videoYukleniyor && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between px-1">
                     <span className="text-sm font-semibold text-gray-800">✅ Videonuz Hazır</span>
                     <span className="text-xs text-gray-400">{videoFormat} · {videoSure} saniye</span>
                   </div>
-                  <video src={videoUrl} controls autoPlay loop className="w-full rounded-xl max-h-96 object-contain bg-black" />
-                  <a href={videoUrl} download="urun-video.mp4" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 rounded-xl text-sm transition-colors">⬇️ Videoyu İndir</a>
-                  <button onClick={() => { setVideoUrl(null); setVideoPrompt(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni video üret</button>
+                  <button
+                    onClick={async () => {
+                      const res = await fetch(`/api/sosyal/video/download?requestId=${videoRequestId}`);
+                      if (!res.ok) { alert("Video indirilemedi. Tekrar deneyin."); return; }
+                      const blob = await res.blob();
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = url; a.download = "urun-video.mp4"; a.click();
+                      URL.revokeObjectURL(url);
+                    }}
+                    className="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
+                  >
+                    ⬇️ Videoyu İndir
+                  </button>
+                  <button onClick={() => { setVideoRequestId(null); setVideoPrompt(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni video üret</button>
                 </div>
               )}
             </div>

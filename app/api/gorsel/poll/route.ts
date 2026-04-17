@@ -13,12 +13,6 @@ export async function GET(req: NextRequest) {
 
   const status = await fal.queue.status(ENDPOINT, { requestId, logs: false });
 
-  if (status.status === "COMPLETED") {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result = await fal.queue.result(ENDPOINT, { requestId }) as any;
-    const gorseller: string[] = result?.data?.images?.map((img: { url: string }) => img.url) || [];
-    return NextResponse.json({ status: "COMPLETED", gorseller });
-  }
-
+  // URL'leri frontend'e yansıtma — proxy üzerinden erişilecek
   return NextResponse.json({ status: status.status });
 }
