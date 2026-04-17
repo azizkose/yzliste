@@ -3,13 +3,11 @@ import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import SiteFooter from "@/components/SiteFooter";
-import { PAKET_LISTESI } from "@/lib/paketler";
 import { useInvalidateCredits } from "@/lib/hooks/useCredits";
 import { analytics } from "@/lib/analytics";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
-type SosyalPlatform = "instagram" | "tiktok" | "facebook" | "twitter";
+type SosyalPlatform = "instagram_tiktok" | "facebook" | "twitter";
 type SosyalTon = "tanitim" | "indirim" | "hikaye";
 
 type Uretim = {
@@ -126,19 +124,13 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
   const [odemeAcik, setOdemeAcik] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
 
-  // Paketler lib/paketler.ts'den geliyor
-  const paketler = PAKET_LISTESI;
+  const paketler = [
+    { id: "baslangic", isim: "Başlangıç", fiyat: "₺29", kredi: "10 kredi", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
+    { id: "populer", isim: "Popüler", fiyat: "₺79", kredi: "30 kredi", renk: "border-orange-400 ring-2 ring-orange-400", butonRenk: "bg-orange-500 hover:bg-orange-600", rozet: true },
+    { id: "buyuk", isim: "Büyük", fiyat: "₺149", kredi: "100 kredi", renk: "border-gray-200", butonRenk: "bg-gray-800 hover:bg-gray-900" },
+  ];
 
   const odemeBaslat = async (paketId: string) => {
-    // Fatura bilgisi kontrolü — ödeme başlamadan önce
-    const { data: profilKontrol } = await supabase.from("profiles").select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no").eq("id", kullanici.id).single();
-    const eksik = !profilKontrol?.ad_soyad || (profilKontrol?.fatura_tipi === "bireysel" && !profilKontrol?.tc_kimlik) || (profilKontrol?.fatura_tipi === "kurumsal" && !profilKontrol?.vergi_no);
-    if (eksik) {
-      onKapat();
-      alert("Ödeme yapabilmek için önce profil sayfasından fatura bilgilerinizi doldurun.");
-      window.location.href = "/profil";
-      return;
-    }
     setSeciliPaket(paketId);
     setYukleniyor(true);
     const fiyatMap: Record<string, number> = { baslangic: 29, populer: 79, buyuk: 149 };
@@ -185,9 +177,9 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-semibold text-gray-800">{p.isim}</p>
-                    <p className="text-sm text-gray-500">{p.krediStr}</p>
+                    <p className="text-sm text-gray-500">{p.kredi}</p>
                   </div>
-                  <p className="text-2xl font-bold text-gray-900">{p.fiyatStr}</p>
+                  <p className="text-2xl font-bold text-gray-900">{p.fiyat}</p>
                 </div>
                 <button onClick={() => odemeBaslat(p.id)} disabled={yukleniyor} className={`w-full mt-4 ${p.butonRenk} text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:bg-gray-300`}>
                   {yukleniyor && seciliPaket === p.id ? "⏳ Yükleniyor..." : "Satın Al"}
@@ -308,9 +300,6 @@ export default function Home() {
   const router = useRouter();
   const invalidateCredits = useInvalidateCredits();
 
-  // Mobil menü
-  const [mobileMenuAcik, setMobileMenuAcik] = useState(false);
-
   // Sekme
   const [anaSekme, setAnaSekme] = useState<AnaSekme>("metin");
 
@@ -338,9 +327,6 @@ export default function Home() {
   const [ozellikler, setOzellikler] = useState("");
   const [platform, setPlatform] = useState("trendyol");
   const [dil, setDil] = useState<"tr" | "en">("tr");
-  const [hedefKitle, setHedefKitle] = useState("genel");
-  const [fiyatSegmenti, setFiyatSegmenti] = useState<"butce" | "orta" | "premium">("orta");
-  const [anahtarKelimeler, setAnahtarKelimeler] = useState("");
   const [sonuc, setSonuc] = useState("");
   const [yukleniyor, setYukleniyor] = useState(false);
   const [yukleniyorMesaj, setYukleniyorMesaj] = useState(0);
@@ -353,13 +339,12 @@ export default function Home() {
 
   // Görsel sekmesi
   const [gorselEkPrompt, setGorselEkPrompt] = useState("");
-  const [seciliStil, setSeciliStil] = useState<string>("");
+  const [seciliStiller, setSeciliStiller] = useState<string[]>([]);
   const [gorselYukleniyor, setGorselYukleniyor] = useState(false);
-  const [gorselJob, setGorselJob] = useState<{ requestId: string; label: string } | null>(null);
+  const [gorselSonuclar, setGorselSonuclar] = useState<{ stil: string; label: string; gorseller: string[] }[]>([]);
   const [gorselUyariAcik, setGorselUyariAcik] = useState(false);
   const [krediOnayAcik, setKrediOnayAcik] = useState(false);
   const [krediOnayIslem, setKrediOnayIslem] = useState<(() => Promise<void>) | null>(null);
-  const [referansGorsel, setReferansGorsel] = useState<string | null>(null);
 
   // Video sekmesi
   // videoFoto kaldırıldı — tüm sekmeler fotolar[0] paylaşır
@@ -367,24 +352,30 @@ export default function Home() {
   const [videoSure, setVideoSure] = useState<"5" | "10">("5");
   const [videoFormat, setVideoFormat] = useState<"9:16" | "16:9" | "1:1">("9:16");
   const [videoYukleniyor, setVideoYukleniyor] = useState(false);
-  const [videoRequestId, setVideoRequestId] = useState<string | null>(null);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
 
   // Sosyal sekmesi
-  const [sosyalFoto, setSosyalFoto] = useState<string | null>(null);
+  // sosyalFoto kaldırıldı — tüm sekmeler fotolar[0] paylaşır
   const [sosyalUrunAdi, setSosyalUrunAdi] = useState("");
   const [sosyalEkBilgi, setSosyalEkBilgi] = useState("");
-  const [sosyalPlatform, setSosyalPlatform] = useState<SosyalPlatform>("instagram");
+  const [sosyalPlatform, setSosyalPlatform] = useState<SosyalPlatform>("instagram_tiktok");
   const [sosyalTon, setSosyalTon] = useState<SosyalTon>("tanitim");
   const [captionYukleniyor, setCaptionYukleniyor] = useState(false);
   const [sosyalCaption, setSosyalCaption] = useState("");
   const [sosyalHashtag, setSosyalHashtag] = useState("");
-  // Sosyal — görsel üretimi
-  const [sosyalIcerikTipi, setSosyalIcerikTipi] = useState<"metin" | "gorsel">("metin");
-  const [sosyalGorselStil, setSosyalGorselStil] = useState("beyaz");
+  const [sosyalSezon, setSosyalSezon] = useState("normal");
+  // Sosyal görsel
   const [sosyalGorselFormat, setSosyalGorselFormat] = useState<"1:1" | "9:16" | "16:9">("1:1");
+  const [sosyalGorselStil, setSosyalGorselStil] = useState("beyaz");
   const [sosyalGorselYukleniyor, setSosyalGorselYukleniyor] = useState(false);
-  const [sosyalGorselSonuclar, setSosyalGorselSonuclar] = useState<{ stil: string; label: string; gorseller: string[] }[]>([]);
-  const [sosyalGorselPrompt, setSosyalGorselPrompt] = useState("");
+  const [sosyalGorselSonuclar, setSosyalGorselSonuclar] = useState<string[]>([]);
+  // Sosyal Medya Kiti
+  type KitCaption = { caption: string; hashtag: string };
+  type KitSonuc = { captions: Record<string, KitCaption>; gorselUrls: string[] };
+  const [kitYukleniyor, setKitYukleniyor] = useState(false);
+  const [kitSonuc, setKitSonuc] = useState<KitSonuc | null>(null);
+  const [kitGorselFormat, setKitGorselFormat] = useState<"1:1" | "9:16" | "16:9">("1:1");
+  const [kitGorselStil, setKitGorselStil] = useState("beyaz");
 
   // Refs
   const scannerRef = useRef<unknown>(null);
@@ -434,33 +425,26 @@ export default function Home() {
       setAuthPopupEmail(""); setAuthPopupSifre(""); setAuthPopupSozlesme(false); setAuthPopupMesaj("");
       if (authSonraAksiyon === "paket") {
         setAuthSonraAksiyon(null);
-        setPaketModalAcik(true);
+        const { data: fatProfil } = await supabase.from("profiles").select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no").eq("id", data.user.id).single();
+        const eksik = !fatProfil?.ad_soyad || (fatProfil?.fatura_tipi === "bireysel" && !fatProfil?.tc_kimlik) || (fatProfil?.fatura_tipi === "kurumsal" && !fatProfil?.vergi_no);
+        if (eksik) { setHata("Ödeme yapabilmek için önce profil sayfasından fatura bilgilerinizi doldurun."); setTimeout(() => router.push("/profil"), 2500); }
+        else { setPaketModalAcik(true); }
       }
     }
     setAuthPopupYukleniyor(false);
   };
 
-  const handleGoogleGiris = async () => {
-    const { data } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/` },
-    });
-    if (data?.url) window.location.href = data.url;
-  };
-
-  const paketModalAc = () => {
-    if (!kullanici) {
-      setAuthSonraAksiyon("paket");
-      setAuthPopupMod("kayit");
-      setAuthPopupAcik(true);
-      return;
-    }
+  const paketModalAc = async () => {
+    if (!kullanici) return;
     if (kullanici.anonim) {
       setAuthSonraAksiyon("paket");
       setAuthPopupMod("kayit");
       setAuthPopupAcik(true);
       return;
     }
+    const { data: profil } = await supabase.from("profiles").select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no").eq("id", kullanici.id).single();
+    const eksik = !profil?.ad_soyad || (profil?.fatura_tipi === "bireysel" && !profil?.tc_kimlik) || (profil?.fatura_tipi === "kurumsal" && !profil?.vergi_no);
+    if (eksik) { setHata("Ödeme yapabilmek için önce profil sayfasından fatura bilgilerinizi doldurun."); setTimeout(() => router.push("/profil"), 2500); return; }
     setPaketModalAcik(true);
   };
 
@@ -472,17 +456,13 @@ export default function Home() {
 
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (odemeParam === "hata") setHata("Ödeme tamamlanamadı. Tekrar deneyin.");
-
     if (!user) {
-      // Login olmadan sayfa göster — üret butonlarında kontrol yapılır
-      if (paketParam) {
-        setAuthSonraAksiyon("paket");
-        setAuthPopupMod("kayit");
-        setAuthPopupAcik(true);
-      }
+      // Oturum yok — sayfayı göster, içerik üretiminde auth popup açılır
+      if (odemeParam === "hata") setHata("Ödeme tamamlanamadı. Tekrar deneyin.");
       return;
     }
+
+    if (odemeParam === "hata") setHata("Ödeme tamamlanamadı. Tekrar deneyin.");
 
     const anonim = user.is_anonymous ?? false;
     const { data: profil } = await supabase.from("profiles").select("email, kredi, is_admin, ton, marka_adi").eq("id", user.id).single();
@@ -502,19 +482,12 @@ export default function Home() {
         setAuthPopupMod("kayit");
         setAuthPopupAcik(true);
       } else {
-        setPaketModalAcik(true);
+        const { data: fatProfil } = await supabase.from("profiles").select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no").eq("id", user.id).single();
+        const eksik = !fatProfil?.ad_soyad || (fatProfil?.fatura_tipi === "bireysel" && !fatProfil?.tc_kimlik) || (fatProfil?.fatura_tipi === "kurumsal" && !fatProfil?.vergi_no);
+        if (eksik) { setHata("Ödeme yapabilmek için önce profil sayfasından fatura bilgilerinizi doldurun."); setTimeout(() => router.push("/profil"), 2500); }
+        else { setPaketModalAcik(true); }
       }
     }
-  };
-
-  // Üretim butonları için login kontrolü — giriş yoksa veya anonim ise popup aç
-  const loginGerekli = (): boolean => {
-    if (!kullanici || kullanici.anonim) {
-      setAuthPopupMod("kayit");
-      setAuthPopupAcik(true);
-      return false;
-    }
-    return true;
   };
 
   useEffect(() => {
@@ -522,6 +495,14 @@ export default function Home() {
     return () => { kameraKapat(); if (mesajInterval.current) clearInterval(mesajInterval.current); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Sekme değişince Metin'deki bilgiyi diğer sekmelere taşı
+  useEffect(() => {
+    if (anaSekme === "sosyal" && !sosyalUrunAdi && urunAdi) {
+      setSosyalUrunAdi(urunAdi);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [anaSekme]);
 
   const gecmisiYukle = async (userId: string) => {
     const { data } = await supabase.from("uretimler").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(10);
@@ -540,7 +521,7 @@ export default function Home() {
     e.target.value = "";
   };
 
-  const fotoKaldir = (index: number) => { setFotolar((prev) => prev.filter((_, i) => i !== index)); setGorselJob(null); };
+  const fotoKaldir = (index: number) => { setFotolar((prev) => prev.filter((_, i) => i !== index)); setGorselSonuclar([]); };
 
   // Fotoğraf boyutlandır — API'ye göndermeden önce
   const resizeFoto = (base64: string, maxSize = 1024): Promise<string> =>
@@ -562,7 +543,7 @@ export default function Home() {
     const dosya = e.target.files?.[0];
     if (!dosya) return;
     const reader = new FileReader();
-    reader.onload = () => { setFotolar([reader.result as string]); setGorselJob(null); };
+    reader.onload = () => { setFotolar([reader.result as string]); setGorselSonuclar([]); };
     reader.readAsDataURL(dosya);
     e.target.value = "";
   };
@@ -609,8 +590,7 @@ export default function Home() {
   const uretButonAktif = !yukleniyor && ((girisTipi === "manuel" && urunAdi && kategori) || (girisTipi === "foto" && fotolar.length > 0) || (girisTipi === "barkod" && barkodBilgi !== null));
 
   const icerikUret = async () => {
-    if (!loginGerekli()) return;
-    if (!kullanici) return;
+    if (!kullanici || kullanici.anonim) { setAuthPopupMod("kayit"); setAuthPopupAcik(true); return; }
     if (!kullanici.is_admin && kullanici.kredi <= 0) { paketModalAc(); return; }
     if (!uretButonAktif) return;
     setYukleniyor(true);
@@ -619,7 +599,7 @@ export default function Home() {
     analytics.generationStarted({ platform, type: 'metin' });
     mesajInterval.current = setInterval(() => setYukleniyorMesaj((prev) => (prev + 1) % yukleniyorMesajlari.length), 1800);
     try {
-      const res = await fetch("/api/uret", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi, userId: kullanici.id, dil: platformDil, ton: kullanici.ton, hedefKitle, fiyatSegmenti, anahtarKelimeler }) });
+      const res = await fetch("/api/uret", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi, userId: kullanici.id, dil: platformDil }) });
       const data = await res.json();
       if (mesajInterval.current) clearInterval(mesajInterval.current);
       if (res.status === 402) { analytics.creditExhausted(); paketModalAc(); setYukleniyor(false); return; }
@@ -667,84 +647,47 @@ export default function Home() {
   };
 
   const gorselUret = async () => {
-    if (!loginGerekli()) return;
-    if (!kullanici) return;
+    if (!kullanici || kullanici.anonim) { setAuthPopupMod("kayit"); setAuthPopupAcik(true); return; }
     if (fotolar.length === 0) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
-    if (!seciliStil) { alert("Bir stil seçin."); return; }
-    if (!kullanici.is_admin && kullanici.kredi < 1) { paketModalAc(); return; }
+    if (seciliStiller.length === 0) { alert("En az bir stil seçin."); return; }
+    if (!kullanici.is_admin && kullanici.kredi < seciliStiller.length) { paketModalAc(); return; }
     setGorselYukleniyor(true);
-    setGorselJob(null);
+    setGorselSonuclar([]);
     try {
       const resizedFoto = await resizeFoto(fotolar[0]);
-      const res = await fetch("/api/gorsel", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ foto: resizedFoto, ekPrompt: gorselEkPrompt, stil: seciliStil, userId: kullanici?.id, referansGorsel }),
-      });
+      const res = await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: resizedFoto, ekPrompt: gorselEkPrompt, stiller: seciliStiller, userId: kullanici?.id }) });
       const data = await res.json();
-      if (!data.requestId) { setHata("Görsel üretilemedi. Tekrar deneyin."); setGorselYukleniyor(false); return; }
-
-      // Poll et — URL yok, sadece status
-      let tamamlandi = false;
-      for (let deneme = 0; deneme < 40; deneme++) {
-        await new Promise(r => setTimeout(r, 4000));
-        const pollRes = await fetch(`/api/gorsel/poll?requestId=${data.requestId}`);
-        const pollData = await pollRes.json();
-        if (pollData.status === "COMPLETED") {
-          setGorselJob({ requestId: data.requestId, label: data.label });
-          tamamlandi = true;
-          break;
-        }
-      }
-      if (!tamamlandi) setHata("Görsel üretilemedi, zaman aşımı. Tekrar deneyin.");
+      if (data.sonuclar) setGorselSonuclar(data.sonuclar);
+      else setHata("Görsel üretilemedi. Tekrar deneyin.");
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setGorselYukleniyor(false);
   };
 
   const videoUret = async () => {
-    if (!loginGerekli()) return;
+    if (!kullanici || kullanici.anonim) { setAuthPopupMod("kayit"); setAuthPopupAcik(true); return; }
     if (!fotolar[0]) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
-    if (!kullanici) return;
     const videoKredi = videoSure === "10" ? 8 : 5;
     if (!kullanici.is_admin && kullanici.kredi < videoKredi) { paketModalAc(); return; }
     setVideoYukleniyor(true);
-    setVideoRequestId(null);
+    setVideoUrl(null);
     try {
-      const resizedFoto = await resizeFoto(fotolar[0]);
-      const res = await fetch("/api/sosyal/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: resizedFoto, prompt: videoPrompt, userId: kullanici.id, sure: videoSure, format: videoFormat }) });
+      const res = await fetch("/api/sosyal/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: fotolar[0], prompt: videoPrompt, userId: kullanici.id, sure: videoSure, format: videoFormat }) });
       const data = await res.json();
-      if (res.status === 402) { paketModalAc(); setVideoYukleniyor(false); return; }
-      if (!data.requestId) { setHata("Video üretilemedi. Tekrar deneyin."); setVideoYukleniyor(false); return; }
-
-      // Kredi düşürüldü, kuyruğa alındı — poll et
-      if (!kullanici.is_admin) { setKullanici({ ...kullanici, kredi: kullanici.kredi - (data.kullanilanKredi ?? videoKredi) }); invalidateCredits(); }
-
-      let tamamlandi = false;
-      for (let deneme = 0; deneme < 60; deneme++) {
-        await new Promise(r => setTimeout(r, 5000));
-        const pollRes = await fetch(`/api/sosyal/video/poll?requestId=${data.requestId}`);
-        const pollData = await pollRes.json();
-        if (pollData.status === "COMPLETED") {
-          setVideoRequestId(data.requestId);
-          tamamlandi = true;
-          break;
-        }
-      }
-      if (!tamamlandi) setHata("Video üretilemedi, zaman aşımı. Tekrar deneyin.");
+      if (data.videoUrl) { setVideoUrl(data.videoUrl); if (!kullanici.is_admin) { setKullanici({ ...kullanici, kredi: kullanici.kredi - (data.kullanilanKredi ?? videoKredi) }); invalidateCredits(); } }
+      else setHata("Video üretilemedi. Tekrar deneyin.");
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setVideoYukleniyor(false);
   };
 
   const captionUret = async () => {
-    if (!loginGerekli()) return;
-    if (!kullanici) return;
+    if (!kullanici || kullanici.anonim) { setAuthPopupMod("kayit"); setAuthPopupAcik(true); return; }
     if (!sosyalUrunAdi.trim()) return;
     if (!kullanici.is_admin && kullanici.kredi <= 0) { paketModalAc(); return; }
     setCaptionYukleniyor(true);
     setSosyalCaption("");
     setSosyalHashtag("");
     try {
-      const res = await fetch("/api/sosyal", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, platform: sosyalPlatform, ton: sosyalTon, userId: kullanici.id }) });
+      const res = await fetch("/api/sosyal", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, platform: sosyalPlatform, ton: sosyalTon, userId: kullanici.id, sezon: sosyalSezon }) });
       const data = await res.json();
       if (data.caption) setSosyalCaption(data.caption);
       if (data.hashtag) setSosyalHashtag(data.hashtag);
@@ -755,37 +698,67 @@ export default function Home() {
 
   const sosyalGorselUret = async () => {
     if (!kullanici || kullanici.anonim) { setAuthPopupMod("kayit"); setAuthPopupAcik(true); return; }
-    if (!sosyalFoto) { alert("Önce ürün fotoğrafı yükle."); return; }
+    if (!fotolar[0]) { alert("Önce ürün fotoğrafı yükle."); return; }
     if (!kullanici.is_admin && kullanici.kredi <= 0) { paketModalAc(); return; }
     setSosyalGorselYukleniyor(true);
     setSosyalGorselSonuclar([]);
     try {
-      const resizedFoto = await resizeFoto(sosyalFoto);
+      const resizedFoto = await resizeFoto(fotolar[0]);
       const res = await fetch("/api/gorsel", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ foto: resizedFoto, stil: sosyalGorselStil, ekPrompt: sosyalGorselPrompt, sosyalFormat: sosyalGorselFormat, userId: kullanici.id }),
+        body: JSON.stringify({ foto: resizedFoto, stiller: [sosyalGorselStil], sosyalFormat: sosyalGorselFormat, userId: kullanici.id }),
       });
       const data = await res.json();
-      if (res.status === 402) { paketModalAc(); setSosyalGorselYukleniyor(false); return; }
-      if (!data.requestId) { setHata("Görsel üretilemedi. Tekrar deneyin."); setSosyalGorselYukleniyor(false); return; }
-
-      // Poll et — COMPLETED olunca proxy URL'lerle göster
-      let tamamlandi = false;
-      for (let deneme = 0; deneme < 40; deneme++) {
-        await new Promise(r => setTimeout(r, 4000));
-        const pollRes = await fetch(`/api/gorsel/poll?requestId=${data.requestId}`);
-        const pollData = await pollRes.json();
-        if (pollData.status === "COMPLETED") {
-          const proxyGorseller = [0, 1, 2, 3].map((i) => `/api/gorsel/img?requestId=${data.requestId}&index=${i}`);
-          setSosyalGorselSonuclar([{ stil: sosyalGorselStil, label: data.label, gorseller: proxyGorseller }]);
-          tamamlandi = true;
-          break;
+      const gorseller: string[] = data.sonuclar?.[0]?.gorseller || [];
+      if (gorseller.length > 0) {
+        setSosyalGorselSonuclar(gorseller);
+        // Kredi düş: üretimde 1 kredi (görsel sekmesinin indir mantığı yerine)
+        if (!kullanici.is_admin) {
+          await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: kullanici.id, action: "indir", stilSayisi: 1 }) });
+          setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - 1) } : k);
         }
+      } else {
+        setHata("Görsel üretilemedi. Tekrar deneyin.");
       }
-      if (!tamamlandi) setHata("Görsel üretilemedi, zaman aşımı. Tekrar deneyin.");
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setSosyalGorselYukleniyor(false);
+  };
+
+  const kitUret = async () => {
+    if (!kullanici || kullanici.anonim) { setAuthPopupMod("kayit"); setAuthPopupAcik(true); return; }
+    if (!sosyalUrunAdi.trim()) { alert("Ürün adı gerekli."); return; }
+    const krediGereken = fotolar[0] ? 5 : 4;
+    if (!kullanici.is_admin && kullanici.kredi < krediGereken) { paketModalAc(); return; }
+    setKitYukleniyor(true);
+    setKitSonuc(null);
+    try {
+      const foto = fotolar[0] ? await resizeFoto(fotolar[0]) : null;
+      const res = await fetch("/api/sosyal/kit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          urunAdi: sosyalUrunAdi,
+          ekBilgi: sosyalEkBilgi,
+          ton: sosyalTon,
+          userId: kullanici.id,
+          foto,
+          gorselFormat: kitGorselFormat,
+          gorselStil: kitGorselStil,
+          sezon: sosyalSezon,
+        }),
+      });
+      const data = await res.json();
+      if (data.hata) { setHata(data.hata); }
+      else {
+        setKitSonuc({ captions: data.captions, gorselUrls: data.gorselUrls || [] });
+        if (!kullanici.is_admin) {
+          setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - (data.kullanilanKredi || krediGereken)) } : k);
+          invalidateCredits();
+        }
+      }
+    } catch { setHata("Kit üretilemedi. Lütfen tekrar deneyin."); }
+    setKitYukleniyor(false);
   };
 
   return (
@@ -793,69 +766,30 @@ export default function Home() {
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center gap-2">
-            <Link href="/auth" className="flex-shrink-0">
-              <img src="/yzliste_logo.png" alt="yzliste" className="h-9" />
-            </Link>
-            <nav className="hidden sm:flex items-center gap-0.5 text-sm text-gray-500 flex-1">
-              <Link href="/auth" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</Link>
-              <Link href="/" className="px-3 py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">İçerik</Link>
-              <Link href="/fiyatlar" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</Link>
-              <Link href="/blog" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</Link>
-            </nav>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              {kullanici ? (
-                <>
-                  <button onClick={() => paketModalAc()} className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-colors ${kullanici.is_admin ? "bg-purple-100 text-purple-700" : krediDusuk ? "bg-red-100 text-red-600 animate-pulse" : "bg-orange-100 text-orange-600 hover:bg-orange-200"}`}>
-                    {kullanici.is_admin ? "∞" : kullanici.kredi} kredi
-                  </button>
-                  {kullanici.anonim
-                    ? <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-xs bg-orange-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-orange-600 transition-colors">Ücretsiz Başla</button>
-                    : <span className="text-sm text-gray-400 hidden sm:block">{kullanici.email}</span>
-                  }
-                  {kullanici.is_admin && <a href="/admin" className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-lg font-medium">Admin</a>}
-                  {!kullanici.anonim && <Link href="/profil" className="text-sm text-gray-400 hover:text-gray-600 hidden sm:block">Profil</Link>}
-                  {!kullanici.anonim && <button onClick={cikisYap} className="text-sm text-gray-400 hover:text-gray-600 hidden sm:block">Çıkış</button>}
-                </>
-              ) : (
-                <>
-                  <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="text-sm text-gray-500 hover:text-gray-700 font-medium hidden sm:block">Giriş Yap</button>
-                  <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-sm bg-orange-500 hover:bg-orange-600 text-white font-semibold px-4 py-1.5 rounded-lg transition-colors hidden sm:block">Ücretsiz Başla</button>
-                </>
-              )}
-              {/* Mobil hamburger */}
-              <button
-                onClick={() => setMobileMenuAcik(!mobileMenuAcik)}
-                className="sm:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
-                aria-label="Menü"
-              >
-                {mobileMenuAcik ? "✕" : "☰"}
+        <div className="flex justify-between items-center mb-6 gap-2">
+          <Link href="/auth" className="flex-shrink-0">
+            <img src="/yzliste_logo.png" alt="yzliste" className="h-9" />
+          </Link>
+          <nav className="hidden sm:flex items-center gap-0.5 text-sm text-gray-500 flex-1">
+            <Link href="/auth" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</Link>
+            <Link href="/" className="px-3 py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">İçerik</Link>
+            <Link href="/fiyatlar" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</Link>
+            <Link href="/blog" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</Link>
+          </nav>
+          {kullanici && !kullanici.anonim ? (
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <button onClick={() => paketModalAc()} className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-colors ${kullanici.is_admin ? "bg-purple-100 text-purple-700" : krediDusuk ? "bg-red-100 text-red-600 animate-pulse" : "bg-orange-100 text-orange-600 hover:bg-orange-200"}`}>
+                {kullanici.is_admin ? "∞" : kullanici.kredi} kredi
               </button>
+              <span className="text-sm text-gray-400 hidden sm:block">{kullanici.email}</span>
+              {kullanici.is_admin && <a href="/admin" className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-lg font-medium">Admin</a>}
+              <a href="/profil" className="text-sm text-gray-400 hover:text-gray-600">Profil</a>
+              <button onClick={cikisYap} className="text-sm text-gray-400 hover:text-gray-600">Çıkış</button>
             </div>
-          </div>
-
-          {/* Mobil dropdown */}
-          {mobileMenuAcik && (
-            <div className="sm:hidden mt-1 bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden">
-              <nav className="px-2 py-3 space-y-1">
-                <a href="/auth" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">Ana Sayfa</a>
-                <a href="/" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-orange-600 font-medium bg-orange-50">İçerik</a>
-                <a href="/fiyatlar" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">Fiyatlar</a>
-                <a href="/blog" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">Blog</a>
-                {kullanici && !kullanici.anonim && (
-                  <div className="border-t border-gray-200 pt-2 mt-1 space-y-1">
-                    <a href="/profil" className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Profil</a>
-                    <button onClick={cikisYap} className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Çıkış</button>
-                  </div>
-                )}
-                {(!kullanici || kullanici.anonim) && (
-                  <div className="border-t border-gray-200 pt-2 mt-1 space-y-1">
-                    <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); setMobileMenuAcik(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Giriş Yap</button>
-                    <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); setMobileMenuAcik(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium bg-orange-500 text-white text-center hover:bg-orange-600 transition-colors rounded-lg">Ücretsiz Başla</button>
-                  </div>
-                )}
-              </nav>
+          ) : (
+            <div className="flex gap-1 sm:gap-2 flex-shrink-0">
+              <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</button>
+              <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla</button>
             </div>
           )}
         </div>
@@ -871,7 +805,7 @@ export default function Home() {
               </div>
             </div>
             <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap transition-colors flex-shrink-0">
-              Ücretsiz Başla
+              Hesap Oluştur
             </button>
           </div>
         )}
@@ -926,8 +860,8 @@ export default function Home() {
               {([
                 { id: "metin", label: "📝 Metin", renk: "bg-orange-500", aktif: true },
                 { id: "gorsel", label: "📷 Görsel", renk: "bg-purple-500", aktif: true },
-                { id: "sosyal", label: "📱 Sosyal Medya", renk: "bg-pink-500", aktif: true },
-                { id: "video", label: "🎬 Video", renk: "bg-red-500", aktif: true },
+                { id: "video", label: "🎬 Video", renk: "bg-red-500", aktif: false },
+                { id: "sosyal", label: "📱 Sosyal Medya", renk: "bg-pink-500", aktif: false },
               ] as { id: AnaSekme; label: string; renk: string; aktif: boolean }[]).map((s) => (
                 <button key={s.id}
                   onClick={() => { if (s.aktif) { setAnaSekme(s.id); window.scrollTo({ top: 0, behavior: "smooth" }); } }}
@@ -965,7 +899,7 @@ export default function Home() {
                       Değiştir
                       <input type="file" accept="image/*" className="hidden" onChange={tekFotoSec} />
                     </label>
-                    <button onClick={() => { setFotolar([]); setGorselJob(null); }} className="text-xs text-gray-400 hover:text-red-500 transition-colors">Kaldır</button>
+                    <button onClick={() => { setFotolar([]); setGorselSonuclar([]); }} className="text-xs text-gray-400 hover:text-red-500 transition-colors">Kaldır</button>
                   </div>
                 </div>
               ) : (
@@ -999,6 +933,7 @@ export default function Home() {
                     <button key={tip} onClick={() => setGirisTipi(tip)}
                       className={`py-2 px-2 rounded-xl border-2 text-xs font-semibold transition-all ${girisTipi === tip ? "border-orange-400 bg-orange-50 text-orange-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
                       {tip === "manuel" ? "✏️ Manuel" : tip === "foto" ? "📷 Fotoğraf" : "🔍 Barkod"}
+                      {tip === "barkod" && <span className="block text-gray-400 font-normal text-[10px]">yakında</span>}
                     </button>
                   ))}
                   <a href="/toplu"
@@ -1052,42 +987,6 @@ export default function Home() {
                     <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)} placeholder={platformPh.ozellik} rows={3} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
                     <p className="text-xs text-gray-400 mt-1">💡 Renk, beden, malzeme, garanti, kutu içeriği, güvenlik bilgisi — ne kadar çok bilgi girersen içerik o kadar spesifik olur; az bilgide sonuç genel kalabilir</p>
                   </div>
-
-                  {/* Hedef Kitle */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Hedef Kitle <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                    <select value={hedefKitle} onChange={(e) => setHedefKitle(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400">
-                      <option value="genel">Genel</option>
-                      <option value="kadinlar">Kadınlar</option>
-                      <option value="erkekler">Erkekler</option>
-                      <option value="gencler">Gençler (18-25)</option>
-                      <option value="ebeveynler">Ebeveynler</option>
-                      <option value="profesyoneller">Profesyoneller</option>
-                      <option value="sporcular">Sporcular</option>
-                    </select>
-                  </div>
-
-                  {/* Fiyat Segmenti */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Fiyat Segmenti <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {(["butce", "orta", "premium"] as const).map((seg) => (
-                        <button key={seg} type="button" onClick={() => setFiyatSegmenti(seg)}
-                          className={`py-2 rounded-xl border-2 text-xs font-semibold transition-all ${fiyatSegmenti === seg ? "border-orange-400 bg-orange-50 text-orange-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
-                          {seg === "butce" ? "💰 Bütçe" : seg === "orta" ? "⚖️ Orta" : "👑 Premium"}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Anahtar Kelimeler */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Anahtar Kelimeler <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                    <input type="text" value={anahtarKelimeler} onChange={(e) => setAnahtarKelimeler(e.target.value)}
-                      placeholder="örn: kışlık bot, su geçirmez ayakkabı, erkek outdoor"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
-                    <p className="text-xs text-gray-400 mt-1">💡 Arama sonuçlarında çıkmak istediğin kelimeler — AI bunları başlık ve açıklamaya doğal yerleştirir</p>
-                  </div>
                 </>
               )}
 
@@ -1117,36 +1016,10 @@ export default function Home() {
 
               {/* Barkod */}
               {girisTipi === "barkod" && (
-                <div className="space-y-3">
-                  {!kameraAcik && !barkodBilgi && (
-                    <div className="bg-orange-50 border border-orange-200 rounded-xl p-5 text-center space-y-3">
-                      <div className="text-3xl">🔍</div>
-                      <p className="text-sm text-gray-600">Ürünün barkodunu kameraya göster, bilgiler otomatik dolacak.</p>
-                      <button onClick={kameraAc} className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-5 py-2 rounded-xl transition-colors">
-                        📷 Kamerayı Aç
-                      </button>
-                    </div>
-                  )}
-                  {kameraAcik && (
-                    <div className="space-y-2">
-                      <div id="barkod-okuyucu" className="w-full rounded-xl overflow-hidden" />
-                      {barkodYukleniyor && <p className="text-center text-sm text-gray-500 animate-pulse">🔄 Ürün sorgulanıyor...</p>}
-                      <button onClick={kameraKapat} className="w-full text-xs text-gray-400 hover:text-gray-600 py-1 transition-colors">
-                        ✕ Kamerayı Kapat
-                      </button>
-                    </div>
-                  )}
-                  {barkodBilgi && (
-                    <div className="bg-green-50 border border-green-200 rounded-xl p-4 space-y-1">
-                      <p className="text-sm font-semibold text-green-700">✅ Ürün Tanındı</p>
-                      <p className="text-sm text-gray-700"><span className="font-medium">İsim:</span> {barkodBilgi.isim}</p>
-                      {barkodBilgi.marka && <p className="text-sm text-gray-600"><span className="font-medium">Marka:</span> {barkodBilgi.marka}</p>}
-                      {barkodBilgi.kategori && <p className="text-sm text-gray-600"><span className="font-medium">Kategori:</span> {barkodBilgi.kategori}</p>}
-                      <button onClick={() => { setBarkodBilgi(null); setUrunAdi(""); setKategori(""); setOzellikler(""); }} className="text-xs text-orange-500 hover:text-orange-700 underline mt-1 transition-colors">
-                        Tekrar Tara
-                      </button>
-                    </div>
-                  )}
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 text-center space-y-2">
+                  <div className="text-3xl">🔍</div>
+                  <p className="text-sm font-semibold text-amber-700">Barkod ile Tanıma — Yakında</p>
+                  <p className="text-xs text-amber-600">Bu özellik çok yakında aktif olacak. Manuel ya da fotoğraf seçeneğini kullanabilirsiniz.</p>
                 </div>
               )}
 
@@ -1208,6 +1081,13 @@ export default function Home() {
                 <span className="text-xs text-orange-500 font-medium">Stil başına 1 kredi · Her stilden 4 varyasyon</span>
               </div>
 
+              {/* Metin sekmesinden taşınan ürün adı */}
+              {urunAdi && (
+                <div className="flex items-center gap-2 bg-orange-50 rounded-xl px-3 py-2 border border-orange-100">
+                  <span className="text-xs text-orange-600">📝 Metin sekmesinden: <strong>{urunAdi}</strong>{kategori ? ` · ${kategori}` : ""}</span>
+                </div>
+              )}
+
               {/* Profil eksik uyarısı */}
               {kullanici && !kullanici.anonim && !kullanici.marka_adi && (
                 <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex items-center justify-between gap-3">
@@ -1217,12 +1097,14 @@ export default function Home() {
               )}
 
               <p className="text-xs text-gray-600">
-                Tek fotoğraftan 7+ farklı stüdyo görseli. Her stilden 4 varyasyon üretilir — inceleme ücretsiz, indirince kredi düşer.{" "}
+                Tek fotoğraftan 3 farklı stüdyo görseli. Her stilden 4 varyasyon üretilir — inceleme ücretsiz, indirince kredi düşer.{" "}
                 <span className="text-xs text-gray-400">  <br /> Örnek: 1 stil seçersen → 4 görsel, 1 kredi <br />2 stil seçersen → 8 görsel, 2 kredi</span>
               </p>
 
               {fotolar.length === 0 ? (
-                <FotoEkleAlani id="gorsel-foto-input" onChange={fotoSec} renk="purple" metin="Ürün fotoğrafı yükle" ikon="📷" altMetin="Arka planı kaldırıp 7+ stilden 4'er varyasyon üretiriz" />
+                <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-4 text-center text-xs text-gray-400">
+                  Yukarıdan ürün fotoğrafı yükle ↑
+                </div>
               ) : (
                 <FotoThumbnail src={fotolar[0]} onKaldir={() => fotoKaldir(0)} renk="green" />
               )}
@@ -1234,146 +1116,113 @@ export default function Home() {
               </p>
 
               <div>
-                <p className="block text-xs font-medium text-gray-600 mb-2">Stil seç <span className="text-gray-400 font-normal">(1 stil → 4 görsel · 1 kredi, indirirken düşer)</span></p>
+                <p className="block text-xs font-medium text-gray-600 mb-2">Stil seç <span className="text-gray-400 font-normal">(birden fazla seçebilirsin — indirirsen her biri için 1 kredi)</span></p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {(() => {
-                    const GORSEL_STILLER = [
-                      { id: "beyaz", label: "⬜ Beyaz Zemin", aciklama: "Trendyol standart", img: "/ornek_beyaz.jpg", kategoriler: ["kozmetik", "elektronik", "cocuk", "giyim"] },
-                      { id: "koyu", label: "⬛ Koyu Zemin", aciklama: "Premium / elektronik", img: "/ornek_koyu.jpg", kategoriler: ["elektronik", "taki"] },
-                      { id: "lifestyle", label: "🏠 Lifestyle", aciklama: "Gerçek ortam", img: "/ornek_lifestyle.jpg", kategoriler: ["giyim", "ev", "gida"] },
-                      { id: "mermer", label: "🪨 Mermer", aciklama: "Lüks / kozmetik", img: "/ornek_mermer.jpg", kategoriler: ["kozmetik", "taki"] },
-                      { id: "ahsap", label: "🪵 Ahşap", aciklama: "El yapımı / organik", img: "/ornek_ahsap.jpg", kategoriler: ["gida", "ev", "spor"] },
-                      { id: "gradient", label: "🎨 Gradient", aciklama: "Modern / teknoloji", img: "/ornek_gradient.jpg", kategoriler: ["elektronik", "cocuk", "kozmetik"] },
-                      { id: "dogal", label: "🌿 Doğal", aciklama: "Açık hava / taze", img: "/ornek_dogal.jpg", kategoriler: ["gida", "spor", "ev"] },
-                      { id: "ozel", label: "✏️ Sahneni Yaz", aciklama: "Prompt ile tanımla", img: null as string | null, kategoriler: [] as string[] },
-                      { id: "referans", label: "🖼️ Arka Plan", aciklama: "Fotoğraf yükle", img: null as string | null, kategoriler: [] as string[] },
-                    ];
-                    const gorselKategoriKodu = (() => {
-                      const k = (kategori || "").toLowerCase();
-                      if (/kozmetik|parfüm|cilt|bakım|makyaj|serum|krem|şampuan/i.test(k)) return "kozmetik";
-                      if (/elektron|telefon|bilgisayar|tablet|kulaklık|şarj|kamera|tv|monitör/i.test(k)) return "elektronik";
-                      if (/giyim|ayakkabı|çanta|elbise|tişört|pantolon|ceket|kazak|gömlek|bot|sneaker/i.test(k)) return "giyim";
-                      if (/gıda|yiyecek|içecek|kahve|çay|bal|zeytinyağı|baharat|atıştırmalık/i.test(k)) return "gida";
-                      if (/ev|mutfak|dekor|mobilya|aydınlatma|halı|perde|tencere|bardak/i.test(k)) return "ev";
-                      if (/spor|fitness|outdoor|kamp|bisiklet|yoga|koşu|dağ/i.test(k)) return "spor";
-                      if (/çocuk|bebek|oyuncak|mama|biberon/i.test(k)) return "cocuk";
-                      if (/takı|mücevher|yüzük|kolye|bilezik|küpe/i.test(k)) return "taki";
-                      return null;
-                    })();
-                    const sirali = gorselKategoriKodu
-                      ? [
-                          ...GORSEL_STILLER.filter(s => s.kategoriler.includes(gorselKategoriKodu)),
-                          ...GORSEL_STILLER.filter(s => !s.kategoriler.includes(gorselKategoriKodu) && s.kategoriler.length > 0),
-                          ...GORSEL_STILLER.filter(s => s.kategoriler.length === 0),
-                        ]
-                      : GORSEL_STILLER;
-                    return sirali.map((s) => (
-                    <button key={s.id} onClick={() => setSeciliStil(s.id)}
-                      className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${seciliStil === s.id ? "border-purple-500 shadow-md" : "border-gray-200 hover:border-purple-300"}`}>
+                  {([
+                    { id: "beyaz", label: "⬜ Beyaz Zemin", aciklama: "Trendyol standart", img: "/ornek_beyaz.jpg" },
+                    { id: "koyu", label: "⬛ Koyu Zemin", aciklama: "Premium / elektronik", img: "/ornek_koyu.jpg" },
+                    { id: "lifestyle", label: "🏠 Lifestyle", aciklama: "Gerçek ortam", img: "/ornek_lifestyle.jpg" },
+                    { id: "ozel", label: "✏️ Kendi Sahneni", aciklama: "Prompt yaz", img: null },
+                  ] as const).map((s) => (
+                    <button key={s.id} onClick={() => setSeciliStiller((prev) => prev.includes(s.id) ? prev.filter((x) => x !== s.id) : [...prev, s.id])}
+                      className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${seciliStiller.includes(s.id) ? "border-purple-500 shadow-md" : "border-gray-200 hover:border-purple-300"}`}>
                       {s.img ? (
-                        <div className="aspect-square w-full overflow-hidden relative bg-gray-50">
-                          <img src={s.img} alt={s.label} className="w-full h-full object-contain" />
-                          {seciliStil === s.id && <div className="absolute inset-0 bg-purple-500/20 flex items-center justify-center"><span className="bg-purple-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">✓</span></div>}
+                        <div className="aspect-video w-full overflow-hidden relative">
+                          <img src={s.img} alt={s.label} className="w-full h-full object-cover" />
+                          {seciliStiller.includes(s.id) && <div className="absolute inset-0 bg-purple-500/20 flex items-center justify-center"><span className="bg-purple-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">✓</span></div>}
                         </div>
                       ) : (
-                        <div className={`aspect-square w-full flex items-center justify-center text-2xl ${seciliStil === s.id ? "bg-purple-100" : "bg-gray-50"}`}>{s.id === "ozel" ? "✏️" : "🖼️"}</div>
+                        <div className={`aspect-video w-full flex items-center justify-center text-2xl ${seciliStiller.includes(s.id) ? "bg-purple-100" : "bg-gray-50"}`}>✏️</div>
                       )}
                       <div className="p-2 bg-white w-full">
-                        <p className={`text-xs font-semibold ${seciliStil === s.id ? "text-purple-600" : "text-gray-700"}`}>{s.label}</p>
+                        <p className={`text-xs font-semibold ${seciliStiller.includes(s.id) ? "text-purple-600" : "text-gray-700"}`}>{s.label}</p>
                         <p className="text-xs text-gray-400">{s.aciklama}</p>
                       </div>
                     </button>
-                  ));
-                  })()}
+                  ))}
                 </div>
+                {seciliStiller.length > 0 && (
+                  <p className="text-xs text-purple-600 font-medium mt-2 text-center">{seciliStiller.length} stil → {seciliStiller.length * 4} görsel · {seciliStiller.length} kredi</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Görsel yönlendirmesi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="Sahneyi tanımla — örn: mermer masa üzerinde yumuşak pencere ışığı, yeşil bitkilerle / rustik ahşap raf, sıcak mum ışığı / pastel pembe gradyan arka plan, uçuşan balonlar" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
+                <label className="block text-xs font-medium text-gray-600 mb-1">Görsel yönlendirmesi <span className="text-gray-400 font-normal">(isteğe bağlı — Türkçe veya İngilizce)</span></label>
+                <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="örn: ahşap masada, deniz kıyısında, sonbahar tonları, minimalist..." rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
               </div>
 
-              {seciliStil === "referans" && (
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Arka plan fotoğrafı <span className="text-gray-400 font-normal">(ürünü bu arka plana yerleştirelim)</span></label>
-                  {referansGorsel ? (
-                    <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2 border-purple-300">
-                      <img src={referansGorsel} alt="Referans" className="w-full h-full object-cover" />
-                      <button onClick={() => setReferansGorsel(null)} className="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center">×</button>
-                    </div>
-                  ) : (
-                    <label className="flex items-center justify-center w-full h-24 border-2 border-dashed border-purple-300 rounded-xl cursor-pointer hover:bg-purple-50 transition-colors">
-                      <span className="text-sm text-purple-400">🖼️ Arka plan fotoğrafı yükle</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        const reader = new FileReader();
-                        reader.onload = () => setReferansGorsel(reader.result as string);
-                        reader.readAsDataURL(file);
-                      }} />
-                    </label>
-                  )}
-                </div>
-              )}
-
-              <button onClick={gorselUret} disabled={gorselYukleniyor || !seciliStil || fotolar.length === 0}
+              <button onClick={gorselUret} disabled={gorselYukleniyor || seciliStiller.length === 0 || fotolar.length === 0}
                 className="w-full bg-purple-500 hover:bg-purple-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
-                {gorselYukleniyor ? "⏳ 4 görsel üretiliyor..." : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : !seciliStil ? "Bir stil seç" : "✨ 4 Görsel Üret — 1 kredi (indirirken düşer)"}
+                {gorselYukleniyor ? `⏳ ${seciliStiller.length * 4} görsel üretiliyor...` : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : seciliStiller.length === 0 ? "Bir stil seç" : `✨ ${seciliStiller.length * 4} Görsel Üret — ${seciliStiller.length} kredi`}
               </button>
-
-              {gorselYukleniyor && (
-                <p className="text-xs text-purple-600 text-center">Sayfayı kapatmayın — görsel üretimi yaklaşık 1 dakika sürer</p>
-              )}
 
               <p className="text-xs text-gray-400 text-center">⚠️ AI hata yapabilir — üretilen görselleri yayınlamadan önce kontrol edin</p>
 
-              {gorselJob && (
-                <div className="space-y-3">
+              {gorselSonuclar.length > 0 && (
+                <div className="space-y-5">
                   <div className="flex items-center justify-between px-1">
-                    <p className="text-xs text-gray-500 font-medium">✅ 4 görsel hazır — inceleme ücretsiz</p>
+                    <p className="text-xs text-gray-500 font-medium">✅ {gorselSonuclar.reduce((t, s) => t + s.gorseller.length, 0)} görsel hazır — inceleme ücretsiz</p>
                     <button
                       onClick={async () => {
-                        if (!kullanici || !gorselJob) return;
-                        const yapIndir = async () => {
-                          indirmeHakiKullan();
-                          const res = await fetch("/api/gorsel/download", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ requestId: gorselJob.requestId, userId: kullanici.id }),
-                          });
-                          if (res.status === 402) { paketModalAc(); return; }
-                          const blob = await res.blob();
-                          const url = URL.createObjectURL(blob);
-                          const a = document.createElement("a");
-                          a.href = url; a.download = "yzliste-gorseller.zip"; a.click();
-                          URL.revokeObjectURL(url);
-                          if (!kullanici.is_admin) setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - 1) } : k);
+                        const zipIslem = async () => {
+                          const JSZip = (await import("jszip")).default;
+                          const { saveAs } = await import("file-saver");
+                          const zip = new JSZip();
+                          const folder = zip.folder("yzliste-gorseller");
+                          let sayac = 0;
+                          for (const stil of gorselSonuclar) {
+                            for (let i = 0; i < stil.gorseller.length; i++) {
+                              const url = stil.gorseller[i];
+                              try {
+                                const res = await fetch(url);
+                                const blob = await res.blob();
+                                folder?.file(`${stil.stil}-${i + 1}.jpg`, blob);
+                                sayac++;
+                              } catch (e) { console.error("ZIP indirme hatası:", e); }
+                            }
+                          }
+                          if (sayac > 0) {
+                            const zipBlob = await zip.generateAsync({ type: "blob" });
+                            saveAs(zipBlob, "yzliste-gorseller.zip");
+                            indirmeHakiKullan();
+                            if (kullanici && !kullanici.is_admin) {
+                              const stilSayisi = gorselSonuclar.length;
+                              await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: kullanici.id, action: "indir", stilSayisi }) });
+                              setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - stilSayisi) } : k);
+                            }
+                          }
                         };
                         if (!indirmeHakkiVarMi()) {
-                          if (kullanici.anonim) { setGorselUyariAcik(true); return; }
-                          setKrediOnayIslem(() => yapIndir); setKrediOnayAcik(true); return;
+                          if (kullanici?.anonim) { setGorselUyariAcik(true); }
+                          else { setKrediOnayIslem(() => zipIslem); setKrediOnayAcik(true); }
+                          return;
                         }
-                        await yapIndir();
+                        await zipIslem();
                       }}
                       className="flex items-center gap-1.5 text-xs bg-purple-500 hover:bg-purple-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors"
                     >
-                      📦 ZIP İndir — 1 kredi
+                      📦 Tümünü ZIP İndir — {gorselSonuclar.length} kredi
                     </button>
                   </div>
-                  <p className="text-xs text-gray-400 px-1">{gorselJob.label} · 4 varyasyon</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {[0, 1, 2, 3].map((i) => (
-                      <div key={i} className="rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
-                        <img
-                          src={`/api/gorsel/img?requestId=${gorselJob.requestId}&index=${i}`}
-                          alt={`${gorselJob.label} ${i + 1}`}
-                          className="w-full aspect-square object-cover select-none"
-                          draggable={false}
-                          onContextMenu={(e) => e.preventDefault()}
-                        />
+                  {gorselSonuclar.map((stil) => (
+                    <div key={stil.stil} className="space-y-2">
+                      <p className="text-xs font-semibold text-gray-600 px-1">{stil.label}</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {stil.gorseller.map((url, i) => (
+                          <div key={i} className="relative group rounded-xl overflow-hidden border border-gray-200">
+                            <img
+                              src={url}
+                              alt={`${stil.label} ${i + 1}`}
+                              className="w-full aspect-square object-cover select-none"
+                              draggable={false}
+                              onContextMenu={(e) => e.preventDefault()}
+                            />
+                            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
@@ -1384,12 +1233,26 @@ export default function Home() {
                 <h2 className="text-base font-semibold text-gray-800">🎬 Ürün Videosu Üret</h2>
                 <span className="text-xs text-red-500 font-medium">{videoSure === "10" ? "8" : "5"} içerik üretim kredisi</span>
               </div>
-              <p className="text-xs text-gray-400">Ürün fotoğrafından kısa tanıtım videosu — pazaryerleri, Reels, TikTok ve YouTube için</p>
+
+              {/* Metin sekmesinden taşınan ürün adı */}
+              {urunAdi && (
+                <div className="flex items-center gap-2 bg-red-50 rounded-xl px-3 py-2 border border-red-100">
+                  <span className="text-xs text-red-600">📝 Metin sekmesinden: <strong>{urunAdi}</strong>{kategori ? ` · ${kategori}` : ""}</span>
+                </div>
+              )}
+
+              {/* Profil eksik uyarısı */}
+              {kullanici && !kullanici.anonim && !kullanici.marka_adi && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex items-center justify-between gap-3">
+                  <p className="text-xs text-yellow-700">💡 <span className="font-semibold">Marka profili eksik</span> — Ton ve marka bilgisi girilince video prompt otomatik kişiselleştirilir.</p>
+                  <a href="/profil" className="text-xs text-yellow-700 font-semibold underline whitespace-nowrap">Profili doldur →</a>
+                </div>
+              )}
 
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2">
                 <span className="text-amber-500 flex-shrink-0 mt-0.5">⚡</span>
                 <div>
-                  <p className="text-xs font-semibold text-amber-700">Kredi üretilince düşer</p>
+                  <p className="text-xs font-semibold text-amber-700">{videoSure === "10" ? "8" : "5"} içerik üretim kredisi — üretilince kredi düşer</p>
                   <p className="text-xs text-amber-600 mt-0.5">Video AI işlem gücü gerektiriyor. Üretim ~2 dakika sürer.</p>
                 </div>
               </div>
@@ -1399,104 +1262,83 @@ export default function Home() {
                   Yukarıdan ürün fotoğrafı yükle ↑
                 </div>
               ) : (
-                <FotoThumbnail src={fotolar[0]} onKaldir={() => { setFotolar([]); setGorselJob(null); }} renk="green" />
+                <FotoThumbnail src={fotolar[0]} onKaldir={() => { setFotolar([]); setGorselSonuclar([]); }} renk="green" />
               )}
 
-              {/* Format seçimi */}
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-2">Video Formatı</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {([
-                    { id: "9:16", label: "📱 Dikey (9:16)", aciklama: "Instagram Reels · TikTok" },
-                    { id: "16:9", label: "🖥️ Yatay (16:9)", aciklama: "YouTube · Facebook · Pazaryeri" },
-                  ] as { id: "9:16" | "16:9"; label: string; aciklama: string }[]).map((f) => (
-                    <button key={f.id} onClick={() => setVideoFormat(f.id)}
-                      className={`p-3 rounded-xl border-2 text-left transition-all ${videoFormat === f.id ? "border-red-400 bg-red-50" : "border-gray-200 hover:border-gray-300"}`}>
-                      <p className={`text-xs font-semibold ${videoFormat === f.id ? "text-red-700" : "text-gray-700"}`}>{f.label}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{f.aciklama}</p>
-                    </button>
-                  ))}
+              {/* Format ve süre seçimi */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Format</label>
+                  <div className="flex gap-1.5">
+                    {(["9:16", "16:9", "1:1"] as const).map((f) => (
+                      <button key={f} onClick={() => setVideoFormat(f)}
+                        className={`flex-1 py-1.5 rounded-lg text-xs font-medium border transition-all ${videoFormat === f ? "bg-red-500 text-white border-red-500" : "bg-white text-gray-600 border-gray-200 hover:border-red-300"}`}>
+                        {f === "9:16" ? "9:16 Reels" : f === "16:9" ? "16:9 Yatay" : "1:1 Kare"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Süre</label>
+                  <div className="flex gap-1.5">
+                    {(["5", "10"] as const).map((s) => (
+                      <button key={s} onClick={() => setVideoSure(s)}
+                        className={`flex-1 py-1.5 rounded-lg text-xs font-medium border transition-all ${videoSure === s ? "bg-red-500 text-white border-red-500" : "bg-white text-gray-600 border-gray-200 hover:border-red-300"}`}>
+                        {s === "5" ? "5 sn · 5 kredi" : "10 sn · 8 kredi"}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Süre seçimi */}
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-2">Video Süresi</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {([
-                    { id: "5", label: "⚡ 5 Saniye", kredi: 5, aciklama: "Hızlı tanıtım · Reels ideal" },
-                    { id: "10", label: "🎞️ 10 Saniye", kredi: 8, aciklama: "Detaylı showcase · Pazaryeri" },
-                  ] as { id: "5" | "10"; label: string; kredi: number; aciklama: string }[]).map((s) => (
-                    <button key={s.id} onClick={() => setVideoSure(s.id)}
-                      className={`p-3 rounded-xl border-2 text-left transition-all ${videoSure === s.id ? "border-red-400 bg-red-50" : "border-gray-200 hover:border-gray-300"}`}>
-                      <div className="flex items-center justify-between mb-0.5">
-                        <p className={`text-xs font-semibold ${videoSure === s.id ? "text-red-700" : "text-gray-700"}`}>{s.label}</p>
-                        <span className={`text-xs font-bold ${videoSure === s.id ? "text-red-500" : "text-gray-400"}`}>{s.kredi} kredi</span>
-                      </div>
-                      <p className="text-xs text-gray-400">{s.aciklama}</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Hareket tarifi */}
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1">Hareket & sahne tarifi <span className="text-gray-400 font-normal">(isteğe bağlı — Türkçe yazabilirsin)</span></label>
-                {(() => {
-                  const VIDEO_PRESETLER = [
-                    { etiket: "360° Dönüş", aciklama: "Ürün kendi ekseni etrafında yavaşça döner. Tüm açılar görünür.", ikon: "🔄", deger: "Product slowly rotates 180 degrees on a clean surface, smooth and steady, then gently settles back to its original position, soft even studio lighting, white background", kategoriler: ["tumu"] },
-                    { etiket: "Zoom Yaklaşım", aciklama: "Kamera ürüne doğru yavaş yaklaşır. Detay ve doku hissi verir.", ikon: "🔍", deger: "Camera smoothly zooms in from medium shot to close-up over 3 seconds, revealing product texture and surface details, then holds steady for 2 seconds, soft focus background gradually blurs more", kategoriler: ["tumu"] },
-                    { etiket: "Dramatik Işık", aciklama: "Karanlık sahnede spotlight açılır. Premium görünüm.", ikon: "💡", deger: "Dark scene, then soft overhead light gradually fades in illuminating the product over 3 seconds, light reaches full brightness and holds steady, subtle reflection on surface beneath product, luxury cinematic feel", kategoriler: ["tumu"] },
-                    { etiket: "Doğal Ortam", aciklama: "Açık havada altın saat ışığında huzurlu sunum.", ikon: "🌿", deger: "Product sits on a natural stone surface outdoors, warm golden hour sunlight slowly shifts across the frame from left to right then settles, one single leaf gently drifts past in background and exits frame, scene becomes peaceful and still", kategoriler: ["tumu"] },
-                    { etiket: "Detay Tarama", aciklama: "Kamera yüzeyi tarayarak detayları gösterir.", ikon: "🔬", deger: "Camera slowly tracks across the product surface from left to right revealing textures and details, then pulls back slightly to show full product and holds, clean studio lighting", kategoriler: ["tumu", "elektronik"] },
-                    { etiket: "Parıltı Reveal", aciklama: "Altın parçacıklar arasında ürün beliriyor. Kozmetik & parfüm için.", ikon: "✨", deger: "Camera slowly moves in toward the product as soft golden particles drift downward for 3 seconds then fade away, product comes into sharp focus and holds steady, warm pink-toned beauty lighting", kategoriler: ["kozmetik"] },
-                    { etiket: "Lüks Mermer", aciklama: "Mermer yüzeyde zarif sunum. Premium kozmetik hissi.", ikon: "💎", deger: "Product sits on white marble surface, camera slowly pans from left to center over 3 seconds then stops, soft overhead light creates gentle reflection on marble, elegant minimal composition", kategoriler: ["kozmetik", "taki"] },
-                    { etiket: "Tech Reveal", aciklama: "Koyu arka planda LED vurgulu teknoloji sunumu.", ikon: "🔵", deger: "Dark scene, cool blue accent light glows briefly on one side of the product then fades to warm white, camera smoothly pans right revealing the product profile, then holds steady, dark background", kategoriler: ["elektronik"] },
-                    { etiket: "Kumaş Hareketi", aciklama: "Hafif rüzgar kumaşı oynatır. Giyim & tekstil için.", ikon: "👕", deger: "Soft breeze gently moves the fabric for 2 seconds creating natural drape movement, then fabric settles smoothly into place, clean studio lighting from the left, camera stays steady on tripod", kategoriler: ["giyim"] },
-                    { etiket: "Lezzet Çekimi", aciklama: "Üstten aşağı çekim, sıcak buhar efekti. Gıda için.", ikon: "🍽️", deger: "Camera slowly descends from directly above looking down at the product on warm wooden surface, gentle wisp of steam rises briefly then dissipates, warm appetizing golden lighting, scene becomes still", kategoriler: ["gida"] },
-                    { etiket: "Taze His", aciklama: "Doğal ışıkta taze ve organik sunum.", ikon: "🌱", deger: "Product on light surface with small green herb sprig beside it, soft natural daylight slowly brightens over 2 seconds then holds steady, fresh clean minimal composition, one water droplet visible on surface", kategoriler: ["gida"] },
-                    { etiket: "Işıltı Dönüş", aciklama: "Spotlight altında yavaş dönüş, pırıltı yansımaları.", ikon: "💍", deger: "Product on dark velvet surface rotates slowly 90 degrees, single spotlight creates sparkle reflections that shimmer across facets, then product settles and reflections calm, luxurious dark background", kategoriler: ["taki"] },
-                    { etiket: "Neşeli Sunum", aciklama: "Renkli ve eğlenceli, çocuk ürünleri için.", ikon: "🎈", deger: "Product bounces lightly once on soft surface and settles into place with a gentle wobble, 3 small colorful confetti pieces drift down briefly then scene clears, bright cheerful even studio lighting", kategoriler: ["cocuk"] },
-                    { etiket: "Dinamik Reveal", aciklama: "Enerjik ve hızlı, spor ürünleri için.", ikon: "⚡", deger: "Quick dynamic camera push toward the product then pulls back smoothly to reveal full view over 3 seconds, motion blur at start clears to sharp focus, energetic bright studio lighting, clean background", kategoriler: ["spor"] },
-                  ];
-                  const seciliKategoriKodu = (() => {
-                    const k = (kategori || "").toLowerCase();
-                    if (/kozmetik|parfüm|cilt|bakım|makyaj|serum|krem|şampuan/i.test(k)) return "kozmetik";
-                    if (/elektron|telefon|bilgisayar|tablet|kulaklık|şarj|kamera|tv|monitör/i.test(k)) return "elektronik";
-                    if (/giyim|ayakkabı|çanta|elbise|tişört|pantolon|ceket|kazak|gömlek|bot|sneaker/i.test(k)) return "giyim";
-                    if (/gıda|yiyecek|içecek|kahve|çay|bal|zeytinyağı|baharat|atıştırmalık/i.test(k)) return "gida";
-                    if (/spor|fitness|outdoor|kamp|bisiklet|yoga|koşu|dağ/i.test(k)) return "spor";
-                    if (/çocuk|bebek|oyuncak|mama|biberon/i.test(k)) return "cocuk";
-                    if (/takı|mücevher|yüzük|kolye|bilezik|küpe/i.test(k)) return "taki";
-                    return null;
-                  })();
-                  const gosterilecekler = seciliKategoriKodu
-                    ? VIDEO_PRESETLER.filter(p => p.kategoriler.includes(seciliKategoriKodu) || p.kategoriler.includes("tumu")).slice(0, 6)
-                    : VIDEO_PRESETLER.filter(p => p.kategoriler.includes("tumu"));
-                  return (
-                    <div className="grid grid-cols-2 gap-2 mb-2">
-                      {gosterilecekler.map((p) => (
-                        <button key={p.etiket} onClick={() => setVideoPrompt(p.deger)}
-                          className={`text-left p-2.5 rounded-xl border-2 transition-all ${videoPrompt === p.deger ? "border-red-400 bg-red-50" : "border-gray-200 hover:border-red-200 hover:bg-red-50/50"}`}>
-                          <p className={`text-xs font-semibold ${videoPrompt === p.deger ? "text-red-700" : "text-gray-700"}`}>{p.ikon} {p.etiket}</p>
-                          <p className="text-[10px] text-gray-500 mt-0.5 leading-relaxed">{p.aciklama}</p>
-                        </button>
-                      ))}
-                    </div>
-                  );
-                })()}
                 <textarea value={videoPrompt} onChange={(e) => setVideoPrompt(e.target.value)} placeholder="örn: Ürün yavaşça dönsün, dramatik ışıklandırma, siyah arka plan" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
-                <p className="text-xs text-gray-400 mt-1">Boş bırakırsan marka bilgine göre otomatik oluşturulur — genellikle iyi sonuç verir</p>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  {[
+                    {
+                      etiket: "360° Dönüş",
+                      aciklama: "Ürün kendi ekseni etrafında yavaşça döner. Tüm açılar görünür.",
+                      ikon: "🔄",
+                      deger: "Smooth slow 360 degree product rotation, studio lighting, clean background",
+                    },
+                    {
+                      etiket: "Zoom Yaklaşım",
+                      aciklama: "Kamera ürüne doğru yavaş yaklaşır. Detay ve doku hissi verir.",
+                      ikon: "🔍",
+                      deger: "Gentle cinematic zoom in towards the product, soft focus background, detail reveal",
+                    },
+                    {
+                      etiket: "Dramatik Işık",
+                      aciklama: "Karanlık sahnede ürüne spotlight açılır. Premium ve güçlü görünüm.",
+                      ikon: "💡",
+                      deger: "Dramatic lighting reveal, dark background, single spotlight effect on product, luxury feel",
+                    },
+                    {
+                      etiket: "Doğal Ortam",
+                      aciklama: "Yapraklar hafifçe sallanır, ışık oynar. Organik ve sıcak his.",
+                      ikon: "🌿",
+                      deger: "Product in natural outdoor setting, soft golden hour light, gentle breeze moving leaves, organic feel",
+                    },
+                  ].map((p) => (
+                    <button key={p.etiket} onClick={() => setVideoPrompt(p.deger)}
+                      className={`text-left p-2.5 rounded-xl border-2 transition-all ${videoPrompt === p.deger ? "border-red-400 bg-red-50" : "border-gray-200 hover:border-red-200 hover:bg-red-50/50"}`}>
+                      <p className={`text-xs font-semibold ${videoPrompt === p.deger ? "text-red-700" : "text-gray-700"}`}>{p.ikon} {p.etiket}</p>
+                      <p className="text-[10px] text-gray-500 mt-0.5 leading-relaxed">{p.aciklama}</p>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-400 mt-1.5">💡 Boş bırakırsan marka bilgine göre otomatik oluşturulur — genellikle iyi sonuç verir</p>
                 <Link href="/blog/ai-urun-videosu-hareket-secenekleri" className="inline-block mt-2 text-xs text-red-500 hover:text-red-700 hover:underline">Bu hareketler ne anlama gelir? Ürün kategorine göre hangisi uygun? →</Link>
               </div>
 
-              <button onClick={videoUret} disabled={videoYukleniyor || fotolar.length === 0 || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 8 : 5))}
+              <button onClick={videoUret} disabled={videoYukleniyor || !fotolar[0] || (!kullanici?.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 8 : 5))}
                 className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
-                {videoYukleniyor ? "⏳ Video üretiliyor... (~2 dakika)" : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : !kullanici ? "🎬 Video Üret — Giriş Gerekli" : `🎬 Video Üret — ${kullanici.is_admin ? "∞" : (videoSure === "10" ? 8 : 5)} kredi`}
+                {videoYukleniyor ? "⏳ Video üretiliyor... (~2 dakika)" : !fotolar[0] ? "Önce fotoğraf ekle ↑" : `🎬 Video Üret — ${kullanici?.is_admin ? "∞" : (videoSure === "10" ? "8" : "5")} kredi`}
               </button>
 
-              {kullanici && !kullanici.is_admin && (kullanici.kredi ?? 0) < (videoSure === "10" ? 8 : 5) && !videoYukleniyor && (
-                <p className="text-center text-xs text-red-500">En az {videoSure === "10" ? 8 : 5} kredi gerekli. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
+              {!kullanici?.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 8 : 5) && !videoYukleniyor && (
+                <p className="text-center text-xs text-red-500">En az {videoSure === "10" ? "8" : "5"} içerik üretim kredisi gerekli. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
               )}
 
               {videoYukleniyor && (
@@ -1507,347 +1349,379 @@ export default function Home() {
                 </div>
               )}
 
-              {videoRequestId && !videoYukleniyor && (
+              {videoUrl && !videoYukleniyor && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between px-1">
                     <span className="text-sm font-semibold text-gray-800">✅ Videonuz Hazır</span>
                     <span className="text-xs text-gray-400">{videoFormat} · {videoSure} saniye</span>
                   </div>
-                  <button
-                    onClick={async () => {
-                      const res = await fetch(`/api/sosyal/video/download?requestId=${videoRequestId}`);
-                      if (!res.ok) { alert("Video indirilemedi. Tekrar deneyin."); return; }
-                      const blob = await res.blob();
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement("a");
-                      a.href = url; a.download = "urun-video.mp4"; a.click();
-                      URL.revokeObjectURL(url);
-                    }}
-                    className="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
-                  >
-                    ⬇️ Videoyu İndir
-                  </button>
-                  <button onClick={() => { setVideoRequestId(null); setVideoPrompt(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni video üret</button>
+                  <video src={videoUrl} controls autoPlay loop className="w-full rounded-xl max-h-96 object-contain bg-black" />
+                  <a href={videoUrl} download="urun-video.mp4" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 rounded-xl text-sm transition-colors">⬇️ Videoyu İndir</a>
+                  <button onClick={() => { setVideoUrl(null); setVideoPrompt(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni video üret</button>
                 </div>
               )}
             </div>
 
             {/* ===== SOSYAL MEDYA SEKMESİ ===== */}
-            <div style={{display: anaSekme === "sosyal" ? "block" : "none"}} className="mt-4 space-y-4">
-
-              {/* Video linki */}
-              <div className="bg-red-50 border border-red-200 rounded-2xl p-3 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">🎬</span>
-                  <p className="text-xs text-red-700 font-medium">Sosyal medya videosu üretmek için <span className="font-bold">Video sekmesini</span> kullan — Reels, TikTok ve Stories formatları destekleniyor.</p>
-                </div>
-                <button onClick={() => setAnaSekme("video")} className="text-xs bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">Video Sekmesi →</button>
+            <div style={{display: anaSekme === "sosyal" ? "block" : "none"}} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-base font-semibold text-gray-800">📱 Sosyal Medya Paylaşımı</h2>
+                <span className="text-xs text-pink-500 font-medium">1 içerik üretim kredisi</span>
               </div>
 
-              {/* İçerik tipi: Metin / Görsel */}
-              <div className="bg-white rounded-2xl shadow p-6 space-y-4">
+              {/* Profil eksik uyarısı */}
+              {kullanici && !kullanici.anonim && !kullanici.marka_adi && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex items-center justify-between gap-3">
+                  <p className="text-xs text-yellow-700">💡 <span className="font-semibold">Marka profili eksik</span> — Marka adı, hedef kitle ve ton girilince caption çok daha özgün olur.</p>
+                  <a href="/profil" className="text-xs text-yellow-700 font-semibold underline whitespace-nowrap">Profili doldur →</a>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Adı <span className="text-red-400">*</span></label>
+                <input type="text" value={sosyalUrunAdi} onChange={(e) => setSosyalUrunAdi(e.target.value)} placeholder="örn: Bakır Cezve Set, Kadın Deri Çanta" className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400" />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
+                <textarea value={sosyalEkBilgi} onChange={(e) => setSosyalEkBilgi(e.target.value)} placeholder="örn: %20 indirimde, yeni sezon, el yapımı, hediye seçeneği" rows={2} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400" />
+              </div>
+
+              {fotolar[0] && (
+                <div className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2 border border-gray-100">
+                  <img src={fotolar[0]} alt="ürün" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+                  <p className="text-xs text-gray-500 flex-1">Ürün fotoğrafı hazır — görsel üretmek için Görsel sekmesine geç</p>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Platform</label>
+                <div className="flex gap-2">
+                  {([
+                    { id: "instagram_tiktok", label: "📸 Instagram & TikTok" },
+                    { id: "facebook", label: "👥 Facebook" },
+                    { id: "twitter", label: "🐦 Twitter/X" },
+                  ] as { id: SosyalPlatform; label: string }[]).map((p) => (
+                    <button key={p.id} onClick={() => setSosyalPlatform(p.id)}
+                      className={`flex-1 py-2 px-2 rounded-xl border-2 text-xs font-semibold transition-all ${sosyalPlatform === p.id ? "border-pink-400 bg-pink-50 text-pink-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Ton</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {([
+                    { id: "tanitim", label: "📣 Tanıtım", aciklama: "Ürünü öne çıkar" },
+                    { id: "indirim", label: "🔥 İndirim", aciklama: "Fırsatı vurgula" },
+                    { id: "hikaye", label: "💫 Hikaye", aciklama: "Duygu bağı kur" },
+                  ] as { id: SosyalTon; label: string; aciklama: string }[]).map((t) => (
+                    <button key={t.id} onClick={() => setSosyalTon(t.id)}
+                      className={`p-3 rounded-xl border-2 text-left transition-all ${sosyalTon === t.id ? "border-pink-400 bg-pink-50" : "border-gray-200 hover:border-gray-300"}`}>
+                      <p className={`text-xs font-semibold ${sosyalTon === t.id ? "text-pink-700" : "text-gray-700"}`}>{t.label}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{t.aciklama}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Sezon / Etkinlik</label>
+                <select value={sosyalSezon} onChange={(e) => setSosyalSezon(e.target.value)}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white">
+                  <option value="normal">📅 Normal (Sezon yok)</option>
+                  <option value="anneler_gunu">💐 Anneler Günü</option>
+                  <option value="babalar_gunu">👔 Babalar Günü</option>
+                  <option value="bayram">🌙 Bayram</option>
+                  <option value="yilbasi">🎄 Yılbaşı</option>
+                  <option value="black_friday">🏷️ Black Friday</option>
+                  <option value="sevgililer_gunu">❤️ Sevgililer Günü</option>
+                </select>
+              </div>
+
+              <button onClick={captionUret} disabled={captionYukleniyor || !sosyalUrunAdi.trim() || (!kullanici?.is_admin && (kullanici?.kredi ?? 0) <= 0)}
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
+                {captionYukleniyor ? "⏳ Üretiliyor..." : `📱 Paylaşım Metni Üret — ${kullanici?.is_admin ? "∞" : "1"} kredi`}
+              </button>
+
+              {!kullanici?.is_admin && (kullanici?.kredi ?? 0) <= 0 && !captionYukleniyor && (
+                <p className="text-center text-xs text-red-500">İçerik üretim krediniz bitti. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
+              )}
+
+              {(sosyalCaption || sosyalHashtag) && (
+                <div className="space-y-3">
+                  {sosyalCaption && (
+                    <div className="bg-white rounded-2xl shadow-sm p-5 border-l-4 border-l-pink-400 border border-gray-100">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-semibold text-gray-700">✍️ Paylaşım Metni</span>
+                        <button onClick={() => navigator.clipboard.writeText(sosyalCaption)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-gray-100 text-gray-500 hover:bg-pink-50 hover:text-pink-600 transition-all">Kopyala</button>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{sosyalCaption}</p>
+                    </div>
+                  )}
+                  {sosyalHashtag && (
+                    <div className="bg-white rounded-2xl shadow-sm p-5 border-l-4 border-l-purple-400 border border-gray-100">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-semibold text-gray-700"># Hashtagler</span>
+                        <button onClick={() => navigator.clipboard.writeText(sosyalHashtag)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-gray-100 text-gray-500 hover:bg-purple-50 hover:text-purple-600 transition-all">Kopyala</button>
+                      </div>
+                      <p className="text-sm text-purple-700 leading-relaxed">{sosyalHashtag}</p>
+                    </div>
+                  )}
+                  <button onClick={() => { setSosyalCaption(""); setSosyalHashtag(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni metin üret</button>
+                </div>
+              )}
+
+              {/* ── SOSYAL MEDYA GÖRSELİ ── */}
+              <div className="border-t border-gray-100 pt-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-base font-semibold text-gray-800">📱 Sosyal Medya İçeriği Üret</h2>
+                  <h3 className="text-sm font-semibold text-gray-700">📸 Sosyal Medya Görseli Üret</h3>
                   <span className="text-xs text-pink-500 font-medium">1 kredi</span>
                 </div>
+                <p className="text-xs text-gray-400">Ürün fotoğrafını seçtiğin platforma uygun boyuta getirir, arka planı değiştirir.</p>
 
-                <div className="grid grid-cols-2 gap-2">
-                  <button onClick={() => setSosyalIcerikTipi("metin")}
-                    className={`py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${sosyalIcerikTipi === "metin" ? "border-pink-400 bg-pink-50 text-pink-700" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
-                    ✍️ Caption + Hashtag
-                  </button>
-                  <button onClick={() => setSosyalIcerikTipi("gorsel")}
-                    className={`py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${sosyalIcerikTipi === "gorsel" ? "border-pink-400 bg-pink-50 text-pink-700" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
-                    🖼️ Ürün Görseli
-                  </button>
-                </div>
-
-                {/* Platform seçimi */}
+                {/* Platform / Format seçici */}
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-2">Platform</label>
-                  <div className="flex gap-2 flex-wrap">
+                  <p className="text-xs font-medium text-gray-600 mb-1.5">Platform Formatı</p>
+                  <div className="grid grid-cols-3 gap-2">
                     {([
-                      { id: "instagram", label: "📸 Instagram" },
-                      { id: "tiktok", label: "🎵 TikTok" },
-                      { id: "facebook", label: "👥 Facebook" },
-                      { id: "twitter", label: "🐦 Twitter/X" },
-                    ] as { id: SosyalPlatform; label: string }[]).map((p) => (
-                      <button key={p.id} onClick={() => setSosyalPlatform(p.id)}
-                        className={`flex-1 py-2 px-2 rounded-xl border-2 text-xs font-semibold transition-all ${sosyalPlatform === p.id ? "border-pink-400 bg-pink-50 text-pink-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
-                        {p.label}
+                      { id: "1:1",  label: "⬜ 1:1",  aciklama: "Instagram Gönderi",   boyut: "1080×1080" },
+                      { id: "9:16", label: "📱 9:16", aciklama: "Reels & TikTok",      boyut: "1080×1920" },
+                      { id: "16:9", label: "🖥️ 16:9", aciklama: "Twitter / LinkedIn",  boyut: "1920×1080" },
+                    ] as { id: "1:1"|"9:16"|"16:9"; label: string; aciklama: string; boyut: string }[]).map((f) => (
+                      <button key={f.id} onClick={() => setSosyalGorselFormat(f.id)}
+                        className={`p-2.5 rounded-xl border-2 text-left transition-all ${sosyalGorselFormat === f.id ? "border-pink-400 bg-pink-50" : "border-gray-200 hover:border-gray-300"}`}>
+                        <p className={`text-xs font-semibold ${sosyalGorselFormat === f.id ? "text-pink-700" : "text-gray-700"}`}>{f.label}</p>
+                        <p className="text-[10px] text-gray-500 mt-0.5">{f.aciklama}</p>
+                        <p className="text-[10px] text-gray-400">{f.boyut}</p>
                       </button>
                     ))}
                   </div>
-
-                  {/* Platform boyut rehberi */}
-                  {sosyalIcerikTipi === "gorsel" && (
-                    <div className={`mt-2 rounded-xl border p-3 text-xs space-y-1 ${
-                      (sosyalPlatform === "instagram" || sosyalPlatform === "tiktok") ? "bg-pink-50 border-pink-200" :
-                      sosyalPlatform === "facebook" ? "bg-blue-50 border-blue-200" :
-                      "bg-sky-50 border-sky-200"
-                    }`}>
-                      <p className="font-semibold text-gray-700">📐 Önerilen Boyutlar</p>
-                      {sosyalPlatform === "instagram" && (
-                        <div className="grid grid-cols-2 gap-2 text-gray-600 mt-1">
-                          <div className="bg-white rounded-lg p-2 text-center border border-pink-100">
-                            <p className="font-bold text-pink-600">1:1</p>
-                            <p>Feed Post</p>
-                            <p className="text-gray-400">1080×1080</p>
-                          </div>
-                          <div className="bg-white rounded-lg p-2 text-center border border-pink-100">
-                            <p className="font-bold text-pink-600">9:16</p>
-                            <p>Story / Reels</p>
-                            <p className="text-gray-400">1080×1920</p>
-                          </div>
-                        </div>
-                      )}
-                      {sosyalPlatform === "tiktok" && (
-                        <div className="grid grid-cols-2 gap-2 text-gray-600 mt-1">
-                          <div className="bg-white rounded-lg p-2 text-center border border-pink-100">
-                            <p className="font-bold text-pink-600">9:16</p>
-                            <p>Dikey Video</p>
-                            <p className="text-gray-400">1080×1920</p>
-                          </div>
-                          <div className="bg-white rounded-lg p-2 text-center border border-pink-100">
-                            <p className="font-bold text-pink-600">1:1</p>
-                            <p>Kare</p>
-                            <p className="text-gray-400">1080×1080</p>
-                          </div>
-                        </div>
-                      )}
-                      {sosyalPlatform === "facebook" && (
-                        <div className="grid grid-cols-2 gap-2 text-gray-600 mt-1">
-                          <div className="bg-white rounded-lg p-2 text-center border border-blue-100">
-                            <p className="font-bold text-blue-600">1:1</p>
-                            <p>Post / Reklam</p>
-                            <p className="text-gray-400">1200×1200</p>
-                          </div>
-                          <div className="bg-white rounded-lg p-2 text-center border border-blue-100">
-                            <p className="font-bold text-blue-600">16:9</p>
-                            <p>Link / Banner</p>
-                            <p className="text-gray-400">1200×628</p>
-                          </div>
-                        </div>
-                      )}
-                      {sosyalPlatform === "twitter" && (
-                        <div className="grid grid-cols-2 gap-2 text-gray-600 mt-1">
-                          <div className="bg-white rounded-lg p-2 text-center border border-sky-100">
-                            <p className="font-bold text-sky-600">16:9</p>
-                            <p>Tweet Görseli</p>
-                            <p className="text-gray-400">1200×675</p>
-                          </div>
-                          <div className="bg-white rounded-lg p-2 text-center border border-sky-100">
-                            <p className="font-bold text-sky-600">1:1</p>
-                            <p>Kare Görsel</p>
-                            <p className="text-gray-400">1080×1080</p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
                 </div>
 
-                {/* METIN İÇERİĞİ */}
-                {sosyalIcerikTipi === "metin" && (
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Adı <span className="text-red-400">*</span></label>
-                      <input type="text" value={sosyalUrunAdi} onChange={(e) => setSosyalUrunAdi(e.target.value)} placeholder="örn: Bakır Cezve Set, Kadın Deri Çanta" className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400" />
-                    </div>
+                {/* Stil seçici — sosyal medya için curated 4 stil */}
+                <div>
+                  <p className="text-xs font-medium text-gray-600 mb-1.5">Görsel Stili</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {([
+                      { id: "beyaz",     label: "⬜ Beyaz Zemin",  aciklama: "Trendyol & pazaryeri standart" },
+                      { id: "lifestyle", label: "🏠 Lifestyle",    aciklama: "Organik, gerçek yaşam hissi" },
+                      { id: "gradient",  label: "🎨 Gradient",     aciklama: "Modern, göze çarpan arka plan" },
+                      { id: "koyu",      label: "⬛ Koyu Zemin",   aciklama: "Premium, elektronik, lüks ürün" },
+                    ] as { id: string; label: string; aciklama: string }[]).map((s) => (
+                      <button key={s.id} onClick={() => setSosyalGorselStil(s.id)}
+                        className={`p-2.5 rounded-xl border-2 text-left transition-all ${sosyalGorselStil === s.id ? "border-pink-400 bg-pink-50" : "border-gray-200 hover:border-gray-300"}`}>
+                        <p className={`text-xs font-semibold ${sosyalGorselStil === s.id ? "text-pink-700" : "text-gray-700"}`}>{s.label}</p>
+                        <p className="text-[10px] text-gray-500 mt-0.5">{s.aciklama}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-                      <textarea value={sosyalEkBilgi} onChange={(e) => setSosyalEkBilgi(e.target.value)} placeholder="örn: %20 indirimde, yeni sezon, el yapımı, hediye seçeneği" rows={2} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400" />
-                    </div>
+                <button onClick={sosyalGorselUret}
+                  disabled={sosyalGorselYukleniyor || !fotolar[0] || (!kullanici?.is_admin && (kullanici?.kredi ?? 0) <= 0)}
+                  className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all text-sm">
+                  {sosyalGorselYukleniyor ? "⏳ Görsel üretiliyor..." : !fotolar[0] ? "Önce fotoğraf yükle ↑" : `📸 Görsel Üret — ${kullanici?.is_admin ? "∞" : "1"} kredi`}
+                </button>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Ton</label>
-                      <div className="grid grid-cols-3 gap-2">
-                        {([
-                          { id: "tanitim", label: "📣 Tanıtım", aciklama: "Ürünü öne çıkar" },
-                          { id: "indirim", label: "🔥 İndirim", aciklama: "Fırsatı vurgula" },
-                          { id: "hikaye", label: "💫 Hikaye", aciklama: "Duygu bağı kur" },
-                        ] as { id: SosyalTon; label: string; aciklama: string }[]).map((t) => (
-                          <button key={t.id} onClick={() => setSosyalTon(t.id)}
-                            className={`p-3 rounded-xl border-2 text-left transition-all ${sosyalTon === t.id ? "border-pink-400 bg-pink-50" : "border-gray-200 hover:border-gray-300"}`}>
-                            <p className={`text-xs font-semibold ${sosyalTon === t.id ? "text-pink-700" : "text-gray-700"}`}>{t.label}</p>
-                            <p className="text-xs text-gray-400 mt-0.5">{t.aciklama}</p>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <button onClick={captionUret} disabled={captionYukleniyor || !sosyalUrunAdi.trim() || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) <= 0)}
-                      className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
-                      {captionYukleniyor ? "⏳ Üretiliyor..." : !kullanici ? "📱 Caption Üret — Giriş Gerekli" : `📱 Caption + Hashtag Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
-                    </button>
-
-                    {kullanici && !kullanici.is_admin && (kullanici.kredi ?? 0) <= 0 && !captionYukleniyor && (
-                      <p className="text-center text-xs text-red-500">İçerik üretim krediniz bitti. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
-                    )}
-
-                    {(sosyalCaption || sosyalHashtag) && (
-                      <div className="space-y-3">
-                        {sosyalCaption && (
-                          <div className="bg-gray-50 rounded-2xl p-5 border-l-4 border-l-pink-400 border border-gray-100">
-                            <div className="flex items-center justify-between mb-3">
-                              <span className="text-sm font-semibold text-gray-700">✍️ Paylaşım Metni</span>
-                              <button onClick={() => navigator.clipboard.writeText(sosyalCaption)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-white text-gray-500 hover:bg-pink-50 hover:text-pink-600 transition-all border border-gray-200">Kopyala</button>
-                            </div>
-                            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{sosyalCaption}</p>
-                          </div>
-                        )}
-                        {sosyalHashtag && (
-                          <div className="bg-gray-50 rounded-2xl p-5 border-l-4 border-l-purple-400 border border-gray-100">
-                            <div className="flex items-center justify-between mb-3">
-                              <span className="text-sm font-semibold text-gray-700"># Hashtagler</span>
-                              <button onClick={() => navigator.clipboard.writeText(sosyalHashtag)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-white text-gray-500 hover:bg-purple-50 hover:text-purple-600 transition-all border border-gray-200">Kopyala</button>
-                            </div>
-                            <p className="text-sm text-purple-700 leading-relaxed">{sosyalHashtag}</p>
-                          </div>
-                        )}
-                        <button onClick={() => { setSosyalCaption(""); setSosyalHashtag(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni metin üret</button>
-                      </div>
-                    )}
+                {sosyalGorselYukleniyor && (
+                  <div className="flex items-center justify-center gap-3 py-4">
+                    <div className="w-6 h-6 border-3 border-pink-200 border-t-pink-500 rounded-full animate-spin" />
+                    <p className="text-sm text-pink-600">4 varyasyon üretiliyor...</p>
                   </div>
                 )}
 
-                {/* GÖRSEL İÇERİĞİ */}
-                {sosyalIcerikTipi === "gorsel" && (
-                  <div className="space-y-4">
-                    <p className="text-xs text-gray-500">Ürün fotoğrafından seçtiğin platform boyutunda profesyonel görsel üretilir — 4 varyasyon, 1 kredi.</p>
+                {sosyalGorselSonuclar.length > 0 && !sosyalGorselYukleniyor && (
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold text-gray-700">✅ {sosyalGorselSonuclar.length} varyasyon hazır</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {sosyalGorselSonuclar.map((url, i) => (
+                        <div key={i} className="relative group rounded-xl overflow-hidden border border-gray-100">
+                          <img src={url} alt={`varyasyon ${i + 1}`} className="w-full object-cover" />
+                          <a href={url} download={`sosyal-gorsel-${i + 1}.jpg`} target="_blank" rel="noopener noreferrer"
+                            className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold rounded-xl">
+                            ⬇️ İndir
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                    <button onClick={() => setSosyalGorselSonuclar([])} className="w-full text-xs text-gray-400 hover:text-gray-600 py-1.5 transition-colors">Yeni görsel üret</button>
+                  </div>
+                )}
+              </div>
 
-                    {!sosyalFoto ? (
-                      <FotoEkleAlani id="sosyal-gorsel-foto-input" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onload = () => setSosyalFoto(r.result as string); r.readAsDataURL(f); } }} renk="pink" metin="Ürün fotoğrafı yükle" ikon="📸" altMetin="Temiz arka planlı fotoğraf en iyi sonucu verir" />
-                    ) : (
-                      <FotoThumbnail src={sosyalFoto} onKaldir={() => { setSosyalFoto(null); setSosyalGorselSonuclar([]); }} renk="green" />
-                    )}
+              {/* ── SOSYAL MEDYA KİTİ ── */}
+              <div className="border-t border-gray-100 pt-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-gray-700">📦 Sosyal Medya Kiti</h3>
+                  <span className="text-xs text-pink-500 font-medium">{fotolar[0] ? "5 kredi" : "4 kredi"}</span>
+                </div>
+                <p className="text-xs text-gray-400">4 platform caption (Instagram, Facebook, Twitter, LinkedIn) {fotolar[0] ? "+ 1 görsel" : ""} birden üretir.</p>
 
-                    {/* Boyut seçimi */}
+                {/* Kit görsel ayarları — sadece foto varsa */}
+                {fotolar[0] && (
+                  <div className="space-y-2">
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-2">Görsel Boyutu</label>
-                      <div className="grid grid-cols-3 gap-2">
-                        {([
-                          { id: "1:1", label: "1:1", aciklama: "Feed / Post" },
-                          { id: "9:16", label: "9:16", aciklama: "Story / Reels" },
-                          { id: "16:9", label: "16:9", aciklama: "Banner / YouTube" },
-                        ] as { id: "1:1" | "9:16" | "16:9"; label: string; aciklama: string }[]).map((b) => (
-                          <button key={b.id} onClick={() => setSosyalGorselFormat(b.id)}
-                            className={`p-2.5 rounded-xl border-2 text-center transition-all ${sosyalGorselFormat === b.id ? "border-pink-400 bg-pink-50" : "border-gray-200 hover:border-gray-300"}`}>
-                            <p className={`text-sm font-bold ${sosyalGorselFormat === b.id ? "text-pink-700" : "text-gray-700"}`}>{b.label}</p>
-                            <p className="text-xs text-gray-400 mt-0.5">{b.aciklama}</p>
+                      <p className="text-xs font-medium text-gray-600 mb-1.5">Görsel Formatı</p>
+                      <div className="flex gap-1.5">
+                        {(["1:1", "9:16", "16:9"] as const).map((f) => (
+                          <button key={f} onClick={() => setKitGorselFormat(f)}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-medium border transition-all ${kitGorselFormat === f ? "border-pink-400 bg-pink-50 text-pink-700" : "border-gray-200 text-gray-600 hover:border-gray-300"}`}>
+                            {f === "1:1" ? "⬜ 1:1" : f === "9:16" ? "📱 9:16" : "🖥 16:9"}
                           </button>
                         ))}
                       </div>
                     </div>
-
-                    {/* Stil seçimi */}
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-2">Arka Plan Stili</label>
-                      <div className="grid grid-cols-4 gap-2">
+                      <p className="text-xs font-medium text-gray-600 mb-1.5">Görsel Stili</p>
+                      <div className="grid grid-cols-2 gap-1.5">
                         {([
-                          { id: "beyaz", label: "⬜ Beyaz" },
-                          { id: "koyu", label: "⬛ Koyu" },
+                          { id: "beyaz", label: "⬜ Beyaz Zemin" },
                           { id: "lifestyle", label: "🏠 Lifestyle" },
-                          { id: "mermer", label: "🪨 Mermer" },
-                          { id: "ahsap", label: "🪵 Ahşap" },
                           { id: "gradient", label: "🎨 Gradient" },
-                          { id: "dogal", label: "🌿 Doğal" },
+                          { id: "koyu", label: "⬛ Koyu Zemin" },
                         ]).map((s) => (
-                          <button key={s.id} onClick={() => setSosyalGorselStil(s.id)}
-                            className={`py-2 px-1 rounded-xl border-2 text-xs font-medium transition-all ${sosyalGorselStil === s.id ? "border-pink-400 bg-pink-50 text-pink-700" : "border-gray-200 text-gray-600 hover:border-pink-200"}`}>
+                          <button key={s.id} onClick={() => setKitGorselStil(s.id)}
+                            className={`py-1.5 rounded-lg text-xs font-medium border transition-all ${kitGorselStil === s.id ? "border-pink-400 bg-pink-50 text-pink-700" : "border-gray-200 text-gray-600 hover:border-gray-300"}`}>
                             {s.label}
                           </button>
                         ))}
                       </div>
                     </div>
+                  </div>
+                )}
 
-                    <div>
-                      <label className="text-xs text-gray-600 font-medium block mb-1">Sahne açıklaması (isteğe bağlı)</label>
-                      <textarea
-                        value={sosyalGorselPrompt}
-                        onChange={(e) => setSosyalGorselPrompt(e.target.value)}
-                        placeholder="örn: Mermerli masada sofistike ışıklandırma, minimalist Japandi dekor..."
-                        className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none"
-                        rows={2}
-                      />
-                    </div>
+                <button onClick={kitUret}
+                  disabled={kitYukleniyor || !sosyalUrunAdi.trim() || (!kullanici?.is_admin && (kullanici?.kredi ?? 0) < (fotolar[0] ? 5 : 4))}
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all text-sm">
+                  {kitYukleniyor ? "⏳ Kit üretiliyor..." : `📦 Kit Üret — ${kullanici?.is_admin ? "∞" : (fotolar[0] ? "5" : "4")} kredi`}
+                </button>
 
-                    <button onClick={sosyalGorselUret} disabled={sosyalGorselYukleniyor || !sosyalFoto || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < 1)}
-                      className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
-                      {sosyalGorselYukleniyor ? "⏳ Görsel üretiliyor..." : !kullanici ? "🖼️ Görsel Üret — Giriş Gerekli" : `🖼️ Sosyal Medya Görseli Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
-                    </button>
+                {kitYukleniyor && (
+                  <div className="flex items-center justify-center gap-3 py-4">
+                    <div className="w-6 h-6 border-2 border-purple-200 border-t-purple-500 rounded-full animate-spin" />
+                    <p className="text-sm text-purple-600">4 platform + görsel üretiliyor...</p>
+                  </div>
+                )}
 
-                    {sosyalGorselYukleniyor && (
-                      <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 text-center space-y-2">
-                        <div className="flex justify-center"><div className="w-8 h-8 border-4 border-pink-200 border-t-pink-500 rounded-full animate-spin" /></div>
-                        <p className="text-sm font-medium text-pink-700">Görsel üretiliyor...</p>
-                        <p className="text-xs text-pink-500">Bu birkaç saniye sürebilir</p>
+                {kitSonuc && !kitYukleniyor && (
+                  <div className="space-y-3">
+                    {/* Görseller */}
+                    {kitSonuc.gorselUrls.length > 0 && (
+                      <div className="space-y-1.5">
+                        <p className="text-xs font-semibold text-gray-700">📸 Görsel ({kitSonuc.gorselUrls.length} varyasyon)</p>
+                        <div className="grid grid-cols-2 gap-2">
+                          {kitSonuc.gorselUrls.map((url, i) => (
+                            <div key={i} className="relative group rounded-xl overflow-hidden border border-gray-100">
+                              <img src={url} alt={`kit görsel ${i + 1}`} className="w-full object-cover" />
+                              <a href={url} download={`kit-gorsel-${i + 1}.jpg`} target="_blank" rel="noopener noreferrer"
+                                className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold rounded-xl">
+                                ⬇️ İndir
+                              </a>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
 
-                    {sosyalGorselSonuclar.length > 0 && !sosyalGorselYukleniyor && (
-                      <div className="space-y-3">
-                        <p className="text-sm font-semibold text-gray-700 px-1">✅ Görseller Hazır — {sosyalGorselFormat} · {sosyalGorselStil}</p>
-                        {sosyalGorselSonuclar.map((stil) => (
-                          <div key={stil.stil} className="grid grid-cols-2 gap-2">
-                            {stil.gorseller.map((url, i) => (
-                              <div key={i} className="relative group rounded-xl overflow-hidden border border-gray-200">
-                                <img src={url} alt={`${stil.label} ${i + 1}`} className="w-full object-cover" />
-                                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                  <a href={url} download target="_blank" rel="noopener noreferrer" className="bg-white text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-lg shadow">⬇️ İndir</a>
-                                </div>
-                              </div>
-                            ))}
+                    {/* Platform captionları */}
+                    {([
+                      { key: "instagram_tiktok", label: "📸 Instagram & TikTok", renk: "border-l-pink-400" },
+                      { key: "facebook", label: "👥 Facebook", renk: "border-l-blue-400" },
+                      { key: "twitter", label: "🐦 Twitter/X", renk: "border-l-sky-400" },
+                      { key: "linkedin", label: "💼 LinkedIn", renk: "border-l-indigo-400" },
+                    ]).map(({ key, label, renk }) => {
+                      const c = kitSonuc.captions[key];
+                      if (!c?.caption) return null;
+                      return (
+                        <div key={key} className={`bg-white rounded-xl shadow-sm p-4 border-l-4 ${renk} border border-gray-100`}>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xs font-semibold text-gray-700">{label}</span>
+                            <button onClick={() => navigator.clipboard.writeText(c.caption + (c.hashtag ? "\n\n" + c.hashtag : ""))}
+                              className="text-xs font-medium px-2.5 py-1 rounded-lg bg-gray-100 text-gray-500 hover:bg-pink-50 hover:text-pink-600 transition-all">
+                              Kopyala
+                            </button>
                           </div>
-                        ))}
-                        <button onClick={() => { setSosyalGorselSonuclar([]); setSosyalFoto(null); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni görsel üret</button>
-                      </div>
-                    )}
+                          <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">{c.caption}</p>
+                          {c.hashtag && <p className="text-xs text-purple-600 mt-2 leading-relaxed">{c.hashtag}</p>}
+                        </div>
+                      );
+                    })}
+
+                    <button onClick={() => setKitSonuc(null)} className="w-full text-xs text-gray-400 hover:text-gray-600 py-1.5 transition-colors">Yeni kit üret</button>
                   </div>
                 )}
               </div>
+
             </div>
 
           </div>
 
-          {/* Sağ panel — Mini widget */}
-          <div className="w-full lg:w-56 flex-shrink-0">
-            <div className="bg-white rounded-2xl shadow p-4 space-y-3 sticky top-4">
-              {kullanici ? (
-                <>
-                  <div className="flex gap-2">
-                    <div className="flex-1 bg-orange-50 rounded-xl px-2 py-2 text-center">
-                      <div className={`text-lg font-bold ${kullanici.is_admin ? "text-purple-500" : krediDusuk ? "text-red-500" : "text-orange-500"}`}>
-                        {kullanici.is_admin ? "∞" : kullanici.kredi}
-                      </div>
-                      <div className="text-xs text-gray-500">Kalan kredi</div>
-                    </div>
-                    <div className="flex-1 bg-gray-50 rounded-xl px-2 py-2 text-center">
-                      <div className="text-lg font-bold text-gray-700">{kullanici.toplam_kullanilan}</div>
-                      <div className="text-xs text-gray-500">Kullanılan</div>
-                    </div>
-                  </div>
-                  <button onClick={() => paketModalAc()} className="w-full bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold py-2 rounded-xl transition-colors">
-                    + Kredi Al
-                  </button>
-                  {!kullanici.anonim && (
-                    <a href="/profil" className="w-full flex items-center justify-center gap-1.5 text-xs text-gray-500 hover:text-orange-600 py-1.5 border border-gray-200 rounded-xl hover:border-orange-300 transition-colors">
-                      📋 Geçmişimi Gör
-                    </a>
-                  )}
-                </>
+          {/* Sağ panel — Geçmiş */}
+          <div className="w-full lg:w-72 space-y-4">
+            <div className="bg-white rounded-2xl shadow p-5">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-gray-700">Son Üretimler</h3>
+                <div className="text-xs text-gray-400">{kullanici?.toplam_kullanilan || 0} toplam</div>
+              </div>
+              {gecmis.length === 0 ? (
+                <p className="text-xs text-gray-400 text-center py-4">Henüz üretim yapılmadı</p>
               ) : (
-                <div className="text-center space-y-2 py-1">
-                  <p className="text-xs text-gray-500 leading-relaxed">Ücretsiz 3 kredi ile başla — kayıt gerekmiyor</p>
-                  <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="w-full bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold py-2 rounded-xl transition-colors">
-                    🎁 Ücretsiz Başla
-                  </button>
-                  <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="w-full text-xs text-gray-500 hover:text-gray-700 py-1 transition-colors">
-                    Giriş Yap
-                  </button>
+                <div className="space-y-2">
+                  {gecmis.map((u) => (
+                    <button key={u.id} onClick={() => setSeciliUretim(seciliUretim?.id === u.id ? null : u)}
+                      className={`w-full text-left p-3 rounded-xl border transition-colors ${seciliUretim?.id === u.id ? "border-orange-300 bg-orange-50" : "border-gray-100 hover:bg-gray-50"}`}>
+                      <div className="flex justify-between items-start gap-2">
+                        <span className="text-xs font-medium text-gray-700 truncate flex-1">{u.urun_adi}</span>
+                        <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${platformRenk[u.platform] || "bg-gray-100 text-gray-600"}`}>{u.platform}</span>
+                      </div>
+                      <div className="text-xs text-gray-400 mt-1">
+                        {new Date(u.created_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                      </div>
+                      {seciliUretim?.id === u.id && (
+                        <div className="mt-3 pt-3 border-t border-orange-200 space-y-2">
+                          {sonucuBolumle(u.sonuc).map((bolum, bi) => (
+                            <div key={bi} className="bg-gray-50 rounded-xl p-3">
+                              <div className="flex items-center justify-between mb-1.5">
+                                <span className="text-xs font-semibold text-gray-600">{bolum.ikon} {bolum.baslik}</span>
+                                <span role="button" tabIndex={0} onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigator.clipboard.writeText(bolum.icerik);
+                                  const el = e.currentTarget as HTMLSpanElement;
+                                  el.textContent = "✓ Kopyalandı"; el.style.color = "#16a34a"; el.style.background = "#dcfce7";
+                                  setTimeout(() => { el.textContent = "Kopyala"; el.style.color = ""; el.style.background = ""; }, 2000);
+                                }} className="text-xs text-orange-500 hover:text-orange-600 cursor-pointer">Kopyala</span>
+                              </div>
+                              <p className="text-xs text-gray-600 leading-relaxed whitespace-pre-line line-clamp-4">{bolum.icerik}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </button>
+                  ))}
                 </div>
               )}
+            </div>
+
+            <div className="bg-white rounded-2xl shadow p-5">
+              <h3 className="text-sm font-semibold text-gray-700 mb-3">Kullanım</h3>
+              <div className="flex gap-3">
+                <div className="flex-1 bg-orange-50 rounded-xl px-3 py-2 text-center">
+                  <div className={`text-xl font-bold ${kullanici?.is_admin ? "text-purple-500" : krediDusuk ? "text-red-500" : "text-orange-500"}`}>
+                    {kullanici?.is_admin ? "∞" : kullanici?.kredi ?? "-"}
+                  </div>
+                  <div className="text-xs text-gray-500">Kalan kredi</div>
+                </div>
+                <div className="flex-1 bg-gray-50 rounded-xl px-3 py-2 text-center">
+                  <div className="text-xl font-bold text-gray-700">{kullanici?.toplam_kullanilan ?? "-"}</div>
+                  <div className="text-xs text-gray-500">Kullanılan</div>
+                </div>
+              </div>
+              <button onClick={() => paketModalAc()} className="w-full mt-3 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold py-2 rounded-xl transition-colors">
+                + İçerik Üretim Kredisi Al
+              </button>
             </div>
           </div>
         </div>
@@ -1863,11 +1737,13 @@ export default function Home() {
                 <button onClick={() => setAuthPopupAcik(false)} className="text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
               </div>
               <div className="p-5 space-y-3">
-                <div className="flex gap-2">
-                  <button onClick={() => setAuthPopupMod("kayit")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${authPopupMod === "kayit" ? "bg-orange-500 text-white border-orange-500" : "bg-white text-orange-500 border-orange-200"}`}>🎁 Kayıt Ol</button>
-                  <button onClick={() => setAuthPopupMod("giris")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${authPopupMod === "giris" ? "bg-gray-800 text-white border-gray-800" : "bg-white text-gray-600 border-gray-200"}`}>Giriş Yap</button>
-                </div>
-                <button onClick={handleGoogleGiris} className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                <button
+                  onClick={async () => {
+                    const { data, error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/` } });
+                    if (!error && data?.url) window.location.href = data.url;
+                  }}
+                  className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                >
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -1880,6 +1756,10 @@ export default function Home() {
                   <div className="flex-1 h-px bg-gray-100" />
                   <span className="text-xs text-gray-400">veya e-posta ile</span>
                   <div className="flex-1 h-px bg-gray-100" />
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => setAuthPopupMod("kayit")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${authPopupMod === "kayit" ? "bg-orange-500 text-white border-orange-500" : "bg-white text-orange-500 border-orange-200"}`}>🎁 Kayıt Ol</button>
+                  <button onClick={() => setAuthPopupMod("giris")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${authPopupMod === "giris" ? "bg-gray-800 text-white border-gray-800" : "bg-white text-gray-600 border-gray-200"}`}>Giriş Yap</button>
                 </div>
                 <input type="email" placeholder="E-posta" value={authPopupEmail} onChange={(e) => setAuthPopupEmail(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
                 <input type="password" placeholder="Şifre" value={authPopupSifre} onChange={(e) => setAuthPopupSifre(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleAuthPopupGiris()} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
@@ -1956,7 +1836,6 @@ export default function Home() {
 
         <ChatWidget />
       </div>
-      <SiteFooter />
     </main>
   );
 }
