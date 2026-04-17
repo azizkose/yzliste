@@ -7,6 +7,7 @@ import SiteFooter from "@/components/SiteFooter";
 import { PAKET_LISTESI } from "@/lib/paketler";
 import { useCredits, useInvalidateCredits } from "@/lib/hooks/useCredits";
 import { analytics } from "@/lib/analytics";
+import { useUretimStore } from "@/store/uretimStore";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
 type SosyalPlatform = "instagram" | "tiktok" | "facebook" | "twitter";
@@ -308,6 +309,7 @@ export default function Home() {
   const router = useRouter();
   const invalidateCredits = useInvalidateCredits();
   const { data: kredilerHook } = useCredits();
+  const { setPaylasim } = useUretimStore();
 
   // Mobil menü
   const [mobileMenuAcik, setMobileMenuAcik] = useState(false);
@@ -396,6 +398,18 @@ export default function Home() {
   const scannerBaslatildi = useRef(false);
   const sorguCalisiyor = useRef(false);
   const mesajInterval = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Metin sekmesindeki değerleri store'a senkronize et
+  useEffect(() => {
+    setPaylasim({ urunAdi, kategori, platform });
+  }, [urunAdi, kategori, platform, setPaylasim]);
+
+  // Sosyal sekmesine geçince sosyalUrunAdi otomatik doldur
+  useEffect(() => {
+    if (anaSekme === "sosyal" && !sosyalUrunAdi && urunAdi) {
+      setSosyalUrunAdi(urunAdi);
+    }
+  }, [anaSekme]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const platformBilgi = PLATFORM_BILGI[platform] || PLATFORM_BILGI.trendyol;
   const platformPh = PLATFORM_PLACEHOLDER[platform] || PLATFORM_PLACEHOLDER.trendyol;
@@ -1310,6 +1324,18 @@ export default function Home() {
                 <span className="text-xs text-violet-500 font-medium">Stil başına 1 kredi · 1 stil = 1 görsel</span>
               </div>
 
+              {/* Metin sekmesinden taşınan ürün bilgisi */}
+              {urunAdi && (
+                <div className="bg-violet-50 border border-violet-200 rounded-xl px-3 py-2 flex items-center gap-2">
+                  <span className="text-violet-400 text-sm">🔗</span>
+                  <p className="text-xs text-violet-700 flex-1 min-w-0 truncate">
+                    <span className="font-medium">{urunAdi}</span>
+                    {kategori && <span className="text-violet-400"> · {kategori}</span>}
+                  </p>
+                  <span className="text-xs text-violet-400 whitespace-nowrap">Metin sekmesinden</span>
+                </div>
+              )}
+
               {/* Profil eksik uyarısı */}
               {kullanici && !kullanici.anonim && !kullanici.marka_adi && (
                 <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex items-center justify-between gap-3">
@@ -1536,6 +1562,18 @@ export default function Home() {
                 <span className="text-xs text-amber-500 font-medium">{videoSure === "10" ? "8" : "5"} içerik üretim kredisi</span>
               </div>
               <p className="text-xs text-gray-400">Ürün fotoğrafından kısa tanıtım videosu — pazaryerleri, Reels, TikTok ve YouTube için</p>
+
+              {/* Metin sekmesinden taşınan ürün bilgisi */}
+              {urunAdi && (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 flex items-center gap-2">
+                  <span className="text-amber-400 text-sm">🔗</span>
+                  <p className="text-xs text-amber-700 flex-1 min-w-0 truncate">
+                    <span className="font-medium">{urunAdi}</span>
+                    {kategori && <span className="text-amber-500"> · {kategori}</span>}
+                  </p>
+                  <span className="text-xs text-amber-400 whitespace-nowrap">Metin sekmesinden</span>
+                </div>
+              )}
 
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2">
                 <span className="text-amber-500 flex-shrink-0 mt-0.5">⚡</span>

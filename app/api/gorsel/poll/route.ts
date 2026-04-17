@@ -11,11 +11,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ hata: "requestId gerekli" }, { status: 400 });
   }
 
-  const status = await fal.queue.status(ENDPOINT, { requestId, logs: false });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const status = await fal.queue.status(ENDPOINT, { requestId, logs: false }) as any;
 
   if (status.status === "FAILED") {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const errMsg = (status as any)?.error?.message || (status as any)?.error || "Görsel üretim başarısız";
+    const errMsg = status?.error?.message || status?.error || "Görsel üretim başarısız";
     return NextResponse.json({ status: "FAILED", hata: String(errMsg) });
   }
 
