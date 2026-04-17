@@ -321,6 +321,8 @@ export default function Home() {
   const [kullanici, setKullanici] = useState<Kullanici | null>(null);
   const [gecmis, setGecmis] = useState<Uretim[]>([]);
   const [seciliUretim, setSeciliUretim] = useState<Uretim | null>(null);
+  const [gecmisAcik, setGecmisAcik] = useState(false);
+  const [gecmisPlatformFiltre, setGecmisPlatformFiltre] = useState("");
   const [paketModalAcik, setPaketModalAcik] = useState(false);
   const [hata, setHata] = useState<string | null>(null);
   const [profilBannerKapatildi, setProfilBannerKapatildi] = useState(false);
@@ -2149,10 +2151,34 @@ export default function Home() {
                   <button onClick={() => paketModalAc()} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold py-2 rounded-xl transition-colors">
                     + Kredi Al
                   </button>
-                  {!kullanici.anonim && (
-                    <a href="/profil" className="w-full flex items-center justify-center gap-1.5 text-xs text-gray-500 hover:text-indigo-600 py-1.5 border border-gray-200 rounded-xl hover:border-indigo-300 transition-colors">
-                      📋 Geçmişimi Gör
-                    </a>
+                  {/* F-12c: Geçmiş sekmesi */}
+                  {!kullanici.anonim && gecmis.length > 0 && (
+                    <div>
+                      <button onClick={() => setGecmisAcik(!gecmisAcik)} className="w-full flex items-center justify-between text-xs text-gray-500 hover:text-indigo-600 py-1.5 border border-gray-200 rounded-xl px-2 hover:border-indigo-300 transition-colors">
+                        <span>📋 Geçmiş ({gecmis.length})</span>
+                        <span>{gecmisAcik ? "▲" : "▼"}</span>
+                      </button>
+                      {gecmisAcik && (
+                        <div className="mt-2 space-y-1">
+                          <select value={gecmisPlatformFiltre} onChange={(e) => setGecmisPlatformFiltre(e.target.value)}
+                            className="w-full text-xs border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-400">
+                            <option value="">Tüm platformlar</option>
+                            {["trendyol","hepsiburada","amazon","n11","etsy","amazon_usa"].map(p => (
+                              <option key={p} value={p}>{p}</option>
+                            ))}
+                          </select>
+                          <div className="max-h-40 overflow-y-auto space-y-1 mt-1">
+                            {gecmis.filter(u => !gecmisPlatformFiltre || u.platform === gecmisPlatformFiltre).map(u => (
+                              <button key={u.id} onClick={() => { setSonuc(u.sonuc); setAnaSekme("metin"); setGecmisAcik(false); }}
+                                className="w-full text-left px-2 py-1.5 rounded-lg bg-gray-50 hover:bg-indigo-50 border border-transparent hover:border-indigo-200 transition-all">
+                                <p className="text-xs font-medium text-gray-700 truncate">{u.urun_adi || "—"}</p>
+                                <p className="text-xs text-gray-400">{u.platform} · {new Date(u.created_at).toLocaleDateString("tr-TR", { day: "numeric", month: "short" })}</p>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </>
               ) : (
