@@ -363,11 +363,19 @@ export default function Home() {
   const [captionYukleniyor, setCaptionYukleniyor] = useState(false);
   const [sosyalCaption, setSosyalCaption] = useState("");
   const [sosyalHashtag, setSosyalHashtag] = useState("");
+  const [sosyalSezon, setSosyalSezon] = useState("normal");
   // Sosyal görsel
   const [sosyalGorselFormat, setSosyalGorselFormat] = useState<"1:1" | "9:16" | "16:9">("1:1");
   const [sosyalGorselStil, setSosyalGorselStil] = useState("beyaz");
   const [sosyalGorselYukleniyor, setSosyalGorselYukleniyor] = useState(false);
   const [sosyalGorselSonuclar, setSosyalGorselSonuclar] = useState<string[]>([]);
+  // Sosyal Medya Kiti
+  type KitCaption = { caption: string; hashtag: string };
+  type KitSonuc = { captions: Record<string, KitCaption>; gorselUrls: string[] };
+  const [kitYukleniyor, setKitYukleniyor] = useState(false);
+  const [kitSonuc, setKitSonuc] = useState<KitSonuc | null>(null);
+  const [kitGorselFormat, setKitGorselFormat] = useState<"1:1" | "9:16" | "16:9">("1:1");
+  const [kitGorselStil, setKitGorselStil] = useState("beyaz");
 
   // Refs
   const scannerRef = useRef<unknown>(null);
@@ -487,6 +495,14 @@ export default function Home() {
     return () => { kameraKapat(); if (mesajInterval.current) clearInterval(mesajInterval.current); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Sekme değişince Metin'deki bilgiyi diğer sekmelere taşı
+  useEffect(() => {
+    if (anaSekme === "sosyal" && !sosyalUrunAdi && urunAdi) {
+      setSosyalUrunAdi(urunAdi);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [anaSekme]);
 
   const gecmisiYukle = async (userId: string) => {
     const { data } = await supabase.from("uretimler").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(10);
@@ -671,7 +687,7 @@ export default function Home() {
     setSosyalCaption("");
     setSosyalHashtag("");
     try {
-      const res = await fetch("/api/sosyal", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, platform: sosyalPlatform, ton: sosyalTon, userId: kullanici.id }) });
+      const res = await fetch("/api/sosyal", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, platform: sosyalPlatform, ton: sosyalTon, userId: kullanici.id, sezon: sosyalSezon }) });
       const data = await res.json();
       if (data.caption) setSosyalCaption(data.caption);
       if (data.hashtag) setSosyalHashtag(data.hashtag);
@@ -707,6 +723,42 @@ export default function Home() {
       }
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setSosyalGorselYukleniyor(false);
+  };
+
+  const kitUret = async () => {
+    if (!kullanici || kullanici.anonim) { setAuthPopupMod("kayit"); setAuthPopupAcik(true); return; }
+    if (!sosyalUrunAdi.trim()) { alert("Ürün adı gerekli."); return; }
+    const krediGereken = fotolar[0] ? 5 : 4;
+    if (!kullanici.is_admin && kullanici.kredi < krediGereken) { paketModalAc(); return; }
+    setKitYukleniyor(true);
+    setKitSonuc(null);
+    try {
+      const foto = fotolar[0] ? await resizeFoto(fotolar[0]) : null;
+      const res = await fetch("/api/sosyal/kit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          urunAdi: sosyalUrunAdi,
+          ekBilgi: sosyalEkBilgi,
+          ton: sosyalTon,
+          userId: kullanici.id,
+          foto,
+          gorselFormat: kitGorselFormat,
+          gorselStil: kitGorselStil,
+          sezon: sosyalSezon,
+        }),
+      });
+      const data = await res.json();
+      if (data.hata) { setHata(data.hata); }
+      else {
+        setKitSonuc({ captions: data.captions, gorselUrls: data.gorselUrls || [] });
+        if (!kullanici.is_admin) {
+          setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - (data.kullanilanKredi || krediGereken)) } : k);
+          invalidateCredits();
+        }
+      }
+    } catch { setHata("Kit üretilemedi. Lütfen tekrar deneyin."); }
+    setKitYukleniyor(false);
   };
 
   return (
@@ -1029,6 +1081,13 @@ export default function Home() {
                 <span className="text-xs text-orange-500 font-medium">Stil başına 1 kredi · Her stilden 4 varyasyon</span>
               </div>
 
+              {/* Metin sekmesinden taşınan ürün adı */}
+              {urunAdi && (
+                <div className="flex items-center gap-2 bg-orange-50 rounded-xl px-3 py-2 border border-orange-100">
+                  <span className="text-xs text-orange-600">📝 Metin sekmesinden: <strong>{urunAdi}</strong>{kategori ? ` · ${kategori}` : ""}</span>
+                </div>
+              )}
+
               {/* Profil eksik uyarısı */}
               {kullanici && !kullanici.anonim && !kullanici.marka_adi && (
                 <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex items-center justify-between gap-3">
@@ -1174,6 +1233,13 @@ export default function Home() {
                 <h2 className="text-base font-semibold text-gray-800">🎬 Ürün Videosu Üret</h2>
                 <span className="text-xs text-red-500 font-medium">{videoSure === "10" ? "8" : "5"} içerik üretim kredisi</span>
               </div>
+
+              {/* Metin sekmesinden taşınan ürün adı */}
+              {urunAdi && (
+                <div className="flex items-center gap-2 bg-red-50 rounded-xl px-3 py-2 border border-red-100">
+                  <span className="text-xs text-red-600">📝 Metin sekmesinden: <strong>{urunAdi}</strong>{kategori ? ` · ${kategori}` : ""}</span>
+                </div>
+              )}
 
               {/* Profil eksik uyarısı */}
               {kullanici && !kullanici.anonim && !kullanici.marka_adi && (
@@ -1361,6 +1427,20 @@ export default function Home() {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Sezon / Etkinlik</label>
+                <select value={sosyalSezon} onChange={(e) => setSosyalSezon(e.target.value)}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white">
+                  <option value="normal">📅 Normal (Sezon yok)</option>
+                  <option value="anneler_gunu">💐 Anneler Günü</option>
+                  <option value="babalar_gunu">👔 Babalar Günü</option>
+                  <option value="bayram">🌙 Bayram</option>
+                  <option value="yilbasi">🎄 Yılbaşı</option>
+                  <option value="black_friday">🏷️ Black Friday</option>
+                  <option value="sevgililer_gunu">❤️ Sevgililer Günü</option>
+                </select>
+              </div>
+
               <button onClick={captionUret} disabled={captionYukleniyor || !sosyalUrunAdi.trim() || (!kullanici?.is_admin && (kullanici?.kredi ?? 0) <= 0)}
                 className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
                 {captionYukleniyor ? "⏳ Üretiliyor..." : `📱 Paylaşım Metni Üret — ${kullanici?.is_admin ? "∞" : "1"} kredi`}
@@ -1468,6 +1548,109 @@ export default function Home() {
                       ))}
                     </div>
                     <button onClick={() => setSosyalGorselSonuclar([])} className="w-full text-xs text-gray-400 hover:text-gray-600 py-1.5 transition-colors">Yeni görsel üret</button>
+                  </div>
+                )}
+              </div>
+
+              {/* ── SOSYAL MEDYA KİTİ ── */}
+              <div className="border-t border-gray-100 pt-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-gray-700">📦 Sosyal Medya Kiti</h3>
+                  <span className="text-xs text-pink-500 font-medium">{fotolar[0] ? "5 kredi" : "4 kredi"}</span>
+                </div>
+                <p className="text-xs text-gray-400">4 platform caption (Instagram, Facebook, Twitter, LinkedIn) {fotolar[0] ? "+ 1 görsel" : ""} birden üretir.</p>
+
+                {/* Kit görsel ayarları — sadece foto varsa */}
+                {fotolar[0] && (
+                  <div className="space-y-2">
+                    <div>
+                      <p className="text-xs font-medium text-gray-600 mb-1.5">Görsel Formatı</p>
+                      <div className="flex gap-1.5">
+                        {(["1:1", "9:16", "16:9"] as const).map((f) => (
+                          <button key={f} onClick={() => setKitGorselFormat(f)}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-medium border transition-all ${kitGorselFormat === f ? "border-pink-400 bg-pink-50 text-pink-700" : "border-gray-200 text-gray-600 hover:border-gray-300"}`}>
+                            {f === "1:1" ? "⬜ 1:1" : f === "9:16" ? "📱 9:16" : "🖥 16:9"}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-gray-600 mb-1.5">Görsel Stili</p>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        {([
+                          { id: "beyaz", label: "⬜ Beyaz Zemin" },
+                          { id: "lifestyle", label: "🏠 Lifestyle" },
+                          { id: "gradient", label: "🎨 Gradient" },
+                          { id: "koyu", label: "⬛ Koyu Zemin" },
+                        ]).map((s) => (
+                          <button key={s.id} onClick={() => setKitGorselStil(s.id)}
+                            className={`py-1.5 rounded-lg text-xs font-medium border transition-all ${kitGorselStil === s.id ? "border-pink-400 bg-pink-50 text-pink-700" : "border-gray-200 text-gray-600 hover:border-gray-300"}`}>
+                            {s.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <button onClick={kitUret}
+                  disabled={kitYukleniyor || !sosyalUrunAdi.trim() || (!kullanici?.is_admin && (kullanici?.kredi ?? 0) < (fotolar[0] ? 5 : 4))}
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all text-sm">
+                  {kitYukleniyor ? "⏳ Kit üretiliyor..." : `📦 Kit Üret — ${kullanici?.is_admin ? "∞" : (fotolar[0] ? "5" : "4")} kredi`}
+                </button>
+
+                {kitYukleniyor && (
+                  <div className="flex items-center justify-center gap-3 py-4">
+                    <div className="w-6 h-6 border-2 border-purple-200 border-t-purple-500 rounded-full animate-spin" />
+                    <p className="text-sm text-purple-600">4 platform + görsel üretiliyor...</p>
+                  </div>
+                )}
+
+                {kitSonuc && !kitYukleniyor && (
+                  <div className="space-y-3">
+                    {/* Görseller */}
+                    {kitSonuc.gorselUrls.length > 0 && (
+                      <div className="space-y-1.5">
+                        <p className="text-xs font-semibold text-gray-700">📸 Görsel ({kitSonuc.gorselUrls.length} varyasyon)</p>
+                        <div className="grid grid-cols-2 gap-2">
+                          {kitSonuc.gorselUrls.map((url, i) => (
+                            <div key={i} className="relative group rounded-xl overflow-hidden border border-gray-100">
+                              <img src={url} alt={`kit görsel ${i + 1}`} className="w-full object-cover" />
+                              <a href={url} download={`kit-gorsel-${i + 1}.jpg`} target="_blank" rel="noopener noreferrer"
+                                className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold rounded-xl">
+                                ⬇️ İndir
+                              </a>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Platform captionları */}
+                    {([
+                      { key: "instagram_tiktok", label: "📸 Instagram & TikTok", renk: "border-l-pink-400" },
+                      { key: "facebook", label: "👥 Facebook", renk: "border-l-blue-400" },
+                      { key: "twitter", label: "🐦 Twitter/X", renk: "border-l-sky-400" },
+                      { key: "linkedin", label: "💼 LinkedIn", renk: "border-l-indigo-400" },
+                    ]).map(({ key, label, renk }) => {
+                      const c = kitSonuc.captions[key];
+                      if (!c?.caption) return null;
+                      return (
+                        <div key={key} className={`bg-white rounded-xl shadow-sm p-4 border-l-4 ${renk} border border-gray-100`}>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xs font-semibold text-gray-700">{label}</span>
+                            <button onClick={() => navigator.clipboard.writeText(c.caption + (c.hashtag ? "\n\n" + c.hashtag : ""))}
+                              className="text-xs font-medium px-2.5 py-1 rounded-lg bg-gray-100 text-gray-500 hover:bg-pink-50 hover:text-pink-600 transition-all">
+                              Kopyala
+                            </button>
+                          </div>
+                          <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">{c.caption}</p>
+                          {c.hashtag && <p className="text-xs text-purple-600 mt-2 leading-relaxed">{c.hashtag}</p>}
+                        </div>
+                      );
+                    })}
+
+                    <button onClick={() => setKitSonuc(null)} className="w-full text-xs text-gray-400 hover:text-gray-600 py-1.5 transition-colors">Yeni kit üret</button>
                   </div>
                 )}
               </div>
