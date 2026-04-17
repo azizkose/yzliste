@@ -24,7 +24,7 @@ Etsy gibi platformlarda etiketler (tags) satışın %80'ini belirler. Yapay zeka
 
 ## BİLGİ KUTUSU
 
-💡 İpucu: <a href='https://yzliste.com' target='_blank' rel='noopener noreferrer'>yzliste'yi kullanarak</a> Türkçe bilgilerinizle Etsy ve eBay uyumlu profesyonel İngilizce listelemeler oluşturabilirsiniz.
+💡 İpucu: yzliste kullanarak Türkçe bilgilerinizle Etsy ve eBay uyumlu profesyonel İngilizce listelemeler oluşturabilirsiniz.
 
 ## SONUÇ
 

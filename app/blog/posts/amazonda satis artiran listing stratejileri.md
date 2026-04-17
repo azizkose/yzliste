@@ -25,7 +25,7 @@ Başlığa sığdıramadığınız ama müşterilerin arattığı tüm kelimeler
 
 ## BİLGİ KUTUSU
 
-💡 İpucu: <a href='https://yzliste.com' target='_blank' rel='noopener noreferrer'>yzliste'yi kullanarak</a> Amazon'un madde işaretleri (bullet points) ve backend keyword formatına tam uyumlu içerikleri saniyeler içinde oluşturabilirsiniz.
+💡 İpucu: yzliste kullanarak Amazon'un madde işaretleri (bullet points) ve backend keyword formatına tam uyumlu içerikleri saniyeler içinde oluşturabilirsiniz.
 
 ## SONUÇ
 

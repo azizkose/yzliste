@@ -24,7 +24,7 @@ Yapay zeka sadece hız sağlamaz, aynı zamanda standardizasyon getirir. Mağaza
 
 ## BİLGİ KUTUSU
 
-💡 İpucu: <a href='https://yzliste.com' target='_blank' rel='noopener noreferrer'>yzliste'yi kullanarak</a> sadece bir fotoğraf yükleyerek ürününüzün tüm pazar yeri içeriklerini saniyeler içinde hazır hale getirebilirsiniz.
+💡 İpucu: yzliste kullanarak sadece bir fotoğraf yükleyerek ürününüzün tüm pazar yeri içeriklerini saniyeler içinde hazır hale getirebilirsiniz.
 
 ## SONUÇ
 

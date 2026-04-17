@@ -24,7 +24,7 @@ N11 açıklama alanında özgürlük tanır. Kendi marka şablonlarınızı kull
 
 ## BİLGİ KUTUSU
 
-💡 İpucu: <a href='https://yzliste.com' target='_blank' rel='noopener noreferrer'>yzliste'yi kullanarak</a> N11 formatına uygun zenginleştirilmiş metin içerikleri ve optimize edilmiş görseller oluşturabilirsiniz.
+💡 İpucu: yzliste kullanarak N11 formatına uygun zenginleştirilmiş metin içerikleri ve optimize edilmiş görseller oluşturabilirsiniz.
 
 ## SONUÇ
 

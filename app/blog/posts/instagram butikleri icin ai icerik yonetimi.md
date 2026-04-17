@@ -24,7 +24,7 @@ Doğru hashtag kullanımı keşfete düşmenin anahtarıdır. Yapay zeka, ürün
 
 ## BİLGİ KUTUSU
 
-💡 İpucu: <a href='https://yzliste.com' target='_blank' rel='noopener noreferrer'>yzliste'yi kullanarak</a> ürün fotoğrafınızdan Instagram post metni, hashtagler ve dikkat çekici lifestyle görseller üretebilirsiniz.
+💡 İpucu: yzliste kullanarak ürün fotoğrafınızdan Instagram post metni, hashtagler ve dikkat çekici lifestyle görseller üretebilirsiniz.
 
 ## SONUÇ
 

@@ -24,7 +24,7 @@ Barkod sistemiyle listelenen ürünlerde SKU hataları minimuma iner. Ürün sis
 
 ## BİLGİ KUTUSU
 
-💡 İpucu: <a href='https://yzliste.com' target='_blank' rel='noopener noreferrer'>yzliste'yi kullanarak</a> ürün barkodlarını taratıp global veritabanından bilgileri otomatik çekerek Trendyol, Amazon ve Hepsiburada uyumlu içerikler oluşturabilirsiniz.
+💡 İpucu: yzliste kullanarak ürün barkodlarını taratıp global veritabanından bilgileri otomatik çekerek Trendyol, Amazon ve Hepsiburada uyumlu içerikler oluşturabilirsiniz.
 
 ## SONUÇ
 

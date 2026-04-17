@@ -24,7 +24,7 @@ Hepsiburada, ürün açıklamalarında zengin metin düzenleyicisine izin verir.
 
 ## BİLGİ KUTUSU
 
-💡 İpucu: <a href='https://yzliste.com' target='_blank' rel='noopener noreferrer'>yzliste'yi kullanarak</a> Hepsiburada kataloğuna uygun teknik özellik setlerini ve açıklama metinlerini otomatik olarak hazırlatabilirsiniz.
+💡 İpucu: yzliste kullanarak Hepsiburada kataloğuna uygun teknik özellik setlerini ve açıklama metinlerini otomatik olarak hazırlatabilirsiniz.
 
 ## SONUÇ
 

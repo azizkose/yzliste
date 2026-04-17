@@ -24,7 +24,7 @@ Bugün bir kişilik bir dev kadro olmak mümkün. Doğru araçları kullanan bir
 
 ## BİLGİ KUTUSU
 
-💡 İpucu: <a href='https://yzliste.com' target='_blank' rel='noopener noreferrer'>yzliste'yi kullanarak</a> ürün giriş ve görsel düzenleme süreçlerinizi %90 oranında hızlandırarak operasyonel maliyetlerinizi düşürebilirsiniz.
+💡 İpucu: yzliste kullanarak ürün giriş ve görsel düzenleme süreçlerinizi %90 oranında hızlandırarak operasyonel maliyetlerinizi düşürebilirsiniz.
 
 ## SONUÇ
 

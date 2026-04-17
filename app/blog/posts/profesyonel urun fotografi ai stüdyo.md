@@ -24,7 +24,7 @@ Beyaz fon güven verir, lifestyle (yaşam tarzı) görselleri ise hayal kurdurur
 
 ## BİLGİ KUTUSU
 
-💡 İpucu: <a href='https://yzliste.com' target='_blank' rel='noopener noreferrer'>yzliste'yi kullanarak</a> tek bir ürün fotoğrafından hem beyaz fonlu katalog çekimleri hem de etkileyici yaşam alanı görselleri üretebilirsiniz.
+💡 İpucu: yzliste kullanarak tek bir ürün fotoğrafından hem beyaz fonlu katalog çekimleri hem de etkileyici yaşam alanı görselleri üretebilirsiniz.
 
 ## SONUÇ
 

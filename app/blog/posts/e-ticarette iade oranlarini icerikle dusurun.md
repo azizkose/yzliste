@@ -24,7 +24,7 @@ Müşterilerden gelen soruları analiz edin. Eğer sürekli "Su geçirir mi?" so
 
 ## BİLGİ KUTUSU
 
-💡 İpucu: <a href='https://yzliste.com' target='_blank' rel='noopener noreferrer'>yzliste'yi kullanarak</a> müşterilerin en çok merak ettiği detayları içeren kapsamlı ve şeffaf ürün açıklamaları üretebilirsiniz.
+💡 İpucu: yzliste kullanarak müşterilerin en çok merak ettiği detayları içeren kapsamlı ve şeffaf ürün açıklamaları üretebilirsiniz.
 
 ## SONUÇ
 

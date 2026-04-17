@@ -36,9 +36,7 @@ Trendyol açıklamasında yaklaşık 300 kelime hedefle. İlk iki cümle en öne
 
 ## BİLGİ KUTUSU
 
-💡 İpucu: metin:
-  metin:
-  "💡 İpucu: <a href='https://yzliste.com' target='_blank' rel='noopener noreferrer'>yzliste'yi kullanarak</a> platform bazında optimize edilmiş..."platform bazında optimize edilmiş..." platform bazında optimize edilmiş başlık, özellik, açıklama ve etiket içeriklerini saniyeler içinde üretebilirsin. Ürün fotoğrafını yükle ya da barkod tara, gerisini YZ halleder.
+💡 İpucu: yzliste kullanarak platform bazında optimize edilmiş başlık, özellik, açıklama ve etiket içeriklerini saniyeler içinde üretebilirsin. Ürün fotoğrafını yükle ya da barkod tara, gerisini YZ halleder.
 
 ## SONUÇ
 
