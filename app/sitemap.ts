@@ -4,7 +4,6 @@ import { getYazilar } from "./blog/icerikler";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.yzliste.com";
 
-  const now = new Date()
 
   // Ana sayfalar
   const mainPages: MetadataRoute.Sitemap = [
