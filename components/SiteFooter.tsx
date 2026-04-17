@@ -9,6 +9,8 @@ export default function SiteFooter() {
           <span>·</span>
           <a href="/hakkimizda" className="hover:text-indigo-500">Hakkımızda</a>
           <span>·</span>
+          <a href="/kosullar" className="hover:text-indigo-500">Kullanım Koşulları</a>
+          <span>·</span>
           <a href="/gizlilik" className="hover:text-indigo-500">Gizlilik Politikası</a>
           <span>·</span>
           <a href="/mesafeli-satis" className="hover:text-indigo-500">Mesafeli Satış</a>

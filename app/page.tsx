@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
 import { PAKET_LISTESI } from "@/lib/paketler";
-import { useInvalidateCredits } from "@/lib/hooks/useCredits";
+import { useCredits, useInvalidateCredits } from "@/lib/hooks/useCredits";
 import { analytics } from "@/lib/analytics";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
@@ -307,6 +307,7 @@ function FotoEkleAlani({ id, onChange, renk = "gray", metin = "Fotoğraf ekle", 
 export default function Home() {
   const router = useRouter();
   const invalidateCredits = useInvalidateCredits();
+  const { data: kredilerHook } = useCredits();
 
   // Mobil menü
   const [mobileMenuAcik, setMobileMenuAcik] = useState(false);
@@ -537,7 +538,7 @@ export default function Home() {
     if (data) setGecmis(data);
   };
 
-  const cikisYap = async () => { await supabase.auth.signOut(); router.push("/auth"); };
+  const cikisYap = async () => { analytics.reset(); await supabase.auth.signOut(); router.push("/auth"); };
 
   const fotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
     const dosyalar = Array.from(e.target.files || []);
@@ -862,7 +863,7 @@ export default function Home() {
               {kullanici ? (
                 <>
                   <button onClick={() => paketModalAc()} className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-colors ${kullanici.is_admin ? "bg-violet-100 text-violet-700" : krediDusuk ? "bg-amber-100 text-amber-600 animate-pulse" : "bg-indigo-100 text-indigo-600 hover:bg-indigo-200"}`}>
-                    {kullanici.is_admin ? "∞" : kullanici.kredi} kredi
+                    {kullanici.is_admin ? "∞" : (kredilerHook ?? kullanici.kredi)} kredi
                   </button>
                   {kullanici.anonim
                     ? <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-xs bg-indigo-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-indigo-600 transition-colors">Ücretsiz Başla</button>

@@ -368,7 +368,7 @@ export default function AuthPage() {
       <section className="px-4 sm:px-6 pt-12 sm:pt-16 pb-12 text-center max-w-3xl mx-auto">
         <div className="flex flex-wrap justify-center gap-2 mb-6">
           <span className="inline-block bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">Trendyol · Hepsiburada · Amazon TR · N11 · Etsy · Amazon USA</span>
-          <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">🆕 Video + Sosyal Medya</span>
+          <span className="inline-block bg-emerald-100 text-emerald-700 text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">🆕 Video + Sosyal Medya</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-5">
           Ürünün için her içeriği<br />
@@ -452,10 +452,10 @@ export default function AuthPage() {
                 baslik: "Sosyal Medya",
                 aciklama: "Caption + hashtag, tüm platformlar",
                 kredi: "1 kredi",
-                renk: "green",
-                ring: "ring-green-400",
-                bg: "bg-green-50",
-                badge: "text-green-600 bg-green-100",
+                renk: "emerald",
+                ring: "ring-emerald-400",
+                bg: "bg-emerald-50",
+                badge: "text-emerald-600 bg-emerald-100",
               },
             ].map((k) => (
               <button
@@ -526,7 +526,7 @@ export default function AuthPage() {
                     { src: "/ornek_lifestyle.jpg", etiket: "🏠 Lifestyle" },
                   ].map((item) => (
                     <div key={item.etiket} className="flex flex-col">
-                      <div className="rounded-xl overflow-hidden border-2 border-green-200 bg-gray-50">
+                      <div className="rounded-xl overflow-hidden border-2 border-violet-200 bg-gray-50">
                         <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" />
                       </div>
                       <p className="text-[11px] text-gray-700 font-semibold text-center mt-1.5">{item.etiket}</p>
@@ -541,7 +541,7 @@ export default function AuthPage() {
                     { src: "/ornek_dogal.jpg", etiket: "🌿 Doğal" },
                   ].map((item) => (
                     <div key={item.etiket} className="flex flex-col">
-                      <div className="rounded-xl overflow-hidden border-2 border-green-200 bg-gray-50">
+                      <div className="rounded-xl overflow-hidden border-2 border-violet-200 bg-gray-50">
                         <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" />
                       </div>
                       <p className="text-[11px] text-gray-700 font-semibold text-center mt-1.5">{item.etiket}</p>
@@ -629,7 +629,7 @@ export default function AuthPage() {
                 {/* Platform sekmeleri görünümü */}
                 <div className="flex gap-2 mb-4 flex-wrap">
                   {["📸 Instagram", "🎵 TikTok", "👥 Facebook", "🐦 Twitter/X"].map((p) => (
-                    <span key={p} className="text-xs bg-green-50 text-green-700 border border-green-200 px-3 py-1 rounded-full font-medium">{p}</span>
+                    <span key={p} className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full font-medium">{p}</span>
                   ))}
                 </div>
 
@@ -650,7 +650,7 @@ export default function AuthPage() {
                       <span className="text-xs font-semibold text-gray-600">🏷️ Hashtag Seti</span>
                       <span className="text-xs bg-white border border-gray-200 text-gray-400 px-2 py-0.5 rounded-lg">Kopyala</span>
                     </div>
-                    <p className="text-sm text-green-700 leading-relaxed">
+                    <p className="text-sm text-emerald-700 leading-relaxed">
                       #porselen #kahvefincanı #kütahyaporselen #altınyaldız #hediye #türkkahvesi #elyapımı #fincanSeti #çeyiz #düğünhediyesi #porseleneserleri #handmade
                     </p>
                   </div>
@@ -729,7 +729,7 @@ export default function AuthPage() {
             </div>
             {/* Sosyal Medya */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-              <div className="bg-pink-50 px-5 pt-6 pb-4">
+              <div className="bg-emerald-50 px-5 pt-6 pb-4">
                 <div className="text-2xl mb-2">📱</div>
                 <h3 className="font-bold text-gray-800">Sosyal Medya</h3>
                 <p className="text-xs text-gray-500 mt-1">1 kredi / platform seti</p>
@@ -739,7 +739,7 @@ export default function AuthPage() {
                 <ul className="space-y-1.5">
                   {["Instagram · Caption + Hashtag", "TikTok · Kısa açıklama", "Facebook · Paylaşım metni", "Twitter/X · Tweet metni"].map(f => (
                     <li key={f} className="flex items-center gap-2 text-xs text-gray-500">
-                      <span className="w-4 h-4 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-[10px]">✓</span>{f}
+                      <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-[10px]">✓</span>{f}
                     </li>
                   ))}
                 </ul>
@@ -826,9 +826,9 @@ export default function AuthPage() {
               { no: "1", ikon: "📦", baslik: "Ürünü tanımla", aciklama: "Ürün adı yaz, fotoğraf yükle ya da barkod tara. YZ ürünü otomatik analiz eder.", renk: "bg-blue-50 text-blue-600" },
               { no: "2", ikon: "🛒", baslik: "Platform seç", aciklama: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy veya Amazon USA. Her platform için ayrı format.", renk: "bg-violet-50 text-violet-600" },
               { no: "3", ikon: "📝", baslik: "Listing metnini al", aciklama: "Optimize başlık, madde madde özellikler, açıklama ve arama etiketleri — tek kredide.", renk: "bg-indigo-50 text-indigo-600" },
-              { no: "4", ikon: "📷", baslik: "Görsel üret", aciklama: "7 farklı stüdyo stili. Kendi sahne promptunu yaz ya da arka plan fotoğrafı ver.", renk: "bg-green-50 text-green-600" },
+              { no: "4", ikon: "📷", baslik: "Görsel üret", aciklama: "7 farklı stüdyo stili. Kendi sahne promptunu yaz ya da arka plan fotoğrafı ver.", renk: "bg-violet-50 text-violet-600" },
               { no: "5", ikon: "🎬", baslik: "Video üret", aciklama: "Ürün fotoğrafından 5sn/10sn tanıtım videosu. Dikey, kare veya yatay format — platforma hazır.", renk: "bg-amber-50 text-amber-600" },
-              { no: "6", ikon: "📱", baslik: "Sosyal medya", aciklama: "Instagram, TikTok, Facebook, Twitter/X için caption + hashtag seti. Platform diline göre ayrı içerik.", renk: "bg-teal-50 text-teal-600" },
+              { no: "6", ikon: "📱", baslik: "Sosyal medya", aciklama: "Instagram, TikTok, Facebook, Twitter/X için caption + hashtag seti. Platform diline göre ayrı içerik.", renk: "bg-emerald-50 text-emerald-600" },
             ].map((adim) => (
               <div key={adim.no} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex gap-4">
                 <div className={`w-10 h-10 rounded-xl ${adim.renk} flex items-center justify-center text-xl flex-shrink-0`}>{adim.ikon}</div>
