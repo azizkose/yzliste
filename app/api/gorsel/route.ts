@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fal } from "@fal-ai/client";
 import { createClient } from "@supabase/supabase-js";
 
-export const maxDuration = 60; // fal storage upload + RMBG (~5s) + queue.submit — GPU bekleme yok
+export const maxDuration = 60;
 
 fal.config({ credentials: process.env.FAL_KEY });
 
@@ -27,18 +27,37 @@ const stilSahneleri: Record<string, string> = {
   dogal: "outdoor natural setting with soft sunlight and green foliage in the background, shallow depth of field, product placed on a natural stone or wooden surface, fresh and organic product photography, product centered and filling the frame prominently, keep the original product exactly as is, do not alter modify or reimagine the product",
 };
 
-
 const stilEtiketleri: Record<string, string> = {
   beyaz: "Beyaz Zemin", koyu: "Koyu Zemin", lifestyle: "Lifestyle",
   mermer: "Mermer", ahsap: "Ahşap", gradient: "Gradient",
   dogal: "Doğal", referans: "Referans Sahne", ozel: "Özel Sahne",
 };
 
+function pozisyonSec(stil: string, sosyalFormat?: string): string {
+  if (sosyalFormat === "9:16") return "bottom_center";
+  if (sosyalFormat === "16:9") return "center_horizontal";
+  switch (stil) {
+    case "beyaz":     return "center_horizontal";
+    case "koyu":      return "center_horizontal";
+    case "gradient":  return "center_horizontal";
+    case "mermer":    return "bottom_center";
+    case "ahsap":     return "bottom_center";
+    case "lifestyle": return "center_vertical";
+    case "dogal":     return "bottom_center";
+    default:          return "center_horizontal";
+  }
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { foto, stil, ekPrompt, userId, referansGorsel, sosyalFormat } = body;
+  const { foto, stiller, stil, ekPrompt, userId, referansGorsel, sosyalFormat } = body;
+
+  // Backwards compat: tek stil gelirse diziye çevir
+  const stilListesi: string[] = stiller || (stil ? [stil] : ["beyaz"]);
 
   if (!foto) return NextResponse.json({ hata: "Fotograf gerekli" }, { status: 400 });
+  if (stilListesi.length === 0) return NextResponse.json({ hata: "En az 1 stil seçin" }, { status: 400 });
+  if (stilListesi.length > 7) return NextResponse.json({ hata: "En fazla 7 stil seçilebilir" }, { status: 400 });
 
   let isAdmin = false;
   let brandContext = "";
@@ -50,27 +69,41 @@ export async function POST(req: NextRequest) {
       .eq("id", userId)
       .single();
 
-    if (profil) {
-      isAdmin = profil.is_admin === true;
-      if (!isAdmin && profil.kredi <= 0) {
-        return NextResponse.json({ hata: "Krediniz bitti." }, { status: 402 });
+    if (!profil) return NextResponse.json({ hata: "Kullanici bulunamadi" }, { status: 404 });
+    isAdmin = profil.is_admin === true;
+
+    if (!isAdmin) {
+      // Atomik: sadece yeterli kredi varsa düşür
+      const { data: updated } = await supabaseAdmin
+        .from("profiles")
+        .update({ kredi: profil.kredi - stilListesi.length })
+        .eq("id", userId)
+        .gte("kredi", stilListesi.length)
+        .select("kredi")
+        .single();
+
+      if (!updated) {
+        return NextResponse.json({
+          hata: `Yetersiz kredi. ${stilListesi.length} görsel için ${stilListesi.length} kredi gerekli.`
+        }, { status: 402 });
       }
-      const tonEnMap: Record<string, string> = {
-        profesyonel: "professional and premium brand tone",
-        samimi: "warm and friendly brand tone",
-        eglenceli: "fun and playful brand tone",
-        lüks: "luxury and elegant brand tone",
-        minimal: "clean and minimal brand tone",
-      };
-      const ctxParcalar: string[] = [];
-      if (profil.ton && tonEnMap[profil.ton]) ctxParcalar.push(tonEnMap[profil.ton]);
-      if (profil.hedef_kitle) ctxParcalar.push(`targeted at: ${profil.hedef_kitle}`);
-      if (ctxParcalar.length > 0) brandContext = `, ${ctxParcalar.join(", ")}`;
     }
+
+    const tonEnMap: Record<string, string> = {
+      profesyonel: "professional and premium brand tone",
+      samimi: "warm and friendly brand tone",
+      eglenceli: "fun and playful brand tone",
+      lüks: "luxury and elegant brand tone",
+      minimal: "clean and minimal brand tone",
+    };
+    const ctxParcalar: string[] = [];
+    if (profil.ton && tonEnMap[profil.ton]) ctxParcalar.push(tonEnMap[profil.ton]);
+    if (profil.hedef_kitle) ctxParcalar.push(`targeted at: ${profil.hedef_kitle}`);
+    if (ctxParcalar.length > 0) brandContext = `, ${ctxParcalar.join(", ")}`;
   }
 
   try {
-    // Ana fotoğraf → FAL storage
+    // Fotoğraf upload
     const base64 = foto.split(",")[1];
     const mediaType = foto.split(";")[0].split(":")[1];
     const binaryStr = atob(base64);
@@ -78,63 +111,88 @@ export async function POST(req: NextRequest) {
     for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
     const imageUrl = await fal.storage.upload(new Blob([bytes], { type: mediaType }));
 
-    const secilenStil: string = stil || "beyaz";
     const shotSize: [number, number] = sosyalFormat ? (FORMAT_BOYUT[sosyalFormat] || [1000, 1000]) : [1000, 1000];
 
-    // RMBG — arka planı kaldır, sonra product-shot'a temiz görsel gönder
+    // RMBG — 1 kez, tüm stiller için
     let cleanImageUrl = imageUrl;
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const rmbgResult = await fal.subscribe("fal-ai/bria/rmbg", { input: { image_url: imageUrl } }) as any;
       cleanImageUrl = rmbgResult?.data?.image?.url || imageUrl;
     } catch {
-      // RMBG başarısız → orijinal görselle devam et
       cleanImageUrl = imageUrl;
     }
 
-    let input: Record<string, unknown>;
-
-    if (secilenStil === "referans" && referansGorsel) {
+    // Referans görsel (varsa, 1 kez upload)
+    let refUrl: string | null = null;
+    if (referansGorsel) {
       const rb64 = referansGorsel.split(",")[1];
       const rmt = referansGorsel.split(";")[0].split(":")[1];
       const rbStr = atob(rb64);
       const rb = new Uint8Array(rbStr.length);
       for (let i = 0; i < rbStr.length; i++) rb[i] = rbStr.charCodeAt(i);
-      const refUrl = await fal.storage.upload(new Blob([rb], { type: rmt }));
-      input = {
-        image_url: cleanImageUrl,
-        ref_image_url: refUrl,
-        optimize_description: true,
-        num_results: 1,
-        fast: false,
-        placement_type: "automatic",
-        shot_size: shotSize,
-      };
-    } else {
-      let sahne: string;
-      if (secilenStil === "ozel") {
-        sahne = ekPrompt || "clean studio background, professional product photography, keep the original product exactly as is";
-      } else {
-        sahne = `${stilSahneleri[secilenStil] || stilSahneleri.beyaz}${brandContext}`;
-        if (ekPrompt) sahne = `${sahne}, ${ekPrompt}`;
-      }
-      input = {
-        image_url: cleanImageUrl,
-        scene_description: sahne,
-        optimize_description: true,
-        num_results: 1,
-        fast: false,
-        placement_type: "automatic",
-        shot_size: shotSize,
-      };
+      refUrl = await fal.storage.upload(new Blob([rb], { type: rmt }));
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queued = await fal.queue.submit("fal-ai/bria/product-shot", { input } as any);
-    const label = stilEtiketleri[secilenStil] || secilenStil;
+    // Her stil için paralel queue.submit
+    const jobs = await Promise.all(
+      stilListesi.map(async (secilenStil) => {
+        let input: Record<string, unknown>;
 
-    return NextResponse.json({ requestId: queued.request_id, label, isAdmin });
+        if (secilenStil === "referans" && refUrl) {
+          input = {
+            image_url: cleanImageUrl,
+            ref_image_url: refUrl,
+            optimize_description: true,
+            num_results: 1,
+            fast: true,
+            placement_type: "manual_placement",
+            manual_placement_selection: "bottom_center",
+            shot_size: shotSize,
+          };
+        } else {
+          let sahne: string;
+          if (secilenStil === "ozel") {
+            sahne = ekPrompt || "clean studio background, professional product photography, keep the original product exactly as is";
+          } else {
+            sahne = `${stilSahneleri[secilenStil] || stilSahneleri.beyaz}${brandContext}`;
+            if (ekPrompt) sahne = `${sahne}, ${ekPrompt}`;
+          }
+          input = {
+            image_url: cleanImageUrl,
+            scene_description: sahne,
+            optimize_description: true,
+            num_results: 1,
+            fast: true,
+            placement_type: "manual_placement",
+            manual_placement_selection: pozisyonSec(secilenStil, sosyalFormat),
+            shot_size: shotSize,
+          };
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const queued = await fal.queue.submit("fal-ai/bria/product-shot", { input } as any);
+        return {
+          requestId: queued.request_id,
+          label: stilEtiketleri[secilenStil] || secilenStil,
+          stil: secilenStil,
+        };
+      })
+    );
+
+    return NextResponse.json({ jobs, isAdmin });
   } catch (e: unknown) {
+    // Hata durumunda krediyi geri yükle
+    if (userId && !isAdmin) {
+      try {
+        const { data: profil } = await supabaseAdmin.from("profiles").select("kredi").eq("id", userId).single();
+        if (profil) {
+          await supabaseAdmin.from("profiles")
+            .update({ kredi: profil.kredi + stilListesi.length })
+            .eq("id", userId);
+        }
+      } catch { /* geri yükleme başarısız — loglarda görünür */ }
+    }
     const err = e as { message?: string };
     console.error("FAL HATA:", err?.message || JSON.stringify(e));
     return NextResponse.json({ hata: "Gorsel uretim hatasi: " + (err?.message || "bilinmiyor") }, { status: 500 });

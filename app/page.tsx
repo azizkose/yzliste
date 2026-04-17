@@ -353,12 +353,9 @@ export default function Home() {
 
   // Görsel sekmesi
   const [gorselEkPrompt, setGorselEkPrompt] = useState("");
-  const [seciliStil, setSeciliStil] = useState<string>("");
+  const [seciliStiller, setSeciliStiller] = useState<Set<string>>(new Set());
   const [gorselYukleniyor, setGorselYukleniyor] = useState(false);
-  const [gorselJob, setGorselJob] = useState<{ requestId: string; label: string } | null>(null);
-  const [gorselUyariAcik, setGorselUyariAcik] = useState(false);
-  const [krediOnayAcik, setKrediOnayAcik] = useState(false);
-  const [krediOnayIslem, setKrediOnayIslem] = useState<(() => Promise<void>) | null>(null);
+  const [gorselJoblar, setGorselJoblar] = useState<{ requestId: string; label: string; stil: string }[]>([]);
   const [referansGorsel, setReferansGorsel] = useState<string | null>(null);
 
   // Video sekmesi
@@ -551,7 +548,7 @@ export default function Home() {
     e.target.value = "";
   };
 
-  const fotoKaldir = (index: number) => { setFotolar((prev) => prev.filter((_, i) => i !== index)); setGorselJob(null); };
+  const fotoKaldir = (index: number) => { setFotolar((prev) => prev.filter((_, i) => i !== index)); setGorselJoblar([]); };
 
   // Fotoğraf boyutlandır — API'ye göndermeden önce
   const resizeFoto = (base64: string, maxSize = 1024): Promise<string> =>
@@ -573,7 +570,7 @@ export default function Home() {
     const dosya = e.target.files?.[0];
     if (!dosya) return;
     const reader = new FileReader();
-    reader.onload = () => { setFotolar([reader.result as string]); setGorselJob(null); };
+    reader.onload = () => { setFotolar([reader.result as string]); setGorselJoblar([]); };
     reader.readAsDataURL(dosya);
     e.target.value = "";
   };
@@ -645,69 +642,73 @@ export default function Home() {
     setTimeout(() => document.getElementById("sonuc-alani")?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
   };
 
-  // Günlük indirme hakkı — localStorage'da tutulur, kullanıcıya gösterilmez
-  const indirmeHakiKullan = (): boolean => {
-    const gun = new Date().toISOString().split("T")[0];
-    const key = `gih_${gun}`;
-    const kullanilan = parseInt(localStorage.getItem(key) || "0", 10);
-    if (kullanilan >= 3) return false; // hak tükendi
-    localStorage.setItem(key, String(3)); // indirme yapıldı → kalan hak sıfırla
-    return true;
-  };
-
-  const indirmeHakkiVarMi = (): boolean => {
-    const gun = new Date().toISOString().split("T")[0];
-    const kullanilan = parseInt(localStorage.getItem(`gih_${gun}`) || "0", 10);
-    return kullanilan < 3;
-  };
-
-  const indirmeHakiSifirla = () => {
-    const gun = new Date().toISOString().split("T")[0];
-    localStorage.setItem(`gih_${gun}`, "0");
-  };
-
-  const krediOnayla = async () => {
-    if (!kullanici) return;
-    // 1 kredi düş — 3 yeni indirme hakkı açılır
-    await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: kullanici.id, action: "indir", stil: "unlock" }) });
-    setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - 1) } : k);
-    invalidateCredits();
-    indirmeHakiSifirla();
-    setKrediOnayAcik(false);
-    if (krediOnayIslem) { await krediOnayIslem(); setKrediOnayIslem(null); }
+  const stilToggle = (stilId: string) => {
+    setSeciliStiller(prev => {
+      const next = new Set(prev);
+      if (stilId === "ozel" || stilId === "referans") {
+        return next.has(stilId) ? new Set() : new Set([stilId]);
+      }
+      next.delete("ozel");
+      next.delete("referans");
+      if (next.has(stilId)) next.delete(stilId);
+      else next.add(stilId);
+      return next;
+    });
   };
 
   const gorselUret = async () => {
     if (!loginGerekli()) return;
     if (!kullanici) return;
     if (fotolar.length === 0) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
-    if (!seciliStil) { alert("Bir stil seçin."); return; }
-    if (!kullanici.is_admin && kullanici.kredi < 1) { paketModalAc(); return; }
+    if (seciliStiller.size === 0) { alert("En az bir stil seçin."); return; }
+    const stilSayisi = seciliStiller.size;
+    if (!kullanici.is_admin && kullanici.kredi < stilSayisi) { paketModalAc(); return; }
     setGorselYukleniyor(true);
-    setGorselJob(null);
+    setGorselJoblar([]);
     try {
       const resizedFoto = await resizeFoto(fotolar[0]);
       const res = await fetch("/api/gorsel", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ foto: resizedFoto, ekPrompt: gorselEkPrompt, stil: seciliStil, userId: kullanici?.id, referansGorsel }),
+        body: JSON.stringify({
+          foto: resizedFoto,
+          stiller: Array.from(seciliStiller),
+          ekPrompt: gorselEkPrompt,
+          userId: kullanici?.id,
+          referansGorsel,
+        }),
       });
       const data = await res.json();
-      if (!data.requestId) { setHata("Görsel üretilemedi. Tekrar deneyin."); setGorselYukleniyor(false); return; }
-
-      // Poll et — URL yok, sadece status
-      let tamamlandi = false;
-      for (let deneme = 0; deneme < 40; deneme++) {
-        await new Promise(r => setTimeout(r, 4000));
-        const pollRes = await fetch(`/api/gorsel/poll?requestId=${data.requestId}`);
-        const pollData = await pollRes.json();
-        if (pollData.status === "COMPLETED") {
-          setGorselJob({ requestId: data.requestId, label: data.label });
-          tamamlandi = true;
-          break;
-        }
+      if (res.status === 402) { paketModalAc(); setGorselYukleniyor(false); return; }
+      if (!data.jobs || data.jobs.length === 0) {
+        setHata("Görsel üretilemedi. Tekrar deneyin.");
+        setGorselYukleniyor(false);
+        return;
       }
-      if (!tamamlandi) setHata("Görsel üretilemedi, zaman aşımı. Tekrar deneyin.");
+
+      if (!kullanici.is_admin) {
+        setKullanici(k => k ? { ...k, kredi: Math.max(0, k.kredi - stilSayisi) } : k);
+        invalidateCredits();
+      }
+
+      // Her iş için paralel poll — tamamlananlar anında gösterilir
+      let tamamlananSayisi = 0;
+      await Promise.all(
+        data.jobs.map(async (job: { requestId: string; label: string; stil: string }) => {
+          for (let deneme = 0; deneme < 40; deneme++) {
+            await new Promise(r => setTimeout(r, 4000));
+            const pollRes = await fetch(`/api/gorsel/poll?requestId=${job.requestId}`);
+            const pollData = await pollRes.json();
+            if (pollData.status === "COMPLETED") {
+              tamamlananSayisi++;
+              setGorselJoblar(prev => [...prev, job]);
+              break;
+            }
+          }
+        })
+      );
+
+      if (tamamlananSayisi === 0) setHata("Görsel üretilemedi, zaman aşımı.");
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setGorselYukleniyor(false);
   };
@@ -1002,7 +1003,7 @@ export default function Home() {
                       Değiştir
                       <input type="file" accept="image/*" className="hidden" onChange={tekFotoSec} />
                     </label>
-                    <button onClick={() => { setFotolar([]); setGorselJob(null); }} className="text-xs text-gray-400 hover:text-red-500 transition-colors">Kaldır</button>
+                    <button onClick={() => { setFotolar([]); setGorselJoblar([]); }} className="text-xs text-gray-400 hover:text-red-500 transition-colors">Kaldır</button>
                   </div>
                 </div>
               ) : (
@@ -1305,18 +1306,18 @@ export default function Home() {
                         ]
                       : GORSEL_STILLER;
                     return sirali.map((s) => (
-                    <button key={s.id} onClick={() => setSeciliStil(s.id)}
-                      className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${seciliStil === s.id ? "border-violet-500 shadow-md" : "border-gray-200 hover:border-violet-300"}`}>
+                    <button key={s.id} onClick={() => stilToggle(s.id)}
+                      className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${seciliStiller.has(s.id) ? "border-violet-500 shadow-md" : "border-gray-200 hover:border-violet-300"}`}>
                       {s.img ? (
                         <div className="aspect-square w-full overflow-hidden relative bg-gray-50">
                           <img src={s.img} alt={s.label} className="w-full h-full object-contain" />
-                          {seciliStil === s.id && <div className="absolute inset-0 bg-violet-500/20 flex items-center justify-center"><span className="bg-violet-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">✓</span></div>}
+                          {seciliStiller.has(s.id) && <div className="absolute inset-0 bg-violet-500/20 flex items-center justify-center"><span className="bg-violet-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">✓</span></div>}
                         </div>
                       ) : (
-                        <div className={`aspect-square w-full flex items-center justify-center text-2xl ${seciliStil === s.id ? "bg-violet-100" : "bg-gray-50"}`}>{s.id === "ozel" ? "✏️" : "🖼️"}</div>
+                        <div className={`aspect-square w-full flex items-center justify-center text-2xl ${seciliStiller.has(s.id) ? "bg-violet-100" : "bg-gray-50"}`}>{s.id === "ozel" ? "✏️" : "🖼️"}</div>
                       )}
                       <div className="p-2 bg-white w-full">
-                        <p className={`text-xs font-semibold ${seciliStil === s.id ? "text-violet-600" : "text-gray-700"}`}>{s.label}</p>
+                        <p className={`text-xs font-semibold ${seciliStiller.has(s.id) ? "text-violet-600" : "text-gray-700"}`}>{s.label}</p>
                         <p className="text-xs text-gray-400">{s.aciklama}</p>
                       </div>
                     </button>
@@ -1330,7 +1331,7 @@ export default function Home() {
                 <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="Sahneyi tanımla — örn: mermer masa üzerinde yumuşak pencere ışığı, yeşil bitkilerle / rustik ahşap raf, sıcak mum ışığı / pastel pembe gradyan arka plan, uçuşan balonlar" rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-400" />
               </div>
 
-              {seciliStil === "referans" && (
+              {seciliStiller.has("referans") && (
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">Arka plan fotoğrafı <span className="text-gray-400 font-normal">(ürünü bu arka plana yerleştirelim)</span></label>
                   {referansGorsel ? (
@@ -1353,9 +1354,15 @@ export default function Home() {
                 </div>
               )}
 
-              <button onClick={gorselUret} disabled={gorselYukleniyor || !seciliStil || fotolar.length === 0}
+              <button onClick={gorselUret} disabled={gorselYukleniyor || seciliStiller.size === 0 || fotolar.length === 0}
                 className="w-full bg-violet-500 hover:bg-violet-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
-                {gorselYukleniyor ? "⏳ 4 görsel üretiliyor..." : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : !seciliStil ? "Bir stil seç" : "✨ 4 Görsel Üret — 1 kredi (indirirken düşer)"}
+                {gorselYukleniyor
+                  ? `⏳ ${seciliStiller.size} görsel üretiliyor...`
+                  : fotolar.length === 0
+                    ? "Önce fotoğraf ekle ↑"
+                    : seciliStiller.size === 0
+                      ? "Stil seç"
+                      : `✨ ${seciliStiller.size} Görsel Üret — ${seciliStiller.size} kredi`}
               </button>
 
               {gorselYukleniyor && (
@@ -1364,50 +1371,89 @@ export default function Home() {
 
               <p className="text-xs text-gray-400 text-center">⚠️ AI hata yapabilir — üretilen görselleri yayınlamadan önce kontrol edin</p>
 
-              {gorselJob && (
+              {gorselJoblar.length > 0 && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between px-1">
-                    <p className="text-xs text-gray-500 font-medium">✅ 4 görsel hazır — inceleme ücretsiz</p>
-                    <button
-                      onClick={async () => {
-                        if (!kullanici || !gorselJob) return;
-                        const yapIndir = async () => {
-                          indirmeHakiKullan();
-                          const res = await fetch("/api/gorsel/download", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ requestId: gorselJob.requestId, userId: kullanici.id }),
-                          });
-                          if (res.status === 402) { paketModalAc(); return; }
-                          const blob = await res.blob();
-                          const url = URL.createObjectURL(blob);
-                          const a = document.createElement("a");
-                          a.href = url; a.download = "yzliste-gorseller.zip"; a.click();
-                          URL.revokeObjectURL(url);
-                          if (!kullanici.is_admin) setKullanici((k) => k ? { ...k, kredi: Math.max(0, k.kredi - 1) } : k);
-                        };
-                        if (!indirmeHakkiVarMi()) {
-                          if (kullanici.anonim) { setGorselUyariAcik(true); return; }
-                          setKrediOnayIslem(() => yapIndir); setKrediOnayAcik(true); return;
-                        }
-                        await yapIndir();
+                    <p className="text-xs text-gray-500 font-medium">✅ {gorselJoblar.length} görsel hazır</p>
+                    {gorselJoblar.length > 1 && (
+                      <button onClick={async () => {
+                        if (!kullanici) return;
+                        const res = await fetch("/api/gorsel/download", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ requestIds: gorselJoblar.map(j => j.requestId), userId: kullanici.id }),
+                        });
+                        const blob = await res.blob();
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url; a.download = "yzliste-gorseller.zip"; a.click();
+                        URL.revokeObjectURL(url);
                       }}
-                      className="flex items-center gap-1.5 text-xs bg-violet-500 hover:bg-violet-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors"
-                    >
-                      📦 ZIP İndir — 1 kredi
-                    </button>
+                        className="flex items-center gap-1.5 text-xs bg-violet-500 hover:bg-violet-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors">
+                        📦 Tümünü İndir (ZIP)
+                      </button>
+                    )}
                   </div>
-                  <p className="text-xs text-gray-400 px-1">{gorselJob.label} · 4 varyasyon</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {[0, 1, 2, 3].map((i) => (
-                      <div key={i} className="rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
-                        <img
-                          src={`/api/gorsel/img?requestId=${gorselJob.requestId}&index=${i}`}
-                          alt={`${gorselJob.label} ${i + 1}`}
-                          className="w-full aspect-square object-cover select-none"
-                          draggable={false}
-                          onContextMenu={(e) => e.preventDefault()}
-                        />
+                  <div className={`grid gap-3 ${gorselJoblar.length === 1 ? "grid-cols-1" : gorselJoblar.length === 2 ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-3"}`}>
+                    {gorselJoblar.map((job) => (
+                      <div key={job.requestId} className="space-y-1.5">
+                        <div className="rounded-xl overflow-hidden border border-gray-200 bg-gray-50 relative group">
+                          <img
+                            src={`/api/gorsel/img?requestId=${job.requestId}&index=0`}
+                            alt={job.label}
+                            className="w-full aspect-square object-cover select-none"
+                            draggable={false}
+                            onContextMenu={(e) => e.preventDefault()}
+                          />
+                          <button onClick={async () => {
+                            if (!kullanici) return;
+                            const res = await fetch("/api/gorsel/download", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ requestIds: [job.requestId], userId: kullanici.id }),
+                            });
+                            const blob = await res.blob();
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url; a.download = `yzliste-${job.stil}.jpg`; a.click();
+                            URL.revokeObjectURL(url);
+                          }}
+                            className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 hover:bg-white text-violet-600 text-xs font-semibold px-2 py-1 rounded-lg shadow">
+                            ⬇️ İndir
+                          </button>
+                        </div>
+                        <div className="flex items-center justify-between px-1">
+                          <p className="text-xs text-gray-500 font-medium">{job.label}</p>
+                          <button onClick={async () => {
+                            if (!kullanici) return;
+                            if (!kullanici.is_admin && kullanici.kredi < 1) { paketModalAc(); return; }
+                            const resizedFoto = await resizeFoto(fotolar[0]);
+                            const res = await fetch("/api/gorsel", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ foto: resizedFoto, stiller: [job.stil], ekPrompt: gorselEkPrompt, userId: kullanici.id, referansGorsel }),
+                            });
+                            const data = await res.json();
+                            if (!data.jobs?.[0]) return;
+                            if (!kullanici.is_admin) {
+                              setKullanici(k => k ? { ...k, kredi: Math.max(0, k.kredi - 1) } : k);
+                              invalidateCredits();
+                            }
+                            const newJob = data.jobs[0];
+                            for (let d = 0; d < 40; d++) {
+                              await new Promise(r => setTimeout(r, 4000));
+                              const pollRes = await fetch(`/api/gorsel/poll?requestId=${newJob.requestId}`);
+                              const pollData = await pollRes.json();
+                              if (pollData.status === "COMPLETED") {
+                                setGorselJoblar(prev => prev.map(j => j.requestId === job.requestId ? newJob : j));
+                                break;
+                              }
+                            }
+                          }}
+                            className="text-xs text-violet-400 hover:text-violet-600 transition-colors">
+                            🔄 Tekrar (1 kr)
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1436,7 +1482,7 @@ export default function Home() {
                   Yukarıdan ürün fotoğrafı yükle ↑
                 </div>
               ) : (
-                <FotoThumbnail src={fotolar[0]} onKaldir={() => { setFotolar([]); setGorselJob(null); }} renk="green" />
+                <FotoThumbnail src={fotolar[0]} onKaldir={() => { setFotolar([]); setGorselJoblar([]); }} renk="green" />
               )}
 
               {/* Format seçimi */}
@@ -2010,58 +2056,6 @@ export default function Home() {
         )}
 
         {paketModalAcik && kullanici && <PaketModal kullanici={kullanici} onKapat={() => setPaketModalAcik(false)} />}
-
-        {/* Görsel indirme — kayıtlı kullanıcı kredi onayı */}
-        {krediOnayAcik && kullanici && (
-          <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => { setKrediOnayAcik(false); setKrediOnayIslem(null); }}>
-            <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center" onClick={(e) => e.stopPropagation()}>
-              <div className="text-4xl mb-4">🔄</div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Denemeye devam et?</h3>
-              <p className="text-sm text-gray-500 mb-1 leading-relaxed">
-                Günlük ücretsiz indirme hakkın bitti.
-              </p>
-              <p className="text-sm font-semibold text-indigo-600 mb-6">
-                1 kredi düşeceğiz — 3 indirme hakkı daha açılır.
-              </p>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => { setKrediOnayAcik(false); setKrediOnayIslem(null); }}
-                  className="flex-1 border border-gray-200 text-gray-600 font-semibold py-2.5 rounded-xl text-sm hover:bg-gray-50 transition-colors"
-                >
-                  İptal
-                </button>
-                <button
-                  onClick={krediOnayla}
-                  disabled={!kullanici.is_admin && kullanici.kredi < 1}
-                  className="flex-1 bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
-                >
-                  {!kullanici.is_admin && kullanici.kredi < 1 ? "Kredi yetersiz" : "Onayla — 1 kredi"}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Görsel indirme — günlük hak uyarısı */}
-        {gorselUyariAcik && (
-          <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setGorselUyariAcik(false)}>
-            <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center" onClick={(e) => e.stopPropagation()}>
-              <div className="text-4xl mb-4">🌙</div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Bugün istediğini bulamadın mı?</h3>
-              <p className="text-sm text-gray-500 mb-6 leading-relaxed">
-                Günlük görsel indirme hakkın doldu. Yarın tekrar deneyebilir ya da kredi satın alarak sınırsız indirebilirsin.
-              </p>
-              <div className="flex flex-col gap-2">
-                <button onClick={() => { setGorselUyariAcik(false); paketModalAc(); }} className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors">
-                  Kredi Satın Al
-                </button>
-                <button onClick={() => setGorselUyariAcik(false)} className="text-gray-400 hover:text-gray-600 text-sm py-2">
-                  Yarın tekrar dene
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         <ChatWidget />
       </div>
