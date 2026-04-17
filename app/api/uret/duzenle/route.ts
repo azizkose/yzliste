@@ -7,6 +7,12 @@ const supabaseAdmin = createClient(
 );
 
 const AKSIYON_PROMPTLARI: Record<string, string> = {
+  yeniden_uret_context: `Aşağıdaki ürün içeriğini biraz farklı bir versiyonla YENİDEN YAZ:
+- Aynı bilgileri kullan, ama farklı kelimeler ve cümle yapıları seç
+- Başlık yakın ama farklı bir formülasyon dene
+- Açıklamada farklı vurgu noktaları öne çıkar
+- Bölüm formatını ve sırasını koru`,
+
   kisalt: `Aşağıdaki ürün içeriğini KISALT. Bölümlerin formatını koru:
 - Başlık: değiştirme
 - Özellikler: en güçlü 3 maddeye indir

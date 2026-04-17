@@ -703,17 +703,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "İçerik üretilemedi, lütfen tekrar deneyin." }, { status: 502 });
   }
 
-  const { error: insertError } = await supabaseAdmin.from("uretimler").insert({
+  const { data: insertData, error: insertError } = await supabaseAdmin.from("uretimler").insert({
     user_id: userId,
     urun_adi: urunAdi || barkodBilgi?.isim || "Fotograf ile uretim",
     platform,
     sonuc: icerik,
     giris_tipi: girisTipi,
     prompt_version: METIN_PROMPT_VERSION,
-  });
+  }).select("id").single();
 
-  if (insertError) {
-    console.error("Üretim kaydı oluşturulamadı:", insertError.message);
+  if (insertError || !insertData) {
+    console.error("Üretim kaydı oluşturulamadı:", insertError?.message);
     // Krediyi geri yükle — içerik üretildi ama kaydedilemedi
     if (!isAdmin) {
       await supabaseAdmin
@@ -724,5 +724,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "İçerik kaydedilemedi, lütfen tekrar deneyin." }, { status: 500 });
   }
 
-  return NextResponse.json({ icerik, isAdmin });
+  return NextResponse.json({ icerik, isAdmin, uretimId: insertData.id });
 }

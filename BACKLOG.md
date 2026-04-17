@@ -220,7 +220,7 @@ Hukuki kontrol gerek. Küme 1'e bağlı değil ama route'lar açılınca yayına
 - [x] **F-12a** Çıktı bloğuna mikro-aksiyonlar: 🔁 Yeniden üret · ✂️ Kısalt · ➕ Genişlet · 🎭 Ton değiştir · 💾 Favori *(💾 Favori hariç — generations ID olmadan yapılamaz)*
 - [x] **F-12b** `generations` tablosu (id, user_id, platform, prompt, output, created_at, is_favorite)
 - [x] **F-12c** Sol menüye "Geçmiş" sekmesi — tarih/platform/başlık filtresi
-- [ ] **F-12d** Her kredide 3 ücretsiz "yeniden üret" hakkı (DB'de `regenerate_count`)
+- [x] **F-12d** Her kredide 3 ücretsiz "yeniden üret" hakkı (DB'de `regenerate_count`)
 - [ ] **F-20a** `messages/tr.json` — tüm UI metinleri tek dosyada
 - [ ] **F-20b** Marka sesi kısa kitapçık: ton (arkadaşça+uzman, "sen" dili), yasaklı kelimeler, her state için örnek metin
 - [ ] **DoD** Platform seçince kurallar sağda görünüyor. Markalı ürün checkbox kapalıysa çıktıda "Stanley" gibi marka geçmiyor. `/hesap` dashboard kullanıcı başına metrikleri gösteriyor.

@@ -348,6 +348,8 @@ export default function Home() {
   const [markaliUrun, setMarkaliUrun] = useState(false);
   const [anahtarKelimeler, setAnahtarKelimeler] = useState("");
   const [sonuc, setSonuc] = useState("");
+  const [uretimId, setUretimId] = useState<string | null>(null);
+  const [yenidenUretHakki, setYenidenUretHakki] = useState(3);
   const [duzenleYukleniyor, setDuzenleYukleniyor] = useState(false);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [yukleniyorMesaj, setYukleniyorMesaj] = useState(0);
@@ -652,6 +654,8 @@ export default function Home() {
       if (mesajInterval.current) clearInterval(mesajInterval.current);
       if (res.status === 402) { analytics.creditExhausted(); paketModalAc(); setYukleniyor(false); return; }
       setSonuc(data.icerik);
+      setUretimId(data.uretimId ?? null);
+      setYenidenUretHakki(3);
       if (kullanici.is_admin) setKullanici({ ...kullanici, toplam_kullanilan: kullanici.toplam_kullanilan + 1 });
       else setKullanici({ ...kullanici, kredi: kullanici.kredi - 1, toplam_kullanilan: kullanici.toplam_kullanilan + 1 });
       analytics.generationCompleted({ platform, type: 'metin', credits_remaining: kullanici.kredi - 1 });
@@ -1313,8 +1317,20 @@ export default function Home() {
                     };
                     return (
                       <div className="flex flex-wrap gap-2 px-1">
-                        <button onClick={icerikUret} disabled={yukleniyor || duzenleYukleniyor} className="flex items-center gap-1 text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-200 transition-colors disabled:opacity-40">
-                          🔁 Yeniden üret
+                        <button onClick={async () => {
+                          if (!kullanici || yukleniyor || duzenleYukleniyor) return;
+                          if (uretimId && yenidenUretHakki > 0) {
+                            // Ücretsiz yeniden üret
+                            setDuzenleYukleniyor(true);
+                            const res = await fetch("/api/uret/duzenle", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sonuc, aksiyon: "yeniden_uret_context", userId: kullanici.id }) });
+                            const data = await res.json();
+                            if (data.sonuc) { setSonuc(data.sonuc); setYenidenUretHakki(h => h - 1); }
+                            setDuzenleYukleniyor(false);
+                          } else {
+                            icerikUret();
+                          }
+                        }} disabled={yukleniyor || duzenleYukleniyor} className="flex items-center gap-1 text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-200 transition-colors disabled:opacity-40">
+                          🔁 Yeniden üret{uretimId && yenidenUretHakki > 0 ? ` (${yenidenUretHakki} ücretsiz)` : ""}
                         </button>
                         <button onClick={() => mikro("kisalt")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-gray-50 hover:bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors disabled:opacity-40">
                           {duzenleYukleniyor ? "⏳" : "✂️"} Kısalt
