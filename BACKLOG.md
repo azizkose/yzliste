@@ -214,9 +214,9 @@ Hukuki kontrol gerek. Küme 1'e bağlı değil ama route'lar açılınca yayına
 - [x] **F-23a** Form üstünde 3 "örnek kart": 🧴 Kozmetik · 👕 Giyim · 🔌 Elektronik → tıklayınca form dolsun
 - [ ] **F-23b** İlk girişte (kullanıcının `total_generations = 0`) onboarding tooltip dizisi (react-joyride veya basit bir state machine)
 - [ ] **F-23c** "Son üretimin" shortcut'ı (auth'lu kullanıcı için)
-- [ ] **F-22a** `/hesap` dashboard'ında 4 metrik kartı: bu ay üretim, kalan kredi, favori platform, toplam tasarruf (~X saat)
-- [ ] **F-22b** Kredi %20 altına inince üst banner: "+50 kredi %15 indirimle"
-- [ ] **F-22c** Son 3 üretim shortcut'ı
+- [x] **F-22a** `/hesap` dashboard'ında 4 metrik kartı: bu ay üretim, kalan kredi, favori platform, toplam tasarruf (~X saat)
+- [x] **F-22b** Kredi %20 altına inince üst banner: "+50 kredi %15 indirimle"
+- [x] **F-22c** Son 3 üretim shortcut'ı
 - [ ] **F-12a** Çıktı bloğuna mikro-aksiyonlar: 🔁 Yeniden üret · ✂️ Kısalt · ➕ Genişlet · 🎭 Ton değiştir · 💾 Favori
 - [x] **F-12b** `generations` tablosu (id, user_id, platform, prompt, output, created_at, is_favorite)
 - [ ] **F-12c** Sol menüye "Geçmiş" sekmesi — tarih/platform/başlık filtresi

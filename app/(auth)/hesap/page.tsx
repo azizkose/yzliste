@@ -7,17 +7,65 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
+const PLATFORM_ETIKET: Record<string, string> = {
+  trendyol: 'Trendyol',
+  hepsiburada: 'Hepsiburada',
+  amazon: 'Amazon TR',
+  n11: 'N11',
+  etsy: 'Etsy',
+  amazon_usa: 'Amazon USA',
+}
+
 export default async function HesapPage() {
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) return null
 
-  const { data: profil } = await supabase
-    .from('profiles')
-    .select('kredi, toplam_kullanilan, marka_adi')
-    .eq('id', user.id)
-    .single()
+  const ayBaslangic = new Date()
+  ayBaslangic.setDate(1)
+  ayBaslangic.setHours(0, 0, 0, 0)
+
+  const [profilRes, buAyRes, enCokPlatformRes, sonUretimlerRes] = await Promise.all([
+    supabase
+      .from('profiles')
+      .select('kredi, toplam_kullanilan, marka_adi')
+      .eq('id', user.id)
+      .single(),
+    supabase
+      .from('generations')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .gte('created_at', ayBaslangic.toISOString()),
+    supabase
+      .from('generations')
+      .select('platform')
+      .eq('user_id', user.id),
+    supabase
+      .from('generations')
+      .select('id, platform, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(3),
+  ])
+
+  const profil = profilRes.data
+  const buAyUretim = buAyRes.count ?? 0
+  const kredi = profil?.kredi ?? 0
+
+  // Favori platform hesapla
+  const platformSayac: Record<string, number> = {}
+  for (const r of (enCokPlatformRes.data ?? [])) {
+    if (r.platform) platformSayac[r.platform] = (platformSayac[r.platform] ?? 0) + 1
+  }
+  const favoriPlatform = Object.entries(platformSayac).sort((a, b) => b[1] - a[1])[0]?.[0]
+
+  const toplamUretim = profil?.toplam_kullanilan ?? 0
+  const krediDusuk = kredi > 0 && kredi <= Math.max(5, Math.round(toplamUretim * 0.2))
+
+  const sonUretimler = (sonUretimlerRes.data ?? []) as {
+    id: string; platform: string; created_at: string
+  }[]
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-12">
@@ -32,13 +80,26 @@ export default async function HesapPage() {
           </Link>
         </div>
 
-        {/* Metrik kartları */}
+        {/* F-22b: Kredi azaldı banner */}
+        {krediDusuk && (
+          <div className="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-amber-800">⚠️ Krediniz azalıyor — {kredi} kredi kaldı</p>
+              <p className="text-xs text-amber-600 mt-0.5">+50 kredi satın alarak üretimlerinize devam edin</p>
+            </div>
+            <Link href="/kredi-yukle" className="text-sm bg-amber-500 text-white px-4 py-2 rounded-xl hover:bg-amber-600 transition-colors font-medium flex-shrink-0">
+              Kredi Yükle
+            </Link>
+          </div>
+        )}
+
+        {/* F-22a: 4 metrik kartı */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           {[
-            { etiket: 'Kalan Kredi', deger: profil?.kredi ?? 0, renk: 'text-indigo-500', ikon: '💳' },
-            { etiket: 'Toplam Üretim', deger: profil?.toplam_kullanilan ?? 0, renk: 'text-blue-500', ikon: '📝' },
-            { etiket: 'Marka', deger: profil?.marka_adi ?? '—', renk: 'text-gray-700', ikon: '🏪' },
-            { etiket: 'Tahmini Tasarruf', deger: `~${Math.round((profil?.toplam_kullanilan ?? 0) * 0.5)}sa`, renk: 'text-green-500', ikon: '⏱️' },
+            { etiket: 'Bu Ay Üretim', deger: buAyUretim, renk: 'text-blue-500', ikon: '📝' },
+            { etiket: 'Kalan Kredi', deger: kredi, renk: 'text-indigo-500', ikon: '💳' },
+            { etiket: 'Favori Platform', deger: favoriPlatform ? PLATFORM_ETIKET[favoriPlatform] ?? favoriPlatform : '—', renk: 'text-violet-500', ikon: '🏆' },
+            { etiket: 'Tahmini Tasarruf', deger: `~${Math.round(toplamUretim * 0.5)}sa`, renk: 'text-emerald-500', ikon: '⏱️' },
           ].map((m) => (
             <div key={m.etiket} className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
               <div className="text-xl mb-2">{m.ikon}</div>
@@ -47,6 +108,30 @@ export default async function HesapPage() {
             </div>
           ))}
         </div>
+
+        {/* F-22c: Son 3 üretim */}
+        {sonUretimler.length > 0 && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm mb-8">
+            <div className="px-5 py-4 border-b border-gray-50 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-gray-700">Son Üretimler</h2>
+              <Link href="/" className="text-xs text-indigo-500 hover:underline">Tümünü gör →</Link>
+            </div>
+            <div className="divide-y divide-gray-50">
+              {sonUretimler.map((u) => (
+                <div key={u.id} className="px-5 py-3 flex items-center gap-3">
+                  <span className="text-lg">📄</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-800">{PLATFORM_ETIKET[u.platform] ?? u.platform}</p>
+                    <p className="text-xs text-gray-400">İçerik üretimi</p>
+                  </div>
+                  <p className="text-xs text-gray-300 whitespace-nowrap">
+                    {new Date(u.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Hızlı linkler */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -62,19 +147,6 @@ export default async function HesapPage() {
             </Link>
           ))}
         </div>
-
-        {/* Kredi azaldı uyarısı */}
-        {(profil?.kredi ?? 0) > 0 && (profil?.kredi ?? 0) < ((profil?.toplam_kullanilan ?? 0) * 0.2 + 2) && (
-          <div className="mt-6 bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center justify-between">
-            <div>
-              <p className="text-sm font-semibold text-amber-800">Krediniz azalıyor!</p>
-              <p className="text-xs text-amber-600 mt-0.5">+50 kredi %15 indirimle satın alın</p>
-            </div>
-            <Link href="/kredi-yukle" className="text-sm bg-amber-500 text-white px-4 py-2 rounded-xl hover:bg-amber-600 transition-colors font-medium flex-shrink-0">
-              Kredi Yükle
-            </Link>
-          </div>
-        )}
       </div>
     </main>
   )
