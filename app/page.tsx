@@ -346,6 +346,7 @@ export default function Home() {
   const [markaliUrun, setMarkaliUrun] = useState(false);
   const [anahtarKelimeler, setAnahtarKelimeler] = useState("");
   const [sonuc, setSonuc] = useState("");
+  const [duzenleYukleniyor, setDuzenleYukleniyor] = useState(false);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [yukleniyorMesaj, setYukleniyorMesaj] = useState(0);
   const [fotolar, setFotolar] = useState<string[]>([]);
@@ -1293,6 +1294,41 @@ export default function Home() {
                       📄 Word İndir
                     </button>
                   </div>
+
+                  {/* F-12a: Mikro-aksiyonlar */}
+                  {(() => {
+                    const mikro = async (aksiyon: string) => {
+                      if (!kullanici || duzenleYukleniyor) return;
+                      setDuzenleYukleniyor(true);
+                      const res = await fetch("/api/uret/duzenle", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ sonuc, aksiyon, userId: kullanici.id }),
+                      });
+                      const data = await res.json();
+                      if (data.sonuc) setSonuc(data.sonuc);
+                      setDuzenleYukleniyor(false);
+                    };
+                    return (
+                      <div className="flex flex-wrap gap-2 px-1">
+                        <button onClick={icerikUret} disabled={yukleniyor || duzenleYukleniyor} className="flex items-center gap-1 text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-200 transition-colors disabled:opacity-40">
+                          🔁 Yeniden üret
+                        </button>
+                        <button onClick={() => mikro("kisalt")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-gray-50 hover:bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors disabled:opacity-40">
+                          {duzenleYukleniyor ? "⏳" : "✂️"} Kısalt
+                        </button>
+                        <button onClick={() => mikro("genislet")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-gray-50 hover:bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors disabled:opacity-40">
+                          ➕ Genişlet
+                        </button>
+                        <button onClick={() => mikro("ton_samimi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-gray-50 hover:bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors disabled:opacity-40">
+                          🎭 Samimi
+                        </button>
+                        <button onClick={() => mikro("ton_resmi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-gray-50 hover:bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors disabled:opacity-40">
+                          🎭 Resmi
+                        </button>
+                      </div>
+                    );
+                  })()}
 
                   {/* F-10c: Platform uyumluluk rozeti */}
                   {(() => {

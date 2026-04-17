@@ -217,7 +217,7 @@ Hukuki kontrol gerek. Küme 1'e bağlı değil ama route'lar açılınca yayına
 - [x] **F-22a** `/hesap` dashboard'ında 4 metrik kartı: bu ay üretim, kalan kredi, favori platform, toplam tasarruf (~X saat)
 - [x] **F-22b** Kredi %20 altına inince üst banner: "+50 kredi %15 indirimle"
 - [x] **F-22c** Son 3 üretim shortcut'ı
-- [ ] **F-12a** Çıktı bloğuna mikro-aksiyonlar: 🔁 Yeniden üret · ✂️ Kısalt · ➕ Genişlet · 🎭 Ton değiştir · 💾 Favori
+- [x] **F-12a** Çıktı bloğuna mikro-aksiyonlar: 🔁 Yeniden üret · ✂️ Kısalt · ➕ Genişlet · 🎭 Ton değiştir · 💾 Favori *(💾 Favori hariç — generations ID olmadan yapılamaz)*
 - [x] **F-12b** `generations` tablosu (id, user_id, platform, prompt, output, created_at, is_favorite)
 - [ ] **F-12c** Sol menüye "Geçmiş" sekmesi — tarih/platform/başlık filtresi
 - [ ] **F-12d** Her kredide 3 ücretsiz "yeniden üret" hakkı (DB'de `regenerate_count`)
