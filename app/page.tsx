@@ -341,6 +341,7 @@ export default function Home() {
   const [dil, setDil] = useState<"tr" | "en">("tr");
   const [hedefKitle, setHedefKitle] = useState("genel");
   const [fiyatSegmenti, setFiyatSegmenti] = useState<"butce" | "orta" | "premium">("orta");
+  const [markaliUrun, setMarkaliUrun] = useState(false);
   const [anahtarKelimeler, setAnahtarKelimeler] = useState("");
   const [sonuc, setSonuc] = useState("");
   const [yukleniyor, setYukleniyor] = useState(false);
@@ -629,7 +630,7 @@ export default function Home() {
     analytics.generationStarted({ platform, type: 'metin' });
     mesajInterval.current = setInterval(() => setYukleniyorMesaj((prev) => (prev + 1) % yukleniyorMesajlari.length), 1800);
     try {
-      const res = await fetch("/api/uret", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi, userId: kullanici.id, dil: platformDil, ton: kullanici.ton, hedefKitle, fiyatSegmenti, anahtarKelimeler }) });
+      const res = await fetch("/api/uret", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi, userId: kullanici.id, dil: platformDil, ton: kullanici.ton, hedefKitle, fiyatSegmenti, anahtarKelimeler, markaliUrun }) });
       const data = await res.json();
       if (mesajInterval.current) clearInterval(mesajInterval.current);
       if (res.status === 402) { analytics.creditExhausted(); paketModalAc(); setYukleniyor(false); return; }
@@ -1107,6 +1108,26 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* F-23a: Örnek ürün kartları */}
+              {girisTipi === "manuel" && !urunAdi && (
+                <div>
+                  <p className="text-xs text-gray-400 mb-2">Hızlı başla — bir örnek seç:</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { ikon: "🧴", label: "Kozmetik", urunAdi: "Hyaluronik Asit Nemlendirici Serum", kategori: "Cilt Bakımı / Kozmetik", ozellikler: "50ml, vegan formül, E vitamini ve aloe vera içerir, tüm cilt tipleri için, parfümsüz, doğrultanmış hyaluronik asit" },
+                      { ikon: "👕", label: "Giyim", urunAdi: "Slim Fit Erkek Gömlek", kategori: "Giyim / Erkek", ozellikler: "% 100 pamuk, S/M/L/XL/XXL beden, beyaz/mavi/lacivert renk seçeneği, ütü gerektirmez, makinede yıkanabilir" },
+                      { ikon: "🔌", label: "Elektronik", urunAdi: "65W GaN USB-C Hızlı Şarj Adaptörü", kategori: "Elektronik / Şarj Cihazı", ozellikler: "65W GaN teknoloji, 3 port (2×USB-C, 1×USB-A), tüm telefonlar/dizüstü uyumlu, akıllı güç yönetimi, UL sertifikalı" },
+                    ].map((ornek) => (
+                      <button key={ornek.label} onClick={() => { setUrunAdi(ornek.urunAdi); setKategori(ornek.kategori); setOzellikler(ornek.ozellikler); }}
+                        className="text-left p-2.5 rounded-xl border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-all">
+                        <p className="text-base mb-0.5">{ornek.ikon}</p>
+                        <p className="text-xs font-semibold text-gray-700">{ornek.label}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Manuel */}
               {girisTipi === "manuel" && (
                 <>
@@ -1159,6 +1180,16 @@ export default function Home() {
                       className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
                     <p className="text-xs text-gray-400 mt-1">💡 Arama sonuçlarında çıkmak istediğin kelimeler — AI bunları başlık ve açıklamaya doğal yerleştirir</p>
                   </div>
+
+                  {/* F-11b: Markalı ürün checkbox */}
+                  <label className="flex items-start gap-3 cursor-pointer bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+                    <input type="checkbox" checked={markaliUrun} onChange={(e) => setMarkaliUrun(e.target.checked)}
+                      className="mt-0.5 h-4 w-4 rounded border-gray-300 text-amber-500 focus:ring-amber-400" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-800">Bu ürün markalı ve ben yetkili satıcıyım</p>
+                      <p className="text-xs text-gray-500 mt-0.5">İşaretlersen AI marka adını içeriğe dahil edebilir. İşaretlemezsen jenerik ifadeler kullanır.</p>
+                    </div>
+                  </label>
                 </>
               )}
 

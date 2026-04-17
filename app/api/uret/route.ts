@@ -296,9 +296,14 @@ function sistemPromptOlustur(
   ton?: string,
   kategoriKodu?: string,
   fiyatSegmenti?: string,
+  markaliUrun?: boolean,
 ): string {
   const kural = PLATFORM_KURALLARI[platform];
   const tonTanimi = ton && TON_TANIMLARI[ton] ? TON_TANIMLARI[ton][dil] : "";
+
+  const markaEki = markaliUrun === false
+    ? `\n\nMARKA KURALI: Kullanici yetkili satici oldugunu belirtmedi. Hicbir marka adi, tescilli isim veya ucuncu taraf marka referansi kullanma. Tamamen jenerik ifadeler kullan.`
+    : "";
 
   // Kategori ek kuralları
   const kategoriEki = kategoriKodu && KATEGORI_KURALLARI[kategoriKodu]
@@ -319,7 +324,7 @@ function sistemPromptOlustur(
   // --- ETSY (İngilizce) ---
   if (platform === "etsy") {
     return `You are an elite Etsy listing copywriter with deep expertise in Etsy's search algorithm and buyer psychology. You craft listings that rank high AND convert browsers into buyers.
-${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}
+${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}${markaEki}
 ${tonTanimi ? `BRAND VOICE:\n${tonTanimi}\n` : ""}
 
 ETSY LISTING RULES:
@@ -366,7 +371,7 @@ Only output this format. Nothing else.`;
   // --- AMAZON USA (İngilizce) ---
   if (platform === "amazon_usa") {
     return `You are an elite Amazon USA listing strategist. You deeply understand the A10 algorithm, conversion-optimized copywriting, and how to make listings that rank AND sell.
-${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}
+${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}${markaEki}
 ${tonTanimi ? `BRAND VOICE:\n${tonTanimi}\n` : ""}
 
 AMAZON USA LISTING RULES:
@@ -432,7 +437,7 @@ Only output this format. No emojis.`;
   // --- AMAZON TR ---
   if (platform === "amazon") {
     return `Sen uzman bir Amazon TR listing stratejistisin. Amazon'un A9/A10 algoritmasini, Turk tuketici psikolojisini ve donusum optimizasyonunu cok iyi biliyorsun.
-${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}
+${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}${markaEki}
 ${tonTanimi ? `MARKA TONU:\n${tonTanimi}\n` : ""}
 
 AMAZON TR KURALLARI:
@@ -496,7 +501,7 @@ Sadece bu formati kullan. Hic emoji kullanma.`;
 
   // --- TR PAZARYERLERİ (Trendyol, HB, N11) ---
   return `Sen uzman bir Turk e-ticaret metin yazarisın. ${platform.toUpperCase()} platformunun arama algoritmasini, Turk tuketici psikolojisini ve donusum optimizasyonunu derinlemesine biliyorsun. Gorev: verilen urun icin en yuksek tiklama ve satis orani getirecek listing icerigi uret.
-${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}
+${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}${markaEki}
 ${tonTanimi ? `MARKA TONU:\n${tonTanimi}\n` : ""}
 
 PLATFORM KURALLARI — ${platform.toUpperCase()}:
@@ -561,7 +566,7 @@ export async function POST(req: NextRequest) {
   const {
     urunAdi, kategori, ozellikler, platform, fotolar,
     girisTipi, barkodBilgi, userId, dil, ton,
-    hedefKitle, fiyatSegmenti, anahtarKelimeler,
+    hedefKitle, fiyatSegmenti, anahtarKelimeler, markaliUrun,
   } = await req.json();
 
   if (!userId) return NextResponse.json({ hata: "Giris yapilmadi" }, { status: 401 });
@@ -673,7 +678,7 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
         max_tokens: 2000,
-        system: sistemPromptOlustur(platformKey, platformDil, ton, kategoriKoduBul(kategori || ""), fiyatSegmenti),
+        system: sistemPromptOlustur(platformKey, platformDil, ton, kategoriKoduBul(kategori || ""), fiyatSegmenti, markaliUrun),
         messages: [{ role: "user", content: mesajIcerikleri }],
       }),
     });

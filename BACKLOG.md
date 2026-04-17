@@ -207,9 +207,9 @@ Hukuki kontrol gerek. Küme 1'e bağlı değil ama route'lar açılınca yayına
 - [x] **F-10a** `platformConfig` objesi: her pazaryeri için `{titleMaxLength, descMaxLength, bannedWords[], requiredFields[]}`
 - [x] **F-10b** Platform dropdown değişince sağ panelde "Kurallar" kutusu render et
 - [ ] **F-10c** Üretim sonrası "Trendyol kurallarına uygun ✓" rozeti (otomatik kontrol)
-- [ ] **F-11a** LLM system prompt: "Marka adı yalnızca kullanıcı 'markalı ürün satıyorum' bayrağı açıksa geçer. Aksi halde jenerik ifade." *(~%40: ICERIK_KURALLARI var ama marka bayrağı mantığı eksik)*
-- [ ] **F-11b** Form'a "Bu ürün markalı mı? (Yetkili satıcı mısın)" checkbox
-- [ ] **F-11c** Platform yasaklı kelime listesini sistem prompt'a inject et (en iyi, %100, şifalı, vb.)
+- [x] **F-11a** LLM system prompt: "Marka adı yalnızca kullanıcı 'markalı ürün satıyorum' bayrağı açıksa geçer. Aksi halde jenerik ifade." *(~%40: ICERIK_KURALLARI var ama marka bayrağı mantığı eksik)*
+- [x] **F-11b** Form'a "Bu ürün markalı mı? (Yetkili satıcı mısın)" checkbox
+- [x] **F-11c** Platform yasaklı kelime listesini sistem prompt'a inject et (en iyi, %100, şifalı, vb.)
 - [ ] **F-11d** Çıktıda "Marka/IP Uyarısı" component — tespit edilmiş marka varsa göster
 - [ ] **F-23a** Form üstünde 3 "örnek kart": 🧴 Kozmetik · 👕 Giyim · 🔌 Elektronik → tıklayınca form dolsun
 - [ ] **F-23b** İlk girişte (kullanıcının `total_generations = 0`) onboarding tooltip dizisi (react-joyride veya basit bir state machine)
