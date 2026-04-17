@@ -1217,6 +1217,10 @@ export default function Home() {
                 {gorselYukleniyor ? `⏳ ${seciliStiller.length * 4} görsel üretiliyor...` : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : seciliStiller.length === 0 ? "Bir stil seç" : `✨ ${seciliStiller.length * 4} Görsel Üret — ${seciliStiller.length} kredi`}
               </button>
 
+              {gorselYukleniyor && (
+                <p className="text-xs text-purple-600 text-center">Sayfayı kapatmayın — görsel üretimi yaklaşık 1 dakika sürer</p>
+              )}
+
               <p className="text-xs text-gray-400 text-center">⚠️ AI hata yapabilir — üretilen görselleri yayınlamadan önce kontrol edin</p>
 
               {gorselSonuclar.length > 0 && (
