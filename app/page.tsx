@@ -535,7 +535,7 @@ export default function Home() {
     e.target.value = "";
   };
 
-  const fotoKaldir = (index: number) => { setFotolar((prev) => prev.filter((_, i) => i !== index)); setGorselSonuclar([]); };
+  const fotoKaldir = (index: number) => { setFotolar((prev) => prev.filter((_, i) => i !== index)); setGorselJob(null); };
 
   // Fotoğraf boyutlandır — API'ye göndermeden önce
   const resizeFoto = (base64: string, maxSize = 1024): Promise<string> =>
@@ -557,7 +557,7 @@ export default function Home() {
     const dosya = e.target.files?.[0];
     if (!dosya) return;
     const reader = new FileReader();
-    reader.onload = () => { setFotolar([reader.result as string]); setGorselSonuclar([]); };
+    reader.onload = () => { setFotolar([reader.result as string]); setGorselJob(null); };
     reader.readAsDataURL(dosya);
     e.target.value = "";
   };
@@ -960,7 +960,7 @@ export default function Home() {
                       Değiştir
                       <input type="file" accept="image/*" className="hidden" onChange={tekFotoSec} />
                     </label>
-                    <button onClick={() => { setFotolar([]); setGorselSonuclar([]); }} className="text-xs text-gray-400 hover:text-red-500 transition-colors">Kaldır</button>
+                    <button onClick={() => { setFotolar([]); setGorselJob(null); }} className="text-xs text-gray-400 hover:text-red-500 transition-colors">Kaldır</button>
                   </div>
                 </div>
               ) : (
@@ -1336,7 +1336,7 @@ export default function Home() {
                   Yukarıdan ürün fotoğrafı yükle ↑
                 </div>
               ) : (
-                <FotoThumbnail src={fotolar[0]} onKaldir={() => { setFotolar([]); setGorselSonuclar([]); }} renk="green" />
+                <FotoThumbnail src={fotolar[0]} onKaldir={() => { setFotolar([]); setGorselJob(null); }} renk="green" />
               )}
 
               {/* Format seçimi */}
