@@ -1011,6 +1011,22 @@ export default function Home() {
           </div>
         )}
 
+        {/* F-23b: Onboarding banner — ilk kez kullananlar için */}
+        {kullanici && !kullanici.anonim && kullanici.toplam_kullanilan === 0 && !sonuc && (
+          <div className="mb-4 bg-indigo-50 border border-indigo-200 rounded-2xl p-4 flex items-start gap-3">
+            <span className="text-2xl flex-shrink-0">🎉</span>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-indigo-800">Hoş geldiniz! İşte nasıl başlayacağınız:</p>
+              <ol className="mt-1 space-y-0.5 text-xs text-indigo-700">
+                <li>1. <span className="font-medium">Platform seç</span> — Trendyol, Amazon, Etsy vb.</li>
+                <li>2. <span className="font-medium">Ürün adı ve kategori gir</span> — mümkün olduğunca spesifik ol</li>
+                <li>3. <span className="font-medium">Üret butonuna bas</span> — AI 15-30 saniyede listing hazırlar</li>
+              </ol>
+            </div>
+            <button onClick={() => setKullanici(u => u ? { ...u, toplam_kullanilan: -1 } : null)} className="text-indigo-400 hover:text-indigo-600 text-lg flex-shrink-0">×</button>
+          </div>
+        )}
+
         <div className="flex gap-6 items-start flex-col lg:flex-row">
           <div className="flex-1 w-full">
 
@@ -1368,6 +1384,23 @@ export default function Home() {
                       </div>
                     );
                   })()}
+                  {/* F-11d: Marka/IP uyarısı */}
+                  {!markaliUrun && (() => {
+                    const BILINEN_MARKALAR = /\b(Apple|Samsung|Nike|Adidas|Sony|LG|Philips|Tefal|Bosch|Siemens|Dyson|Stanley|Tupperware|Lego|Canon|Nikon|Braun|Arçelik|Vestel|Beko|Xiaomi|Huawei|Lenovo|Asus|Microsoft|Google)\b/gi;
+                    const eslesmeler = sonuc.match(BILINEN_MARKALAR);
+                    if (!eslesmeler) return null;
+                    const tekil = [...new Set(eslesmeler.map(m => m.trim()))];
+                    return (
+                      <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-red-50 border border-red-200">
+                        <span className="text-red-500 flex-shrink-0">⚠️</span>
+                        <div>
+                          <p className="text-xs font-semibold text-red-700">Marka/IP Uyarısı</p>
+                          <p className="text-xs text-red-600 mt-0.5">Tespit edilen marka adı: <span className="font-medium">{tekil.join(", ")}</span>. Yetkili satıcı değilseniz içeriği gözden geçirin.</p>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
                   {sonucBolumleri.map((bolum, i) => {
                     const ref = { current: null as HTMLDivElement | null };
                     return (

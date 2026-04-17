@@ -210,10 +210,10 @@ Hukuki kontrol gerek. Küme 1'e bağlı değil ama route'lar açılınca yayına
 - [x] **F-11a** LLM system prompt: "Marka adı yalnızca kullanıcı 'markalı ürün satıyorum' bayrağı açıksa geçer. Aksi halde jenerik ifade." *(~%40: ICERIK_KURALLARI var ama marka bayrağı mantığı eksik)*
 - [x] **F-11b** Form'a "Bu ürün markalı mı? (Yetkili satıcı mısın)" checkbox
 - [x] **F-11c** Platform yasaklı kelime listesini sistem prompt'a inject et (en iyi, %100, şifalı, vb.)
-- [ ] **F-11d** Çıktıda "Marka/IP Uyarısı" component — tespit edilmiş marka varsa göster
+- [x] **F-11d** Çıktıda "Marka/IP Uyarısı" component — tespit edilmiş marka varsa göster
 - [x] **F-23a** Form üstünde 3 "örnek kart": 🧴 Kozmetik · 👕 Giyim · 🔌 Elektronik → tıklayınca form dolsun
-- [ ] **F-23b** İlk girişte (kullanıcının `total_generations = 0`) onboarding tooltip dizisi (react-joyride veya basit bir state machine)
-- [ ] **F-23c** "Son üretimin" shortcut'ı (auth'lu kullanıcı için)
+- [x] **F-23b** İlk girişte (kullanıcının `total_generations = 0`) onboarding tooltip dizisi (sade banner, react-joyride gerekmedi)
+- [x] **F-23c** "Son üretimin" shortcut'ı — F-12c geçmiş listesi kapıyor
 - [x] **F-22a** `/hesap` dashboard'ında 4 metrik kartı: bu ay üretim, kalan kredi, favori platform, toplam tasarruf (~X saat)
 - [x] **F-22b** Kredi %20 altına inince üst banner: "+50 kredi %15 indirimle"
 - [x] **F-22c** Son 3 üretim shortcut'ı
