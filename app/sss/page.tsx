@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 const SORULAR = [
   {
     s: 'Kredi nedir, nasıl çalışır?',
-    c: 'Her içerik üretimi 1 kredi tüketir. Listing metni (başlık + özellikler + açıklama + etiketler) 1 kredi, görsel üretimi (1 stil = 4 varyasyon) 1 kredi, video üretimi 5–8 kredi, sosyal medya içeriği 1 kredidir. Kayıt olunca 3 ücretsiz kredi hediye edilir.',
+    c: 'Her içerik üretimi 1 kredi tüketir. Listing metni (başlık + özellikler + açıklama + etiketler) 1 kredi, görsel üretimi (1 stil = 1 görsel) 1 kredi, video üretimi 5–8 kredi, sosyal medya içeriği 1 kredidir. Kayıt olunca 3 ücretsiz kredi hediye edilir.',
   },
   {
     s: 'Kredilerim ne zaman expire olur?',
@@ -33,7 +33,7 @@ const SORULAR = [
   },
   {
     s: 'Görsel üretiminde kredi ne zaman düşer?',
-    c: 'Görsel üretilip size gösterildikten sonra, sadece indirirseniz kredi düşer. Beğenmezseniz kredi kaybetmezsiniz. 1 stil = 4 varyasyon = 1 kredi.',
+    c: 'Seçtiğin her stil için 1 görsel üretilir ve kredi üretim anında düşer. Birden fazla stil seçebilirsin — her biri ayrı 1 kredi. İndirme bedavadır.',
   },
   {
     s: 'Abonelik var mı?',

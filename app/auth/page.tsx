@@ -198,12 +198,6 @@ export default function AuthPage() {
   // Paketler lib/paketler.ts'den geliyor
   const paketler = PAKET_LISTESI;
 
-  const yorumlar = [
-    { isim: "Ayşe K.", magaza: "Trendyol satıcısı", yorum: "30 dakikada 50 ürünün listing'ini bitirdim. Daha önce günlük işti.", puan: 5 },
-    { isim: "Mehmet T.", magaza: "Hepsiburada mağazası", yorum: "Fotoğraf yükleyince ürünü tanıyor ve harika metinler yazıyor. Barkod özelliği çok işime yarıyor.", puan: 5 },
-    { isim: "Fatma D.", magaza: "Amazon TR satıcısı", yorum: "Görsel üretme özelliği muhteşem. Profesyonel fotoğraf çektirmek yerine artık yzliste kullanıyorum.", puan: 5 },
-  ];
-
   // Örnek çıktı — bölümlü kutular
   const ornekBolumler = [
     {
@@ -434,7 +428,7 @@ export default function AuthPage() {
                 idx: 1,
                 ikon: "📷",
                 baslik: "Görsel",
-                aciklama: "7 stil, her stilden 4 varyasyon",
+                aciklama: "7 stil, stil başına 1 görsel",
                 kredi: "Stil başına 1 kredi",
                 renk: "purple",
                 ring: "ring-violet-400",
@@ -515,7 +509,7 @@ export default function AuthPage() {
             {ozellikTab === 1 && (
               <div className="p-5 sm:p-7">
                 <p className="text-sm font-semibold text-gray-700 mb-1">Tek fotoğraftan 7 farklı stüdyo stili</p>
-                <p className="text-xs text-gray-400 mb-5">İnceleme ücretsiz — beğendiğini indirince 1 kredi düşer · Her stilden 4 varyasyon</p>
+                <p className="text-xs text-gray-400 mb-5">Stil başına 1 kredi · Üretimde düşer, indirme bedava</p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div className="flex flex-col">
                     <div className="relative rounded-xl overflow-hidden border-2 border-gray-200 bg-gray-100">
@@ -535,10 +529,7 @@ export default function AuthPage() {
                       <div className="rounded-xl overflow-hidden border-2 border-green-200 bg-gray-50">
                         <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" />
                       </div>
-                      <div className="bg-green-50 rounded-lg p-2 border border-green-100 mt-2">
-                        <p className="text-[11px] text-gray-700 font-semibold">{item.etiket}</p>
-                        <p className="text-[10px] text-green-500 mt-0.5">4 varyasyon</p>
-                      </div>
+                      <p className="text-[11px] text-gray-700 font-semibold text-center mt-1.5">{item.etiket}</p>
                     </div>
                   ))}
                 </div>
@@ -553,10 +544,7 @@ export default function AuthPage() {
                       <div className="rounded-xl overflow-hidden border-2 border-green-200 bg-gray-50">
                         <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" />
                       </div>
-                      <div className="bg-green-50 rounded-lg p-2 border border-green-100 mt-2">
-                        <p className="text-[11px] text-gray-700 font-semibold">{item.etiket}</p>
-                        <p className="text-[10px] text-green-500 mt-0.5">4 varyasyon</p>
-                      </div>
+                      <p className="text-[11px] text-gray-700 font-semibold text-center mt-1.5">{item.etiket}</p>
                     </div>
                   ))}
                 </div>
@@ -680,30 +668,15 @@ export default function AuthPage() {
             )}
           </div>
 
-          {/* Kredi bilgisi */}
-          <div className="mt-6 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Kredi nasıl çalışır?</h3>
-            <ul className="space-y-2">
-              {[
-                { ikon: "🎁", metin: "Kayıt olunca 3 ücretsiz kredi — kredi kartı gerekmez." },
-                { ikon: "📝", metin: "Listing metni: 1 kredi → başlık + özellikler + açıklama + etiketler" },
-                { ikon: "📷", metin: "Görsel: stil başına 1 kredi → 4 varyasyon. İnceleme ücretsiz, indirince düşer." },
-                { ikon: "🎬", metin: "Video: 5sn veya 10sn — kredi miktarı süreye göre" },
-                { ikon: "📱", metin: "Sosyal medya: 1 kredi → caption + hashtag seti, tüm platformlar" },
-              ].map((m, i) => (
-                <li key={i} className="flex items-start gap-3 text-sm text-gray-500">
-                  <span className="text-base flex-shrink-0">{m.ikon}</span>
-                  <span>{m.metin}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* 4 İçerik Türü Detay Kartları */}
+          <h3 className="text-lg font-bold text-gray-800 mt-8 mb-4">Ne üretebilirsin?</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Listing Metni */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
               <div className="bg-blue-50 px-5 pt-6 pb-4">
                 <div className="text-2xl mb-2">📝</div>
-                <h3 className="font-bold text-gray-800">Sadece Listing Metni</h3>
-                <p className="text-xs text-gray-500 mt-1">1 kredi</p>
+                <h3 className="font-bold text-gray-800">Listing Metni</h3>
+                <p className="text-xs text-gray-500 mt-1">1 kredi / ürün</p>
               </div>
               <div className="p-5 flex-1">
                 <p className="text-sm text-gray-600 leading-relaxed mb-3">Platforma özel optimize başlık, madde madde özellikler, satışa dönen açıklama ve arama etiketleri.</p>
@@ -716,14 +689,15 @@ export default function AuthPage() {
                 </ul>
               </div>
             </div>
+            {/* Görsel */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
               <div className="bg-violet-50 px-5 pt-6 pb-4">
                 <div className="text-2xl mb-2">📷</div>
-                <h3 className="font-bold text-gray-800">Sadece Görsel</h3>
-                <p className="text-xs text-gray-500 mt-1">Stil başına 1 kredi · Her stilden 4 varyasyon</p>
+                <h3 className="font-bold text-gray-800">Stüdyo Görseli</h3>
+                <p className="text-xs text-gray-500 mt-1">Stil başına 1 kredi</p>
               </div>
               <div className="p-5 flex-1">
-                <p className="text-sm text-gray-600 leading-relaxed mb-3">Tek fotoğraftan 3 farklı stüdyo görseli — her stilden 4 varyasyon. 1 stil → 4 görsel → 1 kredi. İnceleme ücretsiz, indirince kredi düşer.</p>
+                <p className="text-sm text-gray-600 leading-relaxed mb-3">Tek fotoğraftan 7 farklı stüdyo stili. 1 stil = 1 görsel = 1 kredi.</p>
                 <div className="grid grid-cols-3 gap-1.5 mb-3">
                   {[{ src: "/ornek_beyaz.jpg", label: "Beyaz" }, { src: "/ornek_koyu.jpg", label: "Koyu" }, { src: "/ornek_lifestyle.jpg", label: "Lifestyle" }].map(s => (
                     <div key={s.label} className="rounded-lg overflow-hidden">
@@ -732,24 +706,43 @@ export default function AuthPage() {
                     </div>
                   ))}
                 </div>
-                <p className="text-xs text-gray-400">İnceleme ücretsiz · İndirince 1 kredi · 1 stil = 4 görsel</p>
+                <p className="text-xs text-gray-400">+ Mermer, Ahşap, Gradient, Doğal</p>
               </div>
             </div>
-            <div className="bg-white rounded-2xl border-2 border-indigo-200 shadow-sm overflow-hidden flex flex-col">
-              <div className="bg-indigo-50 px-5 pt-6 pb-4">
-                <div className="text-2xl mb-2">✨</div>
-                <h3 className="font-bold text-gray-800">Metin + Görsel</h3>
-                <p className="text-xs text-gray-500 mt-1">Ayrı ayrı kredi</p>
+            {/* Video */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+              <div className="bg-amber-50 px-5 pt-6 pb-4">
+                <div className="text-2xl mb-2">🎬</div>
+                <h3 className="font-bold text-gray-800">Ürün Videosu</h3>
+                <p className="text-xs text-gray-500 mt-1">5sn: 5 kredi · 10sn: 8 kredi</p>
               </div>
               <div className="p-5 flex-1">
-                <p className="text-sm text-gray-600 leading-relaxed mb-3">Trendyol ve Hepsiburada&apos;da hem metin hem görsel zorunlu. İkisini aynı anda üret.</p>
-                <div className="space-y-2">
-                  {["Optimize listing metni", "4 stüdyo görseli — beğendiğini indir", "Platforma hazır, düzenleme gerektirmez"].map((t, i) => (
-                    <div key={i} className="flex items-start gap-2 text-xs text-gray-600">
-                      <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">{i + 1}</span>{t}
-                    </div>
+                <p className="text-sm text-gray-600 leading-relaxed mb-3">Ürün fotoğrafından profesyonel tanıtım videosu. Reels, TikTok ve pazaryeri için hazır.</p>
+                <ul className="space-y-1.5">
+                  {["Dikey (9:16) · Reels / TikTok", "Kare (1:1) · Feed / Pazaryeri", "Yatay (16:9) · YouTube"].map(f => (
+                    <li key={f} className="flex items-center gap-2 text-xs text-gray-500">
+                      <span className="w-4 h-4 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-[10px]">✓</span>{f}
+                    </li>
                   ))}
-                </div>
+                </ul>
+              </div>
+            </div>
+            {/* Sosyal Medya */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+              <div className="bg-pink-50 px-5 pt-6 pb-4">
+                <div className="text-2xl mb-2">📱</div>
+                <h3 className="font-bold text-gray-800">Sosyal Medya</h3>
+                <p className="text-xs text-gray-500 mt-1">1 kredi / platform seti</p>
+              </div>
+              <div className="p-5 flex-1">
+                <p className="text-sm text-gray-600 leading-relaxed mb-3">Her platform için ayrı caption ve hashtag seti. Ürün fotoğrafından veya metinden üretilir.</p>
+                <ul className="space-y-1.5">
+                  {["Instagram · Caption + Hashtag", "TikTok · Kısa açıklama", "Facebook · Paylaşım metni", "Twitter/X · Tweet metni"].map(f => (
+                    <li key={f} className="flex items-center gap-2 text-xs text-gray-500">
+                      <span className="w-4 h-4 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-[10px]">✓</span>{f}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
@@ -856,16 +849,14 @@ export default function AuthPage() {
       <section className="px-4 sm:px-6 py-16">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-3">Neden yzliste?</h2>
-          <p className="text-center text-sm text-gray-400 mb-10">Rakipler tek bir şey yapar. yzliste dördünü birden yapar.</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <p className="text-center text-sm text-gray-400 mb-10">ChatGPT&apos;ye &quot;listing yaz&quot; demekten farkımız</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { ikon: "📸", baslik: "Fotoğraftan analiz", aciklama: "Ürün fotoğrafını yükle, YZ ürünü tanısın, listing metnini otomatik oluştursun." },
-              { ikon: "📦", baslik: "Barkod tarama", aciklama: "Barkodu tarat, ürün bilgilerini veritabanından çek, listing üret — klavyeye gerek yok." },
-              { ikon: "🎯", baslik: "6 platform desteği", aciklama: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy, Amazon USA — her platform için ayrı format." },
-              { ikon: "📷", baslik: "7 stilden görsel", aciklama: "Beyaz, koyu, lifestyle, mermer, ahşap, gradient, doğal — her stilden 4 varyasyon." },
-              { ikon: "🎬", baslik: "Ürün videosu", aciklama: "5sn veya 10sn tanıtım videosu. Dikey/kare/yatay format. Reels, TikTok ve pazaryeri için hazır." },
-              { ikon: "📱", baslik: "Sosyal medya içeriği", aciklama: "Instagram, TikTok, Facebook, Twitter/X için ayrı caption + hashtag seti." },
-              { ikon: "💎", baslik: "Görsel kredi garantisi", aciklama: "Görsel üretilir, beğenmezsen indirmezsin — kredin yanmaz." },
+              { ikon: "🧠", baslik: "Pazaryerini bilen AI", aciklama: "Genel AI araçları pazaryeri kurallarını bilmez. yzliste her platformun karakter limiti, yasak kelime ve SEO kuralına göre üretir." },
+              { ikon: "📸", baslik: "Fotoğraf yükle, gerisini bırak", aciklama: "Ürün fotoğrafını yükle — AI ürünü tanır, kategori belirler, listing metnini ve görseli otomatik üretir." },
+              { ikon: "📦", baslik: "Barkod tara, klavyeye dokunma", aciklama: "Barkodu tarat, ürün bilgilerini veritabanından çek, listing üret — tek tıkla." },
+              { ikon: "🎯", baslik: "6 platform, 6 farklı format", aciklama: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy, Amazon USA — her birinin kuralına göre ayrı çıktı." },
+              { ikon: "💎", baslik: "Şeffaf kredi sistemi", aciklama: "Kredi üretimde düşer, indirme bedava. Ne kadar harcadığını her zaman görürsün." },
               { ikon: "💰", baslik: "Kullandığın kadar öde", aciklama: "Aylık abonelik yok. 3 ücretsiz kredi ile başla, istediğin zaman paket al." },
             ].map((o, i) => (
               <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
@@ -878,44 +869,13 @@ export default function AuthPage() {
         </div>
       </section>
 
-      {/* SOSYAL KANIT / TESTİMONY */}
-      <section className="px-4 sm:px-6 py-10 bg-indigo-50 border-y border-indigo-100">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex flex-wrap justify-center gap-8 sm:gap-16 mb-10">
-            {[
-              { sayi: "500+", label: "Beta kullanıcısı" },
-              { sayi: "10.000+", label: "Üretilen listing" },
-              { sayi: "4.9/5", label: "Kullanıcı memnuniyeti" },
-            ].map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="text-2xl sm:text-3xl font-extrabold text-indigo-500">{s.sayi}</div>
-                <div className="text-xs text-gray-500 mt-1">{s.label}</div>
-              </div>
-            ))}
-          </div>
-          <div className="hidden grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {yorumlar.map((y, i) => (
-              <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-indigo-100">
-                <div className="flex gap-0.5 mb-3">
-                  {Array.from({ length: y.puan }).map((_, j) => (
-                    <span key={j} className="text-amber-400 text-sm">★</span>
-                  ))}
-                </div>
-                <p className="text-sm text-gray-600 leading-relaxed mb-4">&quot;{y.yorum}&quot;</p>
-                <div>
-                  <p className="text-xs font-semibold text-gray-800">{y.isim}</p>
-                  <p className="text-xs text-gray-400">{y.magaza}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-10 text-center">
-            <Link href="/kayit" className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-indigo-100">
-              Ücretsiz Hesap Oluştur →
-            </Link>
-            <p className="text-xs text-gray-400 mt-3">Ücretsiz kayıt · Kredi kartı gerekmez</p>
-          </div>
-        </div>
+      {/* FINAL CTA */}
+      <section className="px-4 sm:px-6 py-12 bg-indigo-50 border-y border-indigo-100 text-center">
+        <h2 className="text-xl font-bold text-gray-800 mb-2">Hemen dene</h2>
+        <p className="text-sm text-gray-500 mb-6">3 ücretsiz kredi ile listing metni, görsel veya video üret. Kredi kartı gerekmez.</p>
+        <Link href="/kayit" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-indigo-100">
+          Ücretsiz Hesap Oluştur →
+        </Link>
       </section>
 
       {/* FOOTER */}
@@ -924,3 +884,4 @@ export default function AuthPage() {
     </main>
   );
 }
+  

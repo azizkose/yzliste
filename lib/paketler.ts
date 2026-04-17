@@ -36,7 +36,7 @@ export const PAKETLER: Record<PaketId, Paket> = {
     ozellikler: [
       "10 kredi (tüm içerik türlerinde kullan)",
       "📝 Listing metni: 1 kredi / ürün",
-      "📷 AI görsel: 1 kredi / stil · 4 varyasyon",
+      "📷 AI görsel: 1 kredi / stil · 1 görsel",
       "🎬 Video: 5sn=5 kredi, 10sn=8 kredi",
       "📱 Sosyal medya: 1 kredi / platform seti",
     ],
@@ -56,7 +56,7 @@ export const PAKETLER: Record<PaketId, Paket> = {
     ozellikler: [
       "30 kredi (tüm içerik türlerinde kullan)",
       "📝 Listing metni: 30 ürün",
-      "📷 AI görsel: 30 stil · her stilden 4 varyasyon",
+      "📷 AI görsel: 30 stil · stil başına 1 görsel",
       "🎬 Video: 6 adet 5sn video veya 3 adet 10sn video",
       "📱 Sosyal medya: 30 platform içerik seti",
       "Tüm platformlar · Süre sınırı yok",
@@ -76,7 +76,7 @@ export const PAKETLER: Record<PaketId, Paket> = {
     ozellikler: [
       "100 kredi (tüm içerik türlerinde kullan)",
       "📝 Listing metni: 100 ürün",
-      "📷 AI görsel: 100 stil · her stilden 4 varyasyon",
+      "📷 AI görsel: 100 stil · stil başına 1 görsel",
       "🎬 Video: 20 adet 5sn video veya 12 adet 10sn video",
       "📱 Sosyal medya: 100 platform içerik seti",
       "Toplu kullanım için en ekonomik · Süre sınırı yok",

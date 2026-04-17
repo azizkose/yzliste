@@ -21,11 +21,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Blog | yzliste",
     description: "E-ticaret satıcıları için listing, görsel ve platform rehberleri.",
-    url: "https://yzliste.com/blog",
+    url: "https://www.yzliste.com/blog",
     type: "website",
   },
   alternates: {
-    canonical: "https://yzliste.com/blog",
+    canonical: "https://www.yzliste.com/blog",
   },
   robots: { index: true, follow: true },
   twitter: {
@@ -47,7 +47,7 @@ async function BlogJsonLd() {
           "@type": "Blog",
           name: "yzliste Blog",
           description: "E-ticaret satıcıları için listing ve görsel rehberleri",
-          url: "https://yzliste.com/blog",
+          url: "https://www.yzliste.com/blog",
           publisher: {
             "@type": "Organization",
             name: "yzliste",

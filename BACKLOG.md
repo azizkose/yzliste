@@ -13,7 +13,7 @@ Bu küme firmalara demo göstermek için gerekli. Diğer her şeyden önce gelir
 Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosyasına bak.
 
 ### P0 — Acil (maliyet + kredi modeli değişikliği)
-- [ ] **PQ-00** ⚠️ ÇOKLU STİL SEÇİMİ + MALİYET OPTİMİZASYONU — Büyük değişiklik, 5 dosya etkileniyor.
+- [x] **PQ-00** ⚠️ ÇOKLU STİL SEÇİMİ + MALİYET OPTİMİZASYONU — Büyük değişiklik, 5 dosya etkileniyor.
   **Konsept:** Kullanıcı birden çok stil seçebilsin. Her stil = 1 görsel = 1 kredi. Kredi üretimde düşer, indirme bedava.
   **API (`app/api/gorsel/route.ts`):**
   1. `stiller: string[]` (dizi) kabul et, tek `stil: string` yerine (geriye uyumluluk: tek string gelirse diziye çevir)
@@ -41,9 +41,19 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 - [x] **PQ-01** Video şablonlarını hang-safe yap: 4 mevcut şablonun prompt'larını güncelle (`app/page.tsx` video preset'leri + `app/api/sosyal/video/route.ts` otomatik prompt). Her harekete bitiş noktası ekle. Detay: `PROMPT-REHBER.md § Video Şablonları`
 - [x] **PQ-02** Eski caption route'u kaldır: `app/api/sosyal/caption/route.ts` sil. `app/api/sosyal/route.ts` zaten daha gelişmiş ve 4 platform destekliyor. Frontend'de bu route'a istek atan kodu bul ve sosyal/route.ts'e yönlendir
 
+### P0 — SEO Acil (Search Console bulguları — indeksleme sorunları)
+- [x] **PQ-24** Canonical tag eksikliği + www tutarsızlığı giderildi:
+  - `/auth/layout.tsx` oluşturuldu — metadata + canonical eklendi
+  - Root `layout.tsx`'e canonical eklendi (`https://www.yzliste.com`)
+  - `/fiyatlar`, `/blog`, `/blog/[slug]` canonical'ları `www.yzliste.com`'a düzeltildi
+  - Sitemap'te `/auth` priority 1→0.8'e düşürüldü, `/` en üstte
+- [ ] **PQ-25** Sitemap'ten korumalı sayfaları çıkar: `/hesap/*`, `/odeme/*`, auth-required route'lar sitemap'te olmamalı. `app/sitemap.ts`'de sadece public route'ları listele. "Discovered – not indexed" sayısını düşürür.
+- [ ] **PQ-26** Auth redirect'i Google-safe yap: Korumalı sayfalara Googlebot geldiğinde redirect yerine 403/404 dönmeli veya sitemap'ten çıkarılmalı. "Page with redirect" sorununu çözer.
+- [ ] **PQ-27** `http://www.yzliste.com/` "Crawled – not indexed": Canonical eklendi — Search Console'da "URL Denetimi"nden reindex iste. Deploy sonrası manuel aksiyon.
+
 ### P1 — Görsel Pipeline (kaliteyi 2x artırır)
 - [x] **PQ-03** Görsel pipeline'a RMBG ekle: `fal-ai/bria/rmbg` endpoint'ini çağır, arka planı kaldır, SONRA product-shot'a gönder. `app/api/gorsel/route.ts`'de foto upload sonrası RMBG adımı ekle. Detay: `PROMPT-REHBER.md § Görsel Pipeline`
-- [ ] **PQ-04** ~~Görsel'de placement_type'ı "automatic" yap~~ **İPTAL — automatic 10x maliyet artırır.** ⚠️ Şu an kodda `automatic` aktif! PQ-00 bunu düzeltecek → `manual_placement` + `pozisyonSec()`. PQ-00 yapılınca otomatik çözülür.
+- [x] **PQ-04** ~~Görsel'de placement_type'ı "automatic" yap~~ **İPTAL — automatic 10x maliyet artırır.** ⚠️ Şu an kodda `automatic` aktif! PQ-00 bunu düzeltecek → `manual_placement` + `pozisyonSec()`. PQ-00 yapılınca otomatik çözülür.
 - [x] **PQ-05** Kategori → stil önceliklendirme: Kategori seçiliyse stil kartlarını önerilen sıraya göre sırala. Mapping: `PROMPT-REHBER.md § Kategori-Stil Eşleştirme`
 
 ### P1 — Metin Kalitesi (içerik farkını yaratır)

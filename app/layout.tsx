@@ -41,6 +41,9 @@ export const metadata: Metadata = {
     description: "Trendyol, Hepsiburada, Amazon TR ve N11 için AI ile optimize listing metni üret.",
     images: ["/og-image.png"],
   },
+  alternates: {
+    canonical: "https://www.yzliste.com",
+  },
   robots: { index: true, follow: true },
   icons: {
     icon: [

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Fiyatlar | yzliste",
     description: "Kullandığın kadar öde. 3 ücretsiz kredi, abonelik yok.",
-    url: "https://yzliste.com/fiyatlar",
+    url: "https://www.yzliste.com/fiyatlar",
     type: "website",
     siteName: "yzliste",
   },
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     description: "Kullandığın kadar öde. 3 ücretsiz kredi, abonelik yok.",
   },
   alternates: {
-    canonical: "https://yzliste.com/fiyatlar",
+    canonical: "https://www.yzliste.com/fiyatlar",
   },
   robots: { index: true, follow: true },
 };
@@ -54,7 +54,7 @@ const krediAciklamalari = [
     ikon: "📷",
     baslik: "AI görsel — stil başına 1 kredi",
     icerik:
-      "7 farklı stil (Beyaz, Koyu, Lifestyle, Mermer, Ahşap, Gradient, Doğal) — her stilden 4 varyasyon üretilir. İnceleme ücretsiz, beğendiğini indirince 1 kredi düşer. 1 stil = 4 görsel = 1 kredi.",
+      "7 farklı stil (Beyaz, Koyu, Lifestyle, Mermer, Ahşap, Gradient, Doğal). Seçtiğin her stil için 1 görsel üretilir, kredi üretimde düşer. 1 stil = 1 görsel = 1 kredi.",
   },
   {
     ikon: "🎬",
@@ -109,7 +109,7 @@ const sss = [
   {
     soru: "Görsel üretimde kredi nasıl düşer?",
     cevap:
-      "Görsel üretimde önce seçtiğin stil için 4 varyasyon ücretsiz olarak önizlenir. İndirmek istediğin görseli seçince 1 kredi düşer. Beğenmezsen indirmeden çıkabilirsin, kredin yanmaz.",
+      "Seçtiğin her stil için 1 görsel üretilir ve kredi üretim anında düşer. Birden fazla stil seçersen her biri ayrı kredi harcar. İndirme bedavadır.",
   },
   {
     soru: "Video üretimi kaç kredi tutar?",

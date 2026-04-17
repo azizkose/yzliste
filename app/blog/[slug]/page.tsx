@@ -31,14 +31,14 @@ export async function generateMetadata({
     openGraph: {
       title: yazi.baslik,
       description: yazi.ozet,
-      url: `https://yzliste.com/blog/${yazi.slug}`,
+      url: `https://www.yzliste.com/blog/${yazi.slug}`,
       type: "article",
       publishedTime: yazi.yayinTarihi,
       modifiedTime: yazi.guncellemeTarihi ?? yazi.yayinTarihi,
       authors: [yazi.yazarAdi],
       tags: yazi.etiketler,
       images: yazi.kapakGorsel
-        ? [{ url: `https://yzliste.com${yazi.kapakGorsel}` }]
+        ? [{ url: `https://www.yzliste.com${yazi.kapakGorsel}` }]
         : [],
     },
     twitter: {
@@ -47,7 +47,7 @@ export async function generateMetadata({
       description: yazi.ozet,
     },
     alternates: {
-      canonical: `https://yzliste.com/blog/${yazi.slug}`,
+      canonical: `https://www.yzliste.com/blog/${yazi.slug}`,
     },
     robots: { index: true, follow: true },
   };
@@ -66,7 +66,7 @@ function ArticleJsonLd({ yazi }: { yazi: BlogYazisi }) {
           description: yazi.ozet,
           datePublished: yazi.yayinTarihi,
           dateModified: yazi.guncellemeTarihi ?? yazi.yayinTarihi,
-          url: `https://yzliste.com/blog/${yazi.slug}`,
+          url: `https://www.yzliste.com/blog/${yazi.slug}`,
           inLanguage: "tr",
           author: {
             "@type": "Organization",

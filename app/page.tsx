@@ -1082,7 +1082,7 @@ export default function Home() {
                     <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)} placeholder={platformPh.urun} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Kategori <span className="text-red-400">*</span></label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Kategori <span className="text-red-400">*</span> <span className="text-gray-400 font-normal text-xs">(fotoğraf yüklersen otomatik algılanır)</span></label>
                     <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder={platformPh.kategori} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
                   </div>
                   <div>
@@ -1193,7 +1193,7 @@ export default function Home() {
                 {yukleniyor ? `⏳ ${yukleniyorMesajlari[yukleniyorMesaj]}` : `İçerik Üret — ${kullanici?.is_admin ? "∞" : "1"} kredi`}
               </button>
 
-              <p className="text-xs text-gray-400 text-center">⚠️ AI hata yapabilir — üretilen içeriği yayınlamadan önce kontrol edin</p>
+              <p className="text-xs text-gray-400 text-center">💡 yzliste her platformun karakter limiti ve SEO kuralına göre üretir ancak pazaryeri kuralları sık değişir — yayınlamadan önce içeriği kontrol etmeni öneririz</p>
 
               {!yukleniyor && !kullanici?.is_admin && (kullanici?.kredi ?? 0) <= 0 && (
                 <p className="text-center text-xs text-red-500">İçerik üretim krediniz bitti. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
@@ -1243,7 +1243,7 @@ export default function Home() {
             <div style={{display: anaSekme === "gorsel" ? "block" : "none"}} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-base font-semibold text-gray-800">🖼️ Ürün Görseli Üret</h2>
-                <span className="text-xs text-violet-500 font-medium">Stil başına 1 kredi · Her stilden 4 varyasyon</span>
+                <span className="text-xs text-violet-500 font-medium">Stil başına 1 kredi · 1 stil = 1 görsel</span>
               </div>
 
               {/* Profil eksik uyarısı */}
@@ -1255,12 +1255,12 @@ export default function Home() {
               )}
 
               <p className="text-xs text-gray-600">
-                Tek fotoğraftan 7+ farklı stüdyo görseli. Her stilden 4 varyasyon üretilir — inceleme ücretsiz, indirince kredi düşer.{" "}
-                <span className="text-xs text-gray-400">  <br /> Örnek: 1 stil seçersen → 4 görsel, 1 kredi <br />2 stil seçersen → 8 görsel, 2 kredi</span>
+                Tek fotoğraftan 7 farklı stüdyo stili. Seçtiğin her stil için 1 görsel üretilir, kredi üretimde düşer.{" "}
+                <span className="text-xs text-gray-400">  <br /> Örnek: 1 stil seçersen → 1 görsel, 1 kredi <br />3 stil seçersen → 3 görsel, 3 kredi</span>
               </p>
 
               {fotolar.length === 0 ? (
-                <FotoEkleAlani id="gorsel-foto-input" onChange={fotoSec} renk="purple" metin="Ürün fotoğrafı yükle" ikon="📷" altMetin="Arka planı kaldırıp 7+ stilden 4'er varyasyon üretiriz" />
+                <FotoEkleAlani id="gorsel-foto-input" onChange={fotoSec} renk="purple" metin="Ürün fotoğrafı yükle" ikon="📷" altMetin="Arka planı kaldırıp 7 farklı stilde stüdyo görseli üretiriz" />
               ) : (
                 <FotoThumbnail src={fotolar[0]} onKaldir={() => fotoKaldir(0)} renk="green" />
               )}
@@ -1272,7 +1272,7 @@ export default function Home() {
               </p>
 
               <div>
-                <p className="block text-xs font-medium text-gray-600 mb-2">Stil seç <span className="text-gray-400 font-normal">(1 stil → 4 görsel · 1 kredi, indirirken düşer)</span></p>
+                <p className="block text-xs font-medium text-gray-600 mb-2">Stil seç <span className="text-gray-400 font-normal">(1 stil = 1 görsel = 1 kredi)</span></p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {(() => {
                     const GORSEL_STILLER = [
@@ -1869,7 +1869,7 @@ export default function Home() {
                 {/* GÖRSEL İÇERİĞİ */}
                 {sosyalIcerikTipi === "gorsel" && (
                   <div className="space-y-4">
-                    <p className="text-xs text-gray-500">Ürün fotoğrafından seçtiğin platform boyutunda profesyonel görsel üretilir — 4 varyasyon, 1 kredi.</p>
+                    <p className="text-xs text-gray-500">Ürün fotoğrafından seçtiğin platform boyutunda profesyonel görsel üretilir — 1 görsel, 1 kredi.</p>
 
                     {!sosyalFoto ? (
                       <FotoEkleAlani id="sosyal-gorsel-foto-input" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onload = () => setSosyalFoto(r.result as string); r.readAsDataURL(f); } }} renk="pink" metin="Ürün fotoğrafı yükle" ikon="📸" altMetin="Temiz arka planlı fotoğraf en iyi sonucu verir" />
@@ -2067,3 +2067,4 @@ export default function Home() {
 
 
 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
