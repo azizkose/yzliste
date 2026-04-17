@@ -1293,6 +1293,27 @@ export default function Home() {
                       📄 Word İndir
                     </button>
                   </div>
+
+                  {/* F-10c: Platform uyumluluk rozeti */}
+                  {(() => {
+                    const baslik = sonucBolumleri.find(b => b.baslik === "Başlık")?.icerik ?? "";
+                    const pb = platformBilgi;
+                    const baslikUzunluk = baslik.length;
+                    const baslikUygun = baslikUzunluk > 0 && baslikUzunluk <= pb.baslikLimit;
+                    const platformAdi = { trendyol: "Trendyol", hepsiburada: "Hepsiburada", amazon: "Amazon TR", n11: "N11", etsy: "Etsy", amazon_usa: "Amazon USA" }[platform] ?? platform;
+                    const tumuygun = baslikUygun;
+                    if (!baslik) return null;
+                    return (
+                      <div className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium ${tumuygun ? "bg-emerald-50 border border-emerald-200 text-emerald-700" : "bg-amber-50 border border-amber-200 text-amber-700"}`}>
+                        <span>{tumuygun ? "✓" : "⚠️"}</span>
+                        <span className="flex-1">
+                          {tumuygun
+                            ? `${platformAdi} kurallarına uygun — Başlık ${baslikUzunluk}/${pb.baslikLimit} karakter`
+                            : `Başlık ${baslikUzunluk} karakter — ${platformAdi} limiti ${pb.baslikLimit} karakter`}
+                        </span>
+                      </div>
+                    );
+                  })()}
                   {sonucBolumleri.map((bolum, i) => {
                     const ref = { current: null as HTMLDivElement | null };
                     return (
