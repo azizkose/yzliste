@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
 
   const zipBuffer = await zip.generateAsync({ type: "uint8array" });
 
-  return new NextResponse(zipBuffer, {
+  return new NextResponse(new Blob([zipBuffer]), {
     headers: {
       "Content-Type": "application/zip",
       "Content-Disposition": "attachment; filename=yzliste-gorseller.zip",
