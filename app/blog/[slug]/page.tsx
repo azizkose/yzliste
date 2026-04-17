@@ -159,10 +159,12 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
           <p className="text-sm text-gray-700 leading-relaxed"><MetinLink text={bolum.metin ?? ""} /></p>
         </div>
       );
-    case "video-grid":
+    case "video-grid": {
+      const maddeler = bolum.maddeler ?? [];
+      const gridClass = maddeler.length === 1 ? "grid grid-cols-1 gap-3 my-6 max-w-sm" : "grid grid-cols-2 gap-3 my-6";
       return (
-        <div className="grid grid-cols-2 gap-3 my-6">
-          {(bolum.maddeler ?? []).map((madde, i) => {
+        <div className={gridClass}>
+          {maddeler.map((madde, i) => {
             const [src, etiket] = madde.split("|");
             return (
               <div key={i} className="rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
@@ -182,6 +184,7 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
           })}
         </div>
       );
+    }
     default:
       return null;
   }
