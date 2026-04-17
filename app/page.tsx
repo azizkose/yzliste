@@ -675,7 +675,28 @@ export default function Home() {
       const resizedFoto = await resizeFoto(fotolar[0]);
       const res = await fetch("/api/gorsel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: resizedFoto, ekPrompt: gorselEkPrompt, stiller: seciliStiller, userId: kullanici?.id, referansGorsel }) });
       const data = await res.json();
-      if (data.sonuclar) setGorselSonuclar(data.sonuclar);
+      if (!data.jobs) { setHata("Görsel üretilemedi. Tekrar deneyin."); setGorselYukleniyor(false); return; }
+
+      // Kuyruğa alındı — her job için poll et
+      const jobs: { stil: string; label: string; requestId: string }[] = data.jobs;
+      const sonuclar: { stil: string; label: string; gorseller: string[] }[] = [];
+
+      await Promise.all(jobs.map(async (job) => {
+        let tamamlandi = false;
+        for (let deneme = 0; deneme < 40; deneme++) {
+          await new Promise(r => setTimeout(r, 4000));
+          const pollRes = await fetch(`/api/gorsel/poll?requestId=${job.requestId}`);
+          const pollData = await pollRes.json();
+          if (pollData.status === "COMPLETED") {
+            sonuclar.push({ stil: job.stil, label: job.label, gorseller: pollData.gorseller || [] });
+            tamamlandi = true;
+            break;
+          }
+        }
+        if (!tamamlandi) sonuclar.push({ stil: job.stil, label: job.label, gorseller: [] });
+      }));
+
+      if (sonuclar.length > 0) setGorselSonuclar(sonuclar);
       else setHata("Görsel üretilemedi. Tekrar deneyin.");
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setGorselYukleniyor(false);
@@ -694,8 +715,23 @@ export default function Home() {
       const res = await fetch("/api/sosyal/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: resizedFoto, prompt: videoPrompt, userId: kullanici.id, sure: videoSure, format: videoFormat }) });
       const data = await res.json();
       if (res.status === 402) { paketModalAc(); setVideoYukleniyor(false); return; }
-      if (data.videoUrl) { setVideoUrl(data.videoUrl); if (!kullanici.is_admin) { setKullanici({ ...kullanici, kredi: kullanici.kredi - (data.kullanilanKredi ?? videoKredi) }); invalidateCredits(); } }
-      else setHata("Video üretilemedi. Tekrar deneyin.");
+      if (!data.requestId) { setHata("Video üretilemedi. Tekrar deneyin."); setVideoYukleniyor(false); return; }
+
+      // Kredi düşürüldü, kuyruğa alındı — poll et
+      if (!kullanici.is_admin) { setKullanici({ ...kullanici, kredi: kullanici.kredi - (data.kullanilanKredi ?? videoKredi) }); invalidateCredits(); }
+
+      let tamamlandi = false;
+      for (let deneme = 0; deneme < 60; deneme++) {
+        await new Promise(r => setTimeout(r, 5000));
+        const pollRes = await fetch(`/api/sosyal/video/poll?requestId=${data.requestId}`);
+        const pollData = await pollRes.json();
+        if (pollData.status === "COMPLETED") {
+          setVideoUrl(pollData.videoUrl);
+          tamamlandi = true;
+          break;
+        }
+      }
+      if (!tamamlandi) setHata("Video üretilemedi, zaman aşımı. Tekrar deneyin.");
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setVideoYukleniyor(false);
   };
@@ -733,8 +769,22 @@ export default function Home() {
       });
       const data = await res.json();
       if (res.status === 402) { paketModalAc(); setSosyalGorselYukleniyor(false); return; }
-      if (data.sonuclar) setSosyalGorselSonuclar(data.sonuclar);
-      else setHata("Görsel üretilemedi. Tekrar deneyin.");
+      if (!data.jobs) { setHata("Görsel üretilemedi. Tekrar deneyin."); setSosyalGorselYukleniyor(false); return; }
+
+      // Poll et
+      const job = data.jobs[0];
+      let tamamlandi = false;
+      for (let deneme = 0; deneme < 40; deneme++) {
+        await new Promise(r => setTimeout(r, 4000));
+        const pollRes = await fetch(`/api/gorsel/poll?requestId=${job.requestId}`);
+        const pollData = await pollRes.json();
+        if (pollData.status === "COMPLETED") {
+          setSosyalGorselSonuclar([{ stil: job.stil, label: job.label, gorseller: pollData.gorseller || [] }]);
+          tamamlandi = true;
+          break;
+        }
+      }
+      if (!tamamlandi) setHata("Görsel üretilemedi, zaman aşımı. Tekrar deneyin.");
     } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setSosyalGorselYukleniyor(false);
   };

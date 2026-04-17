@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { fal } from "@fal-ai/client";
 
-export const maxDuration = 300; // 5 dakika — Kling video üretimi ~2 dk sürer
+export const maxDuration = 30; // sadece fal storage upload + queue.submit — GPU bekleme yok
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -70,10 +70,17 @@ export async function POST(req: NextRequest) {
     videoPrompt = `${stilIpucu}${markaIpucu}, smooth cinematic camera movement, professional lighting, clean background, high quality e-commerce video`;
   }
 
-  // Kling v2.1 standard
+  // Krediyi önceden düş — queue.submit sonucu beklemeden döner
+  if (!isAdmin) {
+    await supabaseAdmin
+      .from("profiles")
+      .update({ kredi: profil.kredi - gereken_kredi })
+      .eq("id", userId);
+  }
+
+  // Kling v2.1 standard — kuyruğa gönder, GPU bekleme
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const result = await fal.subscribe("fal-ai/kling-video/v2.1/standard/image-to-video", {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const queued = await fal.queue.submit("fal-ai/kling-video/v2.1/standard/image-to-video", {
     input: {
       prompt: videoPrompt,
       image_url: imageUrl,
@@ -83,20 +90,7 @@ export async function POST(req: NextRequest) {
       cfg_scale: 0.5,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any,
-  }) as unknown as { video: { url: string } };
+  });
 
-  const videoUrl = result?.video?.url;
-
-  if (!videoUrl) {
-    return NextResponse.json({ hata: "Video üretilemedi, tekrar deneyin." }, { status: 500 });
-  }
-
-  if (!isAdmin) {
-    await supabaseAdmin
-      .from("profiles")
-      .update({ kredi: profil.kredi - gereken_kredi })
-      .eq("id", userId);
-  }
-
-  return NextResponse.json({ videoUrl, isAdmin, kullanilanKredi: gereken_kredi });
+  return NextResponse.json({ requestId: queued.request_id, isAdmin, kullanilanKredi: gereken_kredi });
 }

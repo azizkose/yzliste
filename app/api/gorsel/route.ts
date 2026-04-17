@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fal } from "@fal-ai/client";
 import { createClient } from "@supabase/supabase-js";
 
-export const maxDuration = 300; // fal.ai görsel üretimi stil başına ~30-60sn sürer
+export const maxDuration = 30; // sadece fal storage upload + queue.submit — GPU bekleme yok
 
 fal.config({ credentials: process.env.FAL_KEY });
 
@@ -155,49 +155,37 @@ export async function POST(req: NextRequest) {
       refImageUrl = await fal.storage.upload(refBlob);
     }
 
-    // Tüm stiller paralel olarak çağrılır — sıralı değil
-    const sonuclar = await Promise.all(
+    // Tüm stiller paralel olarak kuyruğa gönderilir — GPU beklenmez
+    const jobs = await Promise.all(
       stilListesi.map(async (s) => {
         const padding = stilPadding[s] || stilPadding.beyaz;
 
-        // Referans stili: ref_image_url kullan
+        let input: Record<string, unknown>;
+
         if (s === "referans" && refImageUrl) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const result = await fal.subscribe("fal-ai/bria/product-shot", {
-            input: {
-              image_url: imageUrl,
-              ref_image_url: refImageUrl,
-              optimize_description: true,
-              num_results: 4,
-              fast: false,
-              placement_type: "manual_padding",
-              padding_values: [80, 80, 80, 80],
-              shot_size: shotSize,
-            },
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          }) as any;
-          const gorseller =
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            result?.data?.images?.map((img: any) => img.url) || [];
-          return { stil: s, label: stilEtiketleri[s] || s, gorseller };
-        }
-
-        // Normal stiller: scene_description kullan
-        let sahne: string;
-        if (s === "ozel") {
-          sahne = ekPrompt || "clean studio background, professional product photography, keep the original product exactly as is";
-        } else if (s === "referans") {
-          sahne = ekPrompt
-            ? `Match the style and lighting of the reference image, ${ekPrompt}, keep the original product exactly as is`
-            : "Match the background style and lighting conditions of the reference image, keep the original product exactly as is";
+          input = {
+            image_url: imageUrl,
+            ref_image_url: refImageUrl,
+            optimize_description: true,
+            num_results: 4,
+            fast: false,
+            placement_type: "manual_padding",
+            padding_values: [80, 80, 80, 80],
+            shot_size: shotSize,
+          };
         } else {
-          sahne = `${stilSahneleri[s] || stilSahneleri.beyaz}${brandContext}`;
-          if (ekPrompt) sahne = `${sahne}, ${ekPrompt}`;
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result = await fal.subscribe("fal-ai/bria/product-shot", {
-          input: {
+          let sahne: string;
+          if (s === "ozel") {
+            sahne = ekPrompt || "clean studio background, professional product photography, keep the original product exactly as is";
+          } else if (s === "referans") {
+            sahne = ekPrompt
+              ? `Match the style and lighting of the reference image, ${ekPrompt}, keep the original product exactly as is`
+              : "Match the background style and lighting conditions of the reference image, keep the original product exactly as is";
+          } else {
+            sahne = `${stilSahneleri[s] || stilSahneleri.beyaz}${brandContext}`;
+            if (ekPrompt) sahne = `${sahne}, ${ekPrompt}`;
+          }
+          input = {
             image_url: imageUrl,
             scene_description: sahne,
             optimize_description: true,
@@ -206,19 +194,16 @@ export async function POST(req: NextRequest) {
             placement_type: "manual_padding",
             padding_values: padding,
             shot_size: shotSize,
-          },
+          };
+        }
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        }) as any;
-
-        const gorseller =
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          result?.data?.images?.map((img: { url: string }) => img.url) || [];
-
-        return { stil: s, label: stilEtiketleri[s] || s, gorseller };
+        const queued = await fal.queue.submit("fal-ai/bria/product-shot", { input } as any);
+        return { stil: s, label: stilEtiketleri[s] || s, requestId: queued.request_id };
       })
     );
 
-    return NextResponse.json({ sonuclar, isAdmin });
+    return NextResponse.json({ jobs, isAdmin });
   } catch (e: unknown) {
     const err = e as { message?: string };
     console.error("FAL HATA:", err?.message || JSON.stringify(e));
