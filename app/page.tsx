@@ -125,7 +125,11 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
   const [seciliPaket, setSeciliPaket] = useState<string | null>(null);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [odemeAcik, setOdemeAcik] = useState(false);
+  const [kosullarOnay, setKosullarOnay] = useState(false);
+  const [mesafeliOnay, setMesafeliOnay] = useState(false);
+  const [kvkkOnay, setKvkkOnay] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
+  const tumOnaylar = kosullarOnay && mesafeliOnay && kvkkOnay;
 
   // Paketler lib/paketler.ts'den geliyor
   const paketler = PAKET_LISTESI;
@@ -190,11 +194,26 @@ function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () 
                   </div>
                   <p className="text-2xl font-bold text-gray-900">{p.fiyatStr}</p>
                 </div>
-                <button onClick={() => odemeBaslat(p.id)} disabled={yukleniyor} className={`w-full mt-4 ${p.butonRenk} text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:bg-gray-300`}>
-                  {yukleniyor && seciliPaket === p.id ? "⏳ Yükleniyor..." : "Satın Al"}
+                <button onClick={() => odemeBaslat(p.id)} disabled={yukleniyor || !tumOnaylar} className={`w-full mt-4 ${p.butonRenk} text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:bg-gray-300`}>
+                  {yukleniyor && seciliPaket === p.id ? "⏳ Yükleniyor..." : !tumOnaylar ? "Onayları işaretle" : "Satın Al"}
                 </button>
               </div>
             ))}
+            {/* F-07d: 3 zorunlu onay checkbox'ı */}
+            <div className="space-y-2 border-t border-gray-100 pt-4">
+              {[
+                { state: kosullarOnay, set: setKosullarOnay, href: "/kosullar", metin: "Kullanım Koşulları" },
+                { state: mesafeliOnay, set: setMesafeliOnay, href: "/mesafeli-satis", metin: "Mesafeli Satış Sözleşmesi" },
+                { state: kvkkOnay, set: setKvkkOnay, href: "/kvkk-aydinlatma", metin: "KVKK Aydınlatma Metni" },
+              ].map(({ state, set, href, metin }) => (
+                <label key={href} className="flex items-start gap-2 cursor-pointer">
+                  <input type="checkbox" checked={state} onChange={(e) => set(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0" />
+                  <span className="text-xs text-gray-600">
+                    <a href={href} target="_blank" className="text-indigo-500 hover:underline font-medium">{metin}</a>&apos;ni okudum ve kabul ediyorum.
+                  </span>
+                </label>
+              ))}
+            </div>
             <p className="text-xs text-gray-400 text-center pt-2">🔒 Güvenli ödeme — iyzico altyapısı</p>
           </div>
         ) : (

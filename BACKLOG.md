@@ -182,7 +182,7 @@ Hukuki kontrol gerek. Küme 1'e bağlı değil ama route'lar açılınca yayına
 - [x] **F-07a** Kullanım Koşulları metni → `/kosullar`
 - [x] **F-07b** Mesafeli Satış Sözleşmesi → `/mesafeli-satis`
 - [x] **F-07c** İade Politikası (kredi expire süresi net, cayma hakkı istisnası) → `/teslimat-iade` *(route adı /iade yerine /teslimat-iade olarak oluşturulmuş — OK)*
-- [ ] **F-07d** Checkout'ta 3 checkbox (açık rıza): Koşullar / Mesafeli Satış / KVKK. İşaretlenmeden satın alma disable. *(~%30: auth formunda 1 checkbox var ama checkout akışında 3 ayrı checkbox yok)*
+- [x] **F-07d** Checkout'ta 3 checkbox (açık rıza): Koşullar / Mesafeli Satış / KVKK. İşaretlenmeden satın alma disable.
 - [x] **F-07e** Footer'da 4 link: Kullanım / Mesafeli Satış / İade / Gizlilik *(~%75: Gizlilik + Mesafeli Satış + Teslimat İade var, Kullanım Koşulları linki eksik)*
 - [ ] **DoD** 3 belge hukukçu onayı ile yayında. Checkout akışında 3 checkbox kayıtlı (DB'de timestamp + IP).
 
