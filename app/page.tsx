@@ -385,6 +385,11 @@ export default function Home() {
   const [sosyalGorselYukleniyor, setSosyalGorselYukleniyor] = useState(false);
   const [sosyalGorselSonuclar, setSosyalGorselSonuclar] = useState<{ stil: string; label: string; gorseller: string[] }[]>([]);
   const [sosyalGorselPrompt, setSosyalGorselPrompt] = useState("");
+  const [sosyalSezon, setSosyalSezon] = useState("normal");
+  // Sosyal medya kiti (4 platform birden)
+  const [sosyalKitYukleniyor, setSosyalKitYukleniyor] = useState(false);
+  const [sosyalKitSonuc, setSosyalKitSonuc] = useState<Record<string, { caption: string; hashtag: string }> | null>(null);
+  const [sosyalKitAcik, setSosyalKitAcik] = useState<string | null>(null);
 
   // Refs
   const scannerRef = useRef<unknown>(null);
@@ -522,6 +527,12 @@ export default function Home() {
     return () => { kameraKapat(); if (mesajInterval.current) clearInterval(mesajInterval.current); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // PQ-15: Listing sekmesindeki ürün adını sosyal sekmeye senkronla
+  useEffect(() => {
+    if (urunAdi) setSosyalUrunAdi(urunAdi);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urunAdi]);
 
   const gecmisiYukle = async (userId: string) => {
     const { data } = await supabase.from("uretimler").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(10);
@@ -744,13 +755,39 @@ export default function Home() {
     setSosyalCaption("");
     setSosyalHashtag("");
     try {
-      const res = await fetch("/api/sosyal", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, platform: sosyalPlatform, ton: sosyalTon, userId: kullanici.id }) });
+      const res = await fetch("/api/sosyal", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, platform: sosyalPlatform, ton: sosyalTon, sezon: sosyalSezon, userId: kullanici.id }) });
       const data = await res.json();
       if (data.caption) setSosyalCaption(data.caption);
       if (data.hashtag) setSosyalHashtag(data.hashtag);
       if (!kullanici.is_admin) { setKullanici({ ...kullanici, kredi: kullanici.kredi - 1 }); invalidateCredits(); }
     } catch { setHata("Paylaşım metni üretilemedi. Tekrar deneyin."); }
     setCaptionYukleniyor(false);
+  };
+
+  const kitUret = async () => {
+    if (!loginGerekli()) return;
+    if (!kullanici) return;
+    if (!sosyalUrunAdi.trim()) return;
+    const krediGereken = 4;
+    if (!kullanici.is_admin && kullanici.kredi < krediGereken) { paketModalAc(); return; }
+    setSosyalKitYukleniyor(true);
+    setSosyalKitSonuc(null);
+    setSosyalKitAcik(null);
+    try {
+      const res = await fetch("/api/sosyal/kit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, ton: sosyalTon, sezon: sosyalSezon, userId: kullanici.id }),
+      });
+      const data = await res.json();
+      if (res.status === 402) { paketModalAc(); setSosyalKitYukleniyor(false); return; }
+      if (data.captions) {
+        setSosyalKitSonuc(data.captions);
+        setSosyalKitAcik("instagram_tiktok");
+        if (!kullanici.is_admin) { setKullanici({ ...kullanici, kredi: kullanici.kredi - (data.kullanilanKredi ?? krediGereken) }); invalidateCredits(); }
+      }
+    } catch { setHata("Kit üretilemedi. Tekrar deneyin."); }
+    setSosyalKitYukleniyor(false);
   };
 
   const sosyalGorselUret = async () => {
@@ -1661,6 +1698,20 @@ export default function Home() {
                     </div>
 
                     <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Sezon / Etkinlik</label>
+                      <select value={sosyalSezon} onChange={(e) => setSosyalSezon(e.target.value)}
+                        className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white">
+                        <option value="normal">Normal (sezon yok)</option>
+                        <option value="anneler_gunu">💐 Anneler Günü</option>
+                        <option value="babalar_gunu">👔 Babalar Günü</option>
+                        <option value="bayram">🌙 Bayram</option>
+                        <option value="yilbasi">🎉 Yılbaşı</option>
+                        <option value="black_friday">🔥 Black Friday</option>
+                        <option value="sevgililer_gunu">❤️ Sevgililer Günü</option>
+                      </select>
+                    </div>
+
+                    <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Ton</label>
                       <div className="grid grid-cols-3 gap-2">
                         {([
@@ -1677,10 +1728,16 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <button onClick={captionUret} disabled={captionYukleniyor || !sosyalUrunAdi.trim() || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) <= 0)}
+                    <button onClick={captionUret} disabled={captionYukleniyor || sosyalKitYukleniyor || !sosyalUrunAdi.trim() || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) <= 0)}
                       className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
-                      {captionYukleniyor ? "⏳ Üretiliyor..." : !kullanici ? "📱 Caption Üret — Giriş Gerekli" : `📱 Caption + Hashtag Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
+                      {captionYukleniyor ? "⏳ Üretiliyor..." : !kullanici ? "📱 Caption Üret — Giriş Gerekli" : `📱 ${["instagram","tiktok","facebook","twitter"].find(p => p === sosyalPlatform) ? (sosyalPlatform === "instagram" ? "Instagram" : sosyalPlatform === "tiktok" ? "TikTok" : sosyalPlatform === "facebook" ? "Facebook" : "Twitter/X") : "Caption"} Caption Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
                     </button>
+
+                    <button onClick={kitUret} disabled={sosyalKitYukleniyor || captionYukleniyor || !sosyalUrunAdi.trim() || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < 4)}
+                      className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-300 disabled:to-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
+                      {sosyalKitYukleniyor ? "⏳ Kit üretiliyor..." : !kullanici ? "🎁 Tüm Platformlar İçin Üret — Giriş Gerekli" : `🎁 Sosyal Medya Kiti — ${kullanici.is_admin ? "∞" : "4"} kredi`}
+                    </button>
+                    <p className="text-xs text-gray-400 text-center -mt-2">Instagram · TikTok · Facebook · Twitter/X aynı anda</p>
 
                     {kullanici && !kullanici.is_admin && (kullanici.kredi ?? 0) <= 0 && !captionYukleniyor && (
                       <p className="text-center text-xs text-red-500">İçerik üretim krediniz bitti. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
@@ -1707,6 +1764,57 @@ export default function Home() {
                           </div>
                         )}
                         <button onClick={() => { setSosyalCaption(""); setSosyalHashtag(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni metin üret</button>
+                      </div>
+                    )}
+
+                    {/* Sosyal Medya Kiti sonuçları */}
+                    {sosyalKitSonuc && (
+                      <div className="space-y-3 mt-4">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-semibold text-gray-700">🎁 Sosyal Medya Kiti</p>
+                          <button onClick={() => { setSosyalKitSonuc(null); setSosyalKitAcik(null); }} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Temizle</button>
+                        </div>
+                        {([
+                          { id: "instagram_tiktok", label: "📸 Instagram & TikTok" },
+                          { id: "facebook", label: "👥 Facebook" },
+                          { id: "twitter", label: "🐦 Twitter/X" },
+                          { id: "linkedin", label: "💼 LinkedIn" },
+                        ]).map(({ id, label }) => {
+                          const sonuc = sosyalKitSonuc[id];
+                          if (!sonuc) return null;
+                          const acik = sosyalKitAcik === id;
+                          return (
+                            <div key={id} className="border border-gray-200 rounded-xl overflow-hidden">
+                              <button onClick={() => setSosyalKitAcik(acik ? null : id)}
+                                className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
+                                <span className="text-sm font-medium text-gray-700">{label}</span>
+                                <span className="text-gray-400 text-xs">{acik ? "▲" : "▼"}</span>
+                              </button>
+                              {acik && (
+                                <div className="p-4 space-y-3">
+                                  {sonuc.caption && (
+                                    <div>
+                                      <div className="flex items-center justify-between mb-1">
+                                        <span className="text-xs font-medium text-gray-600">Paylaşım Metni</span>
+                                        <button onClick={() => navigator.clipboard.writeText(sonuc.caption)} className="text-xs px-2 py-1 rounded bg-white border border-gray-200 text-gray-500 hover:text-pink-600 hover:border-pink-200 transition-all">Kopyala</button>
+                                      </div>
+                                      <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">{sonuc.caption}</p>
+                                    </div>
+                                  )}
+                                  {sonuc.hashtag && (
+                                    <div>
+                                      <div className="flex items-center justify-between mb-1">
+                                        <span className="text-xs font-medium text-gray-600">Hashtagler</span>
+                                        <button onClick={() => navigator.clipboard.writeText(sonuc.hashtag)} className="text-xs px-2 py-1 rounded bg-white border border-gray-200 text-gray-500 hover:text-purple-600 hover:border-purple-200 transition-all">Kopyala</button>
+                                      </div>
+                                      <p className="text-sm text-purple-700">{sonuc.hashtag}</p>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
                   </div>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { METIN_PROMPT_VERSION } from "@/lib/prompts/metin";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -703,6 +704,7 @@ export async function POST(req: NextRequest) {
     platform,
     sonuc: icerik,
     giris_tipi: girisTipi,
+    prompt_version: METIN_PROMPT_VERSION,
   });
 
   if (insertError) {
