@@ -115,9 +115,9 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 - [ ] **DoD** Demo testi: 5 farklı ürün (kozmetik, elektronik, giyim, gıda, takı) × 3 platform (Trendyol, Amazon, Etsy) = 15 listing üret. Her biri için görsel + video. Sonuçlar tutarlı, halüsinasyonsuz ve platforma uygun olmalı.
 
-- [ ] **PQ-31** Auth page inline modal → AuthForm component'ine geçir:
+- [x] **PQ-31** Auth page inline modal → AuthForm component'ine geçir:
   `app/auth/page.tsx` kendi modal state'ini yönetiyor (modalAcik, modalMod, modalEmail, modalSifre, modalSozlesme, modalMesaj, modalYukleniyor — 7 state). İçinde ayrı `modalUyeGiris` fonksiyonu var. Bunun yerine `AuthForm` component'ini kullanmalı — aynı mantık orada zaten var. Tekrarlanan kod ~60 satır silinir, bug riski azalır.
-- [ ] **PQ-32** `page.tsx` auth popup tekrarlı kod temizliği:
+- [x] **PQ-32** `page.tsx` auth popup tekrarlı kod temizliği:
   `page.tsx` de kendi auth popup'ını yönetiyor (authPopupAcik, authPopupMod, authPopupEmail, authPopupSifre, authPopupSozlesme, authPopupMesaj, authPopupYukleniyor — 7 state + handleAuthPopupGiris fonksiyonu + handleGoogleGiris). `AuthForm` component'i zaten aynı işi yapıyor. Popup'ı `AuthForm` ile değiştir → ~80 satır ve 7 state kaldırılır.
 - [x] **PQ-33** `@modal/(.)kredi-yukle/page.tsx` paket fiyatlarını `lib/paketler.ts`'ten al:
   Şu an hardcoded fiyatlar var (₺29, ₺79, ₺149). `PAKET_LISTESI` zaten merkezi kaynak — oradan çekmeli. Fiyat değişikliğinde 2 yeri güncellemek yerine 1 yer yeterli olur.
@@ -146,18 +146,18 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   Profil sayfasında TC Kimlik No toplanıyor ama aydınlatma metni, onay checkbox'ı yok. KVKK uyumu için formun altına onay + link eklenmeli.
   **İlişki:** KÜME 5 DoD — consent log tablosu + timestamp + IP kaydı şart. Hukukçu görüşü alınmalı.
 
-- [ ] **QA-05** P2 — Çelişen CTA mesajları ana sayfada (B-008):
+- [x] **QA-05** P2 — Çelişen CTA mesajları ana sayfada (B-008):
   3 farklı mesaj: (1) 'hesap gereklidir', (2) '3 Kredi Hediye', (3) 'kayıt gerekmiyor'. Birleşik, net mesaj olmalı.
   **Not:** PQ-19 (compact hero) ve PQ-20 (sahte sosyal kanıt kaldırma) sonrası bu metinler değişmiş olabilir — deploy'daki duruma göre güncelle.
 
-- [ ] **QA-06** P2 — Kredi/üretim sayacı uyumsuzluğu (B-010):
+- [x] **QA-06** P2 — Kredi/üretim sayacı uyumsuzluğu (B-010):
   Dashboard: '0 Kullanılan' — Profil: '2 Toplam üretim'. Farklı data source'lardan çekiliyor olabilir (kredi düşüş sayacı vs generations tablosu count). Tek kaynak kullan veya etiketleri netleştir.
 
 - [ ] **QA-07** P2 — Dashboard ile diğer sayfalar farklı header (B-011):
   Dashboard'da inline header (kredi rozeti, email, çıkış), diğer sayfalarda SiteHeader (Profil, İçerik Üret butonu). İki farklı layout.
   **İlişki:** PQ-28 monolith refactor — page.tsx inline header'ı SiteHeader'a taşıyınca çözülür.
 
-- [ ] **QA-08** P3 — 'Ücretsiz Başla' CTA'sı 3 yerde tekrar (B-013):
+- [x] **QA-08** P3 — 'Ücretsiz Başla' CTA'sı 3 yerde tekrar (B-013):
   Hero + banner + sağ kutu — görsel gürültü. Hero'dakini bırak, diğerlerini sadeleştir.
 
 - [ ] **QA-09** P3 — Logged-out kullanıcıya çalışmayan form gösterimi (B-014):

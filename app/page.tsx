@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import { PAKET_LISTESI } from "@/lib/paketler";
 import { useCredits, useInvalidateCredits } from "@/lib/hooks/useCredits";
 import { analytics } from "@/lib/analytics";
 import { useUretimStore } from "@/store/uretimStore";
+import AuthForm from "@/components/auth/AuthForm";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
 type SosyalPlatform = "instagram" | "tiktok" | "facebook" | "twitter";
@@ -349,11 +350,6 @@ export default function Home() {
   // Auth popup
   const [authPopupAcik, setAuthPopupAcik] = useState(false);
   const [authPopupMod, setAuthPopupMod] = useState<"giris" | "kayit">("kayit");
-  const [authPopupEmail, setAuthPopupEmail] = useState("");
-  const [authPopupSifre, setAuthPopupSifre] = useState("");
-  const [authPopupSozlesme, setAuthPopupSozlesme] = useState(false);
-  const [authPopupMesaj, setAuthPopupMesaj] = useState("");
-  const [authPopupYukleniyor, setAuthPopupYukleniyor] = useState(false);
   const [authSonraAksiyon, setAuthSonraAksiyon] = useState<"paket" | null>(null);
 
   // Metin sekmesi
@@ -442,54 +438,22 @@ export default function Home() {
   const sonucBolumleri = sonucuBolumle(sonuc);
   const platformRenk: Record<string, string> = { trendyol: "bg-orange-100 text-orange-700", hepsiburada: "bg-orange-100 text-orange-600", amazon: "bg-yellow-100 text-yellow-700", n11: "bg-blue-100 text-blue-700" };
 
-  const turkceHata = (hata: string): string => {
-    if (hata.includes("Password should be at least 6 characters")) return "Şifre en az 6 karakter olmalıdır.";
-    if (hata.includes("Invalid login credentials")) return "E-posta veya şifre hatalı.";
-    if (hata.includes("Email not confirmed")) return "E-posta adresinizi doğrulayın.";
-    if (hata.includes("User already registered")) return "Bu e-posta adresi zaten kayıtlı.";
-    if (hata.includes("invalid") && hata.includes("email")) return "Geçerli bir e-posta adresi girin.";
-    if (hata.includes("rate limit") || hata.includes("too many")) return "Çok fazla deneme. Lütfen biraz bekleyin.";
-    return "Bir hata oluştu. Lütfen tekrar deneyin.";
-  };
 
-  const handleAuthPopupGiris = async () => {
-    if (!authPopupEmail.trim()) { setAuthPopupMesaj("E-posta girin."); return; }
-    if (!authPopupSifre.trim()) { setAuthPopupMesaj("Şifre girin."); return; }
-    if (authPopupMod === "kayit" && !authPopupSozlesme) { setAuthPopupMesaj("Sözleşmeleri kabul edin."); return; }
-    setAuthPopupYukleniyor(true); setAuthPopupMesaj("");
-    if (authPopupMod === "kayit") {
-      if (kullanici?.anonim) {
-        const { error } = await supabase.auth.updateUser({ email: authPopupEmail, password: authPopupSifre });
-        if (error) { setAuthPopupMesaj(turkceHata(error.message)); setAuthPopupYukleniyor(false); return; }
-        setAuthPopupMesaj("Hesabınız oluşturuldu! E-postanızı doğrulayın, ardından giriş yapın.");
-      } else {
-        const { error } = await supabase.auth.signUp({ email: authPopupEmail, password: authPopupSifre });
-        if (error) { setAuthPopupMesaj(turkceHata(error.message)); setAuthPopupYukleniyor(false); return; }
-        setAuthPopupMesaj("Kayıt başarılı! E-postanızı doğrulayın.");
-      }
-    } else {
-      const { error, data } = await supabase.auth.signInWithPassword({ email: authPopupEmail, password: authPopupSifre });
-      if (error) { setAuthPopupMesaj("E-posta veya şifre hatalı."); setAuthPopupYukleniyor(false); return; }
-      const { data: profil } = await supabase.from("profiles").select("email, kredi, is_admin, ton, marka_adi").eq("id", data.user.id).single();
-      if (profil) setKullanici({ id: data.user.id, email: profil.email ?? null, kredi: profil.kredi, toplam_kullanilan: 0, is_admin: profil.is_admin || false, anonim: false, ton: profil.ton ?? undefined, marka_adi: profil.marka_adi ?? undefined });
-      gecmisiYukle(data.user.id);
-      setAuthPopupAcik(false);
-      setAuthPopupEmail(""); setAuthPopupSifre(""); setAuthPopupSozlesme(false); setAuthPopupMesaj("");
-      if (authSonraAksiyon === "paket") {
-        setAuthSonraAksiyon(null);
-        setPaketModalAcik(true);
-      }
+  const handleAuthSuccess = useCallback(async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const [{ data: profil }, { count }] = await Promise.all([
+      supabase.from("profiles").select("email, kredi, is_admin, ton, marka_adi").eq("id", user.id).single(),
+      supabase.from("uretimler").select("*", { count: "exact", head: true }).eq("user_id", user.id),
+    ]);
+    if (profil) setKullanici({ id: user.id, email: profil.email ?? null, kredi: profil.kredi, toplam_kullanilan: count || 0, is_admin: profil.is_admin || false, anonim: false, ton: profil.ton ?? undefined, marka_adi: profil.marka_adi ?? undefined });
+    gecmisiYukle(user.id);
+    setAuthPopupAcik(false);
+    if (authSonraAksiyon === "paket") {
+      setAuthSonraAksiyon(null);
+      setPaketModalAcik(true);
     }
-    setAuthPopupYukleniyor(false);
-  };
-
-  const handleGoogleGiris = async () => {
-    const { data } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/` },
-    });
-    if (data?.url) window.location.href = data.url;
-  };
+  }, [authSonraAksiyon]);
 
   const paketModalAc = () => {
     if (!kullanici) {
@@ -972,17 +936,9 @@ export default function Home() {
 
         {/* Giriş yok / anonim banner */}
         {(!kullanici || kullanici.anonim) && (
-          <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className="text-xl flex-shrink-0">🔒</span>
-              <div>
-                <p className="text-sm font-semibold text-indigo-800">İçerik üretmek için hesap gereklidir</p>
-                <p className="text-xs text-indigo-600 mt-0.5">Ücretsiz hesap oluşturun, 3 kredi hediye edilsin — kredi kartı gerekmez.</p>
-              </div>
-            </div>
-            <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap transition-colors flex-shrink-0">
-              Ücretsiz Başla
-            </button>
+          <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 mb-5 flex items-center gap-3">
+            <span className="text-xl flex-shrink-0">💡</span>
+            <p className="text-sm text-indigo-700">Ücretsiz hesap oluşturun — 3 kredi hediye, kredi kartı gerekmez. Hesap olmadan içerik üretilemez.</p>
           </div>
         )}
 
@@ -2249,9 +2205,9 @@ export default function Home() {
                 </>
               ) : (
                 <div className="text-center space-y-2 py-1">
-                  <p className="text-xs text-gray-500 leading-relaxed">Ücretsiz 3 kredi ile başla — kayıt gerekmiyor</p>
+                  <p className="text-xs text-gray-500 leading-relaxed">3 ücretsiz kredi — kayıt olmadan başlayın</p>
                   <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold py-2 rounded-xl transition-colors">
-                    🎁 Ücretsiz Başla
+                    🎁 Hesap Oluştur
                   </button>
                   <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="w-full text-xs text-gray-500 hover:text-gray-700 py-1 transition-colors">
                     Giriş Yap
@@ -2272,39 +2228,8 @@ export default function Home() {
                 </h2>
                 <button onClick={() => setAuthPopupAcik(false)} className="text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
               </div>
-              <div className="p-5 space-y-3">
-                <div className="flex gap-2">
-                  <button onClick={() => setAuthPopupMod("kayit")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${authPopupMod === "kayit" ? "bg-indigo-500 text-white border-indigo-500" : "bg-white text-indigo-500 border-indigo-200"}`}>🎁 Kayıt Ol</button>
-                  <button onClick={() => setAuthPopupMod("giris")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${authPopupMod === "giris" ? "bg-gray-800 text-white border-gray-800" : "bg-white text-gray-600 border-gray-200"}`}>Giriş Yap</button>
-                </div>
-                <button onClick={handleGoogleGiris} className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                  </svg>
-                  Google ile Devam Et
-                </button>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 h-px bg-gray-100" />
-                  <span className="text-xs text-gray-400">veya e-posta ile</span>
-                  <div className="flex-1 h-px bg-gray-100" />
-                </div>
-                <input type="email" placeholder="E-posta" value={authPopupEmail} onChange={(e) => setAuthPopupEmail(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-                <input type="password" placeholder="Şifre" value={authPopupSifre} onChange={(e) => setAuthPopupSifre(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleAuthPopupGiris()} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-                {authPopupMod === "kayit" && (
-                  <label className="flex items-start gap-3 cursor-pointer">
-                    <input type="checkbox" checked={authPopupSozlesme} onChange={(e) => setAuthPopupSozlesme(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0" />
-                    <span className="text-xs text-gray-500 leading-relaxed">
-                      <a href="/gizlilik" target="_blank" className="text-indigo-500 hover:underline">Gizlilik Politikası</a> ve <a href="/mesafeli-satis" target="_blank" className="text-indigo-500 hover:underline">Mesafeli Satış Sözleşmesi</a>&apos;ni okudum.
-                    </span>
-                  </label>
-                )}
-                {authPopupMesaj && <p className={`text-xs ${authPopupMesaj.includes("başarılı") || authPopupMesaj.includes("oluşturuldu") ? "text-green-600" : "text-red-500"}`}>{authPopupMesaj}</p>}
-                <button onClick={handleAuthPopupGiris} disabled={authPopupYukleniyor || (authPopupMod === "kayit" && !authPopupSozlesme)} className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl text-sm transition-colors">
-                  {authPopupYukleniyor ? "..." : authPopupMod === "kayit" ? "Ücretsiz Hesap Oluştur" : "Giriş Yap"}
-                </button>
+              <div className="p-5">
+                <AuthForm defaultMode={authPopupMod} onSuccess={handleAuthSuccess} />
               </div>
             </div>
           </div>

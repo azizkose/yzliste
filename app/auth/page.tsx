@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
 import { PAKET_LISTESI, MIN_FIYAT } from "@/lib/paketler";
+import AuthForm from "@/components/auth/AuthForm";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
@@ -20,11 +21,7 @@ export default function AuthPage() {
   const [modalMod, setModalMod] = useState<"paket" | "uye">("paket");
   const [modalUyeMod, setModalUyeMod] = useState<"giris" | "kayit">("kayit");
   const [modalAmac, setModalAmac] = useState<"auth" | "satin_al">("auth");
-  const [modalEmail, setModalEmail] = useState("");
-  const [modalSifre, setModalSifre] = useState("");
-  const [modalSozlesme, setModalSozlesme] = useState(false);
   const [modalMesaj, setModalMesaj] = useState("");
-  const [modalYukleniyor, setModalYukleniyor] = useState(false);
   const [odemeYukleniyor, setOdemeYukleniyor] = useState(false);
   const [odemeForm, setOdemeForm] = useState<string | null>(null);
   const [seciliPaket, setSeciliPaket] = useState<string | null>(null);
@@ -85,16 +82,14 @@ export default function AuthPage() {
     setSozlesmeOnay(false); setSifreSifirlamaGonderildi(false);
   };
 
-  const handleGoogleGiris = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/` },
-    });
-    if (error) {
-      setModalMesaj("Google ile giriş başlatılamadı: " + error.message);
-      return;
+  const handleModalAuthSuccess = () => {
+    setOturum(true);
+    if (modalAmac === "auth") {
+      router.push("/");
+    } else {
+      setModalMod("paket");
+      setModalMesaj("");
     }
-    if (data?.url) window.location.href = data.url;
   };
 
   const hemenAlTikla = async () => {
@@ -133,37 +128,6 @@ export default function AuthPage() {
     setModalMesaj("");
   };
 
-  const modalUyeGiris = async () => {
-    if (!modalEmail.trim()) { setModalMesaj("E-posta girin."); return; }
-    if (!modalSifre.trim()) { setModalMesaj("Şifre girin."); return; }
-    if (modalUyeMod === "kayit" && !modalSozlesme) { setModalMesaj("Sözleşmeleri kabul edin."); return; }
-    setModalYukleniyor(true); setModalMesaj("");
-    if (modalUyeMod === "kayit") {
-      if (anonimKullanici) {
-        // Anonim hesabı gerçek hesaba bağla (user ID ve krediler korunur)
-        const { error } = await supabase.auth.updateUser({ email: modalEmail, password: modalSifre });
-        if (error) { setModalMesaj(turkceHata(error.message)); }
-        else { setModalMesaj("Hesabınız oluşturuldu! E-postanızı doğrulayın, ardından giriş yapın."); }
-      } else {
-        const { error } = await supabase.auth.signUp({ email: modalEmail, password: modalSifre });
-        if (error) { setModalMesaj(turkceHata(error.message)); }
-        else { setModalMesaj("Kayıt başarılı! E-postanızı doğrulayın."); }
-      }
-    } else {
-      const { error } = await supabase.auth.signInWithPassword({ email: modalEmail, password: modalSifre });
-      if (error) { setModalMesaj("E-posta veya şifre hatalı."); }
-      else {
-        setOturum(true);
-        if (modalAmac === "auth") {
-          router.push("/");
-        } else {
-          setModalMod("paket");
-          setModalMesaj("");
-        }
-      }
-    }
-    setModalYukleniyor(false);
-  };
 
   const odemeBaslat = async (paket: string) => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -244,42 +208,8 @@ export default function AuthPage() {
               <button onClick={() => setModalAcik(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
             </div>
             {modalMod === "uye" ? (
-              <div className="p-6 space-y-4">
-                <button
-                  onClick={handleGoogleGiris}
-                  className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                  </svg>
-                  Google ile Devam Et
-                </button>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 h-px bg-gray-100" />
-                  <span className="text-xs text-gray-400">veya e-posta ile</span>
-                  <div className="flex-1 h-px bg-gray-100" />
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={() => setModalUyeMod("kayit")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${modalUyeMod === "kayit" ? "bg-indigo-500 text-white border-indigo-500" : "bg-white text-indigo-500 border-indigo-200"}`}>🎁 Kayıt Ol</button>
-                  <button onClick={() => setModalUyeMod("giris")} className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${modalUyeMod === "giris" ? "bg-gray-800 text-white border-gray-800" : "bg-white text-gray-600 border-gray-200"}`}>Giriş Yap</button>
-                </div>
-                <input type="email" placeholder="E-posta" value={modalEmail} onChange={(e) => setModalEmail(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-                <input type="password" placeholder="Şifre" value={modalSifre} onChange={(e) => setModalSifre(e.target.value)} onKeyDown={(e) => e.key === "Enter" && modalUyeGiris()} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-                {modalUyeMod === "kayit" && (
-                  <label className="flex items-start gap-3 cursor-pointer">
-                    <input type="checkbox" checked={modalSozlesme} onChange={(e) => setModalSozlesme(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0" />
-                    <span className="text-xs text-gray-500 leading-relaxed">
-                      <a href="/gizlilik" target="_blank" className="text-indigo-500 hover:underline">Gizlilik Politikası</a> ve <a href="/mesafeli-satis" target="_blank" className="text-indigo-500 hover:underline">Mesafeli Satış Sözleşmesi</a>&apos;ni okudum.
-                    </span>
-                  </label>
-                )}
-                {modalMesaj && <p className={`text-xs ${modalMesaj.includes("başarılı") ? "text-green-600" : "text-red-500"}`}>{modalMesaj}</p>}
-                <button onClick={modalUyeGiris} disabled={modalYukleniyor || (modalUyeMod === "kayit" && !modalSozlesme)} className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl text-sm transition-colors">
-                  {modalYukleniyor ? "..." : modalUyeMod === "kayit" ? "Ücretsiz Hesap Oluştur" : "Giriş Yap"}
-                </button>
+              <div className="p-6">
+                <AuthForm defaultMode={modalUyeMod} onSuccess={handleModalAuthSuccess} />
               </div>
             ) : !odemeForm ? (
               <div className="p-6 space-y-4">
