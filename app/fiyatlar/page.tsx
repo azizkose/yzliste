@@ -4,6 +4,7 @@ import Image from "next/image";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { PAKET_LISTESI, MIN_FIYAT, MAX_FIYAT } from "@/lib/paketler";
+import FiyatlarCta from "@/components/ui/FiyatlarCta";
 
 export const metadata: Metadata = {
   title: "Fiyatlar | yzliste — E-ticaret Listing Üretici",
@@ -250,12 +251,7 @@ export default function FiyatlarPage() {
                     </li>
                   ))}
                 </ul>
-                <a
-                  href="/kayit"
-                  className={`block text-center ${p.butonRenk} text-white font-semibold py-3 rounded-xl text-sm transition-colors`}
-                >
-                  Başla
-                </a>
+                <FiyatlarCta variant="paket" paketButonRenk={p.butonRenk} />
               </div>
             ))}
           </div>
@@ -319,12 +315,9 @@ export default function FiyatlarPage() {
       <section className="px-4 sm:px-6 py-14 bg-gray-50 border-t border-gray-100 text-center">
         <h2 className="text-2xl font-bold text-gray-900 mb-3">Hemen ücretsiz dene</h2>
         <p className="text-gray-500 text-sm mb-6">3 kredi, kredi kartı yok. Hesap oluştur, hemen başla.</p>
-        <a
-          href="/kayit"
+        <FiyatlarCta
           className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-indigo-100"
-        >
-          Ücretsiz Başla — 3 Kredi Hediye →
-        </a>
+        />
       </section>
 
       <SiteFooter />

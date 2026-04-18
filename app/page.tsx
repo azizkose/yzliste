@@ -572,23 +572,16 @@ export default function Home() {
         {(!kullanici || kullanici.anonim) && (
           <div className="bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 rounded-2xl px-6 py-7 mb-5 text-center">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">7 Pazaryeri için AI İçerik Üreticisi</h1>
-            <p className="text-sm text-gray-500 mb-5">Trendyol, Hepsiburada, Amazon, Etsy ve daha fazlası için — başlık, açıklama, görsel ve video tek platformda.</p>
+            <p className="text-sm text-gray-500 mb-1">Trendyol, Hepsiburada, Amazon, Etsy ve daha fazlası için — başlık, açıklama, görsel ve video tek platformda.</p>
+            <p className="text-xs text-indigo-500 mb-5">İçerik üretmek için ücretsiz hesap gerekli — 3 kredi hediye, kredi kartı yok.</p>
             <div className="flex items-center justify-center gap-3 flex-wrap">
               <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors">
-                Ücretsiz Başla — 3 Kredi Hediye
+                Ücretsiz Hesap Oluştur — 3 Kredi Hediye
               </button>
-              <a href="/auth" className="text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
-                Detaylı bilgi →
-              </a>
+              <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
+                Giriş yap →
+              </button>
             </div>
-          </div>
-        )}
-
-        {/* Giriş yok / anonim banner */}
-        {(!kullanici || kullanici.anonim) && (
-          <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 mb-5 flex items-center gap-3">
-            <span className="text-xl flex-shrink-0">💡</span>
-            <p className="text-sm text-indigo-700">Ücretsiz hesap oluşturun — 3 kredi hediye, kredi kartı gerekmez. Hesap olmadan içerik üretilemez.</p>
           </div>
         )}
 

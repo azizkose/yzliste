@@ -6,6 +6,7 @@ Claude Code için: **KÜME 0 EN ÖNCELİKLİ.** Üstten aşağı yap. Küme içi
 > **Son tarama: 2026-04-18** — Cowork tam audit. Tüm [x] maddeler koda karşı doğrulandı.
 > **Küme 0 güncellemesi: 2026-04-17** — PQ-01~PQ-10 tamamlandı.
 > **QA Tur 3 konsolide (2026-04-18):** 28 bulgu (Tur 1: 14, Tur 2 regresyon, Tur 3: 5 yeni). 6 düzeldi, 3 kısmen, 13 açık, 1 kötüleşti. QA-01~QA-21 olarak konsolide edildi. En kritik: QA-10 (şifre sıfırlama 400), QA-14 (auth-aware header kök neden).
+> **Haftalık audit (2026-04-18):** 13/13 sayfa 200 ✅, SSL OK, ort. 0.75s. 6 uyarı → HC-01~HC-06 eklendi. QA-12 (/fiyatlar CTA) düzelmiş. /auth sitemap'te hâlâ var.
 > **Cowork audit notu (2026-04-18):** Bazı yerel dosyalar truncate durumda (Cowork+Claude Code çakışması). Git HEAD doğru — `git checkout -- .` ile restore edilmeli (`index.lock` silinmeli önce).
 
 ---
@@ -147,10 +148,10 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   3. Veri sahibi hakları bilgisi yok
   **Gerekli:** "TC Kimlik verimi e-Arşiv fatura amacıyla işlenmesine açık rıza veriyorum" checkbox (default unchecked) + saklama süresi (örn. 10 yıl) + silme/düzeltme hakkı bilgisi. Hukukçu görüşü alınmalı.
 
-- [ ] **QA-05** P2 — Çelişen CTA mesajları (B-008): Hala açık. Logged-out anasayfada 3 çelişen mesaj aynen duruyor.
+- [x] **QA-05** P2 — Çelişen CTA mesajları (B-008): Hero + banner birleştirildi. "İçerik üretmek için hesap gerekli" bilgisi hero subtitle'a taşındı, ayrı info banner kaldırıldı.
 
 - [x] **QA-06** P2 — Kredi/üretim sayacı etiket tutarsızlığı (B-010):
-  ⚠️ Kısmen düzeldi: Sayılar artık eşleşiyor (5/2). Ama etiketler farklı: Anasayfa 'Kullanılan', Profil 'Toplam üretim'. Tek terime standartlaştır.
+  ✅ Tamamlandı: Anasayfa sidebar'da "Kullanılan" → "Toplam üretim" olarak güncellendi. Hesap/profil sayfalarıyla tutarlı.
 
 - [ ] **QA-07** → QA-14 ile birleştirildi (auth-aware header kök neden).
 
@@ -172,8 +173,8 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 - [x] **QA-12** P1 — Fiyatlar CTA'ları tutarsız rota (B-017):
   Hero 'Ücretsiz Başla' → `/kayit`, paket 'Başla' butonları → `/auth?kayit=1`. Tek rotaya sabitle ya da redirect ekle.
 
-- [ ] **QA-13** P1 — Login'li kullanıcıya kayıt CTA'ları gösteriliyor (B-018):
-  `/fiyatlar`'da login'li kullanıcıya 'Ücretsiz Başla' gösteriliyor. Auth state'e göre 'Paketi Satın Al' olmalı.
+- [x] **QA-13** P1 — Login'li kullanıcıya kayıt CTA'ları gösteriliyor (B-018):
+  `/fiyatlar`'da `FiyatlarCta` client component eklendi. Login'li: "İçerik Üret →" → `/`, login'siz: "Ücretsiz Başla" → `/kayit`.
 
 **Yeni bulgular — P2 (kök neden grubu):**
 - [x] **QA-14** P1 — İki farklı header implementasyonu → tutarsız deneyim (B-026):
@@ -207,6 +208,38 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 - [x] **QA-21** P3 — Cookie banner buton hiyerarşisi eşitsiz (B-027):
   'Tümünü kabul et' primary, 'Sadece zorunlu' secondary. KVKK/GDPR'a göre ikisi aynı görsel ağırlıkta olmalı.
+
+### Haftalık Audit Bulguları (2026-04-18)
+> Kaynak: Otomatik haftalık deep audit — Vercel MCP + Chrome.
+> 13/13 sayfa 200 ✅, SSL OK, ort. 0.75s. 6 uyarı aşağıda.
+
+- [ ] **HC-01** P1 — Canonical tag yanlış sayfalarda homepage'e işaret ediyor:
+  `/giris`, `/kayit`, `/sss` sayfalarının canonical tag'ı `https://www.yzliste.com/` (homepage) gösteriyor. Her sayfanın canonical'ı kendi URL'si olmalı.
+  **İlişki:** PQ-24 canonical eklendi ama bu 3 sayfa yanlış kalmış.
+  **Fix:** `/giris/layout.tsx` (veya page metadata), `/kayit/layout.tsx`, `/sss/page.tsx` metadata'larında canonical'ı kendi URL'lerine güncelle: `https://www.yzliste.com/giris`, `.../kayit`, `.../sss`.
+
+- [ ] **HC-02** P2 — Kırık iç linkler (404 dönen):
+  1. `/video` → 404. Sitede böyle bir route yok ama bir yerden linklenmiş.
+  2. `/blog/ai-gorsel-uretimi-e-ticaret` → 404. Blog post silinmiş veya slug değişmiş olabilir.
+  **Fix:** 1) `/video` linkini sitewide grep ile bul, doğru route'a güncelle veya kaldır. 2) Blog slug'ını kontrol et — varsa düzelt, yoksa 301 redirect ekle veya linki kaldır.
+
+- [ ] **HC-03** P2 — OG image (sosyal medya önizleme görseli) eksik:
+  `/fiyatlar`, `/blog`, `/auth` sayfalarında `og:image` meta tag'ı yok. Sosyal medyada paylaşılınca önizleme görseli çıkmaz.
+  **Fix:** Her sayfa metadata'sına `openGraph: { images: ['/og/fiyatlar.png'] }` ekle. Önce genel bir OG template oluştur (1200×630px), sonra sayfa bazlı varyantlar yapılabilir. Minimum: tüm sayfalar için tek `/og-default.png` kullan.
+
+- [ ] **HC-04** P1 — `/auth` hâlâ sitemap.xml'de:
+  `/auth` giriş yapmamış kullanıcıları `/giris`'e redirect ediyor → Google "Page with redirect" hatası veriyor.
+  **İlişki:** PQ-25'te not edilmişti ama henüz çıkarılmamış.
+  **Fix:** `app/sitemap.ts` (veya sitemap config) dosyasından `/auth` entry'sini tamamen kaldır.
+
+- [ ] **HC-05** P2 — Anasayfada hâlâ 1 adet `/auth` linki:
+  Logged-out anasayfada bir yerde hâlâ `/auth`'a link var. Tüm public linkler `/giris` veya `/kayit` olmalı.
+  **İlişki:** QA-11 kapsamında çoğu düzeldi ama 1 tane kalmış.
+  **Fix:** `app/page.tsx` veya component'lerde `/auth` href'i grep ile bul, `/giris` veya `/kayit`'e değiştir.
+
+- [ ] **HC-06** P3 — `/sss` sitemap'te yok:
+  SSS (Sıkça Sorulan Sorular) sayfası mevcut ve 200 dönüyor ama sitemap.xml'de listelenmiyor. SEO fırsatı kaçırılıyor.
+  **Fix:** `app/sitemap.ts`'e `/sss` ekle (priority: 0.5, changefreq: monthly).
 
 ### P3+ — UI Polish Pass (KÜME 0 bittikten sonra, demo öncesi)
 > Bu bölüm KÜME 0 içerik işleri tamamlandıktan sonra yapılacak. Redesign değil, cilalama.
@@ -369,8 +402,4 @@ Aşağıdaki eşiklerden 2'si gerçekleşince backlog'a al: **1.000 tekil/ay, 10
 - Bir iş bittiğinde `- [ ]` → `- [x]` olarak güncelle. Yarım iş `[x]` olmaz.
 - `~%XX` notları kısmen tamamlanmış item'ları gösterir — bunları tamamla, sonra `[x]` yap.
 - Her küme tek PR değil. Küme içinde 3-5 PR olabilir ama aynı branch ailesinde.
-- `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Cloudflare Turnstile**, **vanilla-cookieconsent**, **Paraşüt**, **Geist font (next/font)**.
-- DB şema değişiklikleri için migration yaz — direkt SQL çalıştırma. Supabase'deysek `supabase migration new xxx`.
-- Her küme bittiğinde `CHANGELOG.md`'ye 1 satır not.
-- Audit raporundaki `[F-XX]` kodları bu dosyayla aynı. Detay için `yzliste-audit-raporu.docx` Bölüm B'ye bak.
-                                                   
+- `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou
