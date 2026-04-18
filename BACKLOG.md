@@ -247,13 +247,8 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 **Kısmen düzelenler / hala açık:**
 
-- [ ] **QA-04** P1 — TC Kimlik KVKK eksik (B-007 + B-025): ⚠️ MANUEL — Hukukçu onayı gerekiyor
-  ⚠️ Kısmen düzeldi: Aydınlatma cümlesi eklendi. Eksikler:
-  1. Açık rıza checkbox'ı yok (KVKK 5/1 gereği zorunlu)
-  2. Saklama süresi beyanı yok (örn. "10 yıl, fatura mevzuatı gereği")
-  3. Veri sahibi hakları (silme/düzeltme/itiraz) bilgisi yok
-  **Yapılacak (hukukçu onayı sonrası):** `app/(auth)/hesap/profil/page.tsx` TC Kimlik alanına checkbox + metin eklenecek. Checkbox işaretsizse alan disabled olacak.
-  **⚠️ Hatırlatma: Avukattan/KVKK danışmanından onay al, sonra Claude Code ile implement et.**
+- [x] **QA-04** P1 — TC Kimlik KVKK eksik (B-007 + B-025):
+  TC Kimlik girilince "TC kimlik numaramın e-Arşiv fatura amacıyla işlenmesine onay veriyorum" checkbox gösteriliyor (default unchecked). Saklama süresi (10 yıl) + silme/düzeltme/itiraz hakkı + KVKK Aydınlatma Metni linki eklendi. Checkbox işaretsizken kaydet → hata mesajı. Mevcut TC Kimlik olanlara checkbox otomatik işaretli başlıyor.
 
 - [x] **QA-05** P2 — Çelişen CTA mesajları (B-008): Hero + banner birleştirildi. "İçerik üretmek için hesap gerekli" bilgisi hero subtitle'a taşındı, ayrı info banner kaldırıldı.
 
