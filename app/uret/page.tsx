@@ -1,29 +1,26 @@
 "use client";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import { useCredits, useInvalidateCredits } from "@/lib/hooks/useCredits";
 import { analytics } from "@/lib/analytics";
-import { useUretimStore } from "@/store/uretimStore";
 import AuthForm from "@/components/auth/AuthForm";
-import { PLATFORM_BILGI, PLATFORM_PLACEHOLDER, YUKLENIYOR_MESAJLARI, GORSEL_STILLER, VIDEO_PRESETLER, kategoriKoduHesapla } from "@/lib/constants";
-import { sonucuBolumle, docxIndir } from "@/lib/listing-utils";
-import KopyalaButon from "@/components/ui/KopyalaButon";
-import FotoThumbnail from "@/components/ui/FotoThumbnail";
-import FotoEkleAlani from "@/components/ui/FotoEkleAlani";
+import { resizeFoto } from "@/lib/listing-utils";
+import type { Kullanici } from "@/lib/listing-utils";
 import PaketModal from "@/components/PaketModal";
 import ChatWidget from "@/components/ChatWidget";
 import MetinSekmesi from "@/components/tabs/MetinSekmesi";
 import GorselSekmesi from "@/components/tabs/GorselSekmesi";
 import VideoSekmesi from "@/components/tabs/VideoSekmesi";
 import SosyalSekmesi from "@/components/tabs/SosyalSekmesi";
+import { useMetinUretim } from "@/lib/hooks/useMetinUretim";
+import { useGorselUretim } from "@/lib/hooks/useGorselUretim";
+import { useVideoUretim } from "@/lib/hooks/useVideoUretim";
+import { useSosyalUretim } from "@/lib/hooks/useSosyalUretim";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
-type SosyalPlatform = "instagram" | "tiktok" | "facebook" | "twitter";
-type SosyalTon = "tanitim" | "indirim" | "hikaye";
 
 type Uretim = {
   id: string;
@@ -34,130 +31,96 @@ type Uretim = {
   created_at: string;
 };
 
-type Kullanici = {
-  id: string;
-  email: string | null;
-  kredi: number;
-  toplam_kullanilan: number;
-  is_admin: boolean;
-  anonim?: boolean;
-  ton?: string;
-  marka_adi?: string;
-};
-
-
 export default function Home() {
   const router = useRouter();
   const invalidateCredits = useInvalidateCredits();
   const { data: kredilerHook } = useCredits();
-  const { setPaylasim } = useUretimStore();
 
-  // Sekme
+  // ===== SHARED STATE =====
   const [anaSekme, setAnaSekme] = useState<AnaSekme>("metin");
-
-  // Kullanıcı
   const [kullanici, setKullanici] = useState<Kullanici | null>(null);
   const [authYukleniyor, setAuthYukleniyor] = useState(true);
   const [gecmis, setGecmis] = useState<Uretim[]>([]);
-  const [seciliUretim, setSeciliUretim] = useState<Uretim | null>(null);
   const [gecmisAcik, setGecmisAcik] = useState(false);
   const [gecmisPlatformFiltre, setGecmisPlatformFiltre] = useState("");
   const [paketModalAcik, setPaketModalAcik] = useState(false);
   const [hata, setHata] = useState<string | null>(null);
   const [profilBannerKapatildi, setProfilBannerKapatildi] = useState(false);
-
-  // Auth popup
   const [authPopupAcik, setAuthPopupAcik] = useState(false);
   const [authPopupMod, setAuthPopupMod] = useState<"giris" | "kayit">("kayit");
   const [authSonraAksiyon, setAuthSonraAksiyon] = useState<"paket" | null>(null);
-
-  // Metin sekmesi
-  const [urunAdi, setUrunAdi] = useState("");
-  const [kategori, setKategori] = useState("");
-  const [ozellikler, setOzellikler] = useState("");
-  const [platform, setPlatform] = useState("trendyol");
-  const [dil, setDil] = useState<"tr" | "en">("tr");
-  const [hedefKitle, setHedefKitle] = useState("genel");
-  const [fiyatSegmenti, setFiyatSegmenti] = useState<"butce" | "orta" | "premium">("orta");
-  const [markaliUrun, setMarkaliUrun] = useState(false);
-  const [anahtarKelimeler, setAnahtarKelimeler] = useState("");
-  const [sonuc, setSonuc] = useState("");
-  const [uretimId, setUretimId] = useState<string | null>(null);
-  const [yenidenUretHakki, setYenidenUretHakki] = useState(3);
-  const [duzenleYukleniyor, setDuzenleYukleniyor] = useState(false);
-  const [yukleniyor, setYukleniyor] = useState(false);
-  const [yukleniyorMesaj, setYukleniyorMesaj] = useState(0);
   const [fotolar, setFotolar] = useState<string[]>([]);
-  const [girisTipi, setGirisTipi] = useState<"manuel" | "foto" | "barkod">("manuel");
-  const [barkod, setBarkod] = useState("");
-  const [barkodYukleniyor, setBarkodYukleniyor] = useState(false);
-  const [barkodBilgi, setBarkodBilgi] = useState<{ isim: string; marka: string; aciklama: string; kategori: string; renk: string; boyut: string } | null>(null);
-  const [kameraAcik, setKameraAcik] = useState(false);
 
-  // Görsel sekmesi
-  const [gorselEkPrompt, setGorselEkPrompt] = useState("");
-  const [seciliStiller, setSeciliStiller] = useState<Set<string>>(new Set());
-  const [gorselYukleniyor, setGorselYukleniyor] = useState(false);
-  const [gorselJoblar, setGorselJoblar] = useState<{ requestId: string; label: string; stil: string }[]>([]);
-  const [referansGorsel, setReferansGorsel] = useState<string | null>(null);
-
-  // Video sekmesi
-  // videoFoto kaldırıldı — tüm sekmeler fotolar[0] paylaşır
-  const [videoPrompt, setVideoPrompt] = useState("");
-  const [videoPromptGoster, setVideoPromptGoster] = useState("");
-  const [videoSure, setVideoSure] = useState<"5" | "10">("5");
-  const [videoFormat, setVideoFormat] = useState<"9:16" | "16:9" | "1:1">("9:16");
-  const [videoYukleniyor, setVideoYukleniyor] = useState(false);
-  const [videoRequestId, setVideoRequestId] = useState<string | null>(null);
-
-  // Sosyal sekmesi
-  const [sosyalFoto, setSosyalFoto] = useState<string | null>(null);
-  const [sosyalUrunAdi, setSosyalUrunAdi] = useState("");
-  const [sosyalEkBilgi, setSosyalEkBilgi] = useState("");
-  const [sosyalPlatform, setSosyalPlatform] = useState<SosyalPlatform>("instagram");
-  const [sosyalTon, setSosyalTon] = useState<SosyalTon>("tanitim");
-  const [captionYukleniyor, setCaptionYukleniyor] = useState(false);
-  const [sosyalCaption, setSosyalCaption] = useState("");
-  const [sosyalHashtag, setSosyalHashtag] = useState("");
-  // Sosyal — görsel üretimi
-  const [sosyalIcerikTipi, setSosyalIcerikTipi] = useState<"metin" | "gorsel">("metin");
-  const [sosyalGorselStil, setSosyalGorselStil] = useState("beyaz");
-  const [sosyalGorselFormat, setSosyalGorselFormat] = useState<"1:1" | "9:16" | "16:9">("1:1");
-  const [sosyalGorselYukleniyor, setSosyalGorselYukleniyor] = useState(false);
-  const [sosyalGorselSonuclar, setSosyalGorselSonuclar] = useState<{ stil: string; label: string; gorseller: string[] }[]>([]);
-  const [sosyalGorselPrompt, setSosyalGorselPrompt] = useState("");
-  const [sosyalSezon, setSosyalSezon] = useState("normal");
-  // Sosyal medya kiti (4 platform birden)
-  const [sosyalKitYukleniyor, setSosyalKitYukleniyor] = useState(false);
-  const [sosyalKitSonuc, setSosyalKitSonuc] = useState<Record<string, { caption: string; hashtag: string }> | null>(null);
-  const [sosyalKitAcik, setSosyalKitAcik] = useState<string | null>(null);
-
-  // Refs
-  const scannerRef = useRef<unknown>(null);
-  const scannerBaslatildi = useRef(false);
-  const sorguCalisiyor = useRef(false);
-  const mesajInterval = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  // Metin sekmesindeki değerleri store'a senkronize et
-  useEffect(() => {
-    setPaylasim({ urunAdi, kategori, platform });
-  }, [urunAdi, kategori, platform, setPaylasim]);
-
-  // Sosyal sekmesine geçince sosyalUrunAdi otomatik doldur
-  useEffect(() => {
-    if (anaSekme === "sosyal" && !sosyalUrunAdi && urunAdi) {
-      setSosyalUrunAdi(urunAdi);
-    }
-  }, [anaSekme]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const platformBilgi = PLATFORM_BILGI[platform] || PLATFORM_BILGI.trendyol;
-  const platformPh = PLATFORM_PLACEHOLDER[platform] || PLATFORM_PLACEHOLDER.trendyol;
-  const platformDil = platformBilgi.dil || "tr";
   const krediDusuk = kullanici && !kullanici.is_admin && (kredilerHook ?? kullanici.kredi) <= 2;
-  const sonucBolumleri = sonucuBolumle(sonuc);
-  const platformRenk: Record<string, string> = { trendyol: "bg-orange-100 text-orange-700", hepsiburada: "bg-orange-100 text-orange-600", amazon: "bg-yellow-100 text-yellow-700", n11: "bg-blue-100 text-blue-700" };
 
+  // Stable functional-update wrapper so hooks get a stable reference
+  const setKullaniciFn = useCallback((fn: (k: Kullanici | null) => Kullanici | null) => {
+    setKullanici(fn);
+  }, []);
 
+  const loginGerekli = useCallback((): boolean => {
+    if (!kullanici || kullanici.anonim) {
+      setAuthPopupMod("kayit");
+      setAuthPopupAcik(true);
+      return false;
+    }
+    return true;
+  }, [kullanici]);
+
+  const paketModalAc = useCallback(() => {
+    if (!kullanici || kullanici.anonim) {
+      setAuthSonraAksiyon("paket");
+      setAuthPopupMod("kayit");
+      setAuthPopupAcik(true);
+      return;
+    }
+    setPaketModalAcik(true);
+  }, [kullanici]);
+
+  const gecmisiYukle = useCallback(async (userId: string) => {
+    const { data } = await supabase.from("uretimler").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(10);
+    if (data) setGecmis(data);
+  }, []);
+
+  const blobIndir = (blob: Blob, dosyaAdi: string) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = dosyaAdi; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // ===== TAB HOOKS =====
+  const metin = useMetinUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, gecmisiYukle, invalidateCredits });
+  const gorsel = useGorselUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
+  const video = useVideoUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
+  const sosyal = useSosyalUretim({ urunAdi: metin.urunAdi, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
+
+  // ===== SHARED PHOTO HANDLERS =====
+  const fotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const dosyalar = Array.from(e.target.files || []);
+    dosyalar.slice(0, 3 - fotolar.length).forEach((dosya) => {
+      const reader = new FileReader();
+      reader.onload = () => setFotolar((prev) => (prev.length >= 3 ? prev : [...prev, reader.result as string]));
+      reader.readAsDataURL(dosya);
+    });
+    e.target.value = "";
+  };
+
+  const fotoKaldir = (index: number) => {
+    setFotolar((prev) => prev.filter((_, i) => i !== index));
+    gorsel.setGorselJoblar([]);
+  };
+
+  const tekFotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const dosya = e.target.files?.[0];
+    if (!dosya) return;
+    const reader = new FileReader();
+    reader.onload = () => { setFotolar([reader.result as string]); gorsel.setGorselJoblar([]); };
+    reader.readAsDataURL(dosya);
+    e.target.value = "";
+  };
+
+  // ===== AUTH =====
   const handleAuthSuccess = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
@@ -168,49 +131,21 @@ export default function Home() {
     if (profil) setKullanici({ id: user.id, email: profil.email ?? null, kredi: profil.kredi, toplam_kullanilan: count || 0, is_admin: profil.is_admin || false, anonim: false, ton: profil.ton ?? undefined, marka_adi: profil.marka_adi ?? undefined });
     gecmisiYukle(user.id);
     setAuthPopupAcik(false);
-    if (authSonraAksiyon === "paket") {
-      setAuthSonraAksiyon(null);
-      setPaketModalAcik(true);
-    }
-  }, [authSonraAksiyon]);
-
-  const paketModalAc = () => {
-    if (!kullanici) {
-      setAuthSonraAksiyon("paket");
-      setAuthPopupMod("kayit");
-      setAuthPopupAcik(true);
-      return;
-    }
-    if (kullanici.anonim) {
-      setAuthSonraAksiyon("paket");
-      setAuthPopupMod("kayit");
-      setAuthPopupAcik(true);
-      return;
-    }
-    setPaketModalAcik(true);
-  };
+    if (authSonraAksiyon === "paket") { setAuthSonraAksiyon(null); setPaketModalAcik(true); }
+  }, [authSonraAksiyon, gecmisiYukle]);
 
   const kullaniciyiKontrolEt = async () => {
     const params = new URLSearchParams(window.location.search);
     const paketParam = params.get("paket") === "ac";
     const odemeParam = params.get("odeme");
     if (paketParam || odemeParam) window.history.replaceState({}, "", "/");
-
     const { data: { user } } = await supabase.auth.getUser();
-
     if (odemeParam === "hata") setHata("Ödeme tamamlanamadı. Tekrar deneyin.");
-
     if (!user) {
-      // Login olmadan sayfa göster — üret butonlarında kontrol yapılır
-      if (paketParam) {
-        setAuthSonraAksiyon("paket");
-        setAuthPopupMod("kayit");
-        setAuthPopupAcik(true);
-      }
+      if (paketParam) { setAuthSonraAksiyon("paket"); setAuthPopupMod("kayit"); setAuthPopupAcik(true); }
       setAuthYukleniyor(false);
       return;
     }
-
     const anonim = user.is_anonymous ?? false;
     const { data: profil } = await supabase.from("profiles").select("email, kredi, is_admin, ton, marka_adi").eq("id", user.id).single();
     const { count } = await supabase.from("uretimler").select("*", { count: "exact", head: true }).eq("user_id", user.id);
@@ -222,360 +157,17 @@ export default function Home() {
       setKullanici({ id: user.id, email: null, kredi: 3, toplam_kullanilan: 0, is_admin: false, anonim: true });
     }
     gecmisiYukle(user.id);
-
     if (paketParam) {
-      if (anonim) {
-        setAuthSonraAksiyon("paket");
-        setAuthPopupMod("kayit");
-        setAuthPopupAcik(true);
-      } else {
-        setPaketModalAcik(true);
-      }
+      if (anonim) { setAuthSonraAksiyon("paket"); setAuthPopupMod("kayit"); setAuthPopupAcik(true); }
+      else setPaketModalAcik(true);
     }
     setAuthYukleniyor(false);
   };
 
-  // Blob'u tarayıcıda indir — tekrarlanan createObjectURL pattern'ini ortadan kaldırır
-  const blobIndir = (blob: Blob, dosyaAdi: string) => {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = dosyaAdi; a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  // Üretim butonları için login kontrolü — giriş yoksa veya anonim ise popup aç
-  const loginGerekli = (): boolean => {
-    if (!kullanici || kullanici.anonim) {
-      setAuthPopupMod("kayit");
-      setAuthPopupAcik(true);
-      return false;
-    }
-    return true;
-  };
-
   useEffect(() => {
     kullaniciyiKontrolEt();
-    return () => { kameraKapat(); if (mesajInterval.current) clearInterval(mesajInterval.current); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // PQ-15: Listing sekmesindeki ürün adını sosyal sekmeye senkronla
-  useEffect(() => {
-    if (urunAdi) setSosyalUrunAdi(urunAdi);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urunAdi]);
-
-  const gecmisiYukle = async (userId: string) => {
-    const { data } = await supabase.from("uretimler").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(10);
-    if (data) setGecmis(data);
-  };
-
-  const cikisYap = async () => { analytics.reset(); await supabase.auth.signOut(); router.push("/"); };
-
-  const fotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const dosyalar = Array.from(e.target.files || []);
-    dosyalar.slice(0, 3 - fotolar.length).forEach((dosya) => {
-      const reader = new FileReader();
-      reader.onload = () => setFotolar((prev) => (prev.length >= 3 ? prev : [...prev, reader.result as string]));
-      reader.readAsDataURL(dosya);
-    });
-    e.target.value = "";
-  };
-
-  const fotoKaldir = (index: number) => { setFotolar((prev) => prev.filter((_, i) => i !== index)); setGorselJoblar([]); };
-
-  // Fotoğraf boyutlandır — API'ye göndermeden önce
-  const resizeFoto = (base64: string, maxSize = 1024): Promise<string> =>
-    new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        let w = img.width, h = img.height;
-        if (w > maxSize || h > maxSize) { if (w > h) { h = Math.round(h * maxSize / w); w = maxSize; } else { w = Math.round(w * maxSize / h); h = maxSize; } }
-        canvas.width = w; canvas.height = h;
-        canvas.getContext("2d")?.drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL("image/jpeg", 0.85));
-      };
-      img.src = base64;
-    });
-
-  // Tek fotoğraf seç — görsel/video/sosyal sekmeleri için (mevcut fotoğrafın üzerine yazar)
-  const tekFotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const dosya = e.target.files?.[0];
-    if (!dosya) return;
-    const reader = new FileReader();
-    reader.onload = () => { setFotolar([reader.result as string]); setGorselJoblar([]); };
-    reader.readAsDataURL(dosya);
-    e.target.value = "";
-  };
-
-  const barkodSorgula = async (kod: string) => {
-    if (!kod || kod.length < 8 || sorguCalisiyor.current) return;
-    sorguCalisiyor.current = true;
-    setBarkodYukleniyor(true);
-    setBarkodBilgi(null);
-    try {
-      const res = await fetch(`/api/barkod?kod=${kod}`);
-      const data = await res.json();
-      if (data.bulunamadi) { alert("Bu ürün veritabanında bulunamadı."); setGirisTipi("manuel"); setBarkod(""); }
-      else if (data.isim) { setBarkodBilgi(data); setUrunAdi(data.isim); if (data.marka) setKategori(data.marka); if (data.aciklama) setOzellikler(data.aciklama); kameraKapat(); }
-    } catch { alert("Barkod sorgulanırken hata oluştu."); }
-    setBarkodYukleniyor(false);
-    sorguCalisiyor.current = false;
-  };
-
-  const kameraAc = async () => {
-    if (scannerBaslatildi.current) return;
-    setKameraAcik(true);
-    setTimeout(async () => {
-      try {
-        const { Html5Qrcode } = await import("html5-qrcode");
-        const scanner = new Html5Qrcode("barkod-okuyucu");
-        scannerRef.current = scanner;
-        scannerBaslatildi.current = true;
-        await scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 150 } },
-          (decodedText: string) => { setBarkod(decodedText); barkodSorgula(decodedText); }, () => {});
-      } catch (e) { console.log(e); alert("Kamera açılamadı."); setKameraAcik(false); scannerBaslatildi.current = false; }
-    }, 300);
-  };
-
-  const kameraKapat = async () => {
-    if (scannerRef.current && scannerBaslatildi.current) {
-      try { const s = scannerRef.current as { stop: () => Promise<void>; clear: () => void }; await s.stop(); s.clear(); } catch (e) { console.log(e); }
-      scannerRef.current = null;
-      scannerBaslatildi.current = false;
-    }
-    setKameraAcik(false);
-  };
-
-  const uretButonAktif = !yukleniyor && ((girisTipi === "manuel" && urunAdi && kategori) || (girisTipi === "foto" && fotolar.length > 0) || (girisTipi === "barkod" && barkodBilgi !== null));
-
-  const icerikUret = async () => {
-    if (!loginGerekli()) return;
-    if (!kullanici) return;
-    if (!kullanici.is_admin && kullanici.kredi <= 0) { paketModalAc(); return; }
-    if (!uretButonAktif) return;
-    setYukleniyor(true);
-    setSonuc("");
-    setYukleniyorMesaj(0);
-    analytics.generationStarted({ platform, type: 'metin' });
-    mesajInterval.current = setInterval(() => setYukleniyorMesaj((prev) => (prev + 1) % YUKLENIYOR_MESAJLARI.length), 1800);
-    try {
-      const res = await fetch("/api/uret", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi, userId: kullanici.id, dil: platformDil, ton: kullanici.ton, hedefKitle, fiyatSegmenti, anahtarKelimeler, markaliUrun }) });
-      const data = await res.json();
-      if (mesajInterval.current) clearInterval(mesajInterval.current);
-      if (res.status === 402) { analytics.creditExhausted(); paketModalAc(); setYukleniyor(false); return; }
-      setSonuc(data.icerik);
-      setUretimId(data.uretimId ?? null);
-      setYenidenUretHakki(3);
-      if (kullanici.is_admin) setKullanici({ ...kullanici, toplam_kullanilan: kullanici.toplam_kullanilan + 1 });
-      else setKullanici({ ...kullanici, kredi: kullanici.kredi - 1, toplam_kullanilan: kullanici.toplam_kullanilan + 1 });
-      analytics.generationCompleted({ platform, type: 'metin', credits_remaining: kullanici.kredi - 1 });
-      invalidateCredits();
-      gecmisiYukle(kullanici.id);
-    } catch { if (mesajInterval.current) clearInterval(mesajInterval.current); analytics.generationFailed({ platform, type: 'metin', error: 'network' }); setHata("İçerik üretilemedi. Lütfen tekrar deneyin."); }
-    setYukleniyor(false);
-    setTimeout(() => document.getElementById("sonuc-alani")?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
-  };
-
-  const stilToggle = (stilId: string) => {
-    setSeciliStiller(prev => {
-      const next = new Set(prev);
-      if (stilId === "ozel" || stilId === "referans") {
-        return next.has(stilId) ? new Set() : new Set([stilId]);
-      }
-      next.delete("ozel");
-      next.delete("referans");
-      if (next.has(stilId)) next.delete(stilId);
-      else next.add(stilId);
-      return next;
-    });
-  };
-
-  const gorselUret = async () => {
-    if (!loginGerekli()) return;
-    if (!kullanici) return;
-    if (fotolar.length === 0) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
-    if (seciliStiller.size === 0) { alert("En az bir stil seçin."); return; }
-    const stilSayisi = seciliStiller.size;
-    if (!kullanici.is_admin && kullanici.kredi < stilSayisi) { paketModalAc(); return; }
-    setGorselYukleniyor(true);
-    setGorselJoblar([]);
-    try {
-      const resizedFoto = await resizeFoto(fotolar[0]);
-      const res = await fetch("/api/gorsel", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          foto: resizedFoto,
-          stiller: Array.from(seciliStiller),
-          ekPrompt: gorselEkPrompt,
-          userId: kullanici?.id,
-          referansGorsel,
-        }),
-      });
-      const data = await res.json();
-      if (res.status === 402) { paketModalAc(); setGorselYukleniyor(false); return; }
-      if (!data.jobs || data.jobs.length === 0) {
-        setHata("Görsel üretilemedi. Tekrar deneyin.");
-        setGorselYukleniyor(false);
-        return;
-      }
-
-      if (!kullanici.is_admin) {
-        setKullanici(k => k ? { ...k, kredi: Math.max(0, k.kredi - stilSayisi) } : k);
-        invalidateCredits();
-      }
-
-      // Her iş için paralel poll — tamamlananlar anında gösterilir
-      let tamamlananSayisi = 0;
-      const hataMesajlari: string[] = [];
-      await Promise.all(
-        data.jobs.map(async (job: { requestId: string; label: string; stil: string }) => {
-          for (let deneme = 0; deneme < 40; deneme++) {
-            await new Promise(r => setTimeout(r, 4000));
-            const pollRes = await fetch(`/api/gorsel/poll?requestId=${job.requestId}`);
-            const pollData = await pollRes.json();
-            if (pollData.status === "COMPLETED") {
-              tamamlananSayisi++;
-              setGorselJoblar(prev => [...prev, job]);
-              break;
-            }
-            if (pollData.status === "FAILED") {
-              const hataAciklama = pollData.hata || "Görsel üretilemedi";
-              hataMesajlari.push(`${job.label}: ${hataAciklama}`);
-              break;
-            }
-          }
-        })
-      );
-
-      if (tamamlananSayisi === 0) {
-        setHata(hataMesajlari.length > 0 ? hataMesajlari[0] : "Görsel üretilemedi, zaman aşımı.");
-      } else if (hataMesajlari.length > 0) {
-        setHata(`${hataMesajlari.length} görsel üretilemedi: ${hataMesajlari[0]}`);
-      }
-    } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
-    setGorselYukleniyor(false);
-  };
-
-  const videoUret = async () => {
-    if (!loginGerekli()) return;
-    if (!fotolar[0]) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
-    if (!kullanici) return;
-    const videoKredi = videoSure === "10" ? 8 : 5;
-    if (!kullanici.is_admin && kullanici.kredi < videoKredi) { paketModalAc(); return; }
-    setVideoYukleniyor(true);
-    setVideoRequestId(null);
-    try {
-      const resizedFoto = await resizeFoto(fotolar[0]);
-      const res = await fetch("/api/sosyal/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foto: resizedFoto, prompt: videoPrompt, userId: kullanici.id, sure: videoSure, format: videoFormat }) });
-      const data = await res.json();
-      if (res.status === 402) { paketModalAc(); setVideoYukleniyor(false); return; }
-      if (!data.requestId) { setHata("Video üretilemedi. Tekrar deneyin."); setVideoYukleniyor(false); return; }
-
-      // Kredi düşürüldü, kuyruğa alındı — poll et
-      if (!kullanici.is_admin) { setKullanici({ ...kullanici, kredi: kullanici.kredi - (data.kullanilanKredi ?? videoKredi) }); invalidateCredits(); }
-
-      let tamamlandi = false;
-      for (let deneme = 0; deneme < 60; deneme++) {
-        await new Promise(r => setTimeout(r, 5000));
-        const pollRes = await fetch(`/api/sosyal/video/poll?requestId=${data.requestId}`);
-        const pollData = await pollRes.json();
-        if (pollData.status === "COMPLETED") {
-          setVideoRequestId(data.requestId);
-          tamamlandi = true;
-          break;
-        }
-      }
-      if (!tamamlandi) setHata("Video üretilemedi, zaman aşımı. Tekrar deneyin.");
-    } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
-    setVideoYukleniyor(false);
-  };
-
-  const captionUret = async () => {
-    if (!loginGerekli()) return;
-    if (!kullanici) return;
-    if (!sosyalUrunAdi.trim()) return;
-    if (!kullanici.is_admin && kullanici.kredi <= 0) { paketModalAc(); return; }
-    setCaptionYukleniyor(true);
-    setSosyalCaption("");
-    setSosyalHashtag("");
-    try {
-      const res = await fetch("/api/sosyal", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, platform: sosyalPlatform, ton: sosyalTon, sezon: sosyalSezon, userId: kullanici.id }) });
-      const data = await res.json();
-      if (data.caption) setSosyalCaption(data.caption);
-      if (data.hashtag) setSosyalHashtag(data.hashtag);
-      if (!kullanici.is_admin) { setKullanici({ ...kullanici, kredi: kullanici.kredi - 1 }); invalidateCredits(); }
-    } catch { setHata("Paylaşım metni üretilemedi. Tekrar deneyin."); }
-    setCaptionYukleniyor(false);
-  };
-
-  const kitUret = async () => {
-    if (!loginGerekli()) return;
-    if (!kullanici) return;
-    if (!sosyalUrunAdi.trim()) return;
-    const krediGereken = 4;
-    if (!kullanici.is_admin && kullanici.kredi < krediGereken) { paketModalAc(); return; }
-    setSosyalKitYukleniyor(true);
-    setSosyalKitSonuc(null);
-    setSosyalKitAcik(null);
-    try {
-      const res = await fetch("/api/sosyal/kit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, ton: sosyalTon, sezon: sosyalSezon, userId: kullanici.id }),
-      });
-      const data = await res.json();
-      if (res.status === 402) { paketModalAc(); setSosyalKitYukleniyor(false); return; }
-      if (data.captions) {
-        setSosyalKitSonuc(data.captions);
-        setSosyalKitAcik("instagram_tiktok");
-        if (!kullanici.is_admin) { setKullanici({ ...kullanici, kredi: kullanici.kredi - (data.kullanilanKredi ?? krediGereken) }); invalidateCredits(); }
-      }
-    } catch { setHata("Kit üretilemedi. Tekrar deneyin."); }
-    setSosyalKitYukleniyor(false);
-  };
-
-  const sosyalGorselUret = async () => {
-    if (!kullanici || kullanici.anonim) { setAuthPopupMod("kayit"); setAuthPopupAcik(true); return; }
-    if (!sosyalFoto) { alert("Önce ürün fotoğrafı yükle."); return; }
-    if (!kullanici.is_admin && kullanici.kredi <= 0) { paketModalAc(); return; }
-    setSosyalGorselYukleniyor(true);
-    setSosyalGorselSonuclar([]);
-    try {
-      const resizedFoto = await resizeFoto(sosyalFoto);
-      const res = await fetch("/api/gorsel", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ foto: resizedFoto, stil: sosyalGorselStil, ekPrompt: sosyalGorselPrompt, sosyalFormat: sosyalGorselFormat, userId: kullanici.id }),
-      });
-      const data = await res.json();
-      if (res.status === 402) { paketModalAc(); setSosyalGorselYukleniyor(false); return; }
-      if (!data.requestId) { setHata("Görsel üretilemedi. Tekrar deneyin."); setSosyalGorselYukleniyor(false); return; }
-
-      // Poll et — COMPLETED olunca proxy URL'lerle göster
-      let tamamlandi = false;
-      for (let deneme = 0; deneme < 40; deneme++) {
-        await new Promise(r => setTimeout(r, 4000));
-        const pollRes = await fetch(`/api/gorsel/poll?requestId=${data.requestId}`);
-        const pollData = await pollRes.json();
-        if (pollData.status === "COMPLETED") {
-          const proxyGorseller = [0, 1, 2, 3].map((i) => `/api/gorsel/img?requestId=${data.requestId}&index=${i}`);
-          setSosyalGorselSonuclar([{ stil: sosyalGorselStil, label: data.label, gorseller: proxyGorseller }]);
-          tamamlandi = true;
-          break;
-        }
-        if (pollData.status === "FAILED") {
-          setHata(pollData.hata || "Görsel üretilemedi. Tekrar deneyin.");
-          tamamlandi = true;
-          break;
-        }
-      }
-      if (!tamamlandi) setHata("Görsel üretilemedi, zaman aşımı. Tekrar deneyin.");
-    } catch { setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
-    setSosyalGorselYukleniyor(false);
-  };
 
   return (
     <>
@@ -583,7 +175,7 @@ export default function Home() {
       <main className="min-h-screen bg-gray-50 pb-24 px-4">
       <div className="max-w-5xl mx-auto pt-6">
 
-        {/* Compact hero — sadece giriş yapılmamışsa (authYukleniyor bitince göster) */}
+        {/* Compact hero */}
         {!authYukleniyor && (!kullanici || kullanici.anonim) && (
           <div className="bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 rounded-2xl px-6 py-7 mb-5 text-center">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">7 Pazaryeri için AI İçerik Üreticisi</h1>
@@ -642,8 +234,8 @@ export default function Home() {
           </div>
         )}
 
-        {/* F-23b: Onboarding banner — ilk kez kullananlar için */}
-        {kullanici && !kullanici.anonim && kullanici.toplam_kullanilan === 0 && !sonuc && (
+        {/* F-23b: Onboarding banner */}
+        {kullanici && !kullanici.anonim && kullanici.toplam_kullanilan === 0 && !metin.sonuc && (
           <div className="mb-4 bg-indigo-50 border border-indigo-200 rounded-2xl p-4 flex items-start gap-3">
             <span className="text-2xl flex-shrink-0">🎉</span>
             <div className="flex-1">
@@ -685,7 +277,7 @@ export default function Home() {
               ))}
             </div>
 
-            {/* PAYLAŞILAN ÜRÜN FOTOĞRAFI — tüm sekmelerde geçerli */}
+            {/* PAYLAŞILAN ÜRÜN FOTOĞRAFI */}
             <div className="mt-3 bg-white rounded-2xl shadow p-4">
               {fotolar[0] ? (
                 <div className="flex items-center gap-3">
@@ -708,7 +300,7 @@ export default function Home() {
                       Değiştir
                       <input type="file" accept="image/*" className="hidden" onChange={tekFotoSec} />
                     </label>
-                    <button onClick={() => { setFotolar([]); setGorselJoblar([]); }} className="text-xs text-gray-400 hover:text-red-500 transition-colors">Kaldır</button>
+                    <button onClick={() => { setFotolar([]); gorsel.setGorselJoblar([]); }} className="text-xs text-gray-400 hover:text-red-500 transition-colors">Kaldır</button>
                   </div>
                 </div>
               ) : (
@@ -729,78 +321,76 @@ export default function Home() {
             {/* ===== METİN SEKMESİ ===== */}
             <MetinSekmesi
               aktif={anaSekme === "metin"}
-              girisTipi={girisTipi} setGirisTipi={setGirisTipi}
-              platform={platform} setPlatform={setPlatform} setDil={setDil}
-              urunAdi={urunAdi} setUrunAdi={setUrunAdi}
-              kategori={kategori} setKategori={setKategori}
-              ozellikler={ozellikler} setOzellikler={setOzellikler}
-              hedefKitle={hedefKitle} setHedefKitle={setHedefKitle}
-              fiyatSegmenti={fiyatSegmenti} setFiyatSegmenti={setFiyatSegmenti}
-              anahtarKelimeler={anahtarKelimeler} setAnahtarKelimeler={setAnahtarKelimeler}
-              markaliUrun={markaliUrun} setMarkaliUrun={setMarkaliUrun}
+              girisTipi={metin.girisTipi} setGirisTipi={metin.setGirisTipi}
+              platform={metin.platform} setPlatform={metin.setPlatform} setDil={metin.setDil}
+              urunAdi={metin.urunAdi} setUrunAdi={metin.setUrunAdi}
+              kategori={metin.kategori} setKategori={metin.setKategori}
+              ozellikler={metin.ozellikler} setOzellikler={metin.setOzellikler}
+              hedefKitle={metin.hedefKitle} setHedefKitle={metin.setHedefKitle}
+              fiyatSegmenti={metin.fiyatSegmenti} setFiyatSegmenti={metin.setFiyatSegmenti}
+              anahtarKelimeler={metin.anahtarKelimeler} setAnahtarKelimeler={metin.setAnahtarKelimeler}
+              markaliUrun={metin.markaliUrun} setMarkaliUrun={metin.setMarkaliUrun}
               fotolar={fotolar} fotoKaldir={fotoKaldir}
-              kameraAcik={kameraAcik} kameraAc={kameraAc} kameraKapat={kameraKapat}
-              barkodYukleniyor={barkodYukleniyor} barkodBilgi={barkodBilgi} setBarkodBilgi={setBarkodBilgi}
-              yukleniyor={yukleniyor} yukleniyorMesaj={yukleniyorMesaj}
-              sonuc={sonuc} setSonuc={setSonuc}
-              duzenleYukleniyor={duzenleYukleniyor} setDuzenleYukleniyor={setDuzenleYukleniyor}
-              uretimId={uretimId} yenidenUretHakki={yenidenUretHakki} setYenidenUretHakki={setYenidenUretHakki}
-              kullanici={kullanici} paketModalAc={paketModalAc} icerikUret={icerikUret}
+              kameraAcik={metin.kameraAcik} kameraAc={metin.kameraAc} kameraKapat={metin.kameraKapat}
+              barkodYukleniyor={metin.barkodYukleniyor} barkodBilgi={metin.barkodBilgi} setBarkodBilgi={metin.setBarkodBilgi}
+              yukleniyor={metin.yukleniyor} yukleniyorMesaj={metin.yukleniyorMesaj}
+              sonuc={metin.sonuc} setSonuc={metin.setSonuc}
+              duzenleYukleniyor={metin.duzenleYukleniyor} setDuzenleYukleniyor={metin.setDuzenleYukleniyor}
+              uretimId={metin.uretimId} yenidenUretHakki={metin.yenidenUretHakki} setYenidenUretHakki={metin.setYenidenUretHakki}
+              kullanici={kullanici} paketModalAc={paketModalAc} icerikUret={metin.icerikUret}
             />
-
 
             {/* ===== GÖRSEL SEKMESİ ===== */}
             <GorselSekmesi
               aktif={anaSekme === "gorsel"}
-              urunAdi={urunAdi} kategori={kategori}
+              urunAdi={metin.urunAdi} kategori={metin.kategori}
               fotolar={fotolar} fotoSec={fotoSec} fotoKaldir={fotoKaldir}
-              gorselEkPrompt={gorselEkPrompt} setGorselEkPrompt={setGorselEkPrompt}
-              seciliStiller={seciliStiller} stilToggle={stilToggle}
-              gorselYukleniyor={gorselYukleniyor} gorselJoblar={gorselJoblar} setGorselJoblar={setGorselJoblar}
-              referansGorsel={referansGorsel} setReferansGorsel={setReferansGorsel}
-              kullanici={kullanici} paketModalAc={paketModalAc} gorselUret={gorselUret}
-              blobIndir={blobIndir} resizeFoto={resizeFoto} invalidateCredits={invalidateCredits} setKullanici={setKullanici}
+              gorselEkPrompt={gorsel.gorselEkPrompt} setGorselEkPrompt={gorsel.setGorselEkPrompt}
+              seciliStiller={gorsel.seciliStiller} stilToggle={gorsel.stilToggle}
+              gorselYukleniyor={gorsel.gorselYukleniyor} gorselJoblar={gorsel.gorselJoblar} setGorselJoblar={gorsel.setGorselJoblar}
+              referansGorsel={gorsel.referansGorsel} setReferansGorsel={gorsel.setReferansGorsel}
+              kullanici={kullanici} paketModalAc={paketModalAc} gorselUret={gorsel.gorselUret}
+              blobIndir={blobIndir} resizeFoto={resizeFoto} invalidateCredits={invalidateCredits} setKullanici={setKullaniciFn}
             />
 
             {/* ===== VIDEO SEKMESİ ===== */}
             <VideoSekmesi
               aktif={anaSekme === "video"}
-              urunAdi={urunAdi} kategori={kategori}
-              fotolar={fotolar} setFotolar={setFotolar} setGorselJoblar={setGorselJoblar}
-              videoSure={videoSure} setVideoSure={setVideoSure}
-              videoFormat={videoFormat} setVideoFormat={setVideoFormat}
-              videoPrompt={videoPrompt} setVideoPrompt={setVideoPrompt}
-              videoPromptGoster={videoPromptGoster} setVideoPromptGoster={setVideoPromptGoster}
-              videoYukleniyor={videoYukleniyor} videoRequestId={videoRequestId} setVideoRequestId={setVideoRequestId}
-              kullanici={kullanici} paketModalAc={paketModalAc} videoUret={videoUret} blobIndir={blobIndir}
+              urunAdi={metin.urunAdi} kategori={metin.kategori}
+              fotolar={fotolar} setFotolar={setFotolar} setGorselJoblar={gorsel.setGorselJoblar}
+              videoSure={video.videoSure} setVideoSure={video.setVideoSure}
+              videoFormat={video.videoFormat} setVideoFormat={video.setVideoFormat}
+              videoPrompt={video.videoPrompt} setVideoPrompt={video.setVideoPrompt}
+              videoPromptGoster={video.videoPromptGoster} setVideoPromptGoster={video.setVideoPromptGoster}
+              videoYukleniyor={video.videoYukleniyor} videoRequestId={video.videoRequestId} setVideoRequestId={video.setVideoRequestId}
+              kullanici={kullanici} paketModalAc={paketModalAc} videoUret={video.videoUret} blobIndir={blobIndir}
             />
 
             {/* ===== SOSYAL MEDYA SEKMESİ ===== */}
             <SosyalSekmesi
               aktif={anaSekme === "sosyal"}
-              sosyalIcerikTipi={sosyalIcerikTipi} setSosyalIcerikTipi={setSosyalIcerikTipi}
-              sosyalPlatform={sosyalPlatform} setSosyalPlatform={setSosyalPlatform}
-              sosyalTon={sosyalTon} setSosyalTon={setSosyalTon}
-              sosyalSezon={sosyalSezon} setSosyalSezon={setSosyalSezon}
-              sosyalUrunAdi={sosyalUrunAdi} setSosyalUrunAdi={setSosyalUrunAdi}
-              sosyalEkBilgi={sosyalEkBilgi} setSosyalEkBilgi={setSosyalEkBilgi}
-              captionYukleniyor={captionYukleniyor}
-              sosyalCaption={sosyalCaption} setSosyalCaption={setSosyalCaption}
-              sosyalHashtag={sosyalHashtag} setSosyalHashtag={setSosyalHashtag}
-              sosyalKitYukleniyor={sosyalKitYukleniyor}
-              sosyalKitSonuc={sosyalKitSonuc} setSosyalKitSonuc={setSosyalKitSonuc}
-              sosyalKitAcik={sosyalKitAcik} setSosyalKitAcik={setSosyalKitAcik}
-              sosyalFoto={sosyalFoto} setSosyalFoto={setSosyalFoto}
-              sosyalGorselStil={sosyalGorselStil} setSosyalGorselStil={setSosyalGorselStil}
-              sosyalGorselFormat={sosyalGorselFormat} setSosyalGorselFormat={setSosyalGorselFormat}
-              sosyalGorselYukleniyor={sosyalGorselYukleniyor}
-              sosyalGorselSonuclar={sosyalGorselSonuclar} setSosyalGorselSonuclar={setSosyalGorselSonuclar}
-              sosyalGorselPrompt={sosyalGorselPrompt} setSosyalGorselPrompt={setSosyalGorselPrompt}
+              sosyalIcerikTipi={sosyal.sosyalIcerikTipi} setSosyalIcerikTipi={sosyal.setSosyalIcerikTipi}
+              sosyalPlatform={sosyal.sosyalPlatform} setSosyalPlatform={sosyal.setSosyalPlatform}
+              sosyalTon={sosyal.sosyalTon} setSosyalTon={sosyal.setSosyalTon}
+              sosyalSezon={sosyal.sosyalSezon} setSosyalSezon={sosyal.setSosyalSezon}
+              sosyalUrunAdi={sosyal.sosyalUrunAdi} setSosyalUrunAdi={sosyal.setSosyalUrunAdi}
+              sosyalEkBilgi={sosyal.sosyalEkBilgi} setSosyalEkBilgi={sosyal.setSosyalEkBilgi}
+              captionYukleniyor={sosyal.captionYukleniyor}
+              sosyalCaption={sosyal.sosyalCaption} setSosyalCaption={sosyal.setSosyalCaption}
+              sosyalHashtag={sosyal.sosyalHashtag} setSosyalHashtag={sosyal.setSosyalHashtag}
+              sosyalKitYukleniyor={sosyal.sosyalKitYukleniyor}
+              sosyalKitSonuc={sosyal.sosyalKitSonuc} setSosyalKitSonuc={sosyal.setSosyalKitSonuc}
+              sosyalKitAcik={sosyal.sosyalKitAcik} setSosyalKitAcik={sosyal.setSosyalKitAcik}
+              sosyalFoto={sosyal.sosyalFoto} setSosyalFoto={sosyal.setSosyalFoto}
+              sosyalGorselStil={sosyal.sosyalGorselStil} setSosyalGorselStil={sosyal.setSosyalGorselStil}
+              sosyalGorselFormat={sosyal.sosyalGorselFormat} setSosyalGorselFormat={sosyal.setSosyalGorselFormat}
+              sosyalGorselYukleniyor={sosyal.sosyalGorselYukleniyor}
+              sosyalGorselSonuclar={sosyal.sosyalGorselSonuclar} setSosyalGorselSonuclar={sosyal.setSosyalGorselSonuclar}
+              sosyalGorselPrompt={sosyal.sosyalGorselPrompt} setSosyalGorselPrompt={sosyal.setSosyalGorselPrompt}
               kullanici={kullanici} paketModalAc={paketModalAc}
-              captionUret={captionUret} kitUret={kitUret} sosyalGorselUret={sosyalGorselUret}
+              captionUret={sosyal.captionUret} kitUret={sosyal.kitUret} sosyalGorselUret={sosyal.sosyalGorselUret}
               setAnaSekme={setAnaSekme}
             />
-
 
           </div>
 
@@ -842,7 +432,7 @@ export default function Home() {
                           </select>
                           <div className="max-h-40 overflow-y-auto space-y-1 mt-1">
                             {gecmis.filter(u => !gecmisPlatformFiltre || u.platform === gecmisPlatformFiltre).map(u => (
-                              <button key={u.id} onClick={() => { setSonuc(u.sonuc); setAnaSekme("metin"); setGecmisAcik(false); }}
+                              <button key={u.id} onClick={() => { metin.setSonuc(u.sonuc); setAnaSekme("metin"); setGecmisAcik(false); }}
                                 className="w-full text-left px-2 py-1.5 rounded-lg bg-gray-50 hover:bg-indigo-50 border border-transparent hover:border-indigo-200 transition-all">
                                 <p className="text-xs font-medium text-gray-700 truncate">{u.urun_adi || "—"}</p>
                                 <p className="text-xs text-gray-400">{u.platform} · {new Date(u.created_at).toLocaleDateString("tr-TR", { day: "numeric", month: "short" })}</p>
