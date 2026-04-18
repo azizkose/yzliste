@@ -290,13 +290,20 @@ async function odemeDogrula(token: string): Promise<NextResponse> {
               populer: "Populer Paket - 30 Kredi",
               buyuk: "Buyuk Paket - 100 Kredi",
             };
-            await parasutFaturaKes(
+            const parasutFaturaId = await parasutFaturaKes(
               parasutAccessToken,
               musteriId,
               odeme.tutar,
               paketler[odeme.paket] || odeme.paket,
               odeme.id
             );
+            // F-25d: Paraşüt fatura ID'yi kaydet
+            if (parasutFaturaId) {
+              await supabase
+                .from("payments")
+                .update({ parasut_fatura_id: parasutFaturaId })
+                .eq("id", odeme.id);
+            }
           }
         }
       } catch (e) {

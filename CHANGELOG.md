@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-04-18 — F-25d: /hesap/faturalar sayfası
+
+- /hesap/faturalar/page.tsx: başarılı ödemeler + PDF indir + e-posta gönder
+- /api/fatura: Paraşüt PDF URL ve e-posta endpoint
+- Migration: payments.parasut_fatura_id + fatura_email_gonderildi kolonları
+- Callback: parasut_fatura_id artık payments tablosuna kaydediliyor
+- /hesap sayfasına Faturalar linki eklendi
+
 ## 2026-04-18 — F-25b: Checkout fatura bilgileri adımı
 
 - PaketModal: 3 adımlı akış (paket → fatura → ödeme). Fatura alanları: Ad/Unvan, TC/VKN, Adres, Vergi Dairesi, Bireysel/Kurumsal.
