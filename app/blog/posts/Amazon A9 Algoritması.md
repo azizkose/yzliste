@@ -32,4 +32,4 @@ Amazon, yüksek çözünürlüklü görsellere (en az 1000x1000 px) büyük öne
 
 ## SONUÇ
 
-Amazon'un katı listeleme kurallarıyla vakit kaybetmeyin. yzlisting.com ile Amazon TR formatına uygun, yüksek dönüşümlü madde işaretleri ve optimize başlıkları saniyeler içinde hazırlayarak satışlarınızı katlayın.
+Amazon'un katı listeleme kurallarıyla vakit kaybetmeyin. yzliste.com ile Amazon TR formatına uygun, yüksek dönüşümlü madde işaretleri ve optimize başlıkları saniyeler içinde hazırlayarak satışlarınızı katlayın.

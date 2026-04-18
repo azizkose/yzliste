@@ -93,22 +93,37 @@ function ArticleJsonLd({ yazi }: { yazi: BlogYazisi }) {
   );
 }
 
-// "yzliste" metnini / linkine çevirir
+// Markdown linkleri [text](url) ve "yzliste" kelimesini link'e çevirir
 function MetinLink({ text }: { text: string }) {
-  const parts = text.split(/(yzliste)/gi);
+  type Token = { type: 'link'; label: string; href: string } | { type: 'text'; value: string }
+  const tokens: Token[] = []
+  const regex = /\[([^\]]+)\]\(([^)]+)\)|(yzliste)/gi
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) tokens.push({ type: 'text', value: text.slice(lastIndex, match.index) })
+    if (match[1]) tokens.push({ type: 'link', label: match[1], href: match[2] })
+    else tokens.push({ type: 'link', label: 'yzliste', href: '/' })
+    lastIndex = regex.lastIndex
+  }
+  if (lastIndex < text.length) tokens.push({ type: 'text', value: text.slice(lastIndex) })
+
   return (
     <>
-      {parts.map((part, i) =>
-        part.toLowerCase() === "yzliste" ? (
-          <Link key={i} href="/" className="text-indigo-500 hover:underline font-medium">
-            yzliste
-          </Link>
+      {tokens.map((t, i) =>
+        t.type === 'link' ? (
+          t.href.startsWith('http') ? (
+            <a key={i} href={t.href} target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline font-medium">{t.label}</a>
+          ) : (
+            <Link key={i} href={t.href} className="text-indigo-500 hover:underline font-medium">{t.label}</Link>
+          )
         ) : (
-          part
+          t.value
         )
       )}
     </>
-  );
+  )
 }
 
 // İçerik bölümü render'ı

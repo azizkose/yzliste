@@ -32,4 +32,4 @@ Depoda veya mağazada sadece telefonunuzun kamerasını kullanarak ürünleriniz
 
 ## SONUÇ
 
-Tek tek klavyeyle yazma devrini kapatıyoruz. yzlisting.com'un barkod tarama özelliği sayesinde ürünlerinizi saniyeler içinde tanıyor ve listeleme içeriklerini hazırlıyoruz. Hızı bugün deneyimleyin!
+Tek tek klavyeyle yazma devrini kapatıyoruz. yzliste.com'un barkod tarama özelliği sayesinde ürünlerinizi saniyeler içinde tanıyor ve listeleme içeriklerini hazırlıyoruz. Hızı bugün deneyimleyin!

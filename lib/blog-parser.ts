@@ -23,10 +23,12 @@ interface FrontMatter {
  * ---
  */
 function parseFrontMatter(content: string): { frontMatter: FrontMatter; body: string } {
-  const matches = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+  // Normalize CRLF → LF (Windows line endings)
+  const normalized = content.replace(/\r\n/g, '\n')
+  const matches = normalized.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   if (!matches) throw new Error("Frontmatter bulunamadı (--- ile başlayıp bitmeli)");
 
-  const fm = matches[1];
+  const fm = matches[1]
   const body = matches[2];
 
   const metadata: Partial<FrontMatter> = {};
