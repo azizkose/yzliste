@@ -191,7 +191,7 @@ export default function TopluPage() {
               <div className="bg-white rounded-2xl shadow p-4">
                 <div className="text-2xl mb-2">🏷️</div>
                 <p className="text-xs font-semibold text-gray-800 mb-1">Limit var mı?</p>
-                <p className="text-xs text-gray-500">Tek seferde <span className="font-semibold">mevcut kredin kadar</span> ürün işleyebilirsin. Kredi yetersizse önce <Link href="/?paket=ac" className="text-indigo-500 underline">İçerik Üretim Kredisi Al</Link>.</p>
+                <p className="text-xs text-gray-500">Tek seferde <span className="font-semibold">mevcut kredin kadar</span> ürün işleyebilirsin. Kredi yetersizse önce <Link href="/uret?paket=ac" className="text-indigo-500 underline">İçerik Üretim Kredisi Al</Link>.</p>
               </div>
             </div>
 

@@ -396,7 +396,7 @@ export default function ProfilPage() {
                 <div className="text-center py-10 space-y-3">
                   <div className="text-4xl">📝</div>
                   <p className="text-sm text-gray-500">Henüz hiç içerik üretmediniz.</p>
-                  <a href="/" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors">İçerik Üret →</a>
+                  <a href="/uret" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors">İçerik Üret →</a>
                 </div>
               ) : (
                 <div className="space-y-2">
