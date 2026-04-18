@@ -11,10 +11,10 @@ export default function GirisModal() {
     <Modal title="Giriş Yap">
       <AuthForm
         defaultMode="giris"
-        redirectTo="/"
+        redirectTo="/uret"
         onSuccess={() => {
           router.back()
-          setTimeout(() => router.replace('/'), 100)
+          setTimeout(() => router.replace('/uret'), 100)
         }}
       />
     </Modal>

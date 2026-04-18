@@ -106,7 +106,7 @@ export async function middleware(request: NextRequest) {
   // Logged-in kullanıcılar /giris ve /kayit'e gelince ana sayfaya yönlendir
   const AUTH_ONLY_PATHS = ['/giris', '/kayit']
   if (user && !user.is_anonymous && AUTH_ONLY_PATHS.includes(pathname)) {
-    return addCsp(NextResponse.redirect(new URL('/', request.url)))
+    return addCsp(NextResponse.redirect(new URL('/uret', request.url)))
   }
 
   return addCsp(response)

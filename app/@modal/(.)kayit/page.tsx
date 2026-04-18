@@ -14,10 +14,10 @@ export default function KayitModal() {
       </div>
       <AuthForm
         defaultMode="kayit"
-        redirectTo="/"
+        redirectTo="/uret"
         onSuccess={() => {
           router.back()
-          setTimeout(() => router.replace('/'), 100)
+          setTimeout(() => router.replace('/uret'), 100)
         }}
       />
     </Modal>

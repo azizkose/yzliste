@@ -29,7 +29,7 @@ export default function KayitPage() {
           </p>
         </div>
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <AuthForm defaultMode="kayit" redirectTo="/" />
+          <AuthForm defaultMode="kayit" redirectTo="/uret" />
         </div>
       </div>
     </main>
