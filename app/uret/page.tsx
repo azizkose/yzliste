@@ -266,7 +266,7 @@ export default function Home() {
     if (data) setGecmis(data);
   };
 
-  const cikisYap = async () => { analytics.reset(); await supabase.auth.signOut(); router.push("/giris"); };
+  const cikisYap = async () => { analytics.reset(); await supabase.auth.signOut(); router.push("/"); };
 
   const fotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
     const dosyalar = Array.from(e.target.files || []);
