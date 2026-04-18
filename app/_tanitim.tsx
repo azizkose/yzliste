@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -9,63 +9,11 @@ import { MIN_FIYAT } from "@/lib/paketler";
 import AuthForm from "@/components/auth/AuthForm";
 
 export default function TanitimSayfasi() {
-  const [email, setEmail] = useState("");
-  const [sifre, setSifre] = useState("");
-  const [mod, setMod] = useState<"giris" | "kayit">("kayit");
-  const [yukleniyor, setYukleniyor] = useState(false);
-  const [mesaj, setMesaj] = useState("");
-  const [sozlesmeOnay, setSozlesmeOnay] = useState(false);
   const [ozellikTab, setOzellikTab] = useState(0);
   const [modalAcik, setModalAcik] = useState(false);
   const [modalUyeMod, setModalUyeMod] = useState<"giris" | "kayit">("kayit");
   const [modalAmac, setModalAmac] = useState<"auth" | "satin_al">("auth");
-  const [sifreSifirlamaGonderildi, setSifreSifirlamaGonderildi] = useState(false);
-  const [sifreSifirlamaYukleniyor, setSifreSifirlamaYukleniyor] = useState(false);
   const router = useRouter();
-
-
-  const turkceHata = (hata: string): string => {
-    if (hata.includes("Password should be at least 6 characters")) return "Şifre en az 6 karakter olmalıdır.";
-    if (hata.includes("Invalid login credentials")) return "E-posta veya şifre hatalı.";
-    if (hata.includes("Email not confirmed")) return "E-posta adresinizi doğrulayın.";
-    if (hata.includes("User already registered")) return "Bu e-posta adresi zaten kayıtlı.";
-    if (hata.includes("invalid") && hata.includes("email")) return "Geçerli bir e-posta adresi girin.";
-    if (hata.includes("rate limit") || hata.includes("too many")) return "Çok fazla deneme. Lütfen biraz bekleyin.";
-    return "Bir hata oluştu. Lütfen tekrar deneyin.";
-  };
-
-  const handleSubmit = async () => {
-    if (!email.trim()) { setMesaj("E-posta adresi girin."); return; }
-    if (!sifre.trim()) { setMesaj("Şifre girin."); return; }
-    if (mod === "kayit" && !sozlesmeOnay) { setMesaj("Devam etmek için sözleşmeleri kabul edin."); return; }
-    setYukleniyor(true); setMesaj("");
-    if (mod === "kayit") {
-      const { error } = await supabase.auth.signUp({ email, password: sifre });
-      if (error) setMesaj(turkceHata(error.message));
-      else setMesaj("Kayıt başarılı! E-postanızı doğrulayın.");
-    } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password: sifre });
-      if (error) setMesaj("E-posta veya şifre hatalı.");
-      else router.push("/uret");
-    }
-    setYukleniyor(false);
-  };
-
-  const handleSifreSifirla = async () => {
-    if (!email.trim()) { setMesaj("Önce e-posta adresinizi girin."); return; }
-    setSifreSifirlamaYukleniyor(true); setMesaj("");
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/sifre-sifirla`,
-    });
-    if (error) { setMesaj("Şifre sıfırlama e-postası gönderilemedi."); }
-    else { setSifreSifirlamaGonderildi(true); }
-    setSifreSifirlamaYukleniyor(false);
-  };
-
-  const handleModDegistir = (yeniMod: "giris" | "kayit") => {
-    setMod(yeniMod); setEmail(""); setSifre(""); setMesaj("");
-    setSozlesmeOnay(false); setSifreSifirlamaGonderildi(false);
-  };
 
   // Auth sonrası: /uret?paket=ac ile PaketModal açılır (F-25b inline billing dahil)
   const handleModalAuthSuccess = () => {
