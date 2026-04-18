@@ -53,6 +53,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 - [x] **PQ-25** Sitemap'ten korumalı sayfaları çıkar: `/hesap/*`, `/odeme/*` sitemap'ten çıkarıldı. ⚠️ **Eksik:** `/auth` hâlâ sitemap'te (priority 0.8) — kaldırılmalı çünkü login olmayan kullanıcıları `/giris`'e redirect ediyor.
 - [x] **PQ-26** Auth redirect'i Google-safe yap: Korumalı sayfalara Googlebot geldiğinde redirect yerine 403/404 dönmeli veya sitemap'ten çıkarılmalı. "Page with redirect" sorununu çözer.
 - [ ] **PQ-27** `http://www.yzliste.com/` "Crawled – not indexed": Canonical eklendi — Search Console'da "URL Denetimi"nden reindex iste. Deploy sonrası manuel aksiyon.
+  **⚠️ Hatırlatma: search.google.com/search-console → URL Denetimi → `https://www.yzliste.com/` → "Dizine Eklenmeyi İste" tıkla.**
 
 ### P1 — Görsel Pipeline (kaliteyi 2x artırır)
 - [x] **PQ-03** Görsel pipeline'a RMBG ekle: `fal-ai/bria/rmbg` endpoint'ini çağır, arka planı kaldır, SONRA product-shot'a gönder. `app/api/gorsel/route.ts`'de foto upload sonrası RMBG adımı ekle. Detay: `PROMPT-REHBER.md § Görsel Pipeline`
@@ -222,6 +223,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   **Kontrol:** Deploy öncesi `git diff --stat` ile tüm dosyaların doğru satır sayısında olduğunu doğrula.
 
 - [ ] **DoD** Demo testi: 5 farklı ürün (kozmetik, elektronik, giyim, gıda, takı) × 3 platform (Trendyol, Amazon, Etsy) = 15 listing üret. Her biri için görsel + video. Sonuçlar tutarlı, halüsinasyonsuz ve platforma uygun olmalı.
+  **⚠️ Hatırlatma: `lib/test-fixtures.ts` içinde 5 ürün hazır. test-normal@yzliste.com ile giriş yap, her fixture için test et.**
 
 - [x] **PQ-31** Auth page inline modal → AuthForm component'ine geçir:
   `app/auth/page.tsx` kendi modal state'ini yönetiyor (modalAcik, modalMod, modalEmail, modalSifre, modalSozlesme, modalMesaj, modalYukleniyor — 7 state). İçinde ayrı `modalUyeGiris` fonksiyonu var. Bunun yerine `AuthForm` component'ini kullanmalı — aynı mantık orada zaten var. Tekrarlanan kod ~60 satır silinir, bug riski azalır.
@@ -245,12 +247,13 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 **Kısmen düzelenler / hala açık:**
 
-- [ ] **QA-04** P1 — TC Kimlik KVKK eksik (B-007 + B-025):
-  ⚠️ Kısmen düzeldi: Aydınlatma cümlesi eklendi ("TC kimlik numaranız yalnızca e-Arşiv fatura için kullanılır"). Ama:
+- [ ] **QA-04** P1 — TC Kimlik KVKK eksik (B-007 + B-025): ⚠️ MANUEL — Hukukçu onayı gerekiyor
+  ⚠️ Kısmen düzeldi: Aydınlatma cümlesi eklendi. Eksikler:
   1. Açık rıza checkbox'ı yok (KVKK 5/1 gereği zorunlu)
-  2. Saklama süresi beyanı yok
-  3. Veri sahibi hakları bilgisi yok
-  **Gerekli:** "TC Kimlik verimi e-Arşiv fatura amacıyla işlenmesine açık rıza veriyorum" checkbox (default unchecked) + saklama süresi (örn. 10 yıl) + silme/düzeltme hakkı bilgisi. Hukukçu görüşü alınmalı.
+  2. Saklama süresi beyanı yok (örn. "10 yıl, fatura mevzuatı gereği")
+  3. Veri sahibi hakları (silme/düzeltme/itiraz) bilgisi yok
+  **Yapılacak (hukukçu onayı sonrası):** `app/(auth)/hesap/profil/page.tsx` TC Kimlik alanına checkbox + metin eklenecek. Checkbox işaretsizse alan disabled olacak.
+  **⚠️ Hatırlatma: Avukattan/KVKK danışmanından onay al, sonra Claude Code ile implement et.**
 
 - [x] **QA-05** P2 — Çelişen CTA mesajları (B-008): Hero + banner birleştirildi. "İçerik üretmek için hesap gerekli" bilgisi hero subtitle'a taşındı, ayrı info banner kaldırıldı.
 
@@ -259,7 +262,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 - [ ] **QA-07** → QA-14 ile birleştirildi (auth-aware header kök neden).
 
-- [ ] **QA-09** P3 — Logged-out form gösterimi (B-014): Hala açık. Form tam görünüyor, "Üret" deyince ne olacağı belirsiz.
+- [x] **QA-09** P3 — Logged-out form gösterimi (B-014): Tüm sekmelerde "Giriş Gerekli" buton etiketi eklendi. GorselSekmesi eksikti — düzeltildi. Üret'e tıklayınca kayıt popup'ı açılıyor.
 
 **Yeni bulgular — P0:**
 - [x] **QA-10** 🔴 P0 — Şifre sıfırlama backend 400 hatası (B-015 + B-028):
@@ -352,7 +355,8 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 - [x] **T4-13** — 404 sayfası `robots: index, follow` ve canonical var. Fix: zaten `robots: { index: false }` + `{ absolute: '...' }` title mevcut.
 
 **P1 (2 hafta):**
-- [ ] **T4-02** — Preview env'de `/giris` ve `/kayit` GET fetch status 0 dönüyor. (Preview env config sorunu, prod'da OK)
+- [x] **T4-02** — Preview env'de `/giris` ve `/kayit` GET fetch status 0 dönüyor. Middleware'e env var guard eklendi: `NEXT_PUBLIC_SUPABASE_URL` veya `NEXT_PUBLIC_SUPABASE_ANON_KEY` yoksa Supabase bloğu skip ediliyor — unhandled throw önlendi.
+  **⚠️ Hatırlatma: Vercel Dashboard → yzliste → Settings → Environment Variables → Preview ortamında `NEXT_PUBLIC_SUPABASE_URL` ve `NEXT_PUBLIC_SUPABASE_ANON_KEY` tanımlı mı kontrol et.**
 - [x] **T4-04** — Header'a kredi sayacı rozeti ekle. (önceki oturumda tamamlandı)
 - [x] **T4-07** — `/iletisim` 404 dönüyor. Kontrol: hiçbir component'te link yok, audit FP.
 - [x] **T4-14** — HTML entity title'larda literal. Kontrol: kaynak kodda `&amp;`/`&#x27;` metadata'da yok, audit FP.
@@ -367,6 +371,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 - [x] **TEST-INFRA-01** — Test hesap bayrağı (`is_test` flag) — ödeme geçmişi filtrele + sınırsız kredi. Migration uygulandı, 3 test hesabı işaretlendi. API'lerde is_test → is_admin gibi kredi bypass yapıyor.
 - [x] **TEST-INFRA-02** — 5 sabit ürün fixture'ı. `lib/test-fixtures.ts` oluşturuldu (kozmetik, elektronik, giyim, gıda, takı).
 - [ ] **TEST-MCP-01** — Mobil viewport tooling (Chrome MCP resize alternatif) — Layer B tamamlansın.
+  **⚠️ Hatırlatma: Bu tooling setup'ı, bir test oturumunda Chrome MCP ile mobil boyutları test etmek için yapılacak. Zaman bulununca ayrı bir oturumda ele al.**
 
 ### P3+ — UI Polish Pass (KÜME 0 bittikten sonra, demo öncesi)
 > Bu bölüm KÜME 0 içerik işleri tamamlandıktan sonra yapılacak. Redesign değil, cilalama.

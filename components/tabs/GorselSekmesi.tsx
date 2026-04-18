@@ -160,7 +160,9 @@ export default function GorselSekmesi({
             ? "Önce fotoğraf ekle ↑"
             : seciliStiller.size === 0
               ? "Stil seç"
-              : `✨ ${seciliStiller.size} Görsel Üret — ${seciliStiller.size} kredi`}
+              : (!kullanici || kullanici.anonim)
+                ? `✨ ${seciliStiller.size} Görsel Üret — Giriş Gerekli`
+                : `✨ ${seciliStiller.size} Görsel Üret — ${kullanici.is_admin ? "∞" : seciliStiller.size} kredi`}
       </button>
 
       {gorselYukleniyor && (
