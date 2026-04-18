@@ -2,7 +2,7 @@
 slug: global-pazar-yerlerine-acilmanin-anahtari-ai-listeleme
 baslik: Etsy ve eBay'de Satış Yapın: AI ile Global Listeleme Sırları
 ozet: Yurtdışına satış yapmak artık hayal değil. Yapay zeka ile İngilizce içerik oluşturma ve global pazar yerlerine giriş rehberi.
-yayinTarihi: 2026-04-24
+yayinTarihi: 2026-04-12
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
 kategori: Global Satış

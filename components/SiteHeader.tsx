@@ -12,9 +12,8 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
 
   const girisVar = !!currentUser && !currentUser.anonim;
 
-  // Logged-in: Ana Sayfa → tool (/), Logged-out: Ana Sayfa → marketing (/auth)
   const navLinks = [
-    { href: girisVar ? "/" : "/auth", label: "Ana Sayfa", id: "ana" as AktifSayfa },
+    { href: "/", label: "Ana Sayfa", id: "ana" as AktifSayfa },
     { href: "/fiyatlar", label: "Fiyatlar", id: "fiyatlar" as AktifSayfa },
     { href: "/blog", label: "Blog", id: "blog" as AktifSayfa },
   ];
@@ -116,12 +115,21 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               </a>
             ))}
             <div className="border-t border-gray-100 pt-2 mt-2">
-              <a
-                href="/kayit"
-                className="block px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white text-center hover:bg-indigo-600 transition-colors"
-              >
-                Ücretsiz Başla
-              </a>
+              {girisVar ? (
+                <a
+                  href="/"
+                  className="block px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white text-center hover:bg-indigo-600 transition-colors"
+                >
+                  İçerik Üret →
+                </a>
+              ) : (
+                <a
+                  href="/kayit"
+                  className="block px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white text-center hover:bg-indigo-600 transition-colors"
+                >
+                  Ücretsiz Başla
+                </a>
+              )}
             </div>
           </nav>
         </div>

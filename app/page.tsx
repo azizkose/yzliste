@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
+import SiteHeader from "@/components/SiteHeader";
 import { PAKET_LISTESI } from "@/lib/paketler";
 import { useCredits, useInvalidateCredits } from "@/lib/hooks/useCredits";
 import { analytics } from "@/lib/analytics";
@@ -330,9 +331,6 @@ export default function Home() {
   const invalidateCredits = useInvalidateCredits();
   const { data: kredilerHook } = useCredits();
   const { setPaylasim } = useUretimStore();
-
-  // Mobil menü
-  const [mobileMenuAcik, setMobileMenuAcik] = useState(false);
 
   // Sekme
   const [anaSekme, setAnaSekme] = useState<AnaSekme>("metin");
@@ -849,74 +847,10 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 pt-8 pb-24 px-4">
-      <div className="max-w-5xl mx-auto">
-
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center gap-2">
-            <Link href="/" className="flex-shrink-0">
-              <img src="/yzliste_logo.png" alt="yzliste" className="h-9" />
-            </Link>
-            <nav className="hidden sm:flex items-center gap-0.5 text-sm text-gray-500 flex-1">
-              <Link href="/" className="px-3 py-2 rounded-lg text-indigo-600 font-medium whitespace-nowrap">İçerik Üret</Link>
-              <Link href="/fiyatlar" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</Link>
-              <Link href="/blog" className="px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</Link>
-            </nav>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              {kullanici ? (
-                <>
-                  <button onClick={() => paketModalAc()} className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-colors ${kullanici.is_admin ? "bg-violet-100 text-violet-700" : krediDusuk ? "bg-amber-100 text-amber-600 animate-pulse" : "bg-indigo-100 text-indigo-600 hover:bg-indigo-200"}`}>
-                    {kullanici.is_admin ? "∞" : (kredilerHook ?? kullanici.kredi)} kredi
-                  </button>
-                  {kullanici.anonim
-                    ? <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-xs bg-indigo-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-indigo-600 transition-colors">Ücretsiz Başla</button>
-                    : <span className="text-sm text-gray-400 hidden sm:block">{kullanici.email}</span>
-                  }
-                  {kullanici.is_admin && <a href="/admin" className="text-xs bg-violet-100 text-violet-600 px-2 py-1 rounded-lg font-medium">Admin</a>}
-                  {!kullanici.anonim && <Link href="/profil" className="text-sm text-gray-400 hover:text-gray-600 hidden sm:block">Profil</Link>}
-                  {!kullanici.anonim && <button onClick={cikisYap} className="text-sm text-gray-400 hover:text-gray-600 hidden sm:block">Çıkış</button>}
-                </>
-              ) : (
-                <>
-                  <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="text-sm text-gray-500 hover:text-gray-700 font-medium hidden sm:block">Giriş Yap</button>
-                  <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="text-sm bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-4 py-1.5 rounded-lg transition-colors hidden sm:block">Ücretsiz Başla</button>
-                </>
-              )}
-              {/* Mobil hamburger */}
-              <button
-                onClick={() => setMobileMenuAcik(!mobileMenuAcik)}
-                className="sm:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
-                aria-label="Menü"
-              >
-                {mobileMenuAcik ? "✕" : "☰"}
-              </button>
-            </div>
-          </div>
-
-          {/* Mobil dropdown */}
-          {mobileMenuAcik && (
-            <div className="sm:hidden mt-1 bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden">
-              <nav className="px-2 py-3 space-y-1">
-                <a href="/" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-indigo-600 font-medium bg-indigo-50">İçerik Üret</a>
-                <a href="/fiyatlar" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">Fiyatlar</a>
-                <a href="/blog" onClick={() => setMobileMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">Blog</a>
-                {kullanici && !kullanici.anonim && (
-                  <div className="border-t border-gray-200 pt-2 mt-1 space-y-1">
-                    <a href="/profil" className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Profil</a>
-                    <button onClick={cikisYap} className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Çıkış</button>
-                  </div>
-                )}
-                {(!kullanici || kullanici.anonim) && (
-                  <div className="border-t border-gray-200 pt-2 mt-1 space-y-1">
-                    <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); setMobileMenuAcik(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Giriş Yap</button>
-                    <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); setMobileMenuAcik(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white text-center hover:bg-indigo-600 transition-colors rounded-lg">Ücretsiz Başla</button>
-                  </div>
-                )}
-              </nav>
-            </div>
-          )}
-        </div>
+    <>
+      <SiteHeader aktifSayfa="ana" />
+      <main className="min-h-screen bg-gray-50 pb-24 px-4">
+      <div className="max-w-5xl mx-auto pt-6">
 
         {/* Compact hero — sadece giriş yapılmamışsa */}
         {(!kullanici || kullanici.anonim) && (
@@ -2241,5 +2175,6 @@ export default function Home() {
       </div>
       <SiteFooter />
     </main>
+    </>
   );
 }

@@ -164,6 +164,8 @@ setYukleniyor(true)
         placeholder="E-posta"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        required
+        autoComplete="email"
         className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
       />
       <input
@@ -172,6 +174,8 @@ setYukleniyor(true)
         value={sifre}
         onChange={(e) => setSifre(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+        required
+        autoComplete={mod === 'kayit' ? 'new-password' : 'current-password'}
         className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
       />
 
@@ -185,9 +189,9 @@ setYukleniyor(true)
             className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0"
           />
           <span className="text-xs text-gray-500 leading-relaxed">
-            <a href="/gizlilik" target="_blank" className="text-indigo-500 hover:underline">Gizlilik Politikası</a> ve{' '}
-            <a href="/mesafeli-satis" target="_blank" className="text-indigo-500 hover:underline">Mesafeli Satış Sözleşmesi</a>
-            &apos;ni okudum, kabul ediyorum.
+            <a href="/kosullar" target="_blank" className="text-indigo-500 hover:underline">Kullanım Koşulları</a> ve{' '}
+            <a href="/gizlilik" target="_blank" className="text-indigo-500 hover:underline">Gizlilik Politikası</a>
+            &apos;nı okudum, kabul ediyorum.
           </span>
         </label>
       )}

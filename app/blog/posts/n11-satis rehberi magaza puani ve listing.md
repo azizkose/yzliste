@@ -2,7 +2,7 @@
 slug: n11-satis-rehberi-magaza-puani-ve-listing
 baslik: N11'de Üst Sıralara Çıkmanın Yolu: Zengin İçerik ve Mağaza Puanı
 ozet: N11 algoritmasının sevdiği içerik yapılarını öğrenin ve mağaza puanınızı içerik kalitesiyle nasıl destekleyeceğinizi görün.
-yayinTarihi: 2026-04-22
+yayinTarihi: 2026-04-14
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

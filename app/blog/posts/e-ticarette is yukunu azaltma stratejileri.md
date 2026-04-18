@@ -2,7 +2,7 @@
 slug: e-ticarette-is-yukunu-azaltma-stratejileri
 baslik: E-Ticarette Büyümenin Gizli Formülü: Operasyonel Verimlilik
 ozet: İşleriniz büyüdükçe iş yükünüzün altında ezilmeyin. Otomasyon araçlarıyla ekibinizi büyütmeden cironuzu nasıl artırırsınız?
-yayinTarihi: 2026-04-25
+yayinTarihi: 2026-04-11
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: İş Yönetimi

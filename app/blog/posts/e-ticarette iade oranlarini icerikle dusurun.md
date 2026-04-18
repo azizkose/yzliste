@@ -2,7 +2,7 @@
 slug: e-ticarette-iade-oranlarini-icerikle-dusurun
 baslik: İade Oranlarını Düşürmenin Gizli Silahı: Doğru Ürün Açıklaması
 ozet: Satışlarınız iadeye mi dönüşüyor? Yanlış beklenti oluşmasını engelleyen ürün açıklamalarıyla kârlılığınızı artırın.
-yayinTarihi: 2026-04-21
+yayinTarihi: 2026-04-15
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: Satış Stratejileri

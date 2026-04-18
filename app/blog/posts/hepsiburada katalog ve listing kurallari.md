@@ -2,7 +2,7 @@
 slug: hepsiburada-katalog-ve-listing-kurallari
 baslik: Hepsiburada'da Buybox Kazanmanın Yolu: Kusursuz Katalog Verisi
 ozet: Hepsiburada'da ürünlerinizin "Buybox" sahibi olması için içerik kalitesinin ne kadar önemli olduğunu biliyor muydunuz?
-yayinTarihi: 2026-04-20
+yayinTarihi: 2026-04-16
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

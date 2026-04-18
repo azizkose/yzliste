@@ -5,7 +5,7 @@ Claude Code için: **KÜME 0 EN ÖNCELİKLİ.** Üstten aşağı yap. Küme içi
 
 > **Son tarama: 2026-04-18** — Cowork tam audit. Tüm [x] maddeler koda karşı doğrulandı.
 > **Küme 0 güncellemesi: 2026-04-17** — PQ-01~PQ-10 tamamlandı.
-> **QA bulguları eklendi (2026-04-18):** 14 bug'lık keşif testi raporu değerlendirildi → 9 madde (QA-01~QA-09) eklendi. B-006 ve B-009 mevcut kodda sorun değil.
+> **QA Tur 3 konsolide (2026-04-18):** 28 bulgu (Tur 1: 14, Tur 2 regresyon, Tur 3: 5 yeni). 6 düzeldi, 3 kısmen, 13 açık, 1 kötüleşti. QA-01~QA-21 olarak konsolide edildi. En kritik: QA-10 (şifre sıfırlama 400), QA-14 (auth-aware header kök neden).
 > **Cowork audit notu (2026-04-18):** Bazı yerel dosyalar truncate durumda (Cowork+Claude Code çakışması). Git HEAD doğru — `git checkout -- .` ile restore edilmeli (`index.lock` silinmeli önce).
 
 ---
@@ -125,45 +125,85 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 - [x] **PQ-34** Dark mode CSS'i devre dışı bırak veya düzgün destekle:
   `globals.css`'te `@media (prefers-color-scheme: dark)` ile `--background: #0a0a0a` ayarlanıyor ama hiçbir component dark mode desteklemiyor (hepsi `bg-white`, `text-gray-900` hardcoded). Sistem dark mode'da olan kullanıcılarda body siyah, component'ler beyaz → garip görünüm. Ya dark mode media query'yi kaldır ya da `html` tag'ine `class="light"` + `color-scheme: light` ekle.
 
-### QA Keşif Testi Bulguları (2026-04-18)
-> Kaynak: `yzliste-bulgu-raporu.docx` — Claude in Chrome ile exploratory test, 14 bulgu.
-> Doğrulama: Her bulgu git HEAD koduna karşı doğrulandı. B-006 (blog tarihleri) ve B-009 (şifremi unuttum) mevcut kodda sorun değil.
+### QA Keşif Testi Bulguları (Tur 1 → Tur 3 konsolide)
+> Kaynak: Tur 1 `yzliste-bulgu-raporu.docx`, Tur 3 `yzliste-tur-3-rapor.docx` — Claude in Chrome.
+> Son güncelleme: Tur 3 (2026-04-18). Toplam: 28 bulgu → 6 düzeldi, 3 kısmen, 13 açık, 1 kötüleşti, 5 yeni.
 
-- [x] **QA-01** 🔴 P0 — Logo ve 'Ana Sayfa' linki `/auth`'a gidiyor (B-001 + B-002):
-  **SiteHeader.tsx:** `navLinks` dizisinde `{ href: "/auth", label: "Ana Sayfa" }` → `href: "/"` olmalı.
-  **page.tsx:** Inline header'daki logo `href="/auth"` → `href="/"` olmalı.
-  **Etki:** Login olmuş kullanıcı logo veya Ana Sayfa'ya tıklayınca tekrar login sayfasına atılıyor.
+**Düzelenler (Tur 3'te onaylandı):**
+- [x] **QA-01** P0 — Logo `/auth`'a gidiyordu (B-001): ✅ Logo href artık `/`. Düzeldi.
+- [x] **QA-02** P1 — Profil linki tıklanamıyordu (B-003 + B-004): ✅ Düzeldi, regresyon yok.
+- [x] **QA-03** P1 — 'İçerik' menü karmaşası (B-005 + B-012): ✅ Ayrı link kaldırıldı.
+- [x] **QA-08** P3 — CTA 3 yerde tekrardı (B-013): ✅ 1'e indi.
 
-- [ ] **QA-02** P1 — 'Profil' linki ve 'Profili Düzenle' butonu tıklamaya yanıt vermiyor (B-003 + B-004):
-  Header'daki Profil linki `href="/profil"` doğru ama tıklama çalışmıyor. Dashboard'daki 'Profili Düzenle' butonu da aynı. Direkt URL ile erişim çalışıyor — muhtemelen click handler veya `preventDefault()` sorunu.
-  **Kontrol:** Link'in `<a href>` mı yoksa `<button onClick>` mı olduğunu doğrula. Next.js `<Link>` component'i kullanılıyorsa `onClick`'in `router.push`'ı engellemediğini kontrol et.
+**Kısmen düzelenler / hala açık:**
 
-- [x] **QA-03** P1 — 'İçerik' menü adlandırma karmaşası (B-005 + B-012):
-  Header'da hem 'İçerik' linki (href='/') hem sağda 'İçerik Üret →' butonu var. İkisi farklı yere gidiyor ama isim benzer — kullanıcı karışıyor.
-  **Öneri:** Menüdeki 'İçerik'i 'Nasıl Çalışır' veya 'Özellikler' olarak değiştir, ya da tamamen kaldır (sağdaki buton yeterli).
+- [ ] **QA-04** P1 — TC Kimlik KVKK eksik (B-007 + B-025):
+  ⚠️ Kısmen düzeldi: Aydınlatma cümlesi eklendi ("TC kimlik numaranız yalnızca e-Arşiv fatura için kullanılır"). Ama:
+  1. Açık rıza checkbox'ı yok (KVKK 5/1 gereği zorunlu)
+  2. Saklama süresi beyanı yok
+  3. Veri sahibi hakları bilgisi yok
+  **Gerekli:** "TC Kimlik verimi e-Arşiv fatura amacıyla işlenmesine açık rıza veriyorum" checkbox (default unchecked) + saklama süresi (örn. 10 yıl) + silme/düzeltme hakkı bilgisi. Hukukçu görüşü alınmalı.
 
-- [x] **QA-04** P1 — TC Kimlik No alanında KVKK aydınlatma metni eksik (B-007):
-  Profil sayfasında TC Kimlik No toplanıyor ama aydınlatma metni, onay checkbox'ı yok. KVKK uyumu için formun altına onay + link eklenmeli.
-  **İlişki:** KÜME 5 DoD — consent log tablosu + timestamp + IP kaydı şart. Hukukçu görüşü alınmalı.
+- [ ] **QA-05** P2 — Çelişen CTA mesajları (B-008): Hala açık. Logged-out anasayfada 3 çelişen mesaj aynen duruyor.
 
-- [x] **QA-05** P2 — Çelişen CTA mesajları ana sayfada (B-008):
-  3 farklı mesaj: (1) 'hesap gereklidir', (2) '3 Kredi Hediye', (3) 'kayıt gerekmiyor'. Birleşik, net mesaj olmalı.
-  **Not:** PQ-19 (compact hero) ve PQ-20 (sahte sosyal kanıt kaldırma) sonrası bu metinler değişmiş olabilir — deploy'daki duruma göre güncelle.
+- [ ] **QA-06** P2 — Kredi/üretim sayacı etiket tutarsızlığı (B-010):
+  ⚠️ Kısmen düzeldi: Sayılar artık eşleşiyor (5/2). Ama etiketler farklı: Anasayfa 'Kullanılan', Profil 'Toplam üretim'. Tek terime standartlaştır.
 
-- [x] **QA-06** P2 — Kredi/üretim sayacı uyumsuzluğu (B-010):
-  Dashboard: '0 Kullanılan' — Profil: '2 Toplam üretim'. Farklı data source'lardan çekiliyor olabilir (kredi düşüş sayacı vs generations tablosu count). Tek kaynak kullan veya etiketleri netleştir.
+- [ ] **QA-07** → QA-14 ile birleştirildi (auth-aware header kök neden).
 
-- [ ] **QA-07** P2 — Dashboard ile diğer sayfalar farklı header (B-011):
-  Dashboard'da inline header (kredi rozeti, email, çıkış), diğer sayfalarda SiteHeader (Profil, İçerik Üret butonu). İki farklı layout.
-  **İlişki:** PQ-28 monolith refactor — page.tsx inline header'ı SiteHeader'a taşıyınca çözülür.
+- [ ] **QA-09** P3 — Logged-out form gösterimi (B-014): Hala açık. Form tam görünüyor, "Üret" deyince ne olacağı belirsiz.
 
-- [x] **QA-08** P3 — 'Ücretsiz Başla' CTA'sı 3 yerde tekrar (B-013):
-  Hero + banner + sağ kutu — görsel gürültü. Hero'dakini bırak, diğerlerini sadeleştir.
+**Yeni bulgular — P0:**
+- [x] **QA-10** 🔴 P0 — Şifre sıfırlama backend 400 hatası (B-015 + B-028):
+  'Şifremi unuttum' UI'da var ama Supabase `/auth/v1/recover` 400 dönüyor. "Şifre sıfırlama e-postası gönderilemedi" hatası.
+  **Kök neden (doğrulandı):** İKİ sorun var:
+  1. `/sifre-sifirla` Next.js route'u HİÇ YOK — `AuthForm.tsx` satır 112'de `redirectTo: ${window.location.origin}/sifre-sifirla` gönderiyor ama sayfa tanımsız.
+  2. Supabase Redirect URLs whitelist'te bu URL yok → 400 hatası.
+  **Fix:** 1) `app/sifre-sifirla/page.tsx` oluştur (Supabase token'ı parse et, yeni şifre formu göster). 2) Supabase Dashboard → Authentication → URL Configuration → Redirect URLs'e `https://*.vercel.app/sifre-sifirla` ve `https://yzliste.com/sifre-sifirla` ekle. 3) Test et.
 
-- [x] **QA-09** P3 — Logged-out kullanıcıya çalışmayan form gösterimi (B-014):
-  Form tam görünüyor ama 'Üret' deyince ne olacağı belirsiz. Ya form blur/overlay ile gizle ya da 'Üret' anında login modal aç + form state'i koru.
+**Yeni bulgular — P1:**
+- [x] **QA-11** P1 — 'Ana Sayfa' linki diğer sayfalarda hala `/auth`'a (B-002 kalan + B-016):
+  Logo düzeldi ama `/profil`, `/fiyatlar`, `/blog` sayfalarında logged-out marketing header'da 'Ana Sayfa' hala `/auth`'a gidiyor.
+  **İlişki:** QA-14 (auth-aware header) çözülünce otomatik düzelir.
 
-> **Not:** B-006 (blog tarihleri gelecek tarihli) mevcut kodda düzeltilmiş — `icerikler.ts` tarihleri 18 Nisan öncesi. B-009 (şifremi unuttum) `AuthForm`'da `handleSifreSifirla` fonksiyonu mevcut — login formunda görünüyor olmalı.
+- [ ] **QA-12** P1 — Fiyatlar CTA'ları tutarsız rota (B-017):
+  Hero 'Ücretsiz Başla' → `/kayit`, paket 'Başla' butonları → `/auth?kayit=1`. Tek rotaya sabitle ya da redirect ekle.
+
+- [ ] **QA-13** P1 — Login'li kullanıcıya kayıt CTA'ları gösteriliyor (B-018):
+  `/fiyatlar`'da login'li kullanıcıya 'Ücretsiz Başla' gösteriliyor. Auth state'e göre 'Paketi Satın Al' olmalı.
+
+**Yeni bulgular — P2 (kök neden grubu):**
+- [x] **QA-14** P1 — İki farklı header implementasyonu → tutarsız deneyim (B-026):
+  🔑 **3 bulgunun kök nedeni:** B-011 (farklı header), B-018 (login'liye kayıt CTA), B-019 (login'li /giris formu).
+  **Doğrulama:** `SiteHeader.tsx` aslında auth-aware (useCurrentUser + useCredits). Ama `page.tsx` kendi inline header'ını kullanıyor (satır 850+). İki ayrı header = iki ayrı davranış.
+  **Fix:** page.tsx inline header'ı kaldır, SiteHeader'ı kullan. Root layout'a SiteHeader ekle (her sayfada tek header). Middleware ile `/giris`, `/kayit`'te logged-in → `/` redirect.
+  **İlişki:** PQ-28 monolith refactor ile birlikte çözülmeli.
+
+- [x] **QA-15** P2 — Login'li kullanıcı /giris'te login formu görüyor (B-019):
+  Oturum cookie var ama `/giris` login formu gösteriyor. Auth check ile redirect.
+  **İlişki:** QA-14 middleware çözülünce otomatik düzelir.
+
+- [x] **QA-16** P2 — Kayıt formunda `required` attribute yok (B-020):
+  Email, şifre HTML `required` değil. Native validation çalışmıyor. `required={true}` ekle.
+
+- [x] **QA-17** P2 — KVKK checkbox zorunlu değil (B-021):
+  ~~Checkbox işaretsiz submit edilebiliyor.~~ ✅ Doğrulama: `AuthForm.tsx` satır 218'de `disabled={... mod === 'kayit' && !sozlesme}` ile submit zaten engellenmiş. HTML `required` yok ama fonksiyonel olarak korunuyor. Kapandı.
+
+- [x] **QA-18** P2 — Kayıt onay metni yanlış sözleşme (B-022 + B-024, kötüleşti):
+  **Doğrulandı:** `AuthForm.tsx` satır 188-189'da "Gizlilik Politikası ve Mesafeli Satış Sözleşmesi" yazıyor. Mesafeli Satış ücretsiz kayıtta uygulanmaz, Kullanım Koşulları referansı kaybolmuş.
+  **Fix:** `AuthForm.tsx` satır 188-189: "Kullanım Koşulları ve Gizlilik Politikası'nı okudum, kabul ediyorum" olarak değiştir. Mesafeli Satış Sözleşmesi → ödeme/checkout ekranına taşınsın.
+
+- [x] **QA-19** P2 — Blog tarihleri hala gelecek tarihli (B-006):
+  **Doğrulandı:** 7 blog post gelecek tarihli (19-25 Nisan 2026). Dosya adları: `amazonda-satis-artiran...` (19), `hepsiburada-katalog...` (20), `e-ticarette-iade...` (21), `n11-satis-rehberi...` (22), `instagram-butikleri...` (23), `global-pazar...` (24), `e-ticarette-is-yukunu...` (25).
+  **Fix:** `app/blog/icerikler.ts` (veya ilgili MD dosyaları) içindeki tarihleri 18 Nisan öncesine çek. Veya blog listesinde `WHERE date <= today` filtresi ekle.
+
+**Yeni bulgular — P3:**
+- [x] **QA-20** P3 — 404 sayfası `<title>` anasayfa title'ı (B-023):
+  **Doğrulandı:** `not-found.tsx` metadata export etmiyor, root layout default title'ı kullanıyor.
+  **Fix:** `app/not-found.tsx`'e ekle: `export const metadata = { title: 'Sayfa Bulunamadı | yzliste' }`.
+
+- [ ] **QA-21** P3 — Cookie banner buton hiyerarşisi eşitsiz (B-027):
+  'Tümünü kabul et' primary, 'Sadece zorunlu' secondary. KVKK/GDPR'a göre ikisi aynı görsel ağırlıkta olmalı.
 
 ### P3+ — UI Polish Pass (KÜME 0 bittikten sonra, demo öncesi)
 > Bu bölüm KÜME 0 içerik işleri tamamlandıktan sonra yapılacak. Redesign değil, cilalama.

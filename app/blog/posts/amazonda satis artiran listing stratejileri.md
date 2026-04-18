@@ -2,7 +2,7 @@
 slug: amazonda-satis-artiran-listing-stratejileri
 baslik: Amazon'da Öne Çıkın: A9 Algoritması Uyumlu Listeleme
 ozet: Amazon'un katı listeleme kurallarını ve A9 algoritmasını lehinize çevirin. Madde işaretlerinden backend keyword'lere kadar her detay burada.
-yayinTarihi: 2026-04-19
+yayinTarihi: 2026-04-17
 yazarAdi: yzliste Ekibi
 okumaSuresi: 8
 kategori: Platform Rehberleri
