@@ -15,7 +15,18 @@
       "Bash(git merge:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(npx supabase *)"
+      "Bash(npx supabase *)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(Write-Output \"updating memory...\")",
+      "Bash(Write-Output \"done\")",
+      "Bash(pkill -f \"next build\")",
+      "Bash(cat app/\\\\\\(auth\\\\\\)/giris/page.tsx)",
+      "Bash(find . -path \"*/giris/page.tsx\" -not -path \"*/node_modules/*\" -exec cat {} \\\\;)",
+      "Bash(cat middleware.ts)",
+      "Bash(find . -name \"middleware.ts\" -not -path \"*/node_modules/*\" -exec cat {} \\\\;)",
+      "Bash(awk 'NR>=1400 && NR<=1850' \"C:/Users/catha/OneDrive/Documents/yzliste/app/page.tsx\")",
+      "Bash(npx next *)"
     ],
     "deny": [
       "EnterWorktree"

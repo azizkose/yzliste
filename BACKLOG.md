@@ -86,6 +86,101 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 - [x] **PQ-12** Sosyal Medya Kiti: Tek butonla 1 görsel (sosyal format) + 4 platform caption birden üret. Yeni endpoint veya mevcut endpoint'leri orchestrate et *(endpoint `app/api/sosyal/kit/route.ts` var, UI entegrasyonu eksik — kötü merge sonrası page.tsx 24d5ef7'e döndürüldü)*
 - [x] **PQ-13** Sezon/etkinlik modu: Sosyal caption'da dropdown — Normal / Anneler Günü / Babalar Günü / Bayram / Yılbaşı / Black Friday / Sevgililer Günü. Prompt'a mevsimsel context ekle *(sosyal/route.ts 24d5ef7'e döndürüldü, `lib/prompts/sosyal.ts` var)*
 
+### P0 — Sayfa Yapısı Refactor (SEO + UX kritik)
+- [ ] **PQ-35** 🔴 Sayfa yapısı refactor — `/` tanıtım, `/uret` engine ayrımı:
+
+  **SORUN:** Şu an `/` direkt engine (araç formu) gösteriyor. Yeni gelen ziyaretçi ürünün ne olduğunu anlamıyor. Tanıtım içeriği `/auth`'ta ama menüden erişilemiyor. SEO açısından en güçlü sayfa (`/`) tanıtım içeriği barındırmıyor.
+
+  **HEDEF:** `/` = tanıtım (landing), `/uret` = engine (araç formu). İki ayrı sayfa, iki ayrı amaç.
+
+  **⚠️ ÖNEMLİ KURALLAR:**
+  - Bu iş 7 ADIM. Her adım bağımsız commit olmalı.
+  - Mevcut dosya İÇERİKLERİNE dokunma — sadece taşı/yeniden adlandır.
+  - Auth/tanıtım sayfasının hero, özellikler, "Neden yzliste?", nasıl çalışır, CTA bölümleri AYNEN kalmalı.
+  - Engine sayfasının tüm form/sekme/üretim mantığı AYNEN kalmalı.
+  - Hiçbir CSS, component, state değişikliği YAPMA.
+  - Test: her adımdan sonra `npx tsc --noEmit` çalıştır, hata varsa düzelt.
+
+  ---
+
+  **ADIM 1 — `/uret` route'u oluştur (engine taşınması):**
+  1. `app/uret/page.tsx` oluştur — mevcut `app/page.tsx`'in TAMAMI buraya taşınacak (kopyala, yapıştır)
+  2. `app/uret/page.tsx` içinde herhangi bir değişiklik YAPMA — sadece dosya konumu değişiyor
+  3. ⚠️ `app/page.tsx`'i henüz SİLME — 3. adımda yeni içerik alacak
+  4. Commit: `refactor: engine page.tsx → app/uret/page.tsx taşındı`
+
+  **ADIM 2 — `/uret` route'u korumalı yap (opsiyonel):**
+  Engine sayfasına logged-out kullanıcılar da erişebilmeli (senin isteğin "logout da gidebilsin"). Bu yüzden:
+  1. `/uret` route'u `(auth)/` route group'unun DIŞINDA kalmalı — koruma YOK
+  2. `app/uret/page.tsx` zaten kendi içinde auth kontrolü yapıyor (compact hero, loginGerekli fonksiyonu) — bu yeterli
+  3. Sadece dosyanın `app/uret/page.tsx` olarak durduğunu doğrula (`app/(auth)/uret/` DEĞİL)
+  4. Commit: `chore: /uret route auth kontrolü doğrulandı`
+
+  **ADIM 3 — `/` tanıtım sayfası yap:**
+  1. Mevcut `app/auth/page.tsx`'in içeriğini `app/page.tsx`'e TAŞI (kopyala, yapıştır)
+  2. `app/page.tsx` artık tanıtım sayfası — hero, özellikler, demo çıktılar, CTA, footer
+  3. Metadata güncelle:
+     ```tsx
+     export const metadata: Metadata = {
+       title: "yzliste — AI ile E-ticaret Listing, Görsel ve Video Üret",
+       description: "Trendyol, Hepsiburada, Amazon, Etsy ve N11 için AI destekli listing metni, stüdyo görseli, ürün videosu ve sosyal medya içeriği üret. Fotoğraf yükle, gerisini YZ halleder.",
+       alternates: { canonical: "https://www.yzliste.com" },
+     };
+     ```
+  4. ⚠️ `app/page.tsx` `"use client"` olacak (mevcut auth/page.tsx client component) — bu OK
+  5. Tanıtım sayfasındaki tüm CTA'lar (`/kayit`, "Ücretsiz Başla" vb.) AYNEN kalsın
+  6. Tanıtım sayfasındaki "İçerik Üret →" veya benzeri butonlar → `/uret`'e yönlendirilecek
+  7. Commit: `refactor: / artık tanıtım sayfası (auth/page.tsx içeriği taşındı)`
+
+  **ADIM 4 — `/auth` → `/` 301 redirect:**
+  1. `next.config.ts` `redirects` array'ine ekle:
+     ```ts
+     { source: "/auth", destination: "/", permanent: true },
+     ```
+  2. `app/auth/page.tsx` dosyasını SİL (artık gereksiz — içerik `/`'e taşındı)
+  3. `app/auth/layout.tsx` dosyasını SİL (auth route group'u artık yok)
+  4. ⚠️ Sitemap'ten `/auth`'ı çıkar (zaten HC-04'te talep edilmişti)
+  5. Commit: `fix: /auth → / 301 redirect, auth route kaldırıldı`
+
+  **ADIM 5 — Header linklerini güncelle:**
+  `components/SiteHeader.tsx` değişiklikleri:
+  1. `navLinks` array'inde `{ href: "/", label: "Ana Sayfa" }` → AYNEN kalır (artık tanıtım sayfası)
+  2. Logged-in kullanıcı için "İçerik Üret →" butonu: `href="/"` → `href="/uret"` olarak değiştir
+  3. Logged-out kullanıcı için "Ücretsiz Başla" butonu: AYNEN kalır (`/kayit`'e gider)
+  4. Logo linki: AYNEN kalır (`/`'e gider — artık tanıtım sayfası)
+  5. Commit: `fix: header İçerik Üret linki /uret'e güncellendi`
+
+  **ADIM 6 — Tüm `/auth` referanslarını temizle:**
+  Sitewide grep yap: `grep -rn "/auth" app/ components/ lib/`
+  Bulunan her `/auth` linkini duruma göre değiştir:
+  - Login/kayıt amaçlı → `/giris` veya `/kayit`
+  - Tanıtım amaçlı → `/`
+  - Engine amaçlı → `/uret`
+  ⚠️ Supabase auth API endpoint'lerine (`/auth/v1/`, `/auth/callback`) DOKUNMA — bunlar farklı
+  Commit: `fix: kalan /auth referansları temizlendi`
+
+  **ADIM 7 — SEO + doğrulama:**
+  1. `app/sitemap.ts`'e `/uret` ekle (priority 0.9) — ama noindex DEĞİL (logged-out da kullanabiliyor)
+  2. `/`'in canonical'ı `https://www.yzliste.com` olmalı (zaten öyle)
+  3. `/uret`'in canonical'ı `https://www.yzliste.com/uret` olmalı
+  4. Test: `npx tsc --noEmit` — sıfır hata
+  5. Test: tüm sayfaları `curl -s -o /dev/null -w "%{http_code}"` ile kontrol et
+  6. `/auth` → 301 → `/` döndüğünü doğrula
+  7. Commit: `chore: sitemap + SEO doğrulama`
+
+  ---
+
+  **DOKUNULMAYACAK DOSYALAR:** `components/auth/AuthForm.tsx`, `components/PaketModal.tsx`, `components/ChatWidget.tsx`, `app/@modal/*`, `app/(auth)/*`, `lib/*`, `app/api/*`
+
+  **SONUÇ:**
+  | URL | İçerik | Auth | SEO |
+  |-----|--------|------|-----|
+  | `/` | Tanıtım (hero, özellikler, CTA) | Herkese açık | Tam SEO, primary landing |
+  | `/uret` | Engine (form, sekmeler, üretim) | Herkese açık (login formu yerleşik) | Sitemap'te, canonical var |
+  | `/auth` | 301 → `/` | — | Redirect |
+  | `/giris` | Login formu | Herkese açık | — |
+  | `/kayit` | Kayıt formu | Herkese açık | — |
+
 ### P3 — Mimari İyileştirme
 - [x] **PQ-14** Sekmeler arası bilgi taşıma: Metin'de girilen urunAdi + kategori + platform → Görsel/Video/Sosyal sekmelerine otomatik taşı. Zustand store veya React context ile *(page.tsx 24d5ef7'e döndürüldü)*
 - [x] **PQ-15** Prompt versiyonlama: Tüm prompt'ları `/lib/prompts/` altına taşı. Her prompt dosyası version numarası içersin. DB'ye uretim kaydında prompt_version ekle *(`lib/prompts/metin.ts` + `sosyal.ts` var; uret/route.ts'e entegre, migration dosyası mevcut)*
@@ -101,10 +196,14 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   5. [x] Tekrarlanan blob indirme handler'ları `blobIndir()` helper'a çıkarıldı (1848→1840 satır)
   6. [x] Accessibility: modal × butonlarına aria-label, sekme nav'a role="tablist" + aria-selected eklendi
   7. [x] auth/page.tsx inline ödeme modalı kaldırıldı → /?paket=ac redirect. 750→666 satır *(tamamlandı)*
-  **auth/page.tsx kalan:**
+  **page.tsx (eski auth/page.tsx → tanıtım sayfası, PQ-35 sonrası):**
   8. Section component'leri: `AuthHero`, `FeaturesTabbed`, `FeatureCards`, `BrandProfile`, `HowItWorks`, `BenefitsGrid`
   9. Platform listesi, özellik kartları, örnek çıktılar → sabit dosyalara
+  **uret/page.tsx (eski page.tsx → engine sayfası, PQ-35 sonrası):**
+  10. Sekmeleri component'lere ayır (sub-1): `MetinSekmesi.tsx`, `GorselSekmesi.tsx`, `VideoSekmesi.tsx`, `SosyalSekmesi.tsx`
+  11. State yönetimini hook'lara taşı (sub-2): `useMetinUretim.ts`, `useGorselUretim.ts` vb.
   Hedef: Hiçbir component 300 satırı geçmesin, state her component'te max 5-6 değişken
+  ⚠️ PQ-28 sub-1~11 PQ-35 tamamlandıktan SONRA yapılacak
 
 - [x] **PQ-29** Gri overlay bug fix — `@modal` intercepting route'larda giriş sonrası overlay takılıyor:
   **Sorun:** `AuthForm` giriş başarılı olunca `router.push('/')` yapıyor ama kullanıcı zaten `/`'de. Next.js parallel route slot'u `@modal`'ı kapatmıyor → `fixed inset-0 bg-black/60 z-50` overlay ekranda kalıyor, hiçbir yere tıklanamıyor.
@@ -397,4 +496,4 @@ Aşağıdaki eşiklerden 2'si gerçekleşince backlog'a al: **1.000 tekil/ay, 10
 - Bir iş bittiğinde `- [ ]` → `- [x]` olarak güncelle. Yarım iş `[x]` olmaz.
 - `~%XX` notları kısmen tamamlanmış item'ları gösterir — bunları tamamla, sonra `[x]` yap.
 - Her küme tek PR değil. Küme içinde 3-5 PR olabilir ama aynı branch ailesinde.
-- `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou
+- `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

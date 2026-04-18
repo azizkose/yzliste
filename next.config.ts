@@ -28,6 +28,7 @@ const nextConfig: NextConfig = {
       { source: "/register", destination: "/kayit", permanent: true },
       { source: "/pricing", destination: "/fiyatlar", permanent: true },
       { source: "/privacy", destination: "/gizlilik", permanent: true },
+      { source: "/auth", destination: "/", permanent: true },
     ];
   },
 };
