@@ -176,9 +176,9 @@ export default function TanitimSayfasi() {
           <Link href="/kayit" className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-indigo-100">
             Ücretsiz Başla — 3 Kredi Hediye →
           </Link>
-          <button onClick={() => document.getElementById("nasil-calisir")?.scrollIntoView({ behavior: "smooth" })} className="text-gray-500 hover:text-gray-700 font-medium px-8 py-4 rounded-xl text-base transition-colors border border-gray-200 hover:border-gray-300">
-            Nasıl çalışır?
-          </button>
+          <Link href="/uret" className="border-2 border-indigo-500 text-indigo-600 font-semibold px-8 py-4 rounded-xl text-base transition-colors hover:bg-indigo-50">
+            Hemen Dene →
+          </Link>
         </div>
         <p className="text-xs text-gray-400 mt-4">Kredi kartı gerekmez · Hesap oluşturunca 3 kredi hemen tanımlanır</p>
       </section>
@@ -652,9 +652,14 @@ export default function TanitimSayfasi() {
       <section className="px-4 sm:px-6 py-12 bg-indigo-50 border-y border-indigo-100 text-center">
         <h2 className="text-xl font-bold text-gray-800 mb-2">Hemen dene</h2>
         <p className="text-sm text-gray-500 mb-6">3 ücretsiz kredi ile listing metni, görsel veya video üret. Kredi kartı gerekmez.</p>
-        <Link href="/kayit" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-indigo-100">
-          Ücretsiz Hesap Oluştur →
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Link href="/kayit" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-indigo-100">
+            Ücretsiz Hesap Oluştur →
+          </Link>
+          <Link href="/uret" className="inline-block border-2 border-indigo-500 text-indigo-600 font-semibold px-8 py-4 rounded-xl text-base transition-colors hover:bg-indigo-50">
+            Hemen Dene →
+          </Link>
+        </div>
       </section>
 
       {/* FOOTER */}
