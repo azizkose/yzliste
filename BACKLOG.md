@@ -342,7 +342,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 > Toplam: 8 P0, 7 P1, 4 P2. QA-14, HC-01, HC-02 regresyon olarak yeniden açıldı.
 
 **P0 (bu hafta):**
-- [ ] **T4-01** — `/giris` tab switcher butonları `type="button"` değil, çift submit oluşuyor. Fix: AuthForm.tsx'te tab butonlarına `type="button"` ekle.
+- [x] **T4-01** — `/giris` tab switcher butonları `type="button"` değil. Kontrol: AuthForm.tsx satır 144+153'te zaten `type="button"` mevcut.
 - [x] **T4-03** — Giriş sonrası header hâlâ "Giriş Yap" gösteriyor, "Çıkış" butonu yok. ⚠️ QA-14 regresyon. Fix: AuthForm login sonrası currentUser+credits query invalidate eder → header anında güncellenir.
 - [x] **T4-05** — `/profil` 44 kredi, `/hesap/krediler` 0 kredi gösteriyor. Fix: stale TanStack cache yerine direkt DB değeri gösteriliyor.
 - [x] **T4-09** — `/profil` `robots: index, follow` — kullanıcı profili arama motoruna sızabilir. Fix: `app/profil/layout.tsx` noindex var (zaten tamamdı).
@@ -353,15 +353,15 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 **P1 (2 hafta):**
 - [ ] **T4-02** — Preview env'de `/giris` ve `/kayit` GET fetch status 0 dönüyor. (Preview env config sorunu, prod'da OK)
-- [ ] **T4-04** — Header'a kredi sayacı rozeti ekle.
+- [x] **T4-04** — Header'a kredi sayacı rozeti ekle. (önceki oturumda tamamlandı)
 - [x] **T4-07** — `/iletisim` 404 dönüyor. Kontrol: hiçbir component'te link yok, audit FP.
 - [x] **T4-14** — HTML entity title'larda literal. Kontrol: kaynak kodda `&amp;`/`&#x27;` metadata'da yok, audit FP.
 - [x] **T4-15** — hreflang eksik. Kontrol: `<html lang="tr">` + `alternates.languages` `tr`/`x-default` zaten mevcut.
 
 **P2:**
-- [ ] **T4-06** — `/hesap/profil` ↔ `/profil` route çakışması — mimari karar.
+- [x] **T4-06** — `/hesap/profil` ↔ `/profil` route çakışması. Kontrol: `/hesap/profil` → `redirect('/profil')` yapıyor, çakışma yok, intentional backward-compat redirect.
 - [x] **T4-08** — `/demo` referanslarını grep-kontrol et. Sonuç: kod tabanında `/demo` linki yok.
-- [ ] **T4-17** — JSON-LD Organization duplication temizliği.
+- [x] **T4-17** — JSON-LD Organization duplication temizliği. Fix: blog/page.tsx + blog/[slug]/page.tsx inline Organization → `@id` referansa çevrildi.
 
 **Test Altyapısı:**
 - [ ] **TEST-INFRA-01** — Test hesap bayrağı (`is_test` flag) — ödeme geçmişi filtrele + sınırsız kredi.

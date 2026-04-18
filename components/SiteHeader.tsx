@@ -5,6 +5,7 @@ import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useCredits } from "@/lib/hooks/useCredits";
 import { supabase } from "@/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
+import { analytics } from "@/lib/analytics";
 
 type AktifSayfa = "ana" | "icerik" | "fiyatlar" | "blog" | "toplu" | "profil";
 
@@ -19,6 +20,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
 
   const cikisYap = async () => {
     await supabase.auth.signOut();
+    analytics.reset();
     queryClient.clear();
     router.push('/');
   };

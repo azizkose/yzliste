@@ -49,11 +49,7 @@ async function BlogJsonLd() {
           name: "yzliste Blog",
           description: "E-ticaret satıcıları için listing ve görsel rehberleri",
           url: "https://www.yzliste.com/blog",
-          publisher: {
-            "@type": "Organization",
-            name: "yzliste",
-            url: "https://yzliste.com",
-          },
+          publisher: { "@id": "https://www.yzliste.com/#organization" },
           blogPost: yazilar.map((y) => ({
             "@type": "BlogPosting",
             headline: y.baslik,
@@ -61,7 +57,7 @@ async function BlogJsonLd() {
             datePublished: y.yayinTarihi,
             dateModified: y.guncellemeTarihi ?? y.yayinTarihi,
             url: `https://yzliste.com/blog/${y.slug}`,
-            author: { "@type": "Organization", name: y.yazarAdi },
+            author: { "@id": "https://www.yzliste.com/#organization" },
           })),
         }),
       }}

@@ -67,20 +67,8 @@ function ArticleJsonLd({ yazi }: { yazi: BlogYazisi }) {
           dateModified: yazi.guncellemeTarihi ?? yazi.yayinTarihi,
           url: `https://www.yzliste.com/blog/${yazi.slug}`,
           inLanguage: "tr",
-          author: {
-            "@type": "Organization",
-            name: yazi.yazarAdi,
-            url: "https://yzliste.com",
-          },
-          publisher: {
-            "@type": "Organization",
-            name: "yzliste",
-            url: "https://yzliste.com",
-            logo: {
-              "@type": "ImageObject",
-              url: "https://yzliste.com/yzliste_logo.png",
-            },
-          },
+          author: { "@id": "https://www.yzliste.com/#organization" },
+          publisher: { "@id": "https://www.yzliste.com/#organization" },
           image: yazi.kapakGorsel
             ? `https://yzliste.com${yazi.kapakGorsel}`
             : "https://yzliste.com/yzliste_logo.png",
