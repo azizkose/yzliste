@@ -81,6 +81,7 @@ export default function ProfilPage() {
   const [adres, setAdres] = useState("");
   const [faturaTipi, setFaturaTipi] = useState("bireysel");
   const [tcKimlik, setTcKimlik] = useState("");
+  const [tcKvkkOnay, setTcKvkkOnay] = useState(false);
   const [vergiNo, setVergiNo] = useState("");
   const [vergiDairesi, setVergiDairesi] = useState("");
 
@@ -124,6 +125,7 @@ export default function ProfilPage() {
       setAdres(data.adres || "");
       setFaturaTipi(data.fatura_tipi || "bireysel");
       setTcKimlik(data.tc_kimlik || "");
+      setTcKvkkOnay(!!data.tc_kimlik);
       setVergiNo(data.vergi_no || "");
       setVergiDairesi(data.vergi_dairesi || "");
       setMarkaAdi(data.marka_adi || "");
@@ -166,6 +168,10 @@ export default function ProfilPage() {
 
   const kaydet = async () => {
     if (!userId) return;
+    if (tcKimlik && !tcKvkkOnay) {
+      setMesaj("TC Kimlik No kaydetmek için KVKK onay kutusunu işaretlemelisiniz.");
+      return;
+    }
     setKaydediliyor(true);
     setMesaj("");
 
@@ -296,9 +302,23 @@ export default function ProfilPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">TC Kimlik No</label>
                 <input type="text" value={tcKimlik} onChange={(e) => setTcKimlik(e.target.value)} placeholder="11 haneli TC kimlik no" maxLength={11}
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                {tcKimlik && (
+                  <label className="flex items-start gap-2 mt-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={tcKvkkOnay}
+                      onChange={(e) => setTcKvkkOnay(e.target.checked)}
+                      className="mt-0.5 flex-shrink-0 accent-indigo-500"
+                    />
+                    <span className="text-xs text-gray-600 leading-snug">
+                      TC kimlik numaramın yalnızca e-Arşiv fatura düzenlenmesi amacıyla işlenmesine onay veriyorum.
+                      Verilerim yasal zorunluluk kapsamında 10 yıl saklanır; silme, düzeltme ve itiraz hakkım saklıdır.{" "}
+                      <a href="/kvkk-aydinlatma" target="_blank" className="text-indigo-500 hover:underline">KVKK Aydınlatma Metni</a>
+                    </span>
+                  </label>
+                )}
                 <p className="text-xs text-gray-400 mt-1">
-                  TC kimlik numaranız yalnızca e-Arşiv fatura oluşturmak için kullanılır, üçüncü taraflarla paylaşılmaz.{" "}
-                  <a href="/gizlilik" target="_blank" className="text-indigo-500 hover:underline">Gizlilik Politikası</a>
+                  TC kimlik numaranız yalnızca e-Arşiv fatura için kullanılır, üçüncü taraflarla paylaşılmaz.
                 </p>
               </div>
             ) : (
