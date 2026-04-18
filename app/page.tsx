@@ -228,6 +228,14 @@ export default function Home() {
     }
   };
 
+  // Blob'u tarayıcıda indir — tekrarlanan createObjectURL pattern'ini ortadan kaldırır
+  const blobIndir = (blob: Blob, dosyaAdi: string) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = dosyaAdi; a.click();
+    URL.revokeObjectURL(url);
+  };
+
   // Üretim butonları için login kontrolü — giriş yoksa veya anonim ise popup aç
   const loginGerekli = (): boolean => {
     if (!kullanici || kullanici.anonim) {
@@ -1178,11 +1186,7 @@ export default function Home() {
                           headers: { "Content-Type": "application/json" },
                           body: JSON.stringify({ requestIds: gorselJoblar.map(j => j.requestId), userId: kullanici.id }),
                         });
-                        const blob = await res.blob();
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement("a");
-                        a.href = url; a.download = "yzliste-gorseller.zip"; a.click();
-                        URL.revokeObjectURL(url);
+                        blobIndir(await res.blob(), "yzliste-gorseller.zip");
                       }}
                         className="flex items-center gap-1.5 text-xs bg-violet-500 hover:bg-violet-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors">
                         📦 Tümünü İndir (ZIP)
@@ -1207,11 +1211,7 @@ export default function Home() {
                               headers: { "Content-Type": "application/json" },
                               body: JSON.stringify({ requestIds: [job.requestId], userId: kullanici.id }),
                             });
-                            const blob = await res.blob();
-                            const url = URL.createObjectURL(blob);
-                            const a = document.createElement("a");
-                            a.href = url; a.download = `yzliste-${job.stil}.jpg`; a.click();
-                            URL.revokeObjectURL(url);
+                            blobIndir(await res.blob(), `yzliste-${job.stil}.jpg`);
                           }}
                             className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 hover:bg-white text-violet-600 text-xs font-semibold px-2 py-1 rounded-lg shadow">
                             ⬇️ İndir
@@ -1385,11 +1385,7 @@ export default function Home() {
                     onClick={async () => {
                       const res = await fetch(`/api/sosyal/video/download?requestId=${videoRequestId}`);
                       if (!res.ok) { alert("Video indirilemedi. Tekrar deneyin."); return; }
-                      const blob = await res.blob();
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement("a");
-                      a.href = url; a.download = "urun-video.mp4"; a.click();
-                      URL.revokeObjectURL(url);
+                      blobIndir(await res.blob(), "urun-video.mp4");
                     }}
                     className="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
                   >
