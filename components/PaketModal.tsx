@@ -51,9 +51,23 @@ export default function PaketModal({ kullanici, onKapat }: PaketModalProps) {
   const paketler = PAKET_LISTESI
 
   // Fatura bilgilerini kontrol et, eksikse fatura adımına yönlendir
+  const consentKaydet = async (odemeId?: string) => {
+    try {
+      await fetch('/api/consent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kosullarOnay: kosullarOnay, mesafeliOnay: mesafeliOnay, kvkkOnay: kvkkOnay, odemeId: odemeId ?? null }),
+      })
+    } catch {
+      // Log hatası ödemeyi engellememeli
+    }
+  }
+
   const paketSec = async (paketId: string) => {
     if (!tumOnaylar) return
     setSeciliPaket(paketId)
+    // KVKK onaylarını DB'ye kaydet
+    await consentKaydet()
 
     const { data: profil } = await supabase
       .from('profiles')

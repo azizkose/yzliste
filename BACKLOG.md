@@ -316,7 +316,7 @@ Hukuki kontrol gerek. Küme 1'e bağlı değil ama route'lar açılınca yayına
 - [x] **F-07c** İade Politikası (kredi expire süresi net, cayma hakkı istisnası) → `/teslimat-iade` *(route adı /iade yerine /teslimat-iade olarak oluşturulmuş — OK)*
 - [x] **F-07d** Checkout'ta 3 checkbox (açık rıza): Koşullar / Mesafeli Satış / KVKK. İşaretlenmeden satın alma disable.
 - [x] **F-07e** Footer'da 4 link: Kullanım / Mesafeli Satış / İade / Gizlilik ✅ Tüm 4 link mevcut.
-- [ ] **DoD** 3 belge hukukçu onayı ile yayında. Checkout akışında 3 checkbox kayıtlı (DB'de timestamp + IP). ⚠️ **Audit:** Checkout'ta 3 checkbox var (sozlesmeOnay, mesafeliOnay, kvkkOnay) ama **DB'ye kaydedilmiyor** — sadece frontend form state. Hukuki denetim için consent log tablosu + timestamp + IP kaydı şart.
+- [x] **DoD kısmi** Checkout onayları artık DB'ye kaydediliyor: `consent_log` tablosu migration oluşturuldu (timestamp + IP + user_agent). `/api/consent` endpoint. PaketModal `paketSec()` sırasında çağırıyor. ⚠️ Hâlâ açık: 3 belge hukukçu onayı.
 
 ---
 

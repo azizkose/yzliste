@@ -597,7 +597,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               <a href="/profil" className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap transition-colors">Profili Düzenle</a>
-              <button onClick={() => setProfilBannerKapatildi(true)} className="text-blue-400 hover:text-blue-600 text-xl leading-none">×</button>
+              <button onClick={() => setProfilBannerKapatildi(true)} aria-label="Bildirimi kapat" className="text-blue-400 hover:text-blue-600 text-xl leading-none">×</button>
             </div>
           </div>
         )}
@@ -623,7 +623,7 @@ export default function Home() {
               <span className="text-xl flex-shrink-0">⚠️</span>
               <p className="text-sm text-red-700">{hata}</p>
             </div>
-            <button onClick={() => setHata(null)} className="text-red-400 hover:text-red-600 text-xl flex-shrink-0">×</button>
+            <button onClick={() => setHata(null)} aria-label="Hatayı kapat" className="text-red-400 hover:text-red-600 text-xl flex-shrink-0">×</button>
           </div>
         )}
 
@@ -639,7 +639,7 @@ export default function Home() {
                 <li>3. <span className="font-medium">Üret butonuna bas</span> — AI 15-30 saniyede listing hazırlar</li>
               </ol>
             </div>
-            <button onClick={() => setKullanici(u => u ? { ...u, toplam_kullanilan: -1 } : null)} className="text-indigo-400 hover:text-indigo-600 text-lg flex-shrink-0">×</button>
+            <button onClick={() => setKullanici(u => u ? { ...u, toplam_kullanilan: -1 } : null)} aria-label="İpuçlarını kapat" className="text-indigo-400 hover:text-indigo-600 text-lg flex-shrink-0">×</button>
           </div>
         )}
 
@@ -647,7 +647,7 @@ export default function Home() {
           <div className="flex-1 w-full">
 
             {/* SEKMELER */}
-            <div className="bg-white rounded-2xl shadow p-1.5 flex gap-1">
+            <div role="tablist" aria-label="İçerik türü seçimi" className="bg-white rounded-2xl shadow p-1.5 flex gap-1">
               {([
                 { id: "metin", label: "📝 Metin", renk: "bg-blue-500", aktif: true },
                 { id: "gorsel", label: "📷 Görsel", renk: "bg-violet-500", aktif: true },
@@ -655,6 +655,9 @@ export default function Home() {
                 { id: "video", label: "🎬 Video", renk: "bg-amber-500", aktif: true },
               ] as { id: AnaSekme; label: string; renk: string; aktif: boolean }[]).map((s) => (
                 <button key={s.id}
+                  role="tab"
+                  aria-selected={anaSekme === s.id}
+                  aria-controls={`sekme-panel-${s.id}`}
                   onClick={() => { if (s.aktif) { setAnaSekme(s.id); window.scrollTo({ top: 0, behavior: "smooth" }); } }}
                   disabled={!s.aktif}
                   className={`flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
@@ -1129,7 +1132,7 @@ export default function Home() {
                   {referansGorsel ? (
                     <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2 border-violet-300">
                       <img src={referansGorsel} alt="Referans" className="w-full h-full object-cover" />
-                      <button onClick={() => setReferansGorsel(null)} className="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center">×</button>
+                      <button onClick={() => setReferansGorsel(null)} aria-label="Referans görseli kaldır" className="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center">×</button>
                     </div>
                   ) : (
                     <label className="flex items-center justify-center w-full h-24 border-2 border-dashed border-violet-300 rounded-xl cursor-pointer hover:bg-violet-50 transition-colors">
@@ -1821,7 +1824,7 @@ export default function Home() {
                 <h2 className="text-lg font-bold text-gray-900">
                   {authPopupMod === "kayit" ? "Hesap Oluştur" : "Giriş Yap"}
                 </h2>
-                <button onClick={() => setAuthPopupAcik(false)} className="text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
+                <button onClick={() => setAuthPopupAcik(false)} aria-label="Kapat" className="text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
               </div>
               <div className="p-5">
                 <AuthForm defaultMode={authPopupMod} onSuccess={handleAuthSuccess} />

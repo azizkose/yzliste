@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-04-18 — KVKK consent log + accessibility
+
+- consent_log migration: checkout onayları timestamp + IP + user_agent ile kaydediliyor
+- /api/consent endpoint oluşturuldu
+- PaketModal: ödeme başlamadan önce consent kaydediliyor
+- page.tsx: sekme nav'a role="tablist", butonlara aria-label eklendi
+
 ## 2026-04-18 — F-25d: /hesap/faturalar sayfası
 
 - /hesap/faturalar/page.tsx: başarılı ödemeler + PDF indir + e-posta gönder
