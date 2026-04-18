@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-04-18 — auth/page.tsx inline ödeme modalı kaldırıldı (PQ-28 kısmi)
+
+- Inline payment modal (odemeBaslat, odemeRef vb.) → /?paket=ac redirect
+- PaketModal (fatura bilgileri + consent log dahil) artık tek checkout yolu
+- 750→666 satır (-84 satır)
+- Krediler sayfasına "Faturaları Görüntüle" linki eklendi
+
 ## 2026-04-18 — KVKK consent log + accessibility
 
 - consent_log migration: checkout onayları timestamp + IP + user_agent ile kaydediliyor

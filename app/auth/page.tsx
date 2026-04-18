@@ -1,11 +1,11 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
-import { PAKET_LISTESI, MIN_FIYAT } from "@/lib/paketler";
+import { MIN_FIYAT } from "@/lib/paketler";
 import AuthForm from "@/components/auth/AuthForm";
 
 export default function AuthPage() {
@@ -17,16 +17,10 @@ export default function AuthPage() {
   const [sozlesmeOnay, setSozlesmeOnay] = useState(false);
   const [ozellikTab, setOzellikTab] = useState(0);
   const [modalAcik, setModalAcik] = useState(false);
-  const [modalMod, setModalMod] = useState<"paket" | "uye">("paket");
   const [modalUyeMod, setModalUyeMod] = useState<"giris" | "kayit">("kayit");
   const [modalAmac, setModalAmac] = useState<"auth" | "satin_al">("auth");
-  const [modalMesaj, setModalMesaj] = useState("");
-  const [odemeYukleniyor, setOdemeYukleniyor] = useState(false);
-  const [odemeForm, setOdemeForm] = useState<string | null>(null);
-  const [seciliPaket, setSeciliPaket] = useState<string | null>(null);
   const [sifreSifirlamaGonderildi, setSifreSifirlamaGonderildi] = useState(false);
   const [sifreSifirlamaYukleniyor, setSifreSifirlamaYukleniyor] = useState(false);
-  const odemeRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
 
@@ -73,84 +67,27 @@ export default function AuthPage() {
     setSozlesmeOnay(false); setSifreSifirlamaGonderildi(false);
   };
 
+  // Auth sonrası: /?paket=ac ile PaketModal açılır (F-25b inline billing dahil)
   const handleModalAuthSuccess = () => {
-    if (modalAmac === "auth") {
-      router.push("/");
+    if (modalAmac === "satin_al") {
+      router.push("/?paket=ac");
     } else {
-      setModalMod("paket");
-      setModalMesaj("");
+      router.push("/");
     }
   };
 
+  // Satın alma: giriş yoksa auth modal aç, giriş varsa ana sayfaya yönlendir
   const hemenAlTikla = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user || user.is_anonymous) {
-      // Giriş yok veya anonim — önce üye ekranını göster
       setModalAmac("satin_al");
-      setModalUyeMod("giris");
-      setModalMod("uye");
+      setModalUyeMod("kayit");
       setModalAcik(true);
-      setOdemeForm(null);
-      setSeciliPaket(null);
-      setModalMesaj("");
       return;
     }
-    setModalAmac("satin_al");
-    // Giriş var — fatura kontrolü
-    const { data: profil } = await supabase
-      .from("profiles")
-      .select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no")
-      .eq("id", user.id)
-      .single();
-    const eksik =
-      !profil?.ad_soyad ||
-      (profil?.fatura_tipi === "bireysel" && !profil?.tc_kimlik) ||
-      (profil?.fatura_tipi === "kurumsal" && !profil?.vergi_no);
-    if (eksik) {
-      window.location.href = "/profil#fatura";
-      return;
-    }
-    // Her şey tamam — paket seçim ekranı
-    setModalMod("paket");
-    setModalAcik(true);
-    setOdemeForm(null);
-    setSeciliPaket(null);
-    setModalMesaj("");
+    // Giriş var — PaketModal ana sayfada açılacak
+    router.push("/?paket=ac");
   };
-
-
-  const odemeBaslat = async (paket: string) => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { setModalMod("uye"); return; }
-    setSeciliPaket(paket); setOdemeYukleniyor(true); setOdemeForm(null);
-    try {
-      const res = await fetch("/api/odeme", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ paket, userId: user.id, email: user.email }),
-      });
-      const data = await res.json();
-      if (data.checkoutFormContent) {
-        setOdemeForm(data.checkoutFormContent);
-        setTimeout(() => {
-          if (odemeRef.current) {
-            odemeRef.current.innerHTML = data.checkoutFormContent;
-            const scriptlar = odemeRef.current.querySelectorAll("script");
-            scriptlar.forEach((eskiScript) => {
-              const yeniScript = document.createElement("script");
-              if (eskiScript.src) { yeniScript.src = eskiScript.src; }
-              else { yeniScript.textContent = eskiScript.textContent; }
-              eskiScript.parentNode?.replaceChild(yeniScript, eskiScript);
-            });
-          }
-        }, 100);
-      } else { setModalMesaj(data.hata || "Ödeme başlatılamadı."); }
-    } catch { setModalMesaj("Bir hata oluştu, tekrar deneyin."); }
-    setOdemeYukleniyor(false);
-  };
-
-  // Paketler lib/paketler.ts'den geliyor
-  const paketler = PAKET_LISTESI;
 
   // Örnek çıktı — bölümlü kutular
   const ornekBolumler = [
@@ -192,34 +129,13 @@ export default function AuthPage() {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
               <h2 className="text-lg font-bold text-gray-900">
-                {modalMod === "uye" ? (modalUyeMod === "kayit" ? "Hesap Oluştur" : "Giriş Yap") : "Paket Seç"}
+                {modalUyeMod === "kayit" ? "Hesap Oluştur" : "Giriş Yap"}
               </h2>
-              <button onClick={() => setModalAcik(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+              <button onClick={() => setModalAcik(false)} aria-label="Kapat" className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
             </div>
-            {modalMod === "uye" ? (
-              <div className="p-6">
-                <AuthForm defaultMode={modalUyeMod} onSuccess={handleModalAuthSuccess} />
-              </div>
-            ) : !odemeForm ? (
-              <div className="p-6 space-y-4">
-                {paketler.map((p) => (
-                  <div key={p.id} className={`border-2 ${p.renk} rounded-2xl p-5 relative`}>
-                    {p.rozet && <span className="absolute -top-3 left-4 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">En Popüler</span>}
-                    <div className="flex items-center justify-between">
-                      <div><p className="font-semibold text-gray-800">{p.isim}</p><p className="text-sm text-gray-500">{p.krediStr}</p></div>
-                      <p className="text-2xl font-bold text-gray-900">{p.fiyatStr}</p>
-                    </div>
-                    <button onClick={() => odemeBaslat(p.id)} disabled={odemeYukleniyor} className={`w-full mt-4 ${p.butonRenk} text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:bg-gray-300`}>
-                      {odemeYukleniyor && seciliPaket === p.id ? "⏳ Yükleniyor..." : "Satın Al"}
-                    </button>
-                  </div>
-                ))}
-                {modalMesaj && <p className="text-xs text-red-500">{modalMesaj}</p>}
-                <p className="text-xs text-gray-400 text-center">🔒 Güvenli ödeme — iyzico altyapısı</p>
-              </div>
-            ) : (
-              <div className="p-4"><div ref={odemeRef} id="iyzipay-checkout-form" className="popup" /></div>
-            )}
+            <div className="p-6">
+              <AuthForm defaultMode={modalUyeMod} onSuccess={handleModalAuthSuccess} />
+            </div>
           </div>
         </div>
       )}

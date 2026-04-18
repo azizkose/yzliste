@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { createSupabaseServerClient } from '@/lib/supabase-server'
 
+
 export const metadata: Metadata = {
   title: 'Krediler — yzliste',
   robots: { index: false, follow: false },
@@ -45,8 +46,9 @@ export default async function KredilerPage() {
         </div>
 
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
-          <div className="px-6 py-4 border-b border-gray-100">
+          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
             <h2 className="font-semibold text-gray-800">Ödeme Geçmişi</h2>
+            <Link href="/hesap/faturalar" className="text-xs text-indigo-500 hover:underline font-medium">Faturaları Görüntüle →</Link>
           </div>
           {!odemeler || odemeler.length === 0 ? (
             <div className="px-6 py-8 text-center text-sm text-gray-400">
