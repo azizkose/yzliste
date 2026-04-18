@@ -24,7 +24,7 @@ export async function generateMetadata({
   if (!yazi) return { title: "Yazı bulunamadı | yzliste" };
 
   return {
-    title: `${yazi.baslik} | yzliste Blog`,
+    title: yazi.baslik,
     description: yazi.ozet,
     keywords: yazi.etiketler,
     authors: [{ name: yazi.yazarAdi }],
@@ -37,9 +37,7 @@ export async function generateMetadata({
       modifiedTime: yazi.guncellemeTarihi ?? yazi.yayinTarihi,
       authors: [yazi.yazarAdi],
       tags: yazi.etiketler,
-      images: yazi.kapakGorsel
-        ? [{ url: `https://www.yzliste.com${yazi.kapakGorsel}` }]
-        : [],
+      images: [{ url: yazi.kapakGorsel ? `https://www.yzliste.com${yazi.kapakGorsel}` : 'https://www.yzliste.com/og-image.png', width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",

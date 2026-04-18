@@ -7,7 +7,7 @@ import SiteFooter from "@/components/SiteFooter";
 export const revalidate = 3600; // 1 saat ISR cache
 
 export const metadata: Metadata = {
-  title: "Blog | yzliste — E-ticaret Listing ve AI Görsel Rehberleri",
+  title: "Blog — E-ticaret Listing ve AI Görsel Rehberleri",
   description:
     "Trendyol, Hepsiburada, Amazon ve Etsy'de satışlarını artırmak için listing yazma rehberleri, AI görsel kullanımı, platform karşılaştırmaları ve e-ticaret ipuçları.",
   keywords: [

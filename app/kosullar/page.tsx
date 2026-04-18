@@ -2,8 +2,9 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Kullanım Koşulları — yzliste',
+  title: 'Kullanım Koşulları',
   description: 'yzliste kullanım koşulları ve hizmet şartları.',
+  alternates: { canonical: 'https://www.yzliste.com/kosullar' },
 }
 
 export default function KosullarPage() {

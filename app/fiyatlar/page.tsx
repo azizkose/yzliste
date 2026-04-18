@@ -7,7 +7,7 @@ import { PAKET_LISTESI, MIN_FIYAT, MAX_FIYAT } from "@/lib/paketler";
 import FiyatlarCta from "@/components/ui/FiyatlarCta";
 
 export const metadata: Metadata = {
-  title: "Fiyatlar | yzliste — E-ticaret Listing Üretici",
+  title: "Fiyatlar — E-ticaret Listing Üretici",
   description:
     "Trendyol, Hepsiburada ve Amazon için listing metni ve AI görsel üretimine dair tüm fiyatlar. Aylık abonelik yok, kullandığın kadar öde. 3 ücretsiz kredi ile başla.",
   keywords: [

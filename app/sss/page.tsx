@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Sık Sorulan Sorular — yzliste',
+  title: 'Sık Sorulan Sorular',
   description: 'yzliste hakkında en sık sorulan sorular ve cevapları. Krediler, ödeme, iade ve platformlar hakkında her şey.',
   alternates: { canonical: 'https://www.yzliste.com/sss' },
 }

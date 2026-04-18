@@ -141,6 +141,7 @@ setYukleniyor(true)
       {/* Mod seçici */}
       <div className="flex gap-2">
         <button
+          type="button"
           onClick={() => handleModDegistir('kayit')}
           className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${
             mod === 'kayit' ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-white text-indigo-500 border-indigo-200'
@@ -149,6 +150,7 @@ setYukleniyor(true)
           🎁 Kayıt Ol
         </button>
         <button
+          type="button"
           onClick={() => handleModDegistir('giris')}
           className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${
             mod === 'giris' ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200'

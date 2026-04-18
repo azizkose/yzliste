@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from '@/lib/supabase-server'
 
 
 export const metadata: Metadata = {
-  title: 'Krediler — yzliste',
+  title: 'Krediler',
   robots: { index: false, follow: false },
 }
 

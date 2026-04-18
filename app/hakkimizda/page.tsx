@@ -3,7 +3,7 @@ import Link from 'next/link'
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: 'Hakkımızda — yzliste',
+  title: 'Hakkımızda',
   description: 'yzliste, Türk e-ticaret satıcıları için AI destekli listing metni ve görsel üretim platformudur. SIMOON PAZARLAMA VE DANISMANLIK LTD. ŞTİ. tarafından geliştirilmektedir.',
   alternates: { canonical: 'https://www.yzliste.com/hakkimizda' },
   robots: { index: true, follow: true },

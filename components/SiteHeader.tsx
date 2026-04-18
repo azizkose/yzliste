@@ -1,7 +1,10 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useCredits } from "@/lib/hooks/useCredits";
+import { supabase } from "@/lib/supabase";
+import { useQueryClient } from "@tanstack/react-query";
 
 type AktifSayfa = "ana" | "icerik" | "fiyatlar" | "blog" | "toplu" | "profil";
 
@@ -9,8 +12,16 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
   const [menuAcik, setMenuAcik] = useState(false);
   const { data: currentUser } = useCurrentUser();
   const { data: kredi } = useCredits();
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const girisVar = !!currentUser && !currentUser.anonim;
+
+  const cikisYap = async () => {
+    await supabase.auth.signOut();
+    queryClient.clear();
+    router.push('/');
+  };
 
   const navLinks = [
     { href: "/", label: "Ana Sayfa", id: "ana" as AktifSayfa },
@@ -62,6 +73,12 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               >
                 Profil
               </a>
+              <button
+                onClick={cikisYap}
+                className="hidden sm:block text-xs sm:text-sm text-gray-400 hover:text-gray-700 px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
+              >
+                Çıkış
+              </button>
             </>
           ) : (
             <a
@@ -107,7 +124,22 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               </a>
             ))}
             <div className="border-t border-gray-100 pt-2 mt-2">
-              {!girisVar && (
+              {girisVar ? (
+                <>
+                  <a
+                    href="/profil"
+                    className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors mb-1"
+                  >
+                    Profil
+                  </a>
+                  <button
+                    onClick={cikisYap}
+                    className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors mb-1"
+                  >
+                    Çıkış Yap
+                  </button>
+                </>
+              ) : (
                 <a
                   href="/giris"
                   className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors mb-1"

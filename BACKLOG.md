@@ -281,7 +281,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   `/fiyatlar`'da `FiyatlarCta` client component eklendi. Login'li: "İçerik Üret →" → `/`, login'siz: "Ücretsiz Başla" → `/kayit`.
 
 **Yeni bulgular — P2 (kök neden grubu):**
-- [x] **QA-14** P1 — İki farklı header implementasyonu → tutarsız deneyim (B-026):
+- [ ] **QA-14** P1 — İki farklı header implementasyonu → tutarsız deneyim (B-026): ⚠️ Tur 4 regresyon
   🔑 **3 bulgunun kök nedeni:** B-011 (farklı header), B-018 (login'liye kayıt CTA), B-019 (login'li /giris formu).
   **Doğrulama:** `SiteHeader.tsx` aslında auth-aware (useCurrentUser + useCredits). Ama `page.tsx` kendi inline header'ını kullanıyor (satır 850+). İki ayrı header = iki ayrı davranış.
   **Fix:** page.tsx inline header'ı kaldır, SiteHeader'ı kullan. Root layout'a SiteHeader ekle (her sayfada tek header). Middleware ile `/giris`, `/kayit`'te logged-in → `/` redirect.
@@ -317,11 +317,11 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 > Kaynak: Otomatik haftalık deep audit — Vercel MCP + Chrome.
 > 13/13 sayfa 200 ✅, SSL OK, ort. 0.75s. 6 uyarı aşağıda.
 
-- [x] **HC-01** P1 — Canonical tag yanlış sayfalarda homepage'e işaret ediyor:
+- [ ] **HC-01** P1 — Canonical tag yanlış sayfalarda homepage'e işaret ediyor: ⚠️ Tur 4 regresyon
   `/giris`, `/kayit`, `/sss` sayfalarının canonical tag'ı `https://www.yzliste.com/` (homepage) gösteriyor. Her sayfanın canonical'ı kendi URL'si olmalı.
   **Fix:** Her üç sayfanın metadata'sına `alternates: { canonical: '...' }` eklendi.
 
-- [x] **HC-02** P2 — Kırık iç linkler (404 dönen):
+- [ ] **HC-02** P2 — Kırık iç linkler (404 dönen): ⚠️ Tur 4 regresyon
   1. `/video` → kodda `href="/video"` bulunamadı, audit kaynaklı FP olabilir.
   2. `/blog/ai-gorsel-uretimi-e-ticaret` → `page.tsx` satır 1083'te link vardı. `/blog/e-ticaret-icin-ai-urun-fotografciligi` olarak güncellendi.
 
@@ -336,6 +336,37 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 - [x] **HC-06** P3 — `/sss` sitemap'te yok:
   **Fix:** `app/sitemap.ts`'e `/sss` eklendi (priority: 0.5, changefreq: monthly).
+
+### Tur 4 Bulguları (2026-04-18)
+> Kaynak: `health-reports/test-tur-4-2026-04-18.md` — Vercel preview üzerinde test edildi.
+> Toplam: 8 P0, 7 P1, 4 P2. QA-14, HC-01, HC-02 regresyon olarak yeniden açıldı.
+
+**P0 (bu hafta):**
+- [ ] **T4-01** — `/giris` tab switcher butonları `type="button"` değil, çift submit oluşuyor. Fix: AuthForm.tsx'te tab butonlarına `type="button"` ekle.
+- [ ] **T4-03** — Giriş sonrası header hâlâ "Giriş Yap" gösteriyor, "Çıkış" butonu yok. ⚠️ QA-14 regresyon. Fix: SiteHeader'a logout butonu ekle.
+- [ ] **T4-05** — `/profil` 44 kredi, `/hesap/krediler` 0 kredi gösteriyor. Fix: `useCredits()` hook'u her yerde kullan.
+- [ ] **T4-09** — `/profil` `robots: index, follow` — kullanıcı profili arama motoruna sızabilir. Fix: profil layout'a noindex ekle.
+- [ ] **T4-10** — `/kosullar`, `/gizlilik` canonical ana sayfaya kırılmış. ⚠️ HC-01 regresyon. Fix: her sayfada kendi URL'e canonical set et.
+- [ ] **T4-11** — Tüm sayfalarda çift "yzliste" başlık (`X — yzliste | yzliste`). Fix: title'lardan ` — yzliste` ekini kaldır, template zaten ekliyor.
+- [ ] **T4-12** — Blog yazılarında `og:image` eksik/jenerik. ⚠️ HC-02/HC-03 regresyon. Fix: frontmatter `kapakGorsel`'den çek, yoksa `/og-image.png` default.
+- [ ] **T4-13** — 404 sayfası `robots: index, follow` ve canonical var. Fix: noindex + canonical kaldır.
+
+**P1 (2 hafta):**
+- [ ] **T4-02** — Preview env'de `/giris` ve `/kayit` GET fetch status 0 dönüyor.
+- [ ] **T4-04** — Header'a kredi sayacı rozeti ekle.
+- [ ] **T4-07** — `/iletisim` 404 dönüyor — ya sayfa oluştur ya footer'dan kaldır.
+- [ ] **T4-14** — HTML entity title'larda literal: `/gizlilik`'te `&amp;`, blog slug'da `&#x27;`. Fix: UTF-8 karakterle değiştir.
+- [ ] **T4-15** — hreflang eksik. Fix: root layout'a `hreflang="tr"` + `x-default` self-reference ekle.
+
+**P2:**
+- [ ] **T4-06** — `/hesap/profil` ↔ `/profil` route çakışması — mimari karar.
+- [ ] **T4-08** — `/demo` referanslarını grep-kontrol et.
+- [ ] **T4-17** — JSON-LD Organization duplication temizliği.
+
+**Test Altyapısı:**
+- [ ] **TEST-INFRA-01** — Test hesap bayrağı (`is_test` flag) — ödeme geçmişi filtrele + sınırsız kredi.
+- [ ] **TEST-INFRA-02** — 5 sabit ürün fixture'ı.
+- [ ] **TEST-MCP-01** — Mobil viewport tooling (Chrome MCP resize alternatif) — Layer B tamamlansın.
 
 ### P3+ — UI Polish Pass (KÜME 0 bittikten sonra, demo öncesi)
 > Bu bölüm KÜME 0 içerik işleri tamamlandıktan sonra yapılacak. Redesign değil, cilalama.

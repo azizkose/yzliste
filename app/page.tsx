@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import TanitimSayfasi from "./_tanitim";
 
 export const metadata: Metadata = {
-  title: "yzliste — AI ile E-ticaret Listing, Görsel ve Video Üret",
+  title: { absolute: "yzliste — AI ile E-ticaret Listing, Görsel ve Video Üret" },
   description:
     "Trendyol, Hepsiburada, Amazon, Etsy ve N11 için AI destekli listing metni, stüdyo görseli, ürün videosu ve sosyal medya içeriği üret. Fotoğraf yükle, gerisini YZ halleder.",
   alternates: { canonical: "https://www.yzliste.com" },
