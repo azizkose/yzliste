@@ -204,8 +204,8 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   8. Section component'leri: `AuthHero`, `FeaturesTabbed`, `FeatureCards`, `BrandProfile`, `HowItWorks`, `BenefitsGrid`
   9. Platform listesi, özellik kartları, örnek çıktılar → sabit dosyalara
   **uret/page.tsx (eski page.tsx → engine sayfası, PQ-35 sonrası):**
-  10. Sekmeleri component'lere ayır (sub-1): `MetinSekmesi.tsx`, `GorselSekmesi.tsx`, `VideoSekmesi.tsx`, `SosyalSekmesi.tsx`
-  11. State yönetimini hook'lara taşı (sub-2): `useMetinUretim.ts`, `useGorselUretim.ts` vb.
+  10. [x] Sekmeleri component'lere ayır (sub-1): `MetinSekmesi.tsx`, `GorselSekmesi.tsx`, `VideoSekmesi.tsx`, `SosyalSekmesi.tsx`
+  11. [x] State yönetimini hook'lara taşı (sub-2): `useMetinUretim.ts`, `useGorselUretim.ts` vb.
   Hedef: Hiçbir component 300 satırı geçmesin, state her component'te max 5-6 değişken
   ⚠️ PQ-28 sub-1~11 PQ-35 tamamlandıktan SONRA yapılacak
 
