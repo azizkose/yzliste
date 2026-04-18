@@ -37,13 +37,13 @@ export default function FiyatlarCta({ className, variant = 'primary', paketButon
   if (girisVar) {
     if (variant === 'paket') {
       return (
-        <a href="/" className={`block text-center ${paketButonRenk} text-white font-semibold py-3 rounded-xl text-sm transition-colors ${className ?? ''}`}>
+        <a href="/uret" className={`block text-center ${paketButonRenk} text-white font-semibold py-3 rounded-xl text-sm transition-colors ${className ?? ''}`}>
           İçerik Üret →
         </a>
       )
     }
     return (
-      <a href="/" className={className}>
+      <a href="/uret" className={className}>
         İçerik Üretmeye Başla →
       </a>
     )
