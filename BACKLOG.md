@@ -3,8 +3,9 @@
 Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 Claude Code için: **KÜME 0 EN ÖNCELİKLİ.** Üstten aşağı yap. Küme içindeki item'lar bağımlıdır → sırayla.
 
-> **Son tarama: 2026-04-17** — Kod taranarak güncellenmiştir. `~` işareti = kısmen yapılmış, eksik kısmı parantezde.
+> **Son tarama: 2026-04-18** — Cowork tam audit. Tüm [x] maddeler koda karşı doğrulandı.
 > **Küme 0 güncellemesi: 2026-04-17** — PQ-01~PQ-10 tamamlandı.
+> **Cowork audit notu (2026-04-18):** Bazı yerel dosyalar truncate durumda (Cowork+Claude Code çakışması). Git HEAD doğru — `git checkout -- .` ile restore edilmeli (`index.lock` silinmeli önce).
 
 ---
 
@@ -47,7 +48,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   - Root `layout.tsx`'e canonical eklendi (`https://www.yzliste.com`)
   - `/fiyatlar`, `/blog`, `/blog/[slug]` canonical'ları `www.yzliste.com`'a düzeltildi
   - Sitemap'te `/auth` priority 1→0.8'e düşürüldü, `/` en üstte
-- [x] **PQ-25** Sitemap'ten korumalı sayfaları çıkar: `/hesap/*`, `/odeme/*`, auth-required route'lar sitemap'te olmamalı. `app/sitemap.ts`'de sadece public route'ları listele. "Discovered – not indexed" sayısını düşürür.
+- [x] **PQ-25** Sitemap'ten korumalı sayfaları çıkar: `/hesap/*`, `/odeme/*` sitemap'ten çıkarıldı. ⚠️ **Eksik:** `/auth` hâlâ sitemap'te (priority 0.8) — kaldırılmalı çünkü login olmayan kullanıcıları `/giris`'e redirect ediyor.
 - [x] **PQ-26** Auth redirect'i Google-safe yap: Korumalı sayfalara Googlebot geldiğinde redirect yerine 403/404 dönmeli veya sitemap'ten çıkarılmalı. "Page with redirect" sorununu çözer.
 - [ ] **PQ-27** `http://www.yzliste.com/` "Crawled – not indexed": Canonical eklendi — Search Console'da "URL Denetimi"nden reindex iste. Deploy sonrası manuel aksiyon.
 
@@ -99,7 +100,29 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   8. Platform listesi, özellik kartları, örnek çıktılar → sabit dosyalara
   Hedef: Hiçbir component 300 satırı geçmesin, state her component'te max 5-6 değişken
 
+- [x] **PQ-29** Gri overlay bug fix — `@modal` intercepting route'larda giriş sonrası overlay takılıyor:
+  **Sorun:** `AuthForm` giriş başarılı olunca `router.push('/')` yapıyor ama kullanıcı zaten `/`'de. Next.js parallel route slot'u `@modal`'ı kapatmıyor → `fixed inset-0 bg-black/60 z-50` overlay ekranda kalıyor, hiçbir yere tıklanamıyor.
+  **Fix (3 dosya):**
+  1. `app/@modal/(.)giris/page.tsx` → `'use client'` yap, `useRouter` import et, `AuthForm`'a `onSuccess={() => { router.back(); setTimeout(() => router.replace('/'), 100) }}` geç
+  2. `app/@modal/(.)kayit/page.tsx` → aynı şekilde
+  3. `components/modal/Modal.tsx` → `usePathname` + `useRef` ile pathname değişimini dinle, farklılaşırsa `handleClose()` çağır (stale overlay güvenlik ağı)
+  **Neden `router.back()` zorunlu:** Intercepted route'larda `router.push` yeni history entry ekler ama parallel route slot'u resetlemeyebilir. `router.back()` history'yi geri alarak modal slot'u doğru şekilde kapatır.
+- [ ] **PQ-30** Dosya truncation riski — çoklu araç çakışma önlemi:
+  Cowork + Claude Code aynı anda aynı dosyaya yazarsa truncation olabiliyor (page.tsx 2322→2052 satıra düşmüş, hesap/ayarlar/page.tsx de kesilmiş). `.git/index.lock` stale kalıyor.
+  **Kural:** Kod yazan tek araç Claude Code olsun. Cowork analiz/planlama/BACKLOG yazımı yapsın, koda dokunmasın.
+  **Kontrol:** Deploy öncesi `git diff --stat` ile tüm dosyaların doğru satır sayısında olduğunu doğrula.
+
 - [ ] **DoD** Demo testi: 5 farklı ürün (kozmetik, elektronik, giyim, gıda, takı) × 3 platform (Trendyol, Amazon, Etsy) = 15 listing üret. Her biri için görsel + video. Sonuçlar tutarlı, halüsinasyonsuz ve platforma uygun olmalı.
+
+- [ ] **PQ-31** Auth page inline modal → AuthForm component'ine geçir:
+  `app/auth/page.tsx` kendi modal state'ini yönetiyor (modalAcik, modalMod, modalEmail, modalSifre, modalSozlesme, modalMesaj, modalYukleniyor — 7 state). İçinde ayrı `modalUyeGiris` fonksiyonu var. Bunun yerine `AuthForm` component'ini kullanmalı — aynı mantık orada zaten var. Tekrarlanan kod ~60 satır silinir, bug riski azalır.
+- [ ] **PQ-32** `page.tsx` auth popup tekrarlı kod temizliği:
+  `page.tsx` de kendi auth popup'ını yönetiyor (authPopupAcik, authPopupMod, authPopupEmail, authPopupSifre, authPopupSozlesme, authPopupMesaj, authPopupYukleniyor — 7 state + handleAuthPopupGiris fonksiyonu + handleGoogleGiris). `AuthForm` component'i zaten aynı işi yapıyor. Popup'ı `AuthForm` ile değiştir → ~80 satır ve 7 state kaldırılır.
+- [ ] **PQ-33** `@modal/(.)kredi-yukle/page.tsx` paket fiyatlarını `lib/paketler.ts`'ten al:
+  Şu an hardcoded fiyatlar var (₺29, ₺79, ₺149). `PAKET_LISTESI` zaten merkezi kaynak — oradan çekmeli. Fiyat değişikliğinde 2 yeri güncellemek yerine 1 yer yeterli olur.
+
+- [ ] **PQ-34** Dark mode CSS'i devre dışı bırak veya düzgün destekle:
+  `globals.css`'te `@media (prefers-color-scheme: dark)` ile `--background: #0a0a0a` ayarlanıyor ama hiçbir component dark mode desteklemiyor (hepsi `bg-white`, `text-gray-900` hardcoded). Sistem dark mode'da olan kullanıcılarda body siyah, component'ler beyaz → garip görünüm. Ya dark mode media query'yi kaldır ya da `html` tag'ine `class="light"` + `color-scheme: light` ekle.
 
 ### P3+ — UI Polish Pass (KÜME 0 bittikten sonra, demo öncesi)
 > Bu bölüm KÜME 0 içerik işleri tamamlandıktan sonra yapılacak. Redesign değil, cilalama.
@@ -122,8 +145,8 @@ Bu küme bitmeden aşağıdakiler boşa gider. Tek branch üzerinde yap.
 - [x] **F-14a** TanStack Query v5 kur, root layout'ta `QueryClientProvider`
 - [x] **F-14b** `useCredits()` hook — `GET /api/credits`, staleTime 10s
 - [x] **F-14c** `useCurrentUser()` hook — `GET /api/me`, staleTime 60s
-- [x] **F-14d** Üretim mutation — `onSuccess`'te `['credits']` invalidate *(~%80: invalidateCredits çağrılıyor ama formal useMutation hook yok, imperative logic page.tsx içinde)*
-- [x] **F-14e** Header + app içi + profil sayfalarında kredi sayacını tek hook'a bağla (Context/prop drilling kaldır) *(~%50: useCredits hook var ama header'da kullanılmıyor, page.tsx'te local state)*
+- [x] **F-14d** Üretim mutation — `onSuccess`'te `['credits']` invalidate *(~%80: invalidateCredits 14 yerde çağrılıyor ama formal useMutation hook yok, imperative logic page.tsx içinde dağınık)*
+- [ ] **F-14e** Header + app içi + profil sayfalarında kredi sayacını tek hook'a bağla *(~%50: useCredits hook var ama header'da kullanılmıyor, page.tsx'te local state. 3 yerde aynı kredi gösterilmeli ama kaynaklar farklı)*
 - [ ] **F-13** 3 test hesabı (DB insert): `test-normal@yzliste.com` (10 kredi), `test-zero@yzliste.com` (0 kredi), `test-new@yzliste.com` (her sprint reset). Credentials 1Password/Bitwarden vault'a.
 - [ ] **DoD** Geri tuşu modal'ı kapatıyor (siteyi kapatmıyor). `/fiyatlar` direk linkle SSR açılıyor. `/app/sonuc/[id]` paylaşılabilir. Kredi sayacı 3 yerde aynı.
 
@@ -135,14 +158,14 @@ PostHog'u consent altyapısıyla birlikte kur — sonradan geri ekleme külfeti 
 - [x] **F-28a** PostHog EU Cloud hesap aç. Env: `NEXT_PUBLIC_POSTHOG_KEY`, `api_host=https://eu.i.posthog.com`
 - [x] **F-28b** `posthog-js` kur. Root provider. `person_profiles: 'identified_only'`, `capture_pageview: false`, başlangıçta `opt_out_capturing()`
 - [x] **F-28c** `PostHogPageView` component (App Router için manuel `$pageview` tetikleme — `usePathname` + `useSearchParams`)
-- [x] **F-28d** Login/logout'ta `identify()` / `reset()`. Properties: `email, plan, signup_date, total_generations` *(~%80: identify() çalışıyor, ama signOut sonrası analytics.reset() eksik)*
+- [x] **F-28d** Login/logout'ta `identify()` / `reset()`. Properties: `email, plan, signup_date, total_generations` *(~%80: identify() çalışıyor. ⚠️ signOut sonrası analytics.reset() eksik — logout'ta PostHog person karışabilir)*
 - [x] **F-28e** 9 custom event: `signup_started`, `signup_completed`, `generation_started`, `generation_completed`, `generation_failed`, `credit_purchase_started`, `credit_purchase_completed`, `credit_exhausted`, `share_clicked`. Her biri doğru yerde + doğru property ile.
 - [x] **F-08a** Cookie consent banner (`vanilla-cookieconsent` v3). 3 kategori: Zorunlu / Analitik / Pazarlama. Default: hepsi KAPALI.
 - [x] **F-08b** Google Consent Mode v2: `gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' })`
 - [x] **F-08c** Consent 'accept analytics' olunca `posthog.opt_in_capturing()` + `gtag('consent', 'update', { analytics_storage: 'granted' })`
 - [x] **F-08d** `/gizlilik` içeriğini KVKK formatına yeniden yaz (veri sorumlusu, kategori, amaç, hukuki sebep, aktarım, saklama, Madde 11 hakları, başvuru yolu)
 - [x] **F-08e** Ayrı `/cerez-politikasi` ve `/kvkk-aydinlatma` sayfaları
-- [ ] **DoD** PostHog dashboard'da 9 event + `$pageview` görünüyor. Consent reddedilirse hiçbir event gitmiyor (network tab ile doğrula).
+- [ ] **DoD** PostHog dashboard'da 9 event + `$pageview` görünüyor. Consent reddedilirse hiçbir event gitmiyor (network tab ile doğrula). ⚠️ **Audit:** analytics.ts'te 9 event tanımlı + opt-out logic var, ama UI component'lerinde `analytics.capture()` çağrılarının gerçekten tetiklendiği doğrulanmalı.
 
 ---
 
@@ -183,8 +206,8 @@ Hukuki kontrol gerek. Küme 1'e bağlı değil ama route'lar açılınca yayına
 - [x] **F-07b** Mesafeli Satış Sözleşmesi → `/mesafeli-satis`
 - [x] **F-07c** İade Politikası (kredi expire süresi net, cayma hakkı istisnası) → `/teslimat-iade` *(route adı /iade yerine /teslimat-iade olarak oluşturulmuş — OK)*
 - [x] **F-07d** Checkout'ta 3 checkbox (açık rıza): Koşullar / Mesafeli Satış / KVKK. İşaretlenmeden satın alma disable.
-- [x] **F-07e** Footer'da 4 link: Kullanım / Mesafeli Satış / İade / Gizlilik *(~%75: Gizlilik + Mesafeli Satış + Teslimat İade var, Kullanım Koşulları linki eksik)*
-- [ ] **DoD** 3 belge hukukçu onayı ile yayında. Checkout akışında 3 checkbox kayıtlı (DB'de timestamp + IP).
+- [x] **F-07e** Footer'da 4 link: Kullanım / Mesafeli Satış / İade / Gizlilik ✅ Tüm 4 link mevcut.
+- [ ] **DoD** 3 belge hukukçu onayı ile yayında. Checkout akışında 3 checkbox kayıtlı (DB'de timestamp + IP). ⚠️ **Audit:** Checkout'ta 3 checkbox var (sozlesmeOnay, mesafeliOnay, kvkkOnay) ama **DB'ye kaydedilmiyor** — sadece frontend form state. Hukuki denetim için consent log tablosu + timestamp + IP kaydı şart.
 
 ---
 
@@ -207,7 +230,7 @@ Hukuki kontrol gerek. Küme 1'e bağlı değil ama route'lar açılınca yayına
 - [x] **F-10a** `platformConfig` objesi: her pazaryeri için `{titleMaxLength, descMaxLength, bannedWords[], requiredFields[]}`
 - [x] **F-10b** Platform dropdown değişince sağ panelde "Kurallar" kutusu render et
 - [x] **F-10c** Üretim sonrası "Trendyol kurallarına uygun ✓" rozeti (otomatik kontrol)
-- [x] **F-11a** LLM system prompt: "Marka adı yalnızca kullanıcı 'markalı ürün satıyorum' bayrağı açıksa geçer. Aksi halde jenerik ifade." *(~%40: ICERIK_KURALLARI var ama marka bayrağı mantığı eksik)*
+- [x] **F-11a** LLM system prompt: "Marka adı yalnızca kullanıcı 'markalı ürün satıyorum' bayrağı açıksa geçer. Aksi halde jenerik ifade." *(~%60: ICERIK_KURALLARI var, markaliUrun param API'ye gidiyor ama prompt text'te "markalı değilse marka adı kullanma" kuralı açık değil)*
 - [x] **F-11b** Form'a "Bu ürün markalı mı? (Yetkili satıcı mısın)" checkbox
 - [x] **F-11c** Platform yasaklı kelime listesini sistem prompt'a inject et (en iyi, %100, şifalı, vb.)
 - [x] **F-11d** Çıktıda "Marka/IP Uyarısı" component — tespit edilmiş marka varsa göster
@@ -217,12 +240,12 @@ Hukuki kontrol gerek. Küme 1'e bağlı değil ama route'lar açılınca yayına
 - [x] **F-22a** `/hesap` dashboard'ında 4 metrik kartı: bu ay üretim, kalan kredi, favori platform, toplam tasarruf (~X saat)
 - [x] **F-22b** Kredi %20 altına inince üst banner: "+50 kredi %15 indirimle"
 - [x] **F-22c** Son 3 üretim shortcut'ı
-- [x] **F-12a** Çıktı bloğuna mikro-aksiyonlar: 🔁 Yeniden üret · ✂️ Kısalt · ➕ Genişlet · 🎭 Ton değiştir · 💾 Favori *(💾 Favori hariç — generations ID olmadan yapılamaz)*
+- [x] **F-12a** Çıktı bloğuna mikro-aksiyonlar: 🔁 Yeniden üret · ✂️ Kısalt · ➕ Genişlet · 🎭 Ton değiştir *(💾 Favori hâlâ eksik — generations tablosu var ama UI'da favori butonu yok)*
 - [x] **F-12b** `generations` tablosu (id, user_id, platform, prompt, output, created_at, is_favorite)
 - [x] **F-12c** Sol menüye "Geçmiş" sekmesi — tarih/platform/başlık filtresi
 - [x] **F-12d** Her kredide 3 ücretsiz "yeniden üret" hakkı (DB'de `regenerate_count`)
-- [ ] **F-20a** `messages/tr.json` — tüm UI metinleri tek dosyada
-- [ ] **F-20b** Marka sesi kısa kitapçık: ton (arkadaşça+uzman, "sen" dili), yasaklı kelimeler, her state için örnek metin
+- [ ] **F-20a** `messages/tr.json` — tüm UI metinleri tek dosyada. ⚠️ Şu an tüm stringler hardcoded. i18n altyapısı yok.
+- [ ] **F-20b** Marka sesi kısa kitapçık: ton (arkadaşça+uzman, "sen" dili), yasaklı kelimeler, her state için örnek metin. ⚠️ Henüz hiç doküman yok.
 - [ ] **DoD** Platform seçince kurallar sağda görünüyor. Markalı ürün checkbox kapalıysa çıktıda "Stanley" gibi marka geçmiyor. `/hesap` dashboard kullanıcı başına metrikleri gösteriyor.
 
 ---
@@ -266,3 +289,4 @@ Aşağıdaki eşiklerden 2'si gerçekleşince backlog'a al: **1.000 tekil/ay, 10
 - DB şema değişiklikleri için migration yaz — direkt SQL çalıştırma. Supabase'deysek `supabase migration new xxx`.
 - Her küme bittiğinde `CHANGELOG.md`'ye 1 satır not.
 - Audit raporundaki `[F-XX]` kodları bu dosyayla aynı. Detay için `yzliste-audit-raporu.docx` Bölüm B'ye bak.
+                       

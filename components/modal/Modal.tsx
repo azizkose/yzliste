@@ -1,7 +1,7 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useEffect, useCallback } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import { useEffect, useCallback, useRef } from 'react'
 
 interface ModalProps {
   title?: string
@@ -10,6 +10,8 @@ interface ModalProps {
 
 export default function Modal({ title, children }: ModalProps) {
   const router = useRouter()
+  const pathname = usePathname()
+  const initialPathname = useRef(pathname)
 
   const handleClose = useCallback(() => {
     router.back()
@@ -23,6 +25,13 @@ export default function Modal({ title, children }: ModalProps) {
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [handleClose])
+
+  // Stale overlay güvenlik ağı: pathname değişirse modal'ı kapat
+  useEffect(() => {
+    if (pathname !== initialPathname.current) {
+      handleClose()
+    }
+  }, [pathname, handleClose])
 
   return (
     <div
