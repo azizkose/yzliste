@@ -5,6 +5,7 @@ Claude Code için: **KÜME 0 EN ÖNCELİKLİ.** Üstten aşağı yap. Küme içi
 
 > **Son tarama: 2026-04-18** — Cowork tam audit. Tüm [x] maddeler koda karşı doğrulandı.
 > **Küme 0 güncellemesi: 2026-04-17** — PQ-01~PQ-10 tamamlandı.
+> **QA bulguları eklendi (2026-04-18):** 14 bug'lık keşif testi raporu değerlendirildi → 9 madde (QA-01~QA-09) eklendi. B-006 ve B-009 mevcut kodda sorun değil.
 > **Cowork audit notu (2026-04-18):** Bazı yerel dosyalar truncate durumda (Cowork+Claude Code çakışması). Git HEAD doğru — `git checkout -- .` ile restore edilmeli (`index.lock` silinmeli önce).
 
 ---
@@ -123,6 +124,46 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 - [x] **PQ-34** Dark mode CSS'i devre dışı bırak veya düzgün destekle:
   `globals.css`'te `@media (prefers-color-scheme: dark)` ile `--background: #0a0a0a` ayarlanıyor ama hiçbir component dark mode desteklemiyor (hepsi `bg-white`, `text-gray-900` hardcoded). Sistem dark mode'da olan kullanıcılarda body siyah, component'ler beyaz → garip görünüm. Ya dark mode media query'yi kaldır ya da `html` tag'ine `class="light"` + `color-scheme: light` ekle.
+
+### QA Keşif Testi Bulguları (2026-04-18)
+> Kaynak: `yzliste-bulgu-raporu.docx` — Claude in Chrome ile exploratory test, 14 bulgu.
+> Doğrulama: Her bulgu git HEAD koduna karşı doğrulandı. B-006 (blog tarihleri) ve B-009 (şifremi unuttum) mevcut kodda sorun değil.
+
+- [x] **QA-01** 🔴 P0 — Logo ve 'Ana Sayfa' linki `/auth`'a gidiyor (B-001 + B-002):
+  **SiteHeader.tsx:** `navLinks` dizisinde `{ href: "/auth", label: "Ana Sayfa" }` → `href: "/"` olmalı.
+  **page.tsx:** Inline header'daki logo `href="/auth"` → `href="/"` olmalı.
+  **Etki:** Login olmuş kullanıcı logo veya Ana Sayfa'ya tıklayınca tekrar login sayfasına atılıyor.
+
+- [ ] **QA-02** P1 — 'Profil' linki ve 'Profili Düzenle' butonu tıklamaya yanıt vermiyor (B-003 + B-004):
+  Header'daki Profil linki `href="/profil"` doğru ama tıklama çalışmıyor. Dashboard'daki 'Profili Düzenle' butonu da aynı. Direkt URL ile erişim çalışıyor — muhtemelen click handler veya `preventDefault()` sorunu.
+  **Kontrol:** Link'in `<a href>` mı yoksa `<button onClick>` mı olduğunu doğrula. Next.js `<Link>` component'i kullanılıyorsa `onClick`'in `router.push`'ı engellemediğini kontrol et.
+
+- [x] **QA-03** P1 — 'İçerik' menü adlandırma karmaşası (B-005 + B-012):
+  Header'da hem 'İçerik' linki (href='/') hem sağda 'İçerik Üret →' butonu var. İkisi farklı yere gidiyor ama isim benzer — kullanıcı karışıyor.
+  **Öneri:** Menüdeki 'İçerik'i 'Nasıl Çalışır' veya 'Özellikler' olarak değiştir, ya da tamamen kaldır (sağdaki buton yeterli).
+
+- [ ] **QA-04** P1 — TC Kimlik No alanında KVKK aydınlatma metni eksik (B-007):
+  Profil sayfasında TC Kimlik No toplanıyor ama aydınlatma metni, onay checkbox'ı yok. KVKK uyumu için formun altına onay + link eklenmeli.
+  **İlişki:** KÜME 5 DoD — consent log tablosu + timestamp + IP kaydı şart. Hukukçu görüşü alınmalı.
+
+- [ ] **QA-05** P2 — Çelişen CTA mesajları ana sayfada (B-008):
+  3 farklı mesaj: (1) 'hesap gereklidir', (2) '3 Kredi Hediye', (3) 'kayıt gerekmiyor'. Birleşik, net mesaj olmalı.
+  **Not:** PQ-19 (compact hero) ve PQ-20 (sahte sosyal kanıt kaldırma) sonrası bu metinler değişmiş olabilir — deploy'daki duruma göre güncelle.
+
+- [ ] **QA-06** P2 — Kredi/üretim sayacı uyumsuzluğu (B-010):
+  Dashboard: '0 Kullanılan' — Profil: '2 Toplam üretim'. Farklı data source'lardan çekiliyor olabilir (kredi düşüş sayacı vs generations tablosu count). Tek kaynak kullan veya etiketleri netleştir.
+
+- [ ] **QA-07** P2 — Dashboard ile diğer sayfalar farklı header (B-011):
+  Dashboard'da inline header (kredi rozeti, email, çıkış), diğer sayfalarda SiteHeader (Profil, İçerik Üret butonu). İki farklı layout.
+  **İlişki:** PQ-28 monolith refactor — page.tsx inline header'ı SiteHeader'a taşıyınca çözülür.
+
+- [ ] **QA-08** P3 — 'Ücretsiz Başla' CTA'sı 3 yerde tekrar (B-013):
+  Hero + banner + sağ kutu — görsel gürültü. Hero'dakini bırak, diğerlerini sadeleştir.
+
+- [ ] **QA-09** P3 — Logged-out kullanıcıya çalışmayan form gösterimi (B-014):
+  Form tam görünüyor ama 'Üret' deyince ne olacağı belirsiz. Ya form blur/overlay ile gizle ya da 'Üret' anında login modal aç + form state'i koru.
+
+> **Not:** B-006 (blog tarihleri gelecek tarihli) mevcut kodda düzeltilmiş — `icerikler.ts` tarihleri 18 Nisan öncesi. B-009 (şifremi unuttum) `AuthForm`'da `handleSifreSifirla` fonksiyonu mevcut — login formunda görünüyor olmalı.
 
 ### P3+ — UI Polish Pass (KÜME 0 bittikten sonra, demo öncesi)
 > Bu bölüm KÜME 0 içerik işleri tamamlandıktan sonra yapılacak. Redesign değil, cilalama.
@@ -289,4 +330,4 @@ Aşağıdaki eşiklerden 2'si gerçekleşince backlog'a al: **1.000 tekil/ay, 10
 - DB şema değişiklikleri için migration yaz — direkt SQL çalıştırma. Supabase'deysek `supabase migration new xxx`.
 - Her küme bittiğinde `CHANGELOG.md`'ye 1 satır not.
 - Audit raporundaki `[F-XX]` kodları bu dosyayla aynı. Detay için `yzliste-audit-raporu.docx` Bölüm B'ye bak.
-                       
+                                                   

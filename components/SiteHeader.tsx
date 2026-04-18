@@ -12,9 +12,9 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
 
   const girisVar = !!currentUser && !currentUser.anonim;
 
+  // Logged-in: Ana Sayfa → tool (/), Logged-out: Ana Sayfa → marketing (/auth)
   const navLinks = [
-    { href: "/auth", label: "Ana Sayfa", id: "ana" as AktifSayfa },
-    { href: "/", label: "İçerik", id: "icerik" as AktifSayfa },
+    { href: girisVar ? "/" : "/auth", label: "Ana Sayfa", id: "ana" as AktifSayfa },
     { href: "/fiyatlar", label: "Fiyatlar", id: "fiyatlar" as AktifSayfa },
     { href: "/blog", label: "Blog", id: "blog" as AktifSayfa },
   ];
