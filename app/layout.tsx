@@ -44,6 +44,10 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://www.yzliste.com",
+    languages: {
+      'tr': 'https://www.yzliste.com',
+      'x-default': 'https://www.yzliste.com',
+    },
   },
   robots: { index: true, follow: true },
   icons: {

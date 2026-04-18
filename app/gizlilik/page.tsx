@@ -3,7 +3,7 @@ import Link from 'next/link'
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: 'Gizlilik Politikası & KVKK Aydınlatma',
+  title: 'Gizlilik Politikası ve KVKK Aydınlatma',
   description: 'yzliste gizlilik politikası, kişisel veri işleme ve KVKK kapsamındaki haklarınız.',
   alternates: { canonical: 'https://www.yzliste.com/gizlilik' },
 }
