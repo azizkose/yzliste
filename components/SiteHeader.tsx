@@ -62,29 +62,21 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               >
                 Profil
               </a>
-              <a
-                href="/uret"
-                className="hidden sm:block text-xs sm:text-sm bg-indigo-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-600 transition-colors font-medium whitespace-nowrap"
-              >
-                İçerik Üret →
-              </a>
             </>
           ) : (
-            <>
-              <a
-                href="/giris"
-                className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
-              >
-                Giriş Yap
-              </a>
-              <a
-                href="/kayit"
-                className="hidden sm:block text-xs sm:text-sm bg-indigo-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-600 transition-colors font-medium whitespace-nowrap"
-              >
-                Ücretsiz Başla
-              </a>
-            </>
+            <a
+              href="/giris"
+              className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
+            >
+              Giriş Yap
+            </a>
           )}
+          <a
+            href="/uret"
+            className="hidden sm:block text-xs sm:text-sm bg-indigo-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-600 transition-colors font-medium whitespace-nowrap"
+          >
+            İçerik Üret →
+          </a>
           {/* Mobile hamburger */}
           <button
             onClick={() => setMenuAcik(!menuAcik)}
@@ -115,21 +107,20 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               </a>
             ))}
             <div className="border-t border-gray-100 pt-2 mt-2">
-              {girisVar ? (
+              {!girisVar && (
                 <a
-                  href="/uret"
-                  className="block px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white text-center hover:bg-indigo-600 transition-colors"
+                  href="/giris"
+                  className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors mb-1"
                 >
-                  İçerik Üret →
-                </a>
-              ) : (
-                <a
-                  href="/kayit"
-                  className="block px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white text-center hover:bg-indigo-600 transition-colors"
-                >
-                  Ücretsiz Başla
+                  Giriş Yap
                 </a>
               )}
+              <a
+                href="/uret"
+                className="block px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white text-center hover:bg-indigo-600 transition-colors"
+              >
+                İçerik Üret →
+              </a>
             </div>
           </nav>
         </div>
