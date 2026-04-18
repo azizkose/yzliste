@@ -146,7 +146,7 @@ Bu küme bitmeden aşağıdakiler boşa gider. Tek branch üzerinde yap.
 - [x] **F-14b** `useCredits()` hook — `GET /api/credits`, staleTime 10s
 - [x] **F-14c** `useCurrentUser()` hook — `GET /api/me`, staleTime 60s
 - [x] **F-14d** Üretim mutation — `onSuccess`'te `['credits']` invalidate *(~%80: invalidateCredits 14 yerde çağrılıyor ama formal useMutation hook yok, imperative logic page.tsx içinde dağınık)*
-- [ ] **F-14e** Header + app içi + profil sayfalarında kredi sayacını tek hook'a bağla *(~%50: useCredits hook var ama header'da kullanılmıyor, page.tsx'te local state. 3 yerde aynı kredi gösterilmeli ama kaynaklar farklı)*
+- [x] **F-14e** Header + app içi + profil sayfalarında kredi sayacını tek hook'a bağla *(SiteHeader'da useCredits ile kredi rozeti; page.tsx krediDusuk + banner → kredilerHook'a bağlandı)*
 - [ ] **F-13** 3 test hesabı (DB insert): `test-normal@yzliste.com` (10 kredi), `test-zero@yzliste.com` (0 kredi), `test-new@yzliste.com` (her sprint reset). Credentials 1Password/Bitwarden vault'a.
 - [ ] **DoD** Geri tuşu modal'ı kapatıyor (siteyi kapatmıyor). `/fiyatlar` direk linkle SSR açılıyor. `/app/sonuc/[id]` paylaşılabilir. Kredi sayacı 3 yerde aynı.
 

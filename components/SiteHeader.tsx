@@ -1,18 +1,16 @@
 "use client";
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { useState } from "react";
+import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
+import { useCredits } from "@/lib/hooks/useCredits";
 
 type AktifSayfa = "ana" | "icerik" | "fiyatlar" | "blog" | "toplu" | "profil";
 
 export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) {
   const [menuAcik, setMenuAcik] = useState(false);
-  const [girisVar, setGirisVar] = useState(false);
+  const { data: currentUser } = useCurrentUser();
+  const { data: kredi } = useCredits();
 
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setGirisVar(!!user && !user.is_anonymous);
-    });
-  }, []);
+  const girisVar = !!currentUser && !currentUser.anonim;
 
   const navLinks = [
     { href: "/auth", label: "Ana Sayfa", id: "ana" as AktifSayfa },
@@ -51,6 +49,14 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
         <div className="flex gap-1 sm:gap-2 ml-auto items-center">
           {girisVar ? (
             <>
+              {kredi !== null && kredi !== undefined && (
+                <a
+                  href="/kredi-yukle"
+                  className="hidden sm:flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors whitespace-nowrap"
+                >
+                  💳 {kredi} kredi
+                </a>
+              )}
               <a
                 href="/profil"
                 className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"

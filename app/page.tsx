@@ -438,7 +438,7 @@ export default function Home() {
   const platformBilgi = PLATFORM_BILGI[platform] || PLATFORM_BILGI.trendyol;
   const platformPh = PLATFORM_PLACEHOLDER[platform] || PLATFORM_PLACEHOLDER.trendyol;
   const platformDil = platformBilgi.dil || "tr";
-  const krediDusuk = kullanici && !kullanici.is_admin && kullanici.kredi <= 2;
+  const krediDusuk = kullanici && !kullanici.is_admin && (kredilerHook ?? kullanici.kredi) <= 2;
   const sonucBolumleri = sonucuBolumle(sonuc);
   const platformRenk: Record<string, string> = { trendyol: "bg-orange-100 text-orange-700", hepsiburada: "bg-orange-100 text-orange-600", amazon: "bg-yellow-100 text-yellow-700", n11: "bg-blue-100 text-blue-700" };
 
@@ -1012,7 +1012,7 @@ export default function Home() {
               <span className="text-xl">⚠️</span>
               <div>
                 <p className="text-sm font-semibold text-amber-800">İçerik üretim krediniz azalıyor</p>
-                <p className="text-xs text-amber-600 mt-0.5">{kullanici?.kredi} kredi kaldı — tükenince içerik üretemezsiniz.</p>
+                <p className="text-xs text-amber-600 mt-0.5">{kredilerHook ?? kullanici?.kredi} kredi kaldı — tükenince içerik üretemezsiniz.</p>
               </div>
             </div>
             <button onClick={() => paketModalAc()} className="bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap flex-shrink-0">Kredi Yükle</button>
