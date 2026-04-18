@@ -65,12 +65,12 @@ export async function POST(req: NextRequest) {
   if (userId) {
     const { data: profil } = await supabaseAdmin
       .from("profiles")
-      .select("kredi, is_admin, marka_adi, ton, hedef_kitle")
+      .select("kredi, is_admin, is_test, marka_adi, ton, hedef_kitle")
       .eq("id", userId)
       .single();
 
     if (!profil) return NextResponse.json({ hata: "Kullanici bulunamadi" }, { status: 404 });
-    isAdmin = profil.is_admin === true;
+    isAdmin = profil.is_admin === true || profil.is_test === true;
 
     if (!isAdmin) {
       // Atomik: sadece yeterli kredi varsa düşür

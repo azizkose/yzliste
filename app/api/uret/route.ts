@@ -593,13 +593,13 @@ export async function POST(req: NextRequest) {
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")
-    .select("kredi, is_admin, marka_adi, hedef_kitle, vurgulanan_ozellikler")
+    .select("kredi, is_admin, is_test, marka_adi, hedef_kitle, vurgulanan_ozellikler")
     .eq("id", userId)
     .single();
 
   if (!profil) return NextResponse.json({ hata: "Kullanici bulunamadi" }, { status: 404 });
 
-  const isAdmin = profil.is_admin === true;
+  const isAdmin = profil.is_admin === true || profil.is_test === true;
 
   // Atomik kredi düşme: kredi > 0 olanı tek sorguda düş, başarısız olursa 402
   if (!isAdmin) {

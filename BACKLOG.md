@@ -317,13 +317,13 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 > Kaynak: Otomatik haftalık deep audit — Vercel MCP + Chrome.
 > 13/13 sayfa 200 ✅, SSL OK, ort. 0.75s. 6 uyarı aşağıda.
 
-- [ ] **HC-01** P1 — Canonical tag yanlış sayfalarda homepage'e işaret ediyor: ⚠️ Tur 4 regresyon
+- [x] **HC-01** P1 — Canonical tag yanlış sayfalarda homepage'e işaret ediyor: ⚠️ Tur 4 regresyon
   `/giris`, `/kayit`, `/sss` sayfalarının canonical tag'ı `https://www.yzliste.com/` (homepage) gösteriyor. Her sayfanın canonical'ı kendi URL'si olmalı.
-  **Fix:** Her üç sayfanın metadata'sına `alternates: { canonical: '...' }` eklendi.
+  **Fix:** Her üç sayfanın metadata'sına `alternates: { canonical: '...' }` eklendi. Doğrulandı: grep ile koda karşı kontrol edildi.
 
-- [ ] **HC-02** P2 — Kırık iç linkler (404 dönen): ⚠️ Tur 4 regresyon
-  1. `/video` → kodda `href="/video"` bulunamadı, audit kaynaklı FP olabilir.
-  2. `/blog/ai-gorsel-uretimi-e-ticaret` → `page.tsx` satır 1083'te link vardı. `/blog/e-ticaret-icin-ai-urun-fotografciligi` olarak güncellendi.
+- [x] **HC-02** P2 — Kırık iç linkler (404 dönen): ⚠️ Tur 4 regresyon
+  1. `/video` → kodda `href="/video"` bulunamadı, audit FP.
+  2. `/blog/ai-gorsel-uretimi-e-ticaret` → `/blog/e-ticaret-icin-ai-urun-fotografciligi` olarak güncellendi. Doğrulandı: stale link kodda yok.
 
 - [x] **HC-03** P2 — OG image (sosyal medya önizleme görseli) eksik:
   **Fix:** `/fiyatlar`, `/blog`, `/auth` (layout) openGraph bloğuna `images: ['/og-image.png']` eklendi.
@@ -364,8 +364,8 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 - [x] **T4-17** — JSON-LD Organization duplication temizliği. Fix: blog/page.tsx + blog/[slug]/page.tsx inline Organization → `@id` referansa çevrildi.
 
 **Test Altyapısı:**
-- [ ] **TEST-INFRA-01** — Test hesap bayrağı (`is_test` flag) — ödeme geçmişi filtrele + sınırsız kredi.
-- [ ] **TEST-INFRA-02** — 5 sabit ürün fixture'ı.
+- [x] **TEST-INFRA-01** — Test hesap bayrağı (`is_test` flag) — ödeme geçmişi filtrele + sınırsız kredi. Migration uygulandı, 3 test hesabı işaretlendi. API'lerde is_test → is_admin gibi kredi bypass yapıyor.
+- [x] **TEST-INFRA-02** — 5 sabit ürün fixture'ı. `lib/test-fixtures.ts` oluşturuldu (kozmetik, elektronik, giyim, gıda, takı).
 - [ ] **TEST-MCP-01** — Mobil viewport tooling (Chrome MCP resize alternatif) — Layer B tamamlansın.
 
 ### P3+ — UI Polish Pass (KÜME 0 bittikten sonra, demo öncesi)
