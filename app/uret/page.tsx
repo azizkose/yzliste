@@ -53,6 +53,7 @@ export default function Home() {
 
   // Kullanıcı
   const [kullanici, setKullanici] = useState<Kullanici | null>(null);
+  const [authYukleniyor, setAuthYukleniyor] = useState(true);
   const [gecmis, setGecmis] = useState<Uretim[]>([]);
   const [seciliUretim, setSeciliUretim] = useState<Uretim | null>(null);
   const [gecmisAcik, setGecmisAcik] = useState(false);
@@ -202,6 +203,7 @@ export default function Home() {
         setAuthPopupMod("kayit");
         setAuthPopupAcik(true);
       }
+      setAuthYukleniyor(false);
       return;
     }
 
@@ -226,6 +228,7 @@ export default function Home() {
         setPaketModalAcik(true);
       }
     }
+    setAuthYukleniyor(false);
   };
 
   // Blob'u tarayıcıda indir — tekrarlanan createObjectURL pattern'ini ortadan kaldırır
@@ -576,8 +579,8 @@ export default function Home() {
       <main className="min-h-screen bg-gray-50 pb-24 px-4">
       <div className="max-w-5xl mx-auto pt-6">
 
-        {/* Compact hero — sadece giriş yapılmamışsa */}
-        {(!kullanici || kullanici.anonim) && (
+        {/* Compact hero — sadece giriş yapılmamışsa (authYukleniyor bitince göster) */}
+        {!authYukleniyor && (!kullanici || kullanici.anonim) && (
           <div className="bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 rounded-2xl px-6 py-7 mb-5 text-center">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">7 Pazaryeri için AI İçerik Üreticisi</h1>
             <p className="text-sm text-gray-500 mb-1">Trendyol, Hepsiburada, Amazon, Etsy ve daha fazlası için — başlık, açıklama, görsel ve video tek platformda.</p>
