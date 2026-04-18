@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'Kayıt Ol — yzliste',
   description: '3 ücretsiz kredi ile yzliste\'ye ücretsiz kayıt olun. Kredi kartı gerekmez.',
   robots: { index: false, follow: false },
+  alternates: { canonical: 'https://www.yzliste.com/kayit' },
 }
 
 export default function KayitPage() {

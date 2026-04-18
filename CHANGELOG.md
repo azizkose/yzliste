@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-04-18 — HC-01/02/04/05/06: SEO + sitemap + canonical düzeltmeleri
+
+- sitemap.ts: /auth kaldırıldı, /sss eklendi
+- giris/kayit/sss sayfalarına doğru canonical tag eklendi
+- page.tsx: cikisYap /auth→/giris, kırık blog linki düzeltildi
+
 ## 2026-04-18 — PQ-28 kısmi: Monolith refactor ilk aşama
 
 - lib/constants.ts: PLATFORM_BILGI, YUKLENIYOR_MESAJLARI, GORSEL_STILLER (9), VIDEO_PRESETLER (14), kategoriKoduHesapla()

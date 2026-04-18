@@ -255,7 +255,7 @@ export default function Home() {
     if (data) setGecmis(data);
   };
 
-  const cikisYap = async () => { analytics.reset(); await supabase.auth.signOut(); router.push("/auth"); };
+  const cikisYap = async () => { analytics.reset(); await supabase.auth.signOut(); router.push("/giris"); };
 
   const fotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
     const dosyalar = Array.from(e.target.files || []);
@@ -1080,7 +1080,7 @@ export default function Home() {
               )}
               <p className="text-xs text-gray-400">
                 📸 En iyi sonuç için nasıl fotoğraf çekilmeli?{" "}
-                <a href="/blog/ai-gorsel-uretimi-e-ticaret" target="_blank" className="text-violet-500 hover:underline font-medium">
+                <a href="/blog/e-ticaret-icin-ai-urun-fotografciligi" target="_blank" className="text-violet-500 hover:underline font-medium">
                   Rehberi oku →
                 </a>
               </p>

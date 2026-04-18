@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'Giriş Yap — yzliste',
   description: 'yzliste hesabınıza giriş yapın.',
   robots: { index: false, follow: false },
+  alternates: { canonical: 'https://www.yzliste.com/giris' },
 }
 
 export default function GirisPage({

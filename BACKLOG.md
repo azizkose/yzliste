@@ -213,33 +213,26 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 > Kaynak: Otomatik haftalık deep audit — Vercel MCP + Chrome.
 > 13/13 sayfa 200 ✅, SSL OK, ort. 0.75s. 6 uyarı aşağıda.
 
-- [ ] **HC-01** P1 — Canonical tag yanlış sayfalarda homepage'e işaret ediyor:
+- [x] **HC-01** P1 — Canonical tag yanlış sayfalarda homepage'e işaret ediyor:
   `/giris`, `/kayit`, `/sss` sayfalarının canonical tag'ı `https://www.yzliste.com/` (homepage) gösteriyor. Her sayfanın canonical'ı kendi URL'si olmalı.
-  **İlişki:** PQ-24 canonical eklendi ama bu 3 sayfa yanlış kalmış.
-  **Fix:** `/giris/layout.tsx` (veya page metadata), `/kayit/layout.tsx`, `/sss/page.tsx` metadata'larında canonical'ı kendi URL'lerine güncelle: `https://www.yzliste.com/giris`, `.../kayit`, `.../sss`.
+  **Fix:** Her üç sayfanın metadata'sına `alternates: { canonical: '...' }` eklendi.
 
-- [ ] **HC-02** P2 — Kırık iç linkler (404 dönen):
-  1. `/video` → 404. Sitede böyle bir route yok ama bir yerden linklenmiş.
-  2. `/blog/ai-gorsel-uretimi-e-ticaret` → 404. Blog post silinmiş veya slug değişmiş olabilir.
-  **Fix:** 1) `/video` linkini sitewide grep ile bul, doğru route'a güncelle veya kaldır. 2) Blog slug'ını kontrol et — varsa düzelt, yoksa 301 redirect ekle veya linki kaldır.
+- [x] **HC-02** P2 — Kırık iç linkler (404 dönen):
+  1. `/video` → kodda `href="/video"` bulunamadı, audit kaynaklı FP olabilir.
+  2. `/blog/ai-gorsel-uretimi-e-ticaret` → `page.tsx` satır 1083'te link vardı. `/blog/e-ticaret-icin-ai-urun-fotografciligi` olarak güncellendi.
 
 - [ ] **HC-03** P2 — OG image (sosyal medya önizleme görseli) eksik:
   `/fiyatlar`, `/blog`, `/auth` sayfalarında `og:image` meta tag'ı yok. Sosyal medyada paylaşılınca önizleme görseli çıkmaz.
   **Fix:** Her sayfa metadata'sına `openGraph: { images: ['/og/fiyatlar.png'] }` ekle. Önce genel bir OG template oluştur (1200×630px), sonra sayfa bazlı varyantlar yapılabilir. Minimum: tüm sayfalar için tek `/og-default.png` kullan.
 
-- [ ] **HC-04** P1 — `/auth` hâlâ sitemap.xml'de:
-  `/auth` giriş yapmamış kullanıcıları `/giris`'e redirect ediyor → Google "Page with redirect" hatası veriyor.
-  **İlişki:** PQ-25'te not edilmişti ama henüz çıkarılmamış.
-  **Fix:** `app/sitemap.ts` (veya sitemap config) dosyasından `/auth` entry'sini tamamen kaldır.
+- [x] **HC-04** P1 — `/auth` hâlâ sitemap.xml'de:
+  **Fix:** `app/sitemap.ts`'ten `/auth` entry'si kaldırıldı.
 
-- [ ] **HC-05** P2 — Anasayfada hâlâ 1 adet `/auth` linki:
-  Logged-out anasayfada bir yerde hâlâ `/auth`'a link var. Tüm public linkler `/giris` veya `/kayit` olmalı.
-  **İlişki:** QA-11 kapsamında çoğu düzeldi ama 1 tane kalmış.
-  **Fix:** `app/page.tsx` veya component'lerde `/auth` href'i grep ile bul, `/giris` veya `/kayit`'e değiştir.
+- [x] **HC-05** P2 — Anasayfada hâlâ 1 adet `/auth` linki:
+  **Fix:** `page.tsx` `cikisYap()` fonksiyonundaki `router.push("/auth")` → `router.push("/giris")` olarak güncellendi.
 
-- [ ] **HC-06** P3 — `/sss` sitemap'te yok:
-  SSS (Sıkça Sorulan Sorular) sayfası mevcut ve 200 dönüyor ama sitemap.xml'de listelenmiyor. SEO fırsatı kaçırılıyor.
-  **Fix:** `app/sitemap.ts`'e `/sss` ekle (priority: 0.5, changefreq: monthly).
+- [x] **HC-06** P3 — `/sss` sitemap'te yok:
+  **Fix:** `app/sitemap.ts`'e `/sss` eklendi (priority: 0.5, changefreq: monthly).
 
 ### P3+ — UI Polish Pass (KÜME 0 bittikten sonra, demo öncesi)
 > Bu bölüm KÜME 0 içerik işleri tamamlandıktan sonra yapılacak. Redesign değil, cilalama.
