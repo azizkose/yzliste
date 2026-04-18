@@ -12,7 +12,7 @@ export default function CookieConsentBanner() {
         consentModal: {
           layout: 'box',
           position: 'bottom right',
-          equalWeightButtons: false,
+          equalWeightButtons: true,
         },
       },
 

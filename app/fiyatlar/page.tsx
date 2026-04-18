@@ -251,7 +251,7 @@ export default function FiyatlarPage() {
                   ))}
                 </ul>
                 <a
-                  href="/auth?kayit=1"
+                  href="/kayit"
                   className={`block text-center ${p.butonRenk} text-white font-semibold py-3 rounded-xl text-sm transition-colors`}
                 >
                   Başla
@@ -320,7 +320,7 @@ export default function FiyatlarPage() {
         <h2 className="text-2xl font-bold text-gray-900 mb-3">Hemen ücretsiz dene</h2>
         <p className="text-gray-500 text-sm mb-6">3 kredi, kredi kartı yok. Hesap oluştur, hemen başla.</p>
         <a
-          href="/auth?kayit=1"
+          href="/kayit"
           className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-indigo-100"
         >
           Ücretsiz Başla — 3 Kredi Hediye →

@@ -2101,7 +2101,7 @@ export default function Home() {
                     </div>
                     <div className="flex-1 bg-gray-50 rounded-xl px-2 py-2 text-center">
                       <div className="text-lg font-bold text-gray-700">{kullanici.toplam_kullanilan}</div>
-                      <div className="text-xs text-gray-500">Kullanılan</div>
+                      <div className="text-xs text-gray-500">Toplam üretim</div>
                     </div>
                   </div>
                   <button onClick={() => paketModalAc()} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold py-2 rounded-xl transition-colors">

@@ -146,7 +146,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 - [ ] **QA-05** P2 — Çelişen CTA mesajları (B-008): Hala açık. Logged-out anasayfada 3 çelişen mesaj aynen duruyor.
 
-- [ ] **QA-06** P2 — Kredi/üretim sayacı etiket tutarsızlığı (B-010):
+- [x] **QA-06** P2 — Kredi/üretim sayacı etiket tutarsızlığı (B-010):
   ⚠️ Kısmen düzeldi: Sayılar artık eşleşiyor (5/2). Ama etiketler farklı: Anasayfa 'Kullanılan', Profil 'Toplam üretim'. Tek terime standartlaştır.
 
 - [ ] **QA-07** → QA-14 ile birleştirildi (auth-aware header kök neden).
@@ -166,7 +166,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   Logo düzeldi ama `/profil`, `/fiyatlar`, `/blog` sayfalarında logged-out marketing header'da 'Ana Sayfa' hala `/auth`'a gidiyor.
   **İlişki:** QA-14 (auth-aware header) çözülünce otomatik düzelir.
 
-- [ ] **QA-12** P1 — Fiyatlar CTA'ları tutarsız rota (B-017):
+- [x] **QA-12** P1 — Fiyatlar CTA'ları tutarsız rota (B-017):
   Hero 'Ücretsiz Başla' → `/kayit`, paket 'Başla' butonları → `/auth?kayit=1`. Tek rotaya sabitle ya da redirect ekle.
 
 - [ ] **QA-13** P1 — Login'li kullanıcıya kayıt CTA'ları gösteriliyor (B-018):
@@ -202,7 +202,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   **Doğrulandı:** `not-found.tsx` metadata export etmiyor, root layout default title'ı kullanıyor.
   **Fix:** `app/not-found.tsx`'e ekle: `export const metadata = { title: 'Sayfa Bulunamadı | yzliste' }`.
 
-- [ ] **QA-21** P3 — Cookie banner buton hiyerarşisi eşitsiz (B-027):
+- [x] **QA-21** P3 — Cookie banner buton hiyerarşisi eşitsiz (B-027):
   'Tümünü kabul et' primary, 'Sadece zorunlu' secondary. KVKK/GDPR'a göre ikisi aynı görsel ağırlıkta olmalı.
 
 ### P3+ — UI Polish Pass (KÜME 0 bittikten sonra, demo öncesi)
