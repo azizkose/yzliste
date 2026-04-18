@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
+import SiteHeader from "@/components/SiteHeader";
 import { PAKET_LISTESI, MIN_FIYAT } from "@/lib/paketler";
 import AuthForm from "@/components/auth/AuthForm";
 
@@ -14,8 +15,6 @@ export default function AuthPage() {
   const [yukleniyor, setYukleniyor] = useState(false);
   const [mesaj, setMesaj] = useState("");
   const [sozlesmeOnay, setSozlesmeOnay] = useState(false);
-  const [oturum, setOturum] = useState<boolean | null>(null);
-  const [menuAcik, setMenuAcik] = useState(false);
   const [ozellikTab, setOzellikTab] = useState(0);
   const [modalAcik, setModalAcik] = useState(false);
   const [modalMod, setModalMod] = useState<"paket" | "uye">("paket");
@@ -27,17 +26,9 @@ export default function AuthPage() {
   const [seciliPaket, setSeciliPaket] = useState<string | null>(null);
   const [sifreSifirlamaGonderildi, setSifreSifirlamaGonderildi] = useState(false);
   const [sifreSifirlamaYukleniyor, setSifreSifirlamaYukleniyor] = useState(false);
-  const [anonimKullanici, setAnonimKullanici] = useState(false);
   const odemeRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setOturum(!!user);
-      const anonim = user?.is_anonymous ?? false;
-      setAnonimKullanici(anonim);
-    });
-  }, []);
 
   const turkceHata = (hata: string): string => {
     if (hata.includes("Password should be at least 6 characters")) return "Şifre en az 6 karakter olmalıdır.";
@@ -83,7 +74,6 @@ export default function AuthPage() {
   };
 
   const handleModalAuthSuccess = () => {
-    setOturum(true);
     if (modalAmac === "auth") {
       router.push("/");
     } else {
@@ -195,8 +185,7 @@ export default function AuthPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-white font-sans">
-
+    <>
       {/* MODAL */}
       {modalAcik && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setModalAcik(false); }}>
@@ -235,64 +224,8 @@ export default function AuthPage() {
         </div>
       )}
 
-      {/* HEADER */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-2.5">
-        <div className="max-w-6xl mx-auto flex items-center gap-2">
-          <Link href="/auth" className="flex-shrink-0 mr-1"><img src="/yzliste_logo.png" alt="yzliste" className="h-8" /></Link>
-          <nav className="flex items-center gap-0.5 text-xs sm:text-sm text-gray-500">
-            <Link href="/auth" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-indigo-600 font-medium whitespace-nowrap">Ana Sayfa</Link>
-            <Link href="/" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</Link>
-            <Link href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</Link>
-            <Link href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Blog</Link>
-          </nav>
-          <div className="flex gap-1 sm:gap-2 ml-auto items-center">
-            {oturum && !anonimKullanici ? (
-              <>
-                <Link href="/profil" className="hidden sm:block text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Profil</Link>
-                <Link href="/" className="hidden sm:block text-xs sm:text-sm bg-indigo-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-600 transition-colors font-medium whitespace-nowrap">İçerik Üret →</Link>
-              </>
-            ) : (
-              <>
-                <Link href="/giris" className="hidden sm:block text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</Link>
-                <Link href="/kayit" className="hidden sm:block text-xs sm:text-sm bg-indigo-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla →</Link>
-              </>
-            )}
-            {/* Mobil hamburger */}
-            <button
-              onClick={() => setMenuAcik(!menuAcik)}
-              className="sm:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
-              aria-label="Menü"
-            >
-              {menuAcik ? "✕" : "☰"}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobil dropdown */}
-        {menuAcik && (
-          <div className="sm:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg z-50">
-            <nav className="px-4 py-3 space-y-1">
-              <a href="/auth" onClick={() => setMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-indigo-600 font-medium bg-indigo-50">Ana Sayfa</a>
-              <a href="/" onClick={() => setMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">İçerik</a>
-              <a href="/fiyatlar" onClick={() => setMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Fiyatlar</a>
-              <a href="/blog" onClick={() => setMenuAcik(false)} className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Blog</a>
-              <div className="border-t border-gray-100 pt-2 mt-2 space-y-1">
-                {oturum && !anonimKullanici ? (
-                  <>
-                    <a href="/profil" className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Profil</a>
-                    <a href="/" className="block px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white text-center hover:bg-indigo-600 transition-colors">İçerik Üret →</a>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/giris" onClick={() => setMenuAcik(false)} className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">Giriş Yap</Link>
-                    <Link href="/kayit" onClick={() => setMenuAcik(false)} className="block w-full text-center px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white hover:bg-indigo-600 transition-colors">Ücretsiz Başla →</Link>
-                  </>
-                )}
-              </div>
-            </nav>
-          </div>
-        )}
-      </header>
+      <SiteHeader aktifSayfa="icerik" />
+      <main className="min-h-screen bg-white font-sans">
 
       {/* HERO */}
       <section className="px-4 sm:px-6 pt-12 sm:pt-16 pb-12 text-center max-w-3xl mx-auto">
@@ -811,7 +744,8 @@ export default function AuthPage() {
       {/* FOOTER */}
       <SiteFooter />
 
-    </main>
+      </main>
+    </>
   );
 }
   
