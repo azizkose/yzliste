@@ -182,6 +182,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   | `/kayit` | Kayıt formu | Herkese açık | — |
 
 - [x] **PQ-36** Header ve CTA link düzeltmeleri (İçerik Üret herkese görünür, tanıtım CTA, eski linkler)
+- [x] **PQ-37** Login/kayıt sonrası /uret yönlendirme + eski link düzeltmeleri
 
 ### P3 — Mimari İyileştirme
 - [x] **PQ-14** Sekmeler arası bilgi taşıma: Metin'de girilen urunAdi + kategori + platform → Görsel/Video/Sosyal sekmelerine otomatik taşı. Zustand store veya React context ile *(page.tsx 24d5ef7'e döndürüldü)*
