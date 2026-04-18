@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-04-18 — PQ-28 kısmi: Monolith refactor ilk aşama
+
+- lib/constants.ts: PLATFORM_BILGI, YUKLENIYOR_MESAJLARI, GORSEL_STILLER (9), VIDEO_PRESETLER (14), kategoriKoduHesapla()
+- lib/listing-utils.ts: sonucuBolumle() + docxIndir() çıkarıldı
+- components/ui/: KopyalaButon, FotoThumbnail, FotoEkleAlani oluşturuldu
+- components/PaketModal.tsx, components/ChatWidget.tsx oluşturuldu
+- app/page.tsx: inline tanımlar kaldırıldı → import'a çevrildi (2180→1848 satır, -332 satır)
+
 ## 2026-04-17 — Küme 0 tamamen tamamlandı (PQ-01~PQ-28 d)
 
 - PQ-00~PQ-26: İçerik kalitesi, görsel pipeline, UX iyileştirmeleri, SEO, renk paleti

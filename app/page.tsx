@@ -5,11 +5,17 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
-import { PAKET_LISTESI } from "@/lib/paketler";
 import { useCredits, useInvalidateCredits } from "@/lib/hooks/useCredits";
 import { analytics } from "@/lib/analytics";
 import { useUretimStore } from "@/store/uretimStore";
 import AuthForm from "@/components/auth/AuthForm";
+import { PLATFORM_BILGI, PLATFORM_PLACEHOLDER, YUKLENIYOR_MESAJLARI, GORSEL_STILLER, VIDEO_PRESETLER, kategoriKoduHesapla } from "@/lib/constants";
+import { sonucuBolumle, docxIndir } from "@/lib/listing-utils";
+import KopyalaButon from "@/components/ui/KopyalaButon";
+import FotoThumbnail from "@/components/ui/FotoThumbnail";
+import FotoEkleAlani from "@/components/ui/FotoEkleAlani";
+import PaketModal from "@/components/PaketModal";
+import ChatWidget from "@/components/ChatWidget";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
 type SosyalPlatform = "instagram" | "tiktok" | "facebook" | "twitter";
@@ -35,296 +41,6 @@ type Kullanici = {
   marka_adi?: string;
 };
 
-type SonucBolum = {
-  baslik: string;
-  ikon: string;
-  icerik: string;
-};
-
-const PLATFORM_BILGI: Record<string, {
-  baslikLimit: number;
-  ozellikSayisi: number;
-  aciklamaKelime: number;
-  etiketSayisi: number;
-  renk: string;
-  aciklama: string;
-  dil: "tr" | "en";
-}> = {
-  trendyol: { baslikLimit: 100, ozellikSayisi: 5, aciklamaKelime: 300, etiketSayisi: 10, renk: "bg-orange-50 text-orange-700 border-orange-200", aciklama: "Emoji destekli · Marka + Ürün + Özellik formatı", dil: "tr" },
-  hepsiburada: { baslikLimit: 150, ozellikSayisi: 5, aciklamaKelime: 350, etiketSayisi: 10, renk: "bg-orange-50 text-orange-600 border-orange-200", aciklama: "Emoji destekli · Teknik detay odaklı", dil: "tr" },
-  amazon: { baslikLimit: 200, ozellikSayisi: 5, aciklamaKelime: 400, etiketSayisi: 0, renk: "bg-yellow-50 text-yellow-700 border-yellow-200", aciklama: "Emoji kullanılmaz · Title Case · Backend arama terimleri", dil: "tr" },
-  n11: { baslikLimit: 100, ozellikSayisi: 5, aciklamaKelime: 250, etiketSayisi: 8, renk: "bg-blue-50 text-blue-700 border-blue-200", aciklama: "Emoji destekli · Sade ve anlaşılır dil", dil: "tr" },
-  etsy: { baslikLimit: 140, ozellikSayisi: 0, aciklamaKelime: 300, etiketSayisi: 13, renk: "bg-orange-50 text-orange-800 border-orange-300", aciklama: "Natural English · 13 multi-word tags · No keyword stuffing", dil: "en" },
-  amazon_usa: { baslikLimit: 200, ozellikSayisi: 5, aciklamaKelime: 400, etiketSayisi: 0, renk: "bg-blue-50 text-blue-800 border-blue-300", aciklama: "Title Case · No emoji · Benefit-first bullets · Backend search terms", dil: "en" },
-};
-
-const PLATFORM_PLACEHOLDER: Record<string, { urun: string; kategori: string; ozellik: string }> = {
-  trendyol: { urun: "örn: Columbia Erkek Su Geçirmez Outdoor Bot", kategori: "örn: Ayakkabı & Çanta / Erkek Bot", ozellik: "örn: 42 numara, kahverengi, hakiki deri, kışlık, garanti belgeli, kutusuyla" },
-  hepsiburada: { urun: "örn: Samsung Galaxy S24 128GB Akıllı Telefon", kategori: "örn: Cep Telefonu & Aksesuar / Akıllı Telefon", ozellik: "örn: Siyah renk, 6.1 inç ekran, 50MP kamera, 4000mAh batarya, Türkiye garantili" },
-  amazon: { urun: "örn: Philips HD9250 Airfryer XXL", kategori: "örn: Küçük Ev Aletleri / Fritöz", ozellik: "örn: 7.3L kapasite, dijital ekran, yağsız pişirme, 7 program, 2030W, CE belgeli" },
-  n11: { urun: "örn: Tefal Ingenio Tencere Seti 13 Parça", kategori: "örn: Mutfak & Yemek / Tencere Seti", ozellik: "örn: Alüminyum, yapışmaz kaplama, 18-28cm, indüksiyon uyumlu, fırına girer" },
-  etsy: { urun: "e.g. Handmade Copper Cezve Set, Turkish Coffee Pot", kategori: "e.g. Kitchen & Dining / Coffee Accessories", ozellik: "e.g. handmade, copper, 2-piece set, traditional Turkish style, gift idea" },
-  amazon_usa: { urun: "e.g. Turkish Copper Coffee Maker Set, 2 Piece", kategori: "e.g. Kitchen & Dining / Coffee & Espresso", ozellik: "e.g. Solid copper, handcrafted, 2-cup capacity, includes lid, food safe" },
-};
-
-function sonucuBolumle(sonuc: string): SonucBolum[] {
-  if (!sonuc) return [];
-  sonuc = sonuc.replace(/\*\*/g, "").replace(/\*/g, "");
-  const bolumler: SonucBolum[] = [];
-  const baslikMatch = sonuc.match(/(?:📌\s*)?(?:BAŞLIK|Başlık)[:\n]+([^\n🔹📄🏷]+)/i);
-  const ozellikMatch = sonuc.match(/(?:🔹\s*)?(?:ÖZELLİKLER|Özellikler)[:\n]+([\s\S]+?)(?=📄|🏷|$)/i);
-  const aciklamaMatch = sonuc.match(/(?:📄\s*)?(?:AÇIKLAMA|Açıklama)[:\n]+([\s\S]+?)(?=🏷|$)/i);
-  const etiketMatch = sonuc.match(/(?:🏷️?\s*)?(?:ETİKETLER|Etiketler)[:\n]+([\s\S]+?)$/i);
-  if (baslikMatch) bolumler.push({ baslik: "Başlık", ikon: "📌", icerik: baslikMatch[1].trim() });
-  if (ozellikMatch) bolumler.push({ baslik: "Özellikler", ikon: "🔹", icerik: ozellikMatch[1].trim() });
-  if (aciklamaMatch) bolumler.push({ baslik: "Açıklama", ikon: "📄", icerik: aciklamaMatch[1].trim() });
-  if (etiketMatch) bolumler.push({ baslik: "Arama Etiketleri", ikon: "🏷️", icerik: etiketMatch[1].trim() });
-  if (bolumler.length === 0) bolumler.push({ baslik: "İçerik", ikon: "📋", icerik: sonuc });
-  return bolumler;
-}
-
-async function docxIndir(bolumler: SonucBolum[], urunAdi: string) {
-  const { Document, Packer, Paragraph, TextRun, HeadingLevel } = await import("docx");
-  const { saveAs } = await import("file-saver");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const paragraflar: any[] = [];
-  bolumler.forEach((bolum) => {
-    paragraflar.push(new Paragraph({ text: `${bolum.ikon} ${bolum.baslik}`, heading: HeadingLevel.HEADING_2, spacing: { before: 300, after: 100 } }));
-    bolum.icerik.split("\n").forEach((satir) => {
-      if (satir.trim()) paragraflar.push(new Paragraph({ children: [new TextRun({ text: satir, size: 22 })], spacing: { after: 80 } }));
-    });
-  });
-  const doc = new Document({ sections: [{ properties: {}, children: [new Paragraph({ text: `yzliste — ${urunAdi}`, heading: HeadingLevel.HEADING_1, spacing: { after: 200 } }), ...paragraflar] }] });
-  const blob = await Packer.toBlob(doc);
-  saveAs(blob, `${urunAdi || "listing"}.docx`);
-}
-
-function KopyalaButon({ metin, getDuzenlenmisMevin }: { metin: string; getDuzenlenmisMevin?: () => string }) {
-  const [kopyalandi, setKopyalandi] = useState(false);
-  const kopyala = () => {
-    const kopyalanacak = getDuzenlenmisMevin ? getDuzenlenmisMevin() : metin;
-    navigator.clipboard.writeText(kopyalanacak);
-    setKopyalandi(true);
-    setTimeout(() => setKopyalandi(false), 2000);
-  };
-  return (
-    <button onClick={kopyala} className={`text-xs font-medium px-3 py-1 rounded-lg transition-all duration-200 ${kopyalandi ? "bg-green-100 text-green-700 border border-green-300 scale-95" : "bg-gray-100 text-gray-500 hover:bg-indigo-50 hover:text-indigo-600"}`}>
-      {kopyalandi ? <span className="flex items-center gap-1 text-green-600"><span>✓</span> Kopyalandı</span> : "Kopyala"}
-    </button>
-  );
-}
-
-const yukleniyorMesajlari = [
-  "Ürün analiz ediliyor...",
-  "Alıcı arama alışkanlıkları inceleniyor...",
-  "Platform kuralları uygulanıyor...",
-  "SEO ve GEO optimizasyonu yapılıyor...",
-  "Anahtar kelimeler yerleştiriliyor...",
-  "İçerik hazırlanıyor...",
-];
-
-function PaketModal({ kullanici, onKapat }: { kullanici: Kullanici; onKapat: () => void }) {
-  const [seciliPaket, setSeciliPaket] = useState<string | null>(null);
-  const [yukleniyor, setYukleniyor] = useState(false);
-  const [odemeAcik, setOdemeAcik] = useState(false);
-  const [kosullarOnay, setKosullarOnay] = useState(false);
-  const [mesafeliOnay, setMesafeliOnay] = useState(false);
-  const [kvkkOnay, setKvkkOnay] = useState(false);
-  const formRef = useRef<HTMLDivElement>(null);
-  const tumOnaylar = kosullarOnay && mesafeliOnay && kvkkOnay;
-
-  // Paketler lib/paketler.ts'den geliyor
-  const paketler = PAKET_LISTESI;
-
-  const odemeBaslat = async (paketId: string) => {
-    // Fatura bilgisi kontrolü — ödeme başlamadan önce
-    const { data: profilKontrol } = await supabase.from("profiles").select("ad_soyad, fatura_tipi, tc_kimlik, vergi_no").eq("id", kullanici.id).single();
-    const eksik = !profilKontrol?.ad_soyad || (profilKontrol?.fatura_tipi === "bireysel" && !profilKontrol?.tc_kimlik) || (profilKontrol?.fatura_tipi === "kurumsal" && !profilKontrol?.vergi_no);
-    if (eksik) {
-      onKapat();
-      alert("Ödeme yapabilmek için önce profil sayfasından fatura bilgilerinizi doldurun.");
-      window.location.href = "/profil";
-      return;
-    }
-    setSeciliPaket(paketId);
-    setYukleniyor(true);
-    const paket = PAKET_LISTESI.find(p => p.id === paketId)
-    analytics.creditPurchaseStarted({ package_id: paketId, price: paket?.fiyat ?? 0 });
-    try {
-      const res = await fetch("/api/odeme", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ paket: paketId, userId: kullanici.id, email: kullanici.email }) });
-      const data = await res.json();
-      if (data.checkoutFormContent) {
-        setOdemeAcik(true);
-        setTimeout(() => {
-          if (formRef.current) {
-            formRef.current.innerHTML = data.checkoutFormContent;
-            const scriptlar = formRef.current.querySelectorAll("script");
-            scriptlar.forEach((eskiScript) => {
-              const yeniScript = document.createElement("script");
-              if (eskiScript.src) yeniScript.src = eskiScript.src;
-              else yeniScript.textContent = eskiScript.textContent;
-              eskiScript.parentNode?.replaceChild(yeniScript, eskiScript);
-            });
-          }
-        }, 100);
-      } else {
-        alert(data.hata || "Ödeme başlatılamadı, tekrar deneyin.");
-      }
-    } catch { alert("Bir hata oluştu, tekrar deneyin."); }
-    setYukleniyor(false);
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <div>
-            <h2 className="text-lg font-bold text-gray-900">İçerik Üretim Kredisi Satın Al</h2>
-            <p className="text-xs text-gray-500 mt-0.5">Mevcut kredin: <span className="font-semibold text-indigo-500">{kullanici.kredi}</span></p>
-          </div>
-          <button onClick={onKapat} className="text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
-        </div>
-        {!odemeAcik ? (
-          <div className="p-6 space-y-4">
-            {paketler.map((p) => (
-              <div key={p.id} className={`border-2 ${p.renk} rounded-2xl p-5 relative`}>
-                {p.rozet && <span className="absolute -top-3 left-4 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">En Popüler</span>}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-semibold text-gray-800">{p.isim}</p>
-                    <p className="text-sm text-gray-500">{p.krediStr}</p>
-                  </div>
-                  <p className="text-2xl font-bold text-gray-900">{p.fiyatStr}</p>
-                </div>
-                <button onClick={() => odemeBaslat(p.id)} disabled={yukleniyor || !tumOnaylar} className={`w-full mt-4 ${p.butonRenk} text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:bg-gray-300`}>
-                  {yukleniyor && seciliPaket === p.id ? "⏳ Yükleniyor..." : !tumOnaylar ? "Onayları işaretle" : "Satın Al"}
-                </button>
-              </div>
-            ))}
-            {/* F-07d: 3 zorunlu onay checkbox'ı */}
-            <div className="space-y-2 border-t border-gray-100 pt-4">
-              {[
-                { state: kosullarOnay, set: setKosullarOnay, href: "/kosullar", metin: "Kullanım Koşulları" },
-                { state: mesafeliOnay, set: setMesafeliOnay, href: "/mesafeli-satis", metin: "Mesafeli Satış Sözleşmesi" },
-                { state: kvkkOnay, set: setKvkkOnay, href: "/kvkk-aydinlatma", metin: "KVKK Aydınlatma Metni" },
-              ].map(({ state, set, href, metin }) => (
-                <label key={href} className="flex items-start gap-2 cursor-pointer">
-                  <input type="checkbox" checked={state} onChange={(e) => set(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0" />
-                  <span className="text-xs text-gray-600">
-                    <a href={href} target="_blank" className="text-indigo-500 hover:underline font-medium">{metin}</a>&apos;ni okudum ve kabul ediyorum.
-                  </span>
-                </label>
-              ))}
-            </div>
-            <p className="text-xs text-gray-400 text-center pt-2">🔒 Güvenli ödeme — iyzico altyapısı</p>
-          </div>
-        ) : (
-          <div className="p-4"><div ref={formRef} id="iyzipay-checkout-form" className="popup" /></div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ChatWidget() {
-  const [acik, setAcik] = useState(false);
-  const [mesajlar, setMesajlar] = useState<{ rol: string; metin: string }[]>([
-    { rol: "asistan", metin: "Merhaba! Listing veya görsel üretim konusunda soru sormak ister misiniz?" },
-  ]);
-  const [input, setInput] = useState("");
-  const [yukleniyor, setYukleniyor] = useState(false);
-
-  const gonder = async () => {
-    if (!input.trim()) return;
-    setMesajlar((prev) => [...prev, { rol: "kullanici", metin: input }]);
-    setInput("");
-    setYukleniyor(true);
-    setTimeout(() => {
-      setMesajlar((prev) => [...prev, { rol: "asistan", metin: "Bu özellik yakında aktif olacak! Şimdilik yzliste'nin tüm özelliklerini deneyebilirsiniz." }]);
-      setYukleniyor(false);
-    }, 1000);
-  };
-
-  return (
-    <div className="fixed bottom-6 right-6 z-50">
-      {acik && (
-        <div className="mb-3 bg-white rounded-2xl shadow-xl border border-gray-100 w-80 flex flex-col overflow-hidden">
-          <div className="bg-indigo-500 px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
-              <span className="text-white text-sm font-semibold">yzliste destek</span>
-            </div>
-            <button onClick={() => setAcik(false)} className="text-white/80 hover:text-white text-lg">×</button>
-          </div>
-          <div className="flex-1 p-4 space-y-3 max-h-72 overflow-y-auto bg-gray-50">
-            {mesajlar.map((m, i) => (
-              <div key={i} className={`flex ${m.rol === "kullanici" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed ${m.rol === "kullanici" ? "bg-indigo-500 text-white" : "bg-white text-gray-700 border border-gray-100"}`}>
-                  {m.metin}
-                </div>
-              </div>
-            ))}
-            {yukleniyor && <div className="flex justify-start"><div className="bg-white border border-gray-100 px-3 py-2 rounded-xl text-xs text-gray-400">yazıyor...</div></div>}
-          </div>
-          <div className="p-3 border-t border-gray-100 bg-white flex gap-2">
-            <input type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && gonder()} placeholder="Mesajınızı yazın..." className="flex-1 text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-400" />
-            <button onClick={gonder} className="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-2 rounded-lg text-xs font-medium">Gönder</button>
-          </div>
-        </div>
-      )}
-      <button onClick={() => setAcik(!acik)} className="bg-indigo-500 hover:bg-indigo-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl transition-all">
-        {acik ? "×" : "💬"}
-      </button>
-    </div>
-  );
-}
-
-// ---- Yardımcı: Fotoğraf thumbnail bileşeni ----
-function FotoThumbnail({ src, onKaldir, renk = "green" }: { src: string; onKaldir: () => void; renk?: string }) {
-  const renkler: Record<string, string> = {
-    green: "bg-green-50 border-green-200 text-green-700 text-green-500",
-    red: "bg-amber-50 border-amber-200 text-amber-700 text-amber-400",
-    pink: "bg-emerald-50 border-emerald-200 text-emerald-700 text-emerald-400",
-  };
-  const cls = renkler[renk] || renkler.green;
-  const parts = cls.split(" ");
-  return (
-    <div className={`flex items-center gap-3 ${parts[0]} border ${parts[1]} rounded-xl p-3`}>
-      <img src={src} alt="Ürün" className={`w-12 h-12 object-cover rounded-lg border ${parts[1]}`} />
-      <div className="flex-1">
-        <p className={`text-xs font-medium ${parts[2]}`}>✓ Fotoğraf hazır</p>
-      </div>
-      <button onClick={onKaldir} className="text-xs text-red-400 hover:text-red-600 underline font-medium">Kaldır</button>
-    </div>
-  );
-}
-
-// ---- Yardımcı: Boş fotoğraf alanı ----
-function FotoEkleAlani({ id, onChange, renk = "gray", metin = "Fotoğraf ekle", ikon = "📷", altMetin }: {
-  id: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  renk?: string; metin?: string; ikon?: string; altMetin?: string;
-}) {
-  const sinirRenk: Record<string, string> = {
-    gray: "border-gray-300 hover:border-indigo-400 hover:bg-indigo-50",
-    purple: "border-violet-300 hover:border-violet-400 hover:bg-violet-50",
-    red: "border-amber-200 hover:border-amber-400 hover:bg-amber-50",
-    pink: "border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50",
-  };
-  const metin_renk: Record<string, string> = {
-    gray: "text-gray-500", purple: "text-violet-700", red: "text-amber-600", pink: "text-emerald-500",
-  };
-  const alt_renk: Record<string, string> = {
-    gray: "text-gray-400", purple: "text-violet-400", red: "text-amber-400", pink: "text-emerald-400",
-  };
-  return (
-    <label htmlFor={id} className={`block border-2 border-dashed ${sinirRenk[renk]} rounded-xl p-6 text-center cursor-pointer transition-all`}>
-      <div className="text-3xl mb-2">{ikon}</div>
-      <p className={`text-sm font-medium ${metin_renk[renk]}`}>{metin}</p>
-      {altMetin && <p className={`text-xs ${alt_renk[renk]} mt-1`}>{altMetin}</p>}
-      <input type="file" accept="image/*" onChange={onChange} className="hidden" id={id} />
-    </label>
-  );
-}
 
 export default function Home() {
   const router = useRouter();
@@ -628,7 +344,7 @@ export default function Home() {
     setSonuc("");
     setYukleniyorMesaj(0);
     analytics.generationStarted({ platform, type: 'metin' });
-    mesajInterval.current = setInterval(() => setYukleniyorMesaj((prev) => (prev + 1) % yukleniyorMesajlari.length), 1800);
+    mesajInterval.current = setInterval(() => setYukleniyorMesaj((prev) => (prev + 1) % YUKLENIYOR_MESAJLARI.length), 1800);
     try {
       const res = await fetch("/api/uret", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi, userId: kullanici.id, dil: platformDil, ton: kullanici.ton, hedefKitle, fiyatSegmenti, anahtarKelimeler, markaliUrun }) });
       const data = await res.json();
@@ -1198,7 +914,7 @@ export default function Home() {
 
               {/* Üret butonu */}
               <button onClick={icerikUret} disabled={!uretButonAktif} className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
-                {yukleniyor ? `⏳ ${yukleniyorMesajlari[yukleniyorMesaj]}` : (!kullanici || kullanici.anonim) ? "İçerik Üret — Giriş Gerekli" : `İçerik Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
+                {yukleniyor ? `⏳ ${YUKLENIYOR_MESAJLARI[yukleniyorMesaj]}` : (!kullanici || kullanici.anonim) ? "İçerik Üret — Giriş Gerekli" : `İçerik Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
               </button>
 
               <p className="text-xs text-gray-400 text-center">💡 yzliste her platformun karakter limiti ve SEO kuralına göre üretir ancak pazaryeri kuralları sık değişir — yayınlamadan önce içeriği kontrol etmeni öneririz</p>
@@ -1210,7 +926,7 @@ export default function Home() {
               {yukleniyor && (
                 <div className="bg-white rounded-2xl shadow p-8 text-center space-y-4">
                   <div className="flex justify-center"><div className="w-10 h-10 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin" /></div>
-                  <p className="text-gray-600 font-medium animate-pulse">{yukleniyorMesajlari[yukleniyorMesaj]}</p>
+                  <p className="text-gray-600 font-medium animate-pulse">{YUKLENIYOR_MESAJLARI[yukleniyorMesaj]}</p>
                   <p className="text-gray-400 text-sm">Bu birkaç saniye sürebilir...</p>
                 </div>
               )}
@@ -1380,29 +1096,7 @@ export default function Home() {
                 <p className="block text-xs font-medium text-gray-600 mb-2">Stil seç <span className="text-gray-400 font-normal">(1 stil = 1 görsel = 1 kredi)</span></p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {(() => {
-                    const GORSEL_STILLER = [
-                      { id: "beyaz", label: "⬜ Beyaz Zemin", aciklama: "Trendyol standart", img: "/ornek_beyaz.jpg", kategoriler: ["kozmetik", "elektronik", "cocuk", "giyim"] },
-                      { id: "koyu", label: "⬛ Koyu Zemin", aciklama: "Premium / elektronik", img: "/ornek_koyu.jpg", kategoriler: ["elektronik", "taki"] },
-                      { id: "lifestyle", label: "🏠 Lifestyle", aciklama: "Gerçek ortam", img: "/ornek_lifestyle.jpg", kategoriler: ["giyim", "ev", "gida"] },
-                      { id: "mermer", label: "🪨 Mermer", aciklama: "Lüks / kozmetik", img: "/ornek_mermer.jpg", kategoriler: ["kozmetik", "taki"] },
-                      { id: "ahsap", label: "🪵 Ahşap", aciklama: "El yapımı / organik", img: "/ornek_ahsap.jpg", kategoriler: ["gida", "ev", "spor"] },
-                      { id: "gradient", label: "🎨 Gradient", aciklama: "Modern / teknoloji", img: "/ornek_gradient.jpg", kategoriler: ["elektronik", "cocuk", "kozmetik"] },
-                      { id: "dogal", label: "🌿 Doğal", aciklama: "Açık hava / taze", img: "/ornek_dogal.jpg", kategoriler: ["gida", "spor", "ev"] },
-                      { id: "ozel", label: "✏️ Sahneni Yaz", aciklama: "Prompt ile tanımla", img: null as string | null, kategoriler: [] as string[] },
-                      { id: "referans", label: "🖼️ Arka Plan", aciklama: "Fotoğraf yükle", img: null as string | null, kategoriler: [] as string[] },
-                    ];
-                    const gorselKategoriKodu = (() => {
-                      const k = (kategori || "").toLowerCase();
-                      if (/kozmetik|parfüm|cilt|bakım|makyaj|serum|krem|şampuan/i.test(k)) return "kozmetik";
-                      if (/elektron|telefon|bilgisayar|tablet|kulaklık|şarj|kamera|tv|monitör/i.test(k)) return "elektronik";
-                      if (/giyim|ayakkabı|çanta|elbise|tişört|pantolon|ceket|kazak|gömlek|bot|sneaker/i.test(k)) return "giyim";
-                      if (/gıda|yiyecek|içecek|kahve|çay|bal|zeytinyağı|baharat|atıştırmalık/i.test(k)) return "gida";
-                      if (/ev|mutfak|dekor|mobilya|aydınlatma|halı|perde|tencere|bardak/i.test(k)) return "ev";
-                      if (/spor|fitness|outdoor|kamp|bisiklet|yoga|koşu|dağ/i.test(k)) return "spor";
-                      if (/çocuk|bebek|oyuncak|mama|biberon/i.test(k)) return "cocuk";
-                      if (/takı|mücevher|yüzük|kolye|bilezik|küpe/i.test(k)) return "taki";
-                      return null;
-                    })();
+                    const gorselKategoriKodu = kategoriKoduHesapla(kategori);
                     const sirali = gorselKategoriKodu
                       ? [
                           ...GORSEL_STILLER.filter(s => s.kategoriler.includes(gorselKategoriKodu)),
@@ -1647,33 +1341,7 @@ export default function Home() {
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1">Hareket & sahne tarifi <span className="text-gray-400 font-normal">(isteğe bağlı — Türkçe yazabilirsin)</span></label>
                 {(() => {
-                  const VIDEO_PRESETLER = [
-                    { etiket: "360° Dönüş", aciklama: "Ürün kendi ekseni etrafında yavaşça döner. Tüm açılar görünür.", ikon: "🔄", goster: "Ürün temiz zemin üzerinde 180° yavaşça döner, yumuşak stüdyo ışığı, beyaz arka plan", deger: "Product slowly rotates 180 degrees on a clean surface, smooth and steady, then gently settles back to its original position, soft even studio lighting, white background", kategoriler: ["tumu"] },
-                    { etiket: "Zoom Yaklaşım", aciklama: "Kamera ürüne doğru yavaş yaklaşır. Detay ve doku hissi verir.", ikon: "🔍", goster: "Kamera 3 saniyede ürüne yaklaşır, doku ve yüzey detayları ortaya çıkar, arka plan yumuşak odak dışı", deger: "Camera smoothly zooms in from medium shot to close-up over 3 seconds, revealing product texture and surface details, then holds steady for 2 seconds, soft focus background gradually blurs more", kategoriler: ["tumu"] },
-                    { etiket: "Dramatik Işık", aciklama: "Karanlık sahnede spotlight açılır. Premium görünüm.", ikon: "💡", goster: "Karanlık sahne, yumuşak tepe ışığı 3 saniyede kademeli açılır, yüzeyde hafif yansıma, lüks sinematik his", deger: "Dark scene, then soft overhead light gradually fades in illuminating the product over 3 seconds, light reaches full brightness and holds steady, subtle reflection on surface beneath product, luxury cinematic feel", kategoriler: ["tumu"] },
-                    { etiket: "Doğal Ortam", aciklama: "Açık havada altın saat ışığında huzurlu sunum.", ikon: "🌿", goster: "Ürün doğal taş zemin üzerinde, altın saat güneşi soldan sağa kayar, arka planda tek yaprak geçer, huzurlu son sahne", deger: "Product sits on a natural stone surface outdoors, warm golden hour sunlight slowly shifts across the frame from left to right then settles, one single leaf gently drifts past in background and exits frame, scene becomes peaceful and still", kategoriler: ["tumu"] },
-                    { etiket: "Detay Tarama", aciklama: "Kamera yüzeyi tarayarak detayları gösterir.", ikon: "🔬", goster: "Kamera ürün yüzeyini soldan sağa yavaş tarar, doku detayları ortaya çıkar, sonra geri çekilerek tam görünüm", deger: "Camera slowly tracks across the product surface from left to right revealing textures and details, then pulls back slightly to show full product and holds, clean studio lighting", kategoriler: ["tumu", "elektronik"] },
-                    { etiket: "Parıltı Reveal", aciklama: "Altın parçacıklar arasında ürün beliriyor. Kozmetik & parfüm için.", ikon: "✨", goster: "Kamera ürüne yaklaşırken altın parçacıklar 3 saniye yavaşça düşer ve solar, ürün odağa gelir, sıcak pembe güzellik ışığı", deger: "Camera slowly moves in toward the product as soft golden particles drift downward for 3 seconds then fade away, product comes into sharp focus and holds steady, warm pink-toned beauty lighting", kategoriler: ["kozmetik"] },
-                    { etiket: "Lüks Mermer", aciklama: "Mermer yüzeyde zarif sunum. Premium kozmetik hissi.", ikon: "💎", goster: "Ürün beyaz mermer üzerinde, kamera 3 saniyede soldan merkeze kayar, mermer yüzeyde yumuşak yansıma, zarif minimal kompozisyon", deger: "Product sits on white marble surface, camera slowly pans from left to center over 3 seconds then stops, soft overhead light creates gentle reflection on marble, elegant minimal composition", kategoriler: ["kozmetik", "taki"] },
-                    { etiket: "Tech Reveal", aciklama: "Koyu arka planda LED vurgulu teknoloji sunumu.", ikon: "🔵", goster: "Koyu sahne, mavi LED ışık bir anda parlar ve beyaza döner, kamera sağa kayarak ürün profilini açar, koyu arka plan", deger: "Dark scene, cool blue accent light glows briefly on one side of the product then fades to warm white, camera smoothly pans right revealing the product profile, then holds steady, dark background", kategoriler: ["elektronik"] },
-                    { etiket: "Kumaş Hareketi", aciklama: "Hafif rüzgar kumaşı oynatır. Giyim & tekstil için.", ikon: "👕", goster: "Hafif esinti 2 saniye kumaşı hareket ettirir, doğal sarkma oluşturur, sonra yerleşir, soldaki stüdyo ışığı, sabit kamera", deger: "Soft breeze gently moves the fabric for 2 seconds creating natural drape movement, then fabric settles smoothly into place, clean studio lighting from the left, camera stays steady on tripod", kategoriler: ["giyim"] },
-                    { etiket: "Lezzet Çekimi", aciklama: "Üstten aşağı çekim, sıcak buhar efekti. Gıda için.", ikon: "🍽️", goster: "Kamera sıcak ahşap yüzeydeki ürünün tam üstünden yavaş iner, hafif buhar çıkar ve dağılır, altın iştah açıcı ışıklandırma", deger: "Camera slowly descends from directly above looking down at the product on warm wooden surface, gentle wisp of steam rises briefly then dissipates, warm appetizing golden lighting, scene becomes still", kategoriler: ["gida"] },
-                    { etiket: "Taze His", aciklama: "Doğal ışıkta taze ve organik sunum.", ikon: "🌱", goster: "Ürünün yanında küçük yeşil ot dalı, doğal gün ışığı 2 saniyede parlar, taze minimal kompozisyon, yüzeyde tek su damlası", deger: "Product on light surface with small green herb sprig beside it, soft natural daylight slowly brightens over 2 seconds then holds steady, fresh clean minimal composition, one water droplet visible on surface", kategoriler: ["gida"] },
-                    { etiket: "Işıltı Dönüş", aciklama: "Spotlight altında yavaş dönüş, pırıltı yansımaları.", ikon: "💍", goster: "Ürün koyu kadife üzerinde 90° döner, tek spot ışık yüzeyde pırıltılar oluşturur, sonra yerleşir, lüks koyu arka plan", deger: "Product on dark velvet surface rotates slowly 90 degrees, single spotlight creates sparkle reflections that shimmer across facets, then product settles and reflections calm, luxurious dark background", kategoriler: ["taki"] },
-                    { etiket: "Neşeli Sunum", aciklama: "Renkli ve eğlenceli, çocuk ürünleri için.", ikon: "🎈", goster: "Ürün yumuşak zemine hafifçe sekerler ve yerleşir, 3 renkli konfeti parçası kısa süre yağar ve kaybolur, neşeli stüdyo ışığı", deger: "Product bounces lightly once on soft surface and settles into place with a gentle wobble, 3 small colorful confetti pieces drift down briefly then scene clears, bright cheerful even studio lighting", kategoriler: ["cocuk"] },
-                    { etiket: "Dinamik Reveal", aciklama: "Enerjik ve hızlı, spor ürünleri için.", ikon: "⚡", goster: "Dinamik kamera itiş ve geri çekiliş 3 saniyede tam görünümü açar, hareket bulanıklığı keskin odağa döner, enerjik stüdyo ışığı", deger: "Quick dynamic camera push toward the product then pulls back smoothly to reveal full view over 3 seconds, motion blur at start clears to sharp focus, energetic bright studio lighting, clean background", kategoriler: ["spor"] },
-                  ];
-                  const seciliKategoriKodu = (() => {
-                    const k = (kategori || "").toLowerCase();
-                    if (/kozmetik|parfüm|cilt|bakım|makyaj|serum|krem|şampuan/i.test(k)) return "kozmetik";
-                    if (/elektron|telefon|bilgisayar|tablet|kulaklık|şarj|kamera|tv|monitör/i.test(k)) return "elektronik";
-                    if (/giyim|ayakkabı|çanta|elbise|tişört|pantolon|ceket|kazak|gömlek|bot|sneaker/i.test(k)) return "giyim";
-                    if (/gıda|yiyecek|içecek|kahve|çay|bal|zeytinyağı|baharat|atıştırmalık/i.test(k)) return "gida";
-                    if (/spor|fitness|outdoor|kamp|bisiklet|yoga|koşu|dağ/i.test(k)) return "spor";
-                    if (/çocuk|bebek|oyuncak|mama|biberon/i.test(k)) return "cocuk";
-                    if (/takı|mücevher|yüzük|kolye|bilezik|küpe/i.test(k)) return "taki";
-                    return null;
-                  })();
+                  const seciliKategoriKodu = kategoriKoduHesapla(kategori);
                   const gosterilecekler = seciliKategoriKodu
                     ? VIDEO_PRESETLER.filter(p => p.kategoriler.includes(seciliKategoriKodu) || p.kategoriler.includes("tumu")).slice(0, 6)
                     : VIDEO_PRESETLER.filter(p => p.kategoriler.includes("tumu"));
