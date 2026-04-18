@@ -1,26 +1,7 @@
 import type { NextConfig } from "next";
 
-const isDev = process.env.NODE_ENV === "development";
-
-// CSP: unsafe-inline required for PostHog snippet + gtag dataLayer + Tailwind
-// iyzico checkout form injects scripts from js.iyzipay.com + frames from pay.iyzipay.com
-const cspHeader = `
-  default-src 'self';
-  script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://js.iyzipay.com https://www.googletagmanager.com https://www.google-analytics.com https://challenges.cloudflare.com;
-  style-src 'self' 'unsafe-inline';
-  img-src 'self' blob: data: https://*.supabase.co https://www.google-analytics.com https://*.fal.media https://fal.media;
-  font-src 'self';
-  connect-src 'self' https://*.supabase.co wss://*.supabase.co https://eu.i.posthog.com https://api.anthropic.com https://www.google-analytics.com https://challenges.cloudflare.com;
-  frame-src 'self' https://pay.iyzipay.com https://checkout.iyzipay.com https://challenges.cloudflare.com;
-  object-src 'none';
-  base-uri 'self';
-  form-action 'self' https://*.iyzipay.com;
-  frame-ancestors 'none';
-  upgrade-insecure-requests;
-`
-  .replace(/\s{2,}/g, " ")
-  .trim();
-
+// CSP is set dynamically (nonce-based) in middleware.ts
+// Only static security headers that don't require nonce go here
 const securityHeaders = [
   { key: "X-Frame-Options", value: "SAMEORIGIN" },
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -30,7 +11,6 @@ const securityHeaders = [
     key: "Permissions-Policy",
     value: "camera=(self), microphone=(), geolocation=(), interest-cohort=()",
   },
-  { key: "Content-Security-Policy", value: cspHeader },
 ];
 
 const nextConfig: NextConfig = {
