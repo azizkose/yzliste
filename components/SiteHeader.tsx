@@ -126,6 +126,14 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
             <div className="border-t border-gray-100 pt-2 mt-2">
               {girisVar ? (
                 <>
+                  {kredi !== null && kredi !== undefined && (
+                    <a
+                      href="/kredi-yukle"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-indigo-600 font-semibold bg-indigo-50 mb-1"
+                    >
+                      💳 {kredi} kredi
+                    </a>
+                  )}
                   <a
                     href="/profil"
                     className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors mb-1"
