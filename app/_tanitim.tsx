@@ -140,7 +140,7 @@ export default function TanitimSayfasi() {
         </div>
       )}
 
-      <SiteHeader aktifSayfa="icerik" />
+      <SiteHeader aktifSayfa="ana" />
       <main className="min-h-screen bg-white font-sans">
 
       {/* HERO */}

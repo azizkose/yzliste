@@ -575,7 +575,7 @@ export default function Home() {
 
   return (
     <>
-      <SiteHeader aktifSayfa="ana" />
+      <SiteHeader aktifSayfa="icerik" />
       <main className="min-h-screen bg-gray-50 pb-24 px-4">
       <div className="max-w-5xl mx-auto pt-6">
 
