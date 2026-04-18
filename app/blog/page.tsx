@@ -23,6 +23,7 @@ export const metadata: Metadata = {
     description: "E-ticaret satıcıları için listing, görsel ve platform rehberleri.",
     url: "https://www.yzliste.com/blog",
     type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "yzliste blog" }],
   },
   alternates: {
     canonical: "https://www.yzliste.com/blog",

@@ -221,9 +221,8 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   1. `/video` → kodda `href="/video"` bulunamadı, audit kaynaklı FP olabilir.
   2. `/blog/ai-gorsel-uretimi-e-ticaret` → `page.tsx` satır 1083'te link vardı. `/blog/e-ticaret-icin-ai-urun-fotografciligi` olarak güncellendi.
 
-- [ ] **HC-03** P2 — OG image (sosyal medya önizleme görseli) eksik:
-  `/fiyatlar`, `/blog`, `/auth` sayfalarında `og:image` meta tag'ı yok. Sosyal medyada paylaşılınca önizleme görseli çıkmaz.
-  **Fix:** Her sayfa metadata'sına `openGraph: { images: ['/og/fiyatlar.png'] }` ekle. Önce genel bir OG template oluştur (1200×630px), sonra sayfa bazlı varyantlar yapılabilir. Minimum: tüm sayfalar için tek `/og-default.png` kullan.
+- [x] **HC-03** P2 — OG image (sosyal medya önizleme görseli) eksik:
+  **Fix:** `/fiyatlar`, `/blog`, `/auth` (layout) openGraph bloğuna `images: ['/og-image.png']` eklendi.
 
 - [x] **HC-04** P1 — `/auth` hâlâ sitemap.xml'de:
   **Fix:** `app/sitemap.ts`'ten `/auth` entry'si kaldırıldı.

@@ -23,6 +23,7 @@ export const metadata: Metadata = {
     url: "https://www.yzliste.com/fiyatlar",
     type: "website",
     siteName: "yzliste",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "yzliste fiyatlar" }],
   },
   twitter: {
     card: "summary_large_image",

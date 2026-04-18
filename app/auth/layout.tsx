@@ -10,6 +10,7 @@ export const metadata: Metadata = {
       "Trendyol, Hepsiburada, Amazon ve N11 için AI destekli listing metni, stüdyo görseli ve ürün videosu üret.",
     url: "https://www.yzliste.com/auth",
     type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "yzliste" }],
   },
   twitter: {
     card: "summary_large_image",
