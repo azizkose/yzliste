@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-04-18 — HC audit, F-25b/d, KVKK consent log, /auth link temizliği
+
+- HC-01: /giris, /kayit, /sss canonical tag'leri kendi URL'lerine düzeltildi
+- HC-02: Blog linki doğru slug'a güncellendi (e-ticaret-icin-ai-urun-fotografciligi)
+- HC-03: /fiyatlar, /blog, /auth OG image eklendi
+- HC-04: /auth sitemap'ten çıkarıldı; HC-06: /sss sitemap'e eklendi
+- HC-05: page.tsx cikisYap() sonrası /auth → /giris
+- F-25b: PaketModal 3 adımlı çoklu-step akışa çevrildi (paket→fatura→ödeme)
+- F-25d: /hesap/faturalar sayfası, /api/fatura endpoint, payments.parasut_fatura_id migration
+- F-07d: consent_log tablosu + /api/consent endpoint — KVKK onayları DB'ye kaydediliyor
+- PQ-28 sub-5: blobIndir() helper — tekrarlanan blob indirme kodu tekilleştirildi
+- PQ-28 sub-6: Modal × butonlarına aria-label, tab nav'a role="tablist" + aria-selected
+- PQ-28 sub-7: auth/page.tsx inline ödeme modalı kaldırıldı → /?paket=ac redirect (750→666 satır)
+- Tüm kalan /auth stale linkler → /giris veya /kayit (HeaderAuthButtons, toplu, profil, blog slug, krediler)
+
 ## 2026-04-18 — auth/page.tsx inline ödeme modalı kaldırıldı (PQ-28 kısmi)
 
 - Inline payment modal (odemeBaslat, odemeRef vb.) → /?paket=ac redirect
