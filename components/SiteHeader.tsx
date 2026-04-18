@@ -63,7 +63,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
                 Profil
               </a>
               <a
-                href="/"
+                href="/uret"
                 className="hidden sm:block text-xs sm:text-sm bg-indigo-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-600 transition-colors font-medium whitespace-nowrap"
               >
                 İçerik Üret →
@@ -117,7 +117,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
             <div className="border-t border-gray-100 pt-2 mt-2">
               {girisVar ? (
                 <a
-                  href="/"
+                  href="/uret"
                   className="block px-3 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white text-center hover:bg-indigo-600 transition-colors"
                 >
                   İçerik Üret →
