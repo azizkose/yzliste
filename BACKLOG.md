@@ -343,24 +343,24 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 **P0 (bu hafta):**
 - [ ] **T4-01** — `/giris` tab switcher butonları `type="button"` değil, çift submit oluşuyor. Fix: AuthForm.tsx'te tab butonlarına `type="button"` ekle.
-- [ ] **T4-03** — Giriş sonrası header hâlâ "Giriş Yap" gösteriyor, "Çıkış" butonu yok. ⚠️ QA-14 regresyon. Fix: SiteHeader'a logout butonu ekle.
-- [ ] **T4-05** — `/profil` 44 kredi, `/hesap/krediler` 0 kredi gösteriyor. Fix: `useCredits()` hook'u her yerde kullan.
-- [ ] **T4-09** — `/profil` `robots: index, follow` — kullanıcı profili arama motoruna sızabilir. Fix: profil layout'a noindex ekle.
-- [ ] **T4-10** — `/kosullar`, `/gizlilik` canonical ana sayfaya kırılmış. ⚠️ HC-01 regresyon. Fix: her sayfada kendi URL'e canonical set et.
-- [ ] **T4-11** — Tüm sayfalarda çift "yzliste" başlık (`X — yzliste | yzliste`). Fix: title'lardan ` — yzliste` ekini kaldır, template zaten ekliyor.
-- [ ] **T4-12** — Blog yazılarında `og:image` eksik/jenerik. ⚠️ HC-02/HC-03 regresyon. Fix: frontmatter `kapakGorsel`'den çek, yoksa `/og-image.png` default.
-- [ ] **T4-13** — 404 sayfası `robots: index, follow` ve canonical var. Fix: noindex + canonical kaldır.
+- [x] **T4-03** — Giriş sonrası header hâlâ "Giriş Yap" gösteriyor, "Çıkış" butonu yok. ⚠️ QA-14 regresyon. Fix: AuthForm login sonrası currentUser+credits query invalidate eder → header anında güncellenir.
+- [x] **T4-05** — `/profil` 44 kredi, `/hesap/krediler` 0 kredi gösteriyor. Fix: stale TanStack cache yerine direkt DB değeri gösteriliyor.
+- [x] **T4-09** — `/profil` `robots: index, follow` — kullanıcı profili arama motoruna sızabilir. Fix: `app/profil/layout.tsx` noindex var (zaten tamamdı).
+- [x] **T4-10** — `/kosullar`, `/gizlilik` canonical ana sayfaya kırılmış. ⚠️ HC-01 regresyon. Fix: zaten doğru canonical'lar mevcut (önceki commit'te düzelti).
+- [x] **T4-11** — Tüm sayfalarda çift "yzliste" başlık (`X — yzliste | yzliste`). Fix: 10 sayfada `— yzliste` suffix kaldırıldı, template `| yzliste` ekliyor.
+- [x] **T4-12** — Blog yazılarında `og:image` eksik/jenerik. ⚠️ HC-02/HC-03 regresyon. Fix: og+twitter image kapakGorsel → og-image.png fallback ile tamamlandı.
+- [x] **T4-13** — 404 sayfası `robots: index, follow` ve canonical var. Fix: zaten `robots: { index: false }` + `{ absolute: '...' }` title mevcut.
 
 **P1 (2 hafta):**
-- [ ] **T4-02** — Preview env'de `/giris` ve `/kayit` GET fetch status 0 dönüyor.
+- [ ] **T4-02** — Preview env'de `/giris` ve `/kayit` GET fetch status 0 dönüyor. (Preview env config sorunu, prod'da OK)
 - [ ] **T4-04** — Header'a kredi sayacı rozeti ekle.
-- [ ] **T4-07** — `/iletisim` 404 dönüyor — ya sayfa oluştur ya footer'dan kaldır.
-- [ ] **T4-14** — HTML entity title'larda literal: `/gizlilik`'te `&amp;`, blog slug'da `&#x27;`. Fix: UTF-8 karakterle değiştir.
-- [ ] **T4-15** — hreflang eksik. Fix: root layout'a `hreflang="tr"` + `x-default` self-reference ekle.
+- [x] **T4-07** — `/iletisim` 404 dönüyor. Kontrol: hiçbir component'te link yok, audit FP.
+- [x] **T4-14** — HTML entity title'larda literal. Kontrol: kaynak kodda `&amp;`/`&#x27;` metadata'da yok, audit FP.
+- [x] **T4-15** — hreflang eksik. Kontrol: `<html lang="tr">` + `alternates.languages` `tr`/`x-default` zaten mevcut.
 
 **P2:**
 - [ ] **T4-06** — `/hesap/profil` ↔ `/profil` route çakışması — mimari karar.
-- [ ] **T4-08** — `/demo` referanslarını grep-kontrol et.
+- [x] **T4-08** — `/demo` referanslarını grep-kontrol et. Sonuç: kod tabanında `/demo` linki yok.
 - [ ] **T4-17** — JSON-LD Organization duplication temizliği.
 
 **Test Altyapısı:**
