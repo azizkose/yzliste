@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-04-18 — F-25b: Checkout fatura bilgileri adımı
+
+- PaketModal: 3 adımlı akış (paket → fatura → ödeme). Fatura alanları: Ad/Unvan, TC/VKN, Adres, Vergi Dairesi, Bireysel/Kurumsal.
+- Profil doluysa fatura adımı atlanır, doğrudan iyzico'ya geçer.
+
 ## 2026-04-18 — HC-01/02/04/05/06: SEO + sitemap + canonical düzeltmeleri
 
 - sitemap.ts: /auth kaldırıldı, /sss eklendi
