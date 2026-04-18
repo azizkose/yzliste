@@ -1264,7 +1264,7 @@ export default function Home() {
 
               {/* Üret butonu */}
               <button onClick={icerikUret} disabled={!uretButonAktif} className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
-                {yukleniyor ? `⏳ ${yukleniyorMesajlari[yukleniyorMesaj]}` : `İçerik Üret — ${kullanici?.is_admin ? "∞" : "1"} kredi`}
+                {yukleniyor ? `⏳ ${yukleniyorMesajlari[yukleniyorMesaj]}` : (!kullanici || kullanici.anonim) ? "İçerik Üret — Giriş Gerekli" : `İçerik Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
               </button>
 
               <p className="text-xs text-gray-400 text-center">💡 yzliste her platformun karakter limiti ve SEO kuralına göre üretir ancak pazaryeri kuralları sık değişir — yayınlamadan önce içeriği kontrol etmeni öneririz</p>

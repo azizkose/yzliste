@@ -142,7 +142,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   Header'da hem 'İçerik' linki (href='/') hem sağda 'İçerik Üret →' butonu var. İkisi farklı yere gidiyor ama isim benzer — kullanıcı karışıyor.
   **Öneri:** Menüdeki 'İçerik'i 'Nasıl Çalışır' veya 'Özellikler' olarak değiştir, ya da tamamen kaldır (sağdaki buton yeterli).
 
-- [ ] **QA-04** P1 — TC Kimlik No alanında KVKK aydınlatma metni eksik (B-007):
+- [x] **QA-04** P1 — TC Kimlik No alanında KVKK aydınlatma metni eksik (B-007):
   Profil sayfasında TC Kimlik No toplanıyor ama aydınlatma metni, onay checkbox'ı yok. KVKK uyumu için formun altına onay + link eklenmeli.
   **İlişki:** KÜME 5 DoD — consent log tablosu + timestamp + IP kaydı şart. Hukukçu görüşü alınmalı.
 
@@ -160,7 +160,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 - [x] **QA-08** P3 — 'Ücretsiz Başla' CTA'sı 3 yerde tekrar (B-013):
   Hero + banner + sağ kutu — görsel gürültü. Hero'dakini bırak, diğerlerini sadeleştir.
 
-- [ ] **QA-09** P3 — Logged-out kullanıcıya çalışmayan form gösterimi (B-014):
+- [x] **QA-09** P3 — Logged-out kullanıcıya çalışmayan form gösterimi (B-014):
   Form tam görünüyor ama 'Üret' deyince ne olacağı belirsiz. Ya form blur/overlay ile gizle ya da 'Üret' anında login modal aç + form state'i koru.
 
 > **Not:** B-006 (blog tarihleri gelecek tarihli) mevcut kodda düzeltilmiş — `icerikler.ts` tarihleri 18 Nisan öncesi. B-009 (şifremi unuttum) `AuthForm`'da `handleSifreSifirla` fonksiyonu mevcut — login formunda görünüyor olmalı.

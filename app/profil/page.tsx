@@ -297,6 +297,10 @@ export default function ProfilPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">TC Kimlik No</label>
                 <input type="text" value={tcKimlik} onChange={(e) => setTcKimlik(e.target.value)} placeholder="11 haneli TC kimlik no" maxLength={11}
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                <p className="text-xs text-gray-400 mt-1">
+                  TC kimlik numaranız yalnızca e-Arşiv fatura oluşturmak için kullanılır, üçüncü taraflarla paylaşılmaz.{" "}
+                  <a href="/gizlilik" target="_blank" className="text-indigo-500 hover:underline">Gizlilik Politikası</a>
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
