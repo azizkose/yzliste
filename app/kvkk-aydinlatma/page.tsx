@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'KVKK Aydınlatma Metni — yzliste',
+  title: 'KVKK Aydınlatma Metni',
   description: '6698 sayılı KVKK kapsamında yzliste kişisel veri aydınlatma metni.',
 }
 

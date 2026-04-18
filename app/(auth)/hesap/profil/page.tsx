@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { createSupabaseServerClient } from '@/lib/supabase-server'
 
 export const metadata: Metadata = {
-  title: 'Profil — yzliste',
+  title: 'Profil',
   robots: { index: false, follow: false },
 }
 

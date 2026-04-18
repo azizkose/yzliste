@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { createSupabaseServerClient } from '@/lib/supabase-server'
 
 export const metadata: Metadata = {
-  title: 'Hesabım — yzliste',
+  title: 'Hesabım',
   robots: { index: false, follow: false },
 }
 

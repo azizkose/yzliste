@@ -3,7 +3,7 @@ import Link from 'next/link'
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: 'Mesafeli Satış Sözleşmesi — yzliste',
+  title: 'Mesafeli Satış Sözleşmesi',
   description: 'yzliste kredi paketleri için mesafeli satış sözleşmesi. 6502 sayılı TKHK kapsamında yasal metin.',
   alternates: { canonical: 'https://www.yzliste.com/mesafeli-satis' },
   robots: { index: false, follow: false },

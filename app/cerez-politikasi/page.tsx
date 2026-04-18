@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Çerez Politikası — yzliste',
+  title: 'Çerez Politikası',
   description: 'yzliste çerez politikası — hangi çerezlerin kullanıldığı ve nasıl kontrol edeceğiniz.',
 }
 

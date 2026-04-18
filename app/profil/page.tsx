@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import { useCredits } from "@/lib/hooks/useCredits";
 
 type Profil = {
   email: string;
@@ -74,8 +73,6 @@ export default function ProfilPage() {
   const SAYFA_BOYUTU = 20;
 
   const router = useRouter();
-  const { data: kredilerVeri } = useCredits();
-
   const [profilSekme, setProfilSekme] = useState<"marka" | "uretimler">("marka");
 
   // Kisisel bilgi alanlari
@@ -246,7 +243,7 @@ export default function ProfilPage() {
           <div className="flex items-center gap-3">
             <div className="bg-indigo-50 rounded-xl px-4 py-2 text-center">
               <div className={`text-xl font-bold ${profil?.is_admin ? "text-violet-500" : "text-indigo-500"}`}>
-                {profil?.is_admin ? "∞" : (kredilerVeri ?? profil?.kredi ?? 0)}
+                {profil?.is_admin ? "∞" : (profil?.kredi ?? 0)}
               </div>
               <div className="text-xs text-gray-500">Kalan kredi</div>
             </div>

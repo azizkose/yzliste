@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import TurnstileWidget from './TurnstileWidget'
 
@@ -34,6 +35,7 @@ export default function AuthForm({ defaultMode = 'kayit', redirectTo = '/', onSu
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
   const turnstileEnabled = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const handleTurnstileVerify = useCallback((token: string) => {
     setTurnstileToken(token)
@@ -96,6 +98,8 @@ setYukleniyor(true)
       const { error } = await supabase.auth.signInWithPassword({ email, password: sifre })
       if (error) { setMesaj(turkceHata(error.message)) }
       else {
+        queryClient.invalidateQueries({ queryKey: ['currentUser'] })
+        queryClient.invalidateQueries({ queryKey: ['credits'] })
         if (onSuccess) onSuccess()
         else router.push(redirectTo)
       }

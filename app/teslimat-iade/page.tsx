@@ -3,7 +3,7 @@ import Link from 'next/link'
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: 'Teslimat ve İade — yzliste',
+  title: 'Teslimat ve İade',
   description: 'yzliste dijital hizmet teslimatı ve iade politikası. Satın alınan kredilerin iadesi hakkında bilgi.',
   alternates: { canonical: 'https://www.yzliste.com/teslimat-iade' },
   robots: { index: false, follow: false },

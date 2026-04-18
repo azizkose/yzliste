@@ -21,7 +21,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const yazi = await yaziGetir(slug);
-  if (!yazi) return { title: "Yazı bulunamadı | yzliste" };
+  if (!yazi) return { title: { absolute: "Yazı bulunamadı | yzliste" } };
 
   return {
     title: yazi.baslik,
@@ -43,6 +43,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: yazi.baslik,
       description: yazi.ozet,
+      images: [yazi.kapakGorsel ? `https://www.yzliste.com${yazi.kapakGorsel}` : 'https://www.yzliste.com/og-image.png'],
     },
     alternates: {
       canonical: `https://www.yzliste.com/blog/${yazi.slug}`,

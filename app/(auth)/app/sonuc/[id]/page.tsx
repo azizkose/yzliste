@@ -11,7 +11,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params
   return {
-    title: `Üretim Sonucu #${id.slice(0, 8)} — yzliste`,
+    title: { absolute: `Üretim Sonucu #${id.slice(0, 8)} | yzliste` },
     description: 'yzliste ile üretilen içerik sonucu.',
   }
 }
