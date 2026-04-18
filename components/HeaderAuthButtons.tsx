@@ -34,10 +34,10 @@ export default function HeaderAuthButtons() {
 
   return (
     <div className="flex gap-1 sm:gap-2 items-center">
-      <a href="/auth?giris=1" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">
+      <a href="/giris" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">
         Giriş Yap
       </a>
-      <a href="/auth?kayit=1" className="hidden sm:block text-xs sm:text-sm bg-indigo-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-600 transition-colors font-medium whitespace-nowrap">
+      <a href="/kayit" className="hidden sm:block text-xs sm:text-sm bg-indigo-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-600 transition-colors font-medium whitespace-nowrap">
         Ücretsiz Başla
       </a>
     </div>

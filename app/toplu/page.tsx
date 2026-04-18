@@ -52,7 +52,7 @@ export default function TopluPage() {
 
       // Kullanıcı kontrolü — anonim de dahil, üye olmayan üretemez
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user || user.is_anonymous) { window.location.href = "/auth?kayit=1"; return; }
+      if (!user || user.is_anonymous) { window.location.href = "/kayit"; return; }
       const { data: profil } = await supabase.from("profiles").select("kredi, is_admin").eq("id", user.id).single();
       setUserId(user.id);
       setKredi(profil?.is_admin ? Infinity : (profil?.kredi ?? 0));

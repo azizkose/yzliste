@@ -104,7 +104,7 @@ export default function ProfilPage() {
 
   const yukle = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { router.push("/auth"); return; }
+    if (!user) { router.push("/giris"); return; }
     setUserId(user.id);
 
     const { data } = await supabase
@@ -213,7 +213,7 @@ export default function ProfilPage() {
     const res = await fetch("/api/hesap-sil", { method: "DELETE" });
     if (res.ok) {
       await supabase.auth.signOut();
-      router.push("/auth");
+      router.push("/giris");
     } else {
       const data = await res.json();
       setSilmeMesaj(data.hata || "Hesap silinemedi.");

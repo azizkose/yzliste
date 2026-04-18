@@ -314,7 +314,7 @@ export default async function BlogYaziPage({
           3 ücretsiz kredi ile listing metni ve AI görsel üret. Kayıt olmadan misafir olarak başla.
         </p>
         <a
-          href="/auth"
+          href="/kayit"
           className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-indigo-100"
         >
           Ücretsiz Dene →
