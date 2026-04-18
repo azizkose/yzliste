@@ -252,7 +252,7 @@ export default function ProfilPage() {
               <div className="text-xl font-bold text-gray-700">{profil?.toplam_kullanilan ?? 0}</div>
               <div className="text-xs text-gray-500">Toplam üretim</div>
             </div>
-            <Link href="/?paket=ac" className="bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl whitespace-nowrap transition-colors">
+            <Link href="/uret?paket=ac" className="bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl whitespace-nowrap transition-colors">
               + Kredi Al
             </Link>
           </div>
