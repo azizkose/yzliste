@@ -101,3 +101,17 @@ export function kategoriKoduHesapla(kategori: string): string | null {
   if (/takı|mücevher|yüzük|kolye|bilezik|küpe/i.test(k))                          return "taki";
   return null;
 }
+
+export const KATEGORI_LISTESI = [
+  "Kozmetik & Kişisel Bakım",
+  "Elektronik & Aksesuar",
+  "Giyim & Moda",
+  "Ev & Yaşam",
+  "Gıda & İçecek",
+  "Takı & Aksesuar",
+  "Spor & Outdoor",
+  "Bebek & Çocuk",
+  "Kitap & Kırtasiye",
+  "Oto & Bahçe",
+  "Diğer",
+] as const;

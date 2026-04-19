@@ -1,5 +1,6 @@
 "use client";
-import { PLATFORM_BILGI, PLATFORM_PLACEHOLDER, YUKLENIYOR_MESAJLARI } from "@/lib/constants";
+import { useState } from "react";
+import { PLATFORM_BILGI, PLATFORM_PLACEHOLDER, YUKLENIYOR_MESAJLARI, KATEGORI_LISTESI } from "@/lib/constants";
 import { sonucuBolumle, docxIndir } from "@/lib/listing-utils";
 import KopyalaButon from "@/components/ui/KopyalaButon";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
@@ -89,8 +90,9 @@ export default function MetinSekmesi({
   const platformBilgi = PLATFORM_BILGI[platform] || PLATFORM_BILGI.trendyol;
   const platformPh = PLATFORM_PLACEHOLDER[platform] || PLATFORM_PLACEHOLDER.trendyol;
   const platformDil = platformBilgi.dil || "tr";
+  const [digerMod, setDigerMod] = useState(false);
   const uretButonAktif = !yukleniyor && (
-    (girisTipi === "manuel" && urunAdi && kategori) ||
+    (girisTipi === "manuel" && urunAdi.trim().length > 0) ||
     (girisTipi === "foto" && fotolar.length > 0) ||
     (girisTipi === "barkod" && barkodBilgi !== null)
   );
@@ -179,8 +181,35 @@ export default function MetinSekmesi({
             <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)} placeholder={platformPh.urun} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Kategori <span className="text-red-400">*</span> <span className="text-gray-400 font-normal text-xs">(fotoğraf yüklersen otomatik algılanır)</span></label>
-            <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder={platformPh.kategori} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <label className="block text-sm font-medium text-gray-700 mb-1">Kategori <span className="text-gray-400 font-normal text-xs">(isteğe bağlı · fotoğraf yüklersen otomatik algılanır)</span></label>
+            <select
+              value={digerMod ? "Diğer" : (kategori || "")}
+              onChange={(e) => {
+                if (e.target.value === "Diğer") {
+                  setDigerMod(true);
+                  setKategori("");
+                } else {
+                  setDigerMod(false);
+                  setKategori(e.target.value);
+                }
+              }}
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="">— Seç (isteğe bağlı) —</option>
+              {KATEGORI_LISTESI.map((k) => (
+                <option key={k} value={k}>{k}</option>
+              ))}
+            </select>
+            {digerMod && (
+              <input
+                type="text"
+                value={kategori}
+                onChange={(e) => setKategori(e.target.value)}
+                placeholder="Kategori yaz..."
+                className="mt-2 w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                autoFocus
+              />
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
