@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
   if (!userId) return NextResponse.json({ hata: "Giriş yapılmadı" }, { status: 401 });
 
   const hasFoto = !!foto;
-  const krediGereken = hasFoto ? 5 : 4;
+  const krediGereken = hasFoto ? 4 : 3;
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")

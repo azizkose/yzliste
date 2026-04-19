@@ -67,21 +67,9 @@ const krediAciklamalari = [
   },
   {
     ikon: "📱",
-    baslik: "Sosyal medya — 1 kredi",
+    baslik: "Sosyal medya — 1 kredi / platform · Kit: 3 kredi (4 platform)",
     icerik:
-      "1 kredi = Instagram, TikTok, Facebook ve Twitter/X için platform uyumlu caption + hashtag seti. Her platform için ayrı ton ve format ayarlanır.",
-  },
-  {
-    ikon: "🎬",
-    baslik: "Video üretimi — 5 veya 8 kredi",
-    icerik:
-      "Tek ürün fotoğrafından kısa tanıtım videosu üretilir. 5 saniyelik video 5 kredi, 10 saniyelik video 8 kredi tüketir. Instagram Reels, TikTok ve ürün sayfaları için ideal.",
-  },
-  {
-    ikon: "📱",
-    baslik: "Sosyal medya içeriği — 1 kredi",
-    icerik:
-      "Instagram, TikTok, Facebook ve Twitter/X için hazır caption metni ve hashtag listesi. Her üretim 1 kredi tüketir. Platform, ton ve marka profiline göre özelleşir.",
+      "Tek platform için 1 kredi: Instagram, TikTok, Facebook veya Twitter/X. Sosyal Medya Kiti ile 4 platform birden sadece 3 kredi — %25 tasarruf. Her platform için ayrı ton ve format.",
   },
   {
     ikon: "🔀",

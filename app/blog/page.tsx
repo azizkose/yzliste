@@ -165,12 +165,12 @@ export default async function BlogPage() {
       {/* CTA */}
       <section className="px-4 sm:px-6 py-14 bg-indigo-50 border-y border-indigo-100 text-center">
         <h2 className="text-xl font-bold text-gray-800 mb-3">Okuduktan sonra dene</h2>
-        <p className="text-sm text-gray-500 mb-6">3 ücretsiz kredi ile listing ve görsel üret. Kayıt bile olmadan misafir olarak başla.</p>
+        <p className="text-sm text-gray-500 mb-6">Ücretsiz hesap oluştur, 3 krediyle hemen listing ve görsel üret.</p>
         <Link
-          href="/?anonim=1"
+          href="/kayit"
           className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-indigo-100"
         >
-          3 Ücretsiz Kredi ile Başla →
+          Ücretsiz Hesap Oluştur →
         </Link>
       </section>
 

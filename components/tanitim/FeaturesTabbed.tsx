@@ -36,7 +36,7 @@ const KUTULAR = [
   { idx: 0, ikon: "📝", baslik: "Listing Metni", aciklama: "Başlık, özellikler, açıklama, etiketler", kredi: "1 kredi", ring: "ring-blue-400", bg: "bg-blue-50", badge: "text-blue-600 bg-blue-100" },
   { idx: 1, ikon: "📷", baslik: "Görsel", aciklama: "7 stil, stil başına 1 görsel", kredi: "Stil başına 1 kredi", ring: "ring-violet-400", bg: "bg-violet-50", badge: "text-violet-600 bg-violet-100" },
   { idx: 2, ikon: "🎬", baslik: "Video", aciklama: "Ürün tanıtım videosu, 1080p", kredi: "5sn veya 10sn", ring: "ring-amber-400", bg: "bg-amber-50", badge: "text-amber-600 bg-amber-100" },
-  { idx: 3, ikon: "📱", baslik: "Sosyal Medya", aciklama: "Caption + hashtag, tüm platformlar", kredi: "1 kredi", ring: "ring-emerald-400", bg: "bg-emerald-50", badge: "text-emerald-600 bg-emerald-100" },
+  { idx: 3, ikon: "📱", baslik: "Sosyal Medya", aciklama: "Caption + hashtag, tüm platformlar", kredi: "1 kredi / platform · Kit: 3 kredi", ring: "ring-emerald-400", bg: "bg-emerald-50", badge: "text-emerald-600 bg-emerald-100" },
 ];
 
 export default function FeaturesTabbed() {

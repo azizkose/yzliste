@@ -20,7 +20,7 @@ export default function AuthHero() {
           { ikon: "📝", label: "Listing Metni", sub: "1 kredi" },
           { ikon: "📷", label: "AI Görsel", sub: "1 kredi / stil" },
           { ikon: "🎬", label: "Video", sub: "5–8 kredi" },
-          { ikon: "📱", label: "Sosyal Medya", sub: "1 kredi" },
+          { ikon: "📱", label: "Sosyal Medya", sub: "1+ kredi" },
         ].map((f) => (
           <div key={f.label} className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-full px-3 py-1.5 shadow-sm">
             <span className="text-base">{f.ikon}</span>

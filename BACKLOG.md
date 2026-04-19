@@ -463,72 +463,15 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 **P0 — Yanlış/Yanıltıcı İfadeler (hemen düzelt):**
 
-- [ ] **UX-01** 🔴 "Kayıt olmadan başlayın" ifadesi yanıltıcı — `/uret` sidebar'da "3 ücretsiz kredi — kayıt olmadan başlayın" yazıyor ama üret butonuna basınca kayıt popup açılıyor. Güven kırıcı.
-  **Fix:** Sidebar'daki metin değişecek:
-  ```
-  ESKİ: "3 ücretsiz kredi — kayıt olmadan başlayın"
-  YENİ: "Ücretsiz hesap oluştur, 3 kredi hediye"
-  ```
-  **Dosya:** `app/uret/page.tsx` — sidebar logout bölümü
+- [x] **UX-01** 🔴 "Kayıt olmadan başlayın" yanıltıcı. ✅ → "Ücretsiz hesap oluştur, 3 kredi hediye".
+- [x] **UX-02** 🔴 Blog alt CTA eskiden kalma. ✅ → "Ücretsiz Hesap Oluştur →" + doğru açıklama, link /kayit.
 
-- [ ] **UX-02** 🔴 Blog alt CTA eskiden kalma — "Kayıt bile olmadan misafir olarak başla" yazıyor. Bu bilgi yanlış.
-  **Fix:** Blog alt CTA güncelle:
-  ```
-  ESKİ başlık: "Okuduktan sonra dene"
-  ESKİ açıklama: "3 ücretsiz kredi ile listing ve görsel üret. Kayıt bile olmadan misafir olarak başla."
-  ESKİ buton: "3 Ücretsiz Kredi ile Başla →"
+- [x] **UX-03** 🔴 Sosyal medya kredi bilgisi yanıltıcı. ✅ Hero "1+ kredi", FeaturesTabbed "1 kredi / platform · Kit: 3 kredi", fiyatlar güncellendi. Kit backend 4→3 kredi (fotosuz), 5→4 (fotolu).
+- [x] **UX-14** 🔴 Login'li header "Giriş Yap". ✅ useCurrentUser() hook'u yalnızca gerçek auth hatalarında (401/invalid/expired) signOut yapacak şekilde düzeltildi.
+- [x] **UX-15** 🔴 Logout kullanıcıya "Krediniz bitti". ✅ MetinSekmesi koşuluna `kullanici && !kullanici.anonim` eklendi.
 
-  YENİ başlık: "Okuduktan sonra dene"
-  YENİ açıklama: "Ücretsiz hesap oluştur, 3 krediyle hemen listing ve görsel üret."
-  YENİ buton: "Ücretsiz Hesap Oluştur →"
-  ```
-  **Dosya:** `app/blog/page.tsx` — alt CTA bölümü
-
-- [ ] **UX-03** 🔴 Sosyal medya kredi bilgisi yanıltıcı — Ana sayfa, fiyatlar ve feature kartlarında "📱 Sosyal medya — 1 kredi" yazıyor. Gerçekte: tek platform caption = 1 kredi, kit (4 platform) = 4 kredi. Kullanıcı 1 krediyle her şeyi aldığını sanıyor.
-  **Fix:** Tüm yerlerde "1 kredi / platform" olarak güncelle. Kit fiyatını 3 krediye indir (%25 tasarruf mesajı):
-  ```
-  ESKİ: "📱 Sosyal Medya · 1 kredi"
-  YENİ: "📱 Sosyal Medya · 1 kredi / platform · Kit: 3 kredi (4 platform)"
-
-  Hero pill ESKİ: "📱 Sosyal Medya · 1 kredi"
-  Hero pill YENİ: "📱 Sosyal Medya · 1+ kredi"
-  ```
-  **⚠️ KRİTİK — Kit fiyat değişikliği (backend):** `app/api/sosyal/kit/route.ts` — `krediGereken` hesabını güncelle:
-  ```
-  ESKİ: fotosuz = 4 kredi, fotolu = 5 kredi
-  YENİ: fotosuz = 3 kredi, fotolu = 4 kredi
-  ```
-  Bu %25 tasarruf olarak pazarlanacak: "Tek tek 4 kredi, kit ile 3 kredi"
-  **Metin değişiklikleri:** `components/tanitim/AuthHero.tsx` pill, `components/tanitim/FeatureCards.tsx` kart, `app/fiyatlar/page.tsx` kredi kartları ve paket özellikleri, `components/tabs/SosyalSekmesi.tsx` buton metni.
-
-- [ ] **UX-14** 🔴 Login'li header hâlâ "Giriş Yap" gösteriyor — Ekran görüntüsüyle doğrulandı (2026-04-19): sidebar 26 kredi + 17 üretim gösteriyor (login'li) ama header'da "Giriş Yap" + "İçerik Üret →" var, profil/çıkış/kredi rozeti YOK. QA-14 / T4-03 regresyonu. Code commit a586ed45 atmış ama ya deploy olmamış ya da çalışmıyor.
-  **Fix:** `components/SiteHeader.tsx` — `useCurrentUser()` hook'u session'ı doğru okuyor mu kontrol et. Deploy sonrası production'da doğrula. Bu bug canlı kullanıcıyı doğrudan etkiler — çıkış yapamıyor, kredi göremez.
-  **İlişki:** QA-14, T4-03, T5-13 (stale session cookie) ile bağlantılı olabilir.
-
-- [ ] **UX-15** 🔴 Logout kullanıcıya "Krediniz bitti" mesajı — `/uret` metin sekmesinde logout iken "İçerik üretim krediniz bitti. Kredi satın al →" gösteriliyor. Kullanıcı giriş yapmamış, kredisi yok ki bitsin. "3 kredi hediye" mesajıyla çelişiyor.
-  **Fix:** Koşul değiştir:
-  ```
-  ESKİ: credits === 0 → "Krediniz bitti" göster
-  YENİ: isLoggedIn && credits === 0 → "Krediniz bitti" göster
-  ```
-  Logout durumunda bu mesaj hiç görünmesin.
-  **Dosya:** `components/tabs/MetinSekmesi.tsx` (ve diğer sekmelerde varsa)
-
-- [ ] **UX-16** P1 — Video sekmesi başlık-kredi tutarsızlığı — Sekme başlığında "5 içerik üretim kredisi" yazıyor ama 10sn seçince 8 kredi gidiyor. Kullanıcı sürpriz yaşar.
-  **Fix:** Statik "5 kredi" yerine dinamik metin:
-  ```
-  ESKİ: "5 içerik üretim kredisi"
-  YENİ: "5sn: 5 kredi · 10sn: 8 kredi" (veya seçime göre dinamik: "{secilenKredi} kredi")
-  ```
-  **Dosya:** `components/tabs/VideoSekmesi.tsx`
-
-- [ ] **UX-17** P2 — Markalı checkbox metni Etsy satıcısını soğutuyor — "İşaretlemezsen jenerik ifadeler kullanır" yazıyor. El yapımı/markasız ürün "jenerik" değil.
-  **Fix:**
-  ```
-  ESKİ: "Bu ürün markalı ve ben yetkili satıcıyım" + "İşaretlemezsen jenerik ifadeler kullanır"
-  YENİ: "Bu ürün markalı ve ben yetkili satıcıyım" + "Markasız veya el yapımı ürünlerde malzeme, teknik ve hikaye öne çıkar"
-  ```
-  **Dosya:** `components/tabs/MetinSekmesi.tsx`
+- [x] **UX-16** P1 — Video sekmesi kredi tutarsızlığı. ✅ "5sn: 5 kredi · 10sn: 8 kredi" sabit metin.
+- [x] **UX-17** P2 — Markalı checkbox "jenerik" metni. ✅ → "Markasız veya el yapımı ürünlerde malzeme, teknik ve hikaye öne çıkar".
 
 - [ ] **UX-18** P2 — "7 pazaryeri" vs UI'da 6 platform — Hero ve marketing metinlerde "7 pazaryeri" yazıyor ama dropdown'da 6 seçenek var (Trendyol, Hepsiburada, Amazon TR, N11, Etsy, Amazon USA). Amazon TR + USA ayrı sayılıyorsa "7" doğru ama kullanıcı 6 sayıyor. Karar ver ve hizala.
   **Dosyalar:** `components/tanitim/AuthHero.tsx`, `components/tanitim/BenefitsGrid.tsx`

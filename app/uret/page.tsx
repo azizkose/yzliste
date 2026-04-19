@@ -446,7 +446,7 @@ export default function Home() {
                 </>
               ) : (
                 <div className="text-center space-y-2 py-1">
-                  <p className="text-xs text-gray-500 leading-relaxed">3 ücretsiz kredi — kayıt olmadan başlayın</p>
+                  <p className="text-xs text-gray-500 leading-relaxed">Ücretsiz hesap oluştur, 3 kredi hediye</p>
                   <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold py-2 rounded-xl transition-colors">
                     🎁 Hesap Oluştur
                   </button>

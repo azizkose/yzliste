@@ -228,7 +228,7 @@ export default function MetinSekmesi({
               className="mt-0.5 h-4 w-4 rounded border-gray-300 text-amber-500 focus:ring-amber-400" />
             <div>
               <p className="text-sm font-medium text-gray-800">Bu ürün markalı ve ben yetkili satıcıyım</p>
-              <p className="text-xs text-gray-500 mt-0.5">İşaretlersen AI marka adını içeriğe dahil edebilir. İşaretlemezsen jenerik ifadeler kullanır.</p>
+              <p className="text-xs text-gray-500 mt-0.5">İşaretlersen AI marka adını içeriğe dahil eder. Markasız veya el yapımı ürünlerde malzeme, teknik ve hikaye öne çıkar.</p>
             </div>
           </label>
         </>
@@ -300,7 +300,7 @@ export default function MetinSekmesi({
 
       <p className="text-xs text-gray-400 text-center">💡 yzliste her platformun karakter limiti ve SEO kuralına göre üretir ancak pazaryeri kuralları sık değişir — yayınlamadan önce içeriği kontrol etmeni öneririz</p>
 
-      {!yukleniyor && !kullanici?.is_admin && (kullanici?.kredi ?? 0) <= 0 && (
+      {!yukleniyor && kullanici && !kullanici.anonim && !kullanici.is_admin && (kullanici.kredi ?? 0) <= 0 && (
         <p className="text-center text-xs text-red-500">İçerik üretim krediniz bitti. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
       )}
 

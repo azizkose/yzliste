@@ -51,7 +51,7 @@ export default function VideoSekmesi({
     <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold text-gray-800">🎬 Ürün Videosu Üret</h2>
-        <span className="text-xs text-amber-500 font-medium">{videoSure === "10" ? "8" : "5"} içerik üretim kredisi</span>
+        <span className="text-xs text-amber-500 font-medium">5sn: 5 kredi · 10sn: 8 kredi</span>
       </div>
       <p className="text-xs text-gray-400">Ürün fotoğrafından kısa tanıtım videosu — pazaryerleri, Reels, TikTok ve YouTube için</p>
 

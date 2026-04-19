@@ -15,8 +15,13 @@ type CurrentUser = {
 async function fetchCurrentUser(): Promise<CurrentUser | null> {
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError) {
-    // Geçersiz/süresi dolmuş session cookie — temizle
-    await supabase.auth.signOut()
+    // Sadece geçersiz/süresi dolmuş JWT için sign out yap — network hatası için değil
+    const isAuthError = authError.status === 401 ||
+      authError.message?.toLowerCase().includes('invalid') ||
+      authError.message?.toLowerCase().includes('expired')
+    if (isAuthError) {
+      await supabase.auth.signOut()
+    }
     return null
   }
   if (!user) return null
