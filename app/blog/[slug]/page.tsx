@@ -37,13 +37,13 @@ export async function generateMetadata({
       modifiedTime: yazi.guncellemeTarihi ?? yazi.yayinTarihi,
       authors: [yazi.yazarAdi],
       tags: yazi.etiketler,
-      images: [{ url: yazi.kapakGorsel ? `https://www.yzliste.com${yazi.kapakGorsel}` : 'https://www.yzliste.com/og-image.png', width: 1200, height: 630 }],
+      images: [{ url: yazi.kapakGorsel ? `https://www.yzliste.com${yazi.kapakGorsel}` : `https://www.yzliste.com/api/og?title=${encodeURIComponent(yazi.baslik)}&kategori=${encodeURIComponent(yazi.kategori)}`, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
       title: yazi.baslik,
       description: yazi.ozet,
-      images: [yazi.kapakGorsel ? `https://www.yzliste.com${yazi.kapakGorsel}` : 'https://www.yzliste.com/og-image.png'],
+      images: [yazi.kapakGorsel ? `https://www.yzliste.com${yazi.kapakGorsel}` : `https://www.yzliste.com/api/og?title=${encodeURIComponent(yazi.baslik)}&kategori=${encodeURIComponent(yazi.kategori)}`],
     },
     alternates: {
       canonical: `https://www.yzliste.com/blog/${yazi.slug}`,
