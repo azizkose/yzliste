@@ -4,7 +4,11 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'KVKK Aydınlatma Metni',
   description: '6698 sayılı KVKK kapsamında yzliste kişisel veri aydınlatma metni.',
-  alternates: { canonical: '/kvkk-aydinlatma' },
+  openGraph: { title: 'KVKK Aydınlatma Metni | yzliste' },
+  alternates: {
+    canonical: '/kvkk-aydinlatma',
+    languages: { 'tr': 'https://www.yzliste.com/kvkk-aydinlatma', 'x-default': 'https://www.yzliste.com/kvkk-aydinlatma' },
+  },
 }
 
 export default function KVKKAydinlatmaPage() {

@@ -27,6 +27,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://www.yzliste.com/blog",
+    languages: { 'tr': 'https://www.yzliste.com/blog', 'x-default': 'https://www.yzliste.com/blog' },
   },
   robots: { index: true, follow: true },
   twitter: {

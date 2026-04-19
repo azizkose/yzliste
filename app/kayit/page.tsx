@@ -5,6 +5,7 @@ import AuthForm from '@/components/auth/AuthForm'
 export const metadata: Metadata = {
   title: 'Kayıt Ol',
   description: '3 ücretsiz kredi ile yzliste\'ye ücretsiz kayıt olun. Kredi kartı gerekmez.',
+  openGraph: { title: 'Kayıt Ol | yzliste' },
   robots: { index: false, follow: false },
   alternates: { canonical: 'https://www.yzliste.com/kayit' },
 }

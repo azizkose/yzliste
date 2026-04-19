@@ -4,7 +4,11 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Çerez Politikası',
   description: 'yzliste çerez politikası — hangi çerezlerin kullanıldığı ve nasıl kontrol edeceğiniz.',
-  alternates: { canonical: '/cerez-politikasi' },
+  openGraph: { title: 'Çerez Politikası | yzliste' },
+  alternates: {
+    canonical: '/cerez-politikasi',
+    languages: { 'tr': 'https://www.yzliste.com/cerez-politikasi', 'x-default': 'https://www.yzliste.com/cerez-politikasi' },
+  },
 }
 
 const CEREZLER = [

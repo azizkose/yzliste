@@ -5,6 +5,7 @@ import AuthForm from '@/components/auth/AuthForm'
 export const metadata: Metadata = {
   title: 'Giriş Yap',
   description: 'yzliste hesabınıza giriş yapın.',
+  openGraph: { title: 'Giriş Yap | yzliste' },
   robots: { index: false, follow: false },
   alternates: { canonical: 'https://www.yzliste.com/giris' },
 }

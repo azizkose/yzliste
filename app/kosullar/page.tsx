@@ -4,7 +4,11 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Kullanım Koşulları',
   description: 'yzliste kullanım koşulları ve hizmet şartları.',
-  alternates: { canonical: 'https://www.yzliste.com/kosullar' },
+  openGraph: { title: 'Kullanım Koşulları | yzliste' },
+  alternates: {
+    canonical: 'https://www.yzliste.com/kosullar',
+    languages: { 'tr': 'https://www.yzliste.com/kosullar', 'x-default': 'https://www.yzliste.com/kosullar' },
+  },
 }
 
 export default function KosullarPage() {

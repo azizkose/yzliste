@@ -32,6 +32,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://www.yzliste.com/fiyatlar",
+    languages: { 'tr': 'https://www.yzliste.com/fiyatlar', 'x-default': 'https://www.yzliste.com/fiyatlar' },
   },
   robots: { index: true, follow: true },
 };

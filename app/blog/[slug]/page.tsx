@@ -47,6 +47,7 @@ export async function generateMetadata({
     },
     alternates: {
       canonical: `https://www.yzliste.com/blog/${yazi.slug}`,
+      languages: { 'tr': `https://www.yzliste.com/blog/${yazi.slug}`, 'x-default': `https://www.yzliste.com/blog/${yazi.slug}` },
     },
     robots: { index: true, follow: true },
   };

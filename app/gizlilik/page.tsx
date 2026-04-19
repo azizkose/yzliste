@@ -5,7 +5,11 @@ import SiteFooter from "@/components/SiteFooter";
 export const metadata: Metadata = {
   title: 'Gizlilik Politikası ve KVKK Aydınlatma',
   description: 'yzliste gizlilik politikası, kişisel veri işleme ve KVKK kapsamındaki haklarınız.',
-  alternates: { canonical: 'https://www.yzliste.com/gizlilik' },
+  openGraph: { title: 'Gizlilik Politikası | yzliste' },
+  alternates: {
+    canonical: 'https://www.yzliste.com/gizlilik',
+    languages: { 'tr': 'https://www.yzliste.com/gizlilik', 'x-default': 'https://www.yzliste.com/gizlilik' },
+  },
 }
 
 export default function GizlilikPage() {
