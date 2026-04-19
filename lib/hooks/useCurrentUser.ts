@@ -13,7 +13,12 @@ type CurrentUser = {
 }
 
 async function fetchCurrentUser(): Promise<CurrentUser | null> {
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError) {
+    // Geçersiz/süresi dolmuş session cookie — temizle
+    await supabase.auth.signOut()
+    return null
+  }
   if (!user) return null
 
   const { data, error } = await supabase
