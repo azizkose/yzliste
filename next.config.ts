@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 // CSP is set dynamically (nonce-based) in middleware.ts
 // Only static security headers that don't require nonce go here
 const securityHeaders = [
-  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "X-DNS-Prefetch-Control", value: "on" },

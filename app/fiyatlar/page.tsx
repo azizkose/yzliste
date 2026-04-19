@@ -146,42 +146,30 @@ const sss = [
   },
 ];
 
-// JSON-LD: Pricing schema
+// JSON-LD: Pricing schema — Product + Offer (Google rich result uyumlu)
 function PricingJsonLd() {
+  const offers = PAKET_LISTESI.map((p) => ({
+    "@type": "Offer",
+    name: `${p.isim} Paketi — ${p.krediStr}`,
+    description: p.aciklama,
+    price: String(p.fiyat),
+    priceCurrency: "TRY",
+    availability: "https://schema.org/InStock",
+    url: "https://www.yzliste.com/fiyatlar",
+  }))
+
   return (
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{
         __html: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "AggregateOffer",
-          priceCurrency: "TRY",
-          offers: [
-            {
-              "@type": "Offer",
-              name: "Başlangıç Paketi",
-              description: "Birkaç ürün denemek isteyenler için ideal başlangıç noktası.",
-              price: String(MIN_FIYAT),
-              priceCurrency: "TRY",
-              availability: "https://schema.org/InStock",
-            },
-            {
-              "@type": "Offer",
-              name: "Popüler Paketi",
-              description: "Aktif satıcılar için en çok tercih edilen paket.",
-              price: "99",
-              priceCurrency: "TRY",
-              availability: "https://schema.org/InStock",
-            },
-            {
-              "@type": "Offer",
-              name: "Büyük Paketi",
-              description: "Toplu yükleme yapan mağazalar ve profesyonel satıcılar için.",
-              price: String(MAX_FIYAT),
-              priceCurrency: "TRY",
-              availability: "https://schema.org/InStock",
-            },
-          ],
+          "@type": "Product",
+          name: "yzliste — AI E-ticaret Listing Üretici",
+          description: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA için AI destekli listing metni, stüdyo görseli ve sosyal medya içeriği üretim platformu.",
+          brand: { "@type": "Brand", name: "yzliste" },
+          url: "https://www.yzliste.com",
+          offers,
         }),
       }}
     />
