@@ -153,11 +153,13 @@ export default function MetinSekmesi({
       {girisTipi === "manuel" && !urunAdi && (
         <div>
           <p className="text-xs text-gray-400 mb-2">Hızlı başla — bir örnek seç:</p>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
             {[
               { ikon: "🧴", label: "Kozmetik", urunAdi: "Hyaluronik Asit Nemlendirici Serum", kategori: "Cilt Bakımı / Kozmetik", ozellikler: "50ml, vegan formül, E vitamini ve aloe vera içerir, tüm cilt tipleri için, parfümsüz, doğrultanmış hyaluronik asit" },
               { ikon: "👕", label: "Giyim", urunAdi: "Slim Fit Erkek Gömlek", kategori: "Giyim / Erkek", ozellikler: "% 100 pamuk, S/M/L/XL/XXL beden, beyaz/mavi/lacivert renk seçeneği, ütü gerektirmez, makinede yıkanabilir" },
               { ikon: "🔌", label: "Elektronik", urunAdi: "65W GaN USB-C Hızlı Şarj Adaptörü", kategori: "Elektronik / Şarj Cihazı", ozellikler: "65W GaN teknoloji, 3 port (2×USB-C, 1×USB-A), tüm telefonlar/dizüstü uyumlu, akıllı güç yönetimi, UL sertifikalı" },
+              { ikon: "🫒", label: "Gıda", urunAdi: "Soğuk Sıkım Zeytinyağı 500ml", kategori: "Gıda / Yağlar", ozellikler: "İlk soğuk sıkım, asidite %0.3, Ayvalık çeşidi, cam şişe, 2024 hasat, sertifikalı organik, 500ml" },
+              { ikon: "💎", label: "Takı", urunAdi: "925 Ayar Gümüş Kelebek Kolye", kategori: "Takı / Gümüş", ozellikler: "925 ayar gümüş, el yapımı, zincir uzunluğu 45cm, kelebek uç 2.5cm, oksit kaplama, toz pembe zirkon taş" },
             ].map((ornek) => (
               <button key={ornek.label} onClick={() => { setUrunAdi(ornek.urunAdi); setKategori(ornek.kategori); setOzellikler(ornek.ozellikler); }}
                 className="text-left p-2.5 rounded-xl border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-all">

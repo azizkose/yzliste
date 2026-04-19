@@ -53,7 +53,6 @@ export default function GorselSekmesi({
     <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold text-gray-800">🖼️ Ürün Görseli Üret</h2>
-        <span className="text-xs text-violet-500 font-medium">Stil başına 1 kredi · 1 stil = 1 görsel</span>
       </div>
 
       {urunAdi && (
