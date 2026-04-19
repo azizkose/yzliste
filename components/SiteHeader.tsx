@@ -73,17 +73,17 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
             <>
               {kredi !== null && kredi !== undefined && (
                 <a
-                  href="/kredi-yukle"
+                  href="/hesap/krediler"
                   className={`hidden sm:flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-full transition-colors whitespace-nowrap ${transparent ? "bg-white/20 text-white hover:bg-white/30" : "bg-indigo-50 text-indigo-600 hover:bg-indigo-100"}`}
                 >
                   💳 {kredi} kredi
                 </a>
               )}
               <a
-                href="/profil"
+                href="/hesap"
                 className={`text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors whitespace-nowrap ${transparent ? "text-white/80 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-800 hover:bg-gray-100"}`}
               >
-                Profil
+                Hesabım
               </a>
               <button
                 onClick={cikisYap}
@@ -140,17 +140,17 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
                 <>
                   {kredi !== null && kredi !== undefined && (
                     <a
-                      href="/kredi-yukle"
+                      href="/hesap/krediler"
                       className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-indigo-600 font-semibold bg-indigo-50 mb-1"
                     >
                       💳 {kredi} kredi
                     </a>
                   )}
                   <a
-                    href="/profil"
+                    href="/hesap"
                     className="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors mb-1"
                   >
-                    Profil
+                    Hesabım
                   </a>
                   <button
                     onClick={cikisYap}

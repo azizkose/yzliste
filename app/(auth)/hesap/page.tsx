@@ -52,6 +52,7 @@ export default async function HesapPage() {
   ])
 
   const profil = profilRes.data
+  const profilYuklendi = !profilRes.error && profil !== null
   const buAyUretim = buAyRes.count ?? 0
   const kredi = profil?.kredi ?? 0
 
@@ -63,7 +64,8 @@ export default async function HesapPage() {
   const favoriPlatform = Object.entries(platformSayac).sort((a, b) => b[1] - a[1])[0]?.[0]
 
   const toplamUretim = profil?.toplam_kullanilan ?? 0
-  const krediDusuk = kredi > 0 && kredi <= Math.max(5, Math.round(toplamUretim * 0.2))
+  // Sadece profil gerçekten geldiyse kredi uyarısı göster
+  const krediDusuk = profilYuklendi && kredi > 0 && kredi <= Math.max(5, Math.round(toplamUretim * 0.2))
 
   const toplamUretimSayisi = enCokPlatformRes.data?.length ?? 0
 
@@ -84,8 +86,8 @@ export default async function HesapPage() {
           </Link>
         </div>
 
-        {/* Kredi durumu banner */}
-        {kredi === 0 ? (
+        {/* Kredi durumu banner — sadece profil yüklendiyse göster */}
+        {profilYuklendi && kredi === 0 ? (
           <div className="mb-6 bg-red-50 border border-red-200 rounded-2xl p-4 flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-semibold text-red-700">🚫 Krediniz tükendi — üretim yapamazsınız</p>
