@@ -32,8 +32,6 @@ async function fetchCurrentUser(): Promise<CurrentUser | null> {
     .eq('id', user.id)
     .single()
 
-  if (error) throw error
-
   return {
     id: user.id,
     email: user.email ?? null,

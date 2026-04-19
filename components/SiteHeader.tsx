@@ -11,7 +11,7 @@ type AktifSayfa = "ana" | "icerik" | "fiyatlar" | "blog" | "toplu" | "profil";
 
 export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) {
   const [menuAcik, setMenuAcik] = useState(false);
-  const { data: currentUser } = useCurrentUser();
+  const { data: currentUser, isLoading: authYukleniyor } = useCurrentUser();
   const { data: kredi } = useCredits();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -59,7 +59,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
 
         {/* Auth buttons */}
         <div className="flex gap-1 sm:gap-2 ml-auto items-center">
-          {girisVar ? (
+          {authYukleniyor ? null : girisVar ? (
             <>
               {kredi !== null && kredi !== undefined && (
                 <a
@@ -126,7 +126,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               </a>
             ))}
             <div className="border-t border-gray-100 pt-2 mt-2">
-              {girisVar ? (
+              {authYukleniyor ? null : girisVar ? (
                 <>
                   {kredi !== null && kredi !== undefined && (
                     <a
