@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const OZELLIKLER = [
-  { ikon: "🧠", baslik: "ChatGPT Trendyol'un 65 karakter başlık limitini bilmez", aciklama: "yzliste her platformun karakter limiti, yasaklı kelime ve kategori kuralına göre üretir. Çıktıyı kopyala, yapıştır — düzeltmeye gerek yok." },
+  { ikon: "🧠", baslik: "Genel amaçlı AI değil, pazaryeri uzmanı AI", aciklama: "Genel amaçlı AI araçları her pazaryerinin karakter limiti, yasaklı kelime listesi ve kategori yapısını bilmez. yzliste; Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA'nın güncel kurallarına göre üretir." },
   { ikon: "📦", baslik: "Metin, görsel, video, sosyal medya — tek fotoğraftan", aciklama: "Ayrı ayrı araçlarla uğraşma. Bir ürün fotoğrafı yükle, 4 içerik türünü tek platformdan üret." },
   { ikon: "🎯", baslik: "Senin markanı, senin dilini konuşur", aciklama: "Mağaza adını, hedef kitlenin yaşını, metin tonunu bir kere gir — her üretimde otomatik uygulanır." },
   { ikon: "💰", baslik: "Abonelik yok, teknik bilgi gerekmiyor", aciklama: "Aylık ödeme yok, API entegrasyonu yok, prompt mühendisliği yok. Formu doldur, butona bas — içeriğin hazır." },
@@ -13,7 +13,7 @@ export default function BenefitsGrid() {
       <section className="px-4 sm:px-6 py-16">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-3">Neden yzliste?</h2>
-          <p className="text-center text-sm text-gray-400 mb-10">ChatGPT&apos;ye &quot;listing yaz&quot; demekten farkımız</p>
+          <p className="text-center text-sm text-gray-400 mb-10">Genel amaçlı AI araçlarından farkımız</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {OZELLIKLER.map((o, i) => (
               <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">

@@ -17,7 +17,7 @@ Trendyol'da yüz binlerce ürün arasından öne çıkmak için iyi bir fotoğra
 
 ## Trendyol'un 100 Karakterlik Başlık Formülü
 
-Trendyol başlıkları en fazla 100 karakter kabul eder. Formatın şu sırayla gitmesi gerekir: Marka + Ürün Adı + Ana Özellik + İkincil Özellik. Emoji kullanımı Trendyol'da serbesttir ve dikkat çekicidir. Örnek: Columbia Erkek Su Geçirmez Bot 🥾 Hakiki Deri | Kışlık | 42 Numara
+Trendyol başlıkları en fazla 100 karakter kabul eder. Başlığın ilk 65 karakteri arama sonuçlarında doğrudan görünür; en önemli anahtar kelimeleri bu alana yerleştirmek görünürlüğü artırır. *(Kaynak: Trendyol Satıcı Akademisi, Nisan 2026)* Formatın şu sırayla gitmesi gerekir: Marka + Ürün Adı + Ana Özellik + İkincil Özellik. Emoji kullanımı Trendyol'da serbesttir ve dikkat çekicidir. Örnek: Columbia Erkek Su Geçirmez Bot 🥾 Hakiki Deri | Kışlık | 42 Numara
 
 ## Özellikler: Madde Madde, Emoji Destekli
 
@@ -36,7 +36,7 @@ Trendyol açıklamasında yaklaşık 300 kelime hedefle. İlk iki cümle en öne
 
 ## BİLGİ KUTUSU
 
-💡 İpucu: yzliste kullanarak platform bazında optimize edilmiş başlık, özellik, açıklama ve etiket içeriklerini saniyeler içinde üretebilirsin. Ürün fotoğrafını yükle ya da barkod tara, gerisini YZ halleder.
+💡 İpucu: yzliste kullanarak platform bazında optimize edilmiş başlık, özellik, açıklama ve etiket içeriklerini ortalama 20–60 saniyede üretebilirsin. Ürün fotoğrafını yükle ya da barkod tara, gerisini YZ halleder.
 
 ## SONUÇ
 
