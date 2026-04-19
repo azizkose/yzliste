@@ -42,7 +42,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
   ];
 
   return (
-    <header className={`sticky top-0 z-40 border-b transition-all duration-300 ${transparent ? "bg-transparent border-transparent" : "bg-white/90 backdrop-blur border-gray-100"}`}>
+    <header className={`sticky top-0 z-40 border-b transition-all duration-300 ${transparent ? "bg-black/25 backdrop-blur-sm border-transparent" : "bg-white/90 backdrop-blur border-gray-100"}`}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-2">
         {/* Logo */}
         <a href="/" className="flex-shrink-0 mr-1">
@@ -109,7 +109,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
           {/* Mobile hamburger */}
           <button
             onClick={() => setMenuAcik(!menuAcik)}
-            className="sm:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+            className={`sm:hidden p-2 rounded-lg transition-colors ${transparent ? "text-white hover:bg-white/10" : "text-gray-500 hover:bg-gray-100"}`}
             aria-label="Menü"
           >
             {menuAcik ? "✕" : "☰"}

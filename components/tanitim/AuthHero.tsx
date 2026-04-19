@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function AuthHero() {
   return (
-    <section className="relative overflow-hidden min-h-[520px] sm:min-h-[580px] flex items-center">
+    <section className="relative overflow-hidden min-h-[520px] sm:min-h-[580px] flex items-center bg-gray-900">
       <video
         autoPlay
         loop
@@ -11,6 +11,8 @@ export default function AuthHero() {
         className="absolute inset-0 w-full h-full object-cover brightness-[0.4]"
         src="/hero-video.mp4"
       />
+      {/* Header altındaki alanı okunaklı kılan gradyan */}
+      <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/50 to-transparent z-[1]" />
 
       <div className="relative z-10 w-full flex flex-col items-center justify-center text-center px-6 py-16 sm:py-24 md:py-32">
         <div className="flex gap-2 flex-wrap justify-center mb-4">
