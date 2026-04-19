@@ -155,7 +155,7 @@ Mevcut `/public/og-image.png` turuncu arka planlı, eski metin ("E-ticaret listi
    - `app/page.tsx` → `description` ve `openGraph.description` alanları
 4. Deploy sonrası `https://www.opengraph.xyz/` ile test et
 
-### HERO VIDEO RESPONSIVE FIX (P1 — mobil + desktop kırpılma)
+### ✅ HERO VIDEO RESPONSIVE FIX (P1 — mobil + desktop kırpılma) — DONE 1a3607b
 `components/tanitim/AuthHero.tsx` — hero video mobilde sadece ortası görünüyor (metinler kayıp), desktop'ta üst-alttan kırpılıyor.
 
 **Kök sebep:**
@@ -215,7 +215,7 @@ Eğer videonun hiç kırpılmaması isteniyorsa:
 
 ---
 
-### ADMIN PANELİ YENİDEN YAPI (P0 — kırık + güvenlik)
+### ✅ ADMIN PANELİ YENİDEN YAPI (P0 — kırık + güvenlik) — DONE 4a02806
 Admin paneli (`/admin`) çalışmıyor. `azizkose@gmail.com` ile giriş yapılsa bile sayfa yükleniyor ama veri gelmiyor veya anasayfaya yönlendiriyor.
 
 **Kök sebepler:**
@@ -304,7 +304,7 @@ disallow: ["/api/", "/admin", "/hesap", ...]
 
 ---
 
-### GİRİŞ SAYFASI TEMİZLİK (P2 — UX)
+### ✅ GİRİŞ SAYFASI TEMİZLİK (P2 — UX) — DONE 6315411
 `/giris` sayfasında "Hesabın yok mu? Ücretsiz oluştur" metni gereksiz — hemen altında zaten "🎁 Kayıt Ol" tab butonu var. İkisi aynı şeyi söylüyor.
 **Fix:** "Hesabın yok mu? Ücretsiz oluştur" satırını kaldır. "Kayıt Ol" tab'ı yeterli.
 **Dosya:** `app/giris/page.tsx` veya auth modal bileşeni — `grep -rn "Hesabın yok mu" app/ components/` ile bul.

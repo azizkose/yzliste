@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-04-19 — Hero video responsive fix + Admin paneli güvenlik + Giriş temizlik
+
+- AuthHero: minHeight max(520px,60vh) + objectPosition center 40% — mobil/desktop kırpılma giderildi
+- Admin paneli: service key + is_admin DB kontrolü, NEXT_PUBLIC_ADMIN_EMAIL kaldırıldı, /admin middleware koruması eklendi
+- /giris: gereksiz "Hesabın yok mu?" satırı kaldırıldı
+
 ## 2026-04-19 — Blog arama ve kategori filtresi (UX-13)
 
 - BlogListesi.tsx client component: metin arama (başlık+özet) + kategori pill filtresi
