@@ -28,6 +28,7 @@ export default function SiteFooter() {
           <img src="/iyzico_footer_logo.png" alt="iyzico ile öde" className="w-44 h-auto" />
         </div>
         <p className="text-center text-xs text-gray-400">© 2026 yzliste · SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI</p>
+        <p className="text-center text-xs text-gray-300 mt-1">yzliste; Trendyol, Hepsiburada, Amazon, N11 ve Etsy ile resmi bir iş birliği içinde değildir. Belirtilen marka adları yalnızca desteklenen pazaryerlerini tanımlamak için kullanılmaktadır. Tüm markalar kendi sahiplerine aittir.</p>
       </div>
     </footer>
   );
