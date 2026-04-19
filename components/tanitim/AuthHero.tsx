@@ -8,12 +8,12 @@ export default function AuthHero() {
         <span className="inline-block bg-emerald-100 text-emerald-700 text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">🆕 Video + Sosyal Medya</span>
       </div>
       <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-5">
-        Ürünün için her içeriği<br />
-        <span className="text-indigo-500">tek platformda üret</span>
+        Fotoğraf yükle,<br />
+        <span className="text-indigo-500">pazaryerine hazır içeriğini al</span>
       </h1>
       <p className="text-base sm:text-lg text-gray-500 mb-6 max-w-2xl mx-auto leading-relaxed">
-        Listing metni, stüdyo görseli, ürün videosu, sosyal medya içeriği —<br className="hidden sm:block" />
-        <strong className="text-gray-700">fotoğraf yükle ya da barkod tara</strong>, gerisini YZ halleder.
+        Trendyol&apos;un karakter limitini, Amazon&apos;un yasaklı kelimelerini, Etsy&apos;nin SEO kurallarını biz biliriz.<br className="hidden sm:block" />
+        Sen sadece ürününü anlat — listing, görsel, video ve sosyal medya içeriğin dakikalar içinde hazır.
       </p>
       <div className="flex flex-wrap justify-center gap-2 mb-8">
         {[

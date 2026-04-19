@@ -97,10 +97,6 @@ export default function ProfilPage() {
   const [sifreDegistiriliyor, setSifreDegistiriliyor] = useState(false);
   const [sifreMesaj, setSifreMesaj] = useState("");
 
-  // Hesap silme
-  const [silmeOnayMetni, setSilmeOnayMetni] = useState("");
-  const [siliniyor, setSiliniyor] = useState(false);
-  const [silmeMesaj, setSilmeMesaj] = useState("");
 
   const yukle = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -212,19 +208,6 @@ export default function ProfilPage() {
     setSifreDegistiriliyor(false);
   };
 
-  const hesapSil = async () => {
-    if (silmeOnayMetni !== "SİL") { setSilmeMesaj("Onay için 'SİL' yazın."); return; }
-    setSiliniyor(true); setSilmeMesaj("");
-    const res = await fetch("/api/hesap-sil", { method: "DELETE" });
-    if (res.ok) {
-      await supabase.auth.signOut();
-      router.push("/giris");
-    } else {
-      const data = await res.json();
-      setSilmeMesaj(data.hata || "Hesap silinemedi.");
-      setSiliniyor(false);
-    }
-  };
 
   if (yukleniyor) {
     return (
@@ -496,20 +479,11 @@ export default function ProfilPage() {
           </div>
 
           {/* Hesap Sil */}
-          <div className="border-t border-red-100 pt-5 space-y-3">
+          <div className="border-t border-red-100 pt-5 space-y-2">
             <p className="text-sm font-medium text-red-700">Hesabı Sil</p>
-            <p className="text-xs text-gray-500 leading-relaxed">
-              Hesabınız ve tüm üretimleriniz kalıcı olarak silinir. Bu işlem geri alınamaz.
-              Onaylamak için aşağıya <strong>SİL</strong> yazın.
+            <p className="text-sm text-gray-500">Hesap ayarlarını değiştirmek veya hesabını silmek için
+              <a href="/hesap/ayarlar" className="text-indigo-600 hover:underline ml-1">Hesap Ayarları</a>&apos;na git.
             </p>
-            <input type="text" value={silmeOnayMetni} onChange={(e) => setSilmeOnayMetni(e.target.value)}
-              placeholder="SİL"
-              className="w-full sm:w-48 border border-red-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
-            {silmeMesaj && <p className="text-xs text-red-500">{silmeMesaj}</p>}
-            <button onClick={hesapSil} disabled={siliniyor || silmeOnayMetni !== "SİL"}
-              className="bg-red-500 hover:bg-red-600 disabled:bg-gray-200 disabled:text-gray-400 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
-              {siliniyor ? "Siliniyor..." : "Hesabı Kalıcı Olarak Sil"}
-            </button>
           </div>
         </div>
 

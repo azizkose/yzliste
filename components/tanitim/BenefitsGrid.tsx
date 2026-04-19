@@ -1,12 +1,10 @@
 import Link from "next/link";
 
 const OZELLIKLER = [
-  { ikon: "🧠", baslik: "Pazaryerini bilen AI", aciklama: "Genel AI araçları pazaryeri kurallarını bilmez. yzliste her platformun karakter limiti, yasak kelime ve SEO kuralına göre üretir." },
-  { ikon: "📸", baslik: "Fotoğraf yükle, gerisini bırak", aciklama: "Ürün fotoğrafını yükle — AI ürünü tanır, kategori belirler, listing metnini ve görseli otomatik üretir." },
-  { ikon: "📦", baslik: "Barkod tara, klavyeye dokunma", aciklama: "Barkodu tarat, ürün bilgilerini veritabanından çek, listing üret — tek tıkla." },
-  { ikon: "🎯", baslik: "6 platform, 6 farklı format", aciklama: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy, Amazon USA — her birinin kuralına göre ayrı çıktı." },
-  { ikon: "💎", baslik: "Şeffaf kredi sistemi", aciklama: "Kredi üretimde düşer, indirme bedava. Ne kadar harcadığını her zaman görürsün." },
-  { ikon: "💰", baslik: "Kullandığın kadar öde", aciklama: "Aylık abonelik yok. 3 ücretsiz kredi ile başla, istediğin zaman paket al." },
+  { ikon: "🧠", baslik: "ChatGPT Trendyol'un 65 karakter başlık limitini bilmez", aciklama: "yzliste her platformun karakter limiti, yasaklı kelime ve kategori kuralına göre üretir. Çıktıyı kopyala, yapıştır — düzeltmeye gerek yok." },
+  { ikon: "📦", baslik: "Metin, görsel, video, sosyal medya — tek fotoğraftan", aciklama: "Ayrı ayrı araçlarla uğraşma. Bir ürün fotoğrafı yükle, 4 içerik türünü tek platformdan üret." },
+  { ikon: "🎯", baslik: "Senin markanı, senin dilini konuşur", aciklama: "Mağaza adını, hedef kitlenin yaşını, metin tonunu bir kere gir — her üretimde otomatik uygulanır." },
+  { ikon: "💰", baslik: "Abonelik yok, teknik bilgi gerekmiyor", aciklama: "Aylık ödeme yok, API entegrasyonu yok, prompt mühendisliği yok. Formu doldur, butona bas — içeriğin hazır." },
 ];
 
 export default function BenefitsGrid() {

@@ -95,6 +95,13 @@ export default function Home() {
   const video = useVideoUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
   const sosyal = useSosyalUretim({ urunAdi: metin.urunAdi, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
 
+  // Sync shared photo to sosyal tab (T7-07)
+  useEffect(() => {
+    if (fotolar[0] && !sosyal.sosyalFoto) {
+      sosyal.setSosyalFoto(fotolar[0]);
+    }
+  }, [fotolar]);
+
   // ===== SHARED PHOTO HANDLERS =====
   const fotoSec = (e: React.ChangeEvent<HTMLInputElement>) => {
     const dosyalar = Array.from(e.target.files || []);
