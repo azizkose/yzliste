@@ -111,8 +111,8 @@ export default async function HesapPage() {
           ))}
         </div>
 
-        {/* F-22c: Son 3 üretim */}
-        {sonUretimler.length > 0 && (
+        {/* F-22c: Son 3 üretim veya empty state */}
+        {sonUretimler.length > 0 ? (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm mb-8">
             <div className="px-5 py-4 border-b border-gray-50 flex items-center justify-between">
               <h2 className="text-sm font-semibold text-gray-700">Son Üretimler</h2>
@@ -132,6 +132,14 @@ export default async function HesapPage() {
                 </div>
               ))}
             </div>
+          </div>
+        ) : (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm mb-8 text-center py-12 px-6">
+            <p className="text-3xl mb-3">📦</p>
+            <p className="text-gray-500 mb-5">Henüz üretim yapmadın</p>
+            <Link href="/uret" className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-colors">
+              İlk içeriğini üret →
+            </Link>
           </div>
         )}
 
