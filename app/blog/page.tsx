@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getYazilar, kategoriler } from "./icerikler";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import BlogListesi from "./BlogListesi";
 
 export const revalidate = 3600; // 1 saat ISR cache
 
@@ -87,75 +88,7 @@ export default async function BlogPage() {
         </p>
       </section>
 
-      {/* KATEGORİLER */}
-      {cats.length > 1 && (
-        <section className="px-4 sm:px-6 pb-6">
-          <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-2">
-            {cats.map((k) => (
-              <span key={k} className="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 px-3 py-1.5 rounded-full font-medium">
-                {k}
-              </span>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* YAZI LİSTESİ */}
-      <section className="px-4 sm:px-6 py-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {yazilar.map((yazi) => (
-              <Link
-                key={yazi.slug}
-                href={`/blog/${yazi.slug}`}
-                className="group bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
-              >
-                {yazi.kapakGorsel && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={yazi.kapakGorsel}
-                    alt={yazi.baslik}
-                    style={{ width: "100%", height: "176px", objectFit: "cover", display: "block" }}
-                  />
-                )}
-                <div className="p-5 flex flex-col flex-1">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs bg-indigo-50 text-indigo-600 border border-indigo-100 px-2 py-0.5 rounded-full font-medium">
-                      {yazi.kategori}
-                    </span>
-                    <span className="text-xs text-gray-400">{yazi.okumaSuresi} dk okuma</span>
-                  </div>
-                  <h2 className="font-bold text-gray-800 text-sm leading-snug mb-2 group-hover:text-indigo-600 transition-colors line-clamp-3">
-                    {yazi.baslik}
-                  </h2>
-                  <p className="text-xs text-gray-500 leading-relaxed flex-1 line-clamp-3">
-                    {yazi.ozet}
-                  </p>
-                  <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
-                    <span className="text-xs text-gray-400">
-                      {new Date(yazi.yayinTarihi).toLocaleDateString("tr-TR", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </span>
-                    <span className="text-xs text-indigo-500 font-medium group-hover:underline">
-                      Oku →
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          {yazilar.length === 0 && (
-            <div className="text-center py-20 text-gray-400">
-              <div className="text-4xl mb-4">✍️</div>
-              <p className="text-sm">Yazılar yakında eklenecek.</p>
-            </div>
-          )}
-        </div>
-      </section>
+      <BlogListesi yazilar={yazilar} kategoriler={cats} />
 
       {/* CTA */}
       <section className="px-4 sm:px-6 py-14 bg-indigo-50 border-y border-indigo-100 text-center">
