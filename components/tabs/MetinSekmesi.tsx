@@ -295,7 +295,7 @@ export default function MetinSekmesi({
 
       {/* Üret butonu */}
       <button onClick={icerikUret} disabled={!uretButonAktif} className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
-        {yukleniyor ? `⏳ ${YUKLENIYOR_MESAJLARI[yukleniyorMesaj]}` : (!kullanici || kullanici.anonim) ? "İçerik Üret — Giriş Gerekli" : `İçerik Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
+        {yukleniyor ? `⏳ ${YUKLENIYOR_MESAJLARI[yukleniyorMesaj]}` : (!kullanici || kullanici.anonim) ? "✨ Metin Üret — Giriş Gerekli" : `✨ Metin Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
       </button>
 
       <p className="text-xs text-gray-400 text-center">💡 yzliste her platformun karakter limiti ve SEO kuralına göre üretir ancak pazaryeri kuralları sık değişir — yayınlamadan önce içeriği kontrol etmeni öneririz</p>

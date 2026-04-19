@@ -146,7 +146,7 @@ export default function VideoSekmesi({
 
       <button onClick={videoUret} disabled={videoYukleniyor || fotolar.length === 0 || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 8 : 5))}
         className="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
-        {videoYukleniyor ? "⏳ Video üretiliyor... (~2 dakika)" : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : !kullanici ? "🎬 Video Üret — Giriş Gerekli" : `🎬 Video Üret — ${kullanici.is_admin ? "∞" : (videoSure === "10" ? 8 : 5)} kredi`}
+        {videoYukleniyor ? "⏳ Video üretiliyor... (~2 dakika)" : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : !kullanici ? "✨ Video Üret — Giriş Gerekli" : `✨ Video Üret — ${kullanici.is_admin ? "∞" : (videoSure === "10" ? 8 : 5)} kredi`}
       </button>
 
       {kullanici && !kullanici.is_admin && (kullanici.kredi ?? 0) < (videoSure === "10" ? 8 : 5) && !videoYukleniyor && (

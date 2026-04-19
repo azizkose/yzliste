@@ -445,14 +445,10 @@ export default function Home() {
                   )}
                 </>
               ) : (
-                <div className="text-center space-y-2 py-1">
-                  <p className="text-xs text-gray-500 leading-relaxed">Ücretsiz hesap oluştur, 3 kredi hediye</p>
-                  <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold py-2 rounded-xl transition-colors">
-                    🎁 Hesap Oluştur
-                  </button>
-                  <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="w-full text-xs text-gray-500 hover:text-gray-700 py-1 transition-colors">
-                    Giriş Yap
-                  </button>
+                <div className="space-y-2 py-1">
+                  <p className="text-xs font-semibold text-gray-600">💡 Nasıl çalışır?</p>
+                  <p className="text-xs text-gray-500 leading-relaxed">Platform seç → Ürünü anlat → İçeriğini al</p>
+                  <p className="text-xs text-gray-400">Metin, görsel, video ve sosyal medya tek yerden.</p>
                 </div>
               )}
             </div>

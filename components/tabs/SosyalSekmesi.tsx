@@ -241,7 +241,7 @@ export default function SosyalSekmesi({
 
             <button onClick={captionUret} disabled={captionYukleniyor || sosyalKitYukleniyor || !sosyalUrunAdi.trim() || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) <= 0)}
               className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
-              {captionYukleniyor ? "⏳ Üretiliyor..." : !kullanici ? "📱 Caption Üret — Giriş Gerekli" : `📱 ${sosyalPlatform === "instagram" ? "Instagram" : sosyalPlatform === "tiktok" ? "TikTok" : sosyalPlatform === "facebook" ? "Facebook" : "Twitter/X"} Caption Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
+              {captionYukleniyor ? "⏳ Üretiliyor..." : !kullanici ? "✨ Caption Üret — Giriş Gerekli" : `✨ ${sosyalPlatform === "instagram" ? "Instagram" : sosyalPlatform === "tiktok" ? "TikTok" : sosyalPlatform === "facebook" ? "Facebook" : "Twitter/X"} Caption Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
             </button>
 
             <button onClick={kitUret} disabled={sosyalKitYukleniyor || captionYukleniyor || !sosyalUrunAdi.trim() || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < 4)}
