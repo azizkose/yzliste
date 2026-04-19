@@ -4,6 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Çerez Politikası',
   description: 'yzliste çerez politikası — hangi çerezlerin kullanıldığı ve nasıl kontrol edeceğiniz.',
+  alternates: { canonical: '/cerez-politikasi' },
 }
 
 const CEREZLER = [

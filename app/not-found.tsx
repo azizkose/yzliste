@@ -4,6 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: { absolute: 'Sayfa Bulunamadı | yzliste' },
   robots: { index: false, follow: false },
+  alternates: { canonical: null },
 }
 
 export default function NotFound() {

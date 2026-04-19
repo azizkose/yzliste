@@ -64,7 +64,8 @@ export default function AuthForm({ defaultMode = 'kayit', redirectTo = '/', onSu
     if (data?.url) window.location.href = data.url
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault()
     if (!email.trim()) { setMesaj('E-posta adresi girin.'); return }
     if (!sifre.trim()) { setMesaj('Şifre girin.'); return }
     if (mod === 'kayit' && !sozlesme) { setMesaj('Devam etmek için sözleşmeleri kabul edin.'); return }
@@ -165,82 +166,84 @@ setYukleniyor(true)
       </div>
 
       {/* Inputs */}
-      <input
-        type="email"
-        placeholder="E-posta"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        autoComplete="email"
-        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-      />
-      <input
-        type="password"
-        placeholder="Şifre"
-        value={sifre}
-        onChange={(e) => setSifre(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-        required
-        autoComplete={mod === 'kayit' ? 'new-password' : 'current-password'}
-        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-      />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="email"
+          placeholder="E-posta"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          autoComplete="email"
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        />
+        <input
+          type="password"
+          placeholder="Şifre"
+          value={sifre}
+          onChange={(e) => setSifre(e.target.value)}
+          required
+          autoComplete={mod === 'kayit' ? 'new-password' : 'current-password'}
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        />
 
-      {/* Kayıt: sözleşme */}
-      {mod === 'kayit' && (
-        <label className="flex items-start gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={sozlesme}
-            onChange={(e) => setSozlesme(e.target.checked)}
-            className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0"
-          />
-          <span className="text-xs text-gray-500 leading-relaxed">
-            <a href="/kosullar" target="_blank" className="text-indigo-500 hover:underline">Kullanım Koşulları</a> ve{' '}
-            <a href="/gizlilik" target="_blank" className="text-indigo-500 hover:underline">Gizlilik Politikası</a>
-            &apos;nı okudum, kabul ediyorum.
-          </span>
-        </label>
-      )}
+        {/* Kayıt: sözleşme */}
+        {mod === 'kayit' && (
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={sozlesme}
+              onChange={(e) => setSozlesme(e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0"
+            />
+            <span className="text-xs text-gray-500 leading-relaxed">
+              <a href="/kosullar" target="_blank" className="text-indigo-500 hover:underline">Kullanım Koşulları</a> ve{' '}
+              <a href="/gizlilik" target="_blank" className="text-indigo-500 hover:underline">Gizlilik Politikası</a>
+              &apos;nı okudum, kabul ediyorum.
+            </span>
+          </label>
+        )}
 
-      {/* Şifre sıfırlama başarı */}
-      {sifreSifirlamaGonderildi && (
-        <p className="text-xs text-green-600 bg-green-50 p-3 rounded-lg">
-          ✓ Şifre sıfırlama bağlantısı e-postanıza gönderildi.
-        </p>
-      )}
+        {/* Şifre sıfırlama başarı */}
+        {sifreSifirlamaGonderildi && (
+          <p className="text-xs text-green-600 bg-green-50 p-3 rounded-lg">
+            ✓ Şifre sıfırlama bağlantısı e-postanıza gönderildi.
+          </p>
+        )}
 
-      {/* Mesaj */}
-      {mesaj && (
-        <p className={`text-xs ${mesaj.includes('başarılı') || mesaj.includes('gönderildi') ? 'text-green-600' : 'text-red-500'}`}>
-          {mesaj}
-        </p>
-      )}
+        {/* Mesaj */}
+        {mesaj && (
+          <p className={`text-xs ${mesaj.includes('başarılı') || mesaj.includes('gönderildi') ? 'text-green-600' : 'text-red-500'}`}>
+            {mesaj}
+          </p>
+        )}
 
-      {/* Turnstile */}
-      <TurnstileWidget
-        onVerify={handleTurnstileVerify}
-        onExpire={handleTurnstileExpire}
-      />
+        {/* Turnstile */}
+        <TurnstileWidget
+          onVerify={handleTurnstileVerify}
+          onExpire={handleTurnstileExpire}
+        />
 
-      {/* Submit */}
-      <button
-        onClick={handleSubmit}
-        disabled={yukleniyor || (mod === 'kayit' && !sozlesme) || (turnstileEnabled && !turnstileToken)}
-        className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
-      >
-        {yukleniyor ? '...' : mod === 'kayit' ? 'Ücretsiz Hesap Oluştur' : 'Giriş Yap'}
-      </button>
-
-      {/* Şifre sıfırla (sadece giriş modunda) */}
-      {mod === 'giris' && !sifreSifirlamaGonderildi && (
+        {/* Submit */}
         <button
-          onClick={handleSifreSifirla}
-          disabled={yukleniyor}
-          className="w-full text-xs text-gray-400 hover:text-gray-600 transition-colors py-1"
+          type="submit"
+          disabled={yukleniyor || (mod === 'kayit' && !sozlesme) || (turnstileEnabled && !turnstileToken)}
+          className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
         >
-          Şifremi unuttum
+          {yukleniyor ? '...' : mod === 'kayit' ? 'Ücretsiz Hesap Oluştur' : 'Giriş Yap'}
         </button>
-      )}
+
+        {/* Şifre sıfırla (sadece giriş modunda) */}
+        {mod === 'giris' && !sifreSifirlamaGonderildi && (
+          <button
+            type="button"
+            onClick={handleSifreSifirla}
+            disabled={yukleniyor}
+            className="w-full text-xs text-gray-400 hover:text-gray-600 transition-colors py-1"
+          >
+            Şifremi unuttum
+          </button>
+        )}
+      </form>
     </div>
   )
 }
