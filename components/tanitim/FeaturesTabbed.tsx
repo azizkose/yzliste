@@ -1,36 +1,118 @@
 "use client";
 import { useState } from "react";
 
-const ornekBolumler = [
-  {
-    ikon: "📌",
-    baslik: "Başlık",
-    icerik: "Selin Porselen Çiçek Desenli Kahve Fincanı 6'lı Set | 80ml | Altın Yaldızlı | Dishwasher Safe",
-    renk: "border-l-blue-400",
+type PlatformKey = "trendyol" | "amazon" | "etsy";
+
+const platformVerileri: Record<PlatformKey, {
+  etiket: string;
+  aciklamaKisa: string;
+  bolumler: { ikon: string; baslik: string; icerik: string; renk: string }[];
+}> = {
+  trendyol: {
+    etiket: "Trendyol",
+    aciklamaKisa: "Max 100 karakter başlık · Türkçe · Keyword-yoğun",
+    bolumler: [
+      {
+        ikon: "📌",
+        baslik: "Başlık",
+        icerik: "Selin Porselen Çiçek Desenli Kahve Fincanı 6'lı Set 80ml Altın Yaldızlı Hediye",
+        renk: "border-l-orange-400",
+      },
+      {
+        ikon: "🔹",
+        baslik: "Özellikler",
+        icerik: `🏆 Birinci Kalite Porselen — Kurşunsuz, gıda güvenli materyal; günlük kullanıma uygun dayanıklılık.
+☕ 80ml Espresso & Türk Kahvesi Hacmi — Geleneksel Türk kahvesi ve espresso severler için ideal boyut.
+🌸 El İşlemeli Çiçek Deseni + 24 Ayar Altın Yaldız — Her fincan benzersiz, özel gün hediyesi için birebir.
+🎁 6 Fincan + 6 Tabak Komple Set — Şık hediye kutusunda teslim; düğün, nişan ve çeyiz hediyesi.
+✅ Bulaşık Makinesine Uygun — Yaldız detayları bozulmadan güvenle yıkanır.`,
+        renk: "border-l-orange-400",
+      },
+      {
+        ikon: "📄",
+        baslik: "Açıklama",
+        icerik: "Selin Porselen'in el işlemeli çiçek desenli fincan seti, Türk kahvesi ritüelinize zarafet katıyor. 80ml hacmiyle espresso ve Türk kahvesine ideal boyutta tasarlanan set, 24 ayar altın yaldız detaylarıyla misafirlerinizi etkileyecek. Düğün, nişan ve doğum günü hediyesi arayanlar için şık kutusunda hazır.",
+        renk: "border-l-green-400",
+      },
+      {
+        ikon: "🏷️",
+        baslik: "Arama Etiketleri",
+        icerik: "porselen fincan seti, kahve fincanı hediye, altın yaldızlı fincan, 6lı fincan takımı, türk kahvesi fincanı, düğün hediyesi fincan, çeyiz fincan seti, espresso fincanı, dekoratif fincan",
+        renk: "border-l-violet-400",
+      },
+    ],
   },
-  {
-    ikon: "🔹",
-    baslik: "Özellikler",
-    icerik: `• 🏆 Birinci Kalite Porselen — Kurşunsuz, gıda güvenli materyal; zarif sunum sağlar.
-• ☕ 80ml Espresso Hacmi — Türk kahvesi, espresso ve menengiç kahvesi için ideal boyut.
-• 🌸 El Yapımı Çiçek Deseni + Altın Yaldız — Benzersiz baskı, özel gün hediyesi için ideal.
-• 🎁 6 Kişilik Komple Set — Fincan ve tabaklar dahil, özel hediye kutusunda teslim.
-• ✅ Bulaşık Makinesine Uyumlu — Yaldızlar bozulmadan yıkanabilir.`,
-    renk: "border-l-blue-400",
+
+  amazon: {
+    etiket: "Amazon TR",
+    aciklamaKisa: "Max 200 karakter başlık · Keyword-stuffed · A+ bullet'lar",
+    bolumler: [
+      {
+        ikon: "📌",
+        baslik: "Başlık",
+        icerik: "Selin Porselen Çiçek Desenli Kahve Fincanı 6'lı Set | 80ml Espresso & Türk Kahvesi Fincanı | Altın Yaldızlı El İşlemeli Porselen | Hediye Kutusunda | Düğün Nişan Çeyiz Hediyesi",
+        renk: "border-l-amber-400",
+      },
+      {
+        ikon: "🔹",
+        baslik: "Özellikler",
+        icerik: `PREMIUM KALİTE PORSELEN: Yüksek ateşte pişirilen birinci sınıf porselen. Kurşunsuz ve kadmiyumsuz — FDA standartlarına uygun gıda güvenli malzeme.
+İDEAL BOYUT — 80ML: Türk kahvesi, espresso ve menengiç kahvesi için tasarlanmış hacim. Ne çok büyük ne çok küçük — tam kıvamında sunum.
+24 AYAR ALTIN YALDIZ DETAYLARI: El işlemeli çiçek deseni ve gerçek altın yaldız ile lüks görünüm. Her fincan ayrı ayrı kalite kontrolünden geçer.
+KOMPLE 12 PARÇA SET: 6 fincan + 6 tabak, özel tasarım hediye kutusunda. Ekstra ambalaja gerek kalmadan direkt hediye edilebilir.
+BULAŞIK MAKİNESİ GÜVENLİ: Altın yaldız detayları bulaşık makinesinde 500+ yıkama döngüsüne dayanıklı olarak test edilmiştir.`,
+        renk: "border-l-amber-400",
+      },
+      {
+        ikon: "📄",
+        baslik: "Açıklama",
+        icerik: "Selin Porselen Çiçek Desenli Kahve Fincanı Seti, geleneksel Türk porseleninin zarafetini modern dayanıklılıkla buluşturuyor. El işlemeli çiçek motifleri ve 24 ayar altın yaldız detaylarıyla her bir fincan, sofranıza sanat eseri niteliğinde bir dokunuş katıyor. 80ml hacmiyle Türk kahvesi, espresso ve menengiç için mükemmel boyutta tasarlanan fincanlar, birinci sınıf porselenden yüksek ateşte üretilmiştir. Düğün, nişan, çeyiz ve özel gün hediyesi olarak şık hediye kutusunda sunulan 12 parçalık set, hem günlük kullanım hem misafir ağırlama için idealdir.",
+        renk: "border-l-green-400",
+      },
+      {
+        ikon: "🏷️",
+        baslik: "Arama Etiketleri",
+        icerik: "kahve fincanı seti, porselen fincan 6lı, altın yaldızlı fincan seti, türk kahvesi fincanı, espresso fincan takımı, düğün hediyesi, nişan hediyesi, çeyiz seti, dekoratif porselen, hediye fincan seti",
+        renk: "border-l-violet-400",
+      },
+    ],
   },
-  {
-    ikon: "📄",
-    baslik: "Açıklama",
-    icerik: "El yapımı çiçek desenleriyle öne çıkan bu porselen fincan seti, hem estetik hem işlevselliği bir arada sunar. Düğün, nişan ve doğum günü hediyesi olarak tercih edilen bu set, sevdiklerinize kalıcı bir değer sunmak isteyenler için biçilmiş kaftandır.",
-    renk: "border-l-green-400",
+
+  etsy: {
+    etiket: "Etsy",
+    aciklamaKisa: "İngilizce · Hikaye anlatımı · Handmade & artisan vurgusu",
+    bolumler: [
+      {
+        ikon: "📌",
+        baslik: "Title",
+        icerik: "Turkish Coffee Cup Set of 6 — Hand-Painted Floral Porcelain with Gold Trim, 80ml Espresso Cups, Gift Boxed",
+        renk: "border-l-rose-400",
+      },
+      {
+        ikon: "🔹",
+        baslik: "Features",
+        icerik: `☕ Artisan-Crafted — Each cup is hand-painted by skilled artisans, making every piece one-of-a-kind with delicate floral motifs.
+✨ Real Gold Detailing — 24K gold trim applied by hand adds timeless elegance to your coffee ritual.
+🎁 Complete Gift Set — 6 cups + 6 saucers arrive in a premium gift box, ready to give for weddings, housewarmings, or special occasions.
+🌿 Food-Safe & Lead-Free — Fired at high temperatures for durability. Meets international food safety standards.
+💛 Perfect 80ml Size — Designed specifically for Turkish coffee, espresso, and macchiato lovers who appreciate a perfectly proportioned cup.`,
+        renk: "border-l-rose-400",
+      },
+      {
+        ikon: "📄",
+        baslik: "Description",
+        icerik: "There's something magical about sipping coffee from a cup that someone shaped and painted by hand. This set of six porcelain cups carries a tradition passed down through generations of Turkish artisans — each one adorned with hand-painted floral patterns and finished with real 24K gold trim. At 80ml, they're sized just right for Turkish coffee or a perfect espresso shot. Whether you're treating yourself or searching for a meaningful gift for a wedding, engagement, or housewarming, this set arrives in a beautiful gift box ready to make someone's day.",
+        renk: "border-l-green-400",
+      },
+      {
+        ikon: "🏷️",
+        baslik: "Tags",
+        icerik: "turkish coffee cup, espresso cup set, hand painted porcelain, gold trim cup, coffee lover gift, wedding gift set, housewarming gift, artisan ceramics, floral cup set",
+        renk: "border-l-violet-400",
+      },
+    ],
   },
-  {
-    ikon: "🏷️",
-    baslik: "Arama Etiketleri",
-    icerik: "porselen fincan seti, kahve fincanı hediye, el yapımı porselen, altın yaldızlı fincan, 6lı fincan seti, türk kahvesi fincanı, düğün hediyesi fincan, çeyiz fincan seti",
-    renk: "border-l-violet-400",
-  },
-];
+};
 
 const KUTULAR = [
   { idx: 0, ikon: "📝", baslik: "Listing Metni", aciklama: "Başlık, özellikler, açıklama, etiketler", kredi: "1 kredi", ring: "ring-blue-400", bg: "bg-blue-50", badge: "text-blue-600 bg-blue-100" },
@@ -41,6 +123,7 @@ const KUTULAR = [
 
 export default function FeaturesTabbed() {
   const [ozellikTab, setOzellikTab] = useState(0);
+  const [platformTab, setPlatformTab] = useState<PlatformKey>("trendyol");
 
   return (
     <section className="px-4 sm:px-6 py-16 bg-gray-50">
@@ -71,12 +154,30 @@ export default function FeaturesTabbed() {
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           {ozellikTab === 0 && (
             <div className="p-5 sm:p-7">
-              <div className="flex items-center gap-2 mb-5">
-                <span className="w-2 h-2 rounded-full bg-blue-400 flex-shrink-0" />
-                <span className="text-xs font-semibold text-blue-700">Trendyol formatında örnek çıktı</span>
+              <div className="flex gap-2 mb-1">
+                {(Object.keys(platformVerileri) as PlatformKey[]).map((key) => {
+                  const p = platformVerileri[key];
+                  const aktif = platformTab === key;
+                  const renkMap: Record<PlatformKey, string> = {
+                    trendyol: aktif ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-500 hover:bg-orange-50 hover:text-orange-600",
+                    amazon:   aktif ? "bg-amber-500 text-white"  : "bg-gray-100 text-gray-500 hover:bg-amber-50 hover:text-amber-600",
+                    etsy:     aktif ? "bg-rose-500 text-white"   : "bg-gray-100 text-gray-500 hover:bg-rose-50 hover:text-rose-600",
+                  };
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setPlatformTab(key)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${renkMap[key]}`}
+                    >
+                      {p.etiket}
+                    </button>
+                  );
+                })}
               </div>
+              <p className="text-[11px] text-gray-400 mb-4">{platformVerileri[platformTab].aciklamaKisa}</p>
               <div className="space-y-3">
-                {ornekBolumler.map((bolum, i) => (
+                {platformVerileri[platformTab].bolumler.map((bolum, i) => (
                   <div key={i} className={`rounded-xl border-l-4 ${bolum.renk} border border-gray-100 bg-gray-50 p-4`}>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-semibold text-gray-700">{bolum.ikon} {bolum.baslik}</span>
@@ -92,6 +193,9 @@ export default function FeaturesTabbed() {
                     <span className="w-3.5 h-3.5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[9px]">✓</span>{f}
                   </span>
                 ))}
+              </div>
+              <div className="mt-4 rounded-xl bg-blue-50 border border-blue-100 p-3 text-[11px] text-blue-700 leading-relaxed">
+                💡 <strong>Her pazaryerinin kuralları farklı:</strong> Trendyol max 100 karakter başlık ister, Amazon 200&apos;e kadar keyword kabul eder, Etsy İngilizce + hikaye anlatımı sever. yzliste hepsini tek fotoğraftan üretir.
               </div>
             </div>
           )}
