@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-04-19 — Hesap merkezi birleştirme: /profil → /hesap/profil
+
+- /hesap/profil sayfası oluşturuldu (profil içeriği taşındı, şifre/güvenlik bölümü kaldırıldı)
+- /profil → /hesap/profil 301 redirect
+- Tüm /profil linkleri güncellendi; middleware ve robots.ts temizlendi
+- ayarlar ve faturalar sayfaları için title tag eklendi
+
 ## 2026-04-19 — G-13: /hesap empty state
 
 - 0 üretim varsa "Son Üretimler" yerine motivasyon mesajı + "İlk içeriğini üret →" CTA gösterilir
