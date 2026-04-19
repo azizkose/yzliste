@@ -44,7 +44,7 @@ Etsy'de her ürün bir "listing"dir ve her listing için 0,20 USD ücret alını
 - **Etiketler (13 tane, her biri 20 karaktere kadar):** Uzun kuyruk terimler kullan — "silver ring" yerine "minimalist silver stacking ring" gibi
 - **Açıklama:** İlk cümle arama sonuçlarında görünür; hemen değer önerisini yaz, ardından malzeme, boyut, üretim süresi ve kargo detaylarını ekle
 - **Fotoğraflar (10 adet):** Kare format, 2000x2000 px ideal. En az bir adet ürün kullanımda, bir adet detay, bir adet ölçek gösterimi olmalı
-- **Video (opsiyonel ama güçlü):** 5-15 saniyelik kısa video dönüşümü %15'e kadar artırabilir
+- **Video (opsiyonel ama güçlü):** 5-15 saniyelik kısa video dönüşüm oranını olumlu etkileyebilir
 
 Etsy SEO'su Trendyol veya Amazon'dan farklı çalışır: alıcı niyetine odaklı, hikaye içeren listingleri ödüllendirir. "Ships in 1-3 business days" gibi net vaatler de arama sıralamasında pozitif etki yapar.
 
@@ -66,9 +66,9 @@ Etsy fiyatlandırmaya yaklaşık %6,5 işlem, %3 ödeme ve 0,25 USD sabit komisy
 
 Etsy'de ilk satış ortalama 2-4 hafta sürüyor. Bu süreyi kısaltmak için şunları dene:
 
-- Pinterest'te mağazanı tanıt — Etsy trafiğinin yaklaşık %20'si Pinterest'ten geliyor
+- Pinterest'te mağazanı tanıt — Pinterest, Etsy için önemli bir dış trafik kaynağı
 - Instagram Reels'te ürünün üretim sürecini göster
-- İlk 20 müşteriye "thank you" kartı ile küçük hediye ekle; yorum oranı 3 katına kadar çıkıyor
+- İlk 20 müşteriye "thank you" kartı ile küçük hediye ekle; yorum oranı belirgin şekilde artıyor
 - Etsy Ads'i günde 1-2 USD'lik küçük bütçeyle test et, performansı ölç
 
 Mağaza açıldıktan sonraki 90 gün kritik. Bu dönemde en az 15 ürün yükle, 3 yorum topla ve %100 yanıt hızı tut. Bu üç metrik, Etsy algoritmasının seni "Star Seller" havuzuna alması için yeterli.
@@ -79,4 +79,4 @@ Son olarak sezonluk fırsatları takip et: Sevgililer Günü, Anneler Günü, ca
 
 ## SONUÇ
 
-Etsy, Türk satıcılar için düşük başlangıç maliyetiyle global pazara açılan en etkili kapılardan biri. Başarının anahtarı ise standart değil, orijinal içerik: başlık, etiketler, fotoğraflar ve açıklamalar özenle İngilizce'ye uyarlanmalı. 7 pazaryerinde listing üretimini otomatize eden yzliste, Etsy için İngilizce başlık, açıklama ve etiket setlerini saniyeler içinde hazırlayarak bu süreci ciddi ölçüde kısaltıyor. Tek bir ürün fotoğrafıyla mağazanı daha hızlı büyütmek istiyorsan yzliste ile ilk listingini bugün dene.
+Etsy, Türk satıcılar için düşük başlangıç maliyetiyle global pazara açılan en etkili kapılardan biri. Başarının anahtarı ise standart değil, orijinal içerik: başlık, etiketler, fotoğraflar ve açıklamalar özenle İngilizce'ye uyarlanmalı. 7 pazaryerinde listing üretimini otomatize eden yzliste, Etsy için İngilizce başlık, açıklama ve etiket setlerini kısa sürede hazırlayarak bu süreci ciddi ölçüde kısaltıyor. Tek bir ürün fotoğrafıyla mağazanı daha hızlı büyütmek istiyorsan yzliste ile ilk listingini bugün dene.

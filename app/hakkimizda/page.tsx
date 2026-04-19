@@ -34,7 +34,7 @@ export default function HakkimizdaPage() {
             <p>
               Trendyol, Hepsiburada, Amazon TR ve N11 gibi Türkiye&apos;nin önde gelen e-ticaret
               platformlarına özel, Türk alıcı davranışına göre optimize edilmiş ürün başlıkları,
-              açıklamaları, özellik maddeleri ve arama etiketleri saniyeler içinde üretilmektedir.
+              açıklamaları, özellik maddeleri ve arama etiketleri ortalama 20–60 saniyede üretilmektedir.
             </p>
             <p>
               Platformumuz; manuel metin girişi, ürün fotoğrafı yükleme ve barkod tarama gibi
