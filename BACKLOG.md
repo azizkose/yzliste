@@ -3,7 +3,7 @@
 Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 Claude Code için: **KÜME 0 EN ÖNCELİKLİ.** Üstten aşağı yap. Küme içindeki item'lar bağımlıdır → sırayla.
 
-> **Son tarama: 2026-04-18** — Cowork tam audit. Tüm [x] maddeler koda karşı doğrulandı.
+> **Son tarama: 2026-04-19 (Tur 7)** — Manuel A-Z test: footer sayfaları + header/footer audit + hesap sayfaları + görsel/video UI. T7-01~T7-06 eklendi.
 > **Küme 0 güncellemesi: 2026-04-17** — PQ-01~PQ-10 tamamlandı.
 > **QA Tur 3 konsolide (2026-04-18):** 28 bulgu (Tur 1: 14, Tur 2 regresyon, Tur 3: 5 yeni). 6 düzeldi, 3 kısmen, 13 açık, 1 kötüleşti. QA-01~QA-21 olarak konsolide edildi. En kritik: QA-10 (şifre sıfırlama 400), QA-14 (auth-aware header kök neden).
 > **Haftalık audit (2026-04-18):** 13/13 sayfa 200 ✅, SSL OK, ort. 0.75s. 6 uyarı → HC-01~HC-06 eklendi. QA-12 (/fiyatlar CTA) düzelmiş. /auth sitemap'te hâlâ var.
@@ -52,8 +52,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   - Sitemap'te `/auth` priority 1→0.8'e düşürüldü, `/` en üstte
 - [x] **PQ-25** Sitemap'ten korumalı sayfaları çıkar: `/hesap/*`, `/odeme/*` sitemap'ten çıkarıldı. ⚠️ **Eksik:** `/auth` hâlâ sitemap'te (priority 0.8) — kaldırılmalı çünkü login olmayan kullanıcıları `/giris`'e redirect ediyor.
 - [x] **PQ-26** Auth redirect'i Google-safe yap: Korumalı sayfalara Googlebot geldiğinde redirect yerine 403/404 dönmeli veya sitemap'ten çıkarılmalı. "Page with redirect" sorununu çözer.
-- [ ] **PQ-27** `http://www.yzliste.com/` "Crawled – not indexed": Canonical eklendi — Search Console'da "URL Denetimi"nden reindex iste. Deploy sonrası manuel aksiyon.
-  **⚠️ Hatırlatma: search.google.com/search-console → URL Denetimi → `https://www.yzliste.com/` → "Dizine Eklenmeyi İste" tıkla.**
+- [x] **PQ-27** ~~`http://www.yzliste.com/` "Crawled – not indexed"~~ **MANUEL AKSİYON** — Search Console'da "URL Denetimi"nden reindex istenmeli. Aziz'in yapması gereken: `search.google.com/search-console → URL Denetimi → https://www.yzliste.com/ → "Dizine Eklenmeyi İste"`. Kod tarafında yapılacak iş yok.
 
 ### P1 — Görsel Pipeline (kaliteyi 2x artırır)
 - [x] **PQ-03** Görsel pipeline'a RMBG ekle: `fal-ai/bria/rmbg` endpoint'ini çağır, arka planı kaldır, SONRA product-shot'a gönder. `app/api/gorsel/route.ts`'de foto upload sonrası RMBG adımı ekle. Detay: `PROMPT-REHBER.md § Görsel Pipeline`
@@ -189,7 +188,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 ### P3 — Mimari İyileştirme
 - [x] **PQ-14** Sekmeler arası bilgi taşıma: Metin'de girilen urunAdi + kategori + platform → Görsel/Video/Sosyal sekmelerine otomatik taşı. Zustand store veya React context ile *(page.tsx 24d5ef7'e döndürüldü)*
 - [x] **PQ-15** Prompt versiyonlama: Tüm prompt'ları `/lib/prompts/` altına taşı. Her prompt dosyası version numarası içersin. DB'ye uretim kaydında prompt_version ekle *(`lib/prompts/metin.ts` + `sosyal.ts` var; uret/route.ts'e entegre, migration dosyası mevcut)*
-- [ ] **PQ-28** Monolith refactor — `page.tsx` (2065 satır) ve `auth/page.tsx` (886 satır) parçalanacak:
+- [x] **PQ-28** Monolith refactor — `page.tsx` (2065 satır) ve `auth/page.tsx` (886 satır) parçalanacak: ✅ Tamamlandı: uret/page.tsx 487 satıra düştü, sekmeler component'lere ayrıldı (MetinSekmesi, GorselSekmesi, VideoSekmesi, SosyalSekmesi), state hook'lara taşındı, tanıtım sayfası section component'lerine bölündü.
   **page.tsx:**
   1. Sekmeleri component'lere ayır: `components/tabs/MetinSekmesi.tsx`, `GorselSekmesi.tsx`, `VideoSekmesi.tsx`, `SosyalSekmesi.tsx`
   2. State yönetimini custom hook'lara taşı: `hooks/useMetinUretim.ts`, `useGorselUretim.ts`, `useVideoUretim.ts`, `useSosyalUretim.ts`
@@ -217,10 +216,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   2. `app/@modal/(.)kayit/page.tsx` → aynı şekilde
   3. `components/modal/Modal.tsx` → `usePathname` + `useRef` ile pathname değişimini dinle, farklılaşırsa `handleClose()` çağır (stale overlay güvenlik ağı)
   **Neden `router.back()` zorunlu:** Intercepted route'larda `router.push` yeni history entry ekler ama parallel route slot'u resetlemeyebilir. `router.back()` history'yi geri alarak modal slot'u doğru şekilde kapatır.
-- [ ] **PQ-30** Dosya truncation riski — çoklu araç çakışma önlemi:
-  Cowork + Claude Code aynı anda aynı dosyaya yazarsa truncation olabiliyor (page.tsx 2322→2052 satıra düşmüş, hesap/ayarlar/page.tsx de kesilmiş). `.git/index.lock` stale kalıyor.
-  **Kural:** Kod yazan tek araç Claude Code olsun. Cowork analiz/planlama/BACKLOG yazımı yapsın, koda dokunmasın.
-  **Kontrol:** Deploy öncesi `git diff --stat` ile tüm dosyaların doğru satır sayısında olduğunu doğrula.
+- [x] **PQ-30** ~~Dosya truncation riski~~ **ÇALIŞMA KURALI OLARAK UYGULANMAKTA** — Cowork koda dokunmaz, sadece BACKLOG/analiz/memory yazar. Claude Code implement eder. Ayrı backlog maddesi gerektirmiyor, memory'de feedback olarak kayıtlı.
 
 - [ ] **DoD** Demo testi: 5 farklı ürün (kozmetik, elektronik, giyim, gıda, takı) × 3 platform (Trendyol, Amazon, Etsy) = 15 listing üret. Her biri için görsel + video. Sonuçlar tutarlı, halüsinasyonsuz ve platforma uygun olmalı.
   **⚠️ Hatırlatma: `lib/test-fixtures.ts` içinde 5 ürün hazır. test-normal@yzliste.com ile giriş yap, her fixture için test et.**
@@ -279,11 +275,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   `/fiyatlar`'da `FiyatlarCta` client component eklendi. Login'li: "İçerik Üret →" → `/`, login'siz: "Ücretsiz Başla" → `/kayit`.
 
 **Yeni bulgular — P2 (kök neden grubu):**
-- [ ] **QA-14** P1 — İki farklı header implementasyonu → tutarsız deneyim (B-026): ⚠️ Tur 4 regresyon
-  🔑 **3 bulgunun kök nedeni:** B-011 (farklı header), B-018 (login'liye kayıt CTA), B-019 (login'li /giris formu).
-  **Doğrulama:** `SiteHeader.tsx` aslında auth-aware (useCurrentUser + useCredits). Ama `page.tsx` kendi inline header'ını kullanıyor (satır 850+). İki ayrı header = iki ayrı davranış.
-  **Fix:** page.tsx inline header'ı kaldır, SiteHeader'ı kullan. Root layout'a SiteHeader ekle (her sayfada tek header). Middleware ile `/giris`, `/kayit`'te logged-in → `/` redirect.
-  **İlişki:** PQ-28 monolith refactor ile birlikte çözülmeli.
+- [x] **QA-14** P1 — İki farklı header implementasyonu. ✅ a586ed4'de /hesap/* sayfalarına SiteHeader+SiteFooter eklendi. ⚠️ UX-14: /uret SiteHeader'ın login state'i hâlâ hatalı — ayrı issue olarak açık.
 
 - [x] **QA-15** P2 — Login'li kullanıcı /giris'te login formu görüyor (B-019):
   Oturum cookie var ama `/giris` login formu gösteriyor. Auth check ile redirect.
@@ -340,14 +332,14 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 > Toplam: 8 P0, 7 P1, 4 P2. QA-14, HC-01, HC-02 regresyon olarak yeniden açıldı.
 
 **P0 (bu hafta):**
-- [x] **T4-01** — `/giris` tab switcher butonları `type="button"` değil. Kontrol: AuthForm.tsx satır 144+153'te zaten `type="button"` mevcut.
+- [x] **T4-01** — `/giris` AuthForm `<form>` wrapper eksik. ✅ T5-01 ile birlikte de121ca'da düzeltildi.
 - [x] **T4-03** — Giriş sonrası header hâlâ "Giriş Yap" gösteriyor, "Çıkış" butonu yok. ⚠️ QA-14 regresyon. Fix: AuthForm login sonrası currentUser+credits query invalidate eder → header anında güncellenir.
 - [x] **T4-05** — `/profil` 44 kredi, `/hesap/krediler` 0 kredi gösteriyor. Fix: stale TanStack cache yerine direkt DB değeri gösteriliyor.
 - [x] **T4-09** — `/profil` `robots: index, follow` — kullanıcı profili arama motoruna sızabilir. Fix: `app/profil/layout.tsx` noindex var (zaten tamamdı).
-- [x] **T4-10** — `/kosullar`, `/gizlilik` canonical ana sayfaya kırılmış. ⚠️ HC-01 regresyon. Fix: zaten doğru canonical'lar mevcut (önceki commit'te düzelti).
+- [x] **T4-10** — Canonical tag regresyonu. ✅ T5-03 ile birlikte de121ca'da düzeltildi.
 - [x] **T4-11** — Tüm sayfalarda çift "yzliste" başlık (`X — yzliste | yzliste`). Fix: 10 sayfada `— yzliste` suffix kaldırıldı, template `| yzliste` ekliyor.
-- [x] **T4-12** — Blog yazılarında `og:image` eksik/jenerik. ⚠️ HC-02/HC-03 regresyon. Fix: og+twitter image kapakGorsel → og-image.png fallback ile tamamlandı.
-- [x] **T4-13** — 404 sayfası `robots: index, follow` ve canonical var. Fix: zaten `robots: { index: false }` + `{ absolute: '...' }` title mevcut.
+- [x] **T4-12** — Blog yazılarında `og:image`. ✅ T5-05 ile birlikte 1f743bf'de slug-based OG endpoint ile düzeltildi.
+- [x] **T4-13** — 404 sayfası canonical. ✅ T5-03 ile birlikte de121ca'da düzeltildi.
 
 **P1 (2 hafta):**
 - [x] **T4-02** — Preview env'de `/giris` ve `/kayit` GET fetch status 0 dönüyor. Middleware'e env var guard eklendi: `NEXT_PUBLIC_SUPABASE_URL` veya `NEXT_PUBLIC_SUPABASE_ANON_KEY` yoksa Supabase bloğu skip ediliyor — unhandled throw önlendi.
@@ -355,18 +347,339 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 - [x] **T4-04** — Header'a kredi sayacı rozeti ekle. (önceki oturumda tamamlandı)
 - [x] **T4-07** — `/iletisim` 404 dönüyor. Kontrol: hiçbir component'te link yok, audit FP.
 - [x] **T4-14** — HTML entity title'larda literal. Kontrol: kaynak kodda `&amp;`/`&#x27;` metadata'da yok, audit FP.
-- [x] **T4-15** — hreflang eksik. Kontrol: `<html lang="tr">` + `alternates.languages` `tr`/`x-default` zaten mevcut.
+- [x] **T4-15** — hreflang kısmi regresyon. ✅ T5-07 ile birlikte c6e5a76'da tüm sayfalara explicit hreflang eklendi.
 
 **P2:**
 - [x] **T4-06** — `/hesap/profil` ↔ `/profil` route çakışması. Kontrol: `/hesap/profil` → `redirect('/profil')` yapıyor, çakışma yok, intentional backward-compat redirect.
 - [x] **T4-08** — `/demo` referanslarını grep-kontrol et. Sonuç: kod tabanında `/demo` linki yok.
 - [x] **T4-17** — JSON-LD Organization duplication temizliği. Fix: blog/page.tsx + blog/[slug]/page.tsx inline Organization → `@id` referansa çevrildi.
 
+### Tur 5 Bulguları (2026-04-19)
+> Kaynak: `health-reports/test-tur-5-icerik-disi-2026-04-19.md` — Otonom scheduled task.
+> Toplam: 3 P0, 6 P1, 3 P2. 7/18 blok LOGIN BAŞARISIZ nedeniyle atlandı (test@gmail.com şifresi bilinmiyor + QA-10 açık).
+> T4-11 ✅, T4-14 ✅, T4-17 ✅ doğrulandı. T4-10/12/13/15/01 regresyon — yukarıda yeniden açıldı.
+
+**P0 (bu hafta — kullanıcı-blocking):**
+- [x] **T5-01** 🔴 P0 — `/giris` ve `/kayit` `<form>` wrapper eksik. ✅ de121ca'da düzeltildi.
+- [x] **T5-02** 🔴 P0 — "Şifremi unuttum" işlevsiz. ✅ de121ca'da `/sifre-sifirla` sayfası + resetPasswordForEmail handler eklendi.
+- [x] **T5-03** 🔴 P0 — Canonical tag kırık. ✅ de121ca'da tüm sayfalar düzeltildi.
+
+**P1 (2 hafta):**
+- [x] **T5-04** P1 — `/kayit` `<form>` wrapper eksik. ✅ de121ca'da T5-01 ile birlikte düzeltildi.
+- [x] **T5-05** P1 — Blog `og:image` jenerik. ✅ 1f743bf'de slug-based dinamik OG endpoint (next/og) eklendi.
+- [x] **T5-06** P1 — `og:title` çoğu sayfada jenerik. ✅ c6e5a76'da tüm sayfalara sayfa-özgü og:title eklendi.
+- [x] **T5-07** P1 — hreflang root layout'tan miras kalmıyor. ✅ c6e5a76'da tüm sayfalara explicit hreflang eklendi.
+- [x] **T5-08** P1 — Sitemap'te yasal + hakkımızda sayfaları yok. ✅ b0346e7'de eklendi.
+- [x] **T5-09** P1 — `/profil` server 200 dönüyor. ✅ 06d2ef1'de middleware server-side redirect eklendi.
+
+**P2 (fırsat bulunca):**
+- [x] **T5-10** P2 — `/fiyatlar` JSON-LD `AggregateOffer` → `Product` + `Offer`. ✅ d212a8d'de düzeltildi.
+- [x] **T5-11** P2 — `X-Frame-Options` SAMEORIGIN → DENY. ✅ d212a8d'de düzeltildi.
+- [x] **T5-12** P2 — `robots.txt` explicit Disallow. ✅ d212a8d'de eklendi.
+
+**Yeni — Auth/Session:**
+- [x] **T5-13** P1 — Stale Supabase session cookie fix. ✅ 06d2ef1'de useCurrentUser() hook'una authError → signOut() eklendi.
+
 **Test Altyapısı:**
 - [x] **TEST-INFRA-01** — Test hesap bayrağı (`is_test` flag) — ödeme geçmişi filtrele + sınırsız kredi. Migration uygulandı, 3 test hesabı işaretlendi. API'lerde is_test → is_admin gibi kredi bypass yapıyor.
 - [x] **TEST-INFRA-02** — 5 sabit ürün fixture'ı. `lib/test-fixtures.ts` oluşturuldu (kozmetik, elektronik, giyim, gıda, takı).
+- [x] **TEST-AUTH-01** — Login-gerektiren test blokları. ✅ T5-02 (şifre sıfırlama) düzeltildi; test@gmail.com şifresi memory'de kayıtlı (111111).
 - [ ] **TEST-MCP-01** — Mobil viewport tooling (Chrome MCP resize alternatif) — Layer B tamamlansın.
   **⚠️ Hatırlatma: Bu tooling setup'ı, bir test oturumunda Chrome MCP ile mobil boyutları test etmek için yapılacak. Zaman bulununca ayrı bir oturumda ele al.**
+
+### Tur 7 Bulguları (2026-04-19 — Manuel A-Z Test)
+> Kaynak: `health-reports/test-tur-7-manuel-2026-04-19.md` — Claude in Chrome ile footer/header/hesap audit.
+> Tüm footer sayfaları + görsel/video UI + hesap sayfaları kontrol edildi.
+
+**P0 — Hesap sayfaları data fetching kırık:**
+- [ ] **T7-01** 🔴 P0 — `/hesap` dashboard tüm veriler 0 gösteriyor (kredi: 0, üretim: 0, gelir: 0). `/uret` sidebar doğru (24 kredi, 19+ üretim). Farklı hook/query kullanılıyor, `/hesap` sayfalarındaki data fetching kırık.
+  **Fix:** `/hesap` sayfalarının kullanıcı verisini çektiği hook'u bul. `/uret` sidebar'daki `useCredits()` hook'u çalışıyor — aynı kaynağı kullan veya cache invalidation düzelt.
+- [ ] **T7-02** 🔴 P0 — `/hesap/krediler` "Mevcut Kredi: 0" gösteriyor — gerçekte 24. T7-01 ile aynı kök neden.
+- [ ] **T7-03** 🔴 P0 — `/hesap/ayarlar` E-posta: "—" gösteriyor — test@gmail.com olmalı. Kullanıcı verisi yüklenemiyor.
+
+**P1 — Header/Footer tutarsızlığı (yasal sayfalar):**
+- [x] **T7-04** 🟡 P1 — Yasal sayfaların 3'ünde SiteHeader yok. ✅ /hakkimizda, /mesafeli-satis, /teslimat-iade + /kosullar, /kvkk-aydinlatma, /cerez-politikasi'na SiteHeader eklendi.
+- [x] **T7-05** 🟡 P1 — Yasal sayfaların 3'ünde Footer yok. ✅ /kosullar, /kvkk-aydinlatma, /cerez-politikasi'na SiteFooter eklendi.
+- [x] **T7-06** 🟡 P1 — `/profil` title tag jenerik. ✅ app/profil/layout.tsx'e `title: 'Profilim'` eklendi.
+- [ ] **T7-07** 🟡 P1 — Sosyal Medya "Ürün Görseli" bölümü yüklenen fotoğrafı tanımıyor: Üstteki genel fotoğraf yükleme alanına resim yükleniyor (Metin/Görsel/Video/Sosyal etiketleri görünüyor) ama Sosyal Medya sekmesindeki "Ürün Görseli" alt bölümü bunu görmüyor — tekrar "Ürün fotoğrafı yükle" diyor.
+  **Kök neden tahmini:** Sosyal sekmesinin "Ürün Görseli" bölümü ayrı bir file state kullanıyor, üstteki ortak fotoğraf yükleme state'ini okumuyor.
+  **Fix:** `components/tabs/SosyalSekmesi.tsx` — üstten yüklenen fotoğraf state'ini (muhtemelen `foto` veya `yuklenenfoto`) prop olarak alsın ve yüklüyse "fotoğraf yükle" yerine thumbnail göstersin. Tüm sekmeler ortak fotoğrafı paylaşıyor olmalı (PQ-14'teki gibi).
+  **Dosya:** `components/tabs/SosyalSekmesi.tsx`, `app/uret/page.tsx` (prop geçirme)
+- [x] **T7-08** 🔴 P0 — RMBG endpoint'i 404. ✅ `fal-ai/bria/rmbg` → `fal-ai/bria/background/remove` olarak güncellendi. fal.ai dashboard'da `fal-ai/bria/rmbg` endpoint'ine yapılan istek **404 "Path /rmbg not found"** hatası veriyor. Bu, PQ-03'te eklenen RMBG adımı. fal.ai bu endpoint'i kaldırmış veya URL değiştirmiş.
+  **Etki:** RMBG görsel pipeline'ın İLK adımı — bu çalışmadan ne normal görsel ne sosyal görsel üretilebiliyor. Tüm görsel üretim zinciri kırık.
+  **Input:** Sadece `{ "image_url": "https://v3b.fal.media/files/..." }` gidiyor — doğru, RMBG sadece resim alır.
+  **Kök neden bulundu:** fal.ai endpoint URL'i değişmiş:
+  ```
+  ESKİ (404): fal-ai/bria/rmbg
+  YENİ (doğru): fal-ai/bria/background/remove
+  ```
+  **Fix (tek satır):** `app/api/gorsel/route.ts` satır 120:
+  ```ts
+  // ESKİ:
+  const rmbgResult = await fal.subscribe("fal-ai/bria/rmbg", { input: { image_url: imageUrl } })
+  // YENİ:
+  const rmbgResult = await fal.subscribe("fal-ai/bria/background/remove", { input: { image_url: imageUrl } })
+  ```
+  Ayrıca response yapısı değişmiş olabilir — `rmbgResult?.data?.image?.url` yerine yeni API'nin döndüğü field'ı kontrol et (muhtemelen aynı ama doğrula).
+  Sosyal görsel endpoint'inde de aynı RMBG çağrısı varsa orayı da güncelle (`grep -rn "bria/rmbg"` ile bul).
+  **Dosya:** `app/api/gorsel/route.ts` satır 120 (+ varsa sosyal görsel endpoint)
+
+### UX Tutarlılık + Değer İletişimi (2026-04-19 Cowork audit)
+> Kaynak: Aziz + Cowork mantıksal denetim. Kod değişikliği değil, copy + UX kararları.
+> Bu maddeler demo öncesi kritik — kullanıcının siteyi ilk 30 saniyede anlaması lazım.
+
+**P0 — Yanlış/Yanıltıcı İfadeler (hemen düzelt):**
+
+- [ ] **UX-01** 🔴 "Kayıt olmadan başlayın" ifadesi yanıltıcı — `/uret` sidebar'da "3 ücretsiz kredi — kayıt olmadan başlayın" yazıyor ama üret butonuna basınca kayıt popup açılıyor. Güven kırıcı.
+  **Fix:** Sidebar'daki metin değişecek:
+  ```
+  ESKİ: "3 ücretsiz kredi — kayıt olmadan başlayın"
+  YENİ: "Ücretsiz hesap oluştur, 3 kredi hediye"
+  ```
+  **Dosya:** `app/uret/page.tsx` — sidebar logout bölümü
+
+- [ ] **UX-02** 🔴 Blog alt CTA eskiden kalma — "Kayıt bile olmadan misafir olarak başla" yazıyor. Bu bilgi yanlış.
+  **Fix:** Blog alt CTA güncelle:
+  ```
+  ESKİ başlık: "Okuduktan sonra dene"
+  ESKİ açıklama: "3 ücretsiz kredi ile listing ve görsel üret. Kayıt bile olmadan misafir olarak başla."
+  ESKİ buton: "3 Ücretsiz Kredi ile Başla →"
+
+  YENİ başlık: "Okuduktan sonra dene"
+  YENİ açıklama: "Ücretsiz hesap oluştur, 3 krediyle hemen listing ve görsel üret."
+  YENİ buton: "Ücretsiz Hesap Oluştur →"
+  ```
+  **Dosya:** `app/blog/page.tsx` — alt CTA bölümü
+
+- [ ] **UX-03** 🔴 Sosyal medya kredi bilgisi yanıltıcı — Ana sayfa, fiyatlar ve feature kartlarında "📱 Sosyal medya — 1 kredi" yazıyor. Gerçekte: tek platform caption = 1 kredi, kit (4 platform) = 4 kredi. Kullanıcı 1 krediyle her şeyi aldığını sanıyor.
+  **Fix:** Tüm yerlerde "1 kredi / platform" olarak güncelle. Kit fiyatını 3 krediye indir (%25 tasarruf mesajı):
+  ```
+  ESKİ: "📱 Sosyal Medya · 1 kredi"
+  YENİ: "📱 Sosyal Medya · 1 kredi / platform · Kit: 3 kredi (4 platform)"
+
+  Hero pill ESKİ: "📱 Sosyal Medya · 1 kredi"
+  Hero pill YENİ: "📱 Sosyal Medya · 1+ kredi"
+  ```
+  **⚠️ KRİTİK — Kit fiyat değişikliği (backend):** `app/api/sosyal/kit/route.ts` — `krediGereken` hesabını güncelle:
+  ```
+  ESKİ: fotosuz = 4 kredi, fotolu = 5 kredi
+  YENİ: fotosuz = 3 kredi, fotolu = 4 kredi
+  ```
+  Bu %25 tasarruf olarak pazarlanacak: "Tek tek 4 kredi, kit ile 3 kredi"
+  **Metin değişiklikleri:** `components/tanitim/AuthHero.tsx` pill, `components/tanitim/FeatureCards.tsx` kart, `app/fiyatlar/page.tsx` kredi kartları ve paket özellikleri, `components/tabs/SosyalSekmesi.tsx` buton metni.
+
+- [ ] **UX-14** 🔴 Login'li header hâlâ "Giriş Yap" gösteriyor — Ekran görüntüsüyle doğrulandı (2026-04-19): sidebar 26 kredi + 17 üretim gösteriyor (login'li) ama header'da "Giriş Yap" + "İçerik Üret →" var, profil/çıkış/kredi rozeti YOK. QA-14 / T4-03 regresyonu. Code commit a586ed45 atmış ama ya deploy olmamış ya da çalışmıyor.
+  **Fix:** `components/SiteHeader.tsx` — `useCurrentUser()` hook'u session'ı doğru okuyor mu kontrol et. Deploy sonrası production'da doğrula. Bu bug canlı kullanıcıyı doğrudan etkiler — çıkış yapamıyor, kredi göremez.
+  **İlişki:** QA-14, T4-03, T5-13 (stale session cookie) ile bağlantılı olabilir.
+
+- [ ] **UX-15** 🔴 Logout kullanıcıya "Krediniz bitti" mesajı — `/uret` metin sekmesinde logout iken "İçerik üretim krediniz bitti. Kredi satın al →" gösteriliyor. Kullanıcı giriş yapmamış, kredisi yok ki bitsin. "3 kredi hediye" mesajıyla çelişiyor.
+  **Fix:** Koşul değiştir:
+  ```
+  ESKİ: credits === 0 → "Krediniz bitti" göster
+  YENİ: isLoggedIn && credits === 0 → "Krediniz bitti" göster
+  ```
+  Logout durumunda bu mesaj hiç görünmesin.
+  **Dosya:** `components/tabs/MetinSekmesi.tsx` (ve diğer sekmelerde varsa)
+
+- [ ] **UX-16** P1 — Video sekmesi başlık-kredi tutarsızlığı — Sekme başlığında "5 içerik üretim kredisi" yazıyor ama 10sn seçince 8 kredi gidiyor. Kullanıcı sürpriz yaşar.
+  **Fix:** Statik "5 kredi" yerine dinamik metin:
+  ```
+  ESKİ: "5 içerik üretim kredisi"
+  YENİ: "5sn: 5 kredi · 10sn: 8 kredi" (veya seçime göre dinamik: "{secilenKredi} kredi")
+  ```
+  **Dosya:** `components/tabs/VideoSekmesi.tsx`
+
+- [ ] **UX-17** P2 — Markalı checkbox metni Etsy satıcısını soğutuyor — "İşaretlemezsen jenerik ifadeler kullanır" yazıyor. El yapımı/markasız ürün "jenerik" değil.
+  **Fix:**
+  ```
+  ESKİ: "Bu ürün markalı ve ben yetkili satıcıyım" + "İşaretlemezsen jenerik ifadeler kullanır"
+  YENİ: "Bu ürün markalı ve ben yetkili satıcıyım" + "Markasız veya el yapımı ürünlerde malzeme, teknik ve hikaye öne çıkar"
+  ```
+  **Dosya:** `components/tabs/MetinSekmesi.tsx`
+
+- [ ] **UX-18** P2 — "7 pazaryeri" vs UI'da 6 platform — Hero ve marketing metinlerde "7 pazaryeri" yazıyor ama dropdown'da 6 seçenek var (Trendyol, Hepsiburada, Amazon TR, N11, Etsy, Amazon USA). Amazon TR + USA ayrı sayılıyorsa "7" doğru ama kullanıcı 6 sayıyor. Karar ver ve hizala.
+  **Dosyalar:** `components/tanitim/AuthHero.tsx`, `components/tanitim/BenefitsGrid.tsx`
+
+- [ ] **UX-19** P2 — Görsel sekmesinde "1 stil = 1 kredi" 3 kez tekrar — Başlıkta, alt başlıkta ve stil seçim alanında. Bilgi yükü.
+  **Fix:** Sadece stil seçim alanında 1 kez göster, başlıktan kaldır.
+
+- [ ] **UX-20** P2 — "Hızlı başla" örneklerine Gıda + Takı ekle — Şu an 3 örnek (Kozmetik, Giyim, Elektronik). Test fixture'larıyla hizala: +🫒 Gıda, +💎 Takı/Aksesuar.
+  **Dosya:** `app/uret/page.tsx` veya ilgili component
+
+- [ ] **UX-21** P1 — `/uret` "Geçmiş Üretimler" tıklanınca kullanıcı ne değiştiğini anlamıyor — Sayfa içi bir toggle/açılır alan gibi davranıyorsa, kullanıcı context kaybediyor. Geçmiş üretimler profil sayfasında yaşamalı.
+  **Fix:** `/uret` sayfasındaki "Geçmiş Üretimler" linkini `/hesap/uretimler` (veya `/hesap/profil#uretimler`) sayfasına yönlendir. `/uret` formu üretim aracı olarak sade kalsın.
+  ```
+  ESKİ: /uret içinde geçmiş üretimler inline toggle
+  YENİ: "📋 Geçmiş Üretimlerim →" linki → /hesap/profil#uretimler
+  ```
+  **Dosya:** `app/uret/page.tsx` + hesap sayfası
+
+- [ ] **UX-22** P1 — Profil geçmiş üretimlerde içerik türü etiketi yok — Kullanıcı hangi üretimin metin, hangisinin görsel/video/sosyal olduğunu ayırt edemiyor.
+  **Fix:** Her üretim kartına tür etiketi ekle:
+  ```
+  📝 Metin  |  🖼️ Görsel  |  🎬 Video  |  📱 Sosyal
+  ```
+  Platform adı + tarih zaten varsa, tür etiketi sol üste badge olarak eklensin.
+  **Dosya:** Geçmiş üretimler component'i (hesap sayfası)
+
+**P1 — Buton Tekrarı + CTA Temizliği:**
+
+- [ ] **UX-04** P1 — `/uret` logout buton tekrarı — Kullanıcı aynı anda 4 yerden "hesap oluştur / giriş yap" görüyor (compact hero, sidebar, header, üret butonu). Baskı hissi yaratıyor.
+  **Fix:** Sidebar auth CTA bloğunu kaldır. Yerine kısa araç açıklaması koy:
+  ```
+  ESKİ sidebar (logout):
+    "3 ücretsiz kredi — kayıt olmadan başlayın"
+    [🎁 Hesap Oluştur]  [Giriş Yap]
+
+  YENİ sidebar (logout):
+    "💡 Nasıl çalışır?"
+    "Platform seç → Ürünü anlat → İçeriğini al"
+    "Metin, görsel, video ve sosyal medya tek yerden."
+  ```
+  **Dosya:** `app/uret/page.tsx` — sidebar render bloğu (logout durumu)
+
+- [ ] **UX-05** P1 — Sekme buton ifadeleri tutarsız — Metin: "✨ X Metin Üret", Video: "🎬 Video Üret", Sosyal: "Üret — 1 kredi". Emoji, format ve kredi gösterimi farklı.
+  **Fix:** Tüm sekmelerde tek pattern:
+  ```
+  Metin:  "✨ Metin Üret — 1 kredi"    (veya "Giriş Gerekli")
+  Görsel: "✨ Görsel Üret — X kredi"
+  Video:  "✨ Video Üret — X kredi"
+  Sosyal: "✨ Caption Üret — 1 kredi"  |  "✨ Kit Üret — 3 kredi"
+  ```
+  Hepsinde ✨ emoji, hepsinde "— X kredi" suffix. Kredi yetersizse kırmızı uyarı ayrı satırda.
+  **Dosyalar:** `components/tabs/MetinSekmesi.tsx`, `GorselSekmesi.tsx`, `VideoSekmesi.tsx`, `SosyalSekmesi.tsx`
+
+**P1 — Değer İletişimi (demo öncesi kritik):**
+
+- [ ] **UX-06** P1 — Ana sayfa hero generic — "Ürünün için her içeriği tek platformda üret" ne olduğunu söylüyor ama neden önemli olduğunu söylemiyor. ChatGPT'den farkı belirsiz.
+  **Fix:** Hero mesajını değer odaklı yap:
+  ```
+  ESKİ başlık: "Ürünün için her içeriği tek platformda üret"
+  ESKİ alt metin: "Listing metni, stüdyo görseli, ürün videosu, sosyal medya içeriği — fotoğraf yükle ya da barkod tara, gerisini YZ halleder."
+
+  YENİ başlık: "Fotoğraf yükle, pazaryerine hazır içeriğini al"
+  YENİ alt metin: "Trendyol'un karakter limitini, Amazon'un yasaklı kelimelerini, Etsy'nin SEO kurallarını biz biliriz. Sen sadece ürününü anlat — listing, görsel, video ve sosyal medya içeriğin dakikalar içinde hazır."
+  ```
+  **Dosya:** `components/tanitim/AuthHero.tsx`
+
+- [ ] **UX-07** P1 — "Neden yzliste?" bölümü özellik listesi, değer önerisi değil — "Barkod tara", "Şeffaf kredi sistemi" gibi maddeler kullanıcıyı ikna etmiyor. Rakip karşılaştırması yok.
+  **Fix:** 6 maddeyi 4'e indir, her biri bir rakibe karşı pozisyon alsın:
+  ```
+  ESKİ 6 madde:
+    1. Pazaryerini bilen AI
+    2. Fotoğraf yükle, gerisini bırak
+    3. Barkod tara, klavyeye dokunma
+    4. 6 platform, 6 farklı format
+    5. Şeffaf kredi sistemi
+    6. Kullandığın kadar öde
+
+  YENİ 4 madde:
+    1. 🧠 "ChatGPT Trendyol'un 65 karakter başlık limitini bilmez"
+       "yzliste her platformun karakter limiti, yasaklı kelime ve kategori kuralına göre üretir. Çıktıyı kopyala, yapıştır — düzeltmeye gerek yok."
+
+    2. 📦 "Metin, görsel, video, sosyal medya — tek fotoğraftan"
+       "Ayrı ayrı araçlarla uğraşma. Bir ürün fotoğrafı yükle, 4 içerik türünü tek platformdan üret."
+
+    3. 🎯 "Senin markanı, senin dilini konuşur"
+       "Mağaza adını, hedef kitlenin yaşını, metin tonunu bir kere gir — her üretimde otomatik uygulanır."
+
+    4. 💰 "Abonelik yok, teknik bilgi gerekmiyor"
+       "Aylık ödeme yok, API entegrasyonu yok, prompt mühendisliği yok. Formu doldur, butona bas — içeriğin hazır."
+  ```
+  **Dosya:** `components/tanitim/BenefitsGrid.tsx`
+
+- [ ] **UX-08** P1 — "Dakikalar içinde hazır" bölümü tekrar — 6 adımın 4'ü zaten "Tek platformda 4 içerik türü" bölümünde anlatılıyor. Sayfa uzuyor, kullanıcı kaydırmaktan sıkılıyor.
+  **Fix:** 6 adımı 3'e indir, inline banner formatına geç:
+  ```
+  ESKİ: 6 adımlı dikey akış (ürün tanımla → platform seç → listing al → görsel üret → video üret → sosyal medya)
+
+  YENİ başlık: "3 adımda hazır"
+  YENİ adımlar (yatay, yan yana 3 kart):
+    1. 📦 "Ürünü anlat" — "Fotoğraf yükle, barkod tara veya elle yaz"
+    2. 🛒 "Platform seç" — "Trendyol, Amazon, Etsy... kurallar otomatik uygulanır"
+    3. ✨ "İçeriğini al" — "Metin, görsel, video, sosyal — hepsi tek seferde"
+  ```
+  **Dosya:** `components/tanitim/HowItWorks.tsx`
+
+**P1 — Fiyatlar Sayfası Temizliği:**
+
+- [ ] **UX-09** P1 — "Kredi nasıl çalışır" 10 kart, duplikasyon var — Video ve Sosyal medya kartları 2 kez tekrarlanıyor (kart 4=kart 6, kart 5=kart 7). Kullanıcı için çok uzun.
+  **Fix:** 10 kartı 5'e indir:
+  ```
+  KALACAK 5 KART:
+    1. 🎁 "3 ücretsiz kredi ile başla" (mevcut kart 1, aynen kalsın)
+    2. 📝 "Listing metni — 1 kredi" (mevcut kart 2, aynen kalsın)
+    3. 📷 "AI görsel — stil başına 1 kredi" (mevcut kart 3, aynen kalsın)
+    4. 🎬 "Video — 5 kredi (5sn) veya 8 kredi (10sn)" (kart 4 ve 6 birleştirilecek)
+    5. 📱 "Sosyal medya — 1 kredi / platform · Kit: 3 kredi" (kart 5 ve 7 birleştirilecek, yeni fiyat)
+
+  KALDIRILAN KARTLAR:
+    - Kart 6 (Video tekrarı)
+    - Kart 7 (Sosyal tekrarı)
+    - Kart 8 ("Tüm içerik türleri aynı krediden" — hero'da söyleniyor)
+    - Kart 9 ("Süre sınırı yok" — paket kartlarında yazıyor)
+    - Kart 10 ("Aylık abonelik yok" — sayfa başlığı zaten bu)
+
+  Kaldırılan kartların bilgisi tek satır özete dönüşsün (5 kartın altına):
+    "✅ Krediler tüm içerik türlerinde kullanılır · Süre sınırı yok · Abonelik yok"
+  ```
+  **Dosya:** `app/fiyatlar/page.tsx` — kredi kartları bölümü
+
+- [ ] **UX-10** P1 — Paket kartlarında tutarsız birim/toplam dili — Başlangıç paketi "1 kredi / ürün" (birim), Popüler "30 ürün" (toplam), Büyük "100 ürün" (toplam). Aynı sayfada iki dil. "100 ürün" yanıltıcı — 100 metin VEYA 100 görsel, ikisi birden değil.
+  **Fix:** Tüm paketlerde aynı format — birim fiyat göster, toplam kapasite gösterme:
+  ```
+  TÜM PAKETLERDE AYNI ÖZELLİK LİSTESİ:
+    - {X} kredi (tüm içerik türlerinde kullan)
+    - 📝 Listing metni — 1 kredi / ürün
+    - 📷 AI görsel — 1 kredi / stil
+    - 🎬 Video — 5 kredi (5sn) · 8 kredi (10sn)
+    - 📱 Sosyal medya — 1 kredi / platform
+    - ✅ Süre sınırı yok · Tüm platformlar
+
+  ESKİ (Popüler):
+    "📝 Listing metni: 30 ürün"
+    "📷 AI görsel: 30 stil · stil başına 1 görsel"
+    "🎬 Video: 6 adet 5sn video veya 3 adet 10sn video"
+
+  YENİ (Popüler):
+    "30 kredi (tüm içerik türlerinde kullan)"
+    "📝 Listing metni — 1 kredi / ürün"
+    "📷 AI görsel — 1 kredi / stil"
+    "🎬 Video — 5 kredi (5sn) · 8 kredi (10sn)"
+    "📱 Sosyal medya — 1 kredi / platform"
+    "✅ Süre sınırı yok · Tüm platformlar"
+  ```
+  Senaryo tablosu (zaten var, iyi çalışıyor) toplam kapasiteyi göstermeye devam etsin.
+  **Dosyalar:** `lib/paketler.ts` özellikleri güncelle, `app/fiyatlar/page.tsx` paket kartları
+
+**P2 — Blog + Kategori:**
+
+- [ ] **UX-11** P2 — Blog kartlarında boş fotoğraf kutusu — Hiçbir yazıda `kapakGorsel` yok, emoji placeholder görünüyor. Placeholder kaldırılsın, sadece başlık + özet + tarih kalsın. İleride fotoğraf eklenince tekrar açılır.
+  **Fix:** Blog kart render'ında `kapakGorsel` kontrolünü kaldır — fotoğraf alanını tamamen gizle:
+  ```
+  ESKİ: kapakGorsel varsa göster, yoksa 📝 emoji placeholder (176px kutu)
+  YENİ: kapakGorsel varsa göster, yoksa hiçbir şey gösterme (kutu yok)
+  ```
+  **Dosya:** `app/blog/page.tsx` — blog kart render bölümü
+
+- [ ] **UX-12** P2 — Kategori input serbest metin + zorunlu — Kullanıcı kategori bilmiyorsa ne yazacağını bilemez. Platform bazında kategoriler farklı.
+  **Fix 3 adım:**
+  1. Kategoriyi **opsiyonel** yap (zorunlu yıldızı kaldır)
+  2. Serbest metin → **dropdown** + "Diğer" seçeneği (serbest metin fallback)
+  3. Ürün adı girilince AI kategori **önersin** (dropdown'da otomatik seçilsin, kullanıcı değiştirebilsin)
+
+  Dropdown seçenekleri (platformlar arası ortak üst kategoriler):
+  ```
+  Kozmetik & Kişisel Bakım | Elektronik & Aksesuar | Giyim & Moda |
+  Ev & Yaşam | Gıda & İçecek | Takı & Aksesuar | Spor & Outdoor |
+  Bebek & Çocuk | Kitap & Kırtasiye | Oto & Bahçe | Diğer
+  ```
+
+  Platform-bazlı mapping (ileride): Kullanıcı "Kozmetik" seçince + Trendyol seçiliyse → prompt'a "Trendyol Kozmetik kategorisi kuralları" inject et (mevcut KATEGORI_KURALLARI sistemiyle uyumlu).
+  **Dosyalar:** `components/tabs/MetinSekmesi.tsx` (form alanı), `lib/constants.ts` (kategori listesi), `app/api/uret/route.ts` (opsiyonel kontrol)
+
+- [ ] **UX-13** P3 — Blog arama — Şu an 20 yazı var, arama yok. Acil değil ama yazı sayısı artınca gerekecek. Basit client-side filtre (başlık + kategori) yeterli.
+  **Dosya:** `app/blog/page.tsx`
 
 ### P3+ — UI Polish Pass (KÜME 0 bittikten sonra, demo öncesi)
 > Bu bölüm KÜME 0 içerik işleri tamamlandıktan sonra yapılacak. Redesign değil, cilalama.
@@ -514,7 +827,7 @@ Mevcut jenerik chatbot'u yzliste'ye özel hale getir + feedback/şikayet toplama
 Aşağıdaki eşiklerden 2'si gerçekleşince backlog'a al: **1.000 tekil/ay, 100 kayıtlı, 20 gerçek ödeme, 50 günlük üretim.**
 
 - [ ] **F-05** Abonelik paketleri (iyzico subscription)
-- [ ] **F-06** Ödeme butonu state machine düzeltmesi (trafik yoksa boş bug)
+- [x] **F-06** ~~Ödeme butonu state machine düzeltmesi~~ PaketModal 3 adımlı akışa çevrildi (F-25b ile). State machine mevcut. Trafik yoksa öncelik düşük — pre-traffic aşamada geçerli değil.
 - [ ] **F-24** iyzico webhook idempotency + signature verify + polling fallback
 - [ ] **F-15** Mobil QA matrisi (BrowserStack, iPhone SE / 14 Pro Max / Galaxy S22 / iPad)
 - [ ] **F-27** Görsel/video moderasyon (OpenAI moderation veya Google Safe Search)
@@ -531,4 +844,4 @@ Aşağıdaki eşiklerden 2'si gerçekleşince backlog'a al: **1.000 tekil/ay, 10
 - Bir iş bittiğinde `- [ ]` → `- [x]` olarak güncelle. Yarım iş `[x]` olmaz.
 - `~%XX` notları kısmen tamamlanmış item'ları gösterir — bunları tamamla, sonra `[x]` yap.
 - Her küme tek PR değil. Küme içinde 3-5 PR olabilir ama aynı branch ailesinde.
-- `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+- `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

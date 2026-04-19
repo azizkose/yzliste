@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import SiteHeader from "@/components/SiteHeader"
+import SiteFooter from "@/components/SiteFooter"
 
 export const metadata: Metadata = {
   title: 'Çerez Politikası',
@@ -20,15 +22,9 @@ const CEREZLER = [
 
 export default function CerezPolitikasiPage() {
   return (
+    <>
+    <SiteHeader />
     <main className="min-h-screen bg-white">
-      <header className="border-b border-gray-100 px-4 sm:px-6 py-4">
-        <div className="max-w-3xl mx-auto flex items-center gap-4">
-          <Link href="/"><img src="/yzliste_logo.png" alt="yzliste" className="h-8" /></Link>
-          <span className="text-gray-300">|</span>
-          <span className="text-sm text-gray-500">Çerez Politikası</span>
-        </div>
-      </header>
-
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 space-y-8 text-sm text-gray-700 leading-relaxed">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-1">Çerez Politikası</h1>
@@ -81,6 +77,8 @@ export default function CerezPolitikasiPage() {
           <Link href="/kvkk-aydinlatma" className="text-indigo-500 hover:underline">KVKK Aydınlatma</Link>
         </div>
       </div>
+      <SiteFooter />
     </main>
+    </>
   )
 }

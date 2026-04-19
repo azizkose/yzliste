@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import SiteHeader from "@/components/SiteHeader"
+import SiteFooter from "@/components/SiteFooter"
 
 export const metadata: Metadata = {
   title: 'Kullanım Koşulları',
@@ -13,17 +15,9 @@ export const metadata: Metadata = {
 
 export default function KosullarPage() {
   return (
+    <>
+    <SiteHeader />
     <main className="min-h-screen bg-white">
-      <header className="border-b border-gray-100 px-4 sm:px-6 py-4">
-        <div className="max-w-3xl mx-auto flex items-center gap-4">
-          <Link href="/">
-            <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
-          </Link>
-          <span className="text-gray-300">|</span>
-          <span className="text-sm text-gray-500">Kullanım Koşulları</span>
-        </div>
-      </header>
-
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 prose prose-sm text-gray-700">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Kullanım Koşulları</h1>
         <p className="text-gray-400 text-sm mb-8">Son güncelleme: Nisan 2026 · Hukuki kontrol sürecinde — kesin metin yakında yayınlanacaktır.</p>
@@ -61,6 +55,8 @@ export default function KosullarPage() {
         <h2 className="text-lg font-bold text-gray-800 mt-6">8. İletişim</h2>
         <p><a href="mailto:destek@yzliste.com" className="text-indigo-500 hover:underline">destek@yzliste.com</a></p>
       </div>
+      <SiteFooter />
     </main>
+    </>
   )
 }

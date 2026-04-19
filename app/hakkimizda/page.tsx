@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
@@ -15,6 +16,8 @@ export const metadata: Metadata = {
 
 export default function HakkimizdaPage() {
   return (
+    <>
+    <SiteHeader />
     <main className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-3xl mx-auto">
         <div className="mb-8">
@@ -59,5 +62,6 @@ export default function HakkimizdaPage() {
       </div>
       <SiteFooter />
     </main>
+    </>
   );
 }

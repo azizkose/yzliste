@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
     let cleanImageUrl = imageUrl;
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const rmbgResult = await fal.subscribe("fal-ai/bria/rmbg", { input: { image_url: imageUrl } }) as any;
+      const rmbgResult = await fal.subscribe("fal-ai/bria/background/remove", { input: { image_url: imageUrl } }) as any;
       cleanImageUrl = rmbgResult?.data?.image?.url || imageUrl;
     } catch {
       cleanImageUrl = imageUrl;
