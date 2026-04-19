@@ -86,8 +86,8 @@ Mevcut AuthHero bileşenini (veya `_tanitim.tsx` hero bölümünü) şu şekilde
 
 ## 🔧 TUR 8 AUDIT BULGULARI — Claude Code İçin (19 Nisan 2026)
 
-### ÖRNEK İÇERİK REVİZYONU (P1 — yasal risk + etki artışı)
-Ana sayfadaki demo listing örneği "Kütahya Porselen Çiçek Desenli Kahve Fincanı 6'lı Set" kullanıyor.
+### ✅ ÖRNEK İÇERİK REVİZYONU (P1 — yasal risk + etki artışı) — DONE a81ef53
+Ana sayfadaki demo listing örneği "Kütahya Porselen Çiçek Desenli Kahve Fincanı 6'lı Set" kullanıyordu.
 **Sorun 1 — Yasal:** "Kütahya Porselen" tescilli marka (Güral Porselen A.Ş.). İzinsiz kullanım ihtarname riski taşır, site indekslendiğinde tespit edilebilir.
 **Sorun 2 — Etki:** Tek pazaryeri formatında gösteriliyor. yzliste'nin asıl değer önerisi (aynı üründen 7 farklı pazaryeri çıktısı) görünmüyor.
 
@@ -107,7 +107,7 @@ Ana sayfadaki demo listing örneği "Kütahya Porselen Çiçek Desenli Kahve Fin
 3. **Dosyalar:** Landing page'deki örnek çıktı bileşeni — muhtemelen `app/page.tsx` veya bir alt component. `grep -rn "Kütahya\|kahve fincanı\|Çiçek Desenli" app/ components/` ile bul.
 
 
-### A-02: Footer'a KVKK + Çerez linki ekle (P1 — yasal zorunluluk)
+### ✅ A-02: Footer'a KVKK + Çerez linki ekle (P1 — yasal zorunluluk) — DONE a81ef53
 Footer link listesinde KVKK Aydınlatma ve Çerez Politikası linkleri eksik. Sayfalar var (/kvkk-aydinlatma, /cerez-politikasi) ama footer'dan erişilemiyor.
 **Fix:** `components/Footer.tsx` (veya footer bileşeni neredeyse) link listesine ekle:
 ```tsx
@@ -116,14 +116,14 @@ Footer link listesinde KVKK Aydınlatma ve Çerez Politikası linkleri eksik. Sa
 ```
 Mevcut footer linkleri: Fiyatlar, Blog, Hakkımızda, Kullanım Koşulları, Gizlilik Politikası, Mesafeli Satış, Teslimat ve İade. Bunların arasına ekle.
 
-### G-09: Fiyat kartları CTA netliği (P1)
+### ✅ G-09: Fiyat kartları CTA netliği (P1) — DONE a81ef53
 Fiyat kartlarında CTA "Başla" yazıyor — ne olacağı belli değil. Fiyatı dahil et.
 **Fix:** `app/fiyatlar/page.tsx` veya fiyat bileşenindeki butonları değiştir:
 - "Başla" → "Satın Al — 39₺" (Başlangıç)
 - "Başla" → "Satın Al — 99₺" (Popüler)
 - "Başla" → "Satın Al — 249₺" (Büyük)
 
-### G-12 / UX-16: Video kredi başlığı dinamik olsun (P1)
+### ✅ G-12 / UX-16: Video kredi başlığı dinamik olsun (P1) — DONE (zaten dinamikti, doğrulandı)
 Video sekmesinde başlık "5 içerik üretim kredisi" yazıyor ama 10sn seçince 8 kredi. Yanıltıcı.
 **Fix:** Video süre seçimine göre başlığı dinamik yap:
 ```tsx
@@ -134,7 +134,7 @@ const videoKredi = sureSec === "5" ? 5 : 8;
 ```
 **Dosya:** Muhtemelen `components/tabs/VideoSekmesi.tsx` veya `/uret` page.tsx video bölümü.
 
-### "6 Pazaryeri" → "7 Pazaryeri" düzeltmesi (P1 — tüm site)
+### ✅ "6 Pazaryeri" → "7 Pazaryeri" düzeltmesi (P1 — tüm site) — DONE a81ef53
 Site genelinde "6 pazaryeri" yazıyor ama gerçekte 7 platform destekleniyor:
 Trendyol, Hepsiburada, Amazon TR, N11, Etsy, Amazon USA = 6 ayrı seçenek ama Amazon TR + Amazon USA ayrı sayılır → **7 pazaryeri**.
 
@@ -144,7 +144,7 @@ Trendyol, Hepsiburada, Amazon TR, N11, Etsy, Amazon USA = 6 ayrı seçenek ama A
 3. `grep -rn "6 [Pp]azaryeri\|6 platform" app/ components/` ile tüm geçişleri bul ve düzelt.
 4. Meta description, title tag veya schema'da varsa orada da düzelt.
 
-### G-08: Büyük pakette kredi başına maliyet vurgusu (P2)
+### ✅ G-08: Kredi başına maliyet vurgusu (P2) — DONE a81ef53 (tüm kartlarda X,XX₺/kredi)
 Fiyat kartlarında kredi başına fiyat yok. Büyük pakette (249₺/100 kredi = 2.49₺/kredi) tasarruf belli değil.
 **Fix:** Her paketin altına küçük yazıyla kredi başına fiyat ekle:
 - Başlangıç: "3.90₺ / kredi"
@@ -171,12 +171,9 @@ Hiç üretim yapmamış kullanıcı için /hesap sayfası boş tablo gösteriyor
 
 ## 🚨 ACİL — Hemen Yap (19 Nisan 2026, Aziz canlı test ediyor)
 
-### 1. RMBG fix DEPLOY ET (T7-08 — kod düzeltildi ama canlıda eski)
-Kodda `fal-ai/bria/background/remove` olarak düzeltilmiş ✅ ama **canlı sitede hâlâ eski `fal-ai/bria/rmbg` çalışıyor → 404 hatası**. Tüm görsel üretim kırık.
-**Yapılacak:** `git push` + Vercel deploy tetikle. Başka bir şey yapmana gerek yok, kod zaten doğru.
-**Doğrulama:** Deploy sonrası `curl` ile gorsel endpoint'i test et veya fal.ai dashboard'da yeni istek 200 dönmeli.
+### ✅ 1. RMBG fix DEPLOY ET (T7-08) — DONE 6eaed50 push ile canlıya alındı
 
-### 2. `/hesap/*` data fetching kırık (T7-01/02/03 — P0)
+### ✅ 2. `/hesap/*` data fetching kırık (T7-01/02/03 — P0) — DONE a81ef53 (generations→uretimler)
 `/hesap` dashboard: kredi=0, üretim=0, gelir=0. `/hesap/krediler`: Mevcut Kredi=0. `/hesap/ayarlar`: E-posta="—".
 Ama `/uret` sidebar doğru çalışıyor (24 kredi, 19+ üretim).
 **Debug adımları:**
