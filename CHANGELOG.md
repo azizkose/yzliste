@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-04-19 — Hero video arka plan + transparan header scroll davranışı
+
+- AuthHero: video overlay (brightness-0.4), yeni subtitle, feature pill'leri kaldırıldı
+- SiteHeader: ana sayfada scroll=0 → bg-transparent/beyaz; scroll>80px → bg-white/90
+
+## 2026-04-19 — Tur 8 audit fixes + FeaturesTabbed 3-platform listing tabs
+
+- Header auth bug (3-katmanlı fix): profiles query hatada signOut yerine default değer döner; onAuthStateChange ile TanStack cache invalidate; yükleme sırasında header gizlenir
+- P0: `/hesap/*` dashboard 0 veri gösteriyordu — kök neden `generations` tablo adı (doğrusu `uretimler`)
+- Footer KVKK + Çerez Politikası linkleri eklendi
+- "6 pazaryeri" → "7 pazaryeri" (uret compact hero + FeaturesTabbed)
+- Kütahya Porselen → Selin Porselen (yasal risk — tüm demo içeriklerde)
+- Fiyat CTA: "Başla" → "Satın Al — X₺"; giriş yapmış kullanıcılar /kredi-yukle'ye yönlendirildi
+- G-08: Fiyat kartlarına kredi başına maliyet eklendi (X,XX₺/kredi)
+- ÖRNEK İÇERİK REVİZYONU: FeaturesTabbed "Listing Metni" sekmesine Trendyol|Amazon TR|Etsy pill alt-tab eklendi; her platform için tam listing verisi (commit 367ea04)
+
 ## 2026-04-19 — UX tutarlılık + landing copy + bug fixes (UX-04~12/18~21, T7-07/T7-09)
 
 - UX-04: /uret sidebar logout CTA → "💡 Nasıl çalışır?" araç açıklaması
