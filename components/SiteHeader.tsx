@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useCredits } from "@/lib/hooks/useCredits";
@@ -11,12 +11,22 @@ type AktifSayfa = "ana" | "icerik" | "fiyatlar" | "blog" | "toplu" | "profil";
 
 export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) {
   const [menuAcik, setMenuAcik] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { data: currentUser, isLoading: authYukleniyor } = useCurrentUser();
   const { data: kredi } = useCredits();
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const girisVar = !!currentUser && !currentUser.anonim;
+  const isHeroPage = aktifSayfa === "ana";
+  const transparent = isHeroPage && !scrolled;
+
+  useEffect(() => {
+    if (!isHeroPage) return;
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHeroPage]);
 
   const cikisYap = async () => {
     await supabase.auth.signOut();
@@ -32,24 +42,24 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100">
+    <header className={`sticky top-0 z-40 border-b transition-all duration-300 ${transparent ? "bg-transparent border-transparent" : "bg-white/90 backdrop-blur border-gray-100"}`}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-2">
         {/* Logo */}
         <a href="/" className="flex-shrink-0 mr-1">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
+          <img src="/yzliste_logo.png" alt="yzliste" className={`h-8 transition-all duration-300 ${transparent ? "brightness-0 invert" : ""}`} />
         </a>
 
         {/* Desktop nav */}
-        <nav className="hidden sm:flex items-center gap-0.5 text-xs sm:text-sm text-gray-500 flex-1">
+        <nav className={`hidden sm:flex items-center gap-0.5 text-xs sm:text-sm flex-1 ${transparent ? "text-white/80" : "text-gray-500"}`}>
           {navLinks.map((link) => (
             <a
               key={link.id}
               href={link.href}
               className={`px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-colors whitespace-nowrap ${
                 aktifSayfa === link.id
-                  ? "text-indigo-600 font-medium"
-                  : "hover:bg-gray-100 hover:text-gray-800"
+                  ? transparent ? "text-white font-medium" : "text-indigo-600 font-medium"
+                  : transparent ? "hover:bg-white/10 hover:text-white" : "hover:bg-gray-100 hover:text-gray-800"
               }`}
             >
               {link.label}
@@ -64,20 +74,20 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               {kredi !== null && kredi !== undefined && (
                 <a
                   href="/kredi-yukle"
-                  className="hidden sm:flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors whitespace-nowrap"
+                  className={`hidden sm:flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-full transition-colors whitespace-nowrap ${transparent ? "bg-white/20 text-white hover:bg-white/30" : "bg-indigo-50 text-indigo-600 hover:bg-indigo-100"}`}
                 >
                   💳 {kredi} kredi
                 </a>
               )}
               <a
                 href="/profil"
-                className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
+                className={`text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors whitespace-nowrap ${transparent ? "text-white/80 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-800 hover:bg-gray-100"}`}
               >
                 Profil
               </a>
               <button
                 onClick={cikisYap}
-                className="hidden sm:block text-xs sm:text-sm text-gray-400 hover:text-gray-700 px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
+                className={`hidden sm:block text-xs sm:text-sm px-2.5 py-1.5 rounded-lg transition-colors whitespace-nowrap ${transparent ? "text-white/60 hover:text-white hover:bg-white/10" : "text-gray-400 hover:text-gray-700 hover:bg-gray-100"}`}
               >
                 Çıkış
               </button>
@@ -85,7 +95,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
           ) : (
             <a
               href="/giris"
-              className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
+              className={`text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors whitespace-nowrap ${transparent ? "text-white/80 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-800 hover:bg-gray-100"}`}
             >
               Giriş Yap
             </a>
