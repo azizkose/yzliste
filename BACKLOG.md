@@ -160,7 +160,7 @@ Fiyat kartlarında kredi başına fiyat yok. Büyük pakette (249₺/100 kredi =
 - Popüler: "3.30₺ / kredi"
 - Büyük: "2.49₺ / kredi — en ekonomik"
 
-### G-13: /hesap empty state (P2)
+### ✅ G-13: /hesap empty state (P2) — DONE 23fe4d2
 Hiç üretim yapmamış kullanıcı için /hesap sayfası boş tablo gösteriyor.
 **Fix:** Üretim sayısı 0 ise tablo yerine motivasyon mesajı göster:
 ```tsx

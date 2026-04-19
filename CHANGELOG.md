@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-04-19 — G-13: /hesap empty state
+
+- 0 üretim varsa "Son Üretimler" yerine motivasyon mesajı + "İlk içeriğini üret →" CTA gösterilir
+
 ## 2026-04-19 — Hero video arka plan + transparan header scroll davranışı
 
 - AuthHero: video overlay (brightness-0.4), yeni subtitle, feature pill'leri kaldırıldı
