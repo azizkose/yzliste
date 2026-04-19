@@ -211,7 +211,7 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
-              <a href="/profil" className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap transition-colors">Profili Düzenle</a>
+              <a href="/hesap/profil" className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap transition-colors">Profili Düzenle</a>
               <button onClick={() => setProfilBannerKapatildi(true)} aria-label="Bildirimi kapat" className="text-blue-400 hover:text-blue-600 text-xl leading-none">×</button>
             </div>
           </div>

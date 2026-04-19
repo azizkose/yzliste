@@ -174,7 +174,7 @@ export default async function HesapPage() {
             </div>
             {/* D-04: Tüm geçmiş linki */}
             <div className="px-5 py-3 border-t border-gray-50 text-center">
-              <Link href="/profil" className="text-xs text-indigo-400 hover:text-indigo-600 hover:underline transition-colors">
+              <Link href="/hesap/profil" className="text-xs text-indigo-400 hover:text-indigo-600 hover:underline transition-colors">
                 Tüm üretim geçmişini gör →
               </Link>
             </div>
