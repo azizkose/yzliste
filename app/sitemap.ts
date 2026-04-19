@@ -37,6 +37,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
       lastModified: new Date(),
     },
+    {
+      url: `${baseUrl}/hakkimizda`,
+      changeFrequency: "monthly",
+      priority: 0.4,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/gizlilik`,
+      changeFrequency: "monthly",
+      priority: 0.3,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/kosullar`,
+      changeFrequency: "monthly",
+      priority: 0.3,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/kvkk-aydinlatma`,
+      changeFrequency: "monthly",
+      priority: 0.3,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/cerez-politikasi`,
+      changeFrequency: "monthly",
+      priority: 0.3,
+      lastModified: new Date(),
+    },
   ];
 
   // Blog yazıları — dinamik
