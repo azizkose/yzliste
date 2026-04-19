@@ -35,16 +35,16 @@ export default async function HesapPage() {
       .eq('id', user.id)
       .single(),
     supabase
-      .from('generations')
+      .from('uretimler')
       .select('id', { count: 'exact', head: true })
       .eq('user_id', user.id)
       .gte('created_at', ayBaslangic.toISOString()),
     supabase
-      .from('generations')
+      .from('uretimler')
       .select('platform')
       .eq('user_id', user.id),
     supabase
-      .from('generations')
+      .from('uretimler')
       .select('id, platform, created_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })

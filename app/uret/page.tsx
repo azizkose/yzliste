@@ -186,7 +186,7 @@ export default function Home() {
         {/* Compact hero */}
         {!authYukleniyor && (!kullanici || kullanici.anonim) && (
           <div className="bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 rounded-2xl px-6 py-7 mb-5 text-center">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">6 Pazaryeri için AI İçerik Üreticisi</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">7 Pazaryeri için AI İçerik Üreticisi</h1>
             <p className="text-sm text-gray-500 mb-1">Trendyol, Hepsiburada, Amazon, Etsy ve daha fazlası için — başlık, açıklama, görsel ve video tek platformda.</p>
             <p className="text-xs text-indigo-500 mb-5">İçerik üretmek için ücretsiz hesap gerekli — 3 kredi hediye, kredi kartı yok.</p>
             <div className="flex items-center justify-center gap-3 flex-wrap">

@@ -17,6 +17,10 @@ export default function SiteFooter() {
           <span>·</span>
           <a href="/teslimat-iade" className="hover:text-indigo-500">Teslimat ve İade</a>
           <span>·</span>
+          <a href="/kvkk-aydinlatma" className="hover:text-indigo-500">KVKK Aydınlatma</a>
+          <span>·</span>
+          <a href="/cerez-politikasi" className="hover:text-indigo-500">Çerez Politikası</a>
+          <span>·</span>
           <a href="mailto:destek@yzliste.com" className="hover:text-indigo-500">destek@yzliste.com</a>
         </div>
         <div className="flex justify-center">

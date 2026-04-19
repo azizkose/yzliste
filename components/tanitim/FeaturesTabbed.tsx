@@ -5,7 +5,7 @@ const ornekBolumler = [
   {
     ikon: "📌",
     baslik: "Başlık",
-    icerik: "Kütahya Porselen Çiçek Desenli Kahve Fincanı 6'lı Set | 80ml | Altın Yaldızlı | Dishwasher Safe",
+    icerik: "Selin Porselen Çiçek Desenli Kahve Fincanı 6'lı Set | 80ml | Altın Yaldızlı | Dishwasher Safe",
     renk: "border-l-blue-400",
   },
   {
@@ -21,13 +21,13 @@ const ornekBolumler = [
   {
     ikon: "📄",
     baslik: "Açıklama",
-    icerik: "Kütahya'nın 500 yıllık porselen geleneğinden ilham alarak tasarlanan bu fincan seti, hem estetik hem işlevselliği bir arada sunar. Düğün, nişan ve doğum günü hediyesi olarak tercih edilen bu set, sevdiklerinize kalıcı bir değer sunmak isteyenler için biçilmiş kaftandır.",
+    icerik: "El yapımı çiçek desenleriyle öne çıkan bu porselen fincan seti, hem estetik hem işlevselliği bir arada sunar. Düğün, nişan ve doğum günü hediyesi olarak tercih edilen bu set, sevdiklerinize kalıcı bir değer sunmak isteyenler için biçilmiş kaftandır.",
     renk: "border-l-green-400",
   },
   {
     ikon: "🏷️",
     baslik: "Arama Etiketleri",
-    icerik: "porselen fincan seti, kahve fincanı hediye, kütahya porselen, altın yaldızlı fincan, 6lı fincan seti, türk kahvesi fincanı, düğün hediyesi fincan, çeyiz fincan seti",
+    icerik: "porselen fincan seti, kahve fincanı hediye, el yapımı porselen, altın yaldızlı fincan, 6lı fincan seti, türk kahvesi fincanı, düğün hediyesi fincan, çeyiz fincan seti",
     renk: "border-l-violet-400",
   },
 ];
@@ -87,7 +87,7 @@ export default function FeaturesTabbed() {
                 ))}
               </div>
               <div className="mt-5 pt-4 border-t border-gray-100 flex flex-wrap gap-3 text-xs text-gray-500">
-                {["Manuel metin girişi", "Fotoğraftan otomatik analiz", "Barkod ile ürün tanıma", "6 platform desteği"].map((f) => (
+                {["Manuel metin girişi", "Fotoğraftan otomatik analiz", "Barkod ile ürün tanıma", "7 platform desteği"].map((f) => (
                   <span key={f} className="flex items-center gap-1.5">
                     <span className="w-3.5 h-3.5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[9px]">✓</span>{f}
                   </span>
@@ -216,8 +216,8 @@ export default function FeaturesTabbed() {
                     <span className="text-xs bg-white border border-gray-200 text-gray-400 px-2 py-0.5 rounded-lg">Kopyala</span>
                   </div>
                   <p className="text-sm text-gray-700 leading-relaxed">
-                    Kütahya&apos;nın 500 yıllık geleneğiyle yapılmış bu porselen fincan setini görünce kendinizi bir Osmanlı sarayında hissedeceksiniz ✨☕{"\n\n"}
-                    El yapımı çiçek deseni ve altın yaldızlarıyla her sofrayı şölen sofrasına dönüştürün. Sevdiklerinize en güzel hediye — 6 kişilik komple set, özel kutusunda! 🎁
+                    El yapımı çiçek deseni ve altın yaldızlarıyla bu porselen fincan seti her sofrayı şölen sofrasına dönüştürüyor ✨☕{"\n\n"}
+                    Sevdiklerinize en güzel hediye — 6 kişilik komple set, özel kutusunda! 🎁
                   </p>
                 </div>
                 <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
@@ -226,7 +226,7 @@ export default function FeaturesTabbed() {
                     <span className="text-xs bg-white border border-gray-200 text-gray-400 px-2 py-0.5 rounded-lg">Kopyala</span>
                   </div>
                   <p className="text-sm text-emerald-700 leading-relaxed">
-                    #porselen #kahvefincanı #kütahyaporselen #altınyaldız #hediye #türkkahvesi #elyapımı #fincanSeti #çeyiz #düğünhediyesi #porseleneserleri #handmade
+                    #porselen #kahvefincanı #porselenfincan #altınyaldız #hediye #türkkahvesi #elyapımı #fincanSeti #çeyiz #düğünhediyesi #porseleneserleri #handmade
                   </p>
                 </div>
                 <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
@@ -235,7 +235,7 @@ export default function FeaturesTabbed() {
                     <span className="text-xs bg-white border border-gray-200 text-gray-400 px-2 py-0.5 rounded-lg">Kopyala</span>
                   </div>
                   <p className="text-sm text-gray-700 leading-relaxed">
-                    Kütahya porseleni + altın yaldız + 6 kişilik set = mükemmel hediye 🎁☕ Her sipariş özel kutusunda geliyor. #porselen #hediye
+                    El yapımı porselen + altın yaldız + 6 kişilik set = mükemmel hediye 🎁☕ Her sipariş özel kutusunda geliyor. #porselen #hediye
                   </p>
                 </div>
               </div>

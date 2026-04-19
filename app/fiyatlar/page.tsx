@@ -200,8 +200,8 @@ export default function FiyatlarPage() {
                 )}
                 <div className="mb-4">
                   <p className="font-bold text-gray-800 text-lg">{p.isim}</p>
-                  <p className="text-3xl font-extrabold text-gray-900 mt-1">{p.fiyat}</p>
-                  <p className="text-sm text-gray-500 mt-1">{p.kredi} kredi</p>
+                  <p className="text-3xl font-extrabold text-gray-900 mt-1">{p.fiyatStr}</p>
+                  <p className="text-sm text-gray-500 mt-1">{p.kredi} kredi · <span className="text-gray-400">{(p.fiyat / p.kredi).toFixed(2).replace('.', ',')}₺/kredi</span></p>
                   <p className="text-xs text-gray-400 mt-2 leading-relaxed">{p.aciklama}</p>
                 </div>
                 <ul className="space-y-2 flex-1 mb-6">
@@ -212,7 +212,7 @@ export default function FiyatlarPage() {
                     </li>
                   ))}
                 </ul>
-                <FiyatlarCta variant="paket" paketButonRenk={p.butonRenk} />
+                <FiyatlarCta variant="paket" paketButonRenk={p.butonRenk} paketFiyatStr={p.fiyatStr} />
               </div>
             ))}
           </div>

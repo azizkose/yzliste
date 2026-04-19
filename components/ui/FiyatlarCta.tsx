@@ -7,9 +7,10 @@ interface FiyatlarCtaProps {
   className?: string
   variant?: 'primary' | 'paket'
   paketButonRenk?: string
+  paketFiyatStr?: string
 }
 
-export default function FiyatlarCta({ className, variant = 'primary', paketButonRenk }: FiyatlarCtaProps) {
+export default function FiyatlarCta({ className, variant = 'primary', paketButonRenk, paketFiyatStr }: FiyatlarCtaProps) {
   const [girisVar, setGirisVar] = useState<boolean | null>(null)
 
   useEffect(() => {
@@ -18,27 +19,13 @@ export default function FiyatlarCta({ className, variant = 'primary', paketButon
     })
   }, [])
 
-  // Loading state — show same as logged-out to avoid layout shift
-  if (girisVar === null) {
-    if (variant === 'paket') {
-      return (
-        <a href="/kayit" className={`block text-center ${paketButonRenk} text-white font-semibold py-3 rounded-xl text-sm transition-colors ${className ?? ''}`}>
-          Başla
-        </a>
-      )
-    }
-    return (
-      <a href="/kayit" className={className}>
-        Ücretsiz Başla — 3 Kredi Hediye →
-      </a>
-    )
-  }
+  const paketLabel = paketFiyatStr ? `Satın Al — ${paketFiyatStr}` : 'Satın Al'
 
   if (girisVar) {
     if (variant === 'paket') {
       return (
-        <a href="/uret" className={`block text-center ${paketButonRenk} text-white font-semibold py-3 rounded-xl text-sm transition-colors ${className ?? ''}`}>
-          İçerik Üret →
+        <a href="/kredi-yukle" className={`block text-center ${paketButonRenk} text-white font-semibold py-3 rounded-xl text-sm transition-colors ${className ?? ''}`}>
+          Satın Al →
         </a>
       )
     }
@@ -52,7 +39,7 @@ export default function FiyatlarCta({ className, variant = 'primary', paketButon
   if (variant === 'paket') {
     return (
       <a href="/kayit" className={`block text-center ${paketButonRenk} text-white font-semibold py-3 rounded-xl text-sm transition-colors ${className ?? ''}`}>
-        Başla
+        {paketLabel}
       </a>
     )
   }

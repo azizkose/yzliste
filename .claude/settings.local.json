@@ -26,7 +26,15 @@
       "Bash(cat middleware.ts)",
       "Bash(find . -name \"middleware.ts\" -not -path \"*/node_modules/*\" -exec cat {} \\\\;)",
       "Bash(awk 'NR>=1400 && NR<=1850' \"C:/Users/catha/OneDrive/Documents/yzliste/app/page.tsx\")",
-      "Bash(npx next *)"
+      "Bash(npx next *)",
+      "Bash(npm update *)",
+      "Bash(grep -v \"//\")",
+      "mcp__b3f6be38-4901-4787-87c7-a30f62976cdc__list_projects",
+      "mcp__b3f6be38-4901-4787-87c7-a30f62976cdc__list_migrations",
+      "mcp__f1824a36-cc79-4fdb-9a19-ef06c3e482d8__list_teams",
+      "mcp__f1824a36-cc79-4fdb-9a19-ef06c3e482d8__list_projects",
+      "mcp__f1824a36-cc79-4fdb-9a19-ef06c3e482d8__list_deployments",
+      "mcp__b3f6be38-4901-4787-87c7-a30f62976cdc__apply_migration"
     ],
     "deny": [
       "EnterWorktree"
