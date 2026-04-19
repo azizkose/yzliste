@@ -665,13 +665,6 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   ```
   **Dosya:** `app/uret/page.tsx` + hesap sayfası
 
-- [ ] **UX-22** P1 — Profil geçmiş üretimlerde içerik türü etiketi yok — Kullanıcı hangi üretimin metin, hangisinin görsel/video/sosyal olduğunu ayırt edemiyor.
-  **Fix:** Her üretim kartına tür etiketi ekle:
-  ```
-  📝 Metin  |  🖼️ Görsel  |  🎬 Video  |  📱 Sosyal
-  ```
-  Platform adı + tarih zaten varsa, tür etiketi sol üste badge olarak eklensin.
-  **Dosya:** Geçmiş üretimler component'i (hesap sayfası)
 
 **P1 — Buton Tekrarı + CTA Temizliği:**
 
