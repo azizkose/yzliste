@@ -45,10 +45,10 @@ export default async function HesapPage() {
       .eq('user_id', user.id),
     supabase
       .from('uretimler')
-      .select('id, platform, created_at')
+      .select('id, platform, created_at, urun_adi, giris_tipi')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
-      .limit(3),
+      .limit(5),
   ])
 
   const profil = profilRes.data
@@ -65,8 +65,10 @@ export default async function HesapPage() {
   const toplamUretim = profil?.toplam_kullanilan ?? 0
   const krediDusuk = kredi > 0 && kredi <= Math.max(5, Math.round(toplamUretim * 0.2))
 
+  const toplamUretimSayisi = enCokPlatformRes.data?.length ?? 0
+
   const sonUretimler = (sonUretimlerRes.data ?? []) as {
-    id: string; platform: string; created_at: string
+    id: string; platform: string; created_at: string; urun_adi: string; giris_tipi: string
   }[]
 
   return (
@@ -77,23 +79,33 @@ export default async function HesapPage() {
             <h1 className="text-2xl font-bold text-gray-900">Hesabım</h1>
             <p className="text-sm text-gray-400 mt-1">{user.email}</p>
           </div>
-          <Link href="/" className="text-sm bg-indigo-500 text-white px-4 py-2 rounded-xl hover:bg-indigo-600 transition-colors font-medium">
+          <Link href="/uret" className="text-sm bg-indigo-500 text-white px-4 py-2 rounded-xl hover:bg-indigo-600 transition-colors font-medium">
             İçerik Üret →
           </Link>
         </div>
 
-        {/* F-22b: Kredi azaldı banner */}
-        {krediDusuk && (
+        {/* Kredi durumu banner */}
+        {kredi === 0 ? (
+          <div className="mb-6 bg-red-50 border border-red-200 rounded-2xl p-4 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-red-700">🚫 Krediniz tükendi — üretim yapamazsınız</p>
+              <p className="text-xs text-red-500 mt-0.5">Kredi yükleyerek üretimlerinize devam edin</p>
+            </div>
+            <Link href="/fiyatlar" className="text-sm bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition-colors font-medium flex-shrink-0">
+              Kredi Al
+            </Link>
+          </div>
+        ) : krediDusuk ? (
           <div className="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-semibold text-amber-800">⚠️ Krediniz azalıyor — {kredi} kredi kaldı</p>
-              <p className="text-xs text-amber-600 mt-0.5">+50 kredi satın alarak üretimlerinize devam edin</p>
+              <p className="text-xs text-amber-600 mt-0.5">Kredi satın alarak kesintisiz üretim yapın</p>
             </div>
-            <Link href="/kredi-yukle" className="text-sm bg-amber-500 text-white px-4 py-2 rounded-xl hover:bg-amber-600 transition-colors font-medium flex-shrink-0">
+            <Link href="/fiyatlar" className="text-sm bg-amber-500 text-white px-4 py-2 rounded-xl hover:bg-amber-600 transition-colors font-medium flex-shrink-0">
               Kredi Yükle
             </Link>
           </div>
-        )}
+        ) : null}
 
         {/* F-22a: 4 metrik kartı */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
@@ -101,7 +113,7 @@ export default async function HesapPage() {
             { etiket: 'Bu Ay Üretim', deger: buAyUretim, renk: 'text-blue-500', ikon: '📝' },
             { etiket: 'Kalan Kredi', deger: kredi, renk: 'text-indigo-500', ikon: '💳' },
             { etiket: 'Favori Platform', deger: favoriPlatform ? PLATFORM_ETIKET[favoriPlatform] ?? favoriPlatform : '—', renk: 'text-violet-500', ikon: '🏆' },
-            { etiket: 'Tahmini Tasarruf', deger: `~${Math.round(toplamUretim * 0.5)}sa`, renk: 'text-emerald-500', ikon: '⏱️' },
+            { etiket: 'Toplam Üretim', deger: toplamUretimSayisi, renk: 'text-emerald-500', ikon: '🚀' },
           ].map((m) => (
             <div key={m.etiket} className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
               <div className="text-xl mb-2">{m.ikon}</div>
@@ -116,21 +128,24 @@ export default async function HesapPage() {
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm mb-8">
             <div className="px-5 py-4 border-b border-gray-50 flex items-center justify-between">
               <h2 className="text-sm font-semibold text-gray-700">Son Üretimler</h2>
-              <Link href="/" className="text-xs text-indigo-500 hover:underline">Tümünü gör →</Link>
+              <Link href="/uret" className="text-xs text-indigo-500 hover:underline">Yeni üretim →</Link>
             </div>
             <div className="divide-y divide-gray-50">
-              {sonUretimler.map((u) => (
-                <div key={u.id} className="px-5 py-3 flex items-center gap-3">
-                  <span className="text-lg">📄</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-800">{PLATFORM_ETIKET[u.platform] ?? u.platform}</p>
-                    <p className="text-xs text-gray-400">İçerik üretimi</p>
+              {sonUretimler.map((u) => {
+                const girisIkon = u.giris_tipi === 'fotograf' ? '🖼️' : u.giris_tipi === 'barkod' ? '📷' : '✍️'
+                return (
+                  <div key={u.id} className="px-5 py-3 flex items-center gap-3">
+                    <span className="text-lg">{girisIkon}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-800 truncate">{u.urun_adi || 'İsimsiz üretim'}</p>
+                      <p className="text-xs text-gray-400">{PLATFORM_ETIKET[u.platform] ?? u.platform}</p>
+                    </div>
+                    <p className="text-xs text-gray-300 whitespace-nowrap">
+                      {new Date(u.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}
+                    </p>
                   </div>
-                  <p className="text-xs text-gray-300 whitespace-nowrap">
-                    {new Date(u.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}
-                  </p>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         ) : (
@@ -144,7 +159,7 @@ export default async function HesapPage() {
         )}
 
         {/* Hızlı linkler */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { href: '/hesap/profil', baslik: 'Profil', aciklama: 'Marka bilgileri ve fatura ayarları', ikon: '👤' },
             { href: '/hesap/krediler', baslik: 'Krediler', aciklama: 'Kredi geçmişi ve satın alma', ikon: '💳' },
