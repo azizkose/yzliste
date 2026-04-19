@@ -3,12 +3,20 @@ import Link from "next/link";
 export default function AuthHero() {
   return (
     <section className="relative overflow-hidden min-h-[80vh] md:min-h-[70vh] lg:aspect-video flex items-center bg-gray-900">
+      {/* Mobil: statik poster (performans + doğru oran) */}
+      <img
+        src="/hero-poster.jpg"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover brightness-[0.4] md:hidden"
+      />
+      {/* Tablet+: video */}
       <video
         autoPlay
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover brightness-[0.4]"
+        poster="/hero-poster.jpg"
+        className="absolute inset-0 w-full h-full object-cover brightness-[0.4] hidden md:block"
         src="/hero-video.mp4"
       />
       {/* Header altındaki alanı okunaklı kılan gradyan */}
