@@ -651,7 +651,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   ```
   **Dosya:** `app/blog/page.tsx` — blog kart render bölümü
 
-- [ ] **UX-12** P2 — Kategori input serbest metin + zorunlu — Kullanıcı kategori bilmiyorsa ne yazacağını bilemez. Platform bazında kategoriler farklı.
+- [x] **UX-12** P2 — Kategori input serbest metin + zorunlu. ✅ Dropdown (11 kategori + Diğer fallback text input), opsiyonel yapıldı. — Kullanıcı kategori bilmiyorsa ne yazacağını bilemez. Platform bazında kategoriler farklı.
   **Fix 3 adım:**
   1. Kategoriyi **opsiyonel** yap (zorunlu yıldızı kaldır)
   2. Serbest metin → **dropdown** + "Diğer" seçeneği (serbest metin fallback)
