@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-04-19 — Hero video tam çözüm + Hesap merkezi + Blog arama + Admin güvenlik
+
+- AuthHero: lg:aspect-video (desktop 16:9), mobil `<img poster>` + tablet+ `<video>` split — kırpılma tamamen giderildi
+- Hero: yeni video (1.4MB) + hero-poster.jpg (94KB) eklendi — coworker üretimi
+- /hesap/profil: /profil içeriği taşındı, şifre bölümü kaldırıldı, /profil → 301 redirect
+- Admin: /api/admin/metrics API route (service key, RLS bypass), is_admin DB kontrolü, NEXT_PUBLIC_ADMIN_EMAIL kaldırıldı
+- Blog: BlogListesi.tsx client component — metin arama + kategori pill filtresi
+- F-20b: docs/marka-sesi.md oluşturuldu (ton kılavuzu, yasaklı kelimeler, chatbot tonu)
+- Tur 8 audit: FeaturesTabbed platform tab'ları (Trendyol|Amazon TR|Etsy), footer KVKK, fiyat CTA, kredi/maliyet badgeleri
+- /giris temizlik: "Hesabın yok mu?" satırı kaldırıldı
+
 ## 2026-04-19 — Hero video responsive fix + Admin paneli güvenlik + Giriş temizlik
 
 - AuthHero: minHeight max(520px,60vh) + objectPosition center 40% — mobil/desktop kırpılma giderildi
