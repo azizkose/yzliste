@@ -2,17 +2,13 @@ import Link from "next/link";
 
 export default function AuthHero() {
   return (
-    <section
-      className="relative overflow-hidden flex items-center bg-gray-900"
-      style={{ minHeight: 'max(520px, 60vh)' }}
-    >
+    <section className="relative overflow-hidden min-h-[80vh] md:min-h-[70vh] lg:aspect-video flex items-center bg-gray-900">
       <video
         autoPlay
         loop
         muted
         playsInline
         className="absolute inset-0 w-full h-full object-cover brightness-[0.4]"
-        style={{ objectPosition: 'center 40%' }}
         src="/hero-video.mp4"
       />
       {/* Header altındaki alanı okunaklı kılan gradyan */}
