@@ -123,7 +123,30 @@ export default async function HesapPage() {
           ))}
         </div>
 
-        {/* F-22c: Son 3 üretim veya empty state */}
+        {/* D-03: Platform dağılımı */}
+        {toplamUretimSayisi > 0 && Object.keys(platformSayac).length > 0 && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
+            <h2 className="text-sm font-semibold text-gray-700 mb-3">Platform Dağılımı</h2>
+            <div className="space-y-2.5">
+              {Object.entries(platformSayac)
+                .sort((a, b) => b[1] - a[1])
+                .map(([p, sayi]) => (
+                  <div key={p} className="flex items-center gap-3">
+                    <span className="text-xs text-gray-500 w-24 flex-shrink-0 truncate">{PLATFORM_ETIKET[p] ?? p}</span>
+                    <div className="flex-1 bg-gray-100 rounded-full h-1.5">
+                      <div
+                        className="bg-indigo-400 rounded-full h-1.5 transition-all"
+                        style={{ width: `${Math.round((sayi / toplamUretimSayisi) * 100)}%` }}
+                      />
+                    </div>
+                    <span className="text-xs text-gray-400 w-6 text-right flex-shrink-0">{sayi}</span>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+
+        {/* F-22c: Son üretimler veya empty state */}
         {sonUretimler.length > 0 ? (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm mb-8">
             <div className="px-5 py-4 border-b border-gray-50 flex items-center justify-between">
@@ -146,6 +169,12 @@ export default async function HesapPage() {
                   </div>
                 )
               })}
+            </div>
+            {/* D-04: Tüm geçmiş linki */}
+            <div className="px-5 py-3 border-t border-gray-50 text-center">
+              <Link href="/profil" className="text-xs text-indigo-400 hover:text-indigo-600 hover:underline transition-colors">
+                Tüm üretim geçmişini gör →
+              </Link>
             </div>
           </div>
         ) : (
