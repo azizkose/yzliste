@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-04-19 — Blog arama ve kategori filtresi (UX-13)
+
+- BlogListesi.tsx client component: metin arama (başlık+özet) + kategori pill filtresi
+- Sonuç yoksa temizle butonu gösterilir
+
 ## 2026-04-19 — Hesap merkezi birleştirme: /profil → /hesap/profil
 
 - /hesap/profil sayfası oluşturuldu (profil içeriği taşındı, şifre/güvenlik bölümü kaldırıldı)

@@ -146,7 +146,7 @@ const videoKredi = sureSec === "5" ? 5 : 8;
 ### ✅ OG IMAGE (Sosyal Paylaşım Görseli) DEĞİŞTİR (P1) — DONE 41f2729
 Mevcut `/public/og-image.png` turuncu arka planlı, eski metin ("E-ticaret listing için en kolay çözüm"), brand renk paletiyle uyumsuz.
 **Yeni görsel hazır:** `yzliste test/og-image-new.png` — indigo gradient, Poppins font, 1200x630, 37KB.
-İçerik: "yzliste / Ürününü anlat, içeriğini al / Metin ve/veya fotoğraf ver — listing metni, stüdyo görseli, video ve sosyal medya postu al"
+İçerik: "yzliste / Ürününü anlat, içeriğini al / Metin · Görsel · Video · Sosyal Medya Postu" — büyük fontlar (logo 96px, tagline 46px, alt 28px), WhatsApp thumbnail'da bile okunur
 **Fix:**
 1. `cp yzliste\ test/og-image-new.png public/og-image.png` (eski görseli override et)
 2. Meta description'ları güncelle — şu an "listing metni ve stüdyo görseli üret" yazıyor, yeni: "metin, görsel, video ve post içeriği üret"
@@ -1052,7 +1052,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   Platform-bazlı mapping (ileride): Kullanıcı "Kozmetik" seçince + Trendyol seçiliyse → prompt'a "Trendyol Kozmetik kategorisi kuralları" inject et (mevcut KATEGORI_KURALLARI sistemiyle uyumlu).
   **Dosyalar:** `components/tabs/MetinSekmesi.tsx` (form alanı), `lib/constants.ts` (kategori listesi), `app/api/uret/route.ts` (opsiyonel kontrol)
 
-- [ ] **UX-13** P3 — Blog arama — Şu an 20 yazı var, arama yok. Acil değil ama yazı sayısı artınca gerekecek. Basit client-side filtre (başlık + kategori) yeterli.
+- [x] **UX-13** P3 — Blog arama — DONE 577ea7c — BlogListesi.tsx client component: text arama (başlık+özet) + kategori pill filtresi.
   **Dosya:** `app/blog/page.tsx`
 
 ### P3+ — UI Polish Pass (KÜME 0 bittikten sonra, demo öncesi)
