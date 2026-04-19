@@ -2,6 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { createSupabaseServerClient } from '@/lib/supabase-server'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Hesabım',
   robots: { index: false, follow: false },
