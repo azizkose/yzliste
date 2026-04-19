@@ -22,14 +22,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "yzliste — E-ticaret listing için en kolay çözüm",
+    default: "yzliste — Ürünün için metin, görsel, video ve sosyal medya postu",
     template: "%s | yzliste",
   },
-  description: "Trendyol, Hepsiburada, Amazon TR ve N11 için AI ile optimize listing metni ve stüdyo görseli üret. Fotoğraf yükle veya barkod tara, gerisini YZ halleder.",
+  description: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA için AI ile listing metni, stüdyo görseli, ürün videosu ve sosyal medya postu üret. Fotoğraf yükle veya barkod tara, gerisini YZ halleder.",
   metadataBase: new URL("https://www.yzliste.com"),
   openGraph: {
-    title: "yzliste — E-ticaret listing için en kolay çözüm",
-    description: "Trendyol, Hepsiburada, Amazon TR ve N11 için AI ile optimize listing metni ve stüdyo görseli üret.",
+    title: "yzliste — Ürünün için metin, görsel, video ve sosyal medya postu",
+    description: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA için AI ile listing metni, görsel, video ve sosyal medya içeriği üret.",
     url: "https://www.yzliste.com",
     siteName: "yzliste",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "yzliste" }],
