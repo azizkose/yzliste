@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-04-19 — UX tutarlılık + landing copy + bug fixes (UX-04~12/18~21, T7-07/T7-09)
+
+- UX-04: /uret sidebar logout CTA → "💡 Nasıl çalışır?" araç açıklaması
+- UX-05: Tüm sekme butonları "✨ X Üret — Y kredi" formatına geçirildi
+- UX-06: AuthHero başlık + alt metin değer odaklı yeniden yazıldı
+- UX-07: BenefitsGrid 6 madde → rakibe karşı pozisyon alan 4 madde
+- UX-08: HowItWorks 6 adım → "3 adımda hazır" 3 yatay kart
+- UX-09: Fiyatlar kredi kartları 8→5 + "✅ Süre sınırı yok · Abonelik yok" özet satır
+- UX-10: lib/paketler.ts tüm paketlerde birim fiyat formatı standartlaştırıldı
+- UX-11: Blog kartlarında boş fotoğraf emoji kutusu kaldırıldı
+- UX-12: Kategori text input → dropdown (11 kategori + Diğer fallback), zorunluluk kaldırıldı
+- UX-18: /uret compact hero "7 Pazaryeri" → "6 Pazaryeri"
+- UX-19: GorselSekmesi başlık badge duplikasyonu kaldırıldı
+- UX-20: MetinSekmesi hızlı örnekler 3→5 (+Gıda +Takı)
+- UX-21: Geçmiş üretimler inline toggle → /hesap/profil linki
+- T7-07: fotolar[0] → sosyal.setSosyalFoto useEffect sync (SosyalSekmesi paylaşımlı fotoğraf)
+- T7-09: /profil Hesabı Sil eski UX kaldırıldı, /hesap/ayarlar linkine yönlendirildi
+
 ## 2026-04-18 — HC audit, F-25b/d, KVKK consent log, /auth link temizliği
 
 - HC-01: /giris, /kayit, /sss canonical tag'leri kendi URL'lerine düzeltildi
