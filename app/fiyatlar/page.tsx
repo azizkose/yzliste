@@ -71,24 +71,6 @@ const krediAciklamalari = [
     icerik:
       "Tek platform için 1 kredi: Instagram, TikTok, Facebook veya Twitter/X. Sosyal Medya Kiti ile 4 platform birden sadece 3 kredi — %25 tasarruf. Her platform için ayrı ton ve format.",
   },
-  {
-    ikon: "🔀",
-    baslik: "Tüm içerik türleri aynı krediden",
-    icerik:
-      "Kredileri listing metni, görsel, video ve sosyal medya arasında dilediğin gibi kullanabilirsin. Hiçbir kategori kısıtlaması yok.",
-  },
-  {
-    ikon: "♾️",
-    baslik: "Süre sınırı yok",
-    icerik:
-      "Satın aldığın krediler sona erene kadar geçerlidir. Ay sonu sıfırlanma yok, kullanmadığın krediler kaybolmaz.",
-  },
-  {
-    ikon: "💳",
-    baslik: "Aylık abonelik yok",
-    icerik:
-      "Yoğun dönemde büyük paket al, durgun dönemde alma. Zorla abonelik yok. İstediğin zaman istediğin paketi alabilirsin.",
-  },
 ];
 
 const sss = [
@@ -188,7 +170,7 @@ export default function FiyatlarPage() {
       <section className="px-4 sm:px-6 py-10 bg-gray-50 border-y border-gray-100">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-xl font-bold text-gray-800 text-center mb-8">Kredi nasıl çalışır?</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
             {krediAciklamalari.map((k, i) => (
               <div key={i} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
                 <div className="text-2xl mb-3">{k.ikon}</div>
@@ -197,6 +179,7 @@ export default function FiyatlarPage() {
               </div>
             ))}
           </div>
+          <p className="text-center text-xs text-gray-400">✅ Krediler tüm içerik türlerinde kullanılır · Süre sınırı yok · Abonelik yok</p>
         </div>
       </section>
 

@@ -118,11 +118,6 @@ export default async function BlogPage() {
                     style={{ width: "100%", height: "176px", objectFit: "cover", display: "block" }}
                   />
                 )}
-                {!yazi.kapakGorsel && (
-                  <div className="w-full h-40 bg-indigo-50 flex items-center justify-center">
-                    <span className="text-4xl">📝</span>
-                  </div>
-                )}
                 <div className="p-5 flex flex-col flex-1">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-xs bg-indigo-50 text-indigo-600 border border-indigo-100 px-2 py-0.5 rounded-full font-medium">
