@@ -26,7 +26,20 @@ Ama `/uret` sidebar doğru çalışıyor (24 kredi, 19+ üretim).
 Üstteki ortak fotoğraf yükleme alanına resim yükleniyor (Metin/Görsel/Video etiketleri görünüyor) ama Sosyal Medya sekmesindeki "Ürün Görseli" bölümü bunu görmüyor — tekrar "Ürün fotoğrafı yükle" diyor.
 **Fix:** `components/tabs/SosyalSekmesi.tsx`'e üstteki fotoğraf state'ini prop olarak geçir. `app/uret/page.tsx`'te SosyalSekmesi'ne `foto` (veya `yuklenenfoto`) prop'u ekle. Fotoğraf yüklüyse thumbnail göster, tekrar yükleme alanı gösterme.
 
-### 4. UX metin düzeltmeleri (UX-01~03, UX-14~16 — açık, demo-kritik)
+### 4. ✅ `/profil` hesap silme eski pattern + duplikasyon (T7-09 — P1) — DONE
+`/profil` sayfasında "Hesabı Sil" bölümü kaldırıldı, `/hesap/ayarlar`'a link ile değiştirildi. `/hesap/ayarlar`'da ise checkbox + modal ile düzgün yapılmış.
+**Sorun:** Hesap silme iki yerde var — kullanıcı hangisini kullanacağını bilmiyor + biri eski UX.
+**Fix:** `/profil/page.tsx`'teki "Hesabı Sil" bölümünü (satır ~500-510) tamamen kaldır. Yerine `/hesap/ayarlar`'a yönlendiren bir link koy:
+```tsx
+// ESKİ: SİL yazdırma + buton (satır 500-510 civarı)
+// YENİ:
+<p className="text-sm text-gray-500">Hesap ayarlarını değiştirmek veya hesabını silmek için 
+  <a href="/hesap/ayarlar" className="text-indigo-600 hover:underline ml-1">Hesap Ayarları</a>'na git.
+</p>
+```
+**Dosya:** `app/profil/page.tsx` — "Hesabı Sil" bölümü (satır 498-510) + ilgili state'ler (silmeOnayMetni, silmeMesaj, siliniyor) temizlensin.
+
+### 5. UX metin düzeltmeleri (UX-01~03, UX-14~16 — açık, demo-kritik)
 Bu maddeler aşağıda "UX Tutarlılık" bölümünde detaylı. Sırayla:
 - **UX-01**: "kayıt olmadan başlayın" → "Ücretsiz hesap oluştur, 3 kredi hediye"
 - **UX-02**: Blog CTA "misafir olarak başla" → "Ücretsiz hesap oluştur"
@@ -434,7 +447,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 - [x] **T7-04** 🟡 P1 — Yasal sayfaların 3'ünde SiteHeader yok. ✅ /hakkimizda, /mesafeli-satis, /teslimat-iade + /kosullar, /kvkk-aydinlatma, /cerez-politikasi'na SiteHeader eklendi.
 - [x] **T7-05** 🟡 P1 — Yasal sayfaların 3'ünde Footer yok. ✅ /kosullar, /kvkk-aydinlatma, /cerez-politikasi'na SiteFooter eklendi.
 - [x] **T7-06** 🟡 P1 — `/profil` title tag jenerik. ✅ app/profil/layout.tsx'e `title: 'Profilim'` eklendi.
-- [ ] **T7-07** 🟡 P1 — Sosyal Medya "Ürün Görseli" bölümü yüklenen fotoğrafı tanımıyor: Üstteki genel fotoğraf yükleme alanına resim yükleniyor (Metin/Görsel/Video/Sosyal etiketleri görünüyor) ama Sosyal Medya sekmesindeki "Ürün Görseli" alt bölümü bunu görmüyor — tekrar "Ürün fotoğrafı yükle" diyor.
+- [x] **T7-07** 🟡 P1 — Sosyal Medya "Ürün Görseli" bölümü yüklenen fotoğrafı tanımıyor. ✅ uret/page.tsx'e useEffect ile fotolar[0] → sosyal.setSosyalFoto sync eklendi. Üstteki genel fotoğraf yükleme alanına resim yükleniyor (Metin/Görsel/Video/Sosyal etiketleri görünüyor) ama Sosyal Medya sekmesindeki "Ürün Görseli" alt bölümü bunu görmüyor — tekrar "Ürün fotoğrafı yükle" diyor.
   **Kök neden tahmini:** Sosyal sekmesinin "Ürün Görseli" bölümü ayrı bir file state kullanıyor, üstteki ortak fotoğraf yükleme state'ini okumuyor.
   **Fix:** `components/tabs/SosyalSekmesi.tsx` — üstten yüklenen fotoğraf state'ini (muhtemelen `foto` veya `yuklenenfoto`) prop olarak alsın ve yüklüyse "fotoğraf yükle" yerine thumbnail göstersin. Tüm sekmeler ortak fotoğrafı paylaşıyor olmalı (PQ-14'teki gibi).
   **Dosya:** `components/tabs/SosyalSekmesi.tsx`, `app/uret/page.tsx` (prop geçirme)
@@ -473,16 +486,16 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 - [x] **UX-16** P1 — Video sekmesi kredi tutarsızlığı. ✅ "5sn: 5 kredi · 10sn: 8 kredi" sabit metin.
 - [x] **UX-17** P2 — Markalı checkbox "jenerik" metni. ✅ → "Markasız veya el yapımı ürünlerde malzeme, teknik ve hikaye öne çıkar".
 
-- [ ] **UX-18** P2 — "7 pazaryeri" vs UI'da 6 platform — Hero ve marketing metinlerde "7 pazaryeri" yazıyor ama dropdown'da 6 seçenek var (Trendyol, Hepsiburada, Amazon TR, N11, Etsy, Amazon USA). Amazon TR + USA ayrı sayılıyorsa "7" doğru ama kullanıcı 6 sayıyor. Karar ver ve hizala.
+- [x] **UX-18** P2 — "7 pazaryeri" vs UI'da 6 platform. ✅ /uret compact hero "7 Pazaryeri" → "6 Pazaryeri" olarak güncellendi. — Hero ve marketing metinlerde "7 pazaryeri" yazıyor ama dropdown'da 6 seçenek var (Trendyol, Hepsiburada, Amazon TR, N11, Etsy, Amazon USA). Amazon TR + USA ayrı sayılıyorsa "7" doğru ama kullanıcı 6 sayıyor. Karar ver ve hizala.
   **Dosyalar:** `components/tanitim/AuthHero.tsx`, `components/tanitim/BenefitsGrid.tsx`
 
-- [ ] **UX-19** P2 — Görsel sekmesinde "1 stil = 1 kredi" 3 kez tekrar — Başlıkta, alt başlıkta ve stil seçim alanında. Bilgi yükü.
+- [x] **UX-19** P2 — Görsel sekmesinde "1 stil = 1 kredi" 3 kez tekrar. ✅ Başlık badgesi kaldırıldı, açıklama paragrafında 1 kez kalıyor. — Başlıkta, alt başlıkta ve stil seçim alanında. Bilgi yükü.
   **Fix:** Sadece stil seçim alanında 1 kez göster, başlıktan kaldır.
 
-- [ ] **UX-20** P2 — "Hızlı başla" örneklerine Gıda + Takı ekle — Şu an 3 örnek (Kozmetik, Giyim, Elektronik). Test fixture'larıyla hizala: +🫒 Gıda, +💎 Takı/Aksesuar.
+- [x] **UX-20** P2 — "Hızlı başla" örneklerine Gıda + Takı ekle. ✅ MetinSekmesi 3→5 örnek (+🫒 Gıda, +💎 Takı). — Şu an 3 örnek (Kozmetik, Giyim, Elektronik). Test fixture'larıyla hizala: +🫒 Gıda, +💎 Takı/Aksesuar.
   **Dosya:** `app/uret/page.tsx` veya ilgili component
 
-- [ ] **UX-21** P1 — `/uret` "Geçmiş Üretimler" tıklanınca kullanıcı ne değiştiğini anlamıyor — Sayfa içi bir toggle/açılır alan gibi davranıyorsa, kullanıcı context kaybediyor. Geçmiş üretimler profil sayfasında yaşamalı.
+- [x] **UX-21** P1 — `/uret` "Geçmiş Üretimler" tıklanınca kullanıcı ne değiştiğini anlamıyor. ✅ Inline toggle → "📋 Geçmiş Üretimlerim →" linki /hesap/profil'e. — Sayfa içi bir toggle/açılır alan gibi davranıyorsa, kullanıcı context kaybediyor. Geçmiş üretimler profil sayfasında yaşamalı.
   **Fix:** `/uret` sayfasındaki "Geçmiş Üretimler" linkini `/hesap/uretimler` (veya `/hesap/profil#uretimler`) sayfasına yönlendir. `/uret` formu üretim aracı olarak sade kalsın.
   ```
   ESKİ: /uret içinde geçmiş üretimler inline toggle
@@ -500,7 +513,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 **P1 — Buton Tekrarı + CTA Temizliği:**
 
-- [ ] **UX-04** P1 — `/uret` logout buton tekrarı — Kullanıcı aynı anda 4 yerden "hesap oluştur / giriş yap" görüyor (compact hero, sidebar, header, üret butonu). Baskı hissi yaratıyor.
+- [x] **UX-04** P1 — `/uret` logout buton tekrarı. ✅ Sidebar auth CTA → araç açıklaması "💡 Nasıl çalışır?" ile değiştirildi. — Kullanıcı aynı anda 4 yerden "hesap oluştur / giriş yap" görüyor (compact hero, sidebar, header, üret butonu). Baskı hissi yaratıyor.
   **Fix:** Sidebar auth CTA bloğunu kaldır. Yerine kısa araç açıklaması koy:
   ```
   ESKİ sidebar (logout):
@@ -514,7 +527,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   ```
   **Dosya:** `app/uret/page.tsx` — sidebar render bloğu (logout durumu)
 
-- [ ] **UX-05** P1 — Sekme buton ifadeleri tutarsız — Metin: "✨ X Metin Üret", Video: "🎬 Video Üret", Sosyal: "Üret — 1 kredi". Emoji, format ve kredi gösterimi farklı.
+- [x] **UX-05** P1 — Sekme buton ifadeleri tutarsız. ✅ Tüm sekmelerde ✨ emoji + "— X kredi" pattern. — Metin: "✨ X Metin Üret", Video: "🎬 Video Üret", Sosyal: "Üret — 1 kredi". Emoji, format ve kredi gösterimi farklı.
   **Fix:** Tüm sekmelerde tek pattern:
   ```
   Metin:  "✨ Metin Üret — 1 kredi"    (veya "Giriş Gerekli")
@@ -527,7 +540,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 **P1 — Değer İletişimi (demo öncesi kritik):**
 
-- [ ] **UX-06** P1 — Ana sayfa hero generic — "Ürünün için her içeriği tek platformda üret" ne olduğunu söylüyor ama neden önemli olduğunu söylemiyor. ChatGPT'den farkı belirsiz.
+- [x] **UX-06** P1 — Ana sayfa hero generic. ✅ "Fotoğraf yükle, pazaryerine hazır içeriğini al" + değer odaklı alt metin. — "Ürünün için her içeriği tek platformda üret" ne olduğunu söylüyor ama neden önemli olduğunu söylemiyor. ChatGPT'den farkı belirsiz.
   **Fix:** Hero mesajını değer odaklı yap:
   ```
   ESKİ başlık: "Ürünün için her içeriği tek platformda üret"
@@ -538,7 +551,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   ```
   **Dosya:** `components/tanitim/AuthHero.tsx`
 
-- [ ] **UX-07** P1 — "Neden yzliste?" bölümü özellik listesi, değer önerisi değil — "Barkod tara", "Şeffaf kredi sistemi" gibi maddeler kullanıcıyı ikna etmiyor. Rakip karşılaştırması yok.
+- [x] **UX-07** P1 — "Neden yzliste?" bölümü özellik listesi, değer önerisi değil. ✅ 6→4 madde, rakip karşılaştırması ile değer önerisi formatına geçildi. — "Barkod tara", "Şeffaf kredi sistemi" gibi maddeler kullanıcıyı ikna etmiyor. Rakip karşılaştırması yok.
   **Fix:** 6 maddeyi 4'e indir, her biri bir rakibe karşı pozisyon alsın:
   ```
   ESKİ 6 madde:
@@ -564,7 +577,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   ```
   **Dosya:** `components/tanitim/BenefitsGrid.tsx`
 
-- [ ] **UX-08** P1 — "Dakikalar içinde hazır" bölümü tekrar — 6 adımın 4'ü zaten "Tek platformda 4 içerik türü" bölümünde anlatılıyor. Sayfa uzuyor, kullanıcı kaydırmaktan sıkılıyor.
+- [x] **UX-08** P1 — "Dakikalar içinde hazır" bölümü tekrar. ✅ 6 adım → 3 yatay kart ("3 adımda hazır"). — 6 adımın 4'ü zaten "Tek platformda 4 içerik türü" bölümünde anlatılıyor. Sayfa uzuyor, kullanıcı kaydırmaktan sıkılıyor.
   **Fix:** 6 adımı 3'e indir, inline banner formatına geç:
   ```
   ESKİ: 6 adımlı dikey akış (ürün tanımla → platform seç → listing al → görsel üret → video üret → sosyal medya)
@@ -579,7 +592,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 **P1 — Fiyatlar Sayfası Temizliği:**
 
-- [ ] **UX-09** P1 — "Kredi nasıl çalışır" 10 kart, duplikasyon var — Video ve Sosyal medya kartları 2 kez tekrarlanıyor (kart 4=kart 6, kart 5=kart 7). Kullanıcı için çok uzun.
+- [x] **UX-09** P1 — "Kredi nasıl çalışır" 10 kart, duplikasyon var. ✅ 8→5 kart + özet satır "✅ Krediler tüm içerik türlerinde kullanılır · Süre sınırı yok · Abonelik yok". — Video ve Sosyal medya kartları 2 kez tekrarlanıyor (kart 4=kart 6, kart 5=kart 7). Kullanıcı için çok uzun.
   **Fix:** 10 kartı 5'e indir:
   ```
   KALACAK 5 KART:
@@ -601,7 +614,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
   ```
   **Dosya:** `app/fiyatlar/page.tsx` — kredi kartları bölümü
 
-- [ ] **UX-10** P1 — Paket kartlarında tutarsız birim/toplam dili — Başlangıç paketi "1 kredi / ürün" (birim), Popüler "30 ürün" (toplam), Büyük "100 ürün" (toplam). Aynı sayfada iki dil. "100 ürün" yanıltıcı — 100 metin VEYA 100 görsel, ikisi birden değil.
+- [x] **UX-10** P1 — Paket kartlarında tutarsız birim/toplam dili. ✅ lib/paketler.ts tüm paketlerde birim fiyat formatı standartlaştırıldı. — Başlangıç paketi "1 kredi / ürün" (birim), Popüler "30 ürün" (toplam), Büyük "100 ürün" (toplam). Aynı sayfada iki dil. "100 ürün" yanıltıcı — 100 metin VEYA 100 görsel, ikisi birden değil.
   **Fix:** Tüm paketlerde aynı format — birim fiyat göster, toplam kapasite gösterme:
   ```
   TÜM PAKETLERDE AYNI ÖZELLİK LİSTESİ:
@@ -630,7 +643,7 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 
 **P2 — Blog + Kategori:**
 
-- [ ] **UX-11** P2 — Blog kartlarında boş fotoğraf kutusu — Hiçbir yazıda `kapakGorsel` yok, emoji placeholder görünüyor. Placeholder kaldırılsın, sadece başlık + özet + tarih kalsın. İleride fotoğraf eklenince tekrar açılır.
+- [x] **UX-11** P2 — Blog kartlarında boş fotoğraf kutusu. ✅ Placeholder emoji kutusu kaldırıldı. — Hiçbir yazıda `kapakGorsel` yok, emoji placeholder görünüyor. Placeholder kaldırılsın, sadece başlık + özet + tarih kalsın. İleride fotoğraf eklenince tekrar açılır.
   **Fix:** Blog kart render'ında `kapakGorsel` kontrolünü kaldır — fotoğraf alanını tamamen gizle:
   ```
   ESKİ: kapakGorsel varsa göster, yoksa 📝 emoji placeholder (176px kutu)
@@ -820,4 +833,4 @@ Aşağıdaki eşiklerden 2'si gerçekleşince backlog'a al: **1.000 tekil/ay, 10
 - Bir iş bittiğinde `- [ ]` → `- [x]` olarak güncelle. Yarım iş `[x]` olmaz.
 - `~%XX` notları kısmen tamamlanmış item'ları gösterir — bunları tamamla, sonra `[x]` yap.
 - Her küme tek PR değil. Küme içinde 3-5 PR olabilir ama aynı branch ailesinde.
-- `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+- `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
