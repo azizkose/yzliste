@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
 
-const PROTECTED_PATHS = ['/app', '/hesap', '/kredi-yukle']
+const PROTECTED_PATHS = ['/app', '/hesap', '/kredi-yukle', '/admin']
 
 const BOT_UA_PATTERN = /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|sogou|exabot|facebot|ia_archiver/i
 

@@ -21,84 +21,42 @@ type Metrik = {
 export default function AdminPage() {
   const [metrik, setMetrik] = useState<Metrik | null>(null);
   const [yukleniyor, setYukleniyor] = useState(true);
+  const [hata, setHata] = useState<string | null>(null);
   const router = useRouter();
 
   const metrikleriYukle = useCallback(async () => {
     setYukleniyor(true);
+    setHata(null);
 
-    const { count: toplamKullanici } = await supabase
-      .from("profiles").select("*", { count: "exact", head: true });
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { router.push("/giris"); return; }
 
-    const { count: toplamUretim } = await supabase
-      .from("uretimler").select("*", { count: "exact", head: true });
-
-    const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
-    const { count: bugunUretim } = await supabase
-      .from("uretimler").select("*", { count: "exact", head: true })
-      .gte("created_at", bugun.toISOString());
-
-    const haftaBasi = new Date(); haftaBasi.setDate(haftaBasi.getDate() - 7);
-    const { count: buHaftaUretim } = await supabase
-      .from("uretimler").select("*", { count: "exact", head: true })
-      .gte("created_at", haftaBasi.toISOString());
-
-    const { data: krediler } = await supabase.from("profiles").select("kredi");
-    const toplamKredi = krediler?.reduce((acc, p) => acc + (p.kredi || 0), 0) || 0;
-
-    const { data: tokenData } = await supabase
-      .from("uretimler").select("input_token, output_token");
-    const toplamInputToken = tokenData?.reduce((acc, u) => acc + (u.input_token || 0), 0) || 0;
-    const toplamOutputToken = tokenData?.reduce((acc, u) => acc + (u.output_token || 0), 0) || 0;
-
-    const { data: platformData } = await supabase.from("uretimler").select("platform");
-    const platformDagilim: Record<string, number> = {};
-    platformData?.forEach((u) => { platformDagilim[u.platform] = (platformDagilim[u.platform] || 0) + 1; });
-
-    const { data: girisTipiData } = await supabase.from("uretimler").select("giris_tipi");
-    const girisTipiDagilim: Record<string, number> = {};
-    girisTipiData?.forEach((u) => { girisTipiDagilim[u.giris_tipi] = (girisTipiDagilim[u.giris_tipi] || 0) + 1; });
-
-    const { data: sonKullanicilar } = await supabase
-      .from("profiles").select("email, kredi, created_at")
-      .order("created_at", { ascending: false }).limit(10);
-
-    const { data: sonUretimler } = await supabase
-      .from("uretimler").select("urun_adi, platform, created_at, input_token, output_token")
-      .order("created_at", { ascending: false }).limit(10);
-
-    setMetrik({
-      toplamKullanici: toplamKullanici || 0,
-      toplamUretim: toplamUretim || 0,
-      bugunUretim: bugunUretim || 0,
-      buHaftaUretim: buHaftaUretim || 0,
-      toplamKredi,
-      toplamInputToken,
-      toplamOutputToken,
-      platformDagilim,
-      girisTipiDagilim,
-      sonKullanicilar: sonKullanicilar || [],
-      sonUretimler: sonUretimler || [],
+    const res = await fetch("/api/admin/metrics", {
+      headers: { Authorization: `Bearer ${session.access_token}` },
     });
 
+    if (res.status === 403) { router.push("/"); return; }
+    if (!res.ok) { setHata("Metrikler yüklenemedi."); setYukleniyor(false); return; }
+
+    const data = await res.json();
+    setMetrik(data);
     setYukleniyor(false);
-  }, []);
+  }, [router]);
 
-  const adminKontrol = useCallback(async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user || user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-      router.push("/");
-      return;
-    }
-    metrikleriYukle();
-  }, [router, metrikleriYukle]);
-
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { adminKontrol(); }, [adminKontrol]);
+  useEffect(() => { metrikleriYukle(); }, [metrikleriYukle]);
 
   if (yukleniyor) {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-gray-400">Yükleniyor...</div>
+      </main>
+    );
+  }
+
+  if (hata) {
+    return (
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-red-500">{hata}</div>
       </main>
     );
   }
