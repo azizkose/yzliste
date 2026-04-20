@@ -360,7 +360,7 @@ export default function MetinSekmesi({
               const res = await fetch("/api/uret/duzenle", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ sonuc, aksiyon, userId: kullanici.id }),
+                body: JSON.stringify({ sonuc, aksiyon, userId: kullanici.id, platform, kategori }),
               });
               const data = await res.json();
               if (data.sonuc) setSonuc(data.sonuc);
@@ -372,7 +372,7 @@ export default function MetinSekmesi({
                   if (!kullanici || yukleniyor || duzenleYukleniyor) return;
                   if (uretimId && yenidenUretHakki > 0) {
                     setDuzenleYukleniyor(true);
-                    const res = await fetch("/api/uret/duzenle", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sonuc, aksiyon: "yeniden_uret_context", userId: kullanici.id }) });
+                    const res = await fetch("/api/uret/duzenle", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sonuc, aksiyon: "yeniden_uret_context", userId: kullanici.id, platform, kategori }) });
                     const data = await res.json();
                     if (data.sonuc) { setSonuc(data.sonuc); setYenidenUretHakki(h => h - 1); }
                     setDuzenleYukleniyor(false);

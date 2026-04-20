@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-04-20 — Hero video + KF P1 fixes + PE-02 tamamlandı
+
+- AuthHero: video object-contain (kırpmasız), hero-video-full.mp4 (kullanıcı kopyaladı)
+- KF-01 son: useVideoUretim.ts videoKredi 5/8 → 10/20 (hook eski fiyatla düşüyordu)
+- KF-02: KrediButon kredi prop opsiyonel — admin'de "0 kredi" gizlendi
+- KF-03: VideoSekmesi indirme butonu loading state + disabled
+- PE-02 tamamlandı: duzenle route'a PLATFORM_CONTEXT + kategori, MetinSekmesi'nden gönderiliyor
+
 ## 2026-04-20 — P0+P1 prompt/kredi iyileştirmeleri + Blog taşıma
 
 - KF-01: Video kredisi 5sn 5→10 kr, 10sn 8→20 kr (paketler + API + UI)

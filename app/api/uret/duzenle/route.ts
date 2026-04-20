@@ -42,8 +42,17 @@ const AKSIYON_PROMPTLARI: Record<string, string> = {
 Teknik ifadeler ve olgusal dil kullan, duygusal ifadeleri kaldır. Bölüm formatını koru.`,
 };
 
+const PLATFORM_CONTEXT: Record<string, string> = {
+  trendyol:    "Platform: Trendyol — başlık max 100 karakter, 5 özellik maddesi, Türkçe",
+  hepsiburada: "Platform: Hepsiburada — başlık max 100 karakter, 5 özellik maddesi, Türkçe",
+  amazon:      "Platform: Amazon TR — başlık max 200 karakter, 5 bullet point, Türkçe",
+  n11:         "Platform: N11 — başlık max 100 karakter, 5 özellik maddesi, Türkçe",
+  etsy:        "Platform: Etsy — başlık max 140 karakter, 13 etiket, İngilizce",
+  amazon_usa:  "Platform: Amazon USA — başlık max 200 karakter, 5 bullet point, İngilizce",
+};
+
 export async function POST(req: NextRequest) {
-  const { sonuc, aksiyon, userId } = await req.json();
+  const { sonuc, aksiyon, userId, platform, kategori } = await req.json();
 
   if (!userId) return NextResponse.json({ hata: "Giriş yapılmadı" }, { status: 401 });
   if (!sonuc || !aksiyon) return NextResponse.json({ hata: "sonuc ve aksiyon gerekli" }, { status: 400 });
@@ -88,7 +97,11 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
         max_tokens: 2048,
-        system: DUZENLE_SISTEM_PROMPT,
+        system: [
+          DUZENLE_SISTEM_PROMPT,
+          platform && PLATFORM_CONTEXT[platform] ? PLATFORM_CONTEXT[platform] : "",
+          kategori ? `Ürün kategorisi: ${kategori}` : "",
+        ].filter(Boolean).join("\n"),
         messages: [{ role: "user", content: `${prompt}\n\n---\n\n${sonuc}` }],
       }),
     });
