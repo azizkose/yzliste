@@ -4,8 +4,6 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export const metadata = undefined; // client component — metadata app/layout'tan gelir
-
 export default function HesapMarkaPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [yukleniyor, setYukleniyor] = useState(true);
