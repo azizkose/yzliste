@@ -424,7 +424,7 @@ export default function Home() {
                   </button>
                   {/* UX-21: Geçmiş üretimler linki */}
                   {!kullanici.anonim && gecmis.length > 0 && (
-                    <Link href="/hesap/profil" className="w-full flex items-center justify-between text-xs text-gray-500 hover:text-indigo-600 py-1.5 border border-gray-200 rounded-xl px-2 hover:border-indigo-300 transition-colors">
+                    <Link href="/hesap/uretimler" className="w-full flex items-center justify-between text-xs text-gray-500 hover:text-indigo-600 py-1.5 border border-gray-200 rounded-xl px-2 hover:border-indigo-300 transition-colors">
                       <span>📋 Geçmiş Üretimlerim ({gecmis.length})</span>
                       <span>→</span>
                     </Link>

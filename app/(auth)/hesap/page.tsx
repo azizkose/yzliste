@@ -174,7 +174,7 @@ export default async function HesapPage() {
             </div>
             {/* D-04: Tüm geçmiş linki */}
             <div className="px-5 py-3 border-t border-gray-50 text-center">
-              <Link href="/hesap/profil" className="text-xs text-indigo-400 hover:text-indigo-600 hover:underline transition-colors">
+              <Link href="/hesap/uretimler" className="text-xs text-indigo-400 hover:text-indigo-600 hover:underline transition-colors">
                 Tüm üretim geçmişini gör →
               </Link>
             </div>
@@ -190,12 +190,14 @@ export default async function HesapPage() {
         )}
 
         {/* Hızlı linkler */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {[
-            { href: '/hesap/profil', baslik: 'Profil', aciklama: 'Marka bilgileri ve fatura ayarları', ikon: '👤' },
-            { href: '/hesap/krediler', baslik: 'Krediler', aciklama: 'Kredi geçmişi ve satın alma', ikon: '💳' },
-            { href: '/hesap/faturalar', baslik: 'Faturalar', aciklama: 'e-Arşiv fatura indir ve gönder', ikon: '🧾' },
-            { href: '/hesap/ayarlar', baslik: 'Ayarlar', aciklama: 'E-posta ve şifre değiştir', ikon: '⚙️' },
+            { href: '/hesap/profil',    baslik: 'Profil',      aciklama: 'Kişisel ve fatura bilgileri',      ikon: '👤' },
+            { href: '/hesap/marka',     baslik: 'Marka',       aciklama: 'Marka profili ve metin tonu',      ikon: '🏪' },
+            { href: '/hesap/uretimler', baslik: 'Üretimler',   aciklama: 'Tüm üretim geçmişi',               ikon: '📋' },
+            { href: '/hesap/krediler',  baslik: 'Krediler',    aciklama: 'Kredi geçmişi ve satın alma',      ikon: '💳' },
+            { href: '/hesap/faturalar', baslik: 'Faturalar',   aciklama: 'e-Arşiv fatura indir ve gönder',   ikon: '🧾' },
+            { href: '/hesap/ayarlar',   baslik: 'Ayarlar',     aciklama: 'E-posta ve şifre değiştir',        ikon: '⚙️' },
           ].map((l) => (
             <Link key={l.href} href={l.href} className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm hover:border-indigo-200 hover:shadow-md transition-all group">
               <div className="text-2xl mb-3">{l.ikon}</div>
