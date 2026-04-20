@@ -2,12 +2,12 @@ import Link from "next/link";
 
 export default function AuthHero() {
   return (
-    <section className="relative overflow-hidden min-h-[80vh] md:min-h-[70vh] lg:aspect-video flex items-center bg-gray-900">
+    <section className="relative overflow-hidden aspect-video min-h-[60vh] sm:min-h-0 flex items-center bg-gray-900">
       {/* Mobil: statik poster (performans + doğru oran) */}
       <img
         src="/hero-poster.jpg"
         alt=""
-        className="absolute inset-0 w-full h-full object-cover brightness-[0.4] md:hidden"
+        className="absolute inset-0 w-full h-full object-contain brightness-[0.4] md:hidden"
       />
       {/* Tablet+: video */}
       <video
@@ -16,8 +16,9 @@ export default function AuthHero() {
         muted
         playsInline
         poster="/hero-poster.jpg"
+        preload="metadata"
         className="absolute inset-0 w-full h-full object-contain brightness-[0.4] hidden md:block"
-        src="/hero-video.mp4"
+        src="/hero-video-full.mp4"
       />
       {/* Header altındaki alanı okunaklı kılan gradyan */}
       <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/50 to-transparent z-[1]" />
