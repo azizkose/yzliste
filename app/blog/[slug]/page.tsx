@@ -169,16 +169,26 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
         <div className={gridClass}>
           {maddeler.map((madde, i) => {
             const [src, etiket] = madde.split("|");
+            const trimmedSrc = src?.trim();
+            const isVideo = trimmedSrc?.match(/\.(mp4|webm|mov)$/i);
             return (
               <div key={i} className="rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
-                <video
-                  src={src?.trim()}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full aspect-video object-cover"
-                />
+                {isVideo ? (
+                  <video
+                    src={trimmedSrc}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full aspect-video object-cover"
+                  />
+                ) : (
+                  <img
+                    src={trimmedSrc}
+                    alt={etiket?.trim() ?? ""}
+                    className="w-full aspect-video object-cover"
+                  />
+                )}
                 {etiket && (
                   <p className="text-xs text-center text-gray-500 py-1.5">{etiket.trim()}</p>
                 )}

@@ -118,7 +118,7 @@ function parseContent(body: string): BlogBolum[] {
         currentSection = { tip: "bilgi-kutusu" };
       } else if (heading.match(/^SONUÇ/i)) {
         currentSection = { tip: "sonuc" };
-      } else if (heading.match(/^V[İI]DEO/i)) {
+      } else if (heading.match(/^(V[İI]DEO|FOTO)/i)) {
         currentSection = { tip: "video-grid" };
       } else {
         currentSection = { tip: "baslik", baslik: heading };
