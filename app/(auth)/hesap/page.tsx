@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import { useCredits } from '@/lib/hooks/useCredits'
+import { useCurrentUser } from '@/lib/hooks/useCurrentUser'
 
 const PLATFORM_ETIKET: Record<string, string> = {
   trendyol: 'Trendyol',
@@ -19,40 +21,34 @@ type SonUretim = {
 
 export default function HesapPage() {
   const router = useRouter()
+  const { data: krediData } = useCredits()
+  const { data: currentUser } = useCurrentUser()
   const [yukleniyor, setYukleniyor] = useState(true)
-  const [kredi, setKredi] = useState(0)
-  const [profilYuklendi, setProfilYuklendi] = useState(false)
   const [buAyUretim, setBuAyUretim] = useState(0)
   const [toplamUretimSayisi, setToplamUretimSayisi] = useState(0)
-  const [toplamKullanilan, setToplamKullanilan] = useState(0)
   const [platformSayac, setPlatformSayac] = useState<Record<string, number>>({})
   const [favoriPlatform, setFavoriPlatform] = useState<string | undefined>()
   const [sonUretimler, setSonUretimler] = useState<SonUretim[]>([])
-  const [email, setEmail] = useState('')
+
+  const kredi = krediData ?? 0
+  const toplamKullanilan = currentUser?.toplam_kullanilan ?? 0
+  const profilYuklendi = krediData !== null && krediData !== undefined
 
   useEffect(() => {
     async function yukle() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/giris'); return }
 
-      setEmail(user.email ?? '')
-
       const ayBaslangic = new Date()
       ayBaslangic.setDate(1)
       ayBaslangic.setHours(0, 0, 0, 0)
 
-      const [profilRes, buAyRes, platformRes, sonUretimlerRes] = await Promise.all([
-        supabase.from('profiles').select('kredi, toplam_kullanilan').eq('id', user.id).single(),
+      const [buAyRes, platformRes, sonUretimlerRes] = await Promise.all([
         supabase.from('uretimler').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('created_at', ayBaslangic.toISOString()),
         supabase.from('uretimler').select('platform').eq('user_id', user.id),
         supabase.from('uretimler').select('id, platform, created_at, urun_adi, giris_tipi').eq('user_id', user.id).order('created_at', { ascending: false }).limit(5),
       ])
 
-      const profil = profilRes.data
-      const yuklendiMi = !profilRes.error && profil !== null
-      setProfilYuklendi(yuklendiMi)
-      setKredi(profil?.kredi ?? 0)
-      setToplamKullanilan(profil?.toplam_kullanilan ?? 0)
       setBuAyUretim(buAyRes.count ?? 0)
 
       const sayac: Record<string, number> = {}
@@ -78,7 +74,7 @@ export default function HesapPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Hesabım</h1>
-            <p className="text-sm text-gray-400 mt-1">{email}</p>
+            <p className="text-sm text-gray-400 mt-1">{currentUser?.email ?? ''}</p>
           </div>
           <Link href="/uret" className="text-sm bg-indigo-500 text-white px-4 py-2 rounded-xl hover:bg-indigo-600 transition-colors font-medium">
             İçerik Üret →
