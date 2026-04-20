@@ -30,3 +30,5 @@ Başlığa sığdıramadığınız ama müşterilerin arattığı tüm kelimeler
 ## SONUÇ
 
 Amazon'da listeleme yapmak bir sanattır. Kurallara uymak, yüksek çözünürlüklü görseller kullanmak ve doğru anahtar kelimeleri seçmek, sizi global bir satıcıya dönüştürecektir.
+
+[Hemen dene — ücretsiz başla](/uret)

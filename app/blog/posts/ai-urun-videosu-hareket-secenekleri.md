@@ -5,7 +5,7 @@ ozet: 360° dönüş mü, zoom yaklaşım mı, dramatik ışık mı? AI video ü
 yayinTarihi: 2026-04-16
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
-kategori: İçerik Üretimi
+kategori: AI ve Görsel
 etiketler: ai video,ürün videosu,instagram reels,tiktok,e-ticaret video,hareket tarifi
 kapakGorsel:
 ---
@@ -110,9 +110,9 @@ Profil bilgilerini doldurmuşsan otomatik sonuç genellikle yeterince iyidir. Ö
 
 ## Hangi Süre? 5 Saniye mi, 10 Saniye mi?
 
-**5 saniye (5 kredi):** Instagram Story, TikTok, hızlı ürün tanıtımı. Dikkat süresi kısa içerikler için ideal. Çoğu durumda yeterlidir.
+**5 saniye (10 kredi):** Instagram Story, TikTok, hızlı ürün tanıtımı. Dikkat süresi kısa içerikler için ideal. Çoğu durumda yeterlidir.
 
-**10 saniye (8 kredi):** Daha uzun hareket sekansı, birden fazla açı. Özellikle 360° dönüş ve doğal ortam seçeneklerinde 10 saniye çok daha iyi sonuç verir. Ürün sayfası ya da detaylı tanıtım için tercih et.
+**10 saniye (20 kredi):** Daha uzun hareket sekansı, birden fazla açı. Özellikle 360° dönüş ve doğal ortam seçeneklerinde 10 saniye çok daha iyi sonuç verir. Ürün sayfası ya da detaylı tanıtım için tercih et.
 
 ---
 
@@ -120,4 +120,4 @@ Profil bilgilerini doldurmuşsan otomatik sonuç genellikle yeterince iyidir. Ö
 
 AI video üretiminde en önemli karar hareket seçimi. Ürün kategorin ve mesajın ne — bu iki şeyi biliyorsan doğru seçim kolay. Takı satıyorsan 360° dön, el emeği satıyorsan zoom yaklaş, lüks satıyorsan ışığı dramatikleştir, doğal yaşam satıyorsan yeşilliğe bırak.
 
-yzliste'de tek fotoğraftan video üretmek birkaç tıklama — [hemen dene](/).
+yzliste'de tek fotoğraftan video üretmek birkaç tıklama — [hemen dene](/uret).

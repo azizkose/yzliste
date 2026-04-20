@@ -41,3 +41,5 @@ Trendyol açıklamasında yaklaşık 300 kelime hedefle. İlk iki cümle en öne
 ## SONUÇ
 
 Trendyol listing'inde başarı, algoritmanın sevdiği formatı insan okumaya uygun şekilde doldurmaktan geçiyor. Başlıktan etikete kadar her alanı doldur, fayda odaklı yaz ve düzenli olarak güncelle.
+
+[Hemen dene — ücretsiz başla](/uret)

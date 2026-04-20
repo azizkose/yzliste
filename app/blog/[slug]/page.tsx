@@ -92,7 +92,7 @@ function MetinLink({ text }: { text: string }) {
   while ((match = regex.exec(text)) !== null) {
     if (match.index > lastIndex) tokens.push({ type: 'text', value: text.slice(lastIndex, match.index) })
     if (match[1]) tokens.push({ type: 'link', label: match[1], href: match[2] })
-    else tokens.push({ type: 'link', label: 'yzliste', href: '/' })
+    else tokens.push({ type: 'link', label: 'yzliste', href: '/uret' })
     lastIndex = regex.lastIndex
   }
   if (lastIndex < text.length) tokens.push({ type: 'text', value: text.slice(lastIndex) })

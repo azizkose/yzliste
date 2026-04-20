@@ -1,5 +1,5 @@
 ---
-slug: amazon-a9-algoritmasi-ile-satis-katlama
+slug: amazon-a9-algoritmasi
 baslik: Amazon TR’de Satış Artırmanın Yolları: A9 Algoritması Rehberi
 ozet: Amazon'un dönüşüm odaklı A9 algoritmasını çözerek ürünlerinizi ilk sayfaya nasıl taşıyacağınızı keşfedin.
 yayinTarihi: 2026-04-10
@@ -33,3 +33,5 @@ Amazon, yüksek çözünürlüklü görsellere (en az 1000x1000 px) büyük öne
 ## SONUÇ
 
 Amazon'un katı listeleme kurallarıyla vakit kaybetmeyin. yzliste.com ile Amazon TR formatına uygun, yüksek dönüşümlü madde işaretleri ve optimize başlıkları ortalama 20–60 saniyede hazırlayarak satışlarınızı artırma yolunda ilerleyin.
+
+[Hemen dene — ücretsiz başla](/uret)
