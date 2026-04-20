@@ -18,7 +18,7 @@ export default function AuthHero() {
         poster="/hero-poster.jpg"
         preload="metadata"
         className="absolute inset-0 w-full h-full object-contain brightness-[0.4] hidden md:block"
-        src="/hero-video-full.mp4"
+        src="/hero-video.mp4"
       />
       {/* Header altındaki alanı okunaklı kılan gradyan */}
       <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/50 to-transparent z-[1]" />
