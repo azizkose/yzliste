@@ -1,13 +1,8 @@
-import { Metadata } from 'next'
+'use client'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { createSupabaseServerClient } from '@/lib/supabase-server'
-
-export const dynamic = 'force-dynamic'
-
-export const metadata: Metadata = {
-  title: 'Hesabım',
-  robots: { index: false, follow: false },
-}
+import { supabase } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
 
 const PLATFORM_ETIKET: Record<string, string> = {
   trendyol: 'Trendyol',
@@ -18,60 +13,64 @@ const PLATFORM_ETIKET: Record<string, string> = {
   amazon_usa: 'Amazon USA',
 }
 
-export default async function HesapPage() {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+type SonUretim = {
+  id: string; platform: string; created_at: string; urun_adi: string; giris_tipi: string
+}
 
-  if (!user) return null
+export default function HesapPage() {
+  const router = useRouter()
+  const [yukleniyor, setYukleniyor] = useState(true)
+  const [kredi, setKredi] = useState(0)
+  const [profilYuklendi, setProfilYuklendi] = useState(false)
+  const [buAyUretim, setBuAyUretim] = useState(0)
+  const [toplamUretimSayisi, setToplamUretimSayisi] = useState(0)
+  const [toplamKullanilan, setToplamKullanilan] = useState(0)
+  const [platformSayac, setPlatformSayac] = useState<Record<string, number>>({})
+  const [favoriPlatform, setFavoriPlatform] = useState<string | undefined>()
+  const [sonUretimler, setSonUretimler] = useState<SonUretim[]>([])
+  const [email, setEmail] = useState('')
 
-  const ayBaslangic = new Date()
-  ayBaslangic.setDate(1)
-  ayBaslangic.setHours(0, 0, 0, 0)
+  useEffect(() => {
+    async function yukle() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { router.push('/giris'); return }
 
-  const [profilRes, buAyRes, enCokPlatformRes, sonUretimlerRes] = await Promise.all([
-    supabase
-      .from('profiles')
-      .select('kredi, toplam_kullanilan, marka_adi')
-      .eq('id', user.id)
-      .single(),
-    supabase
-      .from('uretimler')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-      .gte('created_at', ayBaslangic.toISOString()),
-    supabase
-      .from('uretimler')
-      .select('platform')
-      .eq('user_id', user.id),
-    supabase
-      .from('uretimler')
-      .select('id, platform, created_at, urun_adi, giris_tipi')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(5),
-  ])
+      setEmail(user.email ?? '')
 
-  const profil = profilRes.data
-  const profilYuklendi = !profilRes.error && profil !== null
-  const buAyUretim = buAyRes.count ?? 0
-  const kredi = profil?.kredi ?? 0
+      const ayBaslangic = new Date()
+      ayBaslangic.setDate(1)
+      ayBaslangic.setHours(0, 0, 0, 0)
 
-  // Favori platform hesapla
-  const platformSayac: Record<string, number> = {}
-  for (const r of (enCokPlatformRes.data ?? [])) {
-    if (r.platform) platformSayac[r.platform] = (platformSayac[r.platform] ?? 0) + 1
-  }
-  const favoriPlatform = Object.entries(platformSayac).sort((a, b) => b[1] - a[1])[0]?.[0]
+      const [profilRes, buAyRes, platformRes, sonUretimlerRes] = await Promise.all([
+        supabase.from('profiles').select('kredi, toplam_kullanilan').eq('id', user.id).single(),
+        supabase.from('uretimler').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('created_at', ayBaslangic.toISOString()),
+        supabase.from('uretimler').select('platform').eq('user_id', user.id),
+        supabase.from('uretimler').select('id, platform, created_at, urun_adi, giris_tipi').eq('user_id', user.id).order('created_at', { ascending: false }).limit(5),
+      ])
 
-  const toplamUretim = profil?.toplam_kullanilan ?? 0
-  // Sadece profil gerçekten geldiyse kredi uyarısı göster
-  const krediDusuk = profilYuklendi && kredi > 0 && kredi <= Math.max(5, Math.round(toplamUretim * 0.2))
+      const profil = profilRes.data
+      const yuklendiMi = !profilRes.error && profil !== null
+      setProfilYuklendi(yuklendiMi)
+      setKredi(profil?.kredi ?? 0)
+      setToplamKullanilan(profil?.toplam_kullanilan ?? 0)
+      setBuAyUretim(buAyRes.count ?? 0)
 
-  const toplamUretimSayisi = enCokPlatformRes.data?.length ?? 0
+      const sayac: Record<string, number> = {}
+      for (const r of (platformRes.data ?? [])) {
+        if (r.platform) sayac[r.platform] = (sayac[r.platform] ?? 0) + 1
+      }
+      setPlatformSayac(sayac)
+      setToplamUretimSayisi(platformRes.data?.length ?? 0)
+      setFavoriPlatform(Object.entries(sayac).sort((a, b) => b[1] - a[1])[0]?.[0])
+      setSonUretimler((sonUretimlerRes.data ?? []) as SonUretim[])
+      setYukleniyor(false)
+    }
+    yukle()
+  }, [router])
 
-  const sonUretimler = (sonUretimlerRes.data ?? []) as {
-    id: string; platform: string; created_at: string; urun_adi: string; giris_tipi: string
-  }[]
+  if (yukleniyor) return <main className="min-h-screen bg-gray-50" />
+
+  const krediDusuk = profilYuklendi && kredi > 0 && kredi <= Math.max(5, Math.round(toplamKullanilan * 0.2))
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-12">
@@ -79,14 +78,14 @@ export default async function HesapPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Hesabım</h1>
-            <p className="text-sm text-gray-400 mt-1">{user.email}</p>
+            <p className="text-sm text-gray-400 mt-1">{email}</p>
           </div>
           <Link href="/uret" className="text-sm bg-indigo-500 text-white px-4 py-2 rounded-xl hover:bg-indigo-600 transition-colors font-medium">
             İçerik Üret →
           </Link>
         </div>
 
-        {/* Kredi durumu banner — sadece profil yüklendiyse göster */}
+        {/* Kredi durumu banner */}
         {profilYuklendi && kredi === 0 ? (
           <div className="mb-6 bg-red-50 border border-red-200 rounded-2xl p-4 flex items-center justify-between gap-4">
             <div>
@@ -109,7 +108,7 @@ export default async function HesapPage() {
           </div>
         ) : null}
 
-        {/* F-22a: 4 metrik kartı */}
+        {/* 4 metrik kartı */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           {[
             { etiket: 'Bu Ay Üretim', deger: buAyUretim, renk: 'text-blue-500', ikon: '📝' },
@@ -125,7 +124,7 @@ export default async function HesapPage() {
           ))}
         </div>
 
-        {/* D-03: Platform dağılımı */}
+        {/* Platform dağılımı */}
         {toplamUretimSayisi > 0 && Object.keys(platformSayac).length > 0 && (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
             <h2 className="text-sm font-semibold text-gray-700 mb-3">Platform Dağılımı</h2>
@@ -148,7 +147,7 @@ export default async function HesapPage() {
           </div>
         )}
 
-        {/* F-22c: Son üretimler veya empty state */}
+        {/* Son üretimler */}
         {sonUretimler.length > 0 ? (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm mb-8">
             <div className="px-5 py-4 border-b border-gray-50 flex items-center justify-between">
@@ -172,7 +171,6 @@ export default async function HesapPage() {
                 )
               })}
             </div>
-            {/* D-04: Tüm geçmiş linki */}
             <div className="px-5 py-3 border-t border-gray-50 text-center">
               <Link href="/hesap/uretimler" className="text-xs text-indigo-400 hover:text-indigo-600 hover:underline transition-colors">
                 Tüm üretim geçmişini gör →

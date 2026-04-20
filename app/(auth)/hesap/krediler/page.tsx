@@ -1,41 +1,45 @@
-import { Metadata } from 'next'
+'use client'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { createSupabaseServerClient } from '@/lib/supabase-server'
+import { supabase } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
 
-export const dynamic = 'force-dynamic'
-
-
-export const metadata: Metadata = {
-  title: 'Krediler',
-  robots: { index: false, follow: false },
+type Odeme = {
+  id: string; paket: string; kredi: number; tutar: number | null; created_at: string; durum: string
 }
 
-export default async function KredilerPage() {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
+const PAKET_ETIKET: Record<string, string> = {
+  baslangic: 'Başlangıç Paketi',
+  populer: 'Popüler Paket',
+  buyuk: 'Büyük Paket',
+}
 
-  const { data: profil } = await supabase
-    .from('profiles')
-    .select('kredi, toplam_kullanilan')
-    .eq('id', user.id)
-    .single()
+export default function KredilerPage() {
+  const router = useRouter()
+  const [yukleniyor, setYukleniyor] = useState(true)
+  const [kredi, setKredi] = useState(0)
+  const [odemeler, setOdemeler] = useState<Odeme[]>([])
 
-  // Ödeme geçmişi (tablo henüz oluşturulmadıysa boş gelir)
-  const { data: odemeler } = await supabase
-    .from('payments')
-    .select('id, paket, kredi, tutar, created_at, durum')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
-    .limit(20)
+  useEffect(() => {
+    async function yukle() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { router.push('/giris'); return }
 
-  const sonBasariliOdeme = odemeler?.find(o => o.durum === 'basarili')
+      const [profilRes, odemeRes] = await Promise.all([
+        supabase.from('profiles').select('kredi').eq('id', user.id).single(),
+        supabase.from('payments').select('id, paket, kredi, tutar, created_at, durum').eq('user_id', user.id).order('created_at', { ascending: false }).limit(20),
+      ])
 
-  const PAKET_ETIKET: Record<string, string> = {
-    baslangic: 'Başlangıç Paketi',
-    populer: 'Popüler Paket',
-    buyuk: 'Büyük Paket',
-  }
+      setKredi(profilRes.data?.kredi ?? 0)
+      setOdemeler((odemeRes.data ?? []) as Odeme[])
+      setYukleniyor(false)
+    }
+    yukle()
+  }, [router])
+
+  if (yukleniyor) return <main className="min-h-screen bg-gray-50" />
+
+  const sonBasariliOdeme = odemeler.find(o => o.durum === 'basarili')
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-12">
@@ -48,14 +52,13 @@ export default async function KredilerPage() {
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-4 flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500">Mevcut Kredi</p>
-            <p className="text-3xl font-bold text-indigo-500 mt-1">{profil?.kredi ?? 0}</p>
+            <p className="text-3xl font-bold text-indigo-500 mt-1">{kredi}</p>
           </div>
           <Link href="/fiyatlar" className="bg-indigo-500 text-white text-sm font-semibold px-5 py-3 rounded-xl hover:bg-indigo-600 transition-colors">
             Kredi Al →
           </Link>
         </div>
 
-        {/* D-05: Son satın alınan paket */}
         {sonBasariliOdeme && (
           <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 mb-6 flex items-center justify-between">
             <div>
@@ -76,7 +79,7 @@ export default async function KredilerPage() {
             <h2 className="font-semibold text-gray-800">Ödeme Geçmişi</h2>
             <Link href="/hesap/faturalar" className="text-xs text-indigo-500 hover:underline font-medium">Faturaları Görüntüle →</Link>
           </div>
-          {!odemeler || odemeler.length === 0 ? (
+          {odemeler.length === 0 ? (
             <div className="px-6 py-8 text-center text-sm text-gray-400">
               Henüz ödeme geçmişi yok.
             </div>

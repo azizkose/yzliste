@@ -1,14 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
-import { useCurrentUser } from '@/lib/hooks/useCurrentUser'
 
 export default function AyarlarPage() {
-  const { data: user } = useCurrentUser()
+  const [email, setEmail] = useState('')
   const router = useRouter()
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) { router.push('/giris'); return }
+      setEmail(data.user.email ?? '')
+    })
+  }, [router])
   const [yeniSifre, setYeniSifre] = useState('')
   const [yeniSifreTekrar, setYeniSifreTekrar] = useState('')
   const [sifreMesaj, setSifreMesaj] = useState('')
@@ -83,7 +89,7 @@ export default function AyarlarPage() {
         {/* E-posta */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-4">
           <h2 className="font-semibold text-gray-800 mb-3">E-posta Adresi</h2>
-          <p className="text-sm text-gray-600 bg-gray-50 rounded-xl px-4 py-3">{user?.email ?? '—'}</p>
+          <p className="text-sm text-gray-600 bg-gray-50 rounded-xl px-4 py-3">{email || '—'}</p>
           <p className="text-xs text-gray-400 mt-2">E-posta değişikliği için destek@yzliste.com adresine yazın.</p>
         </div>
 
