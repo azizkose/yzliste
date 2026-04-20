@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { fal } from "@fal-ai/client";
 import { captionSistemPrompt, captionCiktiParse } from "@/lib/prompts/sosyal";
+import { rmbgUygula } from "@/lib/fal/rmbg";
 
 fal.config({ credentials: process.env.FAL_KEY });
 
@@ -108,13 +109,16 @@ export async function POST(req: NextRequest) {
         const blob = new Blob([bytes], { type: mediaType });
         const imageUrl = await fal.storage.upload(blob);
 
+        // RMBG — Bria Product-Shot'a göndermeden önce arka planı temizle
+        const cleanImageUrl = await rmbgUygula(imageUrl);
+
         const shotSize = FORMAT_BOYUT[gorselFormat] ?? FORMAT_BOYUT["1:1"];
         const sahne = STIL_SAHNELERI[gorselStil] ?? STIL_SAHNELERI.beyaz;
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result = await fal.subscribe("fal-ai/bria/product-shot", {
           input: {
-            image_url: imageUrl,
+            image_url: cleanImageUrl,
             scene_description: sahne,
             optimize_description: true,
             num_results: 2,

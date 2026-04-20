@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fal } from "@fal-ai/client";
 import { createClient } from "@supabase/supabase-js";
+import { rmbgUygula } from "@/lib/fal/rmbg";
 
 export const maxDuration = 60;
 
@@ -114,14 +115,7 @@ export async function POST(req: NextRequest) {
     const shotSize: [number, number] = sosyalFormat ? (FORMAT_BOYUT[sosyalFormat] || [1000, 1000]) : [1000, 1000];
 
     // RMBG — 1 kez, tüm stiller için
-    let cleanImageUrl = imageUrl;
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const rmbgResult = await fal.subscribe("fal-ai/bria/background/remove", { input: { image_url: imageUrl } }) as any;
-      cleanImageUrl = rmbgResult?.data?.image?.url || imageUrl;
-    } catch {
-      cleanImageUrl = imageUrl;
-    }
+    const cleanImageUrl = await rmbgUygula(imageUrl);
 
     // Referans görsel (varsa, 1 kez upload)
     let refUrl: string | null = null;

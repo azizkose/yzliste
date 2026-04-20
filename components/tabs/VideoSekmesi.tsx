@@ -51,7 +51,7 @@ export default function VideoSekmesi({
     <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold text-gray-800">🎬 Ürün Videosu Üret</h2>
-        <span className="text-xs text-amber-500 font-medium">5sn: 5 kredi · 10sn: 8 kredi</span>
+        <span className="text-xs text-amber-500 font-medium">5sn: 10 kredi · 10sn: 20 kredi</span>
       </div>
       <p className="text-xs text-gray-400">Ürün fotoğrafından kısa tanıtım videosu — pazaryerleri, Reels, TikTok ve YouTube için</p>
 
@@ -104,8 +104,8 @@ export default function VideoSekmesi({
         <label className="block text-xs font-medium text-gray-600 mb-2">Video Süresi</label>
         <div className="grid grid-cols-2 gap-2">
           {([
-            { id: "5", label: "⚡ 5 Saniye", kredi: 5, aciklama: "Hızlı tanıtım · Reels ideal" },
-            { id: "10", label: "🎞️ 10 Saniye", kredi: 8, aciklama: "Detaylı showcase · Pazaryeri" },
+            { id: "5", label: "⚡ 5 Saniye", kredi: 10, aciklama: "Hızlı tanıtım · Reels ideal" },
+            { id: "10", label: "🎞️ 10 Saniye", kredi: 20, aciklama: "Detaylı showcase · Pazaryeri" },
           ] as { id: "5" | "10"; label: string; kredi: number; aciklama: string }[]).map((s) => (
             <button key={s.id} onClick={() => setVideoSure(s.id)}
               className={`p-3 rounded-xl border-2 text-left transition-all ${videoSure === s.id ? "border-amber-400 bg-amber-50" : "border-gray-200 hover:border-gray-300"}`}>
@@ -144,13 +144,13 @@ export default function VideoSekmesi({
         <Link href="/blog/ai-urun-videosu-hareket-secenekleri" className="inline-block mt-2 text-xs text-amber-500 hover:text-amber-700 hover:underline">Bu hareketler ne anlama gelir? Ürün kategorine göre hangisi uygun? →</Link>
       </div>
 
-      <button onClick={videoUret} disabled={videoYukleniyor || fotolar.length === 0 || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 8 : 5))}
+      <button onClick={videoUret} disabled={videoYukleniyor || fotolar.length === 0 || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 20 : 10))}
         className="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
-        {videoYukleniyor ? "⏳ Video üretiliyor... (~2 dakika)" : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : !kullanici ? "✨ Video Üret — Giriş Gerekli" : `✨ Video Üret — ${kullanici.is_admin ? "∞" : (videoSure === "10" ? 8 : 5)} kredi`}
+        {videoYukleniyor ? "⏳ Video üretiliyor... (~2 dakika)" : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : !kullanici ? "✨ Video Üret — Giriş Gerekli" : `✨ Video Üret — ${kullanici.is_admin ? "∞" : (videoSure === "10" ? 20 : 10)} kredi`}
       </button>
 
-      {kullanici && !kullanici.is_admin && (kullanici.kredi ?? 0) < (videoSure === "10" ? 8 : 5) && !videoYukleniyor && (
-        <p className="text-center text-xs text-red-500">En az {videoSure === "10" ? 8 : 5} kredi gerekli. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
+      {kullanici && !kullanici.is_admin && (kullanici.kredi ?? 0) < (videoSure === "10" ? 20 : 10) && !videoYukleniyor && (
+        <p className="text-center text-xs text-red-500">En az {videoSure === "10" ? 20 : 10} kredi gerekli. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
       )}
 
       {videoYukleniyor && (

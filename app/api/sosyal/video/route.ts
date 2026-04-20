@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { fal } from "@fal-ai/client";
+import { rmbgUygula } from "@/lib/fal/rmbg";
 
 export const maxDuration = 30; // sadece fal storage upload + queue.submit — GPU bekleme yok
 
@@ -11,8 +12,8 @@ const supabaseAdmin = createClient(
 
 fal.config({ credentials: process.env.FAL_KEY });
 
-// sure: "5" → 5 kredi, "10" → 8 kredi
-const VIDEO_KREDI: Record<string, number> = { "5": 5, "10": 8 };
+// sure: "5" → 10 kredi, "10" → 20 kredi
+const VIDEO_KREDI: Record<string, number> = { "5": 10, "10": 20 };
 
 export async function POST(req: NextRequest) {
   const { foto, prompt, userId, sure = "5", format = "9:16" } = await req.json();
@@ -55,6 +56,9 @@ export async function POST(req: NextRequest) {
   const blob = new Blob([buffer], { type: mediaType });
   const imageUrl = await fal.storage.upload(blob);
 
+  // RMBG — Kling'e göndermeden önce arka planı temizle
+  const cleanImageUrl = await rmbgUygula(imageUrl);
+
   // Video prompt — kullanıcı yazmadıysa marka bilgisine göre otomatik
   let videoPrompt: string;
   if (prompt?.trim()) {
@@ -67,7 +71,7 @@ export async function POST(req: NextRequest) {
     };
     const stilIpucu = profil.ton ? (TON_VIDEO[profil.ton] || "professional product showcase") : "professional product showcase";
     const markaIpucu = profil.marka_adi ? ` for ${profil.marka_adi}` : "";
-    videoPrompt = `professional product showcase${markaIpucu}, camera slowly zooms in and holds on product, clean studio lighting, white background, high quality e-commerce video`;
+    videoPrompt = `${stilIpucu}${markaIpucu}, camera slowly zooms in and holds on product, clean studio lighting, white background, high quality e-commerce video`;
   }
 
   // Krediyi önceden düş — queue.submit sonucu beklemeden döner
@@ -83,7 +87,7 @@ export async function POST(req: NextRequest) {
   const queued = await fal.queue.submit("fal-ai/kling-video/v2.1/standard/image-to-video", {
     input: {
       prompt: videoPrompt,
-      image_url: imageUrl,
+      image_url: cleanImageUrl,
       duration: sureDeger,
       aspect_ratio: formatDeger,
       negative_prompt: "blur, distort, low quality, watermark, text overlay, static, jerky, pixelated, morphing, unnatural movement, deformed product",

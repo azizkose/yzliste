@@ -6,6 +6,16 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_KEY!
 );
 
+const DUZENLE_SISTEM_PROMPT = `Sen bir e-ticaret içerik düzenleme uzmanısın. Aşağıdaki içeriği verilen talimata göre düzenle.
+
+KRİTİK KURALLAR:
+- Bölüm formatını ve sırasını koru (Başlık, Özellikler, Açıklama, Etiketler)
+- Karakter/kelime limitlerini aşma
+- Rakip marka ismi yazma
+- Sağlık iddiası, "sertifikalı", "onaylı", "klinik kanıtlı" gibi doğrulanamaz ifade kullanma
+- "Muhtemelen", "olabilir", "tahminimizce" gibi belirsiz ifadeler KULLANMA
+- Satış odaklı, ikna edici ve profesyonel yaz`;
+
 const AKSIYON_PROMPTLARI: Record<string, string> = {
   yeniden_uret_context: `Aşağıdaki ürün içeriğini biraz farklı bir versiyonla YENİDEN YAZ:
 - Aynı bilgileri kullan, ama farklı kelimeler ve cümle yapıları seç
@@ -48,25 +58,54 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (!profil) return NextResponse.json({ hata: "Kullanıcı bulunamadı" }, { status: 404 });
-  if (!profil.is_admin && profil.kredi <= 0) {
-    return NextResponse.json({ hata: "Krediniz bitti." }, { status: 402 });
+
+  const isAdmin = profil.is_admin === true;
+
+  // Atomik kredi düşümü — LLM çağrısından ÖNCE
+  if (!isAdmin) {
+    const { data: updated } = await supabaseAdmin
+      .from("profiles")
+      .update({ kredi: profil.kredi - 1 })
+      .eq("id", userId)
+      .gte("kredi", 1)
+      .select("kredi")
+      .single();
+
+    if (!updated) {
+      return NextResponse.json({ hata: "Krediniz bitti." }, { status: 402 });
+    }
   }
 
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "x-api-key": process.env.ANTHROPIC_API_KEY!,
-      "anthropic-version": "2023-06-01",
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 2048,
-      messages: [{ role: "user", content: `${prompt}\n\n---\n\n${sonuc}` }],
-    }),
-  });
+  let yeniSonuc = "";
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": process.env.ANTHROPIC_API_KEY!,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 2048,
+        system: DUZENLE_SISTEM_PROMPT,
+        messages: [{ role: "user", content: `${prompt}\n\n---\n\n${sonuc}` }],
+      }),
+    });
 
-  const data = await res.json();
-  const yeniSonuc = data.content?.[0]?.text ?? "";
+    const data = await res.json();
+    yeniSonuc = data.content?.[0]?.text ?? "";
+  } catch (e) {
+    // Hata durumunda krediyi geri yükle
+    if (!isAdmin) {
+      await supabaseAdmin
+        .from("profiles")
+        .update({ kredi: profil.kredi })
+        .eq("id", userId);
+    }
+    console.error("Düzenleme LLM hatası:", e);
+    return NextResponse.json({ hata: "İçerik düzenlenemedi, lütfen tekrar deneyin." }, { status: 500 });
+  }
+
   return NextResponse.json({ sonuc: yeniSonuc });
 }
