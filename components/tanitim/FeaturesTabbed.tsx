@@ -266,6 +266,8 @@ export default function FeaturesTabbed() {
                   { src: "/video-ornekler/zoom-yaklasim.mp4", ikon: "🔍", baslik: "Zoom Yaklaşım", aciklama: "Kamera ürüne doğru yaklaşır. Doku ve detay hissi. El yapımı ve tekstil ürünler için güçlü." },
                   { src: "/video-ornekler/dramatik-isik.mp4", ikon: "💡", baslik: "Dramatik Işık", aciklama: "Karanlık sahnede spotlight açılır. Premium ve lüks his. Kozmetik ve elektronik için etkili." },
                   { src: "/video-ornekler/dogal-ortam.mp4", ikon: "🌿", baslik: "Doğal Ortam", aciklama: "Yapraklar sallanır, ışık oynar. Organik ve sıcak his. Gıda, bitki, doğal ürünler için ideal." },
+                  { src: "/video-ornekler/detay-tarama.mp4", ikon: "🔬", baslik: "Detay Tarama", aciklama: "Kamera yüzeyi soldan sağa tarar. Doku, işçilik, malzeme kalitesi ortaya çıkar. Elektronik ve deri ürünler için güçlü." },
+                  { src: "/video-ornekler/kumas-hareketi.mp4", ikon: "👕", baslik: "Kumaş Hareketi", aciklama: "Hafif esinti kumaşı hareket ettirir. Döküm ve akışkanlık hissi verir. Elbise, şal, perde için ideal." },
                 ].map((v, i) => (
                   <div key={i} className="flex gap-3 rounded-xl border border-amber-100 bg-amber-50 p-3">
                     <video src={v.src} autoPlay loop muted playsInline className="w-24 h-24 rounded-lg object-cover flex-shrink-0 bg-black" />
