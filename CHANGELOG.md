@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-04-20 — HESAP yapısı + PE-10/11 + overscroll + tonEnMap
+
+- HESAP YAPISI: /hesap/marka + /hesap/uretimler yeni route'lar; profil tab'sızlaştı, useCredits; 6 kart grid
+- PE-10: foto moduna hedefKitle, fiyatSegmenti, anahtarKelimeler alanları eklendi
+- PE-11: lib/constants/ton.ts merkezi tanım — TON_EN_MAP (gorsel) + TON_VIDEO_MAP (video), tüm tonlar
+- SAYFA SONU OVERSCROLL: overscroll-behavior: none (iOS elastic bounce engelleme)
+
 ## 2026-04-20 — Hero video + KF P1 fixes + PE-02 tamamlandı
 
 - AuthHero: video object-contain (kırpmasız), hero-video-full.mp4 (kullanıcı kopyaladı)
