@@ -12,10 +12,11 @@ type Metrik = {
   toplamKredi: number;
   toplamInputToken: number;
   toplamOutputToken: number;
+  toplamApiMaliyet: number;
   platformDagilim: Record<string, number>;
   girisTipiDagilim: Record<string, number>;
   sonKullanicilar: { email: string; kredi: number; created_at: string }[];
-  sonUretimler: { urun_adi: string; platform: string; created_at: string; input_token: number; output_token: number }[];
+  sonUretimler: { urun_adi: string; platform: string; created_at: string; input_token: number; output_token: number; api_cost: number }[];
 };
 
 export default function AdminPage() {
@@ -63,11 +64,11 @@ export default function AdminPage() {
 
   if (!metrik) return null;
 
-  // Haiku fiyatları: input $1/MTok, output $5/MTok
-  const inputMaliyet = (metrik.toplamInputToken / 1_000_000) * 1;
-  const outputMaliyet = (metrik.toplamOutputToken / 1_000_000) * 5;
-  const toplamMaliyet = inputMaliyet + outputMaliyet;
+  // Gerçek api_cost DB'den geliyor (uret route'da Sonnet 4.6: $3/$15/MTok)
+  const toplamMaliyet = metrik.toplamApiMaliyet || 0;
   const uretimBasiMaliyet = metrik.toplamUretim > 0 ? toplamMaliyet / metrik.toplamUretim : 0;
+  // Token tabanlı tahmini (api_cost yoksa fallback)
+  const tokenMaliyet = (metrik.toplamInputToken / 1_000_000) * 3 + (metrik.toplamOutputToken / 1_000_000) * 15;
 
   return (
     <main className="min-h-screen bg-gray-50 py-8 px-4">
@@ -106,7 +107,7 @@ export default function AdminPage() {
 
         {/* Maliyet & Token */}
         <div className="bg-white rounded-2xl shadow p-5 mb-6">
-          <h3 className="text-sm font-semibold text-gray-700 mb-4">Claude API Kullanımı & Maliyet</h3>
+          <h3 className="text-sm font-semibold text-gray-700 mb-4">API Kullanımı & Maliyet (Gerçek)</h3>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="bg-blue-50 rounded-xl p-4">
               <div className="text-xl font-bold text-blue-600">{metrik.toplamInputToken.toLocaleString()}</div>
@@ -117,8 +118,12 @@ export default function AdminPage() {
               <div className="text-xs text-gray-500 mt-1">Output Token</div>
             </div>
             <div className="bg-red-50 rounded-xl p-4">
-              <div className="text-xl font-bold text-red-600">${toplamMaliyet.toFixed(4)}</div>
-              <div className="text-xs text-gray-500 mt-1">Toplam Maliyet</div>
+              <div className="text-xl font-bold text-red-600">
+                ${(toplamMaliyet > 0 ? toplamMaliyet : tokenMaliyet).toFixed(4)}
+              </div>
+              <div className="text-xs text-gray-500 mt-1">
+                Toplam Maliyet {toplamMaliyet === 0 && tokenMaliyet > 0 && <span className="text-gray-400">(tahmini)</span>}
+              </div>
             </div>
             <div className="bg-yellow-50 rounded-xl p-4">
               <div className="text-xl font-bold text-yellow-600">${uretimBasiMaliyet.toFixed(5)}</div>
@@ -130,8 +135,49 @@ export default function AdminPage() {
             </div>
           </div>
           <p className="text-xs text-gray-400 mt-3">
-            * Haiku 4.5 fiyatları: Input $1/MTok, Output $5/MTok. Gerçek Anthropic bakiyesi için console.anthropic.com kontrol edin.
+            * Metin: Sonnet 4.6 — $3/MTok input, $15/MTok output. Görsel: Bria $0.012/görsel. Video: Kling $0.28/5sn, $0.56/10sn.
           </p>
+        </div>
+
+        {/* Statik Fiyatlama & Marj Tablosu */}
+        <div className="bg-white rounded-2xl shadow p-5 mb-6">
+          <h3 className="text-sm font-semibold text-gray-700 mb-4">Ürün Maliyet & Marj Tablosu</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-xs text-gray-400 border-b">
+                  <th className="text-left pb-2 font-medium">Üretim Tipi</th>
+                  <th className="text-right pb-2 font-medium">API Maliyet</th>
+                  <th className="text-right pb-2 font-medium">Kredi</th>
+                  <th className="text-right pb-2 font-medium">Birim Fiyat (Büyük)</th>
+                  <th className="text-right pb-2 font-medium">Marj</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {[
+                  { tip: "Metin (Sonnet 4.6)", maliyet: "$0.005", kredi: 1, fiyat: "₺2.49", marj: "+1010%" },
+                  { tip: "Metin düzenleme", maliyet: "$0.003", kredi: 1, fiyat: "₺2.49", marj: "+1500%+" },
+                  { tip: "Görsel (RMBG+Bria)", maliyet: "$0.012", kredi: 1, fiyat: "₺2.49", marj: "+363%" },
+                  { tip: "Video 5sn (Kling v2.1)", maliyet: "$0.28", kredi: 10, fiyat: "₺24.90", marj: "+98%" },
+                  { tip: "Video 10sn (Kling v2.1)", maliyet: "$0.56", kredi: 20, fiyat: "₺49.80", marj: "+98%" },
+                  { tip: "Sosyal caption", maliyet: "$0.003", kredi: 1, fiyat: "₺2.49", marj: "+1500%+" },
+                  { tip: "Sosyal kit (caption+görsel)", maliyet: "$0.017", kredi: 2, fiyat: "₺4.98", marj: "+553%" },
+                  { tip: "Virtual try-on (FASHN)", maliyet: "$0.075", kredi: 3, fiyat: "₺7.47", marj: "+122%" },
+                ].map((r) => (
+                  <tr key={r.tip} className="text-sm">
+                    <td className="py-2 text-gray-700">{r.tip}</td>
+                    <td className="py-2 text-right text-gray-500 font-mono">{r.maliyet}</td>
+                    <td className="py-2 text-right text-gray-500">{r.kredi} kr</td>
+                    <td className="py-2 text-right text-gray-600">{r.fiyat}</td>
+                    <td className={`py-2 text-right font-medium ${parseInt(r.marj) >= 200 ? "text-green-600" : parseInt(r.marj) >= 100 ? "text-yellow-600" : "text-orange-600"}`}>
+                      {r.marj}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-gray-400 mt-2">* Büyük paket: ₺2.49/kredi. $ → ₺ kuru: ~₺35.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
@@ -210,6 +256,7 @@ export default function AdminPage() {
                     <div className="text-xs text-gray-400">
                       {new Date(u.created_at).toLocaleDateString("tr-TR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
                       {u.input_token > 0 && <span className="ml-2 text-gray-300">{u.input_token + u.output_token} tok</span>}
+                      {u.api_cost > 0 && <span className="ml-1 text-red-300">${u.api_cost.toFixed(5)}</span>}
                     </div>
                   </div>
                   <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full capitalize">

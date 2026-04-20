@@ -44,16 +44,17 @@ export async function GET(req: NextRequest) {
     supabaseAdmin.from("uretimler").select("*", { count: "exact", head: true }).gte("created_at", bugun.toISOString()),
     supabaseAdmin.from("uretimler").select("*", { count: "exact", head: true }).gte("created_at", haftaBasi.toISOString()),
     supabaseAdmin.from("profiles").select("kredi"),
-    supabaseAdmin.from("uretimler").select("input_token, output_token"),
+    supabaseAdmin.from("uretimler").select("input_token, output_token, api_cost"),
     supabaseAdmin.from("uretimler").select("platform"),
     supabaseAdmin.from("uretimler").select("giris_tipi"),
     supabaseAdmin.from("profiles").select("email, kredi, created_at").order("created_at", { ascending: false }).limit(10),
-    supabaseAdmin.from("uretimler").select("urun_adi, platform, created_at, input_token, output_token").order("created_at", { ascending: false }).limit(10),
+    supabaseAdmin.from("uretimler").select("urun_adi, platform, created_at, input_token, output_token, api_cost").order("created_at", { ascending: false }).limit(10),
   ]);
 
   const toplamKredi = krediler?.reduce((acc, p) => acc + (p.kredi || 0), 0) || 0;
   const toplamInputToken = tokenData?.reduce((acc, u) => acc + (u.input_token || 0), 0) || 0;
   const toplamOutputToken = tokenData?.reduce((acc, u) => acc + (u.output_token || 0), 0) || 0;
+  const toplamApiMaliyet = tokenData?.reduce((acc, u) => acc + (u.api_cost || 0), 0) || 0;
 
   const platformDagilim: Record<string, number> = {};
   platformData?.forEach((u) => { platformDagilim[u.platform] = (platformDagilim[u.platform] || 0) + 1; });
@@ -69,6 +70,7 @@ export async function GET(req: NextRequest) {
     toplamKredi,
     toplamInputToken,
     toplamOutputToken,
+    toplamApiMaliyet,
     platformDagilim,
     girisTipiDagilim,
     sonKullanicilar: sonKullanicilar || [],

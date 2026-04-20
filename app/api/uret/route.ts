@@ -692,6 +692,11 @@ export async function POST(req: NextRequest) {
   const data = await response.json();
   const icerik = data.content?.[0]?.text;
 
+  // Token kullanımı ve maliyet — claude-sonnet-4-6: $3/MTok input, $15/MTok output
+  const inputTokens: number = data.usage?.input_tokens || 0;
+  const outputTokens: number = data.usage?.output_tokens || 0;
+  const apiCost = (inputTokens / 1_000_000) * 3 + (outputTokens / 1_000_000) * 15;
+
   if (!icerik) {
     // LLM boş döndü — krediyi geri yükle
     if (!isAdmin) {
@@ -710,6 +715,9 @@ export async function POST(req: NextRequest) {
     sonuc: icerik,
     giris_tipi: girisTipi,
     prompt_version: METIN_PROMPT_VERSION,
+    input_token: inputTokens,
+    output_token: outputTokens,
+    api_cost: apiCost,
   }).select("id").single();
 
   if (insertError || !insertData) {
