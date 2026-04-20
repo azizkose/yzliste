@@ -298,6 +298,77 @@ src="/hero-video-full.mp4"
 ```
 **Neden `preload="metadata"`:** Eski dosya 1.4MB idi, yeni dosya 6.5MB. `preload="metadata"` ile tarayıcı sadece video süre/boyut bilgisini çeker, tam dosyayı viewport'a girince yükler. Mobilde zaten `<img>` poster gösteriliyor (satır 7-11), video sadece `md:block` (tablet+) — bu yüzden mobilde 6.5MB yüklenmez.
 
+### ✅ KF-05: Blog Yazısı Güncelle — Video Hareket Seçenekleri (P2) — DONE (90f97f4)
+**Dosya:** `app/blog/posts/ai-urun-videosu-hareket-secenekleri.md`
+Blog yazısında şu an 4 hareket anlatılıyor (360° Dönüş, Zoom Yaklaşım, Dramatik Işık, Doğal Ortam).
+Eksik olan 2 hareket eklenmeli: **Detay Tarama** ve **Kumaş Hareketi**.
+
+**1) 🔬 Detay Tarama bölümünü ekle (Doğal Ortam'dan sonra):**
+
+```markdown
+## 🔬 Detay Tarama — "Yüzeyi Keşfet"
+
+Kamera ürünün yüzeyini soldan sağa yavaşça tarar. Doku, işçilik, malzeme kalitesi ortaya çıkar. Sonra hafifçe geri çekilerek tam görünüm verir.
+
+**Ne zaman kullan:** Ürünün yüzey kalitesi, malzeme ve işçiliği öne çıkarılması gerektiğinde. Zoom yaklaşımdan farkı: zoom tek noktaya odaklanır, detay tarama yüzeyin genelini gösterir.
+
+**Uygun ürün kategorileri:**
+- Elektronik cihazlar (telefon kılıfı, laptop sticker, aksesuar)
+- Deri ürünler (cüzdan, çanta yüzeyi)
+- Seramik, porselen, cam ürünler
+- Kumaş dokusu önemli olan tekstil
+- Gravür, baskı ve yüzey deseni olan ürünler
+
+**İpucu:** Yüzeyinde desen, doku veya detay olan her üründe iyi çalışır. Düz, monoton yüzeyli ürünlerde tercih etme — o zaman zoom yaklaşım veya 360° dönüş daha etkili.
+
+## Video Örneği
+- /video-ornekler/detay-tarama.mp4|🔬 Detay Tarama
+```
+
+**2) 👕 Kumaş Hareketi bölümünü ekle (Detay Tarama'dan sonra):**
+
+```markdown
+## 👕 Kumaş Hareketi — "Kumaşı Hisset"
+
+Hafif bir esinti kumaşı doğal şekilde hareket ettirir. Kumaşın akışkanlığı, düşüşü ve dokusu ortaya çıkar. Sonra kumaş yerleşir ve sahnede durağanlaşır.
+
+**Ne zaman kullan:** Ürünün kumaş kalitesi, döküm ve yumuşaklığını hissettirmek istediğinde. Statik fotoğrafta görünmeyen kumaş hareketini göstermenin en etkili yolu.
+
+**Uygun ürün kategorileri:**
+- Elbise, etek, gömlek, şal
+- Perde, nevresim, masa örtüsü
+- İpek, şifon, keten gibi hafif kumaşlar
+- Plaj havlusu, battaniye
+- Kadın giyim ve özellikle dökümlü parçalar
+
+**İpucu:** Hafif ve dökümlü kumaşlarda en iyi sonucu verir. Kalın, sert yapılı kumaşlarda (kot, deri) rüzgar efekti doğal görünmeyebilir — o ürünler için 360° dönüş tercih et.
+
+## Foto ve Video Örneği
+- /video-ornekler/still-life-with-classic-shirts-hanger.jpg|👕 Kumaş Hareketi — Örnek Fotoğraf
+- /video-ornekler/kumas-hareketi.mp4|👕 Kumaş Hareketi — Video
+```
+
+**3) Video dosyası isimlendirme (Claude Code yapacak):**
+- `public/video-ornekler/Detay Tarama.mp4` → `public/video-ornekler/detay-tarama.mp4` olarak rename et (boşluklu dosya adı URL'de sorun çıkarır)
+- `public/video-ornekler/urun-video (9).mp4` → `public/video-ornekler/kumas-hareketi.mp4` olarak rename et
+
+### ✅ KF-06: Kumaş Hareketi Preset "2 saniye" İfadesini Kaldır (P1) — DONE (90f97f4)
+**Dosya:** `lib/constants.ts` satır 82
+"Kumaş Hareketi" preset'inin `goster` ve `deger` alanlarında "2 saniye" / "for 2 seconds" ifadesi var. Ama kullanıcı 5 veya 10 sn seçebiliyor — AI modeli seçilen süreye göre üretiyor, "2 saniye" yanıltıcı.
+
+**Değişiklik:**
+```typescript
+// ESKİ goster:
+"Hafif esinti 2 saniye kumaşı hareket ettirir, doğal sarkma oluşturur, sonra yerleşir, soldaki stüdyo ışığı, sabit kamera"
+// YENİ goster:
+"Hafif esinti kumaşı doğal şekilde hareket ettirir, döküm ve sarkma oluşturur, sonra yerleşir, soldaki stüdyo ışığı, sabit kamera"
+
+// ESKİ deger:
+"Soft breeze gently moves the fabric for 2 seconds creating natural drape movement, then fabric settles smoothly into place, clean studio lighting from the left, camera stays steady on tripod"
+// YENİ deger:
+"Soft breeze gently moves the fabric creating natural drape movement, then fabric settles smoothly into place, clean studio lighting from the left, camera stays steady on tripod"
+```
+
 ---
 
 ## 🔧 PROMPT ENGINE OPTİMİZASYONU — Claude Code İçin (19 Nisan 2026)
@@ -477,52 +548,555 @@ Derin prompt engine analizinden çıkan 14 bulgu. Detaylı rapor: `yzliste test/
 
 **Dosyalar:** `app/api/sosyal/video/route.ts`, `lib/hooks/useVideoUretim.ts`, ilgili frontend component
 
-### NF-02: Virtual Try-On — Mankene Giydirme (P2 — yeni özellik)
+### NF-02: yzstudio — Premium / Deneysel Araçlar Sayfası (P1 — yeni sayfa)
 
-**Fırsat:** fal.ai'de FASHN v1.5/v1.6 modeli var. Giysi fotoğrafı + manken fotoğrafı vererek ürünü mankene giydirebiliyor. ~$0.075/görsel.
+> **KARAR (20 Nisan 2026):** Eski NF-02 (görsel sekmesine try-on ekleme) iptal edildi.
+> Yerine: bağımsız `/yzstudio` sayfası — pahalı/deneysel modeller burada yaşar.
+> Ana site (`/uret`) standart araçlarla sınırlı kalır, yzstudio premium tier olur.
 
-**Kullanıcı göreceği akış:**
-Görsel sekmesinde mevcut stillerin yanına "Mankene Giydirme" ek seçeneği eklenir:
+---
+
+#### MİMARİ GENEL BAKIŞ
+
+**İsim:** yzstudio (marka kimliği — "premium" geçici his verir, "studio" kalıcı)
+
+**Erişim:**
+- URL: `/yzstudio` — şimdilik navigasyonda link yok, sadece URL ile erişim
+- Auth zorunlu (middleware'e ekle)
+- İleride ana sayfadan "🧪 yzstudio" badge'i ile keşfedilebilir
+
+**Sayfa yapısı — Sekme tabanlı multi-tool:**
+```
+/yzstudio
+├── Sekme 1: 👗 Mankene Giydirme (Virtual Try-On) ← ilk model
+├── Sekme 2: [gelecek model — örn. Seedance Premium Video]
+├── Sekme 3: [gelecek model — örn. AI Background Replace]
+└── ...genişleyebilir
+```
+
+Her sekme bağımsız bir tool — kendi input/output/kredi mantığı var.
+Sekmeler arası paylaşılan: auth, kredi bakiyesi, kredi yükleme modal, header.
+
+**Neden ayrı sayfa (ve /uret içine gömmemek):**
+1. Maliyet farkı çok büyük: try-on 3 kredi, görsel 1 kredi — aynı arayüzde karışır
+2. İleride başka premium modeller eklenecek (Seedance, background replace, vb.)
+3. UX: ana üretim akışı basit kalmalı, deneysel araçlar ayrı bir "lab" hissi vermeli
+4. Fiyatlama esnekliği: yzstudio araçları farklı kredi paketleriyle fiyatlanabilir
+
+---
+
+#### ROUTE & DOSYA YAPISI
 
 ```
-Görsel Stili:
-[Stüdyo] [Lifestyle] [Flat-lay] [...] [👗 Mankene Giydirme]
+app/
+├── yzstudio/
+│   ├── layout.tsx          ← Auth guard + yzstudio shell (header, kredi, sekmeler)
+│   ├── page.tsx             ← Ana sayfa: sekme yönetimi + içerik render
+│   └── components/
+│       ├── StudioHeader.tsx  ← "yzstudio" logosu + kredi bakiye + sekme nav
+│       ├── StudioSekmeler.tsx ← Sekme listesi (dinamik, STUDIO_TOOLS constant'tan)
+│       └── tryon/
+│           ├── TryonSekmesi.tsx      ← Ana try-on UI (tüm akış)
+│           ├── GarmentUpload.tsx     ← Kıyafet fotoğrafı yükleme alanı
+│           ├── ModelPicker.tsx       ← Manken seçimi (stok grid + özel yükleme)
+│           ├── TryonAyarlar.tsx      ← Kategori, kalite modu, num_samples seçimi
+│           ├── TryonSonuc.tsx        ← Sonuç galerisi + indirme
+│           └── useTryonUretim.ts     ← Custom hook (state + API çağrıları)
+│
+api/
+├── studio/
+│   └── tryon/
+│       ├── route.ts          ← POST: kredi düş → fal.ai FASHN çağır → requestId dön
+│       └── poll/route.ts     ← GET: job durumu sorgula → sonuç URL'leri dön
 ```
 
-Mankene Giydirme seçildiğinde:
-1. Ürün fotoğrafı yükle (giysi — flat-lay veya askıda)
-2. Manken seç:
-   - Hazır mankenler: [Kadın 1] [Kadın 2] [Erkek 1] [Erkek 2] (biz sağlıyoruz)
-   - "Kendi mankeninizi yükleyin" butonu (opsiyonel, ileri kullanıcılar için)
-3. [Mankene Giydirme — 3 kredi]
-4. Sonuç: giysi mankene giydirilmiş halde
+**Neden `api/studio/tryon/` (ve `api/gorsel/tryon/` değil):**
+yzstudio araçları ana üretim API'sinden ayrı namespace'te olmalı. İleride `api/studio/premium-video/`, `api/studio/bg-replace/` vb. eklenecek.
 
-**Kredi:** 3 kredi/görsel (API maliyeti ~$0.075 = ₺3.36, satış ₺7.47 @ Büyük → %122 marj)
+---
 
-**Teknik detay:**
-- fal.ai endpoint: `fal-ai/fashn/tryon/v1.5` (veya v1.6 — kalite karşılaştır)
-- Input: `garment_image` (giysi) + `model_image` (manken)
-- FASHN flat-lay ve on-model fotoğrafları destekliyor
-- 3 kalite modu var (hız vs kalite tradeoff)
+#### FASHN v1.6 API — TAM PARAMETRE HARİTASI
 
-**Fix:**
-- [ ] Yeni API route: `app/api/gorsel/tryon/route.ts`
-- [ ] fal.ai endpoint ve parametreleri doğrula (v1.5 vs v1.6 kalite karşılaştır)
-- [ ] Stok manken görselleri hazırla: 4 adet (kadın×2, erkek×2), farklı vücut tipleri
-  - Görselleri `public/mankenler/` altına koy (veya CDN)
-  - Uygun lisanslı stok fotoğraflar seç (ticari kullanım hakkı)
-- [ ] RMBG ön-işlemesi: giysi fotoğrafından arka plan temizle (PE-01'deki ortak helper)
-- [ ] Frontend (Görsel sekmesi):
-  - Stil seçeneklerine "Mankene Giydirme" kartı ekle
-  - Seçildiğinde manken grid'i göster (stok + "kendi yükle" butonu)
-  - Kullanıcı kendi manken yüklerse ikinci upload alanı aç
-- [ ] Kredi: 3 kredi, KrediButon component'i kullan (NF-06)
-- [ ] Test: flat-lay giysi fotoğrafı + stok manken → kalite değerlendir
-- [ ] Test: kullanıcı yüklediği manken fotoğrafı ile test
+**Endpoint:** `fal-ai/fashn/tryon/v1.6`
+**Maliyet:** $0.075/görsel (num_samples'tan bağımsız — her sample ayrı ücret)
+**Çıktı:** 864×1296 px native (v1.6), PNG URL array
 
-**Not:** Demo hazırlığından sonra yapılabilir. Pre-traffic MVP'de olması şart değil ama giyim satıcıları için güçlü değer önerisi ve rakip farklılaştırıcı.
+| Parametre | Tip | Varsayılan | Kullanıcıya Aç | Açıklama |
+|---|---|---|---|---|
+| `model_image` | URL | zorunlu | ✅ stok seç veya yükle | Manken fotoğrafı |
+| `garment_image` | URL | zorunlu | ✅ yükle | Kıyafet fotoğrafı |
+| `category` | enum | `"auto"` | ✅ dropdown | `tops`, `bottoms`, `one-pieces`, `auto` |
+| `garment_photo_type` | enum | `"auto"` | ✅ radio | `model` (mankendeki), `flat-lay` (düz/askı), `auto` |
+| `mode` | enum | `"balanced"` | ✅ radio | `performance` (hızlı), `balanced` (önerilen), `quality` (en iyi) |
+| `num_samples` | int | 1 | ✅ slider 1-4 | Üretilecek varyasyon sayısı |
+| `seed` | int | random | ❌ gizli | Tekrarlanabilirlik için (sadece debug) |
+| `segmentation_free` | bool | true | ❌ gizli | v1.6'da her zaman true |
+| `moderation_level` | enum | `"permissive"` | ❌ gizli | İçerik denetimi — biz "permissive" sabit tutarız |
 
-**Dosyalar:** `app/api/gorsel/tryon/route.ts` (yeni), görsel sekmesi component, `public/mankenler/` (stok görseller)
+---
+
+#### KREDİ & FİYATLAMA — DİNAMİK HESAPLAMA
+
+**Temel birim:** 3 kredi = 1 görsel (1 sample)
+**num_samples ile ölçekleme:**
+
+| num_samples | API Maliyeti | Kredi | Büyük Paket Fiyatı | Marj |
+|---|---|---|---|---|
+| 1 | $0.075 | 3 kredi | ₺7.47 | +122% |
+| 2 | $0.150 | 6 kredi | ₺14.94 | +122% |
+| 3 | $0.225 | 9 kredi | ₺22.41 | +122% |
+| 4 | $0.300 | 12 kredi | ₺29.88 | +122% |
+
+**Dinamik hesaplama formülü:**
+```typescript
+// lib/constants.ts veya lib/studio-constants.ts
+export const STUDIO_KREDI = {
+  tryon: {
+    birimKredi: 3,  // 1 sample = 3 kredi
+    minSamples: 1,
+    maxSamples: 4,
+    hesapla: (numSamples: number) => numSamples * 3,
+  },
+  // gelecek modeller buraya eklenir
+} as const;
+```
+
+**Frontend'de gerçek zamanlı kredi gösterimi:**
+Kullanıcı num_samples slider'ını kaydırdıkça buton dinamik güncellenir:
+- `num_samples=1` → `[Mankene Giydirme — 3 kredi]`
+- `num_samples=2` → `[Mankene Giydirme — 6 kredi]`
+- `num_samples=4` → `[Mankene Giydirme — 12 kredi]`
+
+**Not:** `mode` (performance/balanced/quality) fiyatı ETKİLEMEZ — sadece hız/kalite tradeoff. API maliyeti aynı.
+
+---
+
+#### KULLANICI AKIŞI (TryonSekmesi.tsx)
+
+**Adım 1 — Kıyafet Fotoğrafı:**
+```
+┌─────────────────────────────────────────────┐
+│  👕 Kıyafet Fotoğrafı                       │
+│  ┌─────────────────────────────┐            │
+│  │                             │            │
+│  │   [Fotoğraf yükle veya     │            │
+│  │    sürükle bırak]          │            │
+│  │                             │            │
+│  └─────────────────────────────┘            │
+│                                              │
+│  Fotoğraf Tipi: (●) Otomatik  ○ Düz/Askı   │
+│                 ○ Mankendeki                 │
+│                                              │
+│  Kategori: (●) Otomatik ○ Üst ○ Alt        │
+│            ○ Tek Parça (elbise/tulum)       │
+└─────────────────────────────────────────────┘
+```
+
+**Adım 2 — Manken Seçimi:**
+```
+┌─────────────────────────────────────────────┐
+│  👤 Manken Seçimi                            │
+│                                              │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐       │
+│  │Kadın │ │Kadın │ │Erkek │ │Erkek │       │
+│  │  1   │ │  2   │ │  1   │ │  2   │       │
+│  │  ✓   │ │      │ │      │ │      │       │
+│  └──────┘ └──────┘ └──────┘ └──────┘       │
+│                                              │
+│  ┌──────┐                                    │
+│  │  +   │  Kendi mankeninizi yükleyin       │
+│  └──────┘                                    │
+└─────────────────────────────────────────────┘
+```
+
+**Adım 3 — Ayarlar + Üret:**
+```
+┌─────────────────────────────────────────────┐
+│  ⚙️ Ayarlar                                  │
+│                                              │
+│  Kalite: ○ Hızlı  (●) Dengeli  ○ En İyi    │
+│                                              │
+│  Varyasyon: [===●======] 1                   │
+│             1 varyasyon = 3 kredi            │
+│                                              │
+│  ┌─────────────────────────────────────┐    │
+│  │  👗 Mankene Giydirme — 3 kredi      │    │
+│  └─────────────────────────────────────┘    │
+│                                              │
+│  ℹ️ Kalan bakiye: 27 kredi                   │
+└─────────────────────────────────────────────┘
+```
+
+**Adım 4 — Sonuç:**
+```
+┌─────────────────────────────────────────────┐
+│  ✅ Sonuç (1/1 varyasyon)                    │
+│                                              │
+│  ┌─────────────────────┐                    │
+│  │                     │                    │
+│  │   [Giydirme sonucu] │                    │
+│  │   864×1296 px       │                    │
+│  │                     │                    │
+│  └─────────────────────┘                    │
+│                                              │
+│  [⬇️ İndir]  [🔄 Tekrar Üret]              │
+└─────────────────────────────────────────────┘
+```
+
+---
+
+#### API ROUTE — `app/api/studio/tryon/route.ts`
+
+```typescript
+// POST /api/studio/tryon
+// Input: { garmentImage: base64, modelImage: base64|stockId, category, garmentPhotoType, mode, numSamples, userId }
+
+// Akış:
+// 1. Auth doğrula (supabase admin)
+// 2. Stok manken mi özel yükleme mi? → stockId ise public/mankenler/ URL'i al
+// 3. Her iki görseli fal.storage.upload() ile yükle
+// 4. Opsiyonel: garment_image'a RMBG uygula (arka plan temizleme — kaliteyi artırır)
+// 5. Kredi hesapla: numSamples * 3
+// 6. Atomik kredi düşümü (mevcut krediDus helper)
+// 7. fal.queue.submit("fal-ai/fashn/tryon/v1.6", { input: { ... } })
+// 8. Hata durumunda: krediIade()
+// 9. Return { requestId, kullanilanKredi }
+```
+
+**Stok manken yönetimi:**
+```typescript
+// lib/studio-constants.ts
+export const STOK_MANKENLER = [
+  { id: "kadin-1", label: "Kadın 1", url: "/mankenler/kadin-1.jpg", cinsiyet: "kadin" },
+  { id: "kadin-2", label: "Kadın 2", url: "/mankenler/kadin-2.jpg", cinsiyet: "kadin" },
+  { id: "erkek-1", label: "Erkek 1", url: "/mankenler/erkek-1.jpg", cinsiyet: "erkek" },
+  { id: "erkek-2", label: "Erkek 2", url: "/mankenler/erkek-2.jpg", cinsiyet: "erkek" },
+] as const;
+```
+
+**Stok fotoğraf gereksinimleri:**
+- Tam boy (baş-ayak), düz arka plan (beyaz veya açık gri)
+- 1000×1500 px minimum, dikey oryantasyon
+- Doğal poz — cepheden, hafif açı OK, oturma yok
+- Yüz görünür (FASHN identity koruma için gerekli)
+- Ticari lisanslı stok fotoğraf (Unsplash, Pexels veya satın alınmış)
+- 4 adet: kadın×2 (farklı vücut tipi), erkek×2 (farklı vücut tipi)
+- Dosya yolu: `public/mankenler/kadin-1.jpg`, `kadin-2.jpg`, `erkek-1.jpg`, `erkek-2.jpg`
+
+---
+
+#### POLL ROUTE — `app/api/studio/tryon/poll/route.ts`
+
+```typescript
+// GET /api/studio/tryon/poll?requestId=xxx
+// Mevcut gorsel/poll pattern'ini takip et:
+// fal.queue.status() → { status, result }
+// status: "IN_QUEUE" | "IN_PROGRESS" | "COMPLETED" | "FAILED"
+// result.images: [{ url, content_type }]
+```
+
+**Frontend polling (useTryonUretim.ts):**
+- Interval: 3 saniye (FASHN v1.6 balanced ~15-30 sn, quality ~30-60 sn)
+- Max retry: 60 (= 3 dakika timeout)
+- Progress feedback: "Kıyafetiniz giydiriliyor..." → "Sonuçlar hazırlanıyor..."
+
+---
+
+#### HOOK — `useTryonUretim.ts`
+
+```typescript
+interface TryonState {
+  // Input
+  garmentFoto: string | null;           // base64
+  garmentPhotoType: "auto" | "flat-lay" | "model";
+  category: "auto" | "tops" | "bottoms" | "one-pieces";
+  modelSecimi: string | null;           // stockId veya base64 (özel yükleme)
+  modelKaynagi: "stok" | "ozel";
+  mode: "performance" | "balanced" | "quality";
+  numSamples: number;                   // 1-4
+
+  // Output
+  sonuclar: { url: string; index: number }[];
+  yukleniyor: boolean;
+  hata: string | null;
+  ilerleme: string;                     // "Kıyafet hazırlanıyor..." vb.
+
+  // Computed
+  toplamKredi: number;                  // numSamples * 3
+}
+```
+
+---
+
+#### VIDEO TRY-ON — 2 Aşamalı Pipeline (FASHN → Kling)
+
+> **Konsept:** Tek seferde video try-on yapan bir model yok. Ama çok daha iyi bir şey var:
+> FASHN ile giydirme sonucu al (statik görsel) → o görseli Kling v2.1'e ver → manken kıyafetle yürüsün.
+> Kullanıcı önce statik sonucu görür, beğenirse "Videoya Dönüştür" der.
+
+**Neden ayrı sekme DEĞİL:**
+Bu, try-on'un doğal uzantısı — ayrı bir araç değil. Kullanıcı try-on sonucunu gördükten sonra "bunu videoya çevir" demek istiyor. Ayrı sekmeye gidip tekrar aynı görseli yüklemek anlamsız.
+
+**Akış (TryonSonuc.tsx içinde):**
+
+```
+┌─────────────────────────────────────────────┐
+│  ✅ Giydirme Sonucu                          │
+│                                              │
+│  ┌─────────────────────┐                    │
+│  │                     │                    │
+│  │   [Manken + kıyafet]│                    │
+│  │   864×1296 px       │                    │
+│  │                     │                    │
+│  └─────────────────────┘                    │
+│                                              │
+│  [⬇️ İndir]  [🔄 Tekrar Üret]              │
+│                                              │
+│  ────────────────────────────────────────    │
+│                                              │
+│  🎬 Bu görseli videoya dönüştür              │
+│                                              │
+│  Hareket Stili:                              │
+│  (●) Podyum Yürüyüşü   ○ 360° Dönüş       │
+│  ○ Doğal Poz            ○ Rüzgar Efekti     │
+│                                              │
+│  Süre: (●) 5 saniye [10 kredi]              │
+│        ○ 10 saniye [20 kredi]               │
+│                                              │
+│  ┌─────────────────────────────────────┐    │
+│  │  🎬 Videoya Dönüştür — 10 kredi     │    │
+│  └─────────────────────────────────────┘    │
+│                                              │
+│  ℹ️ Giydirme sonucu videoda canlandırılır    │
+└─────────────────────────────────────────────┘
+```
+
+**Video sonrası:**
+```
+┌─────────────────────────────────────────────┐
+│  🎬 Video Hazır                              │
+│                                              │
+│  ┌─────────────────────┐                    │
+│  │                     │                    │
+│  │   ▶ [Video player]  │                    │
+│  │   5 sn              │                    │
+│  │                     │                    │
+│  └─────────────────────┘                    │
+│                                              │
+│  [⬇️ Video İndir]                           │
+└─────────────────────────────────────────────┘
+```
+
+**Teknik pipeline:**
+1. Kullanıcı try-on sonucunu alır (FASHN v1.6 → statik görsel, 3 kredi zaten harcanmış)
+2. "Videoya Dönüştür" tıklar → hareket stili + süre seçer
+3. API: try-on sonuç URL'ini alır → Kling v2.1 Standard image-to-video'ya gönderir
+4. Prompt: hareket stiline göre fashion-specific prompt (aşağıda detay)
+5. Sonuç: 5 veya 10 saniyelik video
+
+**Maliyet tablosu:**
+
+| İşlem | API Maliyeti | Kredi | Açıklama |
+|---|---|---|---|
+| Try-on (statik) | $0.075 | 3 kredi | FASHN v1.6 |
+| Video 5sn | $0.28 | 10 kredi | Kling v2.1 Std |
+| Video 10sn | $0.56 | 20 kredi | Kling v2.1 Std |
+| **Toplam: try-on + 5sn video** | **$0.355** | **13 kredi** | **₺32.37 @ Büyük** |
+| **Toplam: try-on + 10sn video** | **$0.635** | **23 kredi** | **₺57.27 @ Büyük** |
+
+**Neden krediyi ayrı düşüyoruz (kombine paket DEĞİL):**
+- Kullanıcı her try-on'u videoya dönüştürmek istemeyebilir
+- Önce statik sonucu görüp kaliteyi değerlendirmeli
+- Kombine paket "ya video kötü çıkarsa" riskini kullanıcıya yıkar
+
+**Fashion Video Presets (moda-spesifik promptlar):**
+
+```typescript
+// lib/studio-constants.ts
+export const TRYON_VIDEO_PRESETLER = [
+  {
+    id: "podyum",
+    etiket: "Podyum Yürüyüşü",
+    ikon: "👠",
+    aciklama: "Manken kameraya doğru özgüvenli yürür",
+    prompt: "Fashion model walking confidently towards camera on a clean white runway, professional catwalk stride, subtle hip movement, garment flowing naturally with each step, studio lighting, fashion show atmosphere",
+  },
+  {
+    id: "donus",
+    etiket: "360° Dönüş",
+    ikon: "🔄",
+    aciklama: "Manken yerinde dönerek kıyafeti her açıdan gösterir",
+    prompt: "Fashion model slowly turning 360 degrees in place, showing the garment from all angles, smooth rotation, clean studio background, soft directional lighting, full body visible",
+  },
+  {
+    id: "dogal",
+    etiket: "Doğal Poz",
+    ikon: "🧍",
+    aciklama: "Hafif hareketlerle doğal duruş",
+    prompt: "Fashion model in a relaxed natural pose, subtle weight shifting, gentle hand movement, soft smile, clean studio background, lifestyle feel, natural lighting",
+  },
+  {
+    id: "ruzgar",
+    etiket: "Rüzgar Efekti",
+    ikon: "💨",
+    aciklama: "Kumaş rüzgarda hareketlenir, dramatik his",
+    prompt: "Fashion model standing with wind blowing through the garment, fabric flowing dramatically, hair moving gently, cinematic studio lighting, editorial fashion photography feel",
+  },
+] as const;
+```
+
+**API Route — `app/api/studio/tryon/video/route.ts`:**
+
+```typescript
+// POST /api/studio/tryon/video
+// Input: { tryonImageUrl: string, preset: string, sure: "5"|"10", userId: string }
+
+// Akış:
+// 1. Auth doğrula
+// 2. tryonImageUrl geçerli mi kontrol et (fal.ai URL olmalı)
+// 3. Kredi hesapla: VIDEO_KREDI[sure] (10 veya 20)
+// 4. Atomik kredi düşümü
+// 5. TRYON_VIDEO_PRESETLER'den prompt al
+// 6. fal.queue.submit("fal-ai/kling-video/v2.1/standard/image-to-video", {
+//      input: {
+//        image_url: tryonImageUrl,
+//        prompt: preset.prompt,
+//        duration: sure === "5" ? "5" : "10",
+//        aspect_ratio: "9:16",  // dikey — moda için en uygun
+//      }
+//    })
+// 7. Return { requestId, kullanilanKredi }
+```
+
+**Poll:** Mevcut `api/studio/tryon/poll/route.ts` yeniden kullanılabilir — veya ayrı `api/studio/tryon/video/poll/route.ts` endpoint.
+
+**Hook güncellemesi — `useTryonUretim.ts` genişletmesi:**
+
+```typescript
+interface TryonState {
+  // ... mevcut try-on state (yukarıda tanımlı)
+
+  // Video ek state
+  videoAktif: boolean;              // "Videoya Dönüştür" bölümü açık mı
+  videoPreset: string;              // "podyum" | "donus" | "dogal" | "ruzgar"
+  videoSure: "5" | "10";
+  videoSonuc: { url: string } | null;
+  videoYukleniyor: boolean;
+  videoHata: string | null;
+  videoIlerleme: string;
+  videoKredi: number;               // computed: VIDEO_KREDI[videoSure]
+}
+```
+
+---
+
+#### DOSYA YAPISI GÜNCELLEMESİ (Video Try-On dahil)
+
+```
+app/
+├── yzstudio/
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── components/
+│       ├── StudioHeader.tsx
+│       ├── StudioSekmeler.tsx
+│       └── tryon/
+│           ├── TryonSekmesi.tsx
+│           ├── GarmentUpload.tsx
+│           ├── ModelPicker.tsx
+│           ├── TryonAyarlar.tsx
+│           ├── TryonSonuc.tsx          ← statik sonuç + "Videoya Dönüştür" bölümü
+│           ├── TryonVideoAyarlar.tsx   ← YENİ: preset seçimi, süre, kredi gösterimi
+│           ├── TryonVideoSonuc.tsx     ← YENİ: video player + indirme
+│           └── useTryonUretim.ts       ← genişletildi: video state + API
+│
+api/
+├── studio/
+│   └── tryon/
+│       ├── route.ts                    ← POST: FASHN try-on (statik)
+│       ├── poll/route.ts               ← GET: try-on job polling
+│       └── video/
+│           ├── route.ts                ← POST: Kling video (try-on sonucundan)
+│           └── poll/route.ts           ← GET: video job polling
+```
+
+---
+
+#### LAYOUT — `app/yzstudio/layout.tsx`
+
+```typescript
+// Auth guard + yzstudio shell
+// 1. Server-side: kullanıcı yoksa /giris?redirect=/yzstudio
+// 2. Ortak header: "yzstudio" logo + kredi bakiye + kredi yükle butonu
+// 3. Ortak footer: bilgi notu "yzstudio deneysel araçlar içerir"
+// 4. Children render (page.tsx sekme içeriği)
+```
+
+**StudioHeader tasarımı:**
+- Sol: "yzstudio" yazısı (Geist font, indigo-400, küçük "beta" badge)
+- Orta: Sekme navigasyon (tek sekme şimdilik, ileride büyüyecek)
+- Sağ: Kredi bakiyesi + [Kredi Yükle] butonu
+- Stil: koyu arka plan (slate-900), ana siteden farklı his — "lab" ortamı
+
+---
+
+#### MIDDLEWARE GÜNCELLEMESİ
+
+`middleware.ts` → PROTECTED_PATHS dizisine `/yzstudio` ekle:
+```typescript
+const PROTECTED_PATHS = ['/app', '/hesap', '/kredi-yukle', '/admin', '/yzstudio']
+```
+
+---
+
+#### İMPLEMENTASYON SIRASI (Claude Code İçin)
+
+**Faz 1 — Altyapı (önce yap):**
+- [ ] `middleware.ts` → `/yzstudio` koruma ekle
+- [ ] `lib/studio-constants.ts` → STUDIO_KREDI, STOK_MANKENLER, STUDIO_TOOLS tanımla
+- [ ] `app/yzstudio/layout.tsx` → Auth guard + shell
+- [ ] `app/yzstudio/page.tsx` → Sekme yönetimi (şimdilik tek sekme: tryon)
+- [ ] `app/yzstudio/components/StudioHeader.tsx` → Logo + kredi + sekme nav
+
+**Faz 2 — API (backend):**
+- [ ] `app/api/studio/tryon/route.ts` → POST handler (kredi düş → fal FASHN çağır)
+- [ ] `app/api/studio/tryon/poll/route.ts` → GET handler (job durumu sorgula)
+- [ ] `app/api/studio/tryon/video/route.ts` → POST handler (try-on sonucu → Kling video)
+- [ ] `app/api/studio/tryon/video/poll/route.ts` → GET handler (video job polling)
+- [ ] RMBG ön-işleme: garment_image'a `rmbgUygula()` çağır (mevcut helper)
+- [ ] Stok manken URL'lerini fal.storage'a yükleme logic'i (veya public URL direkt kullan)
+
+**Faz 3 — Frontend (UI):**
+- [ ] `app/yzstudio/components/tryon/GarmentUpload.tsx` → Drag-drop kıyafet yükleme
+- [ ] `app/yzstudio/components/tryon/ModelPicker.tsx` → Stok grid + özel yükleme
+- [ ] `app/yzstudio/components/tryon/TryonAyarlar.tsx` → Kategori, mod, num_samples
+- [ ] `app/yzstudio/components/tryon/TryonSonuc.tsx` → Sonuç galerisi + indirme + "Videoya Dönüştür" bölümü
+- [ ] `app/yzstudio/components/tryon/TryonVideoAyarlar.tsx` → Video preset seçimi, süre, dinamik kredi
+- [ ] `app/yzstudio/components/tryon/TryonVideoSonuc.tsx` → Video player + indirme
+- [ ] `app/yzstudio/components/tryon/TryonSekmesi.tsx` → Ana container (tüm parçaları birleştir)
+- [ ] `lib/hooks/useTryonUretim.ts` → Custom hook (try-on + video state + API + polling)
+
+**Faz 4 — Assets + Polish:**
+- [ ] Stok manken görselleri hazırla: `public/mankenler/` (4 adet, ticari lisanslı)
+- [ ] Kredi onay dialogu (NF-06 pattern'i): "Bu işlem X kredi harcar. Devam?"
+- [ ] Hata mesajları Türkçe: yetersiz kredi, yükleme hatası, API timeout
+- [ ] Loading state: skeleton/spinner + ilerleme mesajları
+- [ ] Responsive: mobilde de çalışsın (tek kolon layout)
+
+**Faz 5 — Test:**
+- [ ] Flat-lay kıyafet + stok manken → try-on kalite değerlendir
+- [ ] On-model kıyafet + stok manken → try-on kalite değerlendir
+- [ ] Kullanıcı yüklediği manken ile test
+- [ ] num_samples=2 ile test (birden fazla sonuç)
+- [ ] Try-on sonucu → "Videoya Dönüştür" → podyum yürüyüşü 5sn test
+- [ ] Try-on sonucu → "Videoya Dönüştür" → 360° dönüş 10sn test
+- [ ] Video preset'lerinin hepsini test et (doğal poz, rüzgar efekti)
+- [ ] Kredi düşümü doğrulama: try-on (3 kredi) + video (10 kredi) = ayrı ayrı düşmeli
+- [ ] Yetersiz kredi durumu (try-on için yeterli ama video için yetersiz)
+- [ ] Büyük dosya yükleme (10MB+ görsel)
+- [ ] Mobile responsive test
+
+**Dosyalar:** `app/yzstudio/` (tüm yeni), `app/api/studio/tryon/` (yeni, video/ alt-route dahil), `lib/studio-constants.ts` (yeni), `lib/hooks/useTryonUretim.ts` (yeni), `middleware.ts` (güncelle), `public/mankenler/` (yeni assets)
 
 ### ✅ NF-03: Admin Dashboard — Maliyet & Fiyatlama Tablosu (P1) — DONE 6bdfb4a
 
@@ -540,6 +1114,8 @@ Mankene Giydirme seçildiğinde:
 | Sosyal caption | ~$0.003/caption | 1 kredi | +1500%+ |
 | Sosyal kit (caption + görsel) | ~$0.017/kit | 2 kredi | +553% |
 | Virtual try-on (FASHN) | ~$0.075/görsel | 3 kredi | +122% |
+| Try-on + Video 5sn (FASHN→Kling) | ~$0.355 | 13 kredi (3+10) | +62% |
+| Try-on + Video 10sn (FASHN→Kling) | ~$0.635 | 23 kredi (3+20) | +63% |
 
 (Büyük paket bazında: ₺2.49/kredi, min %100 kar hedefi sağlanıyor)
 (Kling 3.0 ve Seedance geçişi sonraya bırakıldı — NF-01 P3, NF-05 P3)
@@ -574,7 +1150,7 @@ Mankene Giydirme seçildiğinde:
 - [ ] Yeni versiyon varsa: maliyet farkı, özellik farkı, breaking change kontrolü raporla
 - [ ] Rapor formatı: "Güncel vs Yeni" karşılaştırma tablosu
 
-### NF-05: Premium Video Tier — Seedance 2.0 (P3 — gelecek özellik, kullanıcı talebi bekliyor)
+### NF-05: Premium Video Tier — Seedance 2.0 (P3 — gelecek, yzstudio'nun 2. sekmesi olabilir)
 
 **Karar (19 Nisan):** Şimdilik eklenmeyecek. Önce Kling 3.0 standart entegrasyonu mükemmelleştirilecek. Kullanıcı geldikten sonra talep olursa değerlendirilecek.
 
@@ -611,7 +1187,7 @@ Her "Üret" butonunda kredi bilgisi yazılsın:
 - `[Düzenle — 1 kredi]`
 - `[Sosyal Paylaşım Üret — 1 kredi]`
 - `[Sosyal Kit Üret — 2 kredi]`
-- `[Mankene Giydirme — 3 kredi]` (NF-02 sonrası)
+- `[Mankene Giydirme — X kredi]` (yzstudio sayfasında, NF-02 — dinamik: num_samples × 3)
 - Video butonları:
   - 5sn: `[Video Üret — 10 kredi]`
   - 10sn: `[Video Üret — 20 kredi]`
@@ -627,7 +1203,7 @@ Süre seçimi zaten mevcut (5sn/10sn). Kredi badge'i seçime göre dinamik günc
 
 **C) 2+ kredi işlemlerde onay dialogu:**
 
-Video (10-20 kredi), sosyal kit (2 kredi), mankene giydirme (3 kredi) gibi 2+ kredi harcayan işlemlerde üretim öncesi onay:
+Video (10-20 kredi), sosyal kit (2 kredi), yzstudio mankene giydirme (3-12 kredi) gibi 2+ kredi harcayan işlemlerde üretim öncesi onay:
 
 ```
 ┌─────────────────────────────────┐
@@ -1121,7 +1697,7 @@ Hiç üretim yapmamış kullanıcı için /hesap sayfası boş tablo gösteriyor
 
 ### ✅ 1. RMBG fix DEPLOY ET (T7-08) — DONE 6eaed50 push ile canlıya alındı
 
-### ⚠️ 2. `/hesap/*` data fetching kırık (T7-01/02/03 — P0) — REOPENED (20 Nisan 2026: header 99 kredi gösteriyor ama kutular 0)
+### ✅ 2. `/hesap/*` data fetching kırık (T7-01/02/03 — P0) — DONE (e032172: useCredits() + useCurrentUser() hook'larına bağlandı)
 `/hesap` dashboard: kredi=0, üretim=0, gelir=0. `/hesap/krediler`: Mevcut Kredi=0. `/hesap/ayarlar`: E-posta="—".
 Ama `/uret` sidebar doğru çalışıyor (24 kredi, 19+ üretim).
 **Debug adımları:**
@@ -1541,9 +2117,9 @@ Detaylı prompt içerikleri ve implementasyon rehberi: **PROMPT-REHBER.md** dosy
 > Tüm footer sayfaları + görsel/video UI + hesap sayfaları kontrol edildi.
 
 **P0 — Hesap sayfaları data fetching kırık:**
-- [ ] **T7-01** 🔴 P0 — `/hesap` dashboard veriler 0 gösteriyor. ⚠️ REOPENED: `force-dynamic` eklendi (a81ef53) ama bug devam ediyor. Header 99 kredi gösteriyor, kutular hâlâ 0. Header `useCredits()` hook ile client-side çekiyor — çalışıyor. Kutular muhtemelen server-side veya farklı bir data kaynağı kullanıyor. **Yeni debug:** (1) Kutuların veriyi nereden çektiğini bul — server component mi, client hook mu? (2) `force-dynamic` gerçekten deploy edildi mi? (3) Supabase RLS policy kontrol et — user_id ile mi filtreliyor?
-- [ ] **T7-02** 🔴 P0 — `/hesap/krediler` 0 gösteriyor. ⚠️ REOPENED: T7-01 ile aynı kök neden.
-- [ ] **T7-03** 🔴 P0 — `/hesap/ayarlar` e-posta "—". ⚠️ REOPENED: Canlıda hâlâ sorunlu.
+- [x] **T7-01** ✅ DONE (e032172) — `/hesap` page client component'e dönüştürüldü. Kredi useCredits() + useCurrentUser() hook'larından geliyor.
+- [x] **T7-02** ✅ DONE (cdcefc9) — `/hesap/krediler` client component'e dönüştürüldü.
+- [x] **T7-03** ✅ DONE (cdcefc9) — `/hesap/ayarlar` e-posta supabase.auth.getUser() direkt çağrısıyla düzeltildi.
 
 **P1 — Header/Footer tutarsızlığı (yasal sayfalar):**
 - [x] **T7-04** 🟡 P1 — Yasal sayfaların 3'ünde SiteHeader yok. ✅ /hakkimizda, /mesafeli-satis, /teslimat-iade + /kosullar, /kvkk-aydinlatma, /cerez-politikasi'na SiteHeader eklendi.
@@ -1961,8 +2537,8 @@ Search Console'dan doğrulanmış URL listesi (hepsi Last crawled: N/A):
 - [ ] Search Console → Sitemaps → `sitemap.xml`'i yeniden submit et (yeni 20 blog + /mesafeli-satis + /teslimat-iade eklendi)
 
 **Yapılacaklar (Claude Code):**
-- [ ] Blog yazıları arasına ilgili yazılara internal link ekle — şu an "Diğer yazılar" bölümü var ama sadece 3 random yazı gösteriyor. İlgili yazıları göstermek SEO'ya çok katkı sağlar.
-- [ ] `robots.ts`'de `/sifre-sifirla`, `/profil`, `/toplu`, `/kredi-yukle` disallow'a eklenmeli (BACKLOG'a yazıldı, Claude Code yapacak)
+- [x] Blog yazıları arasına ilgili yazılara internal link ekle — etiket+kategori skoruyla "İlgili yazılar" bölümü (ef03381) ✅
+- [x] `robots.ts`'de `/sifre-sifirla`, `/profil`, `/toplu`, `/kredi-yukle` disallow'a eklenmeli — session 9'da yapıldı ✅
 
 ### SC-05 🔴 P1 — `/auth` hâlâ indexlenmiş!
 Search Console indexed sayfalar listesinde `/auth` var (Last crawled: Apr 18, 2026). Bu sayfa `/`'e 301 redirect ediyor (next.config.ts). Google hâlâ index'te tutuyor.
@@ -2003,4 +2579,4 @@ Sitemap'te olan ama indexlenmeyen "yasal" sayfalar (/mesafeli-satis, /teslimat-i
 - Bir iş bittiğinde `- [ ]` → `- [x]` olarak güncelle. Yarım iş `[x]` olmaz.
 - `~%XX` notları kısmen tamamlanmış item'ları gösterir — bunları tamamla, sonra `[x]` yap.
 - Her küme tek PR değil. Küme içinde 3-5 PR olabilir ama aynı branch ailesinde.
-- `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+- `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
