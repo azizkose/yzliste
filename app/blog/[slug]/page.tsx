@@ -203,7 +203,17 @@ export default async function BlogYaziPage({
   if (!yazi) notFound();
 
   const yazilar = await getYazilar();
-  const digerYazilar = yazilar.filter((y) => y.slug !== yazi.slug).slice(0, 3);
+  const digerYazilar = yazilar
+    .filter((y) => y.slug !== yazi.slug)
+    .map((y) => ({
+      yazi: y,
+      score:
+        y.etiketler.filter((e) => yazi.etiketler.includes(e)).length * 2 +
+        (y.kategori === yazi.kategori ? 1 : 0),
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map((s) => s.yazi);
 
   return (
     <main className="min-h-screen bg-white font-sans">
@@ -313,7 +323,7 @@ export default async function BlogYaziPage({
       {digerYazilar.length > 0 && (
         <section className="px-4 sm:px-6 py-12">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-lg font-bold text-gray-800 mb-6">Diğer yazılar</h2>
+            <h2 className="text-lg font-bold text-gray-800 mb-6">İlgili yazılar</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {digerYazilar.map((y) => (
                 <Link
