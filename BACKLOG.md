@@ -84,6 +84,544 @@ Mevcut AuthHero bileşenini (veya `_tanitim.tsx` hero bölümünü) şu şekilde
 
 ---
 
+### SAYFA SONU OVERSCROLL / BOŞ ALAN TEMİZLİĞİ (P2 — UX polish)
+
+Tüm sayfalarda içerik bittikten sonra aşağı scroll edildiğinde boş alan görünmemeli. İki ayrı sorun:
+
+**1. iOS/Safari elastic bounce scroll engelleme:**
+`app/globals.css` veya root layout'a ekle:
+```css
+html, body {
+  overscroll-behavior: none;
+}
+```
+Bu, sayfa sonunda (ve başında) "zıplama" efektini engeller. Tüm sayfalarda geçerli olur.
+
+**2. Kısa içerikli sayfalarda sticky footer:**
+`/giris`, `/kayit` sayfaları footer'sız, sadece form gösteriyor — bu OK (bilinçli).
+Ama yasal sayfalar (`/cerez-politikasi`, `/teslimat-iade`) kısa içerik + `min-h-screen` = alt kısımda geniş boşluk. Fix: `min-h-screen` yerine sticky footer pattern kullan:
+```tsx
+// Root layout (veya yasal sayfaların layout'u):
+<body className="min-h-screen flex flex-col">
+  <header>...</header>
+  <main className="flex-1">...</main>  {/* flex-1 = kalan alanı doldurur */}
+  <footer>...</footer>
+</body>
+```
+`min-h-screen` `<main>` yerine `<body>` üzerinde, `<main>` ise `flex-1` ile esner. İçerik kısa olsa bile footer her zaman viewport'un altına yapışır — arada boşluk olmaz.
+
+**Kontrol edilecek sayfalar:**
+- [ ] `/giris`, `/kayit` — footer yok, `min-h-screen` ile ekrana oturuyor (mevcut durumu koru)
+- [ ] `/cerez-politikasi`, `/teslimat-iade` — kısa içerik, footer'a kadar boşluk var → `flex-1` ile düzelt
+- [ ] `/hakkimizda`, `/kosullar`, `/gizlilik` vb. — uzun içerik, doğal scroll → sorun yok
+- [ ] Tüm sayfalar — `overscroll-behavior: none` eklendikten sonra iOS bounce yok
+
+**Dosyalar:** `app/globals.css`, `app/layout.tsx` (veya ilgili layout dosyaları)
+
+---
+
+### HESAP YAPISINI YENİDEN DÜZENLE — Marka + Üretimler Ayrı Sayfa (P2 — UX)
+
+**Sorun:** Marka bilgileri ve önceki üretimler `/hesap/profil` sayfasında tab olarak gizli. Kullanıcı `/hesap` ana sayfasından "Profil"e tıklayıp sonra tab'a geçmek zorunda. Bu iki özellik kendi başına birer temel sayfa olmalı.
+
+**Mevcut yapı:**
+```
+/hesap
+  /hesap/profil     → Kişisel/Fatura + Tabs(🏪 Marka Profili | 📋 Önceki Üretimler)
+  /hesap/krediler
+  /hesap/faturalar
+  /hesap/ayarlar
+```
+
+**Hedef yapı:**
+```
+/hesap
+  /hesap/profil     → Sadece kişisel bilgiler + fatura bilgileri (tab'sız)
+  /hesap/marka      → Marka Profili (YENİ route)
+  /hesap/uretimler  → Önceki Üretimler (YENİ route)
+  /hesap/krediler
+  /hesap/faturalar
+  /hesap/ayarlar
+```
+
+**Fix — 4 adım:**
+
+1. **Yeni route oluştur: `/hesap/marka/page.tsx`**
+   - `profil/page.tsx`'teki "Marka Profili" tab içeriğini (satır 320-362) buraya taşı
+   - Aynı marka form alanları: marka_adi, ton, hedef_kitle, vurgulanan_ozellikler
+   - Aynı Kaydet butonu ve mesaj gösterimi
+   - Üstte `← Hesap` linki + "Marka Profili" başlığı
+
+2. **Yeni route oluştur: `/hesap/uretimler/page.tsx`**
+   - `profil/page.tsx`'teki "Önceki Üretimler" tab içeriğini (satır 365-424) buraya taşı
+   - Sayfalama (SAYFA_BOYUTU=20), üretim kartları, expand/collapse, kopyala butonları
+   - `sonucuBolumle()` ve `platformRenk` helper'ları da taşınacak
+   - Üstte `← Hesap` linki + "Üretim Geçmişi" başlığı
+
+3. **`/hesap/profil/page.tsx`'den tab yapısını kaldır:**
+   - `profilSekme` state'ini sil
+   - Tab bar'ı (satır 307-318) sil
+   - Sadece "Kişisel ve Fatura Bilgileri" bölümü (satır 224-305) kalsın
+   - Header'daki kredi + toplam üretim widget'ı kalabilir
+
+4. **`/hesap/page.tsx` hızlı linkler gridi güncelle (satır 193-206):**
+   ```tsx
+   // Mevcut 4 kart → 6 kart
+   { href: '/hesap/profil', baslik: 'Profil', aciklama: 'Kişisel ve fatura bilgileri', ikon: '👤' },
+   { href: '/hesap/marka', baslik: 'Marka', aciklama: 'Marka profili ve metin tonu', ikon: '🏪' },
+   { href: '/hesap/uretimler', baslik: 'Üretimler', aciklama: 'Tüm üretim geçmişi', ikon: '📋' },
+   { href: '/hesap/krediler', baslik: 'Krediler', aciklama: 'Kredi geçmişi ve satın alma', ikon: '💳' },
+   { href: '/hesap/faturalar', baslik: 'Faturalar', aciklama: 'e-Arşiv fatura indir ve gönder', ikon: '🧾' },
+   { href: '/hesap/ayarlar', baslik: 'Ayarlar', aciklama: 'E-posta ve şifre değiştir', ikon: '⚙️' },
+   ```
+   Grid: `grid-cols-2 sm:grid-cols-3` (6 kart 3'lü sığar)
+
+5. **Referans güncellemeleri:**
+   - `/hesap/page.tsx` satır 177: "Tüm üretim geçmişini gör" linki → `/hesap/uretimler`
+   - `/app/uret/page.tsx` satır 427: "📋 Geçmiş Üretimlerim" linki → `/hesap/uretimler`
+   - SiteHeader'da profil linki değişmez (zaten `/hesap` gidiyor)
+
+**Test:**
+- [ ] `/hesap` 6 kart doğru gösteriliyor, tüm linkler çalışıyor
+- [ ] `/hesap/profil` tab yok, sadece kişisel + fatura bilgileri
+- [ ] `/hesap/marka` form çalışıyor, kaydet başarılı
+- [ ] `/hesap/uretimler` sayfalama + expand/kopyala çalışıyor
+- [ ] Eski `/hesap/profil`'e gelen bookmark'lar çalışmaya devam ediyor (redirect gerekebilir)
+
+**Dosyalar:** `app/(auth)/hesap/profil/page.tsx`, `app/(auth)/hesap/marka/page.tsx` (yeni), `app/(auth)/hesap/uretimler/page.tsx` (yeni), `app/(auth)/hesap/page.tsx`
+
+---
+
+### KREDİ GÖSTERİMİ TUTARSIZLIĞI (P2 — UX güvenilirlik)
+
+**Sorun:** Kredi miktarı 4+ farklı yerde bağımsız sorguyla gösterildiğinden, eşzamanlılık veya cache nedeniyle uyumsuzluk olabiliyor:
+
+| Yer | Kaynak | Tip |
+|-----|--------|-----|
+| SiteHeader (nav) | `useCredits()` → TanStack Query, 10sn staleTime | Client |
+| /hesap dashboard | `profiles.kredi` → Server Component | RSC (cache'lenebilir) |
+| /hesap/profil | `profiles.kredi` → doğrudan supabase | Client |
+| /hesap/krediler | `profiles.kredi` → doğrudan supabase | Client |
+| /uret sidebar | `kullanici.kredi` → kendi fetch'i | Client |
+
+Ana risk: `/hesap` sayfası RSC olduğu için Next.js cache'leyebilir. Kredi harcandıktan veya satın alındıktan sonra `/hesap`'a dönünce eski değer görünür. SiteHeader'daki TanStack Query ise 10sn sonra yenilenir.
+
+**Fix — 2 adım:**
+
+1. **Tüm kredi gösterimlerini tek kaynağa bağla:**
+   - Zaten `useCredits()` hook'u var ve TanStack Query ile cache'liyor — bunu tüm client component'larda kullan
+   - `/hesap/profil/page.tsx` ve `/hesap/krediler/page.tsx`'de `useCredits()` hook'unu import et, profil sorgusundan krediyi ayır
+   - `/uret/page.tsx`'de de `useCredits()` kullan
+
+2. **`/hesap/page.tsx` (RSC) için kredi gösterimini client component'a çevir:**
+   - Metrik kartlarından "Kalan Kredi" kartını ayrı bir `<KrediKart />` client component'a al
+   - Bu component `useCredits()` hook'unu kullansın
+   - Kredi uyarı banner'ını da aynı client component'ta render et
+   - Böylece sayfa RSC olsa bile kredi her zaman taze
+
+3. **`useCredits()` staleTime'ı düşür veya invalidate ekle:**
+   - Üretim sonrası `useInvalidateCredits()` çağır (zaten var mı kontrol et)
+   - Ödeme sonrası da invalidate çağır
+   - staleTime 10sn → 5sn olabilir veya 0 yapılabilir (kredi kritik bilgi)
+
+**Test:**
+- [ ] Üretim yap → kredi SiteHeader'da hemen düşsün
+- [ ] Kredi satın al → tüm sayfalarda yeni değer göstersin
+- [ ] `/hesap` → `/hesap/profil` → geri → aynı kredi göstersin
+
+**Dosyalar:** `lib/hooks/useCredits.ts`, `components/SiteHeader.tsx`, `app/(auth)/hesap/page.tsx`, `app/(auth)/hesap/profil/page.tsx`, `app/(auth)/hesap/krediler/page.tsx`, `app/uret/page.tsx`
+
+---
+
+## 🔴 KREDİ FİYATLAMA GÜNCELLEMESİ — Claude Code İçin (20 Nisan 2026)
+
+Maliyet analizi sonucu (Kling v2.1 Standard: $0.28/5sn, $0.56/10sn). Büyük paket bazında min %100 kar hedefi.
+
+### KF-01: Video + Try-on Kredi Değerlerini Güncelle (P0 — acil)
+
+**Değişecek dosyalar:**
+
+1. **`lib/paketler.ts`** — özellikler dizisinde video satırını güncelle:
+   - ESKİ: `"🎬 Video — 5 kredi (5sn) · 8 kredi (10sn)"`
+   - YENİ: `"🎬 Video — 10 kredi (5sn) · 20 kredi (10sn)"`
+   - YENİ satır ekle: `"👗 Mankene giydirme — 3 kredi / görsel"` (NF-02 hazır olunca)
+
+2. **`app/api/sosyal/video/route.ts`** — kredi düşüm miktarını güncelle:
+   - 5sn video: 5 → 10 kredi
+   - 10sn video: 8 → 20 kredi
+
+3. **`app/api/sosyal/video/poll/route.ts`** ve **`download/route.ts`** — kredi referansı varsa güncelle
+
+4. **Frontend video sekmesi** — kredi gösterimi varsa güncelle
+
+**Fix:**
+- [x] `lib/paketler.ts` tüm 3 pakette video özellik satırını güncelle (5→10, 8→20)
+- [x] Video API route'unda kredi düşüm miktarlarını güncelle
+- [x] Frontend'de video kredi gösterimini güncelle
+- [ ] Test: video üretimi → doğru kredi düşümü kontrol et
+
+---
+
+## 🔧 PROMPT ENGINE OPTİMİZASYONU — Claude Code İçin (19 Nisan 2026)
+
+Derin prompt engine analizinden çıkan 14 bulgu. Detaylı rapor: `yzliste test/prompt-engine-analiz-raporu.docx`
+
+### PE-01: Video + Sosyal Kit'e RMBG Ekle (P0 — kritik)
+
+**Sorun:** `app/api/sosyal/video/route.ts` ve `app/api/sosyal/kit/route.ts` dosyalarında RMBG (fal-ai/bria/background/remove) hiç çağrılmıyor. Ham fotoğraf direkt Kling'e / Bria Product-Shot'a gönderiliyor. Görsel route'unda (`app/api/gorsel/route.ts` satır 120) düzgün çalışıyor.
+
+**Fix:**
+- [x] Ortak bir RMBG helper fonksiyonu yaz (`lib/fal/rmbg.ts`)
+- [x] `app/api/gorsel/route.ts`'deki mevcut RMBG çağrısını bu helper'a taşı
+- [x] `app/api/sosyal/video/route.ts`'de Kling'e göndermeden önce RMBG helper'ı çağır
+- [x] `app/api/sosyal/kit/route.ts`'de Bria Product-Shot'a göndermeden önce RMBG helper'ı çağır
+- [ ] Test: video ve kit endpoint'lerine arka planlı fotoğraf gönder, temizlenmiş çıktı geldiğini doğrula
+
+**Dosyalar:** `app/api/sosyal/video/route.ts`, `app/api/sosyal/kit/route.ts`, `app/api/gorsel/route.ts`
+
+### PE-02: Düzenleme API'sine Kredi Düşümü + Sistem Prompt Ekle (P0 — kritik)
+
+**Sorun 1 (B-02):** `app/api/uret/duzenle/route.ts` satır 51'de kredi kontrol ediliyor ama hiç düşülmüyor. Sınırsız ücretsiz düzenleme mümkün.
+**Sorun 2 (B-06):** Aynı endpoint'e hiç sistem prompt'u gönderilmiyor. Platform kuralları, marka bilgisi, yasaklı kelimeler — hiçbiri yok.
+
+**Karar:** Her düzenleme 1 kredi harcasın. Ana üretimin sistemPromptOlustur()'u düzenleme için de kullanılsın.
+
+**Fix:**
+- [x] Atomik kredi düşümü ekle (1 kredi, LLM öncesi atomik düşüm)
+- [x] Hata durumunda refund mekanizması ekle
+- [x] Düzenleme sistem prompt'u eklendi (DUZENLE_SISTEM_PROMPT sabiti)
+- [ ] Frontend'den platform ve kategori bilgisini de gönder (şu an sadece action + content geliyor)
+- [ ] Test: düzenleme yap → kredi 1 düşsün, prompt kalitesi korunsun
+
+**Dosyalar:** `app/api/uret/duzenle/route.ts`, `app/api/uret/route.ts` (sistemPromptOlustur import)
+
+### PE-03: Video Prompt'una stilIpucu Ekle (P0 — kritik)
+
+**Sorun:** `app/api/sosyal/video/route.ts` satır 63-68'de stilIpucu hesaplanıyor ama satır 70'teki template string bunu kullanmıyor. Prompt sadece "professional product showcase, camera slowly zooms in..." diyor.
+
+**Fix:**
+- [x] Satır 70'teki default prompt template'ine `${stilIpucu}` eklendi
+- [x] Marka ipucusu (markaIpucu) ile birlikte stilIpucu da aktif
+- [ ] Test: farklı ton değerleriyle video üret, prompt'ta stil ipucunun geçtiğini logla
+
+**Dosyalar:** `app/api/sosyal/video/route.ts`
+
+### PE-04: Dead Code Temizliği — lib/prompts/metin.ts (P1 — bakım)
+
+**Sorun:** `lib/prompts/metin.ts` dosyasındaki `sistemPromptOlustur()`, `PLATFORM_KURALLARI`, `HALLUCINATION_KURALLARI` hiç kullanılmıyor. Route.ts kendi 7-katmanlı versiyonunu tanımlıyor. Sadece `METIN_PROMPT_VERSION` import ediliyor.
+
+**Fix:**
+- [ ] `lib/prompts/metin.ts`'den kullanılmayan fonksiyon ve sabitleri sil (sistemPromptOlustur, PLATFORM_KURALLARI, HALLUCINATION_KURALLARI)
+- [ ] Sadece `METIN_PROMPT_VERSION` export'u kalsın
+- [ ] `app/api/uret/route.ts`'deki import'un hâlâ çalıştığını doğrula
+
+**Dosyalar:** `lib/prompts/metin.ts`, `app/api/uret/route.ts`
+
+### PE-05: Video Route Profil Sorgusunu Genişlet (P1 — kalite)
+
+**Sorun:** `app/api/sosyal/video/route.ts` profil sorgusunda sadece `kredi, is_admin, marka_adi, ton` çekiliyor. `hedef_kitle` ve `vurgulanan_ozellikler` eksik. Frontend (useVideoUretim) de hiç ton/marka bilgisi göndermiyor.
+
+**Karar:** Tam profil çek + frontend'den de ton gönder.
+
+**Fix:**
+- [ ] Profil sorgusuna `hedef_kitle, vurgulanan_ozellikler` ekle
+- [ ] `lib/hooks/useVideoUretim.ts`'den ton bilgisini (kullanici.ton) body'ye ekle
+- [ ] Video prompt'unu bu verilerle zenginleştir (PE-03 ile birlikte yapılabilir)
+- [ ] Test: marka profili dolu olan hesapla video üret, prompt'ta marka bilgisi geçsin
+
+**Dosyalar:** `app/api/sosyal/video/route.ts`, `lib/hooks/useVideoUretim.ts`
+
+### PE-06: Sosyal Caption Ton Önceliğini Düzelt (P1 — UX)
+
+**Sorun:** `app/api/sosyal/route.ts` satır 35'te `profil.ton || ton` yazıyor. Profildeki ton, form'dan gelen ton'u eziyor. Kullanıcı formda "eğlenceli" seçse bile profilde "profesyonel" varsa o kullanılıyor.
+
+**Karar:** Form ton'u öncelikli, profil ton'u fallback.
+
+**Fix:**
+- [ ] Satır 35'teki önceliği tersine çevir: `ton || profil.ton` (form önce, profil fallback)
+- [ ] Test: profilde "profesyonel" olan hesapla formda "eğlenceli" seç → caption eğlenceli tonda çıksın
+
+**Dosyalar:** `app/api/sosyal/route.ts`
+
+### PE-07: Görsel Route'a marka_adi Ekle (P1 — kalite)
+
+**Sorun:** `app/api/gorsel/route.ts`'de marka_adi profil sorgusunda çekiliyor ama `ctxParcalar` dizisine eklenmiyor. Bria Product-Shot marka adından habersiz.
+
+**Fix:**
+- [ ] `ctxParcalar` oluşturulurken `profil.marka_adi` varsa diziye ekle
+- [ ] Test: marka profili dolu hesapla görsel üret, scene description'da marka adının geçtiğini logla
+
+**Dosyalar:** `app/api/gorsel/route.ts`
+
+### PE-08: Tüm Kredi Düşümlerini Atomik Yap (P1 — güvenlik)
+
+**Sorun:**
+- Video (`app/api/sosyal/video/route.ts` satır 74-78): `.gte()` condition yok, eş zamanlı isteklerde negatife düşebilir.
+- Sosyal caption (`app/api/sosyal/route.ts` satır 76-88): Kredi LLM başarısından SONRA düşüyor, race condition.
+- Metin route'undaki pattern doğru (önce atomik düş, hata olursa refund).
+
+**Karar:** Tüm route'ları metin route'undaki atomik pattern'e çevir. Ortak helper fonksiyon yaz.
+
+**Fix:**
+- [ ] Ortak kredi helper'ı yaz: `lib/credits.ts` → `deductCredit(userId, amount)` + `refundCredit(userId, amount)`
+- [ ] `deductCredit`: `.update({ kredi: rpc veya raw sql }).eq("id", userId).gt("kredi", amount-1)` pattern
+- [ ] Hata durumunda `refundCredit` çağrısı
+- [ ] `app/api/sosyal/video/route.ts` → helper kullan, Kling çağrısından ÖNCE düş
+- [ ] `app/api/sosyal/route.ts` → helper kullan, LLM çağrısından ÖNCE düş
+- [ ] `app/api/sosyal/kit/route.ts` → kontrol et, aynı pattern uygula
+- [ ] `app/api/uret/route.ts` → mevcut pattern'i helper'a taşı (opsiyonel, çalışıyor ama DRY için)
+- [ ] `app/api/uret/duzenle/route.ts` → PE-02'de zaten eklenecek, helper kullansın
+- [ ] Test: 2 eş zamanlı istek → sadece birinin başarılı olması, diğerinin "kredi yetersiz" döndürmesi
+
+**Dosyalar:** `lib/credits.ts` (yeni), `app/api/sosyal/video/route.ts`, `app/api/sosyal/route.ts`, `app/api/sosyal/kit/route.ts`, `app/api/uret/route.ts`, `app/api/uret/duzenle/route.ts`
+
+### ~~PE-09: Kling v2.1 → v2.6 Upgrade~~ — GEÇERSİZ (NF-01 ile değiştirildi)
+
+**Not:** Model upgrade sonraya bırakıldı (NF-01 P3). Mevcut Kling v2.1 Standard ile devam. Video kredi fiyatlaması maliyet analizine göre güncellendi: 5sn=10kr, 10sn=20kr.
+
+### PE-10: Foto Moduna Eksik Alanları Ekle (P2 — kalite)
+
+**Sorun:** `components/tabs/MetinSekmesi.tsx` foto modunda kullanıcı sadece kategori + ek bilgi girebiliyor. Manuel modda olan hedefKitle, fiyatSegmenti, anahtarKelimeler alanları foto modda yok.
+
+**Fix:**
+- [ ] Foto moduna hedefKitle, fiyatSegmenti, anahtarKelimeler alanlarını ekle
+- [ ] Bu alanlar opsiyonel olsun (foto modu hızlı mod, zorunlu alan ekleme)
+- [ ] API route'una bu alanları da gönder
+- [ ] Test: foto modunda ek alanları doldurup üret → prompt'ta geçtiğini doğrula
+
+**Dosyalar:** `components/tabs/MetinSekmesi.tsx`, `lib/hooks/useMetinUretim.ts`
+
+### PE-11: tonEnMap Güncellemesi (P2 — tutarlılık)
+
+**Sorun:** `app/api/gorsel/route.ts`'deki tonEnMap'te sadece 'eglenceli'→'playful', 'lüks'→'luxurious', 'minimal'→'minimalist' var. Profilde kullanılan ton değerleri (samimi, profesyonel, premium) map'te yok. 'premium' fallback'e düşüyor.
+
+**Karar:** Tüm profil ton değerlerini ekle + merkezi bir yere taşı.
+
+**Fix:**
+- [ ] `lib/constants/ton.ts` (veya benzeri) oluştur, tonEnMap'i tüm değerlerle tanımla:
+  - samimi → friendly/warm
+  - profesyonel → professional/corporate
+  - premium → premium/upscale
+  - eglenceli → playful/fun
+  - ciddi → serious/formal
+  - lüks → luxurious
+  - minimal → minimalist
+- [ ] `app/api/gorsel/route.ts` ve `app/api/sosyal/video/route.ts`'den bu merkezi map'i import et
+- [ ] Test: her ton değeriyle görsel üret, İngilizce çevirinin prompt'ta doğru geçtiğini doğrula
+
+**Dosyalar:** `lib/constants/ton.ts` (yeni), `app/api/gorsel/route.ts`, `app/api/sosyal/video/route.ts`
+
+---
+
+## 🚀 YENİ ÖZELLİKLER + ALTYAPI — Claude Code İçin (19 Nisan 2026)
+
+### NF-01: Video Kling 3.0 Pro + Ses Desteği (P3 — gelecek, öncelikli değil)
+
+**Mevcut:** Kling v2.1 Standard (sessiz). Maliyet: $0.28/5sn, $0.56/10sn.
+**Hedef:** İleride Kling 3.0 Pro'ya geçiş + opsiyonel ses toggle'ı.
+
+**Karar (20 Nisan):** Önce mevcut v2.1 Standard ile devam. Kredi fiyatlaması mevcut maliyete göre belirlendi:
+- Video 5sn = 10 kredi (maliyet ₺12.56, satış ₺24.90 @ Büyük paket → %98 marj)
+- Video 10sn = 20 kredi (maliyet ₺25.12, satış ₺49.80 @ Büyük paket → %98 marj)
+
+**Kling 3.0 geçildiğinde tekrar fiyatlama yapılacak:**
+- Kling 3.0 sessiz: ~$0.07/sn → 5sn ≈ $0.35 (v2.1'den %25 pahalı)
+- Kling 3.0 sesli: ~$0.14/sn → 5sn ≈ $0.70 (2x)
+
+**Fix:**
+- [ ] `app/api/sosyal/video/route.ts`'de model adını `fal-ai/kling-video/v3/pro/image-to-video` olarak güncelle (fal.ai docs'tan doğru endpoint'i kontrol et)
+- [ ] Parametre doğrulaması: v3 API'sindeki duration, aspect_ratio, audio parametrelerini kontrol et
+- [ ] Frontend'e (`components/tabs/VideoSekmesi.tsx` veya ilgili) "Sesli Video" toggle'ı ekle
+- [ ] Toggle açıksa API'ye `audio: true` (veya ilgili param) gönder
+- [ ] Sesli video için ek kredi düşümü belirle (PE-08'deki ortak helper kullanılsın)
+- [ ] Kredi fiyatlamasını Kling 3.0 maliyetine göre tekrar hesapla
+- [ ] Test: sessiz ve sesli video üret, kalite + maliyet doğrula
+
+**Dosyalar:** `app/api/sosyal/video/route.ts`, `lib/hooks/useVideoUretim.ts`, ilgili frontend component
+
+### NF-02: Virtual Try-On — Mankene Giydirme (P2 — yeni özellik)
+
+**Fırsat:** fal.ai'de FASHN v1.5/v1.6 modeli var. Giysi fotoğrafı + manken fotoğrafı vererek ürünü mankene giydirebiliyor. ~$0.075/görsel.
+
+**Kullanıcı göreceği akış:**
+Görsel sekmesinde mevcut stillerin yanına "Mankene Giydirme" ek seçeneği eklenir:
+
+```
+Görsel Stili:
+[Stüdyo] [Lifestyle] [Flat-lay] [...] [👗 Mankene Giydirme]
+```
+
+Mankene Giydirme seçildiğinde:
+1. Ürün fotoğrafı yükle (giysi — flat-lay veya askıda)
+2. Manken seç:
+   - Hazır mankenler: [Kadın 1] [Kadın 2] [Erkek 1] [Erkek 2] (biz sağlıyoruz)
+   - "Kendi mankeninizi yükleyin" butonu (opsiyonel, ileri kullanıcılar için)
+3. [Mankene Giydirme — 3 kredi]
+4. Sonuç: giysi mankene giydirilmiş halde
+
+**Kredi:** 3 kredi/görsel (API maliyeti ~$0.075 = ₺3.36, satış ₺7.47 @ Büyük → %122 marj)
+
+**Teknik detay:**
+- fal.ai endpoint: `fal-ai/fashn/tryon/v1.5` (veya v1.6 — kalite karşılaştır)
+- Input: `garment_image` (giysi) + `model_image` (manken)
+- FASHN flat-lay ve on-model fotoğrafları destekliyor
+- 3 kalite modu var (hız vs kalite tradeoff)
+
+**Fix:**
+- [ ] Yeni API route: `app/api/gorsel/tryon/route.ts`
+- [ ] fal.ai endpoint ve parametreleri doğrula (v1.5 vs v1.6 kalite karşılaştır)
+- [ ] Stok manken görselleri hazırla: 4 adet (kadın×2, erkek×2), farklı vücut tipleri
+  - Görselleri `public/mankenler/` altına koy (veya CDN)
+  - Uygun lisanslı stok fotoğraflar seç (ticari kullanım hakkı)
+- [ ] RMBG ön-işlemesi: giysi fotoğrafından arka plan temizle (PE-01'deki ortak helper)
+- [ ] Frontend (Görsel sekmesi):
+  - Stil seçeneklerine "Mankene Giydirme" kartı ekle
+  - Seçildiğinde manken grid'i göster (stok + "kendi yükle" butonu)
+  - Kullanıcı kendi manken yüklerse ikinci upload alanı aç
+- [ ] Kredi: 3 kredi, KrediButon component'i kullan (NF-06)
+- [ ] Test: flat-lay giysi fotoğrafı + stok manken → kalite değerlendir
+- [ ] Test: kullanıcı yüklediği manken fotoğrafı ile test
+
+**Not:** Demo hazırlığından sonra yapılabilir. Pre-traffic MVP'de olması şart değil ama giyim satıcıları için güçlü değer önerisi ve rakip farklılaştırıcı.
+
+**Dosyalar:** `app/api/gorsel/tryon/route.ts` (yeni), görsel sekmesi component, `public/mankenler/` (stok görseller)
+
+### NF-03: Admin Dashboard — Maliyet & Fiyatlama Tablosu (P1 — operasyon)
+
+**2 bileşen:**
+
+**A) Statik maliyet tablosu:**
+
+| Üretim Tipi | API Maliyeti | Kredi | Büyük Paket Marj |
+|---|---|---|---|
+| Metin (GPT-4o) | ~$0.005/üretim | 1 kredi | +1010% |
+| Metin düzenleme | ~$0.003/üretim | 1 kredi | +1500%+ |
+| Görsel (RMBG + Bria) | ~$0.012/görsel | 1 kredi | +363% |
+| Video 5sn (Kling v2.1 Std) | $0.28/5sn | 10 kredi | +98% |
+| Video 10sn (Kling v2.1 Std) | $0.56/10sn | 20 kredi | +98% |
+| Sosyal caption | ~$0.003/caption | 1 kredi | +1500%+ |
+| Sosyal kit (caption + görsel) | ~$0.017/kit | 2 kredi | +553% |
+| Virtual try-on (FASHN) | ~$0.075/görsel | 3 kredi | +122% |
+
+(Büyük paket bazında: ₺2.49/kredi, min %100 kar hedefi sağlanıyor)
+(Kling 3.0 ve Seedance geçişi sonraya bırakıldı — NF-01 P3, NF-05 P3)
+
+**B) Canlı maliyet loglama:**
+- [ ] Her API çağrısında maliyet verisini logla: `uretimler` tablosuna `api_cost` kolonu ekle (decimal)
+- [ ] fal.ai response'undaki cost/billing bilgisini parse et
+- [ ] Anthropic API: input/output token sayısından maliyet hesapla
+- [ ] Admin sayfasında (`/hesap/admin` veya `/admin`): günlük/haftalık/aylık toplam maliyet grafiği
+- [ ] Gerçek vs planlanan marj karşılaştırması
+
+**Fix:**
+- [ ] DB migration: `uretimler` tablosuna `api_cost DECIMAL(10,6)` kolonu ekle
+- [ ] Tüm API route'larında response'tan maliyet bilgisini çek ve kaydet
+- [ ] Admin dashboard sayfasına maliyet bölümü ekle (tablo + grafik)
+- [ ] Statik fiyat tablosunu admin sayfasında göster (yukarıdaki tablo)
+
+**Dosyalar:** Migration (yeni), tüm API route'ları, admin dashboard sayfası
+
+### NF-04: fal.ai Model Takip Scheduled Task (P2 — operasyon)
+
+**Amaç:** fal.ai'deki kullandığımız modellerin yeni versiyonlarını haftalık kontrol et.
+
+**Takip edilecek modeller:**
+- `fal-ai/kling-video/*` → video üretim
+- `fal-ai/bria/*` → RMBG + Product-Shot
+- `fal-ai/fashn/*` → virtual try-on (NF-02 sonrası)
+- `fal-ai/seedance/*` → premium video (NF-05 sonrası)
+
+**Fix:**
+- [ ] Cowork scheduled task oluştur: haftalık, Pazartesi
+- [ ] Task: fal.ai'deki ilgili model endpoint'lerini kontrol et
+- [ ] Yeni versiyon varsa: maliyet farkı, özellik farkı, breaking change kontrolü raporla
+- [ ] Rapor formatı: "Güncel vs Yeni" karşılaştırma tablosu
+
+### NF-05: Premium Video Tier — Seedance 2.0 (P3 — gelecek özellik, kullanıcı talebi bekliyor)
+
+**Karar (19 Nisan):** Şimdilik eklenmeyecek. Önce Kling 3.0 standart entegrasyonu mükemmelleştirilecek. Kullanıcı geldikten sonra talep olursa değerlendirilecek.
+
+**Fırsat:** Seedance 2.0 fal.ai'de mevcut. 2K@60fps, native audio sync, 15sn'ye kadar. Sinematik kalite.
+**Gerçek maliyet:** Fast tier ~$0.24/sn → 5sn = ~$1.21, standart ~$0.30/sn → 5sn = ~$1.50. Ses dahil, ek maliyet yok.
+**Endpoint:** `bytedance/seedance-2.0/image-to-video` (fotoğraf → video destekliyor)
+**Prompt tarzı:** Sinematografik — kamera terimleri (dolly, tracking, aerial), shot bazlı yapı, tek aksiyon/shot kuralı. Kling'den farklı prompt şablonu gerekir.
+
+**Konumlandırma (gelecek):**
+- Standart video: Kling v2.1 Std (mevcut) → 10 kredi (5sn) / 20 kredi (10sn)
+- Premium video: Seedance 2.0 → kredi TBD (maliyet yüksek, ayrıca fiyatlanacak)
+
+**Fix:**
+- [ ] Yeni API route: `app/api/sosyal/video/premium/route.ts` (veya mevcut route'a tier parametresi ekle)
+- [ ] fal.ai endpoint: `fal-ai/seedance/v2` (doğru endpoint'i docs'tan kontrol et)
+- [ ] Frontend'de video sekmesine "Standart / Premium" seçeneği ekle
+- [ ] Premium seçildiğinde kredi uyarısı göster ("Bu üretim 3 kredi harcar")
+- [ ] Seedance parametreleri: resolution, duration, audio ayarları
+- [ ] Test: aynı ürün fotoğrafıyla Kling vs Seedance karşılaştır
+
+**Not:** Demo sonrası değerlendirilebilir. Fiyat noktası ($0.62) sürdürülebilir ama kredi/TL dengesine dikkat.
+
+**Dosyalar:** `app/api/sosyal/video/route.ts` (veya yeni route), frontend video component
+
+### NF-06: Kredi Tüketim UX — Bilgilendirme + Onay (P1 — UX)
+
+**Amaç:** Kullanıcı her işlemde kaç kredi harcayacağını net görsün. Teknik terimler yok, sade dil.
+
+**A) Tüm üretim butonlarına kredi badge'i:**
+
+Her "Üret" butonunda kredi bilgisi yazılsın:
+- `[İçerik Üret — 1 kredi]`
+- `[Görsel Üret — 1 kredi]`
+- `[Düzenle — 1 kredi]`
+- `[Sosyal Paylaşım Üret — 1 kredi]`
+- `[Sosyal Kit Üret — 2 kredi]`
+- `[Mankene Giydirme — 3 kredi]` (NF-02 sonrası)
+- Video butonları:
+  - 5sn: `[Video Üret — 10 kredi]`
+  - 10sn: `[Video Üret — 20 kredi]`
+
+Badge stili: butonun sağında veya altında küçük, soluk text. Örn: `text-xs text-gray-400` veya buton içinde `— 1 kredi` şeklinde.
+
+**B) Video sekmesinde süre seçimi:**
+
+Süre seçimi zaten mevcut (5sn/10sn). Kredi badge'i seçime göre dinamik güncellenir:
+- 5sn seçili: "Video Üret — 10 kredi"
+- 10sn seçili: "Video Üret — 20 kredi"
+(Ses toggle'ı ve model seçimi şimdilik yok — NF-01 P3, NF-05 P3.)
+
+**C) 2+ kredi işlemlerde onay dialogu:**
+
+Video (10-20 kredi), sosyal kit (2 kredi), mankene giydirme (3 kredi) gibi 2+ kredi harcayan işlemlerde üretim öncesi onay:
+
+```
+┌─────────────────────────────────┐
+│  Bu işlem 3 kredi harcar.       │
+│  Kalan krediniz: 12             │
+│                                 │
+│  [Vazgeç]  [Devam Et]          │
+└─────────────────────────────────┘
+```
+
+1 kredi işlemlerde dialog gösterilMEZ (akışı yavaşlatır).
+
+**Fix:**
+- [ ] Ortak `<KrediButon>` component'i yaz: `label`, `kredi`, `onClick`, `disabled` props
+- [ ] Buton içinde kredi bilgisi render et (örn: `{label} — {kredi} kredi`)
+- [ ] `kredi >= 2` ise onClick'te onay dialog'u göster (confirm modal veya alert dialog)
+- [ ] Dialog: "Bu işlem {kredi} kredi harcar. Kalan krediniz: {kalan}. Devam?" + Vazgeç/Devam butonları
+- [ ] Tüm üretim butonlarını `<KrediButon>` ile değiştir:
+  - `components/tabs/MetinSekmesi.tsx` — içerik üret butonu
+  - `components/tabs/GorselSekmesi.tsx` — görsel üret butonu  
+  - `components/tabs/VideoSekmesi.tsx` — video üret butonu + model seçimi
+  - `components/tabs/SosyalSekmesi.tsx` — caption üret + kit üret butonları
+  - Düzenleme butonları (kısalt, genişlet, ton değiştir vb.)
+- [ ] Video sekmesinde süre seçimine göre buton kredi badge'ini dinamik güncelle (5sn→10kr, 10sn→20kr)
+- [ ] Mankene giydirme butonunda 3 kredi badge'i göster
+- [ ] Test: her üretim tipinde doğru kredi gösterilsin, 2+ kredide dialog çıksın
+
+**Dosyalar:** `components/ui/KrediButon.tsx` (yeni), tüm sekme component'leri, video sekmesi
+
+---
+
 ## 🔧 TUR 8 AUDIT BULGULARI — Claude Code İçin (19 Nisan 2026)
 
 ### ✅ ÖRNEK İÇERİK REVİZYONU (P1 — yasal risk + etki artışı) — DONE a81ef53 + 367ea04
@@ -155,7 +693,60 @@ Mevcut `/public/og-image.png` turuncu arka planlı, eski metin ("E-ticaret listi
    - `app/page.tsx` → `description` ve `openGraph.description` alanları
 4. Deploy sonrası `https://www.opengraph.xyz/` ile test et
 
-### ✅ HERO VIDEO RESPONSIVE FIX (P1 — mobil + desktop kırpılma) — DONE 1a3607b
+### HERO VIDEO TAM VERSİYON + KIRPMASIZ GÖRÜNTÜLEME (P1 — 19 Nisan 2026)
+
+**Sorun:** Şu an `public/hero-video.mp4` sadece ofisteki kadını gösteren 10 saniyelik kırpılmış versiyon. Overlay yazıları (Listing metni, Ürün görseli, Ürün videosu, Sosyal medya), kutu açan kadın sahnesi ve liman kapanışı yok. Ayrıca video `object-cover` ile kırpılıyor.
+
+**Fix — 3 adım:**
+
+1. **Video dosyasını değiştir:**
+   `yzliste test/hero-video-draft.mp4` → `public/hero-video.mp4` olarak kopyala (eski 10s dosyayı override et).
+   Yeni: 20sn, 1280x720, 6.6MB, h264, sessiz. 3 sahne + text overlay'ler + liman kapanışı.
+
+2. **Poster'ı güncelle:**
+   `public/hero-poster.jpg` olarak aşağıdaki komutu çalıştır:
+   ```bash
+   ffmpeg -y -ss 5 -i "yzliste test/hero-video-draft.mp4" -frames:v 1 -q:v 2 public/hero-poster.jpg
+   ```
+   Bu 5. saniyedeki kareyi alır — overlay yazıları görünür durumda.
+
+3. **CSS: Videoyu kırpmadan göster (`AuthHero.tsx`):**
+   ```tsx
+   // ESKİ (kırpıyor):
+   <section className="relative overflow-hidden min-h-[80vh] md:min-h-[70vh] lg:aspect-video flex items-center bg-gray-900">
+     <img ... className="absolute inset-0 w-full h-full object-cover brightness-[0.4] md:hidden" />
+     <video ... className="absolute inset-0 w-full h-full object-cover brightness-[0.4] hidden md:block" />
+
+   // YENİ (kırpmaz):
+   <section className="relative overflow-hidden aspect-video flex items-center bg-gray-900">
+     <img ... className="absolute inset-0 w-full h-full object-contain brightness-[0.4] md:hidden" />
+     <video ... className="absolute inset-0 w-full h-full object-contain brightness-[0.4] hidden md:block" />
+   ```
+   
+   Değişiklikler:
+   - Container: `min-h-[80vh] md:min-h-[70vh] lg:aspect-video` → `aspect-video` (her ekranda 16:9)
+   - Video + img: `object-cover` → `object-contain` (kırpma yok, video tam görünür)
+   - `bg-gray-900` kalır — eğer kenarlardan boşluk olursa koyu arka plan gösterir
+   - İçerik overlay (`z-10` div): padding'leri kontrol et, mobilde `py-8` yeterli olabilir (aspect-video mobilde daha kısa)
+
+   ⚠️ Mobil not: `aspect-video` mobilde ~210px yükseklik verir (375px genişlikte). Bu az gelebilir — metinler + butonlar sığmazsa mobilde min-h ekle:
+   ```tsx
+   <section className="relative overflow-hidden aspect-video min-h-[60vh] sm:min-h-0 flex items-center bg-gray-900">
+   ```
+   `min-h-[60vh]` sadece mobilde devreye girer (sm:min-h-0 ile sıfırlanır). Mobilde video `object-contain` ile yukarıda gösterilir, altta koyu alan kalır.
+
+**Test:**
+- [ ] Desktop (1440px+): Video kırpılmadan tam gösteriliyor, 3 sahne + overlay'ler visible
+- [ ] Tablet (768px): Video ve metinler dengeli
+- [ ] Mobil (375px): Video tam görünüyor (ya da kırpılma minimal), metinler + butonlar sığıyor
+- [ ] Video 20 saniyelik loop düzgün dönüyor
+- [ ] Poster (mobilde) overlay yazıları gösteriyor
+
+**Dosyalar:** `components/tanitim/AuthHero.tsx`, `public/hero-video.mp4`, `public/hero-poster.jpg`
+
+---
+
+### ✅ HERO VIDEO RESPONSIVE FIX v1 (P1 — eski) — DONE 1a3607b
 `components/tanitim/AuthHero.tsx` — hero video mobilde sadece ortası görünüyor (metinler kayıp), desktop'ta üst-alttan kırpılıyor.
 
 **Kök sebep:**
@@ -211,7 +802,29 @@ Eğer videonun hiç kırpılmaması isteniyorsa:
 - [ ] Desktop (1440px): Video tam oranında veya minimal kırpılmayla görünür
 - [ ] Çok geniş ekran (1920px+): Video çirkin gerilmez
 
-**Dosya:** `components/tanitim/AuthHero.tsx` — tek dosya değişikliği
+**Dosya:** `components/tanitim/AuthHero.tsx`
+
+**Yeni video dosyaları hazır — `yzliste test/` klasöründe:**
+- `hero-video.mp4` — 1280x720, 10sn, 1.4MB, overlay'sız temiz video, fade in/out döngü uyumlu, h264, sessiz
+- `hero-poster.jpg` — 1280x720, 93KB, en iyi kareden still (mobilde statik olarak kullanılacak)
+
+**Claude Code talimatı:**
+1. `yzliste test/hero-video.mp4` → `public/hero-video.mp4` olarak kopyala (eski 6.8MB dosyayı override eder — yeni 1.4MB)
+2. `yzliste test/hero-poster.jpg` → `public/hero-poster.jpg` olarak kopyala
+3. `AuthHero.tsx`'deki `<video>` tag'ine poster ekle ve mobilde statik göster:
+```tsx
+{/* Mobilde statik poster (performans), desktop'ta video */}
+<img
+  src="/hero-poster.jpg" alt=""
+  className="absolute inset-0 w-full h-full object-cover brightness-[0.4] md:hidden"
+/>
+<video
+  autoPlay loop muted playsInline
+  poster="/hero-poster.jpg"
+  className="absolute inset-0 w-full h-full object-cover brightness-[0.4] hidden md:block"
+  src="/hero-video.mp4"
+/>
+```
 
 ---
 
@@ -1278,4 +1891,4 @@ Aşağıdaki eşiklerden 2'si gerçekleşince backlog'a al: **1.000 tekil/ay, 10
 - Bir iş bittiğinde `- [ ]` → `- [x]` olarak güncelle. Yarım iş `[x]` olmaz.
 - `~%XX` notları kısmen tamamlanmış item'ları gösterir — bunları tamamla, sonra `[x]` yap.
 - Her küme tek PR değil. Küme içinde 3-5 PR olabilir ama aynı branch ailesinde.
-- `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+- `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
