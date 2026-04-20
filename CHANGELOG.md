@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-04-20 — Hero video final + SC-05 blog 404 + mobil poster fix
+
+- hero-video-full.mp4 git'e eklendi (6.5MB, 20sn), AuthHero src güncellendi — commit 5768914/01ac57a
+- Mobil poster fix: aspect-video sadece md+ ekranda, mobilde min-h-[60vh] — commit a7d7038
+- SC-05: /blog/trendyol-urun-listeleme-rehberi → trendyol-listing-nasil-yazilir 301 redirect — commit ff91ca9
+
 ## 2026-04-20 — NF-03 maliyet loglama + hero video fix
 
 - NF-03: uretimler.api_cost migration, uret/route Anthropic token+maliyet kaydı, admin statik fiyat/marj tablosu
