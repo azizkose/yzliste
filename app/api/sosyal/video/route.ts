@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { fal } from "@fal-ai/client";
 import { rmbgUygula } from "@/lib/fal/rmbg";
 import { krediDus, krediIade } from "@/lib/credits";
+import { TON_VIDEO_MAP, TON_VIDEO_DEFAULT } from "@/lib/constants/ton";
 
 export const maxDuration = 30; // sadece fal storage upload + queue.submit — GPU bekleme yok
 
@@ -65,12 +66,7 @@ export async function POST(req: NextRequest) {
   if (prompt?.trim()) {
     videoPrompt = prompt.trim();
   } else {
-    const TON_VIDEO: Record<string, string> = {
-      samimi: "friendly warm product showcase, camera slowly pushes in then holds steady, soft natural lighting, clean background",
-      profesyonel: "clean professional product reveal, camera smoothly tracks right then stops, corporate studio lighting, white background",
-      premium: "luxury cinematic product film, dramatic light gradually illuminates the product then holds, dark elegant background, subtle reflections",
-    };
-    const stilIpucu = profil.ton ? (TON_VIDEO[profil.ton] || "professional product showcase") : "professional product showcase";
+    const stilIpucu = profil.ton ? (TON_VIDEO_MAP[profil.ton] || TON_VIDEO_DEFAULT) : TON_VIDEO_DEFAULT;
     const markaIpucu = profil.marka_adi ? ` for ${profil.marka_adi}` : "";
     const hedefIpucu = profil.hedef_kitle ? `, appealing to ${profil.hedef_kitle}` : "";
     const ozellikIpucu = profil.vurgulanan_ozellikler ? `, highlighting ${profil.vurgulanan_ozellikler}` : "";

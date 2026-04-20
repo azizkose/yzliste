@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fal } from "@fal-ai/client";
 import { createClient } from "@supabase/supabase-js";
 import { rmbgUygula } from "@/lib/fal/rmbg";
+import { TON_EN_MAP } from "@/lib/constants/ton";
 
 export const maxDuration = 60;
 
@@ -90,16 +91,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const tonEnMap: Record<string, string> = {
-      profesyonel: "professional and premium brand tone",
-      samimi: "warm and friendly brand tone",
-      eglenceli: "fun and playful brand tone",
-      lüks: "luxury and elegant brand tone",
-      minimal: "clean and minimal brand tone",
-    };
     const ctxParcalar: string[] = [];
     if (profil.marka_adi) ctxParcalar.push(`brand: ${profil.marka_adi}`);
-    if (profil.ton && tonEnMap[profil.ton]) ctxParcalar.push(tonEnMap[profil.ton]);
+    if (profil.ton && TON_EN_MAP[profil.ton]) ctxParcalar.push(TON_EN_MAP[profil.ton]);
     if (profil.hedef_kitle) ctxParcalar.push(`targeted at: ${profil.hedef_kitle}`);
     if (ctxParcalar.length > 0) brandContext = `, ${ctxParcalar.join(", ")}`;
   }
