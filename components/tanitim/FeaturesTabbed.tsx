@@ -280,8 +280,8 @@ export default function FeaturesTabbed() {
               </div>
               <div className="grid grid-cols-3 gap-3 mb-5">
                 {[
-                  { ikon: "⏱️", baslik: "5 saniyelik", aciklama: "Story · Reels", etiket: "5 kredi" },
-                  { ikon: "🎞️", baslik: "10 saniyelik", aciklama: "Showcase · Pazaryeri", etiket: "8 kredi" },
+                  { ikon: "⏱️", baslik: "5 saniyelik", aciklama: "Story · Reels", etiket: "10 kredi" },
+                  { ikon: "🎞️", baslik: "10 saniyelik", aciklama: "Showcase · Pazaryeri", etiket: "20 kredi" },
                   { ikon: "📐", baslik: "3 format", aciklama: "9:16 · 1:1 · 16:9", etiket: "Tüm platformlar" },
                 ].map((v, i) => (
                   <div key={i} className="rounded-xl border border-amber-100 bg-amber-50 p-3 text-center">

@@ -61,9 +61,9 @@ const krediAciklamalari = [
   },
   {
     ikon: "🎬",
-    baslik: "Video — 5sn: 5 kredi · 10sn: 8 kredi",
+    baslik: "Video — 5sn: 10 kredi · 10sn: 20 kredi",
     icerik:
-      "Ürün fotoğrafından tanıtım videosu üretilir. 5 saniyelik video için 5 kredi, 10 saniyelik için 8 kredi. Dikey (9:16 · Reels/TikTok), kare (1:1 · Feed) veya yatay (16:9 · YouTube) format seçilebilir.",
+      "Ürün fotoğrafından tanıtım videosu üretilir. 5 saniyelik video için 10 kredi, 10 saniyelik için 20 kredi. Dikey (9:16 · Reels/TikTok), kare (1:1 · Feed) veya yatay (16:9 · YouTube) format seçilebilir.",
   },
   {
     ikon: "📱",
@@ -87,7 +87,7 @@ const sss = [
   {
     soru: "Video üretimi kaç kredi tutar?",
     cevap:
-      "5 saniyelik video 5 kredi, 10 saniyelik video 8 kredi tüketir. Dikey (9:16 · Reels/TikTok), kare (1:1 · Feed) veya yatay (16:9 · YouTube) format seçebilirsin. Video MP4 formatında indirilir.",
+      "5 saniyelik video 10 kredi, 10 saniyelik video 20 kredi tüketir. Dikey (9:16 · Reels/TikTok), kare (1:1 · Feed) veya yatay (16:9 · YouTube) format seçebilirsin. Video MP4 formatında indirilir.",
   },
   {
     soru: "Sosyal medya içeriği hangi platformları kapsıyor?",
@@ -240,7 +240,7 @@ export default function FiyatlarPage() {
                 {[
                   { senaryo: "10 ürün için listing metni", kredi: "10 kredi", paket: "Başlangıç (₺39)" },
                   { senaryo: "5 ürün metin + 5 stil görsel", kredi: "10 kredi", paket: "Başlangıç (₺39)" },
-                  { senaryo: "2 adet 5sn ürün videosu", kredi: "10 kredi", paket: "Başlangıç (₺39)" },
+                  { senaryo: "2 adet 5sn ürün videosu", kredi: "20 kredi", paket: "Popüler (₺99)" },
                   { senaryo: "20 ürün metin + 10 stil görsel", kredi: "30 kredi", paket: "Popüler (₺99)" },
                   { senaryo: "30 ürün listing metni + 30 sosyal medya seti", kredi: "60 kredi", paket: "Büyük (₺249)" },
                   { senaryo: "100 ürün listing metni (toplu)", kredi: "100 kredi", paket: "Büyük (₺249)" },
