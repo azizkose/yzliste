@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-04-20 — NF-03 maliyet loglama + hero video fix
+
+- NF-03: uretimler.api_cost migration, uret/route Anthropic token+maliyet kaydı, admin statik fiyat/marj tablosu
+- Hero video fix: hero-video-full.mp4 git'te yoktu → hero-video.mp4'e döndürüldü (tablet+ video, mobil poster)
+
 ## 2026-04-20 — HESAP yapısı + PE-10/11 + overscroll + tonEnMap
 
 - HESAP YAPISI: /hesap/marka + /hesap/uretimler yeni route'lar; profil tab'sızlaştı, useCredits; 6 kart grid
