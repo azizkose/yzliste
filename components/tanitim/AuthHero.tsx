@@ -16,7 +16,7 @@ export default function AuthHero() {
         muted
         playsInline
         poster="/hero-poster.jpg"
-        className="absolute inset-0 w-full h-full object-cover brightness-[0.4] hidden md:block"
+        className="absolute inset-0 w-full h-full object-contain brightness-[0.4] hidden md:block"
         src="/hero-video.mp4"
       />
       {/* Header altındaki alanı okunaklı kılan gradyan */}

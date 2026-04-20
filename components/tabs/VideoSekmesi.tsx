@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 import { VIDEO_PRESETLER, kategoriKoduHesapla } from "@/lib/constants";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
@@ -48,6 +49,8 @@ export default function VideoSekmesi({
   videoYukleniyor, videoRequestId, setVideoRequestId,
   kullanici, paketModalAc, videoUret, blobIndir,
 }: VideoSekmesiProps) {
+  const [indiriliyor, setIndiriliyor] = useState(false);
+
   return (
     <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
       <div className="flex items-center justify-between">
@@ -156,7 +159,7 @@ export default function VideoSekmesi({
       ) : (
         <KrediButon
           label="✨ Video Üret"
-          kredi={kullanici.is_admin ? 0 : (videoSure === "10" ? 20 : 10)}
+          kredi={kullanici.is_admin ? undefined : (videoSure === "10" ? 20 : 10)}
           kalanKredi={kullanici.is_admin ? undefined : kullanici.kredi}
           onClick={videoUret}
           disabled={videoYukleniyor || (!kullanici.is_admin && (kullanici.kredi ?? 0) < (videoSure === "10" ? 20 : 10))}
@@ -186,13 +189,19 @@ export default function VideoSekmesi({
           </div>
           <button
             onClick={async () => {
-              const res = await fetch(`/api/sosyal/video/download?requestId=${videoRequestId}`);
-              if (!res.ok) { alert("Video indirilemedi. Tekrar deneyin."); return; }
-              blobIndir(await res.blob(), "urun-video.mp4");
+              setIndiriliyor(true);
+              try {
+                const res = await fetch(`/api/sosyal/video/download?requestId=${videoRequestId}`);
+                if (!res.ok) { alert("Video indirilemedi. Tekrar deneyin."); return; }
+                blobIndir(await res.blob(), "urun-video.mp4");
+              } finally {
+                setIndiriliyor(false);
+              }
             }}
-            className="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
+            disabled={indiriliyor}
+            className="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-400 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
           >
-            ⬇️ Videoyu İndir
+            {indiriliyor ? "⏳ İndiriliyor..." : "⬇️ Videoyu İndir"}
           </button>
           <button onClick={() => { setVideoRequestId(null); setVideoPrompt(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni video üret</button>
         </div>

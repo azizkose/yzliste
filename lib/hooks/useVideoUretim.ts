@@ -29,7 +29,7 @@ export function useVideoUretim(deps: VideoDeps) {
     if (!loginGerekli()) return;
     if (!fotolar[0]) { alert("Önce bir ürün fotoğrafı ekleyin."); return; }
     if (!kullanici) return;
-    const videoKredi = videoSure === "10" ? 8 : 5;
+    const videoKredi = videoSure === "10" ? 20 : 10;
     if (!kullanici.is_admin && kullanici.kredi < videoKredi) { paketModalAc(); return; }
     setVideoYukleniyor(true);
     setVideoRequestId(null);

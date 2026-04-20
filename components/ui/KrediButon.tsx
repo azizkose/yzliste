@@ -3,7 +3,7 @@ import { useState } from "react";
 
 interface KrediButonProps {
   label: string;
-  kredi: number;
+  kredi?: number;        // undefined → admin/ücretsiz mod (kredi gösterilmez, onay yok)
   kalanKredi?: number;
   onClick: () => void;
   disabled?: boolean;
@@ -27,7 +27,7 @@ export default function KrediButon({
   const [onayAcik, setOnayAcik] = useState(false);
 
   const handleClick = () => {
-    if (kredi >= 2 && !disabled && !yukleniyor) {
+    if (kredi !== undefined && kredi >= 2 && !disabled && !yukleniyor) {
       setOnayAcik(true);
     } else if (!disabled && !yukleniyor) {
       onClick();
@@ -39,6 +39,12 @@ export default function KrediButon({
     onClick();
   };
 
+  const butonLabel = yukleniyor
+    ? (yukleniyorLabel ?? "⏳ Üretiliyor...")
+    : kredi !== undefined
+      ? `${label} — ${kredi} kredi`
+      : label;
+
   return (
     <>
       <button
@@ -46,12 +52,10 @@ export default function KrediButon({
         disabled={disabled || yukleniyor}
         className={`w-full ${renkSinif[renk]} disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-all ${className}`}
       >
-        {yukleniyor
-          ? (yukleniyorLabel ?? "⏳ Üretiliyor...")
-          : `${label} — ${kredi} kredi`}
+        {butonLabel}
       </button>
 
-      {onayAcik && (
+      {onayAcik && kredi !== undefined && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
           <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full space-y-4">
             <p className="text-sm font-semibold text-gray-800">
