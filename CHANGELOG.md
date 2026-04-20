@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-04-20 — P0+P1 prompt/kredi iyileştirmeleri + Blog taşıma
+
+- KF-01: Video kredisi 5sn 5→10 kr, 10sn 8→20 kr (paketler + API + UI)
+- PE-01: lib/fal/rmbg.ts helper — gorsel/video/kit route'larına RMBG entegrasyonu
+- PE-02: Düzenleme API atomik kredi düşümü (1 kr, LLM öncesi) + refund + sistem prompt
+- PE-03: Video auto-prompt stilIpucu aktif (ton bazlı kamera tarifi)
+- PE-04~07: metin.ts dead code temizliği, ton önceliği, marka_adi gorsel, video profil genişletme
+- PE-08: lib/credits.ts atomik helper (krediDus/krediIade) — video+sosyal route'a uygulandı
+- NF-06: KrediButon component — 2+ kredi işlemlerde onay dialog'u (video + sosyal kit)
+- Blog: 35 yeni yazı eklendi, Türkçe/boşluklu dosya isimleri kebab-case slug'a taşındı
+
 ## 2026-04-19 — Hero video tam çözüm + Hesap merkezi + Blog arama + Admin güvenlik
 
 - AuthHero: lg:aspect-video (desktop 16:9), mobil `<img poster>` + tablet+ `<video>` split — kırpılma tamamen giderildi
