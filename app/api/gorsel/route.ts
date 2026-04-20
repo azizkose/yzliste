@@ -98,6 +98,7 @@ export async function POST(req: NextRequest) {
       minimal: "clean and minimal brand tone",
     };
     const ctxParcalar: string[] = [];
+    if (profil.marka_adi) ctxParcalar.push(`brand: ${profil.marka_adi}`);
     if (profil.ton && tonEnMap[profil.ton]) ctxParcalar.push(tonEnMap[profil.ton]);
     if (profil.hedef_kitle) ctxParcalar.push(`targeted at: ${profil.hedef_kitle}`);
     if (ctxParcalar.length > 0) brandContext = `, ${ctxParcalar.join(", ")}`;

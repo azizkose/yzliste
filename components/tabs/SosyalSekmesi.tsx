@@ -1,6 +1,7 @@
 "use client";
 import FotoEkleAlani from "@/components/ui/FotoEkleAlani";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
+import KrediButon from "@/components/ui/KrediButon";
 
 type SosyalPlatform = "instagram" | "tiktok" | "facebook" | "twitter";
 type SosyalTon = "tanitim" | "indirim" | "hikaye";
@@ -244,10 +245,21 @@ export default function SosyalSekmesi({
               {captionYukleniyor ? "⏳ Üretiliyor..." : !kullanici ? "✨ Caption Üret — Giriş Gerekli" : `✨ ${sosyalPlatform === "instagram" ? "Instagram" : sosyalPlatform === "tiktok" ? "TikTok" : sosyalPlatform === "facebook" ? "Facebook" : "Twitter/X"} Caption Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
             </button>
 
-            <button onClick={kitUret} disabled={sosyalKitYukleniyor || captionYukleniyor || !sosyalUrunAdi.trim() || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < 4)}
-              className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
-              {sosyalKitYukleniyor ? "⏳ Kit üretiliyor..." : !kullanici ? "🎁 Tüm Platformlar İçin Üret — Giriş Gerekli" : `🎁 Sosyal Medya Kiti — ${kullanici.is_admin ? "∞" : "4"} kredi`}
-            </button>
+            {!kullanici ? (
+              <button disabled className="w-full bg-gray-300 text-white font-semibold py-3 rounded-xl">
+                🎁 Tüm Platformlar İçin Üret — Giriş Gerekli
+              </button>
+            ) : (
+              <KrediButon
+                label="🎁 Sosyal Medya Kiti"
+                kredi={kullanici.is_admin ? 0 : (sosyalFoto ? 4 : 3)}
+                kalanKredi={kullanici.is_admin ? undefined : kullanici.kredi}
+                onClick={kitUret}
+                disabled={sosyalKitYukleniyor || captionYukleniyor || !sosyalUrunAdi.trim() || (!kullanici.is_admin && (kullanici.kredi ?? 0) < (sosyalFoto ? 4 : 3))}
+                yukleniyor={sosyalKitYukleniyor}
+                yukleniyorLabel="⏳ Kit üretiliyor..."
+              />
+            )}
             <p className="text-xs text-gray-400 text-center -mt-2">Instagram · TikTok · Facebook · Twitter/X aynı anda</p>
 
             {kullanici && !kullanici.is_admin && (kullanici.kredi ?? 0) <= 0 && !captionYukleniyor && (

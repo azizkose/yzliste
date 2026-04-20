@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { VIDEO_PRESETLER, kategoriKoduHesapla } from "@/lib/constants";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
+import KrediButon from "@/components/ui/KrediButon";
 
 type Kullanici = {
   id: string;
@@ -144,10 +145,26 @@ export default function VideoSekmesi({
         <Link href="/blog/ai-urun-videosu-hareket-secenekleri" className="inline-block mt-2 text-xs text-amber-500 hover:text-amber-700 hover:underline">Bu hareketler ne anlama gelir? Ürün kategorine göre hangisi uygun? →</Link>
       </div>
 
-      <button onClick={videoUret} disabled={videoYukleniyor || fotolar.length === 0 || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < (videoSure === "10" ? 20 : 10))}
-        className="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-all">
-        {videoYukleniyor ? "⏳ Video üretiliyor... (~2 dakika)" : fotolar.length === 0 ? "Önce fotoğraf ekle ↑" : !kullanici ? "✨ Video Üret — Giriş Gerekli" : `✨ Video Üret — ${kullanici.is_admin ? "∞" : (videoSure === "10" ? 20 : 10)} kredi`}
-      </button>
+      {!kullanici ? (
+        <button disabled className="w-full bg-gray-300 text-white font-semibold py-3 rounded-xl">
+          ✨ Video Üret — Giriş Gerekli
+        </button>
+      ) : fotolar.length === 0 ? (
+        <button disabled className="w-full bg-gray-300 text-white font-semibold py-3 rounded-xl">
+          Önce fotoğraf ekle ↑
+        </button>
+      ) : (
+        <KrediButon
+          label="✨ Video Üret"
+          kredi={kullanici.is_admin ? 0 : (videoSure === "10" ? 20 : 10)}
+          kalanKredi={kullanici.is_admin ? undefined : kullanici.kredi}
+          onClick={videoUret}
+          disabled={videoYukleniyor || (!kullanici.is_admin && (kullanici.kredi ?? 0) < (videoSure === "10" ? 20 : 10))}
+          yukleniyor={videoYukleniyor}
+          yukleniyorLabel="⏳ Video üretiliyor... (~2 dakika)"
+          renk="amber"
+        />
+      )}
 
       {kullanici && !kullanici.is_admin && (kullanici.kredi ?? 0) < (videoSure === "10" ? 20 : 10) && !videoYukleniyor && (
         <p className="text-center text-xs text-red-500">En az {videoSure === "10" ? 20 : 10} kredi gerekli. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
