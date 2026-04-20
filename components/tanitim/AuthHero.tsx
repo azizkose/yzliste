@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function AuthHero() {
   return (
-    <section className="relative overflow-hidden aspect-video min-h-[60vh] sm:min-h-0 flex items-center bg-gray-900">
+    <section className="relative overflow-hidden min-h-[60vh] md:min-h-0 md:aspect-video flex items-center bg-gray-900">
       {/* Mobil: statik poster */}
       <img
         src="/hero-poster.jpg"
