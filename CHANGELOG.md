@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-04-20 — KF-05-FIX + KF-01 tamamla + görsel sıkıştırma
+
+- KF-05-FIX: blog-parser FOTO regex + img fallback; FeaturesTabbed Detay Tarama/Kumaş Hareketi preset — ce648a0/cf77708
+- KF-01 tamamla: fiyatlar+SSS+senaryo tablosu+FeaturesTabbed video kredi 5/8→10/20 — 0128faf
+- perf: still-life-with-classic-shirts-hanger.jpg 16.5MB → 80KB — 8ec57de
+
 ## 2026-04-20 — Hero video final + SC-05 blog 404 + mobil poster fix
 
 - hero-video-full.mp4 git'e eklendi (6.5MB, 20sn), AuthHero src güncellendi — commit 5768914/01ac57a

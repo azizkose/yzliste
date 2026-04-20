@@ -237,7 +237,7 @@ Ana risk: `/hesap` sayfası RSC olduğu için Next.js cache'leyebilir. Kredi har
 
 Maliyet analizi sonucu (Kling v2.1 Standard: $0.28/5sn, $0.56/10sn). Büyük paket bazında min %100 kar hedefi.
 
-### KF-01: Video + Try-on Kredi Değerlerini Güncelle (P0 — acil)
+### ✅ KF-01: Video + Try-on Kredi Değerlerini Güncelle (P0 — acil) — DONE (0128faf)
 
 **Değişecek dosyalar:**
 
@@ -258,8 +258,10 @@ Maliyet analizi sonucu (Kling v2.1 Standard: $0.28/5sn, $0.56/10sn). Büyük pak
 - [x] `lib/paketler.ts` tüm 3 pakette video özellik satırını güncelle (5→10, 8→20)
 - [x] Video API route'unda kredi düşüm miktarlarını güncelle
 - [x] Frontend'de video kredi gösterimini güncelle (VideoSekmesi.tsx satır 108-109, 159, 162, 169-170 doğru: 10/20)
-- [x] ⚠️ `lib/hooks/useVideoUretim.ts` satır 32 — **HÂLÂ ESKİ FİYAT!** `videoKredi = videoSure === "10" ? 8 : 5` → `videoSure === "10" ? 20 : 10` olmalı. UI doğru gösteriyor ama hook eski değerle kredi düşüyor.
-- [ ] Test: video üretimi → doğru kredi düşümü kontrol et
+- [x] `lib/hooks/useVideoUretim.ts` satır 32 — düzeltildi: `videoSure === "10" ? 20 : 10`
+- [x] `app/fiyatlar/page.tsx` — krediAciklamalari + SSS + senaryo tablosu güncellendi
+- [x] `components/tanitim/FeaturesTabbed.tsx` — 5sn/10sn etiketleri güncellendi
+- [x] Test: video üretimi → kredi sayacı ve API doğrulandı
 
 ### KF-02: Video Buton Admin "0 kredi" Sorunu (P1)
 **Sorun:** `VideoSekmesi.tsx` satır 159: `kredi={kullanici.is_admin ? 0 : ...}` — admin kullanıcıda buton "✨ Video Üret — 0 kredi" gösteriyor. Demo'da kötü görünür.
