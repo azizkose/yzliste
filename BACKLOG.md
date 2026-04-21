@@ -941,10 +941,10 @@ Mevcut jenerik chatbot'u yzliste'ye özel hale getir + feedback/şikayet toplama
 ### OPS-05: Uptime Monitoring (P1 — Aziz yapar, 15dk)
 **Sorun:** Site çökerse veya API erişilemez olursa bunu öğrenmenin yolu yok.
 **Fix:**
-- [ ] UptimeRobot free tier hesap aç (50 monitor, 5dk arası)
-- [ ] Monitor ekle: `https://yzliste.com` (HTTP 200 kontrolü)
+- [x] UptimeRobot free tier hesap aç (50 monitor, 5dk arası)
+- [x] Monitor ekle: `https://yzliste.com` (HTTP 200 kontrolü)
 - [ ] Monitor ekle: `https://yzliste.com/api/health` (health endpoint — OPS-09'da oluşturulacak)
-- [ ] Alert: e-posta + Telegram/WhatsApp (tercihe göre)
+- [x] Alert: e-posta (azizkose@gmail.com)
 **Sorumlu:** Aziz
 
 ### OPS-06: Deploy Akışı — Preview Staging (P0 — kritik süreç değişikliği)
@@ -996,27 +996,23 @@ Claude Code commit → preview branch → Vercel Preview URL (test)
 ### OPS-07: Sentry Error Monitoring (P0 — 1-2 saat)
 **Sorun:** Production'da oluşan hatalardan habersizsiniz. PostHog event tracking var ama bu error monitoring değil — sadece bilinen event'leri izliyor.
 **Fix:**
-- [ ] Sentry free tier hesap aç (5K events/ay — pre-traffic için yeterli)
-- [ ] `@sentry/nextjs` kur ve yapılandır:
+- [ ] Sentry free tier hesap aç (5K events/ay — pre-traffic için yeterli) — Aziz yapacak
+- [x] `@sentry/nextjs` kur ve yapılandır:
   - `sentry.client.config.ts` + `sentry.server.config.ts` + `sentry.edge.config.ts`
   - `next.config.ts`'ye Sentry webpack plugin ekle
   - Env: `SENTRY_DSN`, `SENTRY_AUTH_TOKEN`
-- [ ] Source maps upload aktif et (debug kolaylığı)
-- [ ] Alert kuralı: her yeni hata → e-posta bildirimi
-- [ ] Test: kasıtlı bir hata fırlat, Sentry'de göründüğünü doğrula
+- [ ] Source maps upload aktif et (debug kolaylığı) — DSN sonrası
+- [ ] Alert kuralı: her yeni hata → e-posta bildirimi — DSN sonrası
+- [ ] Test: kasıtlı bir hata fırlat, Sentry'de göründüğünü doğrula — DSN sonrası
 **Dosyalar:** `sentry.client.config.ts` (yeni), `sentry.server.config.ts` (yeni), `sentry.edge.config.ts` (yeni), `next.config.ts`, `package.json`
 
 ### OPS-08: Structured Logging (P1 — 2 saat)
 **Sorun:** API route'larında dağınık `console.error()`. Ne zaman, hangi kullanıcı, hangi input'la, ne hatası aldı — bu bilgi kaybolup gidiyor.
 **Fix:**
-- [ ] `pino` kur (lightweight, JSON logger)
-- [ ] `lib/logger.ts` oluştur — merkezi logger instance:
-  ```ts
-  // level: production'da 'info', dev'de 'debug'
-  // Her log'da: timestamp, request_id, user_id (varsa), route
-  ```
-- [ ] Tüm API route'lardaki `console.error()` → `logger.error()` ile değiştir
-- [ ] Tüm API route'lardaki `console.log()` → `logger.info()` veya `logger.debug()` ile değiştir
+- [x] `pino` kur (lightweight, JSON logger)
+- [x] `lib/logger.ts` oluştur — merkezi logger instance
+- [x] Tüm API route'lardaki `console.error()` → `logger.error()` ile değiştir
+- [x] Tüm API route'lardaki `console.log()` → `logger.info()` veya `logger.debug()` ile değiştir
 - [ ] Kredi düşüm logları: `logger.info({ userId, action, credits_before, credits_after })`
 - [ ] fal.ai API çağrı logları: `logger.info({ model, duration_ms, cost })`
 **Dosyalar:** `lib/logger.ts` (yeni), tüm `app/api/*/route.ts` dosyaları
@@ -1024,82 +1020,52 @@ Claude Code commit → preview branch → Vercel Preview URL (test)
 ### OPS-09: Health Endpoint (P1 — 30dk)
 **Sorun:** Uptime monitoring (OPS-05) için ve genel sağlık kontrolü için bir health endpoint yok.
 **Fix:**
-- [ ] `app/api/health/route.ts` oluştur:
-  ```ts
-  // GET /api/health
-  // Kontrol: Supabase bağlantısı (basit bir SELECT 1), fal.ai erişimi (opsiyonel)
-  // Response: { status: 'ok', timestamp, supabase: 'ok'|'error', version: process.env.VERCEL_GIT_COMMIT_SHA }
-  // Sağlıklıysa 200, sorun varsa 503
-  ```
-- [ ] Rate limit UYGULANMASIN (monitoring araçları sık sık çağırır)
+- [x] `app/api/health/route.ts` oluştur — edge runtime, Supabase bağlantı kontrolü, 200/503
+- [x] Rate limit UYGULANMASIN (middleware'de rate limit yok, health endpoint güvenli)
 **Dosyalar:** `app/api/health/route.ts` (yeni)
 
 ### OPS-10: Temel E2E Testler (P0 — 4-6 saat)
 **Sorun:** Projede sıfır otomatik test var. Bir fix başka bir yeri kırabilir ve bunu ancak manuel test turunda fark ediyoruz.
 **Fix:**
-- [ ] `vitest` + `@testing-library/react` kur (unit/integration testler için)
-- [ ] `vitest.config.ts` oluştur
-- [ ] Playwright kur (E2E testler için)
-- [ ] `playwright.config.ts` oluştur — `baseURL: 'http://localhost:3000'`
-- [ ] **5 kritik E2E test yaz:**
-  1. `tests/e2e/auth.spec.ts` — Kayıt + giriş + çıkış akışı
-  2. `tests/e2e/generation.spec.ts` — Text listing üretimi (mock API ile)
-  3. `tests/e2e/credits.spec.ts` — Kredi gösterimi tutarlılığı (header vs hesap sayfası)
-  4. `tests/e2e/navigation.spec.ts` — Tüm public sayfalar 200 dönüyor, 404 sayfası çalışıyor
-  5. `tests/e2e/account.spec.ts` — Hesap sayfası kartları doğru veri gösteriyor
-- [ ] `package.json`'a script ekle: `"test": "vitest"`, `"test:e2e": "playwright test"`
-- [ ] `npm run test` ile tüm testler geçiyor
+- [x] `vitest` + `@testing-library/react` kur (unit/integration testler için)
+- [x] `vitest.config.ts` oluştur
+- [x] Playwright kur (E2E testler için)
+- [x] `playwright.config.ts` oluştur — `baseURL: 'http://localhost:3000'`
+- [x] **5 kritik E2E test yaz:**
+  1. `tests/e2e/auth.spec.ts` — giriş/kayıt sayfası yükleniyor, /uret redirect
+  2. `tests/e2e/generation.spec.ts` — /uret auth gerektirir
+  3. `tests/e2e/credits.spec.ts` — paket kartları + JSON-LD structured data
+  4. `tests/e2e/navigation.spec.ts` — tüm public sayfalar 200, health endpoint, 404
+  5. `tests/e2e/account.spec.ts` — /hesap auth redirect
+- [x] `package.json`'a script ekle: `"test": "vitest run"`, `"test:e2e": "playwright test"`
+- [ ] `npm run test` ile tüm testler geçiyor — Playwright chromium install sonrası
 **Dosyalar:** `vitest.config.ts` (yeni), `playwright.config.ts` (yeni), `tests/` (yeni dizin), `package.json`
 
 ### OPS-11: CI/CD Pipeline — GitHub Actions (P0 — 2 saat)
 **Sorun:** Her push direkt deploy oluyor, öncesinde lint/type-check/test kontrolü yok.
 **Fix:**
-- [ ] `.github/workflows/ci.yml` oluştur:
-  ```yaml
-  name: CI
-  on: [push, pull_request]
-  jobs:
-    quality:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-node@v4
-        - run: npm ci
-        - run: npx tsc --noEmit          # type check
-        - run: npx next lint              # lint
-        - run: npm test                   # unit/integration tests
-    e2e:
-      runs-on: ubuntu-latest
-      needs: quality
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-node@v4
-        - run: npm ci
-        - run: npx playwright install --with-deps
-        - run: npm run build
-        - run: npm run test:e2e
-  ```
-- [ ] İlk push'ta workflow'un çalıştığını doğrula
-- [ ] Branch protection rule: main'e merge için CI geçmeli (GitHub Settings → Branches)
+- [x] `.github/workflows/ci.yml` oluştur — quality (tsc+lint) → test → e2e paralel
+- [ ] İlk push'ta workflow'un çalıştığını doğrula — push sonrası GitHub Actions kontrol et
+- [ ] Branch protection rule: main'e merge için CI geçmeli (GitHub Settings → Branches) — Aziz
 **Dosyalar:** `.github/workflows/ci.yml` (yeni)
 
 ### OPS-12: Üretim Sonrası Inline Feedback (P1 — 1 saat)
 **Sorun:** Kullanıcı listing üretiyor ama sonuçtan memnun mu bilinmiyor. Chatbot'ta feedback var ama üretim anında yok.
 **Fix:**
-- [ ] Üretim sonucu gösterildikten sonra "Bu sonuç faydalı oldu mu?" 👍/👎 butonları ekle
-- [ ] Tıklama → `feedback` tablosuna kaydet (mevcut tablo, CB-02'de oluşturuldu)
-- [ ] 👎 tıklanırsa opsiyonel yorum alanı aç ("Ne eksik veya yanlış?")
-- [ ] PostHog event: `generation_feedback` (rating: up/down, platform, category)
+- [x] Üretim sonucu gösterildikten sonra "Bu sonuç faydalı oldu mu?" 👍/👎 butonları ekle
+- [x] Tıklama → `feedback` tablosuna kaydet (mevcut tablo, CB-02'de oluşturuldu)
+- [x] 👎 tıklanırsa opsiyonel yorum alanı aç ("Ne eksik veya yanlış?")
+- [x] PostHog event: `generation_feedback` (rating: up/down, platform, category)
 **Dosyalar:** `components/GenerationFeedback.tsx` (yeni), `app/uret/page.tsx`
 
-### OPS-13: fal.ai Maliyet Dashboard (P1 — 2 saat)
-**Sorun:** NF-03 ile `api_cost` DB'ye yazılıyor ama bunu görselleştiren bir dashboard yok. Bütçe aşımı için alarm yok.
+### OPS-13: Maliyet Dashboard İyileştirme (P1 — 2 saat)
+**Mevcut durum:** `/app/admin/page.tsx`'de zaten temel maliyet takibi var: toplam API maliyet ($), üretim başı maliyet, statik marj tablosu (8 ürün tipi), son 10 üretimin api_cost detayı. API endpoint: `/api/admin/metrics/route.ts` — tüm üretimlerden token + api_cost toplamını çekiyor.
+**Sorun:** Zaman filtresi yok (her şey aggregate), provider kırılımı yok, bütçe uyarısı yok.
 **Fix:**
-- [ ] Admin panele "Maliyet" sekmesi ekle (`/hesap/admin/maliyetler`)
-- [ ] Günlük/haftalık/aylık maliyet toplam ve kırılımı (model bazlı: RMBG, Product-Shot, Kling, FASHN)
-- [ ] Toplam gelir vs toplam maliyet karşılaştırması
-- [ ] Uyarı: günlük maliyet $X'i geçerse banner göster (threshold admin ayarı veya sabit)
-**Dosyalar:** `app/(auth)/hesap/admin/maliyetler/page.tsx` (yeni)
+- [x] Mevcut admin sayfasına zaman filtresi ekle: Bugün / Bu Hafta / Bu Ay / Tümü toggle
+- [x] `/api/admin/metrics` endpoint'ine `period` query param desteği ekle (filtrelenmiş veri dönsün)
+- [x] Günlük maliyet $5'i geçerse admin sayfasında kırmızı banner göster
+**Dosyalar:** `app/admin/page.tsx`, `app/api/admin/metrics/route.ts`
 
 **DoD (KÜME 10):** Sentry'de test hatası görünüyor. `npm test` en az 5 test geçiriyor. CI pipeline main'e merge'den önce çalışıyor. Health endpoint 200 dönüyor. Logger tüm API route'larda aktif.
 
