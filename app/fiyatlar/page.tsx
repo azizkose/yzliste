@@ -126,6 +126,41 @@ function PricingJsonLd() {
     priceCurrency: "TRY",
     availability: "https://schema.org/InStock",
     url: "https://www.yzliste.com/fiyatlar",
+    hasMerchantReturnPolicy: {
+      "@type": "MerchantReturnPolicy",
+      applicableCountry: "TR",
+      returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+      merchantReturnDays: 14,
+      returnMethod: "https://schema.org/ReturnByMail",
+      returnFees: "https://schema.org/FreeReturn",
+    },
+    shippingDetails: {
+      "@type": "OfferShippingDetails",
+      shippingRate: {
+        "@type": "MonetaryAmount",
+        value: "0",
+        currency: "TRY",
+      },
+      shippingDestination: {
+        "@type": "DefinedRegion",
+        addressCountry: "TR",
+      },
+      deliveryTime: {
+        "@type": "ShippingDeliveryTime",
+        handlingTime: {
+          "@type": "QuantitativeValue",
+          minValue: 0,
+          maxValue: 0,
+          unitCode: "d",
+        },
+        transitTime: {
+          "@type": "QuantitativeValue",
+          minValue: 0,
+          maxValue: 0,
+          unitCode: "d",
+        },
+      },
+    },
   }))
 
   return (
@@ -138,6 +173,7 @@ function PricingJsonLd() {
           name: "yzliste — AI E-ticaret Listing Üretici",
           description: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA için AI destekli listing metni, stüdyo görseli ve sosyal medya içeriği üretim platformu.",
           brand: { "@type": "Brand", name: "yzliste" },
+          image: "https://www.yzliste.com/yzliste_og.png",
           url: "https://www.yzliste.com",
           offers,
         }),
