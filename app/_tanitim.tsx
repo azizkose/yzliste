@@ -12,6 +12,8 @@ import FeatureCards from "@/components/tanitim/FeatureCards";
 import BrandProfile from "@/components/tanitim/BrandProfile";
 import HowItWorks from "@/components/tanitim/HowItWorks";
 import BenefitsGrid from "@/components/tanitim/BenefitsGrid";
+import LandingFAQ from "@/components/tanitim/LandingFAQ";
+import TrustBand from "@/components/tanitim/TrustBand";
 
 export default function TanitimSayfasi() {
   const [modalAcik, setModalAcik] = useState(false);
@@ -67,6 +69,8 @@ export default function TanitimSayfasi() {
         <FeatureCards minFiyat={MIN_FIYAT} onSatinAlClick={hemenAlTikla} />
         <BrandProfile />
         <BenefitsGrid />
+        <LandingFAQ />
+        <TrustBand />
         <SiteFooter />
       </main>
     </>
