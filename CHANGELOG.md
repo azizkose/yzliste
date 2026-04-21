@@ -179,3 +179,5 @@
 - F-23b/c: Onboarding banner (total_generations=0) + son üretim shortcut
 - CB-02~CB-07: Chatbot feedback sistemi (user_feedback + feedback tabloları, admin paneli)
 - Küme 8 Chatbot: ChatWidget tam yeniden yazıldı (öneri/şikayet modu, thumbs feedback)
+
+## 2026-04-21 — KÜME 9 Faz 0: Error boundary, .env.example, branching, vercel.json, fiyatlar structured data fix
