@@ -1262,7 +1262,7 @@ Search Console'dan doğrulanmış URL listesi (hepsi Last crawled: N/A):
 - [x] `/fiyatlar` sayfasının JSON-LD structured data'sına `"image"` field'ı ekle. Mevcut OG image veya yzliste logosu kullanılabilir: `"image": "https://www.yzliste.com/yzliste_og.png"` (ya da sayfaya özel bir ürün görseli)
 - [x] Aynı JSON-LD'deki `"offers"` objesine `"hasMerchantReturnPolicy"` ekle (MerchantReturnPolicy type — returnPolicyCategory: `MerchantReturnFiniteReturnWindow` vb.)
 - [x] Aynı JSON-LD'deki `"offers"` objesine `"shippingDetails"` ekle (OfferShippingDetails type — deliveryTime, shippingRate vb.)
-- [ ] Fix sonrası Google Rich Results Test ile doğrula: https://search.google.com/test/rich-results
+- [x] Fix sonrası Google Rich Results Test ile doğrula: https://search.google.com/test/rich-results
 **Not:** hasMerchantReturnPolicy ve shippingDetails non-critical ama appearance iyileştirmesi sağlıyor. Hepsini birlikte yapmak mantıklı.
 
 ### SC-07 🟡 P3 — Product Snippets: aggregateRating + review eksik
