@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const OZELLIKLER = [
   { ikon: "🧠", baslik: "Genel amaçlı AI değil, pazaryeri uzmanı AI", aciklama: "Genel amaçlı AI araçları her pazaryerinin karakter limiti, yasaklı kelime listesi ve kategori yapısını bilmez. yzliste; Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA'nın güncel kurallarına göre üretir." },
-  { ikon: "📦", baslik: "Metin, görsel, video, sosyal medya — tek fotoğraftan", aciklama: "Ayrı ayrı araçlarla uğraşma. Bir ürün fotoğrafı yükle, 4 içerik türünü tek platformdan üret." },
+  { ikon: "⚡", baslik: "Dakikalar içinde hazır", aciklama: "Fotoğraf yükle veya ürün bilgisi gir — listing metni 30 saniyede, stüdyo görseli 1 dakikada, tanıtım videosu 2 dakikada hazır." },
   { ikon: "🎯", baslik: "Senin markanı, senin dilini konuşur", aciklama: "Mağaza adını, hedef kitlenin yaşını, metin tonunu bir kere gir — her üretimde otomatik uygulanır." },
   { ikon: "💰", baslik: "Abonelik yok, teknik bilgi gerekmiyor", aciklama: "Aylık ödeme yok, API entegrasyonu yok, prompt mühendisliği yok. Formu doldur, butona bas — içeriğin hazır." },
 ];

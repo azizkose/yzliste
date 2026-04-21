@@ -1,14 +1,11 @@
 "use client";
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
-import { MIN_FIYAT } from "@/lib/paketler";
 import AuthForm from "@/components/auth/AuthForm";
 import AuthHero from "@/components/tanitim/AuthHero";
 import FeaturesTabbed from "@/components/tanitim/FeaturesTabbed";
-import FeatureCards from "@/components/tanitim/FeatureCards";
 import BrandProfile from "@/components/tanitim/BrandProfile";
 import HowItWorks from "@/components/tanitim/HowItWorks";
 import BenefitsGrid from "@/components/tanitim/BenefitsGrid";
@@ -27,17 +24,6 @@ export default function TanitimSayfasi() {
     } else {
       router.push("/uret");
     }
-  };
-
-  const hemenAlTikla = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user || user.is_anonymous) {
-      setModalAmac("satin_al");
-      setModalUyeMod("kayit");
-      setModalAcik(true);
-      return;
-    }
-    router.push("/uret?paket=ac");
   };
 
   return (
@@ -66,7 +52,6 @@ export default function TanitimSayfasi() {
         <AuthHero />
         <HowItWorks />
         <FeaturesTabbed />
-        <FeatureCards minFiyat={MIN_FIYAT} onSatinAlClick={hemenAlTikla} />
         <BrandProfile />
         <BenefitsGrid />
         <LandingFAQ />
