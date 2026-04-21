@@ -145,7 +145,7 @@ export default async function RootLayout({
   return (
     <html
       lang="tr"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <head>
         <RootJsonLd />
@@ -165,7 +165,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-screen flex flex-col">
         <PostHogProvider>
           <QueryProvider>
             {children}
