@@ -166,29 +166,11 @@ Maliyet analizi sonucu (Kling v2.1 Standard: $0.28/5sn, $0.56/10sn). Büyük pak
 
 ### ✅ KF-01: Video + Try-on Kredi Değerlerini Güncelle (P0 — acil) — DONE (0128faf)
 
-### KF-02: Video Buton Admin "0 kredi" Sorunu (P1)
-**Sorun:** `VideoSekmesi.tsx` satır 159: `kredi={kullanici.is_admin ? 0 : ...}` — admin kullanıcıda buton "✨ Video Üret — 0 kredi" gösteriyor. Demo'da kötü görünür.
-**Fix:** Admin için kredi gösterme ya da "Admin — ücretsiz" yaz. Öneri:
-```tsx
-// ESKİ:
-kredi={kullanici.is_admin ? 0 : (videoSure === "10" ? 20 : 10)}
-// YENİ seçenek 1: Admin'de kredi gizle
-kredi={kullanici.is_admin ? undefined : (videoSure === "10" ? 20 : 10)}
-// YENİ seçenek 2: Gerçek maliyeti göster ama "(ücretsiz)" ekle — KrediButon'da bu desteği ekle
-```
-**Dosya:** `components/tabs/VideoSekmesi.tsx` satır 159 + `components/KrediButon.tsx` (admin desteği)
+### ✅ KF-02: Video Buton Admin "0 kredi" Sorunu (P1) — DONE (8dd3553)
+`VideoSekmesi.tsx`: `kredi={kullanici.is_admin ? undefined : ...}` — `KrediButon` undefined krediyi label-only gösterir, onay dialog atlar.
 
-### KF-03: Video İndirme UX — Loading/Spinner Ekle (P1)
-**Sorun:** "⬇️ Videoyu İndir" butonuna tıklanınca `fetch` ile blob çekiliyor (video dosyası ~2-4MB). Bu süre boyunca buton değişmiyor, kullanıcı tıklandığını anlamıyor. Saat dönsün veya "İndiriliyor..." yazısı çıksın.
-**Fix:**
-```tsx
-// VideoSekmesi.tsx satır 187-196
-// 1. State ekle: const [indiriliyor, setIndiriliyor] = useState(false);
-// 2. onClick'e setIndiriliyor(true) ekle, finally'de false yap
-// 3. Buton label: indiriliyor ? "⏳ İndiriliyor..." : "⬇️ Videoyu İndir"
-// 4. disabled={indiriliyor} ekle
-```
-**Dosya:** `components/tabs/VideoSekmesi.tsx` satır 187-196
+### ✅ KF-03: Video İndirme UX — Loading/Spinner Ekle (P1) — DONE (8dd3553)
+`VideoSekmesi.tsx`: `indiriliyor` state eklendi, "⏳ İndiriliyor..." label + disabled + finally reset.
 
 ### ✅ KF-04: Hero Video src Güncelle (P1) — DONE 01ac57a + 5768914
 
@@ -996,7 +978,7 @@ Claude Code commit → preview branch → Vercel Preview URL (test)
 ### OPS-07: Sentry Error Monitoring (P0 — 1-2 saat)
 **Sorun:** Production'da oluşan hatalardan habersizsiniz. PostHog event tracking var ama bu error monitoring değil — sadece bilinen event'leri izliyor.
 **Fix:**
-- [ ] Sentry free tier hesap aç (5K events/ay — pre-traffic için yeterli) — Aziz yapacak
+- [x] Sentry free tier hesap aç (5K events/ay, EU region) — Aziz tamamladı (21 Nisan)
 - [x] `@sentry/nextjs` kur ve yapılandır:
   - `sentry.client.config.ts` + `sentry.server.config.ts` + `sentry.edge.config.ts`
   - `next.config.ts`'ye Sentry webpack plugin ekle
@@ -1045,8 +1027,9 @@ Claude Code commit → preview branch → Vercel Preview URL (test)
 **Sorun:** Her push direkt deploy oluyor, öncesinde lint/type-check/test kontrolü yok.
 **Fix:**
 - [x] `.github/workflows/ci.yml` oluştur — quality (tsc+lint) → test → e2e paralel
-- [ ] İlk push'ta workflow'un çalıştığını doğrula — push sonrası GitHub Actions kontrol et
-- [ ] Branch protection rule: main'e merge için CI geçmeli (GitHub Settings → Branches) — Aziz
+- [x] **CI FIX:** `npx next lint` → `npm run lint`, `node-version: 20` → `22`, ESLint error'ları düzeltildi, Vitest E2E exclude eklendi — Claude Code (caaa7c5, 5f27116, 04137d5)
+- [ ] **E2E geçici devre dışı:** `if: false` ile kapatıldı — CI ortamında Supabase + env setup gerekiyor. **KÜME 11'de tekrar açılacak** (OPS-10 ile birlikte düzelt)
+- [x] Branch protection rule: main'e "Unit Tests" + "Lint & Type Check" status check zorunluluğu eklendi (GitHub Settings → Branches) — Aziz, 21 Nisan 2026
 **Dosyalar:** `.github/workflows/ci.yml` (yeni)
 
 ### OPS-12: Üretim Sonrası Inline Feedback (P1 — 1 saat)
@@ -1158,6 +1141,66 @@ Claude Code commit → preview branch → Vercel Preview URL (test)
 
 ---
 
+## ✅ KÜME 12 — Landing Page UX + Satış Optimizasyonu — DONE
+
+> İlk dış kullanıcı geri bildirimi sonrası. Amaç: "ne sunuyorsunuz" sorusunu 5 saniyede cevaplamak, güven oluşturmak, aksiyona yönlendirmek.
+
+### ✅ LP-01: Hero Revize — Başlık + 4 Aksiyon Kartı (P0 — 1-2 saat) — DONE
+**Sorun:** Mevcut başlık "Fotoğraf yükle, pazaryerine hazır içeriğini al" — fotoğraf yüklemeyi zorunlu gibi gösteriyor (değil), ne üretileceği belirsiz.
+**Fix:**
+- [x] Başlığı değiştir → **"E-ticaret içeriğini AI ile üret"**
+- [x] Alt metin → **"Ürün bilgini gir — listing metni, stüdyo görseli, tanıtım videosu ve sosyal medya içeriğini dakikalar içinde al."**
+- [x] Hero'nun altına 4 aksiyon kartı ekle (yatay grid, tıklanabilir):
+  - 📝 **Listing Metni** → `/uret?tab=metin`
+  - 📷 **Stüdyo Görseli** → `/uret?tab=gorsel`
+  - 🎬 **Ürün Videosu** → `/uret?tab=video`
+  - 📱 **Sosyal Medya** → `/uret?tab=sosyal`
+- [x] Her kartta 1 satır açıklama: "Platforma özel başlık, açıklama, etiket", "7 farklı stüdyo stili", "5sn veya 10sn tanıtım klibi", "Instagram, TikTok, Facebook, X"
+- [x] Mevcut 2 CTA ("Ücretsiz Başla" + "Hemen Dene") kart grid'in altında kalsın
+**Dosyalar:** `components/tanitim/AuthHero.tsx`
+
+### ✅ LP-02: Sayfa Bölüm Sıralamasını Değiştir (P0 — 15dk) — DONE
+**Sorun:** "Nasıl çalışır" bölümü 5. sırada, çok geç. Kullanıcı ürünü anlamadan detaya giriyor.
+**Fix — `app/_tanitim.tsx` component sırasını değiştir:**
+```
+<SiteHeader />
+<AuthHero />          ← (1) başlık + 4 aksiyon kartı
+<HowItWorks />        ← (2) yukarı taşındı — 3 adım
+<FeaturesTabbed />    ← (3) platform çıktı örnekleri
+<FeatureCards />      ← (4) 4 ürün detay kartı
+<BrandProfile />      ← (5) marka profili
+<BenefitsGrid />      ← (6) neden yzliste
+<LandingFAQ />        ← (7) YENİ — inline SSS
+<TrustBand />         ← (8) YENİ — güven bandı
+<SiteFooter />
+```
+**Dosyalar:** `app/_tanitim.tsx`
+
+### ✅ LP-03: Inline FAQ Bölümü — Ana Sayfaya Ekle (P1 — 1 saat) — DONE
+**Fix:**
+- [x] `components/tanitim/LandingFAQ.tsx` oluşturuldu — 6 soru, accordion
+- [x] Altında "Tüm sorular →" linki → `/sss`
+- [x] `app/_tanitim.tsx`'e eklendi (BenefitsGrid'den sonra)
+
+### ✅ LP-04: Güven Bandı (Trust Band) Ekle (P1 — 30dk) — DONE
+**Fix:**
+- [x] `components/tanitim/TrustBand.tsx` oluşturuldu
+- [x] Şirket adı `/hakkimizda`'ya linkli
+- [x] `app/_tanitim.tsx`'e eklendi (LandingFAQ'dan sonra)
+
+### ✅ LP-05: /uret Sayfasında Tab Query Param Desteği (P1 — 30dk) — DONE
+**Fix:**
+- [x] `useSearchParams` ile `tab` param okunuyor
+- [x] Geçerli değerler: `metin`, `gorsel`, `video`, `sosyal`
+
+### ✅ LP-06: Video Kredi Bilgisi Bug Fix (P0 — 5dk) — DONE
+**Fix:**
+- [x] `5sn: 5 kredi · 10sn: 8 kredi` → `5sn: 10 kredi · 10sn: 20 kredi`
+
+**DoD (KÜME 12):** Hero'da 4 aksiyon kartı tıklanıyor ve doğru tab'a yönlendiriyor. HowItWorks hero'nun hemen altında. FAQ accordion açılıp kapanıyor. Trust band footer üstünde görünüyor. Video kredi bilgisi doğru (10/20).
+
+---
+
 ## 🔄 ERTELE — Trafik Eşiği Gelince Aç
 Aşağıdaki eşiklerden 2'si gerçekleşince backlog'a al: **1.000 tekil/ay, 100 kayıtlı, 20 gerçek ödeme, 50 günlük üretim.**
 
@@ -1257,3 +1300,4 @@ SC-02 "Discovered — currently not indexed" hâlâ 14 sayfa. Validation "Starte
 - `~%XX` notları kısmen tamamlanmış item'ları gösterir — bunları tamamla, sonra `[x]` yap.
 - Her küme tek PR değil. Küme içinde 3-5 PR olabilir ama aynı branch ailesinde.
 - `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
