@@ -67,7 +67,7 @@ export default function HesapProfilPage() {
     setYukleniyor(false);
   }, [router]);
 
-  useEffect(() => { yukle(); }, [yukle]);
+  useEffect(() => { yukle(); }, [yukle]); // eslint-disable-line react-hooks/set-state-in-effect
 
   const kaydet = async () => {
     if (!userId) return;

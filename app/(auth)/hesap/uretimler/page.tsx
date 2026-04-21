@@ -83,7 +83,7 @@ export default function HesapUretimlerPage() {
     setYukleniyor(false);
   }, [router, uretimYukle]);
 
-  useEffect(() => { yukle(); }, [yukle]);
+  useEffect(() => { yukle(); }, [yukle]); // eslint-disable-line react-hooks/set-state-in-effect
 
   const dahaFazlaYukle = async () => {
     if (!userId) return;

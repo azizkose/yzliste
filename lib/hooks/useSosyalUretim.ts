@@ -41,6 +41,7 @@ export function useSosyalUretim(deps: SosyalDeps) {
 
   // Sync urunAdi from metin tab → sosyal tab
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (deps.urunAdi) setSosyalUrunAdi(deps.urunAdi);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deps.urunAdi]);

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function SiteFooter() {
   return (
     <footer className="bg-white border-t border-gray-100 px-4 sm:px-6 py-8">
@@ -5,7 +7,7 @@ export default function SiteFooter() {
         <div className="flex flex-wrap justify-center gap-3 sm:gap-4 text-xs text-gray-400">
           <a href="/fiyatlar" className="hover:text-indigo-500">Fiyatlar</a>
           <span>·</span>
-          <a href="/blog" className="hover:text-indigo-500">Blog</a>
+          <Link href="/blog" className="hover:text-indigo-500">Blog</Link>
           <span>·</span>
           <a href="/hakkimizda" className="hover:text-indigo-500">Hakkımızda</a>
           <span>·</span>

@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import { PAKET_LISTESI, MIN_FIYAT, MAX_FIYAT } from "@/lib/paketler";
+import { PAKET_LISTESI } from "@/lib/paketler";
 import FiyatlarCta from "@/components/ui/FiyatlarCta";
 
 export const metadata: Metadata = {

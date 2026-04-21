@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useCredits } from "@/lib/hooks/useCredits";
@@ -45,10 +46,10 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
     <header className={`sticky top-0 z-40 border-b transition-all duration-300 ${transparent ? "bg-black/25 backdrop-blur-sm border-transparent" : "bg-white/90 backdrop-blur border-gray-100"}`}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-2">
         {/* Logo */}
-        <a href="/" className="flex-shrink-0 mr-1">
+        <Link href="/" className="flex-shrink-0 mr-1">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/yzliste_logo.png" alt="yzliste" className={`h-8 transition-all duration-300 ${transparent ? "brightness-0 invert" : ""}`} />
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <nav className={`hidden sm:flex items-center gap-0.5 text-xs sm:text-sm flex-1 ${transparent ? "text-white/80" : "text-gray-500"}`}>

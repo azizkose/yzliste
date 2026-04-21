@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { useCredits } from '@/lib/hooks/useCredits'
-import { useInvalidateCredits } from '@/lib/hooks/useCredits'
 
 const PAKETLER = [
   { id: 'baslangic', isim: 'Başlangıç', fiyat: '₺29', kredi: 10, renk: 'border-gray-200', butonRenk: 'bg-gray-800 hover:bg-gray-900' },
@@ -14,7 +13,6 @@ const PAKETLER = [
 
 export default function KrediYuklePage() {
   const { data: kredi } = useCredits()
-  const invalidateCredits = useInvalidateCredits()
   const [yukleniyor, setYukleniyor] = useState<string | null>(null)
   const [odemeForm, setOdemeForm] = useState<string | null>(null)
   const [hata, setHata] = useState('')

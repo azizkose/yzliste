@@ -15,20 +15,22 @@ export default function SifreSifirlaPage() {
   const [yukleniyor, setYukleniyor] = useState(false)
 
   useEffect(() => {
-    const code = searchParams.get('code')
-    if (!code) {
-      setMesaj('Geçersiz veya süresi dolmuş bağlantı. Lütfen tekrar şifre sıfırlama isteği gönderin.')
-      setDurum('hata')
-      return
-    }
-    supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+    const run = async () => {
+      const code = searchParams.get('code')
+      if (!code) {
+        setMesaj('Geçersiz veya süresi dolmuş bağlantı. Lütfen tekrar şifre sıfırlama isteği gönderin.')
+        setDurum('hata')
+        return
+      }
+      const { error } = await supabase.auth.exchangeCodeForSession(code)
       if (error) {
         setMesaj('Bağlantı geçersiz veya süresi dolmuş. Lütfen tekrar şifre sıfırlama isteği gönderin.')
         setDurum('hata')
       } else {
         setDurum('form')
       }
-    })
+    }
+    run()
   }, [searchParams])
 
   async function handleSubmit(e: React.FormEvent) {

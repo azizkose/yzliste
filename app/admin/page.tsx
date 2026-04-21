@@ -44,9 +44,9 @@ export default function AdminPage() {
     const data = await res.json();
     setMetrik(data);
     setYukleniyor(false);
-  }, [router]);
+  }, [router, period]);
 
-  useEffect(() => { metrikleriYukle(); }, [metrikleriYukle, period]);
+  useEffect(() => { metrikleriYukle(); }, [metrikleriYukle, period]); // eslint-disable-line react-hooks/set-state-in-effect
 
   if (yukleniyor) {
     return (

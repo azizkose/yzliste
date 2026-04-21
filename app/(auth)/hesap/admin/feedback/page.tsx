@@ -66,7 +66,7 @@ export default function AdminFeedbackPage() {
     setYukleniyor(false);
   }, [token, turFiltre, durumFiltre]);
 
-  useEffect(() => { yukle(); }, [yukle]);
+  useEffect(() => { yukle(); }, [yukle]); // eslint-disable-line react-hooks/set-state-in-effect
 
   const durumGuncelle = async (id: string, status: string) => {
     if (!token) return;
