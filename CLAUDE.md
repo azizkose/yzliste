@@ -34,3 +34,18 @@ Tüm yapılacak işler **BACKLOG.md** dosyasında.
 ## Commit
 - Conventional commits: `feat:`, `fix:`, `chore:`, `docs:`
 - Türkçe açıklama OK: `feat: fiyatlar sayfası SSR olarak eklendi`
+
+## Branch Stratejisi
+- `main` — production (Vercel auto-deploy → yzliste.com)
+- `preview` — staging (Vercel preview deploy → test URL'de doğrulama)
+- `claude/*` — feature branch'ler (Claude Code çalışma alanı)
+- Akış: `claude/xxx` → `preview`'a merge (test) → sorun yoksa `main`'e merge
+- **Direkt `main`'e push YAPMA** — her zaman `preview` üzerinden geç
+- İstisna: 1-2 satırlık acil hotfix direkt `main`'e gidebilir
+- Her `main` merge sonrası Vercel deployment dashboard'ı kontrol et (build hatası var mı?)
+
+## Deploy Kuralı
+- Her feature branch `preview`'a merge edilir → Vercel preview URL oluşur
+- Preview URL'de test edilir (Cowork veya Aziz)
+- Sorun yoksa `preview` → `main` merge edilir
+- Production deploy otomatik (Vercel)
