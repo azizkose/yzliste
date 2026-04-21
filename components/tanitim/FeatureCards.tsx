@@ -52,7 +52,7 @@ export default function FeatureCards({ minFiyat, onSatinAlClick }: FeatureCardsP
             <div className="bg-amber-50 px-5 pt-6 pb-4">
               <div className="text-2xl mb-2">🎬</div>
               <h3 className="font-bold text-gray-800">Ürün Videosu</h3>
-              <p className="text-xs text-gray-500 mt-1">5sn: 5 kredi · 10sn: 8 kredi</p>
+              <p className="text-xs text-gray-500 mt-1">5sn: 10 kredi · 10sn: 20 kredi</p>
             </div>
             <div className="p-5 flex-1">
               <p className="text-sm text-gray-600 leading-relaxed mb-3">Ürün fotoğrafından profesyonel tanıtım videosu. Reels, TikTok ve pazaryeri için hazır.</p>

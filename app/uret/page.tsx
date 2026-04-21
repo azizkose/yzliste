@@ -146,7 +146,11 @@ export default function Home() {
     const params = new URLSearchParams(window.location.search);
     const paketParam = params.get("paket") === "ac";
     const odemeParam = params.get("odeme");
-    if (paketParam || odemeParam) window.history.replaceState({}, "", "/");
+    const tabParam = params.get("tab");
+    if (tabParam && (["metin", "gorsel", "video", "sosyal"] as AnaSekme[]).includes(tabParam as AnaSekme)) {
+      setAnaSekme(tabParam as AnaSekme);
+    }
+    if (paketParam || odemeParam || tabParam) window.history.replaceState({}, "", "/uret");
     const { data: { user } } = await supabase.auth.getUser();
     if (odemeParam === "hata") setHata("Ödeme tamamlanamadı. Tekrar deneyin.");
     if (!user) {

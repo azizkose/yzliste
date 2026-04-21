@@ -62,10 +62,10 @@ export default function TanitimSayfasi() {
       <SiteHeader aktifSayfa="ana" />
       <main className="min-h-screen bg-white font-sans">
         <AuthHero />
+        <HowItWorks />
         <FeaturesTabbed />
         <FeatureCards minFiyat={MIN_FIYAT} onSatinAlClick={hemenAlTikla} />
         <BrandProfile />
-        <HowItWorks />
         <BenefitsGrid />
         <SiteFooter />
       </main>
