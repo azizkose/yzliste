@@ -13,6 +13,7 @@ type Metrik = {
   toplamInputToken: number;
   toplamOutputToken: number;
   toplamApiMaliyet: number;
+  bugunMaliyet: number;
   platformDagilim: Record<string, number>;
   girisTipiDagilim: Record<string, number>;
   sonKullanicilar: { email: string; kredi: number; created_at: string }[];
@@ -23,6 +24,7 @@ export default function AdminPage() {
   const [metrik, setMetrik] = useState<Metrik | null>(null);
   const [yukleniyor, setYukleniyor] = useState(true);
   const [hata, setHata] = useState<string | null>(null);
+  const [period, setPeriod] = useState("all");
   const router = useRouter();
 
   const metrikleriYukle = useCallback(async () => {
@@ -32,7 +34,7 @@ export default function AdminPage() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { router.push("/giris"); return; }
 
-    const res = await fetch("/api/admin/metrics", {
+    const res = await fetch(`/api/admin/metrics?period=${period}`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
     });
 
@@ -44,7 +46,7 @@ export default function AdminPage() {
     setYukleniyor(false);
   }, [router]);
 
-  useEffect(() => { metrikleriYukle(); }, [metrikleriYukle]);
+  useEffect(() => { metrikleriYukle(); }, [metrikleriYukle, period]);
 
   if (yukleniyor) {
     return (
@@ -90,6 +92,19 @@ export default function AdminPage() {
           </div>
         </div>
 
+        {/* Bütçe uyarısı */}
+        {metrik && metrik.bugunMaliyet > 5 && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center gap-3">
+            <span className="text-2xl">⚠️</span>
+            <div>
+              <div className="text-sm font-semibold text-red-700">Günlük maliyet uyarısı</div>
+              <div className="text-xs text-red-600">
+                Bugünkü API maliyeti ${metrik.bugunMaliyet.toFixed(2)} — $5 limitini aştı!
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Ana metrikler */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {[
@@ -107,7 +122,29 @@ export default function AdminPage() {
 
         {/* Maliyet & Token */}
         <div className="bg-white rounded-2xl shadow p-5 mb-6">
-          <h3 className="text-sm font-semibold text-gray-700 mb-4">API Kullanımı & Maliyet (Gerçek)</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-semibold text-gray-700">API Kullanımı & Maliyet (Gerçek)</h3>
+            <div className="flex gap-2">
+              {[
+                { key: "today", label: "Bugün" },
+                { key: "week", label: "Bu Hafta" },
+                { key: "month", label: "Bu Ay" },
+                { key: "all", label: "Tümü" },
+              ].map((p) => (
+                <button
+                  key={p.key}
+                  onClick={() => setPeriod(p.key)}
+                  className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
+                    period === p.key
+                      ? "bg-indigo-500 text-white"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="bg-blue-50 rounded-xl p-4">
               <div className="text-xl font-bold text-blue-600">{metrik.toplamInputToken.toLocaleString()}</div>

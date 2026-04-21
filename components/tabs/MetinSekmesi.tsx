@@ -4,6 +4,7 @@ import { PLATFORM_BILGI, PLATFORM_PLACEHOLDER, YUKLENIYOR_MESAJLARI, KATEGORI_LI
 import { sonucuBolumle, docxIndir } from "@/lib/listing-utils";
 import KopyalaButon from "@/components/ui/KopyalaButon";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
+import GenerationFeedback from "@/components/GenerationFeedback";
 
 type Kullanici = {
   id: string;
@@ -485,6 +486,8 @@ export default function MetinSekmesi({
               </div>
             );
           })}
+
+          <GenerationFeedback platform={platform} category={kategori} />
         </div>
       )}
     </div>
