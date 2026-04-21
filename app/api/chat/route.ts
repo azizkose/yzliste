@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import logger from "@/lib/logger";
 
 const SYSTEM_PROMPT = `Sen yzliste'nin destek asistanısın. Adın "yzliste".
 
@@ -66,7 +67,7 @@ export async function POST(req: NextRequest) {
 
     if (!response.ok) {
       const hata = await response.text();
-      console.error("Anthropic API hatasi:", hata);
+      logger.error({ err: hata }, "Anthropic API hatası");
       return NextResponse.json({ hata: "AI servisi hatasi" }, { status: 500 });
     }
 
@@ -75,7 +76,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ cevap });
   } catch (hata) {
-    console.error("Chat route hatasi:", hata);
+    logger.error({ err: hata }, "Chat route hatası");
     return NextResponse.json({ hata: "Sunucu hatasi" }, { status: 500 });
   }
 }

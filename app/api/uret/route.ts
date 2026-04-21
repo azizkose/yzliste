@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Ratelimit } from "@upstash/ratelimit";
+import logger from "@/lib/logger";
 import { Redis } from "@upstash/redis";
 import { METIN_PROMPT_VERSION } from "@/lib/prompts/metin";
 
@@ -721,7 +722,7 @@ export async function POST(req: NextRequest) {
   }).select("id").single();
 
   if (insertError || !insertData) {
-    console.error("Üretim kaydı oluşturulamadı:", insertError?.message);
+    logger.error({ err: insertError?.message }, "Üretim kaydı oluşturulamadı");
     // Krediyi geri yükle — içerik üretildi ama kaydedilemedi
     if (!isAdmin) {
       await supabaseAdmin

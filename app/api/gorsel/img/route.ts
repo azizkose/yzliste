@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fal } from "@fal-ai/client";
+import logger from "@/lib/logger";
 
 fal.config({ credentials: process.env.FAL_KEY });
 
@@ -34,7 +35,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (e: unknown) {
     const err = e as { message?: string };
-    console.error("IMG PROXY HATA:", err?.message);
+    logger.error({ err: err?.message }, "Görsel proxy hatası");
     return new NextResponse("Görsel yüklenemedi", { status: 500 });
   }
 }

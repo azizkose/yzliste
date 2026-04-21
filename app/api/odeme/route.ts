@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
+import logger from "@/lib/logger";
 
 const IYZICO_API_KEY = process.env.IYZICO_API_KEY!;
 const IYZICO_SECRET_KEY = process.env.IYZICO_SECRET_KEY!;
@@ -116,7 +117,7 @@ export async function POST(req: NextRequest) {
   const data = await response.json();
 
   if (data.status !== "success") {
-    console.error("Iyzico hata:", JSON.stringify(data));
+    logger.error({ data }, "iyzico hata yanıtı");
     return NextResponse.json({ hata: data.errorMessage || "Odeme baslatılamadı" }, { status: 400 });
   }
 

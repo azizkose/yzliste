@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
+import logger from "@/lib/logger";
 
 const IYZICO_API_KEY = process.env.IYZICO_API_KEY!;
 const IYZICO_SECRET_KEY = process.env.IYZICO_SECRET_KEY!;
@@ -36,7 +37,7 @@ function redirect303(url: string): NextResponse {
 
 async function parasutToken(): Promise<string | null> {
   if (!PARASUT_CLIENT_ID || !PARASUT_CLIENT_SECRET || !PARASUT_USERNAME || !PARASUT_PASSWORD) {
-    console.log("Parasut env eksik, fatura kesilmeyecek.");
+    logger.warn("Parasut env eksik, fatura kesilmeyecek");
     return null;
   }
   try {
@@ -55,7 +56,7 @@ async function parasutToken(): Promise<string | null> {
     const data = await res.json();
     return data.access_token || null;
   } catch (e) {
-    console.error("Parasut token hatasi:", e);
+    logger.error({ err: e }, "Parasut token hatası");
     return null;
   }
 }
@@ -106,7 +107,7 @@ async function parasutMusteriOlusturVeyaBul(
     const createData = await createRes.json();
     return createData.data?.id || null;
   } catch (e) {
-    console.error("Parasut musteri hatasi:", e);
+    logger.error({ err: e }, "Parasut müşteri hatası");
     return null;
   }
 }
@@ -165,7 +166,7 @@ async function parasutFaturaKes(
     const faturaData = await faturaRes.json();
     const faturaId = faturaData.data?.id;
     if (!faturaId) {
-      console.error("Parasut fatura olusturulamadi:", JSON.stringify(faturaData));
+      logger.error({ data: faturaData }, "Parasut fatura oluşturulamadı");
       return null;
     }
 
@@ -210,11 +211,11 @@ async function parasutFaturaKes(
     );
 
     const earsivData = await earsivRes.json();
-    console.log("E-arsiv olusturuldu:", earsivData.data?.id);
+    logger.info({ id: earsivData.data?.id }, "E-arşiv oluşturuldu");
 
     return faturaId;
   } catch (e) {
-    console.error("Parasut fatura hatasi:", e);
+    logger.error({ err: e }, "Parasut fatura hatası");
     return null;
   }
 }
@@ -245,7 +246,7 @@ async function odemeDogrula(token: string): Promise<NextResponse> {
   });
 
   const data = await response.json();
-  console.log("Iyzico callback:", JSON.stringify(data));
+  logger.info({ conversationId: data?.conversationId }, "iyzico callback alındı");
 
   if (data.status !== "success" || data.paymentStatus !== "SUCCESS") {
     await supabase.from("payments").update({ durum: "basarisiz" }).eq("iyzico_token", token);
@@ -307,7 +308,7 @@ async function odemeDogrula(token: string): Promise<NextResponse> {
           }
         }
       } catch (e) {
-        console.error("Parasut entegrasyon hatasi (odeme etkilenmedi):", e);
+        logger.error({ err: e }, "Parasut entegrasyon hatası (odeme etkilenmedi)");
       }
     }
   }

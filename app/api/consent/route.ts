@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import { createClient } from "@supabase/supabase-js";
+import logger from "@/lib/logger";
 
 /**
  * POST /api/consent
@@ -40,7 +41,7 @@ export async function POST(req: NextRequest) {
   });
 
   if (error) {
-    console.error("Consent log hatası:", error);
+    logger.error({ err: error }, "Consent log hatası");
     // Log hatası ödemeyi engellememeli
   }
 

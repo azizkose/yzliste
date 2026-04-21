@@ -3,6 +3,7 @@ import { fal } from "@fal-ai/client";
 import { createClient } from "@supabase/supabase-js";
 import { rmbgUygula } from "@/lib/fal/rmbg";
 import { TON_EN_MAP } from "@/lib/constants/ton";
+import logger from "@/lib/logger";
 
 export const maxDuration = 60;
 
@@ -183,7 +184,7 @@ export async function POST(req: NextRequest) {
       } catch { /* geri yükleme başarısız — loglarda görünür */ }
     }
     const err = e as { message?: string };
-    console.error("FAL HATA:", err?.message || JSON.stringify(e));
+    logger.error({ err: err?.message }, "fal.ai görsel hatası");
     return NextResponse.json({ hata: "Gorsel uretim hatasi: " + (err?.message || "bilinmiyor") }, { status: 500 });
   }
 }
