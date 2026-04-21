@@ -1,32 +1,5 @@
 import Link from "next/link";
 
-const KARTLAR = [
-  {
-    ikon: "📝",
-    baslik: "Listing Metni",
-    aciklama: "Platforma özel başlık, açıklama, etiket",
-    href: "/uret?tab=metin",
-  },
-  {
-    ikon: "📷",
-    baslik: "Stüdyo Görseli",
-    aciklama: "7 farklı stüdyo stili",
-    href: "/uret?tab=gorsel",
-  },
-  {
-    ikon: "🎬",
-    baslik: "Ürün Videosu",
-    aciklama: "5sn veya 10sn tanıtım klibi",
-    href: "/uret?tab=video",
-  },
-  {
-    ikon: "📱",
-    baslik: "Sosyal Medya",
-    aciklama: "Instagram, TikTok, Facebook, X",
-    href: "/uret?tab=sosyal",
-  },
-];
-
 export default function AuthHero() {
   return (
     <section className="relative overflow-hidden min-h-[60vh] md:min-h-0 md:aspect-video flex items-center bg-gray-900">
@@ -68,18 +41,17 @@ export default function AuthHero() {
           Ürün bilgini gir — listing metni, stüdyo görseli, tanıtım videosu ve sosyal medya içeriğini dakikalar içinde al.
         </p>
 
-        {/* Aksiyon kartları */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-2xl mb-8">
-          {KARTLAR.map((k) => (
-            <Link
-              key={k.href}
-              href={k.href}
-              className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl px-4 py-4 text-left transition-colors group"
-            >
-              <div className="text-2xl mb-2">{k.ikon}</div>
-              <div className="text-white font-semibold text-sm mb-1">{k.baslik}</div>
-              <div className="text-white/60 text-xs leading-relaxed">{k.aciklama}</div>
-            </Link>
+        <div className="flex flex-col gap-2 max-w-lg mb-8">
+          {[
+            "Yazılım kurulumu veya entegrasyon yok — tarayıcıdan kullan",
+            "Aylık abonelik yok — sadece kullandığın kadar öde",
+            "7 pazaryerinin kurallarını bilir — platforma özel üretir",
+            "Prompt yazmana gerek yok — formu doldur, butona bas",
+          ].map((t) => (
+            <div key={t} className="flex items-center gap-2 text-white/80 text-sm">
+              <span className="w-5 h-5 rounded-full bg-emerald-500/30 text-emerald-300 flex items-center justify-center text-xs flex-shrink-0">✓</span>
+              {t}
+            </div>
           ))}
         </div>
 
@@ -90,12 +62,9 @@ export default function AuthHero() {
           >
             Ücretsiz Başla — 3 Kredi Hediye →
           </Link>
-          <Link
-            href="/uret"
-            className="border-2 border-white text-white hover:bg-white/10 px-7 py-3.5 rounded-xl font-semibold text-base transition-colors"
-          >
-            Hemen Dene →
-          </Link>
+          <a href="/#araclar" className="border-2 border-white text-white hover:bg-white/10 px-7 py-3.5 rounded-xl font-semibold text-base transition-colors">
+            Araçları İncele ↓
+          </a>
         </div>
         <p className="text-white/40 text-xs">Kredi kartı gerekmez</p>
       </div>

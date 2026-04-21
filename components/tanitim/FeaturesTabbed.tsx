@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type PlatformKey = "trendyol" | "amazon" | "etsy";
 
@@ -125,8 +125,30 @@ export default function FeaturesTabbed() {
   const [ozellikTab, setOzellikTab] = useState(0);
   const [platformTab, setPlatformTab] = useState<PlatformKey>("trendyol");
 
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      const map: Record<string, number> = {
+        "#arac-metin": 0,
+        "#arac-gorsel": 1,
+        "#arac-video": 2,
+        "#arac-sosyal": 3,
+      };
+      if (hash in map) {
+        setOzellikTab(map[hash]);
+        setTimeout(() => {
+          document.getElementById("araclar")?.scrollIntoView({ behavior: "smooth" });
+          history.replaceState(null, "", window.location.pathname);
+        }, 100);
+      }
+    };
+    handleHash();
+    window.addEventListener("hashchange", handleHash);
+    return () => window.removeEventListener("hashchange", handleHash);
+  }, []);
+
   return (
-    <section className="px-4 sm:px-6 py-16 bg-gray-50">
+    <section id="araclar" className="px-4 sm:px-6 py-16 bg-gray-50">
       <div className="max-w-5xl mx-auto">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Tek platformda 4 içerik türü</h2>
         <p className="text-center text-sm text-gray-400 mb-8">İhtiyacın olanı seç — örnek çıktıyı hemen gör</p>
@@ -197,6 +219,11 @@ export default function FeaturesTabbed() {
               <div className="mt-4 rounded-xl bg-blue-50 border border-blue-100 p-3 text-[11px] text-blue-700 leading-relaxed">
                 💡 <strong>Her pazaryerinin kuralları farklı:</strong> Trendyol max 100 karakter başlık ister, Amazon 200&apos;e kadar keyword kabul eder, Etsy İngilizce + hikaye anlatımı sever. yzliste hepsini tek fotoğraftan üretir.
               </div>
+              <div className="mt-5 pt-4 border-t border-gray-100 text-center">
+                <a href="/uret?tab=metin" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-colors shadow-lg shadow-indigo-100">
+                  Listing Metni Üret →
+                </a>
+              </div>
             </div>
           )}
 
@@ -253,6 +280,11 @@ export default function FeaturesTabbed() {
                   ))}
                 </div>
               </div>
+              <div className="mt-5 pt-4 border-t border-gray-100 text-center">
+                <a href="/uret?tab=gorsel" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-colors shadow-lg shadow-indigo-100">
+                  Stüdyo Görseli Üret →
+                </a>
+              </div>
             </div>
           )}
 
@@ -303,6 +335,11 @@ export default function FeaturesTabbed() {
                   ))}
                 </div>
               </div>
+              <div className="mt-5 pt-4 border-t border-gray-100 text-center">
+                <a href="/uret?tab=video" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-colors shadow-lg shadow-indigo-100">
+                  Ürün Videosu Üret →
+                </a>
+              </div>
             </div>
           )}
 
@@ -344,6 +381,11 @@ export default function FeaturesTabbed() {
                     El yapımı porselen + altın yaldız + 6 kişilik set = mükemmel hediye 🎁☕ Her sipariş özel kutusunda geliyor. #porselen #hediye
                   </p>
                 </div>
+              </div>
+              <div className="mt-5 pt-4 border-t border-gray-100 text-center">
+                <a href="/uret?tab=sosyal" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-colors shadow-lg shadow-indigo-100">
+                  Sosyal İçerik Üret →
+                </a>
               </div>
             </div>
           )}
