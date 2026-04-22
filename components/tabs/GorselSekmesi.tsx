@@ -1,6 +1,5 @@
 "use client";
 import { GORSEL_STILLER, kategoriKoduHesapla } from "@/lib/constants";
-import FotoEkleAlani from "@/components/ui/FotoEkleAlani";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
 
 type Kullanici = {
@@ -18,7 +17,6 @@ interface GorselSekmesiProps {
   urunAdi: string;
   kategori: string;
   fotolar: string[];
-  fotoSec: (e: React.ChangeEvent<HTMLInputElement>) => void;
   fotoKaldir: (i: number) => void;
   gorselEkPrompt: string;
   setGorselEkPrompt: (v: string) => void;
@@ -41,7 +39,7 @@ interface GorselSekmesiProps {
 export default function GorselSekmesi({
   aktif,
   urunAdi, kategori,
-  fotolar, fotoSec, fotoKaldir,
+  fotolar, fotoKaldir,
   gorselEkPrompt, setGorselEkPrompt,
   seciliStiller, stilToggle,
   gorselYukleniyor, gorselJoblar, setGorselJoblar,
@@ -79,7 +77,10 @@ export default function GorselSekmesi({
       </p>
 
       {fotolar.length === 0 ? (
-        <FotoEkleAlani id="gorsel-foto-input" onChange={fotoSec} renk="purple" metin="Ürün fotoğrafı yükle" ikon="📷" altMetin="Arka planı kaldırıp 7 farklı stilde stüdyo görseli üretiriz" />
+        <div className="bg-amber-50 border-2 border-dashed border-amber-300 rounded-xl p-5 text-center space-y-1">
+          <p className="text-sm font-medium text-amber-700">↑ Önce ürün fotoğrafı yükle</p>
+          <p className="text-xs text-amber-500">Sayfanın üstündeki fotoğraf alanından ekleyebilirsin</p>
+        </div>
       ) : (
         <FotoThumbnail src={fotolar[0]} onKaldir={() => fotoKaldir(0)} renk="green" />
       )}

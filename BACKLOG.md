@@ -1515,6 +1515,113 @@ Her adımda:
 - State yönetimini kontrol et (platform prop/context geçişi)
 ```
 
+### ✅ KF-04: kredi-yukle Sayfası Fiyat Tutarsızlığı (P0 — 15dk) — DONE
+
+**Bug:** `/app/(auth)/kredi-yukle/page.tsx` dosyasında paket fiyatları hardcoded ve **yanlış**: 29 / 79 / 149 TL yazıyor. Gerçek fiyatlar `lib/paketler.ts`'de 39 / 99 / 249 TL. Kullanıcı farklı fiyat görüyor, ödeme farklı tutar çekiyor.
+
+**Fix:**
+- [ ] `/app/(auth)/kredi-yukle/page.tsx`'deki hardcoded paket array'ini kaldır, `import { PAKET_LISTESI } from '@/lib/paketler'` ile değiştir
+- [ ] `/app/fiyatlar/page.tsx`'deki senaryo tablosundaki hardcoded fiyatları da `paketler.ts`'den besle (veya en azından doğru fiyatları yaz)
+- [ ] Tüm projede `39.*TL\|99.*TL\|249.*TL` grep yapıp başka hardcoded fiyat kalmadığını doğrula
+
+**Test:**
+- [ ] kredi-yukle sayfasında fiyatlar 39/99/249 TL görünmeli
+- [ ] PaketModal, /fiyatlar ve kredi-yukle aynı fiyatları göstermeli
+- [ ] Ödeme akışı çalışmaya devam etmeli
+
+**Dosyalar:** `app/(auth)/kredi-yukle/page.tsx`, `lib/paketler.ts`, `app/fiyatlar/page.tsx`
+
+**Claude Code Promptu:**
+```
+KF-04: kredi-yukle fiyat tutarsızlığı fix
+
+BACKLOG.md'deki "### KF-04" spec'ini oku ve uygula.
+Özet: /app/(auth)/kredi-yukle/page.tsx hardcoded fiyatları kaldır, lib/paketler.ts'den import et.
+Sonra projede başka hardcoded fiyat kalıp kalmadığını grep ile doğrula.
+```
+
+### ✅ UX-01b: Metin Sekmesi UX Düzeltmeleri (P1 — 1-2 saat) — DONE
+
+**Bağlam:** UX-01 uygulandı ama sahadan ek feedback geldi. Step indicator sayfayı daraltıyor, kategori zorunlu olmalı, platform bilgi badge'i tüm sekmelerde olmalı, fotoğraf mesajı iyileştirilmeli, görsel sekmesindeki gereksiz kutu kaldırılmalı.
+
+**7 Değişiklik:**
+
+**1) Sol step indicator kaldır:**
+- [ ] UX-01'de eklenen sol taraftaki ①②③ dikey step indicator'ı tamamen kaldır (desktop dahil). Sayfayı gereksiz daraltıyor, yeni tasarımda ihtiyaç yok.
+
+**2) Kategori alanını zorunlu yap + dropdown:**
+- [ ] Metin sekmesinde kategori alanını zorunlu (`*` işareti) yap
+- [ ] Dropdown olarak kalsın (önceki gibi): Kozmetik, Elektronik, Giyim, Ev, Gıda, Takı, Spor, Bebek, Kitap, Oto, Diğer
+- [ ] "Diğer" seçildiğinde manuel text input açılsın
+- [ ] Üret butonunun aktif olma koşuluna kategori seçimini de ekle
+
+**3) Platform bilgi badge'ini tüm sekmelere genişlet:**
+- [ ] Metin sekmesinde mevcut: `📌 Max 100 karakter başlık · 🔹 5 özellik · 🏷️ 10 etiket · 🇹🇷 Türkçe çıktı`
+- [ ] Görsel sekmesinde: seçili platforma göre önerilen görsel boyutu, format bilgisi (ör: `📐 1200x1200px · 🖼️ 7 stüdyo stili · 📷 PNG çıktı`)
+- [ ] Video sekmesinde: format bilgisi (ör: `🎬 5-10sn · 📐 9:16 / 1:1 / 16:9 · 🎥 MP4 çıktı`)
+- [ ] Sosyal medya sekmesinde: seçili sosyal platforma göre (ör: Instagram → `📸 2.200 karakter · #️⃣ 30 hashtag · 🎨 görsel odaklı ton`)
+
+**4) Metin sekmesi fotoğraf mesajını iyileştir:**
+- [ ] Mevcut: "Yukarıdan ürün fotoğrafı yükle ↑"
+- [ ] Yeni: Fotoğraf yüklenmemişse → "📷 Fotoğraf metin kalitesini artırır — yukarıdan yükleyebilirsin" + altında küçük link: "Fotoğrafsız devam et →" (tıklayınca fotoğraf alanını collapse eder veya sadece formu aktif tutar)
+- [ ] Fotoğraf yüklenmişse → mevcut thumbnail gösterimi devam etsin
+
+**5) Görsel sekmesindeki gereksiz fotoğraf kutusunu kaldır:**
+- [ ] Görsel sekmesinde "📷 Ürün fotoğrafı yükle — Arka planı kaldırıp 7 farklı stilde stüdyo görseli üretiriz" bilgi kutusunu kaldır
+- [ ] Fotoğraf yüklenmemişse: üstteki ortak fotoğraf yükleme alanını highlight et (border pulse/glow animasyonu veya sarı arka plan)
+- [ ] Üret butonu fotoğraf olmadan disabled kalsın, buton üstünde "↑ Önce fotoğraf yükle" uyarısı
+
+**6) Sosyal medya sekmesini metin kalıbına uyumla:**
+- [ ] Sosyal medya sekmesindeki akışı metin sekmesiyle aynı kalıba sok:
+  - Sosyal platform seçimi (Instagram, TikTok, Facebook, X) → dropdown veya chip butonlar
+  - Platform bilgi badge (karakter limiti, hashtag sayısı, ton)
+  - Ürün bilgisi girişi (ad + detaylar)
+  - Gelişmiş ayarlar collapse (ton, hedef kitle)
+  - Üret butonu
+- [ ] Kategori burada da zorunlu dropdown olsun
+
+**7) Video sekmesini görsel kalıbına uyumla:**
+- [ ] Video sekmesindeki akışı görsel sekmesiyle aynı kalıba sok:
+  - Fotoğraf yüklenmemişse üst alan highlight (görsel ile aynı)
+  - Hareket stili seçimi (mevcut 6 preset + custom prompt)
+  - Format seçimi (süre + oran)
+  - Platform bilgi badge
+  - Üret butonu
+- [ ] Gereksiz tekrar eden fotoğraf yükleme alanı varsa kaldır (görsel ile aynı mantık)
+
+**Test:**
+- [ ] Step indicator hiçbir ekranda görünmemeli
+- [ ] Metin + sosyal medya: kategori seçmeden üret butonu aktif olmamalı
+- [ ] 4 sekmede de platform bilgi badge'i görünmeli, seçime göre değişmeli
+- [ ] Metin sekmesinde fotoğraf yüklenmemişse yeni mesaj ve "fotoğrafsız devam et" linki
+- [ ] Görsel sekmesinde fotoğraf kutus yok, fotoğraf yokken üst alan highlight
+- [ ] Sosyal medya akışı metin ile, video akışı görsel ile tutarlı
+- [ ] Tüm üretim akışları çalışıyor, kredi düşüyor
+
+**Dosyalar:** `app/uret/page.tsx`, `components/tabs/MetinSekmesi.tsx`, `components/tabs/GorselSekmesi.tsx`, `components/tabs/VideoSekmesi.tsx`, `components/tabs/SosyalSekmesi.tsx`
+
+**Claude Code Promptu:**
+```
+UX-01b: Üretim Sekmesi UX Düzeltmeleri — 7 değişiklik
+
+BACKLOG.md'deki "### UX-01b" spec'ini oku ve 7 maddeyi sırayla uygula.
+
+ÖNCELİK SIRASI:
+1. Step indicator kaldır (hızlı)
+2. Görsel sekmesi fotoğraf kutusu kaldır + highlight mantığı
+3. Metin sekmesi fotoğraf mesajı iyileştir
+4. Kategori zorunlu + dropdown (metin + sosyal)
+5. Platform bilgi badge tüm sekmelere
+6. Sosyal medya = metin kalıbı
+7. Video = görsel kalıbı
+
+2 UX kalıbı var:
+- Metin kalıbı (input-ağırlıklı): Metin + Sosyal Medya
+- Görsel kalıbı (fotoğraf-ağırlıklı): Görsel + Video
+
+Mevcut üretim akışlarını bozma. Her sekmenin API çağrısı ve kredi düşümü çalışmaya devam etmeli.
+```
+
 ---
 
 ## 🔄 ERTELE — Trafik Eşiği Gelince Aç
@@ -1616,4 +1723,4 @@ SC-02 "Discovered — currently not indexed" hâlâ 14 sayfa. Validation "Starte
 - `~%XX` notları kısmen tamamlanmış item'ları gösterir — bunları tamamla, sonra `[x]` yap.
 - Her küme tek PR değil. Küme içinde 3-5 PR olabilir ama aynı branch ailesinde.
 - `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  

@@ -78,7 +78,7 @@ export default function MetinSekmesi({
   const [gelismisAcik, setGelismisAcik] = useState(false);
 
   const uretButonAktif = !yukleniyor && (
-    (girisTipi === "manuel" && urunAdi.trim().length > 0) ||
+    (girisTipi === "manuel" && urunAdi.trim().length > 0 && kategori.trim().length > 0) ||
     (girisTipi === "foto" && fotolar.length > 0) ||
     (girisTipi === "barkod" && barkodBilgi !== null)
   );
@@ -152,7 +152,7 @@ export default function MetinSekmesi({
             <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)} placeholder={platformPh.urun} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Kategori <span className="text-gray-400 font-normal text-xs">(isteğe bağlı · fotoğraf yüklersen otomatik algılanır)</span></label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Kategori <span className="text-red-400">*</span></label>
             <select
               value={digerMod ? "Diğer" : (kategori || "")}
               onChange={(e) => {
@@ -193,8 +193,9 @@ export default function MetinSekmesi({
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Ürün Fotoğrafı</label>
             {fotolar.length === 0 ? (
-              <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-4 text-center text-xs text-gray-400">
-                Yukarıdan ürün fotoğrafı yükle ↑
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center space-y-1">
+                <p className="text-xs text-blue-700">📷 Fotoğraf metin kalitesini artırır — yukarıdan yükleyebilirsin</p>
+                <button type="button" onClick={() => setGirisTipi("manuel")} className="text-xs text-blue-500 hover:text-blue-700 underline">Fotoğrafsız devam et →</button>
               </div>
             ) : (
               <FotoThumbnail src={fotolar[0]} onKaldir={() => fotoKaldir(0)} renk="green" />

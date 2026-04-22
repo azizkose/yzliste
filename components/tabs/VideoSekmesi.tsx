@@ -79,8 +79,9 @@ export default function VideoSekmesi({
       </div>
 
       {!fotolar[0] ? (
-        <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-4 text-center text-xs text-gray-400">
-          Yukarıdan ürün fotoğrafı yükle ↑
+        <div className="bg-amber-50 border-2 border-dashed border-amber-300 rounded-xl p-5 text-center space-y-1">
+          <p className="text-sm font-medium text-amber-700">↑ Önce ürün fotoğrafı yükle</p>
+          <p className="text-xs text-amber-500">Sayfanın üstündeki fotoğraf alanından ekleyebilirsin</p>
         </div>
       ) : (
         <FotoThumbnail src={fotolar[0]} onKaldir={() => { setFotolar([]); setGorselJoblar([]); }} renk="green" />

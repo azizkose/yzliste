@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import FotoEkleAlani from "@/components/ui/FotoEkleAlani";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
 import KrediButon from "@/components/ui/KrediButon";
@@ -81,6 +82,8 @@ export default function SosyalSekmesi({
   kullanici, paketModalAc,
   captionUret, kitUret, sosyalGorselUret, setAnaSekme,
 }: SosyalSekmesiProps) {
+  const [gelismisAcik, setGelismisAcik] = useState(false);
+
   return (
     <div style={{ display: aktif ? "block" : "none" }} className="mt-4 space-y-4">
 
@@ -209,36 +212,49 @@ export default function SosyalSekmesi({
               <textarea value={sosyalEkBilgi} onChange={(e) => setSosyalEkBilgi(e.target.value)} placeholder="örn: %20 indirimde, yeni sezon, el yapımı, hediye seçeneği" rows={2} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Sezon / Etkinlik</label>
-              <select value={sosyalSezon} onChange={(e) => setSosyalSezon(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white">
-                <option value="normal">Normal (sezon yok)</option>
-                <option value="anneler_gunu">💐 Anneler Günü</option>
-                <option value="babalar_gunu">👔 Babalar Günü</option>
-                <option value="bayram">🌙 Bayram</option>
-                <option value="yilbasi">🎉 Yılbaşı</option>
-                <option value="black_friday">🔥 Black Friday</option>
-                <option value="sevgililer_gunu">❤️ Sevgililer Günü</option>
-              </select>
-            </div>
+            <button type="button" onClick={() => setGelismisAcik(v => !v)}
+              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 transition-colors cursor-pointer">
+              <span>{gelismisAcik ? "▾" : "▸"}</span>
+              <span>Daha fazla seçenek</span>
+              {!gelismisAcik && (sosyalTon !== "tanitim" || sosyalSezon !== "normal") && (
+                <span className="text-emerald-500 font-medium">• değiştirildi</span>
+              )}
+            </button>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Ton</label>
-              <div className="grid grid-cols-3 gap-2">
-                {([
-                  { id: "tanitim", label: "📣 Tanıtım", aciklama: "Ürünü öne çıkar" },
-                  { id: "indirim", label: "🔥 İndirim", aciklama: "Fırsatı vurgula" },
-                  { id: "hikaye", label: "💫 Hikaye", aciklama: "Duygu bağı kur" },
-                ] as { id: SosyalTon; label: string; aciklama: string }[]).map((t) => (
-                  <button key={t.id} onClick={() => setSosyalTon(t.id)}
-                    className={`p-3 rounded-xl border-2 text-left transition-all ${sosyalTon === t.id ? "border-emerald-400 bg-emerald-50" : "border-gray-200 hover:border-gray-300"}`}>
-                    <p className={`text-xs font-semibold ${sosyalTon === t.id ? "text-emerald-700" : "text-gray-700"}`}>{t.label}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{t.aciklama}</p>
-                  </button>
-                ))}
+            {gelismisAcik && (
+              <div className="space-y-4 pl-1 border-l-2 border-gray-100">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Ton</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {([
+                      { id: "tanitim", label: "📣 Tanıtım", aciklama: "Ürünü öne çıkar" },
+                      { id: "indirim", label: "🔥 İndirim", aciklama: "Fırsatı vurgula" },
+                      { id: "hikaye", label: "💫 Hikaye", aciklama: "Duygu bağı kur" },
+                    ] as { id: SosyalTon; label: string; aciklama: string }[]).map((t) => (
+                      <button key={t.id} onClick={() => setSosyalTon(t.id)}
+                        className={`p-3 rounded-xl border-2 text-left transition-all ${sosyalTon === t.id ? "border-emerald-400 bg-emerald-50" : "border-gray-200 hover:border-gray-300"}`}>
+                        <p className={`text-xs font-semibold ${sosyalTon === t.id ? "text-emerald-700" : "text-gray-700"}`}>{t.label}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{t.aciklama}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Sezon / Etkinlik</label>
+                  <select value={sosyalSezon} onChange={(e) => setSosyalSezon(e.target.value)}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white">
+                    <option value="normal">Normal (sezon yok)</option>
+                    <option value="anneler_gunu">💐 Anneler Günü</option>
+                    <option value="babalar_gunu">👔 Babalar Günü</option>
+                    <option value="bayram">🌙 Bayram</option>
+                    <option value="yilbasi">🎉 Yılbaşı</option>
+                    <option value="black_friday">🔥 Black Friday</option>
+                    <option value="sevgililer_gunu">❤️ Sevgililer Günü</option>
+                  </select>
+                </div>
               </div>
-            </div>
+            )}
 
             <button onClick={captionUret} disabled={captionYukleniyor || sosyalKitYukleniyor || !sosyalUrunAdi.trim() || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) <= 0)}
               className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-all">

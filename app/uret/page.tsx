@@ -265,28 +265,6 @@ export default function Home() {
 
         <div className="flex gap-6 items-start flex-col lg:flex-row">
 
-          {/* Step indicator — desktop only */}
-          <div className="hidden lg:flex flex-col gap-4 w-24 flex-shrink-0 pt-4 sticky top-4 self-start">
-            {[
-              { n: 1, label: "Platform seç", done: true, active: false },
-              { n: 2, label: "Ürün bilgisi", done: !!metin.sonuc, active: !metin.sonuc },
-              { n: 3, label: "Üret", done: !!metin.sonuc, active: false },
-            ].map((step) => (
-              <div key={step.n} className="flex items-start gap-2">
-                <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5 ${
-                  step.done ? "bg-emerald-100 text-emerald-600" : step.active ? "bg-indigo-500 text-white" : "bg-gray-100 text-gray-400"
-                }`}>
-                  {step.done ? "✓" : step.n}
-                </div>
-                <span className={`text-xs leading-tight ${
-                  step.done ? "text-emerald-600 font-medium" : step.active ? "text-indigo-700 font-semibold" : "text-gray-400"
-                }`}>
-                  {step.label}
-                </span>
-              </div>
-            ))}
-          </div>
-
           <div className="flex-1 w-full">
 
             {/* SEKMELER */}
@@ -335,6 +313,27 @@ export default function Home() {
                 </select>
               </div>
               {(() => {
+                if (anaSekme === "gorsel") {
+                  return (
+                    <div className="mt-2 flex flex-wrap gap-2 text-xs px-3 py-1.5 rounded-lg border bg-violet-50 border-violet-200 text-violet-700">
+                      <span>📐 1:1 kare tercih</span><span>·</span><span>🖼️ 7 stüdyo stili</span><span>·</span><span>📷 PNG çıktı</span><span>·</span><span>Stil başına 1 kredi</span>
+                    </div>
+                  );
+                }
+                if (anaSekme === "video") {
+                  return (
+                    <div className="mt-2 flex flex-wrap gap-2 text-xs px-3 py-1.5 rounded-lg border bg-amber-50 border-amber-200 text-amber-700">
+                      <span>🎬 5sn (10kr) · 10sn (20kr)</span><span>·</span><span>📐 9:16 / 1:1 / 16:9</span><span>·</span><span>🎥 MP4 çıktı</span>
+                    </div>
+                  );
+                }
+                if (anaSekme === "sosyal") {
+                  return (
+                    <div className="mt-2 flex flex-wrap gap-2 text-xs px-3 py-1.5 rounded-lg border bg-emerald-50 border-emerald-200 text-emerald-700">
+                      <span>📸 4 platform</span><span>·</span><span>#️⃣ Caption + Hashtag</span><span>·</span><span>🎁 Kit: 3 kredi</span>
+                    </div>
+                  );
+                }
                 const pb = PLATFORM_BILGI[metin.platform] || PLATFORM_BILGI.trendyol;
                 const platformDil = pb.dil || "tr";
                 return (
@@ -414,7 +413,7 @@ export default function Home() {
             <GorselSekmesi
               aktif={anaSekme === "gorsel"}
               urunAdi={metin.urunAdi} kategori={metin.kategori}
-              fotolar={fotolar} fotoSec={fotoSec} fotoKaldir={fotoKaldir}
+              fotolar={fotolar} fotoKaldir={fotoKaldir}
               gorselEkPrompt={gorsel.gorselEkPrompt} setGorselEkPrompt={gorsel.setGorselEkPrompt}
               seciliStiller={gorsel.seciliStiller} stilToggle={gorsel.stilToggle}
               gorselYukleniyor={gorsel.gorselYukleniyor} gorselJoblar={gorsel.gorselJoblar} setGorselJoblar={gorsel.setGorselJoblar}
