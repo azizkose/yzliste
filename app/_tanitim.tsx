@@ -50,8 +50,8 @@ export default function TanitimSayfasi() {
       <SiteHeader aktifSayfa="ana" />
       <main className="min-h-screen bg-white font-sans">
         <AuthHero />
-        <HowItWorks />
         <FeaturesTabbed />
+        <HowItWorks />
         <BrandProfile />
         <BenefitsGrid />
         <LandingFAQ />

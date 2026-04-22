@@ -1199,6 +1199,206 @@ Claude Code commit → preview branch → Vercel Preview URL (test)
 
 **DoD (KÜME 12):** Hero'da 4 aksiyon kartı tıklanıyor ve doğru tab'a yönlendiriyor. HowItWorks hero'nun hemen altında. FAQ accordion açılıp kapanıyor. Trust band footer üstünde görünüyor. Video kredi bilgisi doğru (10/20).
 
+### LP-08: Header'a "Araçlar" Dropdown Menü + FeaturesTabbed CTA + Zenginleştirme (P1 — 2-3 saat)
+
+**Amaç:** Ziyaretçi siteye girince "ne yapabilirim" sorusunu header'dan 1 tıkla cevaplayabilsin. Dropdown'dan direkt araca gidebilsin, merak ederse detay bölümüne scroll etsin, oradaki detayı okuyunca da "Hemen Dene" CTA'sıyla üretime geçebilsin.
+
+**A) AuthHero'daki 4 aksiyon kartını kaldır, değer önermeleri ekle:**
+
+Hero'nun işi artık "ne yapıyoruz" değil "neden biz" olmalı — araçlar dropdown'da ve FeaturesTabbed'de zaten var.
+
+- [ ] KARTLAR dizisini ve grid'ini kaldır
+- [ ] Yerine 4 değer önermesi badge'i ekle (video üstünde okunabilir, yarı-saydam arka plan):
+  - ✓ Yazılım kurulumu veya entegrasyon yok — tarayıcıdan kullan
+  - ✓ Aylık abonelik yok — sadece kullandığın kadar öde
+  - ✓ 7 pazaryerinin kurallarını bilir — platforma özel üretir
+  - ✓ Prompt yazmana gerek yok — formu doldur, butona bas
+- [ ] İkinci CTA'yı değiştir: "Hemen Dene →" → "Araçları İncele ↓" (href="/#araclar", scroll to FeaturesTabbed)
+- [ ] Üst badge'ler ("🆕 Video + Sosyal Medya") kalabilir
+
+**B) SiteHeader'a "Araçlar" dropdown ekle:**
+
+Desktop: `navLinks` dizisine `{ label: "Araçlar", id: "araclar" }` ekle (href yok, dropdown tetikler). Hover veya tıkla ile dropdown açılır:
+
+```
+Araçlar ▾
+┌───────────────────────────────────────────────┐
+│ 📝 Listing Metni                              │
+│    Platforma özel başlık, özellikler, etiket  │
+│    [Hemen Kullan →]  [Detaylar]               │
+│───────────────────────────────────────────────│
+│ 📷 Stüdyo Görseli                            │
+│    Tek fotoğraftan 7 farklı stüdyo stili     │
+│    [Hemen Kullan →]  [Detaylar]               │
+│───────────────────────────────────────────────│
+│ 🎬 Ürün Videosu                               │
+│    5sn veya 10sn AI tanıtım klibi            │
+│    [Hemen Kullan →]  [Detaylar]               │
+│───────────────────────────────────────────────│
+│ 📱 Sosyal Medya                               │
+│    Instagram, TikTok, Facebook, X caption    │
+│    [Hemen Kullan →]  [Detaylar]               │
+└───────────────────────────────────────────────┘
+```
+
+- **"Hemen Kullan →"** → `/uret?tab=metin` (veya gorsel/video/sosyal)
+- **"Detaylar"** → `/#arac-metin` (ana sayfada FeaturesTabbed'in ilgili sekmesine scroll + o sekmeyi aç)
+- Dropdown dışına tıklayınca veya mouse çıkınca kapanır
+- Stil: `bg-white rounded-xl shadow-xl border border-gray-100`, transparent header'da da beyaz dropdown
+
+Mobil hamburger menüde: "Araçlar" tıklayınca accordion açılır, 4 alt madde görünür (her biri tıklanınca `/uret?tab=X` gider). Detay linki mobilde gösterilmeyebilir (opsiyonel).
+
+**B) FeaturesTabbed'e anchor ID'ler + CTA butonları ekle:**
+
+1. Section'a `id="araclar"` ekle
+2. Her sekme içeriğinin sonuna CTA butonu ekle:
+   ```tsx
+   <div className="mt-5 pt-4 border-t border-gray-100 text-center">
+     <a href="/uret?tab=metin" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-colors">
+       Listing Metni Üret →
+     </a>
+   </div>
+   ```
+   Her sekmede farklı CTA label ve link:
+   - Sekme 0 (Metin): "Listing Metni Üret →" → `/uret?tab=metin`
+   - Sekme 1 (Görsel): "Stüdyo Görseli Üret →" → `/uret?tab=gorsel`
+   - Sekme 2 (Video): "Ürün Videosu Üret →" → `/uret?tab=video`
+   - Sekme 3 (Sosyal): "Sosyal İçerik Üret →" → `/uret?tab=sosyal`
+
+3. Dropdown'daki "Detaylar" linki tıklanınca:
+   - `/#arac-metin` gibi hash ile sayfaya git
+   - Sayfa `id="araclar"` bölümüne scroll etsin
+   - İlgili sekme (ozellikTab) açılsın
+   
+   Bunu yapmak için: FeaturesTabbed, URL hash'i dinlesin. `useEffect` ile `window.location.hash` kontrol etsin:
+   - `#arac-metin` → `setOzellikTab(0)` + scroll to `#araclar`
+   - `#arac-gorsel` → `setOzellikTab(1)` + scroll
+   - `#arac-video` → `setOzellikTab(2)` + scroll
+   - `#arac-sosyal` → `setOzellikTab(3)` + scroll
+
+**C) FeaturesTabbed sekme içeriklerini zenginleştir (opsiyonel, LP-08 sonrası yapılabilir):**
+
+Şu an Listing Metni sekmesinde platform örnekleri var (detaylı, iyi). Ama Görsel, Video, Sosyal sekmelerinde "nasıl çalışır" + "ne üretir" daha kapsayıcı olabilir. Bu madde P2 — önce dropdown + CTA + anchor çalışsın.
+
+**Test:**
+- [ ] Desktop: "Araçlar" hover/tıkla → dropdown açılır, 4 araç listelenir
+- [ ] Dropdown'da "Hemen Kullan →" tıkla → `/uret?tab=metin` açılır
+- [ ] Dropdown'da "Detaylar" tıkla → ana sayfada FeaturesTabbed'e scroll + ilgili sekme açılır
+- [ ] FeaturesTabbed her sekmede CTA butonu var → doğru `/uret?tab=X`'e gider
+- [ ] Mobil hamburger → "Araçlar" accordion açılır, alt maddeler tıklanır
+- [ ] Transparent header (hero üstü) → dropdown yine beyaz ve okunabilir
+- [ ] Sayfada olmayan bir yerden (örn: /fiyatlar) "Detaylar" tıklayınca → ana sayfaya gidip scroll eder
+
+**Dosyalar:** `components/SiteHeader.tsx`, `components/tanitim/FeaturesTabbed.tsx`, `app/_tanitim.tsx` (section id)
+
+### LP-07: Landing Page Tekrar Temizliği (P1 — 30dk)
+**Sorun:** Aynı 4 içerik türü (metin, görsel, video, sosyal medya) sayfada 4 kez tekrarlanıyor:
+1. AuthHero — 4 aksiyon kartı (📝📷🎬📱)
+2. HowItWorks — alt başlıkta "Metin, görsel, video, sosyal medya"
+3. FeaturesTabbed — 4 sekme (aynı 4 tür)
+4. FeatureCards — 4 detay kartı (aynı 4 tür, aynı ikonlar)
+
+Kullanıcı sayfanın yarısına gelmeden "bunu zaten gördüm" hissediyor.
+
+**Fix — 2 adım:**
+- [ ] **FeatureCards bölümünü kaldır:** `app/_tanitim.tsx`'den `<FeatureCards>` component'ini ve import'unu sil. AuthHero'daki 4 kart + FeaturesTabbed detaylı sekmeler zaten aynı işi yapıyor. FeatureCards tamamen gereksiz tekrar. `hemenAlTikla` fonksiyonu hâlâ AuthHero'da kullanılıyor, onu koruyun. `onSatinAlClick` prop'u artık gereksiz.
+- [ ] **BenefitsGrid'deki tekrar eden kartı değiştir:** 📦 kartı ("Metin, görsel, video, sosyal medya — tek fotoğraftan") zaten 3 kez anlatılmış. Bu kartı farklı bir avantaja çevir:
+  - ESKİ: `{ ikon: "📦", baslik: "Metin, görsel, video, sosyal medya — tek fotoğraftan", aciklama: "Ayrı ayrı araçlarla uğraşma. Bir ürün fotoğrafı yükle, 4 içerik türünü tek platformdan üret." }`
+  - YENİ: `{ ikon: "⚡", baslik: "Dakikalar içinde hazır", aciklama: "Fotoğraf yükle veya ürün bilgisi gir — listing metni 30 saniyede, stüdyo görseli 1 dakikada, tanıtım videosu 2 dakikada hazır." }`
+
+**Sonra sıralama:**
+```
+<AuthHero />       ← 4 aksiyon kartı (metin/görsel/video/sosyal)
+<HowItWorks />     ← 3 adım (akış)
+<FeaturesTabbed /> ← 4 sekme (detaylı örnekler)
+<BrandProfile />   ← marka profili
+<BenefitsGrid />   ← 4 farklı avantaj (tekrar yok)
+<LandingFAQ />     ← SSS
+<TrustBand />      ← güven bandı
+```
+
+**Test:**
+- [ ] Sayfa yüklenince FeatureCards bölümü görünmemeli
+- [ ] BenefitsGrid'de "⚡ Dakikalar içinde hazır" kartı çıkmalı
+- [ ] "Paket Satın Al" CTA'sı kaybolmuyor (BenefitsGrid'deki "Hemen dene" bölümü hâlâ var)
+- [ ] Sayfada aynı mesajın 2 kereden fazla tekrarı olmamalı
+
+**Dosyalar:** `app/_tanitim.tsx`, `components/tanitim/BenefitsGrid.tsx`, `components/tanitim/FeatureCards.tsx` (kullanılmayan dosya kalabilir veya silinebilir)
+
+### ✅ LP-09: FeaturesTabbed UX İyileştirmesi — DONE
+
+**Amaç:** FeaturesTabbed bölümünü daha erişilebilir, anlaşılır ve etkileşimli hale getirmek. Kullanıcı sekmelerin tıklanabilir olduğunu hemen anlamalı, aktif sekmenin içerikle bağlantısı görsel olarak belli olmalı, her sekmenin ne yaptığı örneklerden önce kısa bir açıklamayla verilmeli.
+
+**5 Değişiklik:**
+
+**1) Bölüm sırası değişikliği:**
+- [ ] `app/_tanitim.tsx`'de `<FeaturesTabbed />` ile `<HowItWorks />` yer değiştirsin:
+  ```
+  <AuthHero />
+  <FeaturesTabbed />   ← yukarı taşındı
+  <HowItWorks />       ← aşağı taşındı
+  <BrandProfile />
+  <BenefitsGrid />
+  <LandingFAQ />
+  <TrustBand />
+  ```
+
+**2) Bölüm başlığının altına açıklama paragrafı:**
+- [ ] FeaturesTabbed'in mevcut başlığının ("Tek Platformda 4 İçerik Türü" veya benzeri) altına şu açıklama paragrafını ekle:
+  `"Pazaryerlerinde ürün listelemek için metin, görsel, video ve sosyal içerik gerekir. Ayrı ayrı araçlarla uğraşmak yerine hepsini tek platformdan üretin."`
+  — Stil: text-gray-500, text-base veya text-lg, max-w-2xl mx-auto, text-center, mt-2 mb-6
+
+**3) Tab butonlarına cursor-pointer:**
+- [ ] FeaturesTabbed'deki 4 sekme butonuna `cursor-pointer` class'ı ekle. Hover state zaten varsa kontrol et, yoksa `hover:shadow-md transition-shadow` ekle.
+
+**4) Aktif tab ile içerik paneli arasında görsel bağlantı:**
+- [ ] Aktif sekme butonunun altından içerik paneline bir görsel bağlantı oluştur. Öneriler (en uygun olanı seç):
+  - Aktif sekmenin altına küçük bir üçgen/ok (CSS triangle, aktif sekme rengiyle) + içerik panelinin üst border'ı aynı renk
+  - VEYA aktif sekme butonunun alt kenar çizgisi (border-bottom 3px) + içerik panelinin üst kenar çizgisi aynı renk
+  - Renk: her sekmenin kendi ring/bg rengi (KUTULAR array'deki renkler)
+
+**5) Her sekmenin içeriğinin üstüne kısa açıklama metni:**
+- [ ] Her 4 sekmenin örneklerinin/grid'inin üstüne şu intro metinlerini ekle (text-gray-600, text-sm veya text-base):
+
+  **📝 Listing Metni (idx 0):**
+  `"Her pazaryerinin kendine özel karakter limiti, format kuralları ve yasaklı kelimeleri var. yzliste bunları bilir — platforma özel başlık, madde madde özellikler, SEO uyumlu açıklama ve arama etiketleri üretir."`
+
+  **📷 Stüdyo Görseli (idx 1):**
+  `"Tek bir ürün fotoğrafından profesyonel stüdyo görselleri oluşturun. Arka plan otomatik temizlenir, 7 farklı stüdyo stilinden seçin — ya da sahnenizi anlatın, kendi fonunuzu yükleyin."`
+
+  **🎬 Ürün Videosu (idx 2):**
+  `"Ürün fotoğrafınızdan AI ile tanıtım videosu oluşturun. 6 ön tanımlı hareket stilinden seçin ya da kendi yönetmenliğinizi yapın — Reels, TikTok, YouTube ve pazaryeri formatlarında."`
+
+  **📱 Sosyal Medya (idx 3):**
+  `"Her platform için ayrı formatta caption ve hashtag seti üretin. Instagram, TikTok, Facebook ve X — hepsi tek tıkla."`
+
+**Test:**
+- [x] Sayfa yüklenince FeaturesTabbed, HowItWorks'ün üstünde görünmeli
+- [x] Başlık altında açıklama paragrafı okunabilir
+- [x] Tab butonlarına hover'da cursor pointer görünmeli
+- [x] Aktif sekmenin altında görsel indicator/bağlantı var, renk sekmeye uygun
+- [x] Her sekmenin içerik alanının üstünde intro metni var
+- [x] CTA butonları hâlâ çalışıyor (LP-08'den kalan)
+- [x] Hash navigation hâlâ çalışıyor (#arac-metin vb.)
+
+**Dosyalar:** `app/_tanitim.tsx`, `components/tanitim/FeaturesTabbed.tsx`
+
+**Claude Code Promptu:**
+```
+LP-09: FeaturesTabbed UX İyileştirmesi — 5 değişiklik
+
+BACKLOG.md'deki "### LP-09" spec'ini oku ve 5 maddeyi sırayla uygula:
+
+1. app/_tanitim.tsx → FeaturesTabbed ve HowItWorks sırasını değiştir (FeaturesTabbed yukarı)
+2. FeaturesTabbed.tsx → Bölüm başlığının altına açıklama paragrafı ekle (metni BACKLOG'dan al)
+3. FeaturesTabbed.tsx → 4 sekme butonuna cursor-pointer ekle
+4. FeaturesTabbed.tsx → Aktif tab ile içerik paneli arasına görsel bağlantı (CSS triangle veya border, sekme rengiyle uyumlu)
+5. FeaturesTabbed.tsx → Her sekmenin içerik alanının üstüne intro metin ekle (metinleri BACKLOG'dan al)
+
+Mevcut LP-08 özelliklerini bozma: CTA butonları, hash navigation (#arac-metin vb.), anchor id="araclar".
+Her değişikliği yaptıktan sonra dosyayı kaydet, hepsini bitirince test talimatlarını çalıştır.
+```
+
 ---
 
 ## 🔄 ERTELE — Trafik Eşiği Gelince Aç
@@ -1300,4 +1500,4 @@ SC-02 "Discovered — currently not indexed" hâlâ 14 sayfa. Validation "Starte
 - `~%XX` notları kısmen tamamlanmış item'ları gösterir — bunları tamamla, sonra `[x]` yap.
 - Her küme tek PR değil. Küme içinde 3-5 PR olabilir ama aynı branch ailesinde.
 - `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

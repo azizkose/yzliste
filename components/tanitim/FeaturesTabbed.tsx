@@ -121,6 +121,8 @@ const KUTULAR = [
   { idx: 3, ikon: "📱", baslik: "Sosyal Medya", aciklama: "Caption + hashtag, tüm platformlar", kredi: "1 kredi / platform · Kit: 3 kredi", ring: "ring-emerald-400", bg: "bg-emerald-50", badge: "text-emerald-600 bg-emerald-100" },
 ];
 
+const BORDER_TOP_MAP = ["border-t-blue-400", "border-t-violet-400", "border-t-amber-400", "border-t-emerald-400"];
+
 export default function FeaturesTabbed() {
   const [ozellikTab, setOzellikTab] = useState(0);
   const [platformTab, setPlatformTab] = useState<PlatformKey>("trendyol");
@@ -151,7 +153,7 @@ export default function FeaturesTabbed() {
     <section id="araclar" className="px-4 sm:px-6 py-16 bg-gray-50">
       <div className="max-w-5xl mx-auto">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Tek platformda 4 içerik türü</h2>
-        <p className="text-center text-sm text-gray-400 mb-8">İhtiyacın olanı seç — örnek çıktıyı hemen gör</p>
+        <p className="text-center text-base text-gray-500 max-w-2xl mx-auto mt-2 mb-6">Pazaryerlerinde ürün listelemek için metin, görsel, video ve sosyal içerik gerekir. Ayrı ayrı araçlarla uğraşmak yerine hepsini tek platformdan üretin.</p>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
           {KUTULAR.map((k) => (
@@ -159,7 +161,7 @@ export default function FeaturesTabbed() {
               key={k.idx}
               type="button"
               onClick={() => setOzellikTab(k.idx)}
-              className={`text-left rounded-2xl border-2 overflow-hidden transition-all shadow-sm hover:shadow-md ${
+              className={`cursor-pointer text-left rounded-2xl border-2 overflow-hidden transition-all shadow-sm hover:shadow-md ${
                 ozellikTab === k.idx ? `border-transparent ring-2 ${k.ring} ${k.bg}` : "border-gray-100 bg-white hover:border-gray-200"
               }`}
             >
@@ -173,9 +175,10 @@ export default function FeaturesTabbed() {
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className={`bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden border-t-4 ${BORDER_TOP_MAP[ozellikTab]}`}>
           {ozellikTab === 0 && (
             <div className="p-5 sm:p-7">
+              <p className="text-sm text-gray-600 mb-4">Her pazaryerinin kendine özel karakter limiti, format kuralları ve yasaklı kelimeleri var. yzliste bunları bilir — platforma özel başlık, madde madde özellikler, SEO uyumlu açıklama ve arama etiketleri üretir.</p>
               <div className="flex gap-2 mb-1">
                 {(Object.keys(platformVerileri) as PlatformKey[]).map((key) => {
                   const p = platformVerileri[key];
@@ -229,6 +232,7 @@ export default function FeaturesTabbed() {
 
           {ozellikTab === 1 && (
             <div className="p-5 sm:p-7">
+              <p className="text-sm text-gray-600 mb-4">Tek bir ürün fotoğrafından profesyonel stüdyo görselleri oluşturun. Arka plan otomatik temizlenir, 7 farklı stüdyo stilinden seçin — ya da sahnenizi anlatın, kendi fonunuzu yükleyin.</p>
               <p className="text-sm font-semibold text-gray-700 mb-1">Tek fotoğraftan 7 farklı stüdyo stili</p>
               <p className="text-xs text-gray-400 mb-5">Stil başına 1 kredi · Üretimde düşer, indirme bedava</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -290,6 +294,7 @@ export default function FeaturesTabbed() {
 
           {ozellikTab === 2 && (
             <div className="p-5 sm:p-7">
+              <p className="text-sm text-gray-600 mb-4">Ürün fotoğrafınızdan AI ile tanıtım videosu oluşturun. 6 ön tanımlı hareket stilinden seçin ya da kendi yönetmenliğinizi yapın — Reels, TikTok, YouTube ve pazaryeri formatlarında.</p>
               <p className="text-sm font-semibold text-gray-700 mb-1">Ürün fotoğrafından tanıtım videosu</p>
               <p className="text-xs text-gray-400 mb-5">Ürünü hareket ettiren, platform uyumlu dikey/kare video — MP4 olarak indir</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
@@ -345,6 +350,7 @@ export default function FeaturesTabbed() {
 
           {ozellikTab === 3 && (
             <div className="p-5 sm:p-7">
+              <p className="text-sm text-gray-600 mb-4">Her platform için ayrı formatta caption ve hashtag seti üretin. Instagram, TikTok, Facebook ve X — hepsi tek tıkla.</p>
               <p className="text-sm font-semibold text-gray-700 mb-1">Platform uyumlu caption + hashtag seti</p>
               <p className="text-xs text-gray-400 mb-5">Instagram, TikTok, Facebook, Twitter/X — her platform için ayrı format · 1 kredi</p>
               <div className="flex gap-2 mb-4 flex-wrap">
