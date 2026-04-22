@@ -1399,6 +1399,122 @@ Mevcut LP-08 özelliklerini bozma: CTA butonları, hash navigation (#arac-metin 
 Her değişikliği yaptıktan sonra dosyayı kaydet, hepsini bitirince test talimatlarını çalıştır.
 ```
 
+### ✅ UX-01: Metin Üretme Sayfası UX Revize + Küçük Fixler — DONE
+
+**Bağlam:** Sahadan gelen feedback: kullanıcı metin üretme ekranında ne yapacağını anlamıyor. "Hızlı başla" kafa karıştırıyor, çok fazla alan var, küçük üretici hedef kitle/fiyat bilmiyor. Ayrıca markalı ürün checkbox'u kalkacak (sorumluluk satıcıda, sözleşmeye eklenir) ve video sekmesinde hareket tipi deselect bug'ı var.
+
+**8 Değişiklik:**
+
+**1) "Hızlı başla — bir örnek seç" bölümünü kaldır:**
+- [ ] `components/tabs/MetinSekmesi.tsx`'den "Hızlı başla" bölümünü (5 örnek kart) tamamen kaldır
+- [ ] Placeholder'ları zenginleştir — input alanlarının placeholder'ları zaten örnek veriyor, yeterli
+
+**2) Platform seçimini global yap (tüm sekmeler için):**
+- [ ] Platform dropdown'ı `MetinSekmesi.tsx`'den çıkar, üst seviyeye taşı (`app/uret/page.tsx` veya üretim layout'u)
+- [ ] Sekme başlıklarının (Metin/Görsel/Video/Sosyal) hemen altına, fotoğraf yükleme alanının üstüne yerleştir
+- [ ] Platform state'i parent'tan prop veya context ile tüm sekmelere geçir
+- [ ] Mevcut platform bilgisi (karakter limitleri, kurallar vb.) platform dropdown'un hemen altında kısa badge olarak gösterilsin
+- [ ] Varsayılan: "Trendyol"
+
+**3) Ürün bilgisi akışını sadeleştir — "Ek bilgi" ve "Anahtar kelimeler" tek kutu:**
+- [ ] "Ek Bilgi" ve "Anahtar Kelimeler" alanlarını tek textarea'ya birleştir
+- [ ] Yeni label: "Ürün Detayları"
+- [ ] Placeholder: "Renk, beden, malzeme, öne çıkan özellikler, arama kelimeleri — ne kadar detay girersen içerik o kadar iyi olur"
+- [ ] Prompt tarafında AI zaten ürün özelliği ile SEO kelimesini ayırt edebilir, backend değişikliği gerekmez
+
+**4) "Gelişmiş Ayarlar" collapse bölümü:**
+- [ ] Hedef Kitle, Fiyat Segmenti ve (ileride eklenecek) gelişmiş seçenekleri varsayılan kapalı bir `<details>` veya collapse bölümüne al
+- [ ] Başlık: "▸ Daha fazla seçenek" (tıklayınca açılır)
+- [ ] Varsayılanlar: Hedef Kitle = "Genel", Fiyat Segmenti = "Orta" — kullanıcı dokunmazsa bunlar gider
+- [ ] Collapse açıkken "▾ Daha fazla seçenek", kapalıyken "▸ Daha fazla seçenek"
+
+**5) Sol tarafta step indicator (sadece desktop):**
+- [ ] Masaüstünde (lg: ve üzeri) form'un soluna dikey step indicator ekle:
+  ```
+  ① Platform seç     ← üstte zaten seçili, tik
+  ② Ürün bilgisi     ← aktif adım (vurgulu)
+  ③ Üret             ← henüz yapılmadı (soluk)
+  ```
+- [ ] Aktif adım: bold + accent renk, tamamlanan adım: tik işareti + yeşil
+- [ ] Tıklanabilir olmasına gerek yok — sadece görsel rehber
+- [ ] Mobilde (lg: altı) gösterme — ekran dar, gereksiz alan kaplar
+
+**6) Markalı ürün checkbox'unu kaldır:**
+- [ ] `components/tabs/MetinSekmesi.tsx`'den "Bu ürün markalı ve ben yetkili satıcıyım" checkbox'unu ve ilgili state'i (`markaliUrun`) kaldır
+- [ ] Prompt'a giden payload'dan `markaliUrun` alanını çıkar (veya her zaman false gönder)
+- [ ] API route'da `markaliUrun` parametresini opsiyonel yap (backward compat)
+
+**7) Video hareket tipi deselect fix:**
+- [ ] `components/tabs/VideoSekmesi.tsx`'de hareket tipi butonlarının onClick handler'ını toggle mantığına çevir:
+  ```tsx
+  onClick={() => {
+    if (videoPrompt === p.deger) {
+      setVideoPrompt("");
+      setVideoPromptGoster("");
+    } else {
+      setVideoPrompt(p.deger);
+      setVideoPromptGoster(p.goster);
+    }
+  }}
+  ```
+- [ ] Deselect olunca border ve bg rengi normal (seçili olmayan) haline dönmeli
+
+**8) Giriş tipi seçimini (manuel/foto/barkod) ürün bilgisi alanına göm:**
+- [ ] Mevcut 4'lü giriş tipi butonlarını (✏️ Manuel / 📷 Fotoğraf / 🔍 Barkod / 📊 Excel) ürün adı alanının hemen üstüne taşı
+- [ ] Daha kompakt stil: küçük chip/pill butonlar, büyük kartlar değil
+- [ ] Excel seçeneği hâlâ `/toplu` sayfasına yönlendirsin
+
+**Yeni form sırası (metin sekmesi):**
+```
+[Platform seçimi — tüm sekmelerde ortak, üstte]
+
+Sol (desktop):        Sağ (form):
+① Platform ✓          Giriş tipi: [Manuel] [Foto] [Barkod] [Excel→]
+② Ürün bilgisi ●      Ürün Adı* _______________
+③ Üret ○              Kategori (opsiyonel) _______________
+                      Ürün Detayları (eski ek bilgi + keywords) ___________
+                      ▸ Daha fazla seçenek
+                        Hedef Kitle [Genel ▾]  Fiyat [💰 ⚖️ 👑]
+                      
+                      [✨ Metin Üret — 1 kredi]
+```
+
+**Test:**
+- [x] Hızlı başla örnekleri görünmemeli
+- [x] Platform seçimi sekme başlıklarının altında, tüm sekmelerde görünür
+- [x] Ek bilgi + anahtar kelimeler tek "Ürün Detayları" alanı
+- [x] Hedef kitle ve fiyat "Daha fazla seçenek" altında, varsayılan kapalı
+- [x] Desktop'ta sol step indicator görünür, mobilde gizli
+- [x] Markalı ürün checkbox'u yok
+- [x] Video sekmesinde hareket tipine tıkla → seçilir, tekrar tıkla → deselect olur
+- [x] Giriş tipi butonları kompakt, ürün adının üstünde
+- [x] Mevcut üretim akışı çalışıyor (form submit → API → sonuç)
+- [x] Platform değiştirince tüm sekmelerde güncelleniyor
+
+**Dosyalar:** `app/uret/page.tsx`, `components/tabs/MetinSekmesi.tsx`, `components/tabs/VideoSekmesi.tsx`, ilgili hook/context dosyaları
+
+**Claude Code Promptu:**
+```
+UX-01: Metin Üretme Sayfası UX Revize + Fixler — 8 değişiklik
+
+BACKLOG.md'deki "### UX-01" spec'ini oku ve 8 maddeyi sırayla uygula.
+
+ÖNCELİK SIRASI:
+1. Video deselect fix (küçük, bağımsız — hemen yap)
+2. Markalı ürün checkbox kaldır (küçük, bağımsız)
+3. Platform seçimini global yap (mimari değişiklik — önce yap)
+4. Hızlı başla kaldır
+5. Ek bilgi + anahtar kelimeler birleştir
+6. Gelişmiş ayarlar collapse
+7. Giriş tipi butonlarını göm
+8. Sol step indicator (desktop only)
+
+Her adımda:
+- Dosyayı kaydet ve lint hatası olmadığını kontrol et
+- Mevcut üretim akışını bozma
+- State yönetimini kontrol et (platform prop/context geçişi)
+```
+
 ---
 
 ## 🔄 ERTELE — Trafik Eşiği Gelince Aç
@@ -1500,4 +1616,4 @@ SC-02 "Discovered — currently not indexed" hâlâ 14 sayfa. Validation "Starte
 - `~%XX` notları kısmen tamamlanmış item'ları gösterir — bunları tamamla, sonra `[x]` yap.
 - Her küme tek PR değil. Küme içinde 3-5 PR olabilir ama aynı branch ailesinde.
 - `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             

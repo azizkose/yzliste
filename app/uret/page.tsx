@@ -9,6 +9,7 @@ import { analytics } from "@/lib/analytics";
 import AuthForm from "@/components/auth/AuthForm";
 import { resizeFoto } from "@/lib/listing-utils";
 import type { Kullanici } from "@/lib/listing-utils";
+import { PLATFORM_BILGI } from "@/lib/constants";
 import PaketModal from "@/components/PaketModal";
 import ChatWidget from "@/components/ChatWidget";
 import MetinSekmesi from "@/components/tabs/MetinSekmesi";
@@ -263,6 +264,29 @@ export default function Home() {
         )}
 
         <div className="flex gap-6 items-start flex-col lg:flex-row">
+
+          {/* Step indicator — desktop only */}
+          <div className="hidden lg:flex flex-col gap-4 w-24 flex-shrink-0 pt-4 sticky top-4 self-start">
+            {[
+              { n: 1, label: "Platform seç", done: true, active: false },
+              { n: 2, label: "Ürün bilgisi", done: !!metin.sonuc, active: !metin.sonuc },
+              { n: 3, label: "Üret", done: !!metin.sonuc, active: false },
+            ].map((step) => (
+              <div key={step.n} className="flex items-start gap-2">
+                <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5 ${
+                  step.done ? "bg-emerald-100 text-emerald-600" : step.active ? "bg-indigo-500 text-white" : "bg-gray-100 text-gray-400"
+                }`}>
+                  {step.done ? "✓" : step.n}
+                </div>
+                <span className={`text-xs leading-tight ${
+                  step.done ? "text-emerald-600 font-medium" : step.active ? "text-indigo-700 font-semibold" : "text-gray-400"
+                }`}>
+                  {step.label}
+                </span>
+              </div>
+            ))}
+          </div>
+
           <div className="flex-1 w-full">
 
             {/* SEKMELER */}
@@ -287,6 +311,42 @@ export default function Home() {
                   {!s.aktif && <span className="block text-xs font-normal opacity-70">yakında</span>}
                 </button>
               ))}
+            </div>
+
+            {/* GLOBAL PLATFORM SEÇİMİ */}
+            <div className="mt-3 bg-white rounded-2xl shadow p-4">
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700 whitespace-nowrap flex-shrink-0">Platform</label>
+                <select
+                  value={metin.platform}
+                  onChange={(e) => { metin.setPlatform(e.target.value); metin.setDil(PLATFORM_BILGI[e.target.value]?.dil || "tr"); }}
+                  className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                  <optgroup label="🇹🇷 Türk Pazaryerleri">
+                    <option value="trendyol">Trendyol</option>
+                    <option value="hepsiburada">Hepsiburada</option>
+                    <option value="amazon">Amazon TR</option>
+                    <option value="n11">N11</option>
+                  </optgroup>
+                  <optgroup label="🌍 Yabancı Pazaryerleri (İngilizce)">
+                    <option value="etsy">Etsy</option>
+                    <option value="amazon_usa">Amazon USA</option>
+                  </optgroup>
+                </select>
+              </div>
+              {(() => {
+                const pb = PLATFORM_BILGI[metin.platform] || PLATFORM_BILGI.trendyol;
+                const platformDil = pb.dil || "tr";
+                return (
+                  <div className={`mt-2 flex flex-wrap gap-2 text-xs px-3 py-1.5 rounded-lg border ${pb.renk}`}>
+                    <span>📌 Max {pb.baslikLimit} karakter başlık</span>
+                    {pb.ozellikSayisi > 0 && <><span>·</span><span>🔹 {pb.ozellikSayisi} özellik</span></>}
+                    {pb.etiketSayisi > 0 && <><span>·</span><span>🏷️ {pb.etiketSayisi} etiket</span></>}
+                    <span>·</span>
+                    <span>{platformDil === "en" ? "🇬🇧 İngilizce çıktı" : "🇹🇷 Türkçe çıktı"}</span>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* PAYLAŞILAN ÜRÜN FOTOĞRAFI */}
@@ -334,14 +394,12 @@ export default function Home() {
             <MetinSekmesi
               aktif={anaSekme === "metin"}
               girisTipi={metin.girisTipi} setGirisTipi={metin.setGirisTipi}
-              platform={metin.platform} setPlatform={metin.setPlatform} setDil={metin.setDil}
+              platform={metin.platform}
               urunAdi={metin.urunAdi} setUrunAdi={metin.setUrunAdi}
               kategori={metin.kategori} setKategori={metin.setKategori}
               ozellikler={metin.ozellikler} setOzellikler={metin.setOzellikler}
               hedefKitle={metin.hedefKitle} setHedefKitle={metin.setHedefKitle}
               fiyatSegmenti={metin.fiyatSegmenti} setFiyatSegmenti={metin.setFiyatSegmenti}
-              anahtarKelimeler={metin.anahtarKelimeler} setAnahtarKelimeler={metin.setAnahtarKelimeler}
-              markaliUrun={metin.markaliUrun} setMarkaliUrun={metin.setMarkaliUrun}
               fotolar={fotolar} fotoKaldir={fotoKaldir}
               kameraAcik={metin.kameraAcik} kameraAc={metin.kameraAc} kameraKapat={metin.kameraKapat}
               barkodYukleniyor={metin.barkodYukleniyor} barkodBilgi={metin.barkodBilgi} setBarkodBilgi={metin.setBarkodBilgi}

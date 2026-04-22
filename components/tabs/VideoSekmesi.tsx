@@ -134,7 +134,10 @@ export default function VideoSekmesi({
           return (
             <div className="grid grid-cols-2 gap-2 mb-2">
               {gosterilecekler.map((p) => (
-                <button key={p.etiket} onClick={() => { setVideoPrompt(p.deger); setVideoPromptGoster(p.goster); }}
+                <button key={p.etiket} onClick={() => {
+                    if (videoPrompt === p.deger) { setVideoPrompt(""); setVideoPromptGoster(""); }
+                    else { setVideoPrompt(p.deger); setVideoPromptGoster(p.goster); }
+                  }}
                   className={`text-left p-2.5 rounded-xl border-2 transition-all ${videoPrompt === p.deger ? "border-amber-400 bg-amber-50" : "border-gray-200 hover:border-amber-200 hover:bg-amber-50/50"}`}>
                   <p className={`text-xs font-semibold ${videoPrompt === p.deger ? "text-amber-700" : "text-gray-700"}`}>{p.ikon} {p.etiket}</p>
                   <p className="text-[10px] text-gray-500 mt-0.5 leading-relaxed">{p.aciklama}</p>
