@@ -33,7 +33,7 @@ export default function AuthForm({ defaultMode = 'kayit', redirectTo = '/', onSu
   const [yukleniyor, setYukleniyor] = useState(false)
   const [sifreSifirlamaGonderildi, setSifreSifirlamaGonderildi] = useState(false)
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
-  const turnstileEnabled = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+  const turnstileEnabled = false
   const router = useRouter()
   const queryClient = useQueryClient()
 
