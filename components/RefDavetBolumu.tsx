@@ -22,7 +22,7 @@ export default function RefDavetBolumu({ userId }: { userId: string }) {
 
   const link = `${typeof window !== "undefined" ? window.location.origin : "https://yzliste.com"}/r/${stats.referralCode}`;
   const whatsappMetin = encodeURIComponent(
-    `yzliste.com ile pazaryeri içeriklerimi AI ile üretiyorum. Bu linkle kayıt ol, ilk satın almanda ikinize +10 kredi hediye 🎁 ${link}`
+    `yzliste.com ile pazaryeri içeriklerimi AI ile üretiyorum. Bu linkle kayıt ol, ilk satın almanda ikimiz de +10 kredi kazanalım 🎁 ${link}`
   );
   const twitterMetin = encodeURIComponent(
     `yzliste ile e-ticaret içeriklerimi AI üretiyor. İlk satın almanda ikinize +10 kredi hediye! ${link}`
