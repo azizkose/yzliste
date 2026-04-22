@@ -90,9 +90,18 @@ setYukleniyor(true)
     }
 
     if (mod === 'kayit') {
-      const { error } = await supabase.auth.signUp({ email, password: sifre })
+      const { data: signUpData, error } = await supabase.auth.signUp({ email, password: sifre })
       if (error) { setMesaj(turkceHata(error.message)) }
       else {
+        // REF-01: referral cookie varsa link
+        const refCode = document.cookie.match(/(?:^|;\s*)ref_code=([^;]+)/)?.[1]
+        if (refCode && signUpData.user?.id) {
+          fetch('/api/referral/link', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: signUpData.user.id, refCode }),
+          }).catch(() => {}) // fire and forget
+        }
         setMesaj('Kayıt başarılı! E-postanızı doğrulayın.')
       }
     } else {

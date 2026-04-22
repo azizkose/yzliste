@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { useCredits } from '@/lib/hooks/useCredits'
 import { useCurrentUser } from '@/lib/hooks/useCurrentUser'
+import RefDavetBolumu from '@/components/RefDavetBolumu'
 
 const PLATFORM_ETIKET: Record<string, string> = {
   trendyol: 'Trendyol',
@@ -182,6 +183,9 @@ export default function HesapPage() {
             </Link>
           </div>
         )}
+
+        {/* Davet programı */}
+        {currentUser?.id && <RefDavetBolumu userId={currentUser.id} />}
 
         {/* Hızlı linkler */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">

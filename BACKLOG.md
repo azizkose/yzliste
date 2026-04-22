@@ -383,6 +383,43 @@ Derin prompt engine analizinden çıkan 14 bulgu. Detaylı rapor: `yzliste test/
 
 ---
 
+## 🧹 RF-01: Dead Code + Proje Hijyeni Temizliği (P2 — 15dk)
+
+**Kaynak:** Kod sağlığı audit'i (22 Nisan 2026)
+
+**3 Temizlik:**
+
+1. **Orphan dosya sil:** `/uret_route.ts` — proje kökünde 347 satırlık eski route handler kopyası. Aktif route `app/api/uret/route.ts`'de. Bu dosya hiçbir yerden import edilmiyor.
+   - [ ] `/uret_route.ts` dosyasını sil
+
+2. **Unused component sil:** `/components/tanitim/FeatureCards.tsx` — LP-07'de `_tanitim.tsx`'den kaldırıldı ama dosya hâlâ duruyor. Hiçbir yerden import edilmiyor.
+   - [ ] `components/tanitim/FeatureCards.tsx` dosyasını sil
+
+3. **gitignore güncelle:** `tsconfig.tsbuildinfo` dosyası git'e girmamalı (build artifact).
+   - [ ] `.gitignore`'a `tsconfig.tsbuildinfo` ekle
+   - [ ] Zaten git'teyse: `git rm --cached tsconfig.tsbuildinfo`
+
+**Test:**
+- [ ] `npm run build` hatasız tamamlanıyor
+- [ ] `npm run lint` geçiyor
+- [ ] Silinen dosyalara referans kalmamış (grep ile doğrula)
+
+**Dosyalar:** `/uret_route.ts` (sil), `components/tanitim/FeatureCards.tsx` (sil), `.gitignore`
+
+**Claude Code Promptu:**
+```
+RF-01: Dead code temizliği — 3 adım
+
+1. /uret_route.ts dosyasını sil (proje kökündeki orphan route handler, 347 satır)
+2. components/tanitim/FeatureCards.tsx dosyasını sil (LP-07'de kullanımdan kaldırıldı)
+3. .gitignore'a tsconfig.tsbuildinfo ekle, varsa git rm --cached
+
+Silmeden önce her dosyanın gerçekten hiçbir yerden import edilmediğini grep ile doğrula.
+Sonra npm run build && npm run lint çalıştır.
+```
+
+---
+
 ## 🚀 YENİ ÖZELLİKLER + ALTYAPI — Claude Code İçin (19 Nisan 2026)
 
 ### NF-01: Video Kling 3.0 Pro + Ses Desteği (P3 — gelecek, öncelikli değil)
@@ -1199,7 +1236,7 @@ Claude Code commit → preview branch → Vercel Preview URL (test)
 
 **DoD (KÜME 12):** Hero'da 4 aksiyon kartı tıklanıyor ve doğru tab'a yönlendiriyor. HowItWorks hero'nun hemen altında. FAQ accordion açılıp kapanıyor. Trust band footer üstünde görünüyor. Video kredi bilgisi doğru (10/20).
 
-### LP-08: Header'a "Araçlar" Dropdown Menü + FeaturesTabbed CTA + Zenginleştirme (P1 — 2-3 saat)
+### ✅ LP-08: Header'a "Araçlar" Dropdown Menü + FeaturesTabbed CTA + Zenginleştirme (P1 — 2-3 saat) — DONE
 
 **Amaç:** Ziyaretçi siteye girince "ne yapabilirim" sorusunu header'dan 1 tıkla cevaplayabilsin. Dropdown'dan direkt araca gidebilsin, merak ederse detay bölümüne scroll etsin, oradaki detayı okuyunca da "Hemen Dene" CTA'sıyla üretime geçebilsin.
 
@@ -1291,7 +1328,7 @@ Mobil hamburger menüde: "Araçlar" tıklayınca accordion açılır, 4 alt madd
 
 **Dosyalar:** `components/SiteHeader.tsx`, `components/tanitim/FeaturesTabbed.tsx`, `app/_tanitim.tsx` (section id)
 
-### LP-07: Landing Page Tekrar Temizliği (P1 — 30dk)
+### ✅ LP-07: Landing Page Tekrar Temizliği (P1) — DONE (dosya silme RF-01'e taşındı)
 **Sorun:** Aynı 4 içerik türü (metin, görsel, video, sosyal medya) sayfada 4 kez tekrarlanıyor:
 1. AuthHero — 4 aksiyon kartı (📝📷🎬📱)
 2. HowItWorks — alt başlıkta "Metin, görsel, video, sosyal medya"
@@ -1326,300 +1363,466 @@ Kullanıcı sayfanın yarısına gelmeden "bunu zaten gördüm" hissediyor.
 **Dosyalar:** `app/_tanitim.tsx`, `components/tanitim/BenefitsGrid.tsx`, `components/tanitim/FeatureCards.tsx` (kullanılmayan dosya kalabilir veya silinebilir)
 
 ### ✅ LP-09: FeaturesTabbed UX İyileştirmesi — DONE
-
-**Amaç:** FeaturesTabbed bölümünü daha erişilebilir, anlaşılır ve etkileşimli hale getirmek. Kullanıcı sekmelerin tıklanabilir olduğunu hemen anlamalı, aktif sekmenin içerikle bağlantısı görsel olarak belli olmalı, her sekmenin ne yaptığı örneklerden önce kısa bir açıklamayla verilmeli.
-
-**5 Değişiklik:**
-
-**1) Bölüm sırası değişikliği:**
-- [ ] `app/_tanitim.tsx`'de `<FeaturesTabbed />` ile `<HowItWorks />` yer değiştirsin:
-  ```
-  <AuthHero />
-  <FeaturesTabbed />   ← yukarı taşındı
-  <HowItWorks />       ← aşağı taşındı
-  <BrandProfile />
-  <BenefitsGrid />
-  <LandingFAQ />
-  <TrustBand />
-  ```
-
-**2) Bölüm başlığının altına açıklama paragrafı:**
-- [ ] FeaturesTabbed'in mevcut başlığının ("Tek Platformda 4 İçerik Türü" veya benzeri) altına şu açıklama paragrafını ekle:
-  `"Pazaryerlerinde ürün listelemek için metin, görsel, video ve sosyal içerik gerekir. Ayrı ayrı araçlarla uğraşmak yerine hepsini tek platformdan üretin."`
-  — Stil: text-gray-500, text-base veya text-lg, max-w-2xl mx-auto, text-center, mt-2 mb-6
-
-**3) Tab butonlarına cursor-pointer:**
-- [ ] FeaturesTabbed'deki 4 sekme butonuna `cursor-pointer` class'ı ekle. Hover state zaten varsa kontrol et, yoksa `hover:shadow-md transition-shadow` ekle.
-
-**4) Aktif tab ile içerik paneli arasında görsel bağlantı:**
-- [ ] Aktif sekme butonunun altından içerik paneline bir görsel bağlantı oluştur. Öneriler (en uygun olanı seç):
-  - Aktif sekmenin altına küçük bir üçgen/ok (CSS triangle, aktif sekme rengiyle) + içerik panelinin üst border'ı aynı renk
-  - VEYA aktif sekme butonunun alt kenar çizgisi (border-bottom 3px) + içerik panelinin üst kenar çizgisi aynı renk
-  - Renk: her sekmenin kendi ring/bg rengi (KUTULAR array'deki renkler)
-
-**5) Her sekmenin içeriğinin üstüne kısa açıklama metni:**
-- [ ] Her 4 sekmenin örneklerinin/grid'inin üstüne şu intro metinlerini ekle (text-gray-600, text-sm veya text-base):
-
-  **📝 Listing Metni (idx 0):**
-  `"Her pazaryerinin kendine özel karakter limiti, format kuralları ve yasaklı kelimeleri var. yzliste bunları bilir — platforma özel başlık, madde madde özellikler, SEO uyumlu açıklama ve arama etiketleri üretir."`
-
-  **📷 Stüdyo Görseli (idx 1):**
-  `"Tek bir ürün fotoğrafından profesyonel stüdyo görselleri oluşturun. Arka plan otomatik temizlenir, 7 farklı stüdyo stilinden seçin — ya da sahnenizi anlatın, kendi fonunuzu yükleyin."`
-
-  **🎬 Ürün Videosu (idx 2):**
-  `"Ürün fotoğrafınızdan AI ile tanıtım videosu oluşturun. 6 ön tanımlı hareket stilinden seçin ya da kendi yönetmenliğinizi yapın — Reels, TikTok, YouTube ve pazaryeri formatlarında."`
-
-  **📱 Sosyal Medya (idx 3):**
-  `"Her platform için ayrı formatta caption ve hashtag seti üretin. Instagram, TikTok, Facebook ve X — hepsi tek tıkla."`
-
-**Test:**
-- [x] Sayfa yüklenince FeaturesTabbed, HowItWorks'ün üstünde görünmeli
-- [x] Başlık altında açıklama paragrafı okunabilir
-- [x] Tab butonlarına hover'da cursor pointer görünmeli
-- [x] Aktif sekmenin altında görsel indicator/bağlantı var, renk sekmeye uygun
-- [x] Her sekmenin içerik alanının üstünde intro metni var
-- [x] CTA butonları hâlâ çalışıyor (LP-08'den kalan)
-- [x] Hash navigation hâlâ çalışıyor (#arac-metin vb.)
-
-**Dosyalar:** `app/_tanitim.tsx`, `components/tanitim/FeaturesTabbed.tsx`
-
-**Claude Code Promptu:**
-```
-LP-09: FeaturesTabbed UX İyileştirmesi — 5 değişiklik
-
-BACKLOG.md'deki "### LP-09" spec'ini oku ve 5 maddeyi sırayla uygula:
-
-1. app/_tanitim.tsx → FeaturesTabbed ve HowItWorks sırasını değiştir (FeaturesTabbed yukarı)
-2. FeaturesTabbed.tsx → Bölüm başlığının altına açıklama paragrafı ekle (metni BACKLOG'dan al)
-3. FeaturesTabbed.tsx → 4 sekme butonuna cursor-pointer ekle
-4. FeaturesTabbed.tsx → Aktif tab ile içerik paneli arasına görsel bağlantı (CSS triangle veya border, sekme rengiyle uyumlu)
-5. FeaturesTabbed.tsx → Her sekmenin içerik alanının üstüne intro metin ekle (metinleri BACKLOG'dan al)
-
-Mevcut LP-08 özelliklerini bozma: CTA butonları, hash navigation (#arac-metin vb.), anchor id="araclar".
-Her değişikliği yaptıktan sonra dosyayı kaydet, hepsini bitirince test talimatlarını çalıştır.
-```
+5 değişiklik (sıra, açıklama paragrafı, cursor-pointer, aktif tab bağlantısı, intro metinleri). Detay: `BACKLOG-DONE.md`
 
 ### ✅ UX-01: Metin Üretme Sayfası UX Revize + Küçük Fixler — DONE
+8 değişiklik (hızlı başla kaldırıldı, global platform, alanlar birleştirildi, collapse, step indicator, marka checkbox kaldır, video deselect fix, kompakt input tipi). Detay: `BACKLOG-DONE.md`
 
-**Bağlam:** Sahadan gelen feedback: kullanıcı metin üretme ekranında ne yapacağını anlamıyor. "Hızlı başla" kafa karıştırıyor, çok fazla alan var, küçük üretici hedef kitle/fiyat bilmiyor. Ayrıca markalı ürün checkbox'u kalkacak (sorumluluk satıcıda, sözleşmeye eklenir) ve video sekmesinde hareket tipi deselect bug'ı var.
+### ✅ KF-04: kredi-yukle Sayfası Fiyat Tutarsızlığı (P0) — DONE
+Hardcoded 29/79/149 TL → `PAKET_LISTESI` import'una çevrildi. Detay: `BACKLOG-DONE.md`
 
-**8 Değişiklik:**
+### ✅ UX-01b: Metin Sekmesi UX Düzeltmeleri (P1) — DONE
+7 değişiklik (step indicator kaldır, kategori zorunlu, platform badge tüm sekmelere, fotoğraf mesajı, görsel kutu kaldır, sosyal=metin kalıbı, video=görsel kalıbı). Detay: `BACKLOG-DONE.md`
 
-**1) "Hızlı başla — bir örnek seç" bölümünü kaldır:**
-- [ ] `components/tabs/MetinSekmesi.tsx`'den "Hızlı başla" bölümünü (5 örnek kart) tamamen kaldır
-- [ ] Placeholder'ları zenginleştir — input alanlarının placeholder'ları zaten örnek veriyor, yeterli
+### FY-01: Fiyat Artışı — 49 / 129 / 299 TL (P1 — 10dk)
 
-**2) Platform seçimini global yap (tüm sekmeler için):**
-- [ ] Platform dropdown'ı `MetinSekmesi.tsx`'den çıkar, üst seviyeye taşı (`app/uret/page.tsx` veya üretim layout'u)
-- [ ] Sekme başlıklarının (Metin/Görsel/Video/Sosyal) hemen altına, fotoğraf yükleme alanının üstüne yerleştir
-- [ ] Platform state'i parent'tan prop veya context ile tüm sekmelere geçir
-- [ ] Mevcut platform bilgisi (karakter limitleri, kurallar vb.) platform dropdown'un hemen altında kısa badge olarak gösterilsin
-- [ ] Varsayılan: "Trendyol"
+**Bağlam:** Enflasyon telafisi + strateji raporu önerisi. Mevcut fiyatlar (39/99/249) reel olarak aşınmış. Tek seferlik kredi satışı olduğu için kullanıcı direnci düşük.
 
-**3) Ürün bilgisi akışını sadeleştir — "Ek bilgi" ve "Anahtar kelimeler" tek kutu:**
-- [ ] "Ek Bilgi" ve "Anahtar Kelimeler" alanlarını tek textarea'ya birleştir
-- [ ] Yeni label: "Ürün Detayları"
-- [ ] Placeholder: "Renk, beden, malzeme, öne çıkan özellikler, arama kelimeleri — ne kadar detay girersen içerik o kadar iyi olur"
-- [ ] Prompt tarafında AI zaten ürün özelliği ile SEO kelimesini ayırt edebilir, backend değişikliği gerekmez
-
-**4) "Gelişmiş Ayarlar" collapse bölümü:**
-- [ ] Hedef Kitle, Fiyat Segmenti ve (ileride eklenecek) gelişmiş seçenekleri varsayılan kapalı bir `<details>` veya collapse bölümüne al
-- [ ] Başlık: "▸ Daha fazla seçenek" (tıklayınca açılır)
-- [ ] Varsayılanlar: Hedef Kitle = "Genel", Fiyat Segmenti = "Orta" — kullanıcı dokunmazsa bunlar gider
-- [ ] Collapse açıkken "▾ Daha fazla seçenek", kapalıyken "▸ Daha fazla seçenek"
-
-**5) Sol tarafta step indicator (sadece desktop):**
-- [ ] Masaüstünde (lg: ve üzeri) form'un soluna dikey step indicator ekle:
-  ```
-  ① Platform seç     ← üstte zaten seçili, tik
-  ② Ürün bilgisi     ← aktif adım (vurgulu)
-  ③ Üret             ← henüz yapılmadı (soluk)
-  ```
-- [ ] Aktif adım: bold + accent renk, tamamlanan adım: tik işareti + yeşil
-- [ ] Tıklanabilir olmasına gerek yok — sadece görsel rehber
-- [ ] Mobilde (lg: altı) gösterme — ekran dar, gereksiz alan kaplar
-
-**6) Markalı ürün checkbox'unu kaldır:**
-- [ ] `components/tabs/MetinSekmesi.tsx`'den "Bu ürün markalı ve ben yetkili satıcıyım" checkbox'unu ve ilgili state'i (`markaliUrun`) kaldır
-- [ ] Prompt'a giden payload'dan `markaliUrun` alanını çıkar (veya her zaman false gönder)
-- [ ] API route'da `markaliUrun` parametresini opsiyonel yap (backward compat)
-
-**7) Video hareket tipi deselect fix:**
-- [ ] `components/tabs/VideoSekmesi.tsx`'de hareket tipi butonlarının onClick handler'ını toggle mantığına çevir:
-  ```tsx
-  onClick={() => {
-    if (videoPrompt === p.deger) {
-      setVideoPrompt("");
-      setVideoPromptGoster("");
-    } else {
-      setVideoPrompt(p.deger);
-      setVideoPromptGoster(p.goster);
-    }
-  }}
-  ```
-- [ ] Deselect olunca border ve bg rengi normal (seçili olmayan) haline dönmeli
-
-**8) Giriş tipi seçimini (manuel/foto/barkod) ürün bilgisi alanına göm:**
-- [ ] Mevcut 4'lü giriş tipi butonlarını (✏️ Manuel / 📷 Fotoğraf / 🔍 Barkod / 📊 Excel) ürün adı alanının hemen üstüne taşı
-- [ ] Daha kompakt stil: küçük chip/pill butonlar, büyük kartlar değil
-- [ ] Excel seçeneği hâlâ `/toplu` sayfasına yönlendirsin
-
-**Yeni form sırası (metin sekmesi):**
-```
-[Platform seçimi — tüm sekmelerde ortak, üstte]
-
-Sol (desktop):        Sağ (form):
-① Platform ✓          Giriş tipi: [Manuel] [Foto] [Barkod] [Excel→]
-② Ürün bilgisi ●      Ürün Adı* _______________
-③ Üret ○              Kategori (opsiyonel) _______________
-                      Ürün Detayları (eski ek bilgi + keywords) ___________
-                      ▸ Daha fazla seçenek
-                        Hedef Kitle [Genel ▾]  Fiyat [💰 ⚖️ 👑]
-                      
-                      [✨ Metin Üret — 1 kredi]
-```
+**Değişiklik:**
+- [ ] `lib/paketler.ts`'de fiyatları güncelle:
+  - Başlangıç: 39 → **49 TL** (10 kredi, birim 4,90 TL)
+  - Popüler: 99 → **129 TL** (30 kredi, birim 4,30 TL)
+  - Büyük: 249 → **299 TL** (100 kredi, birim 2,99 TL)
+- [ ] `app/fiyatlar/page.tsx`'deki senaryo tablosunda hardcoded fiyat varsa güncelle
+- [ ] KF-04 tamamlandığı için diğer tüm sayfalar otomatik güncellenir (PaketModal, kredi-yukle, API)
+- [ ] **CB-01 chatbot system prompt'unu da güncelle:** `components/ChatWidget.tsx`'deki fiyat bilgisi hâlâ 39/99/249 TL diyor — yeni fiyatlarla (49/129/299) değiştirilmeli
 
 **Test:**
-- [x] Hızlı başla örnekleri görünmemeli
-- [x] Platform seçimi sekme başlıklarının altında, tüm sekmelerde görünür
-- [x] Ek bilgi + anahtar kelimeler tek "Ürün Detayları" alanı
-- [x] Hedef kitle ve fiyat "Daha fazla seçenek" altında, varsayılan kapalı
-- [x] Desktop'ta sol step indicator görünür, mobilde gizli
-- [x] Markalı ürün checkbox'u yok
-- [x] Video sekmesinde hareket tipine tıkla → seçilir, tekrar tıkla → deselect olur
-- [x] Giriş tipi butonları kompakt, ürün adının üstünde
-- [x] Mevcut üretim akışı çalışıyor (form submit → API → sonuç)
-- [x] Platform değiştirince tüm sekmelerde güncelleniyor
+- [ ] /fiyatlar sayfasında yeni fiyatlar görünmeli
+- [ ] PaketModal'da yeni fiyatlar görünmeli
+- [ ] kredi-yukle sayfasında yeni fiyatlar görünmeli
+- [ ] iyzico ödeme 49/129/299 TL üzerinden işlenmeli
+- [ ] Birim fiyat hesapları doğru gösterilmeli
 
-**Dosyalar:** `app/uret/page.tsx`, `components/tabs/MetinSekmesi.tsx`, `components/tabs/VideoSekmesi.tsx`, ilgili hook/context dosyaları
+**Dosyalar:** `lib/paketler.ts`, `app/fiyatlar/page.tsx` (senaryo tablosu)
 
 **Claude Code Promptu:**
 ```
-UX-01: Metin Üretme Sayfası UX Revize + Fixler — 8 değişiklik
+FY-01: Fiyat artışı — paketler.ts güncelle
 
-BACKLOG.md'deki "### UX-01" spec'ini oku ve 8 maddeyi sırayla uygula.
+lib/paketler.ts'de 3 paketin fiyatlarını güncelle:
+- Başlangıç: 39 → 49 TL
+- Popüler: 99 → 129 TL
+- Büyük: 249 → 299 TL
+
+Kredi miktarları aynı kalıyor (10/30/100).
+Birim fiyat hesabı varsa güncelle.
+app/fiyatlar/page.tsx'de senaryo tablosunda hardcoded fiyat varsa onu da güncelle.
+components/ChatWidget.tsx'deki chatbot system prompt'unda fiyatları 49/129/299'a güncelle.
+Projede grep ile eski fiyatların (39 TL, 99 TL, 249 TL) başka yerde kalmadığını doğrula.
+```
+
+### LP-10: Araçlar Dropdown — Buton Düzeni (P2 — 15dk)
+
+**Bağlam:** Araçlar dropdown'unda "Kullan →" ve "Detaylar" linkleri var. Mevcut sıra: Kullan solda, Detaylar sağda. Kullanıcı CTA'yı sağda bekliyor.
+
+**Değişiklik:**
+- [ ] `components/SiteHeader.tsx`'de Araçlar dropdown'undaki her araç satırında:
+  - **Detaylar** sola al (text link, muted renk)
+  - **Kullan →** sağa al (buton hissi: bg-indigo-600 text-white px-3 py-1 rounded-md hover:bg-indigo-700, veya mevcut accent renk)
+- [ ] Mobil hamburger menüdeki sırayı da aynı şekilde güncelle
+
+**Test:**
+- [ ] Desktop dropdown: Detaylar solda (link), Kullan sağda (buton görünümü)
+- [ ] Mobil hamburger: aynı düzen
+- [ ] Hover/tıklama çalışıyor, doğru sayfaya yönlendiriyor
+
+**Dosyalar:** `components/SiteHeader.tsx`
+
+**Claude Code Promptu:**
+```
+LP-10: Araçlar dropdown buton düzeni
+
+components/SiteHeader.tsx'de Araçlar dropdown'unu güncelle:
+1. Her araç satırında "Detaylar" sola, "Kullan →" sağa geçsin
+2. "Kullan →" buton stili alsın: bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700 transition
+3. "Detaylar" muted link olarak kalsın: text-gray-500 text-sm hover:text-gray-700
+4. Mobil hamburger'deki aynı bölümü de güncelle
+```
+
+### REF-01: Referans Programı — Davet Et, İkinize +10 Kredi (P1 — 4-6 saat)
+
+**Amaç:** Mevcut kullanıcıların arkadaşlarını davet etmesiyle organik büyüme. Mikro satıcı WhatsApp/Facebook gruplarında paylaşım potansiyeli yüksek. CAC neredeyse sıfır.
+
+**Mekanik:**
+1. Her kullanıcıya benzersiz referans kodu/linki atanır: `yzliste.com/r/{kod}`
+2. Davet edilen kişi bu linkle kayıt olur → referans ilişkisi kaydedilir
+3. Davet edilen kişi **ilk satın almasını** yaptığında → **her iki tarafa +10 kredi** eklenir
+4. Sadece kayıt yeterli DEĞİL — ilk ödeme şart (fraud koruması)
+
+**DB şeması (Supabase migration):**
+- [ ] `referrals` tablosu oluştur:
+  ```sql
+  create table referrals (
+    id uuid primary key default gen_random_uuid(),
+    referrer_id uuid references profiles(id) not null,      -- davet eden
+    referred_id uuid references profiles(id),                -- davet edilen (kayıt olunca dolar)
+    referral_code text unique not null,                      -- benzersiz kod
+    referred_email text,                                     -- davet linki tıklanınca (opsiyonel)
+    status text default 'pending' check (status in ('pending','registered','completed','expired')),
+    reward_given boolean default false,                      -- kredi verildi mi
+    created_at timestamptz default now(),
+    registered_at timestamptz,                               -- kayıt tarihi
+    completed_at timestamptz                                 -- ilk ödeme tarihi
+  );
+  ```
+- [ ] `profiles` tablosuna `referral_code text unique` kolonu ekle (her kullanıcıya otomatik atanır)
+- [ ] RLS politikaları: kullanıcı sadece kendi referanslarını görsün
+
+**Referans kodu üretimi:**
+- [ ] Kullanıcı ilk kayıt olduğunda `referral_code` otomatik atansın (6 harf, benzersiz, ör: `abc123`)
+- [ ] Profil sayfasından veya /hesap'tan erişilebilir olsun
+
+**Referans linki akışı:**
+- [ ] `/r/[code]` route'u: kodu cookie'ye yaz (30 gün TTL) → ana sayfaya yönlendir
+- [ ] Kayıt sırasında cookie'deki referans kodu okunur → `referrals` tablosuna `referred_id` yazılır, status → `registered`
+- [ ] İlk ödeme callback'inde (`/api/odeme/callback`): referral status kontrol et, `completed` değilse:
+  - Status → `completed`, `completed_at` = now(), `reward_given` = true
+  - Davet eden +10 kredi
+  - Davet edilen +10 kredi
+  - Her ikisine de bildirim (toast veya e-posta)
+
+**UI bileşenleri:**
+- [ ] **Profil/Hesap sayfasında "Davet Et" bölümü:**
+  - Referans linki göster + kopyala butonu
+  - "Arkadaşın ilk satın almasını yapınca ikinize +10 kredi!"
+  - Davet istatistikleri: X kişi kayıt oldu, Y kişi satın aldı, toplam Z kredi kazandın
+- [ ] **Landing page'de referans kodu varsa banner:**
+  - "🎁 Davet kodunla geldin! Kayıt ol ve ilk satın almanda +10 bonus kredi kazan"
+- [ ] **İlk satın alma sonrası kutlama:**
+  - Davet edilen: "🎉 +10 bonus kredi hesabına eklendi!"
+  - Davet eden: "🎉 Arkadaşın [isim] ilk satın almasını yaptı — sana +10 kredi!"
+
+**Fraud koruması:**
+- [ ] Aynı IP'den 24 saatte max 3 referans kaydı
+- [ ] Self-referral engeli (aynı e-posta domain kontrolü + aynı IP kontrolü)
+- [ ] Kredi sadece ilk satın almada verilir, tekrar eden satın almalarda değil
+- [ ] Referans kodu 90 gün geçerli (cookie TTL 30 gün, DB'de expire)
+
+**Paylaşım kolaylığı:**
+- [ ] Kopyala butonu yanında WhatsApp ve Twitter/X paylaşım butonları
+- [ ] WhatsApp paylaşım metni: "yzliste.com ile pazaryeri içeriklerimi AI ile üretiyorum. Bu linkle kayıt ol, ilk satın almanda ikinize +10 kredi hediye 🎁 {link}"
+
+**Test:**
+- [ ] Referans linki ile gelen kullanıcı kayıt olabilmeli
+- [ ] Sadece kayıt → kredi verilmemeli (status: registered)
+- [ ] İlk satın alma → her iki tarafa +10 kredi eklenmeli
+- [ ] İkinci satın almada tekrar kredi verilmemeli
+- [ ] Profil sayfasında davet istatistikleri doğru
+- [ ] Self-referral engellenmiş olmalı
+
+**Dosyalar:** Yeni: `app/r/[code]/route.ts`, migration dosyası. Mevcut: `app/api/odeme/callback/route.ts`, `app/hesap/page.tsx` veya profil sayfası, `components/` altında yeni RefBanner ve RefShare bileşenleri.
+
+**Claude Code Promptu:**
+```
+REF-01: Referans Programı — Davet Et, İkinize +10 Kredi
+
+BACKLOG.md'deki "### REF-01" spec'ini oku ve sırayla uygula:
+
+1. Supabase migration: referrals tablosu + profiles'a referral_code kolonu + RLS
+2. /r/[code] route: cookie yaz → ana sayfaya redirect
+3. Kayıt akışında cookie'den referans kodu oku → referrals tablosuna yaz
+4. Ödeme callback'inde referral tamamlama → iki tarafa +10 kredi
+5. Profil/hesap sayfasında "Davet Et" bölümü: link kopyala + WhatsApp paylaş + istatistikler
+6. Landing page'de referans banner (cookie varsa)
+7. Fraud koruması: IP limit, self-referral engeli, tek seferlik ödül
+
+Migration için: supabase migration new add_referral_system
+Mevcut auth ve ödeme akışlarını bozma.
+```
+
+### UX-03: Üretim Sayfası Navigasyon Düzenlemesi (P1 — 3-4 saat)
+
+**Bağlam:** Sahadan feedback: Excel toplu üretim için başka sayfaya gidince "kayboldum" hissi. Ayrıca yzstudio sayfası planlanıyor. Tüm üretim deneyimini tek sayfada toplamak gerekiyor.
+
+**4 Değişiklik:**
+
+**1) Kredi/üretim bilgi kutusunu kaldır:**
+- [ ] `/uret` sayfasının üstündeki "Kalan kredi: X · Toplam üretim: Y · + Kredi Al" kutusunu kaldır
+- [ ] Kredi bilgisi zaten header'da görünüyor, tekrar gereksiz
+- [ ] Açılan alan sekmelere ve form'a daha fazla nefes verir
+
+**2) yzstudio'yu 5. sekme olarak ekle:**
+- [ ] Mevcut 4 sekmenin (Metin, Görsel, Video, Sosyal) yanına 5. sekme: "✨ Studio"
+- [ ] Sekme üstünde küçük badge: "Yakında" (bg-amber-100 text-amber-700 text-xs px-2 rounded-full)
+- [ ] Tıklayınca teaser ekran göster (ayrı sayfaya gitmesin, aynı container içinde):
+  ```
+  ✨ yzstudio — Yakında
+  
+  👗 Mankene Giydirme
+  Ürün fotoğrafını yükle, AI manken üzerinde görsün.
+  
+  🎬 Video Try-On
+  Giydirilmiş görselden tanıtım videosu oluştur.
+  
+  [Hazır olunca haber ver →]  (email toplama butonu, opsiyonel)
+  ```
+- [ ] Teaser tasarımı: koyu tema (mevcut yzstudio stili ile tutarlı), gradient arka plan, blur efekt
+- [ ] "Hazır olunca haber ver" butonu tıklayınca basit bir email/bildirim kaydı (Supabase'e kayıt veya sadece PostHog event)
+
+**3) Toplu üretimi metin sekmesine göm:**
+- [ ] Metin sekmesindeki giriş tipi "📊 Excel" tıklayınca artık `/toplu`'ya redirect etmesin
+- [ ] Aynı sekme içinde Excel yükleme akışı açılsın:
+  - Excel dosya yükleme alanı (drag & drop veya dosya seç)
+  - Yüklenen dosyanın satır önizlemesi (ilk 5 satır tablo olarak)
+  - Kolon eşleştirme: hangi kolon = ürün adı, hangisi = kategori, vb.
+  - "Toplu Üret — X kredi" butonu
+  - Sonuçlar aynı sayfada liste olarak (her satır için üretilen içerik)
+- [ ] Mevcut `/toplu` sayfasının mantığını ve bileşenlerini metin sekmesine taşı veya import et
+- [ ] `/toplu` route'unu koru ama `/uret?tab=metin&giris=excel` sayfasına redirect yap (SEO ve eski linkler için)
+
+**4) Sekme düzeni güncelleme:**
+- [ ] Yeni sekme sırası: [📝 Metin] [📷 Görsel] [🎬 Video] [📱 Sosyal] [✨ Studio ^Yakında]
+- [ ] Mobilde 5 sekme sığmıyorsa horizontal scroll veya 2 satır düzeni
+- [ ] Studio sekmesi diğerlerinden hafif farklı stilde (ör: border-dashed veya opacity-80) "henüz aktif değil" hissi vermek için
+
+**Test:**
+- [ ] Kredi kutusu `/uret` sayfasında görünmemeli
+- [ ] 5 sekme görünmeli, Studio'da "Yakında" badge
+- [ ] Studio tıklayınca teaser ekran, sayfa değişmemeli
+- [ ] Metin sekmesinde Excel giriş tipi tıklayınca aynı sayfada kalmalı
+- [ ] Excel yükle → önizle → toplu üret akışı çalışmalı
+- [ ] `/toplu` URL'si `/uret?tab=metin&giris=excel`'e redirect etmeli
+- [ ] Mobilde 5 sekme kullanılabilir olmalı (scroll veya wrap)
+- [ ] Mevcut tekli üretim akışları bozulmamış olmalı
+
+**Dosyalar:** `app/uret/page.tsx`, `components/tabs/MetinSekmesi.tsx`, yeni `components/tabs/StudioSekmesi.tsx` (teaser), mevcut `/app/toplu/` bileşenleri (taşıma/import), `app/toplu/page.tsx` (redirect)
+
+**Claude Code Promptu:**
+```
+UX-03: Üretim Sayfası Navigasyon Düzenlemesi — 4 değişiklik
+
+BACKLOG.md'deki "### UX-03" spec'ini oku ve sırayla uygula:
 
 ÖNCELİK SIRASI:
-1. Video deselect fix (küçük, bağımsız — hemen yap)
-2. Markalı ürün checkbox kaldır (küçük, bağımsız)
-3. Platform seçimini global yap (mimari değişiklik — önce yap)
-4. Hızlı başla kaldır
-5. Ek bilgi + anahtar kelimeler birleştir
-6. Gelişmiş ayarlar collapse
-7. Giriş tipi butonlarını göm
-8. Sol step indicator (desktop only)
+1. Kredi/üretim bilgi kutusunu kaldır (hızlı, bağımsız)
+2. 5. sekme "✨ Studio" ekle — teaser ekran (koyu tema, yakında badge)
+3. Metin sekmesine Excel toplu üretimi göm (/toplu'dan taşı)
+4. /toplu route'unu /uret?tab=metin&giris=excel'e redirect yap
 
-Her adımda:
-- Dosyayı kaydet ve lint hatası olmadığını kontrol et
-- Mevcut üretim akışını bozma
-- State yönetimini kontrol et (platform prop/context geçişi)
+Mevcut 4 sekmenin üretim akışlarını bozma.
+Studio sekmesi sadece teaser — henüz gerçek işlevsellik yok.
+Toplu üretim mevcut /toplu mantığını kullanabilir, sayfaya import et.
 ```
 
-### ✅ KF-04: kredi-yukle Sayfası Fiyat Tutarsızlığı (P0 — 15dk) — DONE
+### KG-01: Kredi Geçmişi + Kullanım Analitiği Dashboard (P2 — 3-4 saat)
 
-**Bug:** `/app/(auth)/kredi-yukle/page.tsx` dosyasında paket fiyatları hardcoded ve **yanlış**: 29 / 79 / 149 TL yazıyor. Gerçek fiyatlar `lib/paketler.ts`'de 39 / 99 / 249 TL. Kullanıcı farklı fiyat görüyor, ödeme farklı tutar çekiyor.
+**Amaç:** Kullanıcıya "bu platformdan ne kadar değer aldığını" göstermek. Değer algısı = sonraki satın alma tetikleyici. Mevcut `/hesap` dashboard'u temel verileri gösteriyor ama görsel analitik ve değer mesajı eksik.
 
-**Fix:**
-- [ ] `/app/(auth)/kredi-yukle/page.tsx`'deki hardcoded paket array'ini kaldır, `import { PAKET_LISTESI } from '@/lib/paketler'` ile değiştir
-- [ ] `/app/fiyatlar/page.tsx`'deki senaryo tablosundaki hardcoded fiyatları da `paketler.ts`'den besle (veya en azından doğru fiyatları yaz)
-- [ ] Tüm projede `39.*TL\|99.*TL\|249.*TL` grep yapıp başka hardcoded fiyat kalmadığını doğrula
+**Mevcut durum:** `/hesap/page.tsx`'de bu ay üretim sayısı, toplam üretim, platform dağılımı, son 5 üretim zaten var. `uretimler` tablosu her üretimi logluyor (platform, kategori, input/output tokens, api_cost, created_at). `/hesap/uretimler/page.tsx` tam liste, `/hesap/krediler/page.tsx` ödeme geçmişi.
+
+**Eklenecekler:**
+
+**1) İçerik türü bazlı dağılım:**
+- [ ] Dashboard'da metin / görsel / video / sosyal medya üretim sayılarını ayrı ayrı göster
+- [ ] Her tür için ikon + sayı: "📝 47 metin · 📷 12 görsel · 🎬 3 video · 📱 8 sosyal"
+- [ ] `uretimler` tablosunda içerik türü ayrımı yoksa, API route veya tablo adından çıkar (metin/gorsel/video/sosyal)
+
+**2) Aylık trend grafiği:**
+- [ ] Son 3 ayın haftalık üretim trendi — basit bar chart veya spark line
+- [ ] Recharts kullan (zaten projede mevcut olabilir, yoksa ekle)
+- [ ] X ekseni: haftalar, Y ekseni: üretim sayısı
+
+**3) Kredi tüketim özeti:**
+- [ ] "Bu ay X kredi harcadın" + tür bazlı dağılım (metin: 12, görsel: 8, video: 30 kredi)
+- [ ] Kalan kredi belirgin: "💰 Kalan: 23 kredi"
+- [ ] Kredi azalınca uyarı: < 5 kredi → "Kredin azalıyor — paket al" CTA
+
+**4) Değer mesajı:**
+- [ ] Dashboard üstünde kısa değer özeti: "Bu ay 47 içerik ürettin — freelancer'a verseydin tahmini ₺14.100 öderdin"
+- [ ] Hesaplama basit: metin başına ~₺300 (freelancer fiyatı), görsel ~₺500, video ~₺2.000 tahmini
+- [ ] Bu rakamlar hardcoded tahmini, hassas olması gerekmez — algı yaratması yeterli
+
+**5) Son üretimler listesini genişlet:**
+- [ ] Mevcut 5 → 10'a çıkar
+- [ ] Her satırda: tür ikonu + ürün adı + platform + tarih + harcanan kredi
+- [ ] "Tümünü gör →" linki `/hesap/uretimler`'e gitsin
 
 **Test:**
-- [ ] kredi-yukle sayfasında fiyatlar 39/99/249 TL görünmeli
-- [ ] PaketModal, /fiyatlar ve kredi-yukle aynı fiyatları göstermeli
-- [ ] Ödeme akışı çalışmaya devam etmeli
+- [ ] Dashboard'da içerik türü dağılımı doğru
+- [ ] Trend grafiği son 3 ayı gösteriyor (veri yoksa boş state)
+- [ ] Kredi tüketim özeti doğru hesaplanıyor
+- [ ] Değer mesajı görünüyor (pozitif rakam)
+- [ ] Düşük kredide uyarı + CTA görünüyor
 
-**Dosyalar:** `app/(auth)/kredi-yukle/page.tsx`, `lib/paketler.ts`, `app/fiyatlar/page.tsx`
+**Dosyalar:** `app/(auth)/hesap/page.tsx`, muhtemelen yeni `components/dashboard/` bileşenleri
 
 **Claude Code Promptu:**
 ```
-KF-04: kredi-yukle fiyat tutarsızlığı fix
+KG-01: Kredi Geçmişi + Kullanım Analitiği Dashboard
 
-BACKLOG.md'deki "### KF-04" spec'ini oku ve uygula.
-Özet: /app/(auth)/kredi-yukle/page.tsx hardcoded fiyatları kaldır, lib/paketler.ts'den import et.
-Sonra projede başka hardcoded fiyat kalıp kalmadığını grep ile doğrula.
+BACKLOG.md'deki "### KG-01" spec'ini oku ve uygula:
+1. /hesap dashboard'una içerik türü bazlı dağılım ekle (metin/görsel/video/sosyal)
+2. Aylık trend grafiği (Recharts bar chart, son 3 ay haftalık)
+3. Kredi tüketim özeti + düşük kredi uyarısı
+4. Değer mesajı ("freelancer'a verseydin X TL öderdin")
+5. Son üretimler 5→10, tür ikonu + kredi bilgisi ekle
+
+Mevcut dashboard yapısını koru, üstüne ekle. uretimler tablosundan veri çek.
 ```
 
-### ✅ UX-01b: Metin Sekmesi UX Düzeltmeleri (P1 — 1-2 saat) — DONE
+### MP-01: Mağaza Profili Genişletme (P2 — 2 saat)
 
-**Bağlam:** UX-01 uygulandı ama sahadan ek feedback geldi. Step indicator sayfayı daraltıyor, kategori zorunlu olmalı, platform bilgi badge'i tüm sekmelerde olmalı, fotoğraf mesajı iyileştirilmeli, görsel sekmesindeki gereksiz kutu kaldırılmalı.
+**Amaç:** Marka profiline ek alanlar ekleyerek üretim kalitesini artırmak. Daha fazla bağlam = daha iyi prompt = daha spesifik çıktı.
 
-**7 Değişiklik:**
+**Mevcut alanlar:** marka_adi, ton (samimi/profesyonel/premium), hedef_kitle, vurgulanan_ozellikler. Tümü prompt'a enjekte ediliyor.
 
-**1) Sol step indicator kaldır:**
-- [ ] UX-01'de eklenen sol taraftaki ①②③ dikey step indicator'ı tamamen kaldır (desktop dahil). Sayfayı gereksiz daraltıyor, yeni tasarımda ihtiyaç yok.
+**Eklenecek alanlar:**
 
-**2) Kategori alanını zorunlu yap + dropdown:**
-- [ ] Metin sekmesinde kategori alanını zorunlu (`*` işareti) yap
-- [ ] Dropdown olarak kalsın (önceki gibi): Kozmetik, Elektronik, Giyim, Ev, Gıda, Takı, Spor, Bebek, Kitap, Oto, Diğer
-- [ ] "Diğer" seçildiğinde manuel text input açılsın
-- [ ] Üret butonunun aktif olma koşuluna kategori seçimini de ekle
+**1) Mağaza kategorileri:**
+- [ ] `profiles` tablosuna `magaza_kategorileri text[]` kolonu ekle (array)
+- [ ] UI'da multi-select chip/tag seçimi: Kadın Giyim, Erkek Giyim, Çocuk, Kozmetik, Elektronik, Ev & Yaşam, Gıda, Takı & Aksesuar, Spor, Oto, Kitap & Hobi, Diğer
+- [ ] Max 3 kategori seçilebilsin
+- [ ] Prompt'a enjekte: "Bu mağaza şu kategorilerde satış yapıyor: [kategoriler]"
 
-**3) Platform bilgi badge'ini tüm sekmelere genişlet:**
-- [ ] Metin sekmesinde mevcut: `📌 Max 100 karakter başlık · 🔹 5 özellik · 🏷️ 10 etiket · 🇹🇷 Türkçe çıktı`
-- [ ] Görsel sekmesinde: seçili platforma göre önerilen görsel boyutu, format bilgisi (ör: `📐 1200x1200px · 🖼️ 7 stüdyo stili · 📷 PNG çıktı`)
-- [ ] Video sekmesinde: format bilgisi (ör: `🎬 5-10sn · 📐 9:16 / 1:1 / 16:9 · 🎥 MP4 çıktı`)
-- [ ] Sosyal medya sekmesinde: seçili sosyal platforma göre (ör: Instagram → `📸 2.200 karakter · #️⃣ 30 hashtag · 🎨 görsel odaklı ton`)
+**2) Fiyat bandı:**
+- [ ] `profiles` tablosuna `fiyat_bandi text` kolonu ekle
+- [ ] UI'da 3 seçenek (mevcut fiyat segmenti gibi ama mağaza genelinde):
+  - 💰 Ekonomik (ürünler genelde 0-100 TL)
+  - ⚖️ Orta segment (100-500 TL)
+  - 👑 Premium (500 TL+)
+- [ ] Prompt'a enjekte: "Mağazanın fiyat bandı: [band] — dil ve ton buna uygun olmalı"
 
-**4) Metin sekmesi fotoğraf mesajını iyileştir:**
-- [ ] Mevcut: "Yukarıdan ürün fotoğrafı yükle ↑"
-- [ ] Yeni: Fotoğraf yüklenmemişse → "📷 Fotoğraf metin kalitesini artırır — yukarıdan yükleyebilirsin" + altında küçük link: "Fotoğrafsız devam et →" (tıklayınca fotoğraf alanını collapse eder veya sadece formu aktif tutar)
-- [ ] Fotoğraf yüklenmişse → mevcut thumbnail gösterimi devam etsin
+**3) Teslimat/hizmet vurguları:**
+- [ ] `profiles` tablosuna `teslimat_vurgulari text[]` kolonu ekle (array)
+- [ ] UI'da checkbox grubu: ✈️ Hızlı kargo, 🔄 Kolay iade, 🇹🇷 Yerli üretim, 🌿 Organik/doğal, 📦 Hediye paketi, 🛡️ Garanti, 💳 Taksit imkanı
+- [ ] Seçilenler her üretimde otomatik vurgulanır
+- [ ] Prompt'a enjekte: "Bu mağazanın vurguladığı değerler: [seçilenler]"
 
-**5) Görsel sekmesindeki gereksiz fotoğraf kutusunu kaldır:**
-- [ ] Görsel sekmesinde "📷 Ürün fotoğrafı yükle — Arka planı kaldırıp 7 farklı stilde stüdyo görseli üretiriz" bilgi kutusunu kaldır
-- [ ] Fotoğraf yüklenmemişse: üstteki ortak fotoğraf yükleme alanını highlight et (border pulse/glow animasyonu veya sarı arka plan)
-- [ ] Üret butonu fotoğraf olmadan disabled kalsın, buton üstünde "↑ Önce fotoğraf yükle" uyarısı
+**4) Rakip/benchmark mağaza (opsiyonel):**
+- [ ] `profiles` tablosuna `benchmark_magaza text` kolonu ekle
+- [ ] UI'da text input: "Beğendiğin veya hedeflediğin bir mağaza var mı? (opsiyonel)"
+- [ ] Placeholder: "örn: LCW, Koton, benzer bir mağaza adı"
+- [ ] Prompt'a: "Kullanıcı şu mağazayı referans alıyor: [isim] — benzer profesyonellikte içerik üret"
 
-**6) Sosyal medya sekmesini metin kalıbına uyumla:**
-- [ ] Sosyal medya sekmesindeki akışı metin sekmesiyle aynı kalıba sok:
-  - Sosyal platform seçimi (Instagram, TikTok, Facebook, X) → dropdown veya chip butonlar
-  - Platform bilgi badge (karakter limiti, hashtag sayısı, ton)
-  - Ürün bilgisi girişi (ad + detaylar)
-  - Gelişmiş ayarlar collapse (ton, hedef kitle)
-  - Üret butonu
-- [ ] Kategori burada da zorunlu dropdown olsun
+**Migration:**
+- [ ] `supabase migration new expand_brand_profile`
+```sql
+alter table profiles
+  add column if not exists magaza_kategorileri text[],
+  add column if not exists fiyat_bandi text,
+  add column if not exists teslimat_vurgulari text[],
+  add column if not exists benchmark_magaza text;
+```
 
-**7) Video sekmesini görsel kalıbına uyumla:**
-- [ ] Video sekmesindeki akışı görsel sekmesiyle aynı kalıba sok:
-  - Fotoğraf yüklenmemişse üst alan highlight (görsel ile aynı)
-  - Hareket stili seçimi (mevcut 6 preset + custom prompt)
-  - Format seçimi (süre + oran)
-  - Platform bilgi badge
-  - Üret butonu
-- [ ] Gereksiz tekrar eden fotoğraf yükleme alanı varsa kaldır (görsel ile aynı mantık)
+**Prompt entegrasyonu:**
+- [ ] `/app/api/uret/route.ts` ve diğer üretim route'larında profil bağlamını genişlet
+- [ ] Mevcut `ctxParcalar` array'ine yeni alanları ekle
+- [ ] Boş alanlar prompt'a eklenmemeli (mevcut mantık korunur)
 
 **Test:**
-- [ ] Step indicator hiçbir ekranda görünmemeli
-- [ ] Metin + sosyal medya: kategori seçmeden üret butonu aktif olmamalı
-- [ ] 4 sekmede de platform bilgi badge'i görünmeli, seçime göre değişmeli
-- [ ] Metin sekmesinde fotoğraf yüklenmemişse yeni mesaj ve "fotoğrafsız devam et" linki
-- [ ] Görsel sekmesinde fotoğraf kutus yok, fotoğraf yokken üst alan highlight
-- [ ] Sosyal medya akışı metin ile, video akışı görsel ile tutarlı
-- [ ] Tüm üretim akışları çalışıyor, kredi düşüyor
+- [ ] Marka profili sayfasında yeni alanlar görünmeli
+- [ ] Kaydedince DB'ye yazılmalı, sayfayı yenileyince korunmalı
+- [ ] Metin üretiminde yeni profil bilgileri çıktıya yansımalı (ör: "hızlı kargo" seçildiyse listingde geçmeli)
+- [ ] Boş bırakılan alanlar hata vermemeli
 
-**Dosyalar:** `app/uret/page.tsx`, `components/tabs/MetinSekmesi.tsx`, `components/tabs/GorselSekmesi.tsx`, `components/tabs/VideoSekmesi.tsx`, `components/tabs/SosyalSekmesi.tsx`
+**Dosyalar:** Migration dosyası, `app/(auth)/hesap/marka/page.tsx`, üretim API route'ları (`/api/uret/route.ts`, `/api/gorsel/route.ts` vb.)
 
 **Claude Code Promptu:**
 ```
-UX-01b: Üretim Sekmesi UX Düzeltmeleri — 7 değişiklik
+MP-01: Mağaza Profili Genişletme — 4 yeni alan
 
-BACKLOG.md'deki "### UX-01b" spec'ini oku ve 7 maddeyi sırayla uygula.
+BACKLOG.md'deki "### MP-01" spec'ini oku ve uygula:
 
-ÖNCELİK SIRASI:
-1. Step indicator kaldır (hızlı)
-2. Görsel sekmesi fotoğraf kutusu kaldır + highlight mantığı
-3. Metin sekmesi fotoğraf mesajı iyileştir
-4. Kategori zorunlu + dropdown (metin + sosyal)
-5. Platform bilgi badge tüm sekmelere
-6. Sosyal medya = metin kalıbı
-7. Video = görsel kalıbı
+1. Supabase migration: profiles tablosuna 4 yeni kolon (magaza_kategorileri, fiyat_bandi, teslimat_vurgulari, benchmark_magaza)
+2. /hesap/marka sayfasına yeni alanları ekle (multi-select chips, radio buttons, checkboxes, text input)
+3. Üretim API route'larında profil bağlamını genişlet — yeni alanları prompt'a enjekte et
+4. Boş alan kontrolü: sadece dolu alanlar prompt'a eklensin
 
-2 UX kalıbı var:
-- Metin kalıbı (input-ağırlıklı): Metin + Sosyal Medya
-- Görsel kalıbı (fotoğraf-ağırlıklı): Görsel + Video
+Migration: supabase migration new expand_brand_profile
+Mevcut profil kaydetme akışını bozma.
+```
 
-Mevcut üretim akışlarını bozma. Her sekmenin API çağrısı ve kredi düşümü çalışmaya devam etmeli.
+### LS-01: Listing Skor + Ücretsiz Revize (P1 — 3-4 saat)
+
+**Amaç:** Üretilen metin içeriğine kural bazlı skor vermek, eksik bilgileri önermek, düşük skorda ücretsiz revize hakkı tanımak. Kullanıcıya "seni yarıyolda bırakmayız" hissi vermek. Sıfır ek AI maliyeti (skor), minimal maliyet (revize ~₺0,01).
+
+**Skor hesaplama (rule-based, AI yok):**
+Aşağıdaki kurallar platformdan bağımsız temel kontroller + platforma özel kurallar:
+
+**Temel kontroller (her platform):**
+| Kural | Puan | Koşul |
+|---|---|---|
+| Başlık uzunluğu | 0-15 | Platform max limitine yakınlık (ör: Trendyol 100 kar → 80-100 arası = 15 puan) |
+| Özellik/madde sayısı | 0-15 | Platform beklentisi kadar varsa tam puan (ör: Trendyol 5 madde) |
+| Açıklama uzunluğu | 0-10 | Min 150 karakter = tam puan |
+| Etiket sayısı | 0-10 | Platform limiti kadar varsa tam puan (ör: Trendyol 10 etiket) |
+| Anahtar kelime kullanımı | 0-10 | Kullanıcının girdiği keyword'ler çıktıda var mı |
+| Ürün detay zenginliği | 0-20 | Renk, malzeme, boyut, adet, ağırlık, garanti bilgisi var mı (her biri +4) |
+| Kategori uyumu | 0-10 | Kategori seçilmiş + çıktıda yansımış mı |
+| Fotoğraf kullanımı | 0-10 | Fotoğraf yüklenmişse +10 (AI daha iyi çıktı üretir) |
+| **Toplam** | **0-100** | |
+
+**Eksik bilgi önerileri (skor düşükse hangi alan eksik):**
+- [ ] Skor hesaplanırken hangi kurallardan puan kaybedildiği kaydedilsin
+- [ ] Her eksik kural için kullanıcıya somut öneri gösterilsin:
+  - Renk eksik → "🎨 Ürünün rengini ekle — alıcılar renk bilgisi arar"
+  - Malzeme eksik → "🧵 Malzeme bilgisi ekle — %100 pamuk, paslanmaz çelik vb."
+  - Boyut/adet eksik → "📏 Boyut veya adet bilgisi ekle — 500ml, 3'lü set vb."
+  - Fotoğraf yok → "📷 Fotoğraf ekle — metin kalitesi önemli ölçüde artar"
+  - Keyword eksik → "🔍 Anahtar kelime ekle — arama sonuçlarında öne çıkarsın"
+
+**UI — Skor gösterimi (sonuç ekranında):**
+- [ ] Üretilen içeriğin üstüne skor barı ekle:
+  - **75-100:** Yeşil bar → "✅ Harika listing! Pazaryerine hazır." (opsiyonel ücretli revize butonu)
+  - **50-74:** Turuncu bar → "⚠️ İyileştirilebilir — seni yarıyolda bırakmayız!" + eksik bilgi listesi + "🔄 Ücretsiz Yeniden Üret" butonu
+  - **0-49:** Kırmızı bar → "❌ Eksik bilgi çok fazla" + eksik bilgi listesi + "🔄 Ücretsiz Yeniden Üret" butonu
+- [ ] Skor barı animasyonlu dolsun (0'dan hedefe, 1sn)
+- [ ] Skor sayısı büyük font ile gösterilsin (ör: **72**/100)
+
+**Ücretsiz revize akışı (skor < 75):**
+- [ ] "🔄 Ücretsiz Yeniden Üret" butonu aktif — sarı/turuncu vurgulu
+- [ ] Tıklayınca form'a geri dön, eksik alanlar highlight edilmiş (sarı border veya pulse)
+- [ ] Kullanıcı eksik bilgileri girer → "Ücretsiz Yeniden Üret" butonuna tıklar
+- [ ] Backend'de kontrol: `uretimId` ile ilişkili, `ucretsizRevize: true` flag'i
+  - Kredi düşülmez
+  - Yeni sonuç gösterilir + yeni skor hesaplanır
+  - Sadece 1 kez ücretsiz hak (ikinci revize ücretli)
+- [ ] Revize sonrası yeni skor gösterilsin — idealde artmış olur, kullanıcı farkı görür
+
+**Mevcut revize sistemiyle entegrasyon:**
+- [ ] Şu an zaten "🔁 Yeniden üret" butonu var (ücretli veya yenidenUretHakki ile)
+- [ ] Ücretsiz skor revizesi bundan ayrı bir buton olsun — kafa karışmasın
+- [ ] Skor < 75 → "Ücretsiz Yeniden Üret (bilgi ekle)" butonu göster
+- [ ] Skor ≥ 75 → sadece mevcut ücretli "Yeniden üret" butonu
+
+**API değişikliği:**
+- [ ] `/api/uretim/metin` (veya ilgili route) response'una `skor` ve `oneriler` alanları ekle
+- [ ] Skor hesaplama fonksiyonu ayrı util: `lib/listingSkor.ts`
+  - Input: üretilen çıktı (başlık, özellikler, açıklama, etiketler) + kullanıcı inputları (kategori, keyword, fotoğraf var mı) + platform kuralları
+  - Output: `{ skor: number, oneriler: string[], detay: { kural: string, puan: number, maxPuan: number }[] }`
+- [ ] Ücretsiz revize endpoint'i: mevcut endpoint'e `ucretsizRevize: true` + `uretimId` parametresi ekle
+  - Backend kontrol: bu uretimId için daha önce ücretsiz revize yapılmış mı? Yapılmışsa → normal ücretli akış
+
+**Test:**
+- [ ] Eksik bilgiyle üretim yap → skor < 75 → öneriler listesi görünmeli
+- [ ] "Ücretsiz Yeniden Üret" tıkla → form'a dön → eksik alanlar highlight
+- [ ] Bilgi ekle → ücretsiz üret → kredi düşmemeli
+- [ ] Yeni skor hesaplanmalı (idealde yükselmiş)
+- [ ] İkinci revize → ücretli olmalı (kredi düşmeli)
+- [ ] Tüm bilgilerle üretim → skor ≥ 75 → ücretsiz revize butonu yok
+- [ ] Skor barı animasyonu çalışıyor
+- [ ] Farklı platformlarda (Trendyol vs Etsy) kurallar değişiyor, skor farklı
+
+**Dosyalar:** Yeni: `lib/listingSkor.ts`. Mevcut: `components/tabs/MetinSekmesi.tsx` (sonuç ekranı), `/api/uretim/metin` veya ilgili API route.
+
+**Claude Code Promptu:**
+```
+LS-01: Listing Skor + Ücretsiz Revize
+
+BACKLOG.md'deki "### LS-01" spec'ini oku ve sırayla uygula:
+
+1. lib/listingSkor.ts oluştur — kural bazlı skor hesaplama fonksiyonu (AI yok, string matching)
+   - Platform kurallarını lib/paketler.ts veya mevcut platform config'den al
+   - 8 kural kategorisi, toplam 100 puan
+   - Eksik bilgi önerileri array olarak dönsün
+2. API response'una skor + oneriler ekle
+3. MetinSekmesi sonuç ekranına skor barı ekle (animasyonlu, renkli)
+4. Skor < 75 → öneriler listesi + "Ücretsiz Yeniden Üret" butonu
+5. Ücretsiz revize akışı: forma geri dön (highlight) → bilgi ekle → kredi düşmeden üret
+6. Backend'de ücretsiz revize kontrolü (uretimId başına 1 hak)
+
+Mevcut üretim akışını bozma. Skor hesaplama tamamen client-side veya API-side olabilir — ek AI çağrısı yapma.
 ```
 
 ---
@@ -1634,9 +1837,10 @@ Aşağıdaki eşiklerden 2'si gerçekleşince backlog'a al: **1.000 tekil/ay, 10
 - [ ] **F-27** Görsel/video moderasyon (OpenAI moderation veya Google Safe Search)
 - [ ] **F-29** Crisp/Tidio destek widget + SSS genişletme
 - [ ] **F-30** Ana sayfa sosyal kanıt sayaçları (DB'den agg)
-- [ ] **F-31** Referral programı (`/r/[code]`, davet eden + edilene 20 kredi)
+- [x] **F-31** ~~Referral programı~~ → REF-01 olarak aktif backlog'a taşındı (ilk satın almada +10 kredi her iki tarafa)
 - [ ] **F-21** A11y tam audit (Lighthouse 95+, focus trap, aria)
 - [ ] **F-32** `/changelog` + haftalık sürüm notu
+- [ ] **F-33** Kredi süre sınırı politikası — şu an krediler süresiz (güçlü pazarlama mesajı). Kullanıcı tabanı büyüyünce (10.000+ kullanılmamış kredi birikimi) cash-flow riski oluşabilir. O noktada değerlendir: 12 ay son kullanma, "süresiz saklama" premium özellik olarak ayrıştırma, veya büyük paketlere özel süresiz. Şimdilik dokunma — "kredin bitmez" Roketfy'a karşı en net fark.
 
 ---
 
@@ -1723,4 +1927,4 @@ SC-02 "Discovered — currently not indexed" hâlâ 14 sayfa. Validation "Starte
 - `~%XX` notları kısmen tamamlanmış item'ları gösterir — bunları tamamla, sonra `[x]` yap.
 - Her küme tek PR değil. Küme içinde 3-5 PR olabilir ama aynı branch ailesinde.
 - `[DECIDE]` olmayan her karar default'la git: **TanStack Query v5**, **PostHog EU Cloud**, **Upstash Redis**, **Clou
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

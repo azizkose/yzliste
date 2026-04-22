@@ -11,6 +11,7 @@ import HowItWorks from "@/components/tanitim/HowItWorks";
 import BenefitsGrid from "@/components/tanitim/BenefitsGrid";
 import LandingFAQ from "@/components/tanitim/LandingFAQ";
 import TrustBand from "@/components/tanitim/TrustBand";
+import RefBanner from "@/components/RefBanner";
 
 export default function TanitimSayfasi() {
   const [modalAcik, setModalAcik] = useState(false);
@@ -48,6 +49,7 @@ export default function TanitimSayfasi() {
       )}
 
       <SiteHeader aktifSayfa="ana" />
+      <RefBanner />
       <main className="min-h-screen bg-white font-sans">
         <AuthHero />
         <FeaturesTabbed />

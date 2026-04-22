@@ -313,6 +313,52 @@ async function odemeDogrula(token: string): Promise<NextResponse> {
     }
   }
 
+  // REF-01: İlk ödeme ise referral tamamla
+  if (odeme) {
+    const { data: referral } = await supabase
+      .from("referrals")
+      .select("id, referrer_id")
+      .eq("referred_id", odeme.user_id)
+      .eq("status", "registered")
+      .eq("reward_given", false)
+      .single();
+
+    if (referral) {
+      await supabase
+        .from("referrals")
+        .update({ status: "completed", reward_given: true, completed_at: new Date().toISOString() })
+        .eq("id", referral.id);
+
+      // Davet edene +10 kredi
+      const { data: referrerProfile } = await supabase
+        .from("profiles")
+        .select("kredi")
+        .eq("id", referral.referrer_id)
+        .single();
+      if (referrerProfile) {
+        await supabase
+          .from("profiles")
+          .update({ kredi: referrerProfile.kredi + 10 })
+          .eq("id", referral.referrer_id);
+      }
+
+      // Davet edilene +10 kredi
+      const { data: referredProfile } = await supabase
+        .from("profiles")
+        .select("kredi")
+        .eq("id", odeme.user_id)
+        .single();
+      if (referredProfile) {
+        await supabase
+          .from("profiles")
+          .update({ kredi: referredProfile.kredi + 10 })
+          .eq("id", odeme.user_id);
+      }
+
+      logger.info({ referralId: referral.id }, "REF-01: Referral tamamlandı, +10 kredi her iki tarafa");
+    }
+  }
+
   return redirect303(`${SITE_URL}/?odeme=basarili`);
 }
 
