@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { Edit3, Camera, ScanLine, FileSpreadsheet } from "lucide-react";
 import { PLATFORM_BILGI, PLATFORM_PLACEHOLDER, YUKLENIYOR_MESAJLARI, KATEGORI_LISTESI } from "@/lib/constants";
 import { sonucuBolumle, docxIndir } from "@/lib/listing-utils";
 import KopyalaButon from "@/components/ui/KopyalaButon";
@@ -84,17 +85,29 @@ export default function MetinSekmesi({
   );
   const sonucBolumleri = sonucuBolumle(sonuc);
 
+  const GIRIS_TIPI_CONF = [
+    { tip: "manuel" as const, label: "Manuel",   Icon: Edit3 },
+    { tip: "foto"   as const, label: "Fotoğraf", Icon: Camera },
+    { tip: "barkod" as const, label: "Barkod",   Icon: ScanLine },
+  ];
+
   const GirisTipiChips = (
-    <div className="flex gap-1.5 flex-wrap">
-      {(["manuel", "foto", "barkod"] as const).map((tip) => (
+    <div className="flex items-center border-b border-[#D8D6CE]">
+      {GIRIS_TIPI_CONF.map(({ tip, label, Icon }) => (
         <button key={tip} onClick={() => setGirisTipi(tip)}
-          className={`py-1 px-2.5 rounded-lg border text-xs font-semibold transition-all ${girisTipi === tip ? "border-blue-400 bg-blue-50 text-blue-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
-          {tip === "manuel" ? "✏️ Manuel" : tip === "foto" ? "📷 Fotoğraf" : "🔍 Barkod"}
+          className={`flex items-center gap-1.5 py-2 px-3 text-xs font-medium transition-colors border-b-2 -mb-px ${
+            girisTipi === tip
+              ? "border-[#1E4DD8] text-[#1A1A17]"
+              : "border-transparent text-[#908E86] hover:text-[#1A1A17]"
+          }`}>
+          <Icon size={14} strokeWidth={1.5} />
+          <span>{label}</span>
         </button>
       ))}
       <a href="/toplu"
-        className="py-1 px-2.5 rounded-lg border text-xs font-semibold border-gray-200 text-gray-500 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50">
-        📊 Excel
+        className="flex items-center gap-1.5 py-2 px-3 text-xs font-medium transition-colors border-b-2 border-transparent -mb-px text-[#908E86] hover:text-[#1A1A17]">
+        <FileSpreadsheet size={14} strokeWidth={1.5} />
+        <span>Excel</span>
       </a>
     </div>
   );
@@ -137,7 +150,7 @@ export default function MetinSekmesi({
   );
 
   return (
-    <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
+    <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white border border-[#D8D6CE] rounded-xl p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-medium text-[#1A1A17]">Listing metni</h2>
         <span className="text-xs text-[#5A5852] font-mono">1 kredi</span>
@@ -248,8 +261,12 @@ export default function MetinSekmesi({
       )}
 
       {/* Üret butonu */}
-      <button onClick={icerikUret} disabled={!uretButonAktif} className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
-        {yukleniyor ? `⏳ ${YUKLENIYOR_MESAJLARI[yukleniyorMesaj]}` : (!kullanici || kullanici.anonim) ? "✨ Metin Üret — Giriş Gerekli" : `✨ Metin Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
+      <button onClick={icerikUret} disabled={!uretButonAktif} className="w-full bg-[#1E4DD8] hover:bg-[#163B9E] disabled:bg-[#D8D6CE] disabled:text-[#908E86] text-white font-medium py-3 rounded-lg transition-colors">
+        {yukleniyor
+          ? YUKLENIYOR_MESAJLARI[yukleniyorMesaj]
+          : (!kullanici || kullanici.anonim)
+            ? "Giriş yap ve başla"
+            : `Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
       </button>
 
       <p className="text-xs text-gray-400 text-center">💡 yzliste her platformun karakter limiti ve SEO kuralına göre üretir ancak pazaryeri kuralları sık değişir — yayınlamadan önce içeriği kontrol etmeni öneririz</p>

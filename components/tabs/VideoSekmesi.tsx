@@ -1,9 +1,14 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { RotateCw, ZoomIn, Lightbulb, Leaf, Search, Sparkles, Gem, Cpu, Wind, Utensils, Sprout, Star, Gift, Zap, type LucideIcon } from "lucide-react";
 import { VIDEO_PRESETLER, kategoriKoduHesapla } from "@/lib/constants";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
 import KrediButon from "@/components/ui/KrediButon";
+
+const PRESET_ICON_MAP: Record<string, LucideIcon> = {
+  RotateCw, ZoomIn, Lightbulb, Leaf, Search, Sparkles, Gem, Cpu, Wind, Utensils, Sprout, Star, Gift, Zap,
+};
 
 type Kullanici = {
   id: string;
@@ -52,10 +57,10 @@ export default function VideoSekmesi({
   const [indiriliyor, setIndiriliyor] = useState(false);
 
   return (
-    <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
+    <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white border border-[#D8D6CE] rounded-xl p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-gray-800">🎬 Ürün Videosu Üret</h2>
-        <span className="text-xs text-amber-500 font-medium">5sn: 10 kredi · 10sn: 20 kredi</span>
+        <h2 className="text-base font-medium text-[#1A1A17]">Ürün videosu</h2>
+        <span className="text-xs text-[#5A5852] font-mono">5sn: 10 kr · 10sn: 20 kr</span>
       </div>
       <p className="text-xs text-gray-400">Ürün fotoğrafından kısa tanıtım videosu — pazaryerleri, Reels, TikTok ve YouTube için</p>
 
@@ -70,18 +75,21 @@ export default function VideoSekmesi({
         </div>
       )}
 
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2">
-        <span className="text-amber-500 flex-shrink-0 mt-0.5">⚡</span>
+      <div className="bg-[#FEF4E7] rounded-lg p-3 flex items-start gap-2.5">
+        <Zap size={16} strokeWidth={1.5} className="text-[#8B4513] flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-xs font-semibold text-amber-700">Kredi üretilince düşer</p>
-          <p className="text-xs text-amber-600 mt-0.5">Video AI işlem gücü gerektiriyor. Üretim ~2 dakika sürer.</p>
+          <p className="text-xs font-medium text-[#8B4513]">Kredi üretim anında düşer</p>
+          <p className="text-xs text-[#8B4513]/80 mt-0.5">AI işlem ~2 dakika sürer</p>
         </div>
       </div>
 
       {!fotolar[0] ? (
-        <div className="bg-amber-50 border-2 border-dashed border-amber-300 rounded-xl p-5 text-center space-y-1">
-          <p className="text-sm font-medium text-amber-700">↑ Önce ürün fotoğrafı yükle</p>
-          <p className="text-xs text-amber-500">Sayfanın üstündeki fotoğraf alanından ekleyebilirsin</p>
+        <div className="bg-[#F1F0EB] rounded-lg p-6 text-center">
+          <p className="text-sm text-[#5A5852]">Video üretmek için önce ürün fotoğrafı ekle</p>
+          <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="text-sm text-[#1E4DD8] hover:text-[#163B9E] font-medium mt-2 block mx-auto transition-colors">
+            Fotoğraf ekle
+          </button>
         </div>
       ) : (
         <FotoThumbnail src={fotolar[0]} onKaldir={() => { setFotolar([]); setGorselJoblar([]); }} renk="green" />
@@ -134,16 +142,23 @@ export default function VideoSekmesi({
             : VIDEO_PRESETLER.filter(p => p.kategoriler.includes("tumu"));
           return (
             <div className="grid grid-cols-2 gap-2 mb-2">
-              {gosterilecekler.map((p) => (
-                <button key={p.etiket} onClick={() => {
-                    if (videoPrompt === p.deger) { setVideoPrompt(""); setVideoPromptGoster(""); }
-                    else { setVideoPrompt(p.deger); setVideoPromptGoster(p.goster); }
-                  }}
-                  className={`text-left p-2.5 rounded-xl border-2 transition-all ${videoPrompt === p.deger ? "border-amber-400 bg-amber-50" : "border-gray-200 hover:border-amber-200 hover:bg-amber-50/50"}`}>
-                  <p className={`text-xs font-semibold ${videoPrompt === p.deger ? "text-amber-700" : "text-gray-700"}`}>{p.ikon} {p.etiket}</p>
-                  <p className="text-[10px] text-gray-500 mt-0.5 leading-relaxed">{p.aciklama}</p>
-                </button>
-              ))}
+              {gosterilecekler.map((p) => {
+                const PresetIcon = PRESET_ICON_MAP[p.ikon];
+                const secili = videoPrompt === p.deger;
+                return (
+                  <button key={p.etiket} onClick={() => {
+                      if (secili) { setVideoPrompt(""); setVideoPromptGoster(""); }
+                      else { setVideoPrompt(p.deger); setVideoPromptGoster(p.goster); }
+                    }}
+                    className={`text-left p-2.5 rounded-xl border-2 transition-all ${secili ? "border-[#1E4DD8] bg-[#F1F0EB]" : "border-[#D8D6CE] hover:border-[#1E4DD8]"}`}>
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      {PresetIcon && <PresetIcon size={14} strokeWidth={1.5} className={secili ? "text-[#1E4DD8]" : "text-[#5A5852]"} />}
+                      <p className={`text-xs font-medium ${secili ? "text-[#1A1A17]" : "text-[#5A5852]"}`}>{p.etiket}</p>
+                    </div>
+                    <p className="text-[10px] text-[#908E86] leading-relaxed">{p.aciklama}</p>
+                  </button>
+                );
+              })}
             </div>
           );
         })()}
@@ -162,14 +177,14 @@ export default function VideoSekmesi({
         </button>
       ) : (
         <KrediButon
-          label="✨ Video Üret"
+          label="Video üret"
           kredi={kullanici.is_admin ? undefined : (videoSure === "10" ? 20 : 10)}
           kalanKredi={kullanici.is_admin ? undefined : kullanici.kredi}
           onClick={videoUret}
           disabled={videoYukleniyor || (!kullanici.is_admin && (kullanici.kredi ?? 0) < (videoSure === "10" ? 20 : 10))}
           yukleniyor={videoYukleniyor}
-          yukleniyorLabel="⏳ Video üretiliyor... (~2 dakika)"
-          renk="amber"
+          yukleniyorLabel="Video üretiliyor..."
+          renk="indigo"
         />
       )}
 

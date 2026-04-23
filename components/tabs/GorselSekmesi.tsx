@@ -48,9 +48,9 @@ export default function GorselSekmesi({
   blobIndir, resizeFoto, invalidateCredits, setKullanici,
 }: GorselSekmesiProps) {
   return (
-    <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white rounded-2xl shadow p-6 space-y-4">
+    <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white border border-[#D8D6CE] rounded-xl p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-gray-800">🖼️ Ürün Görseli Üret</h2>
+        <h2 className="text-base font-medium text-[#1A1A17]">Ürün görseli</h2>
       </div>
 
       {urunAdi && (
@@ -77,9 +77,12 @@ export default function GorselSekmesi({
       </p>
 
       {fotolar.length === 0 ? (
-        <div className="bg-amber-50 border-2 border-dashed border-amber-300 rounded-xl p-5 text-center space-y-1">
-          <p className="text-sm font-medium text-amber-700">↑ Önce ürün fotoğrafı yükle</p>
-          <p className="text-xs text-amber-500">Sayfanın üstündeki fotoğraf alanından ekleyebilirsin</p>
+        <div className="bg-[#F1F0EB] rounded-lg p-6 text-center">
+          <p className="text-sm text-[#5A5852]">Görsel üretmek için önce ürün fotoğrafı ekle</p>
+          <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="text-sm text-[#1E4DD8] hover:text-[#163B9E] font-medium mt-2 block mx-auto transition-colors">
+            Fotoğraf ekle
+          </button>
         </div>
       ) : (
         <FotoThumbnail src={fotolar[0]} onKaldir={() => fotoKaldir(0)} renk="green" />
@@ -103,23 +106,31 @@ export default function GorselSekmesi({
                   ...GORSEL_STILLER.filter(s => s.kategoriler.length === 0),
                 ]
               : GORSEL_STILLER;
-            return sirali.map((s) => (
-              <button key={s.id} onClick={() => stilToggle(s.id)}
-                className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${seciliStiller.has(s.id) ? "border-violet-500 shadow-md" : "border-gray-200 hover:border-violet-300"}`}>
-                {s.img ? (
-                  <div className="aspect-square w-full overflow-hidden relative bg-gray-50">
-                    <img src={s.img} alt={s.label} className="w-full h-full object-contain" />
-                    {seciliStiller.has(s.id) && <div className="absolute inset-0 bg-violet-500/20 flex items-center justify-center"><span className="bg-violet-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">✓</span></div>}
+            return sirali.map((s) => {
+              // Labeldan başındaki emoji + boşluğu at, sentence case yap
+              const raw = s.label.split(" ").slice(1).join(" ");
+              const displayLabel = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+              const secili = seciliStiller.has(s.id);
+              return (
+                <button key={s.id} onClick={() => stilToggle(s.id)}
+                  className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${secili ? "border-[#1E4DD8]" : "border-[#D8D6CE] hover:border-[#1E4DD8]"}`}>
+                  {s.img ? (
+                    <div className="aspect-square w-full overflow-hidden relative bg-[#F1F0EB]">
+                      <img src={s.img} alt={displayLabel} className="w-full h-full object-contain" />
+                      {secili && <div className="absolute inset-0 bg-[#1E4DD8]/15 flex items-center justify-center"><span className="bg-[#1E4DD8] text-white text-xs font-medium px-2 py-0.5 rounded-full">✓</span></div>}
+                    </div>
+                  ) : (
+                    <div className={`aspect-square w-full flex items-center justify-center text-[#5A5852] ${secili ? "bg-[#EBF1FB]" : "bg-[#F1F0EB]"}`}>
+                      <span className="text-xs font-medium">{displayLabel}</span>
+                    </div>
+                  )}
+                  <div className="p-2 bg-white w-full">
+                    <p className={`text-xs font-medium ${secili ? "text-[#1E4DD8]" : "text-[#1A1A17]"}`}>{displayLabel}</p>
+                    <p className="text-xs text-[#908E86]">{s.aciklama}</p>
                   </div>
-                ) : (
-                  <div className={`aspect-square w-full flex items-center justify-center text-2xl ${seciliStiller.has(s.id) ? "bg-violet-100" : "bg-gray-50"}`}>{s.id === "ozel" ? "✏️" : "🖼️"}</div>
-                )}
-                <div className="p-2 bg-white w-full">
-                  <p className={`text-xs font-semibold ${seciliStiller.has(s.id) ? "text-violet-600" : "text-gray-700"}`}>{s.label}</p>
-                  <p className="text-xs text-gray-400">{s.aciklama}</p>
-                </div>
-              </button>
-            ));
+                </button>
+              );
+            });
           })()}
         </div>
       </div>
@@ -153,16 +164,16 @@ export default function GorselSekmesi({
       )}
 
       <button onClick={gorselUret} disabled={gorselYukleniyor || seciliStiller.size === 0 || fotolar.length === 0}
-        className="w-full bg-violet-500 hover:bg-violet-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors">
+        className="w-full bg-[#1E4DD8] hover:bg-[#163B9E] disabled:bg-[#D8D6CE] disabled:text-[#908E86] text-white font-medium py-3 rounded-lg transition-colors">
         {gorselYukleniyor
-          ? `⏳ ${seciliStiller.size} görsel üretiliyor...`
+          ? `${seciliStiller.size} görsel üretiliyor...`
           : fotolar.length === 0
-            ? "Önce fotoğraf ekle ↑"
+            ? "Fotoğraf ekle"
             : seciliStiller.size === 0
               ? "Stil seç"
               : (!kullanici || kullanici.anonim)
-                ? `✨ ${seciliStiller.size} Görsel Üret — Giriş Gerekli`
-                : `✨ ${seciliStiller.size} Görsel Üret — ${kullanici.is_admin ? "∞" : seciliStiller.size} kredi`}
+                ? "Giriş yap ve başla"
+                : `${seciliStiller.size} görsel üret — ${kullanici.is_admin ? "∞" : seciliStiller.size} kredi`}
       </button>
 
       {gorselYukleniyor && (
