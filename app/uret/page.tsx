@@ -186,20 +186,20 @@ export default function Home() {
   return (
     <>
       <SiteHeader aktifSayfa="icerik" />
-      <main className="min-h-screen bg-gray-50 pb-24 px-4">
+      <main className="min-h-screen bg-[#FAFAF8] pb-24 px-4">
       <div className="max-w-5xl mx-auto pt-6">
 
         {/* Compact hero */}
         {!authYukleniyor && (!kullanici || kullanici.anonim) && (
-          <div className="bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 rounded-2xl px-6 py-7 mb-5 text-center">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">7 Pazaryeri için AI İçerik Üreticisi</h1>
-            <p className="text-sm text-gray-500 mb-1">Trendyol, Hepsiburada, Amazon, Etsy ve daha fazlası için — başlık, açıklama, görsel ve video tek platformda.</p>
-            <p className="text-xs text-indigo-500 mb-5">İçerik üretmek için ücretsiz hesap gerekli — 3 kredi hediye, kredi kartı yok.</p>
+          <div className="bg-[#F1F0EB] border border-[#D8D6CE] rounded-xl px-6 py-7 mb-5 text-center">
+            <h1 className="text-xl sm:text-2xl font-medium text-[#1A1A17] mb-2">7 pazaryeri için AI içerik üreticisi</h1>
+            <p className="text-sm text-[#5A5852] mb-1">Trendyol, Hepsiburada, Amazon, Etsy ve daha fazlası için — başlık, açıklama, görsel ve video tek platformda.</p>
+            <p className="text-xs text-[#5A5852] mb-5">İçerik üretmek için ücretsiz hesap gerekli — 3 kredi hediye, kredi kartı yok.</p>
             <div className="flex items-center justify-center gap-3 flex-wrap">
-              <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors">
-                Ücretsiz Hesap Oluştur — 3 Kredi Hediye
+              <button onClick={() => { setAuthPopupMod("kayit"); setAuthPopupAcik(true); }} className="bg-[#1E4DD8] hover:bg-[#163B9E] text-white font-medium px-6 py-2.5 rounded-xl text-sm transition-colors">
+                Ücretsiz hesap oluştur — 3 kredi hediye
               </button>
-              <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
+              <button onClick={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }} className="text-sm text-[#1E4DD8] hover:text-[#163B9E] font-medium transition-colors">
                 Giriş yap →
               </button>
             </div>
@@ -208,59 +208,49 @@ export default function Home() {
 
         {/* Profil eksik banner */}
         {kullanici && !kullanici.anonim && !kullanici.marka_adi && !profilBannerKapatildi && (
-          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className="text-xl flex-shrink-0">💡</span>
-              <div>
-                <p className="text-sm font-semibold text-blue-800">Marka profilinizi doldurun</p>
-                <p className="text-xs text-blue-600 mt-0.5">Marka adı, hedef kitle ve ton bilgileri girilince AI metinleri ve görseller çok daha kaliteli sonuç verir.</p>
-              </div>
+          <div className="bg-[#F1F0EB] border border-[#D8D6CE] rounded-xl p-4 mb-5 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-medium text-[#1A1A17]">Marka profilinizi doldurun</p>
+              <p className="text-xs text-[#5A5852] mt-0.5">Marka adı, hedef kitle ve ton bilgileri girilince AI metinleri ve görseller çok daha kaliteli sonuç verir.</p>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
-              <a href="/hesap/profil" className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap transition-colors">Profili Düzenle</a>
-              <button onClick={() => setProfilBannerKapatildi(true)} aria-label="Bildirimi kapat" className="text-blue-400 hover:text-blue-600 text-xl leading-none">×</button>
+              <a href="/hesap/profil" className="bg-[#1E4DD8] hover:bg-[#163B9E] text-white text-xs font-medium px-4 py-2 rounded-xl whitespace-nowrap transition-colors">Profili düzenle</a>
+              <button onClick={() => setProfilBannerKapatildi(true)} aria-label="Bildirimi kapat" className="text-[#908E86] hover:text-[#5A5852] text-xl leading-none transition-colors">×</button>
             </div>
           </div>
         )}
 
         {/* Kredi düşük banner */}
         {krediDusuk && (
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className="text-xl">⚠️</span>
-              <div>
-                <p className="text-sm font-semibold text-amber-800">İçerik üretim krediniz azalıyor</p>
-                <p className="text-xs text-amber-600 mt-0.5">{kredilerHook ?? kullanici?.kredi} kredi kaldı — tükenince içerik üretemezsiniz.</p>
-              </div>
+          <div className="bg-[#FEF4E7] border border-amber-200 rounded-xl p-4 mb-5 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-medium text-[#8B4513]">İçerik üretim krediniz azalıyor</p>
+              <p className="text-xs text-[#8B4513]/80 mt-0.5">{kredilerHook ?? kullanici?.kredi} kredi kaldı — tükenince içerik üretemezsiniz.</p>
             </div>
-            <button onClick={() => paketModalAc()} className="bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl whitespace-nowrap flex-shrink-0">Kredi Yükle</button>
+            <button onClick={() => paketModalAc()} className="bg-[#1E4DD8] hover:bg-[#163B9E] text-white text-xs font-medium px-4 py-2 rounded-xl whitespace-nowrap flex-shrink-0 transition-colors">Kredi yükle</button>
           </div>
         )}
 
         {/* Hata banner */}
         {hata && (
-          <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-4 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className="text-xl flex-shrink-0">⚠️</span>
-              <p className="text-sm text-red-700">{hata}</p>
-            </div>
-            <button onClick={() => setHata(null)} aria-label="Hatayı kapat" className="text-red-400 hover:text-red-600 text-xl flex-shrink-0">×</button>
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-4 flex items-center justify-between gap-4">
+            <p className="text-sm text-red-700 flex-1">{hata}</p>
+            <button onClick={() => setHata(null)} aria-label="Hatayı kapat" className="text-red-400 hover:text-red-600 text-xl flex-shrink-0 transition-colors">×</button>
           </div>
         )}
 
         {/* F-23b: Onboarding banner */}
         {kullanici && !kullanici.anonim && kullanici.toplam_kullanilan === 0 && !metin.sonuc && (
-          <div className="mb-4 bg-indigo-50 border border-indigo-200 rounded-2xl p-4 flex items-start gap-3">
-            <span className="text-2xl flex-shrink-0">🎉</span>
+          <div className="mb-4 bg-[#F1F0EB] border border-[#D8D6CE] rounded-xl p-4 flex items-start gap-3">
             <div className="flex-1">
-              <p className="text-sm font-semibold text-indigo-800">Hoş geldiniz! İşte nasıl başlayacağınız:</p>
-              <ol className="mt-1 space-y-0.5 text-xs text-indigo-700">
+              <p className="text-sm font-medium text-[#1A1A17]">Hoş geldiniz! İşte nasıl başlayacağınız:</p>
+              <ol className="mt-1 space-y-0.5 text-xs text-[#5A5852]">
                 <li>1. <span className="font-medium">Platform seç</span> — Trendyol, Amazon, Etsy vb.</li>
                 <li>2. <span className="font-medium">Ürün adı ve kategori gir</span> — mümkün olduğunca spesifik ol</li>
                 <li>3. <span className="font-medium">Üret butonuna bas</span> — AI 15-30 saniyede listing hazırlar</li>
               </ol>
             </div>
-            <button onClick={() => setKullanici(u => u ? { ...u, toplam_kullanilan: -1 } : null)} aria-label="İpuçlarını kapat" className="text-indigo-400 hover:text-indigo-600 text-lg flex-shrink-0">×</button>
+            <button onClick={() => setKullanici(u => u ? { ...u, toplam_kullanilan: -1 } : null)} aria-label="İpuçlarını kapat" className="text-[#908E86] hover:text-[#5A5852] text-lg flex-shrink-0 transition-colors">×</button>
           </div>
         )}
 
@@ -457,37 +447,40 @@ export default function Home() {
 
           {/* Sağ panel — Mini widget */}
           <div className="w-full lg:w-56 flex-shrink-0">
-            <div className="bg-white rounded-2xl shadow p-4 space-y-3 sticky top-4">
+            <div className="bg-white rounded-xl border border-[#D8D6CE] p-4 space-y-3 sticky top-4">
               {kullanici ? (
                 <>
                   <div className="flex gap-2">
-                    <div className="flex-1 bg-indigo-50 rounded-xl px-2 py-2 text-center">
-                      <div className={`text-lg font-bold ${kullanici.is_admin ? "text-violet-500" : krediDusuk ? "text-amber-500" : "text-indigo-500"}`}>
+                    <div className="flex-1 bg-[#F1F0EB] rounded-xl px-2 py-2 text-center">
+                      <div className={`text-lg font-medium ${kullanici.is_admin ? "text-[#5A5852]" : krediDusuk ? "text-amber-600" : "text-[#1E4DD8]"}`}>
                         {kullanici.is_admin ? "∞" : kullanici.kredi}
                       </div>
-                      <div className="text-xs text-gray-500">Kalan kredi</div>
+                      <div className="text-xs text-[#908E86]">Kalan kredi</div>
                     </div>
-                    <div className="flex-1 bg-gray-50 rounded-xl px-2 py-2 text-center">
-                      <div className="text-lg font-bold text-gray-700">{kullanici.toplam_kullanilan}</div>
-                      <div className="text-xs text-gray-500">Toplam üretim</div>
+                    <div className="flex-1 bg-[#F1F0EB] rounded-xl px-2 py-2 text-center">
+                      <div className="text-lg font-medium text-[#1A1A17]">{kullanici.toplam_kullanilan}</div>
+                      <div className="text-xs text-[#908E86]">Toplam üretim</div>
                     </div>
                   </div>
-                  <button onClick={() => paketModalAc()} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold py-2 rounded-xl transition-colors">
-                    + Kredi Al
+                  <button onClick={() => paketModalAc()} className="w-full bg-[#1E4DD8] hover:bg-[#163B9E] text-white text-xs font-medium py-2 rounded-xl transition-colors">
+                    + Kredi al
                   </button>
-                  {/* UX-21: Geçmiş üretimler linki */}
                   {!kullanici.anonim && gecmis.length > 0 && (
-                    <Link href="/hesap/uretimler" className="w-full flex items-center justify-between text-xs text-gray-500 hover:text-indigo-600 py-1.5 border border-gray-200 rounded-xl px-2 hover:border-indigo-300 transition-colors">
-                      <span>📋 Geçmiş Üretimlerim ({gecmis.length})</span>
+                    <Link href="/hesap/uretimler" className="w-full flex items-center justify-between text-xs text-[#5A5852] hover:text-[#1E4DD8] py-1.5 border border-[#D8D6CE] rounded-xl px-2 hover:border-[#1E4DD8] transition-colors">
+                      <span>Geçmiş üretimlerim ({gecmis.length})</span>
                       <span>→</span>
                     </Link>
                   )}
                 </>
               ) : (
                 <div className="space-y-2 py-1">
-                  <p className="text-xs font-semibold text-gray-600">💡 Nasıl çalışır?</p>
-                  <p className="text-xs text-gray-500 leading-relaxed">Platform seç → Ürünü anlat → İçeriğini al</p>
-                  <p className="text-xs text-gray-400">Metin, görsel, video ve sosyal medya tek yerden.</p>
+                  <p className="text-xs font-medium text-[#1A1A17]">3 adımda başla</p>
+                  <ol className="space-y-1 text-xs text-[#5A5852]">
+                    <li><span className="font-mono text-[#908E86]">1.</span> Platform seç</li>
+                    <li><span className="font-mono text-[#908E86]">2.</span> Ürünü anlat</li>
+                    <li><span className="font-mono text-[#908E86]">3.</span> İçeriğini al</li>
+                  </ol>
+                  <p className="text-xs text-[#908E86]">Metin, görsel, video ve sosyal medya tek yerden.</p>
                 </div>
               )}
             </div>
@@ -497,10 +490,10 @@ export default function Home() {
         {/* Auth Popup */}
         {authPopupAcik && (
           <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setAuthPopupAcik(false); }}>
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
-              <div className="flex items-center justify-between p-5 border-b border-gray-100">
-                <h2 className="text-lg font-bold text-gray-900">
-                  {authPopupMod === "kayit" ? "Hesap Oluştur" : "Giriş Yap"}
+            <div className="bg-white rounded-xl border border-[#D8D6CE] w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between p-5 border-b border-[#D8D6CE]">
+                <h2 className="text-lg font-medium text-[#1A1A17]">
+                  {authPopupMod === "kayit" ? "Hesap oluştur" : "Giriş yap"}
                 </h2>
                 <button onClick={() => setAuthPopupAcik(false)} aria-label="Kapat" className="text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
               </div>
