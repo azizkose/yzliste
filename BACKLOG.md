@@ -1438,6 +1438,233 @@ components/ChatWidget.tsx'deki chatbot system prompt'unda fiyatları 49/129/299'
 Projede grep ile eski fiyatların (39 TL, 99 TL, 249 TL) başka yerde kalmadığını doğrula.
 ```
 
+---
+
+## KÜME: /uret Redesign (RD-01 → RD-04)
+
+**Bağlam:** "Çakma ChatGPT" kullanıcı eleştirisi. Design system v2 ile /uret sayfası yeniden tasarlanıyor. Referans dosyalar: `docs/redesign/` altında.
+
+**Sıralama:** RD-01 → RD-02 → RD-03 → RD-04 (sıralı, her biri öncekine bağımlı).
+
+**IC-01 ile ilişki:** RD serisi /uret'i tamamen yeni design system'e geçirir. IC-01 sonra gelir ve /uret dışındaki sayfaları (landing, fiyatlar, hesap vb.) temizler. IC-01'in /uret dosyalarına dokunmasına gerek yok.
+
+### RD-01: Altyapı — Font + İkon Sistemi Değişikliği (P1 — 1-2 saat)
+
+**Amaç:** Design system v2'nin temel altyapısını kurmak: Geist → Inter font geçişi + Lucide strokeWidth standardı.
+
+**Yapılacaklar:**
+- [ ] `app/layout.tsx`: Geist font import'unu kaldır, Inter + Inter Display ekle (`next/font/google`, subsets: `latin`, `latin-ext`)
+- [ ] CSS variable'ları güncelle: `--font-inter` tanımla, body'de uygula
+- [ ] Tüm Lucide ikon kullanımlarında `strokeWidth={1.5}` standardını uygula (default 2'den düşür)
+- [ ] Tailwind config'de font-family override: `fontFamily: { sans: ['var(--font-inter)', ...] }`
+- [ ] Build test: `npm run build` hatasız geçmeli
+- [ ] Mevcut sayfaların görünümünü kırmadığını doğrula
+
+**Referans dosya:** `docs/redesign/yzliste-design-tokens.md` (Bölüm 2: Tipografi, Bölüm 7: İkonlar)
+
+**Dosyalar:** `app/layout.tsx`, `tailwind.config.ts`, Lucide kullanan tüm componentler
+
+**Test:**
+- [ ] Tüm sayfalarda Inter fontu yükleniyor mu? (DevTools → Computed → font-family)
+- [ ] Türkçe karakterler (ğ, ş, ç, ı, ö, ü) doğru render ediliyor mu?
+- [ ] Build başarılı mı?
+
+**Claude Code Promptu:**
+```
+RD-01: Altyapı — Font + İkon Sistemi Değişikliği
+
+docs/redesign/yzliste-design-tokens.md dosyasını oku (Bölüm 2 ve 7).
+
+1. app/layout.tsx'de Geist font import'unu kaldır, Inter ekle:
+   import { Inter } from 'next/font/google'
+   const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-inter', display: 'swap' })
+   Body'de className'e inter.variable ekle.
+
+2. tailwind.config.ts'de fontFamily.sans'a 'var(--font-inter)' ekle.
+
+3. Projede Lucide ikon kullanan tüm componentlerde strokeWidth={1.5} ekle (default 2 olanları bul ve düzelt).
+   grep -r "from 'lucide-react'" ile dosyaları bul, her birindeki ikon kullanımını kontrol et.
+
+4. npm run build ile test et. Hata varsa düzelt.
+
+NOT: Sadece font ve ikon altyapısı. Renk, spacing, radius değişikliği YAPMA — onlar RD-02'de.
+
+ÖNEMLİ: Başlamadan önce ve bitirmeden önce repo kökündeki CLAUDE.md dosyasındaki UI kurallarını oku. Kabul kontrol listesini geçmeden görevi tamamlandı sayma.
+```
+
+---
+
+### RD-02: Sekme + Platform Seçici + Info Bar Redesign (P1 — 2-3 saat)
+
+**Amaç:** /uret sayfasının üst kısmını (sekme navigasyonu, platform dropdown, kural bilgi çubuğu) design system v2'ye geçirmek.
+
+**Yapılacaklar:**
+- [ ] Sekme navigasyonu: Renkli ikon sekmelerden → beyaz kart içinde nötr buton sekmelerine geç (spec item A)
+- [ ] Platform dropdown: `<select>` elementini `<optgroup>` ile grupla — Türk/yabancı pazaryerleri (spec item B)
+- [ ] Info bar: Emoji kaldır, `bg-[#F1F0EB]` zemin, `·` separator ile inline kural listesi (spec item C)
+- [ ] Fotoğraf yükleme alanı: Emoji kaldır, Lucide `ImagePlus` ikonu, dashed border hover efekti (spec item D)
+- [ ] Panel başlığı: Emoji kaldır, text + mono kredi gösterimi (spec item E)
+- [ ] Tüm renkleri design tokens'tan al (spec'teki hex değerleri)
+
+**Bağımlılık:** RD-01 tamamlanmış olmalı (Inter font + Lucide altyapısı)
+
+**Referans dosyalar:**
+- `docs/redesign/yzliste-uret-spec.md` (item A, B, C, D, E)
+- `docs/redesign/yzliste-uret-prototype.tsx` (görsel referans)
+- `docs/redesign/yzliste-design-tokens.md` (renk + spacing değerleri)
+
+**Claude Code Promptu:**
+```
+RD-02: Sekme + Platform + Info Bar Redesign
+
+docs/redesign/yzliste-uret-spec.md dosyasını oku (item A, B, C, D, E).
+docs/redesign/yzliste-uret-prototype.tsx dosyasını referans al.
+docs/redesign/yzliste-design-tokens.md'den renk ve spacing değerlerini kullan.
+
+Sırayla uygula:
+1. Item A: Sekme navigasyonu — renkli ikonlu sekmeler → beyaz kart içinde nötr butonlar
+2. Item B: Platform dropdown — optgroup ile Türk/yabancı ayır
+3. Item C: Info bar — emoji kaldır, surface zemin, dot separator
+4. Item D: Fotoğraf yükleme — ImagePlus ikonu, dashed border
+5. Item E: Panel başlığı — emoji kaldır, kredi mono gösterim
+
+Renk değerleri: bg=#FAFAF8, surface=#F1F0EB, border=#D8D6CE, primary-text=#1A1A17, secondary=#5A5852, muted=#908E86, primary=#1E4DD8.
+
+Mevcut state/API mantığına DOKUNMA — sadece görsel değişiklik.
+npm run build ile test et.
+
+ÖNEMLİ: Başlamadan önce ve bitirmeden önce repo kökündeki CLAUDE.md dosyasındaki UI kurallarını oku. Kabul kontrol listesini geçmeden görevi tamamlandı sayma.
+```
+
+---
+
+### RD-03: Form Panelleri — Metin/Görsel/Video/Sosyal (P1 — 3-4 saat)
+
+**Amaç:** Dört sekmenin (metin, görsel, video, sosyal) içerik panellerini design system v2'ye geçirmek.
+
+**Yapılacaklar:**
+- [ ] Input method sekmesi: Emoji kaldır, alt çizgi tablar (underline tabs), Lucide ikonlar (spec item F)
+- [ ] Ana buton: Gradient kaldır, düz `bg-[#1E4DD8]` buton, disabled state nötr (spec item G)
+- [ ] Görsel stil galerisi: Emoji rozet kaldır, thumbnail grid + caption formatı (spec item H)
+- [ ] Video preset kartları: Emoji kaldır, Lucide ikon + metin, tek seçim (spec item I)
+- [ ] Kredi uyarısı: Emoji kaldır, semantik warning renkleri, Lucide `Zap` ikonu (spec item J)
+- [ ] Empty state (fotoğraf yok): Koşullu gösterim, soft CTA (spec item K)
+
+**Bağımlılık:** RD-02 tamamlanmış olmalı
+
+**Referans dosyalar:**
+- `docs/redesign/yzliste-uret-spec.md` (item F, G, H, I, J, K)
+- `docs/redesign/yzliste-uret-prototype.tsx`
+- `docs/redesign/yzliste-design-tokens.md`
+
+**Claude Code Promptu:**
+```
+RD-03: Form Panelleri Redesign
+
+docs/redesign/yzliste-uret-spec.md dosyasını oku (item F, G, H, I, J, K).
+docs/redesign/yzliste-uret-prototype.tsx dosyasını referans al.
+
+Sırayla uygula:
+1. Item F: Input method tabs — emoji → Lucide (Edit3, Camera, ScanLine, FileSpreadsheet), underline tab stili
+2. Item G: Ana buton — gradient kaldır, düz primary buton
+3. Item H: Görsel stil galerisi — emoji rozet → thumbnail grid, checkbox yerine ring seçim
+4. Item I: Video presetleri — emoji → Lucide ikon, kart formatı
+5. Item J: Kredi uyarısı — emoji → Zap ikonu, warning semantik renkleri
+6. Item K: Empty state — fotoğraf yoksa soft mesaj + CTA
+
+constants.ts'deki GORSEL_STILLER ve VIDEO_PRESETLER arraylerindeki emoji ikon alanlarını Lucide ikon adıyla değiştir (ama emoji label'ları KALDIRMA — sadece UI render'ında Lucide kullan).
+
+npm run build ile test et.
+
+ÖNEMLİ: Başlamadan önce ve bitirmeden önce repo kökündeki CLAUDE.md dosyasındaki UI kurallarını oku. Kabul kontrol listesini geçmeden görevi tamamlandı sayma.
+```
+
+---
+
+### RD-04: Bildirim, Chat Butonu ve Yan Panel (P1 — 1-2 saat)
+
+**Amaç:** /uret sayfasındaki kalan elementleri (chat butonu, yan panel, footer notu) design system v2'ye geçirmek.
+
+**Yapılacaklar:**
+- [ ] Chat butonu: Emoji kaldır, Lucide `MessageCircle`, koyu nötr zemin `bg-[#1A1A17]` (spec item L)
+- [ ] Yan panel ("3 adımda"): Card stili, adımları mono numara ile göster (spec item M)
+- [ ] Sayfa geneli: `bg-[#FAFAF8]` arka plan, `rounded-xl` → max `rounded-xl` (12px) kontrolü
+- [ ] Tüm shadow sınıflarını kaldır (shadow-sm, shadow-md vb.) — sadece border ile ayrım
+- [ ] Son geçiş: Tüm sayfada kalan Title Case → sentence case dönüşümü
+- [ ] Genel QA: Tüm değişikliklerin tutarlılığını kontrol et
+
+**Bağımlılık:** RD-03 tamamlanmış olmalı
+
+**Referans dosyalar:**
+- `docs/redesign/yzliste-uret-spec.md` (item L, M)
+- `docs/redesign/yzliste-uret-prototype.tsx`
+- `docs/redesign/yzliste-design-tokens.md` (Bölüm 9: Değişmeyen prensipler)
+
+**Claude Code Promptu:**
+```
+RD-04: Bildirim, Chat ve Yan Panel + Final QA
+
+docs/redesign/yzliste-uret-spec.md dosyasını oku (item L, M).
+docs/redesign/yzliste-design-tokens.md Bölüm 9'u oku (değişmeyen prensipler).
+
+1. Item L: Chat butonu — emoji → MessageCircle, bg-[#1A1A17]
+2. Item M: Yan panel — kart içinde 3 adım, mono numara
+3. Sayfa arka planı bg-[#FAFAF8] olmalı
+4. Tüm shadow- sınıflarını /uret sayfası componentlerinden kaldır
+5. rounded-2xl, rounded-3xl varsa rounded-xl'e düşür (max 12px)
+6. Title Case metinleri sentence case'e çevir
+
+Final QA:
+- Tüm sekmeleri (metin, görsel, video, sosyal) tek tek kontrol et
+- Mobil responsive kırılma var mı?
+- npm run build hatasız geçmeli
+
+NOT: Bu son görev — tamamlanınca /uret redesign bitti.
+
+ÖNEMLİ: Başlamadan önce ve bitirmeden önce repo kökündeki CLAUDE.md dosyasındaki UI kurallarını oku. Kabul kontrol listesini geçmeden görevi tamamlandı sayma.
+```
+
+---
+
+### IC-01: Emoji Temizliği ve İkon Sistemi (P1 — 4-6 saat)
+
+**Bağlam:** Sitedeki tüm emoji kullanımı iki katmanlı ikon sistemine geçiyor. Marketing alanları → 3D ikonlar (3dicons.co), fonksiyonel UI → Lucide React. Kalıcı kural: bundan sonra UI'da emoji YASAK.
+
+**⚠️ /uret dosyaları ATLANIR:** RD-01→RD-04 /uret sayfasını zaten design system v2'ye geçirmiş olacak. IC-01 sadece /uret dışındaki sayfaları (landing, fiyatlar, hesap, header vb.) kapsar.
+
+**Detaylı spec:** `cowork-asama2-prompt.md` dosyasında 7 adımlı tam plan var. Özet:
+
+**ADIM 1-2:** 17 adet 3D ikon indir (`public/icons/3d/`) + `Icon3D.tsx` helper component oluştur
+**ADIM 3:** Marketing bölgelerinde emoji → 3D ikon (BenefitsGrid, HowItWorks, TrustBand, BrandProfile, FeaturesTabbed sekme ikonları, SiteHeader, fiyatlar kartları, "Tek platformda 4 içerik türü" bölümü)
+**ADIM 4:** Fonksiyonel UI'da emoji → Lucide (~30 dosya, eşleme tablosu spec'te) — **/uret altındaki dosyalar hariç**
+**ADIM 5:** DOKUNULMAYACAKLAR: listing-utils.ts, excel-parser.ts, uret/route.ts (AI prompt), constants.ts (görsel/video presetleri), blog md dosyaları, FeaturesTabbed örnek metinleri, **+ /uret sayfası componentleri (RD tarafından yapıldı)**
+**ADIM 6:** CLAUDE.md'ye ikon sistemi kuralı ekle
+**ADIM 7:** Test (dev + build + üretim akışı parse kontrolü)
+
+**Bağımlılık:** RD-04 tamamlanmış olmalı.
+
+**Claude Code Promptu:**
+```
+IC-01: Emoji temizliği ve ikon sistemi.
+Projedeki cowork-asama2-prompt.md dosyasını oku (veya BACKLOG.md'deki IC-01 spec'ini oku).
+Adım adım ilerle: önce ikon indir + Icon3D component, sonra 3D ikon değişiklikleri, sonra Lucide dönüşümü.
+DOKUNMA: listing-utils.ts, excel-parser.ts, uret/route.ts, constants.ts (görsel/video preset), blog md dosyaları, FeaturesTabbed örnek listing metinleri.
+DOKUNMA: /uret sayfası componentleri (RD-01→RD-04 tarafından zaten yapıldı).
+İkon indirme başarısız olursa bana söyle, ben yüklerim.
+Her adım sonrası rapor ver.
+
+ÖNEMLİ: Başlamadan önce ve bitirmeden önce repo kökündeki CLAUDE.md dosyasındaki UI kurallarını oku. Kabul kontrol listesini geçmeden görevi tamamlandı sayma.
+```
+
+**Öncelik sırası (adım adım yapılabilir):**
+1. ADIM 1-2 (ikon indirme + helper)
+2. ADIM 3 (3D ikonlar — en görünür etki)
+3. ADIM 6 (CLAUDE.md — kalıcılık için kritik)
+4. ADIM 4 (Lucide dönüşümü — uzun ama tekrarlı iş)
+5. ADIM 7 (test)
+
+---
+
 ### LP-10: Araçlar Dropdown — Buton Düzeni (P2 — 15dk)
 
 **Bağlam:** Araçlar dropdown'unda "Kullan →" ve "Detaylar" linkleri var. Mevcut sıra: Kullan solda, Detaylar sağda. Kullanıcı CTA'yı sağda bekliyor.

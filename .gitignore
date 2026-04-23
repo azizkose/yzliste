@@ -45,3 +45,6 @@ next-env.d.ts
 test-results/
 playwright-report/
 .tmp.driveupload/
+
+# strateji arşivi — sadece kişisel kayıt
+docs/redesign/yzliste-strateji-kararlari.md
