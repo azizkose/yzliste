@@ -17,6 +17,7 @@ import GorselSekmesi from "@/components/tabs/GorselSekmesi";
 import VideoSekmesi from "@/components/tabs/VideoSekmesi";
 import SosyalSekmesi from "@/components/tabs/SosyalSekmesi";
 import Link from "next/link";
+import { FileText, Image as ImageIcon, Video, Share2, ImagePlus } from "lucide-react";
 import { useMetinUretim } from "@/lib/hooks/useMetinUretim";
 import { useGorselUretim } from "@/lib/hooks/useGorselUretim";
 import { useVideoUretim } from "@/lib/hooks/useVideoUretim";
@@ -268,122 +269,113 @@ export default function Home() {
           <div className="flex-1 w-full">
 
             {/* SEKMELER */}
-            <div role="tablist" aria-label="İçerik türü seçimi" className="bg-white rounded-2xl shadow p-1.5 flex gap-1">
+            <div role="tablist" aria-label="İçerik türü seçimi" className="bg-white border border-[#D8D6CE] rounded-xl p-1 flex gap-0.5">
               {([
-                { id: "metin", label: "📝 Metin", renk: "bg-blue-500", aktif: true },
-                { id: "gorsel", label: "📷 Görsel", renk: "bg-violet-500", aktif: true },
-                { id: "sosyal", label: "📱 Sosyal Medya", renk: "bg-emerald-500", aktif: true },
-                { id: "video", label: "🎬 Video", renk: "bg-amber-500", aktif: true },
-              ] as { id: AnaSekme; label: string; renk: string; aktif: boolean }[]).map((s) => (
-                <button key={s.id}
+                { id: "metin" as AnaSekme, label: "Metin", Icon: FileText },
+                { id: "gorsel" as AnaSekme, label: "Görsel", Icon: ImageIcon },
+                { id: "sosyal" as AnaSekme, label: "Sosyal medya", Icon: Share2 },
+                { id: "video" as AnaSekme, label: "Video", Icon: Video },
+              ]).map(({ id, label, Icon }) => (
+                <button key={id}
                   role="tab"
-                  aria-selected={anaSekme === s.id}
-                  aria-controls={`sekme-panel-${s.id}`}
-                  onClick={() => { if (s.aktif) { setAnaSekme(s.id); window.scrollTo({ top: 0, behavior: "smooth" }); } }}
-                  disabled={!s.aktif}
-                  className={`flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                    !s.aktif ? "text-gray-300 cursor-not-allowed" :
-                    anaSekme === s.id ? `${s.renk} text-white shadow-sm` : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                  aria-selected={anaSekme === id}
+                  aria-controls={`sekme-panel-${id}`}
+                  onClick={() => { setAnaSekme(id); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                  className={`flex-1 py-2.5 rounded-lg text-xs sm:text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+                    anaSekme === id ? "bg-[#F1F0EB] text-[#1A1A17]" : "text-[#5A5852] hover:text-[#1A1A17] hover:bg-[#FAFAF8]"
                   }`}>
-                  <span>{s.label}</span>
-                  {!s.aktif && <span className="block text-xs font-normal opacity-70">yakında</span>}
+                  <Icon size={16} strokeWidth={1.5} />
+                  <span>{label}</span>
                 </button>
               ))}
             </div>
 
             {/* GLOBAL PLATFORM SEÇİMİ */}
-            <div className="mt-3 bg-white rounded-2xl shadow p-4">
+            <div className="mt-3 bg-white border border-[#D8D6CE] rounded-xl p-4">
               <div className="flex items-center gap-3">
-                <label className="text-sm font-medium text-gray-700 whitespace-nowrap flex-shrink-0">Platform</label>
+                <label className="text-sm font-medium text-[#1A1A17] whitespace-nowrap flex-shrink-0">Platform</label>
                 <select
                   value={metin.platform}
                   onChange={(e) => { metin.setPlatform(e.target.value); metin.setDil(PLATFORM_BILGI[e.target.value]?.dil || "tr"); }}
-                  className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="flex-1 border border-[#D8D6CE] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#1E4DD8] focus:ring-2 focus:ring-[#1E4DD8]/20 transition-colors"
                 >
-                  <optgroup label="🇹🇷 Türk Pazaryerleri">
+                  <optgroup label="Türk pazaryerleri">
                     <option value="trendyol">Trendyol</option>
                     <option value="hepsiburada">Hepsiburada</option>
                     <option value="amazon">Amazon TR</option>
                     <option value="n11">N11</option>
                   </optgroup>
-                  <optgroup label="🌍 Yabancı Pazaryerleri (İngilizce)">
+                  <optgroup label="Yabancı pazaryerleri (İngilizce)">
                     <option value="etsy">Etsy</option>
                     <option value="amazon_usa">Amazon USA</option>
                   </optgroup>
                 </select>
               </div>
               {(() => {
+                const bar = "mt-2 bg-[#F1F0EB] rounded-lg px-3 py-2 flex items-center gap-2 flex-wrap text-xs text-[#5A5852]";
+                const dot = <span className="text-[#D8D6CE]">·</span>;
                 if (anaSekme === "gorsel") {
                   return (
-                    <div className="mt-2 flex flex-wrap gap-2 text-xs px-3 py-1.5 rounded-lg border bg-violet-50 border-violet-200 text-violet-700">
-                      <span>📐 1:1 kare tercih</span><span>·</span><span>🖼️ 7 stüdyo stili</span><span>·</span><span>📷 PNG çıktı</span><span>·</span><span>Stil başına 1 kredi</span>
+                    <div className={bar}>
+                      <span>1:1 kare tercih</span>{dot}<span>7 stüdyo stili</span>{dot}<span>PNG çıktı</span>{dot}<span>Stil başına 1 kredi</span>
                     </div>
                   );
                 }
                 if (anaSekme === "video") {
                   return (
-                    <div className="mt-2 flex flex-wrap gap-2 text-xs px-3 py-1.5 rounded-lg border bg-amber-50 border-amber-200 text-amber-700">
-                      <span>🎬 5sn (10kr) · 10sn (20kr)</span><span>·</span><span>📐 9:16 / 1:1 / 16:9</span><span>·</span><span>🎥 MP4 çıktı</span>
+                    <div className={bar}>
+                      <span>5sn 10kr · 10sn 20kr</span>{dot}<span>9:16 / 1:1 / 16:9</span>{dot}<span>MP4 çıktı</span>
                     </div>
                   );
                 }
                 if (anaSekme === "sosyal") {
                   return (
-                    <div className="mt-2 flex flex-wrap gap-2 text-xs px-3 py-1.5 rounded-lg border bg-emerald-50 border-emerald-200 text-emerald-700">
-                      <span>📸 4 platform</span><span>·</span><span>#️⃣ Caption + Hashtag</span><span>·</span><span>🎁 Kit: 3 kredi</span>
+                    <div className={bar}>
+                      <span>4 platform</span>{dot}<span>Caption ve hashtag</span>{dot}<span>Kit: 3 kredi</span>
                     </div>
                   );
                 }
                 const pb = PLATFORM_BILGI[metin.platform] || PLATFORM_BILGI.trendyol;
                 const platformDil = pb.dil || "tr";
                 return (
-                  <div className={`mt-2 flex flex-wrap gap-2 text-xs px-3 py-1.5 rounded-lg border ${pb.renk}`}>
-                    <span>📌 Max {pb.baslikLimit} karakter başlık</span>
-                    {pb.ozellikSayisi > 0 && <><span>·</span><span>🔹 {pb.ozellikSayisi} özellik</span></>}
-                    {pb.etiketSayisi > 0 && <><span>·</span><span>🏷️ {pb.etiketSayisi} etiket</span></>}
-                    <span>·</span>
-                    <span>{platformDil === "en" ? "🇬🇧 İngilizce çıktı" : "🇹🇷 Türkçe çıktı"}</span>
+                  <div className={bar}>
+                    <span>Başlık {pb.baslikLimit} karakter</span>
+                    {pb.ozellikSayisi > 0 && <>{dot}<span>{pb.ozellikSayisi} özellik maddesi</span></>}
+                    {pb.etiketSayisi > 0 && <>{dot}<span>{pb.etiketSayisi} arama etiketi</span></>}
+                    {dot}
+                    <span>{platformDil === "en" ? "İngilizce çıktı" : "Türkçe çıktı"}</span>
                   </div>
                 );
               })()}
             </div>
 
             {/* PAYLAŞILAN ÜRÜN FOTOĞRAFI */}
-            <div className="mt-3 bg-white rounded-2xl shadow p-4">
+            <div className={`mt-3 bg-white rounded-xl p-4 transition-colors ${fotolar[0] ? "border border-[#D8D6CE]" : "border border-dashed border-[#D8D6CE] hover:border-[#1E4DD8]"}`}>
               {fotolar[0] ? (
                 <div className="flex items-center gap-3">
-                  <img src={fotolar[0]} alt="ürün" className="w-14 h-14 rounded-xl object-cover border border-gray-100 flex-shrink-0" />
+                  <img src={fotolar[0]} alt="ürün" className="w-14 h-14 rounded-xl object-cover border border-[#D8D6CE] flex-shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-gray-700">Ürün Fotoğrafı</p>
-                    <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                      {[
-                        { id: "metin", label: "📝 Metin", renk: "bg-blue-100 text-blue-600" },
-                        { id: "gorsel", label: "📷 Görsel", renk: "bg-violet-100 text-violet-600" },
-                        { id: "video", label: "🎬 Video", renk: "bg-amber-100 text-amber-600" },
-                        { id: "sosyal", label: "📱 Sosyal", renk: "bg-emerald-100 text-emerald-600" },
-                      ].map((s) => (
-                        <span key={s.id} className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${s.renk}`}>{s.label}</span>
-                      ))}
-                    </div>
+                    <p className="text-xs font-medium text-[#1A1A17]">Ürün fotoğrafı</p>
+                    <p className="text-xs text-[#908E86] mt-0.5">Metin, Görsel, Video, Sosyal</p>
                   </div>
                   <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                    <label className="text-xs text-blue-500 hover:text-blue-700 cursor-pointer font-medium">
+                    <label className="text-xs text-[#1E4DD8] hover:text-[#163B9E] cursor-pointer font-medium transition-colors">
                       Değiştir
                       <input type="file" accept="image/*" className="hidden" onChange={tekFotoSec} />
                     </label>
-                    <button onClick={() => { setFotolar([]); gorsel.setGorselJoblar([]); }} className="text-xs text-gray-400 hover:text-red-500 transition-colors">Kaldır</button>
+                    <button onClick={() => { setFotolar([]); gorsel.setGorselJoblar([]); }} className="text-xs text-[#908E86] hover:text-red-500 transition-colors">Kaldır</button>
                   </div>
                 </div>
               ) : (
                 <label className="flex items-center gap-3 cursor-pointer group">
-                  <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 group-hover:border-indigo-300 flex items-center justify-center transition-colors flex-shrink-0">
-                    <span className="text-xl">📷</span>
+                  <div className="w-12 h-12 rounded-lg bg-[#F1F0EB] group-hover:bg-[#EBF1FB] flex items-center justify-center flex-shrink-0 transition-colors">
+                    <ImagePlus size={20} strokeWidth={1.5} className="text-[#5A5852] group-hover:text-[#1E4DD8] transition-colors" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-600 group-hover:text-indigo-600 transition-colors">Ürün fotoğrafı yükle</p>
-                    <p className="text-xs text-gray-400 mt-0.5">Metin, Görsel, Video ve Sosyal sekmelerin hepsinde kullanılır</p>
+                    <p className="text-sm font-medium text-[#1A1A17]">Ürün fotoğrafı yükle</p>
+                    <p className="text-xs text-[#908E86] mt-0.5">Tüm içerik türlerinde kullanılır</p>
                   </div>
-                  <span className="text-xs text-gray-400 group-hover:text-indigo-500 transition-colors flex-shrink-0">Seç →</span>
+                  <span className="text-xs text-[#908E86] group-hover:text-[#1E4DD8] transition-colors flex-shrink-0">Seç</span>
                   <input type="file" accept="image/*" className="hidden" onChange={tekFotoSec} />
                 </label>
               )}
