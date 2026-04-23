@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
@@ -9,14 +9,10 @@ import PostHogProvider from "@/components/providers/PostHogProvider";
 import PostHogPageView from "@/components/analytics/PostHogPageView";
 import CookieConsentBanner from "@/components/consent/CookieConsent";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const inter = Inter({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-inter",
+  display: "swap",
 });
 
 
@@ -145,7 +141,7 @@ export default async function RootLayout({
   return (
     <html
       lang="tr"
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      className={`${inter.variable} antialiased`}
     >
       <head>
         <RootJsonLd />
