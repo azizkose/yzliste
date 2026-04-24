@@ -573,14 +573,14 @@ Video (10-20 kredi), sosyal kit (2 kredi), yzstudio mankene giydirme (3-12 kredi
 - [x] Buton içinde kredi bilgisi render et (örn: `{label} — {kredi} kredi`)
 - [x] `kredi >= 2` ise onClick'te onay dialog'u göster (confirm modal veya alert dialog)
 - [x] Dialog: "Bu işlem {kredi} kredi harcar. Kalan krediniz: {kalan}. Devam?" + Vazgeç/Devam butonları
-- [ ] Tüm üretim butonlarını `<KrediButon>` ile değiştir:
-  - `components/tabs/MetinSekmesi.tsx` — içerik üret butonu
-  - `components/tabs/GorselSekmesi.tsx` — görsel üret butonu  
-  - `components/tabs/VideoSekmesi.tsx` — video üret butonu + model seçimi
-  - `components/tabs/SosyalSekmesi.tsx` — caption üret + kit üret butonları
-  - Düzenleme butonları (kısalt, genişlet, ton değiştir vb.)
-- [ ] Video sekmesinde süre seçimine göre buton kredi badge'ini dinamik güncelle (5sn→10kr, 10sn→20kr)
-- [ ] Mankene giydirme butonunda 3 kredi badge'i göster
+- [x] Tüm üretim butonlarını `<KrediButon>` ile değiştir:
+  - [x] `components/tabs/MetinSekmesi.tsx` — 1 kredi (7255757)
+  - [x] `components/tabs/GorselSekmesi.tsx` — seciliStiller.size kredi, 2+ stilde dialog (7255757)
+  - [x] `components/tabs/VideoSekmesi.tsx` — video üret butonu (önceden yapılmıştı)
+  - [x] `components/tabs/SosyalSekmesi.tsx` — caption üret + kit üret (önceden yapılmıştı)
+  - [ ] Düzenleme butonları (kısalt, genişlet, ton değiştir vb.) — P3, akışı yavaşlatır
+- [x] Video sekmesinde süre seçimine göre buton kredi badge'i dinamik (VideoSekmesi'nde zaten mevcut)
+- [ ] Mankene giydirme butonunda 3 kredi badge'i göster — NF-02 sonrası
 - [ ] Test: her üretim tipinde doğru kredi gösterilsin, 2+ kredide dialog çıksın
 
 **Dosyalar:** `components/ui/KrediButon.tsx` (yeni), tüm sekme component'leri, video sekmesi
