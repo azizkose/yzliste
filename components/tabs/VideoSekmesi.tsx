@@ -184,7 +184,7 @@ export default function VideoSekmesi({
           disabled={videoYukleniyor || (!kullanici.is_admin && (kullanici.kredi ?? 0) < (videoSure === "10" ? 20 : 10))}
           yukleniyor={videoYukleniyor}
           yukleniyorLabel="Video üretiliyor..."
-          renk="indigo"
+          renk="primary"
         />
       )}
 

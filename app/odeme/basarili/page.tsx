@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { Check } from 'lucide-react'
 import { analytics } from '@/lib/analytics'
 import { useInvalidateCredits } from '@/lib/hooks/useCredits'
-import { Suspense } from 'react'
 
 function OdemeBasariliIcerik() {
   const searchParams = useSearchParams()
@@ -24,24 +24,24 @@ function OdemeBasariliIcerik() {
   }, [searchParams, invalidateCredits])
 
   return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-[#FAFAF8] flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-10">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <span className="text-2xl">✓</span>
+        <div className="bg-white rounded-xl border border-[#D8D6CE] p-10">
+          <div className="w-16 h-16 bg-[#E8F5EE] rounded-full flex items-center justify-center mx-auto mb-6">
+            <Check size={28} strokeWidth={2} className="text-[#0F5132]" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Ödeme Başarılı!</h1>
-          <p className="text-gray-500 text-sm mb-8 leading-relaxed">
+          <h1 className="text-2xl font-medium text-[#1A1A17] mb-2">Ödeme başarılı!</h1>
+          <p className="text-[#908E86] text-sm mb-8 leading-relaxed">
             Krediniz hesabınıza eklendi. Hemen içerik üretmeye başlayabilirsiniz.
           </p>
           <div className="flex flex-col gap-3">
             <Link
               href="/"
-              className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
+              className="bg-[#1E4DD8] hover:bg-[#163B9E] text-white font-medium py-3 rounded-lg text-sm transition-colors"
             >
-              İçerik Üret →
+              İçerik üret
             </Link>
-            <Link href="/hesap/krediler" className="text-sm text-gray-400 hover:text-gray-600 py-2">
+            <Link href="/hesap/krediler" className="text-sm text-[#908E86] hover:text-[#5A5852] py-2">
               Kredi geçmişini gör
             </Link>
           </div>

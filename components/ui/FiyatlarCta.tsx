@@ -24,7 +24,7 @@ export default function FiyatlarCta({ className, variant = 'primary', paketButon
   if (girisVar) {
     if (variant === 'paket') {
       return (
-        <a href="/kredi-yukle" className={`block text-center ${paketButonRenk} text-white font-semibold py-3 rounded-xl text-sm transition-colors ${className ?? ''}`}>
+        <a href="/kredi-yukle" className={`block text-center ${paketButonRenk} text-white font-medium py-3 rounded-xl text-sm transition-colors ${className ?? ''}`}>
           Satın Al →
         </a>
       )
@@ -38,7 +38,7 @@ export default function FiyatlarCta({ className, variant = 'primary', paketButon
 
   if (variant === 'paket') {
     return (
-      <a href="/kayit" className={`block text-center ${paketButonRenk} text-white font-semibold py-3 rounded-xl text-sm transition-colors ${className ?? ''}`}>
+      <a href="/kayit" className={`block text-center ${paketButonRenk} text-white font-medium py-3 rounded-xl text-sm transition-colors ${className ?? ''}`}>
         {paketLabel}
       </a>
     )

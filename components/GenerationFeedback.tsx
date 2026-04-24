@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Check, ThumbsUp, ThumbsDown } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 interface Props {
@@ -51,33 +52,33 @@ export default function GenerationFeedback({ sessionId, platform, category }: Pr
 
   if (submitted) {
     return (
-      <div className="flex items-center gap-2 text-sm text-gray-400 mt-4">
-        <span>✓</span> Geri bildiriminiz alındı, teşekkürler!
+      <div className="flex items-center gap-2 text-sm text-[#908E86] mt-4">
+        <Check size={14} strokeWidth={2} /> Geri bildiriminiz alındı, teşekkürler!
       </div>
     );
   }
 
   return (
-    <div className="mt-4 pt-4 border-t border-gray-100">
+    <div className="mt-4 pt-4 border-t border-[#D8D6CE]">
       <div className="flex items-center gap-3">
-        <span className="text-sm text-gray-500">Bu sonuç faydalı oldu mu?</span>
+        <span className="text-sm text-[#5A5852]">Bu sonuç faydalı oldu mu?</span>
         <button
           onClick={() => handleRate("up")}
-          className={`p-2 rounded-lg text-lg hover:bg-green-50 transition-colors ${
-            rating === "up" ? "bg-green-50 ring-2 ring-green-200" : ""
+          className={`p-2 rounded-lg hover:bg-[#E8F5EE] transition-colors ${
+            rating === "up" ? "bg-[#E8F5EE] ring-2 ring-[#0F5132]/20" : ""
           }`}
           title="Evet, faydalı"
         >
-          👍
+          <ThumbsUp size={16} strokeWidth={1.5} className={rating === "up" ? "text-[#0F5132]" : "text-[#908E86]"} />
         </button>
         <button
           onClick={() => handleRate("down")}
-          className={`p-2 rounded-lg text-lg hover:bg-red-50 transition-colors ${
-            rating === "down" ? "bg-red-50 ring-2 ring-red-200" : ""
+          className={`p-2 rounded-lg hover:bg-[#FCECEC] transition-colors ${
+            rating === "down" ? "bg-[#FCECEC] ring-2 ring-[#7A1E1E]/20" : ""
           }`}
           title="Hayır, faydalı değil"
         >
-          👎
+          <ThumbsDown size={16} strokeWidth={1.5} className={rating === "down" ? "text-[#7A1E1E]" : "text-[#908E86]"} />
         </button>
       </div>
 
@@ -88,12 +89,12 @@ export default function GenerationFeedback({ sessionId, platform, category }: Pr
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Ne eksik veya yanlış? (opsiyonel)"
-            className="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            className="flex-1 text-sm border border-[#D8D6CE] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#BAC9EB]"
             maxLength={500}
           />
           <button
             onClick={() => submitFeedback("down", comment)}
-            className="text-sm bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition-colors"
+            className="text-sm bg-[#1E4DD8] text-white px-4 py-2 rounded-lg hover:bg-[#163B9E] transition-colors"
           >
             Gönder
           </button>

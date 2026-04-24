@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { FileText, Check, Loader2, Download, Mail } from 'lucide-react'
 
 type Odeme = {
   id: string
@@ -79,23 +80,23 @@ export default function FaturalarPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-12">
+    <main className="min-h-screen bg-[#FAFAF8] px-4 py-12">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
-          <Link href="/hesap" className="text-sm text-gray-400 hover:text-gray-600">← Hesap</Link>
-          <h1 className="text-2xl font-bold text-gray-900">Faturalar</h1>
+          <Link href="/hesap" className="text-sm text-[#908E86] hover:text-[#5A5852]">← Hesap</Link>
+          <h1 className="text-2xl font-medium text-[#1A1A17]">Faturalar</h1>
         </div>
 
         {yukleniyor ? (
-          <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center text-gray-400">
+          <div className="bg-white rounded-xl border border-[#D8D6CE] p-8 text-center text-[#908E86]">
             Yükleniyor...
           </div>
         ) : odemeler.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-gray-100 p-10 text-center">
-            <p className="text-4xl mb-3">🧾</p>
-            <p className="text-gray-600 font-medium">Henüz faturanız yok</p>
-            <p className="text-sm text-gray-400 mt-1">Kredi satın aldıktan sonra faturalarınız burada görünür.</p>
-            <Link href="/kredi-yukle" className="inline-block mt-5 bg-indigo-500 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-indigo-600 transition-colors">
+          <div className="bg-white rounded-xl border border-[#D8D6CE] p-10 text-center">
+            <FileText size={40} strokeWidth={1.5} className="text-[#908E86] mx-auto mb-3" />
+            <p className="text-[#5A5852] font-medium">Henüz faturanız yok</p>
+            <p className="text-sm text-[#908E86] mt-1">Kredi satın aldıktan sonra faturalarınız burada görünür.</p>
+            <Link href="/kredi-yukle" className="inline-block mt-5 bg-[#1E4DD8] text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-[#163B9E] transition-colors">
               Kredi Satın Al →
             </Link>
           </div>
@@ -108,22 +109,23 @@ export default function FaturalarPage() {
               const aksiyonYukleniyor = aksiyonDurum[odeme.id]
 
               return (
-                <div key={odeme.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+                <div key={odeme.id} className="bg-white rounded-xl border border-[#D8D6CE] p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
-                      <p className="font-semibold text-gray-800 text-sm">
+                      <p className="font-medium text-[#1A1A17] text-sm">
                         {PAKET_ISIM[odeme.paket] ?? odeme.paket}
                       </p>
-                      <p className="text-xs text-gray-400 mt-0.5">{tarih}</p>
+                      <p className="text-xs text-[#908E86] mt-0.5">{tarih}</p>
                       <div className="flex items-center gap-3 mt-2">
-                        <span className="text-sm font-bold text-gray-900">
+                        <span className="text-sm font-medium text-[#1A1A17]">
                           ₺{odeme.tutar.toLocaleString('tr-TR')}
                         </span>
-                        <span className="text-xs bg-green-50 text-green-600 font-medium px-2 py-0.5 rounded-full">
-                          ✓ Ödendi
+                        <span className="text-xs bg-[#E8F5EE] text-[#0F5132] font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
+                          <Check size={10} strokeWidth={2} />
+                          Ödendi
                         </span>
                         {!odeme.parasut_fatura_id && (
-                          <span className="text-xs bg-yellow-50 text-yellow-600 font-medium px-2 py-0.5 rounded-full">
+                          <span className="text-xs bg-[#FEF4E7] text-[#8B4513] font-medium px-2 py-0.5 rounded-full">
                             Fatura oluşturuluyor
                           </span>
                         )}
@@ -134,16 +136,25 @@ export default function FaturalarPage() {
                         <button
                           onClick={() => pdfIndir(odeme.id)}
                           disabled={!!aksiyonYukleniyor}
-                          className="flex items-center gap-1.5 text-xs bg-indigo-50 text-indigo-600 hover:bg-indigo-100 font-medium px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
+                          className="flex items-center gap-1.5 text-xs bg-[#F0F4FB] text-[#1E4DD8] hover:bg-[#BAC9EB]/30 font-medium px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
                         >
-                          {aksiyonYukleniyor === 'pdf' ? '⏳' : '⬇️'} PDF İndir
+                          {aksiyonYukleniyor === 'pdf'
+                            ? <Loader2 size={12} strokeWidth={1.5} className="animate-spin" />
+                            : <Download size={12} strokeWidth={1.5} />
+                          }
+                          PDF İndir
                         </button>
                         <button
                           onClick={() => epostaGonder(odeme.id)}
                           disabled={!!aksiyonYukleniyor}
-                          className="flex items-center gap-1.5 text-xs bg-gray-50 text-gray-600 hover:bg-gray-100 font-medium px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
+                          className="flex items-center gap-1.5 text-xs bg-[#F1F0EB] text-[#5A5852] hover:bg-[#D8D6CE] font-medium px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
                         >
-                          {aksiyonYukleniyor === 'email' ? '⏳' : odeme.fatura_email_gonderildi ? '✅' : '📧'}{' '}
+                          {aksiyonYukleniyor === 'email'
+                            ? <Loader2 size={12} strokeWidth={1.5} className="animate-spin" />
+                            : odeme.fatura_email_gonderildi
+                            ? <Check size={12} strokeWidth={2} />
+                            : <Mail size={12} strokeWidth={1.5} />
+                          }
                           {odeme.fatura_email_gonderildi ? 'Yeniden Gönder' : 'E-postayla Gönder'}
                         </button>
                       </div>
@@ -155,9 +166,9 @@ export default function FaturalarPage() {
           </div>
         )}
 
-        <p className="text-xs text-gray-400 text-center mt-8">
+        <p className="text-xs text-[#908E86] text-center mt-8">
           Fatura ile ilgili sorunlar için{' '}
-          <a href="mailto:destek@yzliste.com" className="text-indigo-500 hover:underline">
+          <a href="mailto:destek@yzliste.com" className="text-[#1E4DD8] hover:underline">
             destek@yzliste.com
           </a>
         </p>

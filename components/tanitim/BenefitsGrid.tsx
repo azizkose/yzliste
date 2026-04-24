@@ -1,10 +1,11 @@
 import Link from "next/link";
+import { Icon3D } from "@/components/ui/Icon3D";
 
 const OZELLIKLER = [
-  { ikon: "🧠", baslik: "Genel amaçlı AI değil, pazaryeri uzmanı AI", aciklama: "Genel amaçlı AI araçları her pazaryerinin karakter limiti, yasaklı kelime listesi ve kategori yapısını bilmez. yzliste; Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA'nın güncel kurallarına göre üretir." },
-  { ikon: "⚡", baslik: "Dakikalar içinde hazır", aciklama: "Fotoğraf yükle veya ürün bilgisi gir — listing metni 30 saniyede, stüdyo görseli 1 dakikada, tanıtım videosu 2 dakikada hazır." },
-  { ikon: "🎯", baslik: "Senin markanı, senin dilini konuşur", aciklama: "Mağaza adını, hedef kitlenin yaşını, metin tonunu bir kere gir — her üretimde otomatik uygulanır." },
-  { ikon: "💰", baslik: "Abonelik yok, teknik bilgi gerekmiyor", aciklama: "Aylık ödeme yok, API entegrasyonu yok, prompt mühendisliği yok. Formu doldur, butona bas — içeriğin hazır." },
+  { ikonAdi: "bulb" as const, ikonRenk: "#EEEDFE", baslik: "Genel amaçlı AI değil, pazaryeri uzmanı AI", aciklama: "Genel amaçlı AI araçları her pazaryerinin karakter limiti, yasaklı kelime listesi ve kategori yapısını bilmez. yzliste; Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA'nın güncel kurallarına göre üretir." },
+  { ikonAdi: "flash" as const, ikonRenk: "#FAEEDA", baslik: "Dakikalar içinde hazır", aciklama: "Fotoğraf yükle veya ürün bilgisi gir — listing metni 30 saniyede, stüdyo görseli 1 dakikada, tanıtım videosu 2 dakikada hazır." },
+  { ikonAdi: "target" as const, ikonRenk: "#FBEAF0", baslik: "Senin markanı, senin dilini konuşur", aciklama: "Mağaza adını, hedef kitlenin yaşını, metin tonunu bir kere gir — her üretimde otomatik uygulanır." },
+  { ikonAdi: "money-bag" as const, ikonRenk: "#E1F5EE", baslik: "Abonelik yok, teknik bilgi gerekmiyor", aciklama: "Aylık ödeme yok, API entegrasyonu yok, prompt mühendisliği yok. Formu doldur, butona bas — içeriğin hazır." },
 ];
 
 export default function BenefitsGrid() {
@@ -12,29 +13,31 @@ export default function BenefitsGrid() {
     <>
       <section className="px-4 sm:px-6 py-16">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-3">Neden yzliste?</h2>
-          <p className="text-center text-sm text-gray-400 mb-10">Genel amaçlı AI araçlarından farkımız</p>
+          <h2 className="text-2xl font-medium text-center text-[#1A1A17] mb-3" style={{ letterSpacing: "-0.01em" }}>Neden yzliste?</h2>
+          <p className="text-center text-sm text-[#908E86] mb-10">Genel amaçlı AI araçlarından farkımız</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {OZELLIKLER.map((o, i) => (
-              <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-                <div className="text-2xl mb-3">{o.ikon}</div>
-                <h3 className="font-semibold text-gray-800 text-sm mb-1">{o.baslik}</h3>
-                <p className="text-xs text-gray-400 leading-relaxed">{o.aciklama}</p>
+              <div key={i} className="bg-white rounded-xl p-5 border border-[#D8D6CE]">
+                <div className="mb-3">
+                  <Icon3D name={o.ikonAdi} size={56} bgColor={o.ikonRenk} />
+                </div>
+                <h3 className="font-medium text-[#1A1A17] text-sm mb-1">{o.baslik}</h3>
+                <p className="text-xs text-[#908E86] leading-relaxed">{o.aciklama}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="px-4 sm:px-6 py-12 bg-indigo-50 border-y border-indigo-100 text-center">
-        <h2 className="text-xl font-bold text-gray-800 mb-2">Hemen dene</h2>
-        <p className="text-sm text-gray-500 mb-6">3 ücretsiz kredi ile listing metni, görsel veya video üret. Kredi kartı gerekmez.</p>
+      <section className="px-4 sm:px-6 py-12 bg-[#F1F0EB] border-y border-[#D8D6CE] text-center">
+        <h2 className="text-xl font-medium text-[#1A1A17] mb-2">Hemen dene</h2>
+        <p className="text-sm text-[#5A5852] mb-6">3 ücretsiz kredi ile listing metni, görsel veya video üret. Kredi kartı gerekmez.</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href="/kayit" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-lg shadow-indigo-100">
-            Ücretsiz Hesap Oluştur →
+          <Link href="/kayit" className="inline-block bg-[#1E4DD8] hover:bg-[#163B9E] text-white font-medium px-8 py-4 rounded-xl text-base transition-colors">
+            Ücretsiz hesap oluştur →
           </Link>
-          <Link href="/uret" className="inline-block border-2 border-indigo-500 text-indigo-600 font-semibold px-8 py-4 rounded-xl text-base transition-colors hover:bg-indigo-50">
-            Hemen Dene →
+          <Link href="/uret" className="inline-block border border-[#1E4DD8] text-[#1E4DD8] font-medium px-8 py-4 rounded-xl text-base transition-colors hover:bg-[#F0F4FB]">
+            Hemen dene →
           </Link>
         </div>
       </section>

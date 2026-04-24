@@ -6,6 +6,7 @@ import { parseExcel, excelOlustur, type ParseSonucu } from "@/lib/excel-parser";
 import * as XLSX from "xlsx";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import { CreditCard, BarChart3, AlertTriangle, Tag, ClipboardList, FolderOpen, Lightbulb, Check, X as XIcon, Loader2, Download } from "lucide-react";
 
 type Adim = "yukle" | "onizleme" | "islem" | "tamamlandi";
 type Platform = "trendyol" | "hepsiburada" | "amazon" | "n11" | "etsy" | "amazon_usa";
@@ -50,7 +51,6 @@ export default function TopluPage() {
       const sonuc = parseExcel(buffer);
       if (sonuc.toplam === 0) { setHata("Dosyada geçerli ürün satırı bulunamadı."); return; }
 
-      // Kullanıcı kontrolü — anonim de dahil, üye olmayan üretemez
       const { data: { user } } = await supabase.auth.getUser();
       if (!user || user.is_anonymous) { window.location.href = "/kayit"; return; }
       const { data: profil } = await supabase.from("profiles").select("kredi, is_admin").eq("id", user.id).single();
@@ -155,15 +155,17 @@ export default function TopluPage() {
   return (
     <>
     <SiteHeader aktifSayfa="toplu" />
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-[#FAFAF8] py-8 px-4">
       <div className="max-w-2xl mx-auto">
 
-        <h1 className="text-xl font-bold text-gray-800 mb-6">Toplu İçerik Üretimi</h1>
+        <h1 className="text-xl font-medium text-[#1A1A17] mb-6">Toplu içerik üretimi</h1>
 
         {hata && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center justify-between gap-3">
-            <p className="text-sm text-red-700">{hata}</p>
-            <button onClick={() => setHata(null)} className="text-red-400 hover:text-red-600 text-xl">×</button>
+          <div className="bg-[#FCECEC] border border-[#7A1E1E]/20 rounded-xl p-4 mb-6 flex items-center justify-between gap-3">
+            <p className="text-sm text-[#7A1E1E]">{hata}</p>
+            <button onClick={() => setHata(null)} className="text-[#7A1E1E]/60 hover:text-[#7A1E1E]">
+              <XIcon size={16} strokeWidth={1.5} />
+            </button>
           </div>
         )}
 
@@ -173,32 +175,43 @@ export default function TopluPage() {
 
             {/* Bilgilendirme kartları */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white rounded-2xl shadow p-4">
-                <div className="text-2xl mb-2">💳</div>
-                <p className="text-xs font-semibold text-gray-800 mb-1">Kredi nasıl işler?</p>
-                <p className="text-xs text-gray-500">Her ürün için <span className="font-semibold text-indigo-600">1 kredi</span> düşer. 50 ürünlük bir dosya 50 kredi harcar. İşlem başlamadan önce toplam kredi gösterilir.</p>
-              </div>
-              <div className="bg-white rounded-2xl shadow p-4">
-                <div className="text-2xl mb-2">📊</div>
-                <p className="text-xs font-semibold text-gray-800 mb-1">Ne alacaksın?</p>
-                <p className="text-xs text-gray-500">Orijinal dosyan + üretilen listing metinleri tek bir <span className="font-semibold">.xlsx</span> dosyasında. Her ürün satırına platform içeriği eklenir.</p>
-              </div>
-              <div className="bg-white rounded-2xl shadow p-4">
-                <div className="text-2xl mb-2">⚠️</div>
-                <p className="text-xs font-semibold text-gray-800 mb-1">Sayfayı kapatma!</p>
-                <p className="text-xs text-gray-500">İşlem sırasında bu sekmeyi kapatırsan üretim yarıda kesilir. Excel tamamlanana kadar bekle, sonra indir.</p>
-              </div>
-              <div className="bg-white rounded-2xl shadow p-4">
-                <div className="text-2xl mb-2">🏷️</div>
-                <p className="text-xs font-semibold text-gray-800 mb-1">Limit var mı?</p>
-                <p className="text-xs text-gray-500">Tek seferde <span className="font-semibold">mevcut kredin kadar</span> ürün işleyebilirsin. Kredi yetersizse önce <Link href="/uret?paket=ac" className="text-indigo-500 underline">İçerik Üretim Kredisi Al</Link>.</p>
-              </div>
+              {[
+                {
+                  Ikon: CreditCard,
+                  baslik: "Kredi nasıl işler?",
+                  icerik: <>Her ürün için <span className="font-medium text-[#1E4DD8]">1 kredi</span> düşer. 50 ürünlük bir dosya 50 kredi harcar. İşlem başlamadan önce toplam kredi gösterilir.</>,
+                },
+                {
+                  Ikon: BarChart3,
+                  baslik: "Ne alacaksın?",
+                  icerik: <>Orijinal dosyan + üretilen listing metinleri tek bir <span className="font-medium">.xlsx</span> dosyasında. Her ürün satırına platform içeriği eklenir.</>,
+                },
+                {
+                  Ikon: AlertTriangle,
+                  baslik: "Sayfayı kapatma!",
+                  icerik: "İşlem sırasında bu sekmeyi kapatırsan üretim yarıda kesilir. Excel tamamlanana kadar bekle, sonra indir.",
+                },
+                {
+                  Ikon: Tag,
+                  baslik: "Limit var mı?",
+                  icerik: <>Tek seferde <span className="font-medium">mevcut kredin kadar</span> ürün işleyebilirsin. Kredi yetersizse önce <Link href="/uret?paket=ac" className="text-[#1E4DD8] underline">İçerik Üretim Kredisi Al</Link>.</>,
+                },
+              ].map((kart, i) => (
+                <div key={i} className="bg-white rounded-xl border border-[#D8D6CE] p-4">
+                  <kart.Ikon size={22} strokeWidth={1.5} className="text-[#908E86] mb-2" />
+                  <p className="text-xs font-medium text-[#1A1A17] mb-1">{kart.baslik}</p>
+                  <p className="text-xs text-[#5A5852]">{kart.icerik}</p>
+                </div>
+              ))}
             </div>
 
             {/* Dosya formatı açıklaması */}
-            <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
-              <p className="text-xs font-semibold text-blue-800 mb-2">📋 Dosyanda ne olmalı?</p>
-              <p className="text-xs text-blue-700 mb-3">Sütun adları Türkçe veya İngilizce olabilir — sistem otomatik algılar. Şablon indirmene gerek yok.</p>
+            <div className="bg-[#F0F4FB] border border-[#BAC9EB] rounded-xl p-5">
+              <p className="text-xs font-medium text-[#1E4DD8] mb-2 flex items-center gap-1.5">
+                <ClipboardList size={13} strokeWidth={1.5} />
+                Dosyanda ne olmalı?
+              </p>
+              <p className="text-xs text-[#5A5852] mb-3">Sütun adları Türkçe veya İngilizce olabilir — sistem otomatik algılar. Şablon indirmene gerek yok.</p>
               <div className="grid grid-cols-2 gap-x-4 gap-y-1">
                 {[
                   ["Ürün Adı / Product Name", "zorunlu"],
@@ -208,30 +221,30 @@ export default function TopluPage() {
                   ["Renk / Color", "isteğe bağlı"],
                   ["Boyut / Size", "isteğe bağlı"],
                 ].map(([alan, durum]) => (
-                  <div key={alan} className="flex items-center gap-1.5 text-xs text-blue-700">
-                    <span className={durum === "zorunlu" ? "text-green-600 font-bold" : durum === "önerilir" ? "text-blue-600" : "text-gray-400"}>•</span>
+                  <div key={alan} className="flex items-center gap-1.5 text-xs text-[#5A5852]">
+                    <span className={durum === "zorunlu" ? "text-[#0F5132] font-medium" : durum === "önerilir" ? "text-[#1E4DD8]" : "text-[#D8D6CE]"}>•</span>
                     <span>{alan}</span>
-                    <span className={`ml-auto text-[10px] ${durum === "zorunlu" ? "text-green-600 font-semibold" : "text-gray-400"}`}>{durum}</span>
+                    <span className={`ml-auto text-[10px] ${durum === "zorunlu" ? "text-[#0F5132] font-medium" : "text-[#908E86]"}`}>{durum}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Dosya yükle kutusu */}
-            <div className="bg-white rounded-2xl shadow p-8 text-center">
-              <div className="text-4xl mb-4">📂</div>
-              <h2 className="text-base font-semibold text-gray-800 mb-2">Excel veya CSV Yükle</h2>
-              <p className="text-sm text-gray-500 mb-6">
+            <div className="bg-white rounded-xl border border-[#D8D6CE] p-8 text-center">
+              <FolderOpen size={40} strokeWidth={1.5} className="text-[#908E86] mx-auto mb-4" />
+              <h2 className="text-base font-medium text-[#1A1A17] mb-2">Excel veya CSV yükle</h2>
+              <p className="text-sm text-[#5A5852] mb-6">
                 Dosyanızda ürün adı, kategori, açıklama gibi sütunlar varsa otomatik algılanır. Şablon gerekmez.
               </p>
               <button
                 onClick={() => dosyaRef.current?.click()}
-                className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-3 rounded-xl transition-colors"
+                className="bg-[#1E4DD8] hover:bg-[#163B9E] text-white font-medium px-8 py-3 rounded-xl transition-colors"
               >
                 Dosya Seç
               </button>
               <input ref={dosyaRef} type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={dosyaSec} />
-              <p className="text-xs text-gray-400 mt-4">Desteklenen formatlar: .xlsx, .xls, .csv</p>
+              <p className="text-xs text-[#908E86] mt-4">Desteklenen formatlar: .xlsx, .xls, .csv</p>
             </div>
           </div>
         )}
@@ -241,24 +254,24 @@ export default function TopluPage() {
           <div className="space-y-4">
 
             {/* Tespit özeti */}
-            <div className="bg-white rounded-2xl shadow p-6">
-              <h2 className="text-base font-semibold text-gray-800 mb-4">Dosya Analizi</h2>
+            <div className="bg-white rounded-xl border border-[#D8D6CE] p-6">
+              <h2 className="text-base font-medium text-[#1A1A17] mb-4">Dosya analizi</h2>
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-2xl font-bold text-indigo-600">{parse.toplam}</span>
-                <span className="text-sm text-gray-600">ürün bulundu</span>
+                <span className="text-2xl font-medium text-[#1E4DD8]">{parse.toplam}</span>
+                <span className="text-sm text-[#5A5852]">ürün bulundu</span>
               </div>
               <div className="space-y-1.5">
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Algılanan Alanlar</p>
+                <p className="text-xs font-medium text-[#908E86] uppercase tracking-wide mb-2">Algılanan alanlar</p>
                 {parse.kolonlar.map((k) => (
                   <div key={k.hedef} className="flex items-center gap-2 text-sm">
-                    <span className="text-green-500">✓</span>
-                    <span className="font-medium text-gray-700">{k.etiket}</span>
-                    <span className="text-gray-400">← &quot;{k.kaynak}&quot;</span>
+                    <Check size={13} strokeWidth={2} className="text-[#0F5132]" />
+                    <span className="font-medium text-[#5A5852]">{k.etiket}</span>
+                    <span className="text-[#908E86]">← &quot;{k.kaynak}&quot;</span>
                   </div>
                 ))}
                 {parse.tespit_edilemeyen.length > 0 && (
-                  <div className="mt-2 pt-2 border-t border-gray-100">
-                    <p className="text-xs text-gray-400">
+                  <div className="mt-2 pt-2 border-t border-[#F1F0EB]">
+                    <p className="text-xs text-[#908E86]">
                       Eşleşmeyen sütunlar (ek bilgi olarak dahil edilir):{" "}
                       {parse.tespit_edilemeyen.join(", ")}
                     </p>
@@ -268,15 +281,17 @@ export default function TopluPage() {
             </div>
 
             {/* Platform */}
-            <div className="bg-white rounded-2xl shadow p-6">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">Platform</h3>
+            <div className="bg-white rounded-xl border border-[#D8D6CE] p-6">
+              <h3 className="text-sm font-medium text-[#5A5852] mb-3">Platform</h3>
               <div className="grid grid-cols-3 gap-2">
                 {(Object.keys(PLATFORM_ETIKET) as Platform[]).map((p) => (
                   <button
                     key={p}
                     onClick={() => setPlatform(p)}
                     className={`py-2 px-3 rounded-xl text-sm font-medium border-2 transition-all ${
-                      platform === p ? "border-indigo-400 bg-indigo-50 text-indigo-700" : "border-gray-200 text-gray-600 hover:border-gray-300"
+                      platform === p
+                        ? "border-[#1E4DD8] bg-[#F0F4FB] text-[#1E4DD8]"
+                        : "border-[#D8D6CE] text-[#5A5852] hover:border-[#1E4DD8]/40"
                     }`}
                   >
                     {PLATFORM_ETIKET[p]}
@@ -286,8 +301,8 @@ export default function TopluPage() {
             </div>
 
             {/* Ton */}
-            <div className="bg-white rounded-2xl shadow p-6">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">Metin Tonu</h3>
+            <div className="bg-white rounded-xl border border-[#D8D6CE] p-6">
+              <h3 className="text-sm font-medium text-[#5A5852] mb-3">Metin tonu</h3>
               <div className="grid grid-cols-3 gap-2">
                 {[
                   { id: "samimi", label: "Samimi", aciklama: "Sıcak, yakın" },
@@ -298,11 +313,13 @@ export default function TopluPage() {
                     key={t.id}
                     onClick={() => setTon(t.id)}
                     className={`p-3 rounded-xl border-2 text-left transition-all ${
-                      ton === t.id ? "border-indigo-400 bg-indigo-50" : "border-gray-200 hover:border-gray-300"
+                      ton === t.id
+                        ? "border-[#1E4DD8] bg-[#F0F4FB]"
+                        : "border-[#D8D6CE] hover:border-[#1E4DD8]/40"
                     }`}
                   >
-                    <p className={`text-xs font-semibold ${ton === t.id ? "text-indigo-600" : "text-gray-700"}`}>{t.label}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{t.aciklama}</p>
+                    <p className={`text-xs font-medium ${ton === t.id ? "text-[#1E4DD8]" : "text-[#1A1A17]"}`}>{t.label}</p>
+                    <p className="text-xs text-[#908E86] mt-0.5">{t.aciklama}</p>
                   </button>
                 ))}
               </div>
@@ -310,11 +327,12 @@ export default function TopluPage() {
 
             {/* Marka uyarısı */}
             {!markaVarMi && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                <p className="text-sm font-medium text-yellow-800 mb-2">
-                  💡 Verilerinizde marka sütunu yok
+              <div className="bg-[#FEF4E7] border border-[#8B4513]/20 rounded-xl p-4">
+                <p className="text-sm font-medium text-[#8B4513] mb-2 flex items-center gap-1.5">
+                  <Lightbulb size={14} strokeWidth={1.5} />
+                  Verilerinizde marka sütunu yok
                 </p>
-                <p className="text-xs text-yellow-700 mb-3">
+                <p className="text-xs text-[#8B4513]/80 mb-3">
                   Marka adı girerseniz AI tüm ürünlerde daha tutarlı ve kaliteli metin üretir.
                   Boş bırakırsanız profil bilginiz kullanılır.
                 </p>
@@ -323,20 +341,20 @@ export default function TopluPage() {
                   value={markaOverride}
                   onChange={(e) => setMarkaOverride(e.target.value)}
                   placeholder="orn: Ayşe Tekstil, TechStore TR (isteğe bağlı)"
-                  className="w-full border border-yellow-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white"
+                  className="w-full border border-[#8B4513]/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#8B4513]/40 bg-white"
                 />
               </div>
             )}
 
             {/* Kredi onayı */}
-            <div className="bg-white rounded-2xl shadow p-6">
+            <div className="bg-white rounded-xl border border-[#D8D6CE] p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-sm font-semibold text-gray-800">
+                  <p className="text-sm font-medium text-[#1A1A17]">
                     {parse.toplam} ürün işlenecek — {parse.toplam} kredi düşecek
                   </p>
                   {kredi !== null && kredi !== Infinity && (
-                    <p className={`text-xs mt-1 ${kredi < parse.toplam ? "text-red-500 font-medium" : "text-gray-400"}`}>
+                    <p className={`text-xs mt-1 ${kredi < parse.toplam ? "text-[#7A1E1E] font-medium" : "text-[#908E86]"}`}>
                       {kredi < parse.toplam
                         ? `Yetersiz kredi (mevcut: ${kredi})`
                         : `Mevcut krediniz: ${kredi}`}
@@ -347,13 +365,13 @@ export default function TopluPage() {
               <button
                 onClick={islemeBaslat}
                 disabled={kredi !== null && kredi !== Infinity && kredi < parse.toplam}
-                className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-300 text-white font-semibold py-3 rounded-xl transition-colors"
+                className="w-full bg-[#1E4DD8] hover:bg-[#163B9E] disabled:bg-[#D8D6CE] text-white font-medium py-3 rounded-xl transition-colors"
               >
                 Başlat →
               </button>
               <button
                 onClick={() => { setParse(null); setAdim("yukle"); }}
-                className="w-full mt-2 text-sm text-gray-400 hover:text-gray-600 py-2"
+                className="w-full mt-2 text-sm text-[#908E86] hover:text-[#5A5852] py-2"
               >
                 Farklı dosya yükle
               </button>
@@ -365,23 +383,23 @@ export default function TopluPage() {
         {(adim === "islem" || adim === "tamamlandi") && (
           <div className="space-y-4">
           {adim === "islem" && (
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
-              <span className="text-xl flex-shrink-0">⚠️</span>
-              <p className="text-sm text-amber-800">Üretim devam ediyor — bu sekmeyi kapatma veya sayfadan ayrılma. İşlem bitince Excel dosyası hazır olacak.</p>
+            <div className="bg-[#FEF4E7] border border-[#8B4513]/20 rounded-xl p-4 flex items-start gap-3">
+              <AlertTriangle size={18} strokeWidth={1.5} className="text-[#8B4513] flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-[#8B4513]">Üretim devam ediyor — bu sekmeyi kapatma veya sayfadan ayrılma. İşlem bitince Excel dosyası hazır olacak.</p>
             </div>
           )}
-          <div className="bg-white rounded-2xl shadow p-6">
+          <div className="bg-white rounded-xl border border-[#D8D6CE] p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold text-gray-800">
+              <h2 className="text-base font-medium text-[#1A1A17]">
                 {adim === "tamamlandi" ? "Tamamlandı" : "İşleniyor..."}
               </h2>
-              <span className="text-sm text-gray-500">{tamamlanan} / {ilerlemeler.length}</span>
+              <span className="text-sm text-[#908E86]">{tamamlanan} / {ilerlemeler.length}</span>
             </div>
 
             {/* Progress bar */}
-            <div className="h-2 bg-gray-100 rounded-full mb-6 overflow-hidden">
+            <div className="h-2 bg-[#F1F0EB] rounded-full mb-6 overflow-hidden">
               <div
-                className="h-full bg-indigo-500 rounded-full transition-all duration-500"
+                className="h-full bg-[#1E4DD8] rounded-full transition-all duration-500"
                 style={{ width: ilerlemeler.length ? `${(tamamlanan / ilerlemeler.length) * 100}%` : "0%" }}
               />
             </div>
@@ -389,19 +407,19 @@ export default function TopluPage() {
             {/* Ürün listesi */}
             <div className="space-y-2 max-h-80 overflow-y-auto">
               {ilerlemeler.map((item) => (
-                <div key={item.indeks} className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
-                  <div className="w-5 flex-shrink-0 text-center">
-                    {item.durum === "bekliyor" && <span className="text-gray-300">○</span>}
+                <div key={item.indeks} className="flex items-center gap-3 py-2 border-b border-[#F1F0EB] last:border-0">
+                  <div className="w-5 flex-shrink-0 text-center flex items-center justify-center">
+                    {item.durum === "bekliyor" && <span className="w-3 h-3 rounded-full border border-[#D8D6CE] block" />}
                     {item.durum === "isleniyor" && (
-                      <span className="inline-block w-4 h-4 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
+                      <Loader2 size={14} strokeWidth={1.5} className="text-[#1E4DD8] animate-spin" />
                     )}
-                    {item.durum === "tamam" && <span className="text-green-500">✓</span>}
-                    {item.durum === "hata" && <span className="text-red-400">✗</span>}
+                    {item.durum === "tamam" && <Check size={14} strokeWidth={2} className="text-[#0F5132]" />}
+                    {item.durum === "hata" && <XIcon size={14} strokeWidth={2} className="text-[#7A1E1E]" />}
                   </div>
                   <span className={`text-sm flex-1 truncate ${
-                    item.durum === "isleniyor" ? "text-indigo-600 font-medium" :
-                    item.durum === "tamam" ? "text-gray-700" :
-                    item.durum === "hata" ? "text-red-500" : "text-gray-400"
+                    item.durum === "isleniyor" ? "text-[#1E4DD8] font-medium" :
+                    item.durum === "tamam" ? "text-[#5A5852]" :
+                    item.durum === "hata" ? "text-[#7A1E1E]" : "text-[#908E86]"
                   }`}>
                     {item.urun}
                   </span>
@@ -411,20 +429,21 @@ export default function TopluPage() {
 
             {/* Tamamlandı özet */}
             {adim === "tamamlandi" && (
-              <div className="mt-6 pt-4 border-t border-gray-100">
-                <p className="text-sm text-gray-600 mb-4">
-                  <span className="text-green-600 font-semibold">{tamam} başarılı</span>
-                  {hatali > 0 && <span className="text-red-500 font-medium">, {hatali} hatalı</span>}
+              <div className="mt-6 pt-4 border-t border-[#F1F0EB]">
+                <p className="text-sm text-[#5A5852] mb-4">
+                  <span className="text-[#0F5132] font-medium">{tamam} başarılı</span>
+                  {hatali > 0 && <span className="text-[#7A1E1E] font-medium">, {hatali} hatalı</span>}
                 </p>
                 <button
                   onClick={excelIndir}
-                  className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition-colors"
+                  className="w-full bg-[#0F5132] hover:bg-[#0a3d25] text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
                 >
+                  <Download size={16} strokeWidth={1.5} />
                   Excel İndir (.xlsx)
                 </button>
                 <button
                   onClick={() => { setParse(null); setAdim("yukle"); setIlerlemeler([]); setTamamlanan(0); }}
-                  className="w-full mt-2 text-sm text-gray-400 hover:text-gray-600 py-2"
+                  className="w-full mt-2 text-sm text-[#908E86] hover:text-[#5A5852] py-2"
                 >
                   Yeni işlem başlat
                 </button>

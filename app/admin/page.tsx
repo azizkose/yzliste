@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { AlertTriangle, Pencil, Camera, Search } from "lucide-react";
 
 type Metrik = {
   toplamKullanici: number;
@@ -50,16 +51,16 @@ export default function AdminPage() {
 
   if (yukleniyor) {
     return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-400">Yükleniyor...</div>
+      <main className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
+        <div className="text-[#908E86]">Yükleniyor...</div>
       </main>
     );
   }
 
   if (hata) {
     return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-red-500">{hata}</div>
+      <main className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
+        <div className="text-[#7A1E1E]">{hata}</div>
       </main>
     );
   }
@@ -73,32 +74,32 @@ export default function AdminPage() {
   const tokenMaliyet = (metrik.toplamInputToken / 1_000_000) * 3 + (metrik.toplamOutputToken / 1_000_000) * 15;
 
   return (
-    <main className="min-h-screen bg-gray-50 py-8 px-4">
+    <main className="min-h-screen bg-[#FAFAF8] py-8 px-4">
       <div className="max-w-5xl mx-auto">
 
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-            <p className="text-sm text-gray-400">YZListe — Sistem Metrikleri</p>
+            <h1 className="text-2xl font-medium text-[#1A1A17]">Admin dashboard</h1>
+            <p className="text-sm text-[#908E86]">YZListe — Sistem metrikleri</p>
           </div>
           <div className="flex gap-3">
             <button onClick={metrikleriYukle}
-              className="text-sm bg-white border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50">
+              className="text-sm bg-white border border-[#D8D6CE] px-4 py-2 rounded-lg hover:bg-[#F1F0EB] transition-colors">
               Yenile
             </button>
-            <Link href="/" className="text-sm bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600">
-              Uygulamaya Dön
+            <Link href="/" className="text-sm bg-[#1E4DD8] text-white px-4 py-2 rounded-lg hover:bg-[#163B9E] transition-colors">
+              Uygulamaya dön
             </Link>
           </div>
         </div>
 
         {/* Bütçe uyarısı */}
         {metrik && metrik.bugunMaliyet > 5 && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center gap-3">
-            <span className="text-2xl">⚠️</span>
+          <div className="bg-[#FCECEC] border border-[#7A1E1E]/20 rounded-xl p-4 mb-6 flex items-center gap-3">
+            <AlertTriangle size={16} strokeWidth={1.5} className="text-[#7A1E1E] flex-shrink-0" />
             <div>
-              <div className="text-sm font-semibold text-red-700">Günlük maliyet uyarısı</div>
-              <div className="text-xs text-red-600">
+              <div className="text-sm font-medium text-[#7A1E1E]">Günlük maliyet uyarısı</div>
+              <div className="text-xs text-[#7A1E1E]/70">
                 Bugünkü API maliyeti ${metrik.bugunMaliyet.toFixed(2)} — $5 limitini aştı!
               </div>
             </div>
@@ -108,27 +109,27 @@ export default function AdminPage() {
         {/* Ana metrikler */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {[
-            { label: "Toplam Kullanıcı", value: metrik.toplamKullanici, renk: "text-blue-600" },
-            { label: "Toplam Üretim", value: metrik.toplamUretim, renk: "text-indigo-600" },
-            { label: "Bugün Üretim", value: metrik.bugunUretim, renk: "text-green-600" },
-            { label: "Bu Hafta", value: metrik.buHaftaUretim, renk: "text-violet-600" },
+            { label: "Toplam kullanıcı", value: metrik.toplamKullanici },
+            { label: "Toplam üretim", value: metrik.toplamUretim },
+            { label: "Bugün üretim", value: metrik.bugunUretim },
+            { label: "Bu hafta", value: metrik.buHaftaUretim },
           ].map((m) => (
-            <div key={m.label} className="bg-white rounded-2xl shadow p-5">
-              <div className={`text-3xl font-bold ${m.renk}`}>{m.value}</div>
-              <div className="text-sm text-gray-500 mt-1">{m.label}</div>
+            <div key={m.label} className="bg-white rounded-xl border border-[#D8D6CE] p-5">
+              <div className="text-3xl font-medium text-[#1E4DD8]">{m.value}</div>
+              <div className="text-sm text-[#908E86] mt-1">{m.label}</div>
             </div>
           ))}
         </div>
 
         {/* Maliyet & Token */}
-        <div className="bg-white rounded-2xl shadow p-5 mb-6">
+        <div className="bg-white rounded-xl border border-[#D8D6CE] p-5 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-700">API Kullanımı & Maliyet (Gerçek)</h3>
+            <h3 className="text-sm font-medium text-[#5A5852]">API kullanımı & maliyet (gerçek)</h3>
             <div className="flex gap-2">
               {[
                 { key: "today", label: "Bugün" },
-                { key: "week", label: "Bu Hafta" },
-                { key: "month", label: "Bu Ay" },
+                { key: "week", label: "Bu hafta" },
+                { key: "month", label: "Bu ay" },
                 { key: "all", label: "Tümü" },
               ].map((p) => (
                 <button
@@ -136,8 +137,8 @@ export default function AdminPage() {
                   onClick={() => setPeriod(p.key)}
                   className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
                     period === p.key
-                      ? "bg-indigo-500 text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      ? "bg-[#1E4DD8] text-white"
+                      : "bg-[#F1F0EB] text-[#5A5852] hover:bg-[#D8D6CE]"
                   }`}
                 >
                   {p.label}
@@ -146,51 +147,51 @@ export default function AdminPage() {
             </div>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-            <div className="bg-blue-50 rounded-xl p-4">
-              <div className="text-xl font-bold text-blue-600">{metrik.toplamInputToken.toLocaleString()}</div>
-              <div className="text-xs text-gray-500 mt-1">Input Token</div>
+            <div className="bg-[#F0F4FB] rounded-xl p-4">
+              <div className="text-xl font-medium text-[#1E4DD8]">{metrik.toplamInputToken.toLocaleString()}</div>
+              <div className="text-xs text-[#908E86] mt-1">Input token</div>
             </div>
-            <div className="bg-violet-50 rounded-xl p-4">
-              <div className="text-xl font-bold text-violet-600">{metrik.toplamOutputToken.toLocaleString()}</div>
-              <div className="text-xs text-gray-500 mt-1">Output Token</div>
+            <div className="bg-[#F1F0EB] rounded-xl p-4">
+              <div className="text-xl font-medium text-[#5A5852]">{metrik.toplamOutputToken.toLocaleString()}</div>
+              <div className="text-xs text-[#908E86] mt-1">Output token</div>
             </div>
-            <div className="bg-red-50 rounded-xl p-4">
-              <div className="text-xl font-bold text-red-600">
+            <div className="bg-[#FCECEC] rounded-xl p-4">
+              <div className="text-xl font-medium text-[#7A1E1E]">
                 ${(toplamMaliyet > 0 ? toplamMaliyet : tokenMaliyet).toFixed(4)}
               </div>
-              <div className="text-xs text-gray-500 mt-1">
-                Toplam Maliyet {toplamMaliyet === 0 && tokenMaliyet > 0 && <span className="text-gray-400">(tahmini)</span>}
+              <div className="text-xs text-[#908E86] mt-1">
+                Toplam maliyet {toplamMaliyet === 0 && tokenMaliyet > 0 && <span className="text-[#D8D6CE]">(tahmini)</span>}
               </div>
             </div>
-            <div className="bg-yellow-50 rounded-xl p-4">
-              <div className="text-xl font-bold text-yellow-600">${uretimBasiMaliyet.toFixed(5)}</div>
-              <div className="text-xs text-gray-500 mt-1">Üretim Başı</div>
+            <div className="bg-[#FEF4E7] rounded-xl p-4">
+              <div className="text-xl font-medium text-[#8B4513]">${uretimBasiMaliyet.toFixed(5)}</div>
+              <div className="text-xs text-[#908E86] mt-1">Üretim başı</div>
             </div>
-            <div className="bg-indigo-50 rounded-xl p-4">
-              <div className="text-xl font-bold text-indigo-600">{metrik.toplamKredi}</div>
-              <div className="text-xs text-gray-500 mt-1">Kalan Kredi</div>
+            <div className="bg-[#F0F4FB] rounded-xl p-4">
+              <div className="text-xl font-medium text-[#1E4DD8]">{metrik.toplamKredi}</div>
+              <div className="text-xs text-[#908E86] mt-1">Kalan kredi</div>
             </div>
           </div>
-          <p className="text-xs text-gray-400 mt-3">
+          <p className="text-xs text-[#908E86] mt-3">
             * Metin: Sonnet 4.6 — $3/MTok input, $15/MTok output. Görsel: Bria $0.012/görsel. Video: Kling $0.28/5sn, $0.56/10sn.
           </p>
         </div>
 
         {/* Statik Fiyatlama & Marj Tablosu */}
-        <div className="bg-white rounded-2xl shadow p-5 mb-6">
-          <h3 className="text-sm font-semibold text-gray-700 mb-4">Ürün Maliyet & Marj Tablosu</h3>
+        <div className="bg-white rounded-xl border border-[#D8D6CE] p-5 mb-6">
+          <h3 className="text-sm font-medium text-[#5A5852] mb-4">Ürün maliyet & marj tablosu</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-xs text-gray-400 border-b">
-                  <th className="text-left pb-2 font-medium">Üretim Tipi</th>
-                  <th className="text-right pb-2 font-medium">API Maliyet</th>
+                <tr className="text-xs text-[#908E86] border-b border-[#F1F0EB]">
+                  <th className="text-left pb-2 font-medium">Üretim tipi</th>
+                  <th className="text-right pb-2 font-medium">API maliyet</th>
                   <th className="text-right pb-2 font-medium">Kredi</th>
-                  <th className="text-right pb-2 font-medium">Birim Fiyat (Büyük)</th>
+                  <th className="text-right pb-2 font-medium">Birim fiyat (büyük)</th>
                   <th className="text-right pb-2 font-medium">Marj</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-[#F1F0EB]">
                 {[
                   { tip: "Metin (Sonnet 4.6)", maliyet: "$0.005", kredi: 1, fiyat: "₺2.49", marj: "+1010%" },
                   { tip: "Metin düzenleme", maliyet: "$0.003", kredi: 1, fiyat: "₺2.49", marj: "+1500%+" },
@@ -202,11 +203,11 @@ export default function AdminPage() {
                   { tip: "Virtual try-on (FASHN)", maliyet: "$0.075", kredi: 3, fiyat: "₺7.47", marj: "+122%" },
                 ].map((r) => (
                   <tr key={r.tip} className="text-sm">
-                    <td className="py-2 text-gray-700">{r.tip}</td>
-                    <td className="py-2 text-right text-gray-500 font-mono">{r.maliyet}</td>
-                    <td className="py-2 text-right text-gray-500">{r.kredi} kr</td>
-                    <td className="py-2 text-right text-gray-600">{r.fiyat}</td>
-                    <td className={`py-2 text-right font-medium ${parseInt(r.marj) >= 200 ? "text-green-600" : parseInt(r.marj) >= 100 ? "text-yellow-600" : "text-orange-600"}`}>
+                    <td className="py-2 text-[#5A5852]">{r.tip}</td>
+                    <td className="py-2 text-right text-[#908E86] font-mono">{r.maliyet}</td>
+                    <td className="py-2 text-right text-[#908E86]">{r.kredi} kr</td>
+                    <td className="py-2 text-right text-[#5A5852]">{r.fiyat}</td>
+                    <td className={`py-2 text-right font-medium ${parseInt(r.marj) >= 200 ? "text-[#0F5132]" : parseInt(r.marj) >= 100 ? "text-[#8B4513]" : "text-[#7A1E1E]"}`}>
                       {r.marj}
                     </td>
                   </tr>
@@ -214,24 +215,24 @@ export default function AdminPage() {
               </tbody>
             </table>
           </div>
-          <p className="text-xs text-gray-400 mt-2">* Büyük paket: ₺2.49/kredi. $ → ₺ kuru: ~₺35.</p>
+          <p className="text-xs text-[#908E86] mt-2">* Büyük paket: ₺2.49/kredi. $ → ₺ kuru: ~₺35.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
 
           {/* Platform dağılımı */}
-          <div className="bg-white rounded-2xl shadow p-5">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Platform Dağılımı</h3>
+          <div className="bg-white rounded-xl border border-[#D8D6CE] p-5">
+            <h3 className="text-sm font-medium text-[#5A5852] mb-3">Platform dağılımı</h3>
             <div className="space-y-2">
               {Object.entries(metrik.platformDagilim).map(([platform, sayi]) => (
                 <div key={platform} className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600 capitalize">{platform}</span>
+                  <span className="text-sm text-[#5A5852] capitalize">{platform}</span>
                   <div className="flex items-center gap-2">
-                    <div className="w-24 bg-gray-100 rounded-full h-2">
-                      <div className="bg-indigo-400 h-2 rounded-full"
+                    <div className="w-24 bg-[#F1F0EB] rounded-full h-2">
+                      <div className="bg-[#7B9BD9] h-2 rounded-full"
                         style={{ width: `${metrik.toplamUretim > 0 ? (sayi / metrik.toplamUretim) * 100 : 0}%` }} />
                     </div>
-                    <span className="text-sm font-medium text-gray-700 w-6 text-right">{sayi}</span>
+                    <span className="text-sm font-medium text-[#1A1A17] w-6 text-right">{sayi}</span>
                   </div>
                 </div>
               ))}
@@ -239,20 +240,26 @@ export default function AdminPage() {
           </div>
 
           {/* Giriş tipi */}
-          <div className="bg-white rounded-2xl shadow p-5">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Giriş Tipi Dağılımı</h3>
+          <div className="bg-white rounded-xl border border-[#D8D6CE] p-5">
+            <h3 className="text-sm font-medium text-[#5A5852] mb-3">Giriş tipi dağılımı</h3>
             <div className="space-y-2">
               {Object.entries(metrik.girisTipiDagilim).map(([tip, sayi]) => (
                 <div key={tip} className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">
-                    {tip === "manuel" ? "✏️ Manuel" : tip === "foto" ? "📷 Fotoğraf" : "🔍 Barkod"}
+                  <span className="text-sm text-[#5A5852] flex items-center gap-1.5">
+                    {tip === "manuel"
+                      ? <Pencil size={12} strokeWidth={1.5} className="text-[#908E86]" />
+                      : tip === "foto"
+                      ? <Camera size={12} strokeWidth={1.5} className="text-[#908E86]" />
+                      : <Search size={12} strokeWidth={1.5} className="text-[#908E86]" />
+                    }
+                    {tip === "manuel" ? "Manuel" : tip === "foto" ? "Fotoğraf" : "Barkod"}
                   </span>
                   <div className="flex items-center gap-2">
-                    <div className="w-24 bg-gray-100 rounded-full h-2">
-                      <div className="bg-indigo-400 h-2 rounded-full"
+                    <div className="w-24 bg-[#F1F0EB] rounded-full h-2">
+                      <div className="bg-[#7B9BD9] h-2 rounded-full"
                         style={{ width: `${metrik.toplamUretim > 0 ? (sayi / metrik.toplamUretim) * 100 : 0}%` }} />
                     </div>
-                    <span className="text-sm font-medium text-gray-700 w-6 text-right">{sayi}</span>
+                    <span className="text-sm font-medium text-[#1A1A17] w-6 text-right">{sayi}</span>
                   </div>
                 </div>
               ))}
@@ -263,18 +270,18 @@ export default function AdminPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
           {/* Son kullanıcılar */}
-          <div className="bg-white rounded-2xl shadow p-5">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Son Kayıt Olan Kullanıcılar</h3>
+          <div className="bg-white rounded-xl border border-[#D8D6CE] p-5">
+            <h3 className="text-sm font-medium text-[#5A5852] mb-3">Son kayıt olan kullanıcılar</h3>
             <div className="space-y-2">
               {metrik.sonKullanicilar.map((k, i) => (
-                <div key={i} className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
+                <div key={i} className="flex justify-between items-center py-2 border-b border-[#F1F0EB] last:border-0">
                   <div>
-                    <div className="text-sm text-gray-700">{k.email}</div>
-                    <div className="text-xs text-gray-400">
+                    <div className="text-sm text-[#1A1A17]">{k.email}</div>
+                    <div className="text-xs text-[#908E86]">
                       {new Date(k.created_at).toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" })}
                     </div>
                   </div>
-                  <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full">
+                  <span className="text-xs bg-[#F0F4FB] text-[#1E4DD8] px-2 py-1 rounded-full">
                     {k.kredi} kredi
                   </span>
                 </div>
@@ -283,20 +290,20 @@ export default function AdminPage() {
           </div>
 
           {/* Son üretimler */}
-          <div className="bg-white rounded-2xl shadow p-5">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Son Üretimler</h3>
+          <div className="bg-white rounded-xl border border-[#D8D6CE] p-5">
+            <h3 className="text-sm font-medium text-[#5A5852] mb-3">Son üretimler</h3>
             <div className="space-y-2">
               {metrik.sonUretimler.map((u, i) => (
-                <div key={i} className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
+                <div key={i} className="flex justify-between items-center py-2 border-b border-[#F1F0EB] last:border-0">
                   <div>
-                    <div className="text-sm text-gray-700 truncate max-w-40">{u.urun_adi}</div>
-                    <div className="text-xs text-gray-400">
+                    <div className="text-sm text-[#1A1A17] truncate max-w-40">{u.urun_adi}</div>
+                    <div className="text-xs text-[#908E86]">
                       {new Date(u.created_at).toLocaleDateString("tr-TR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
-                      {u.input_token > 0 && <span className="ml-2 text-gray-300">{u.input_token + u.output_token} tok</span>}
-                      {u.api_cost > 0 && <span className="ml-1 text-red-300">${u.api_cost.toFixed(5)}</span>}
+                      {u.input_token > 0 && <span className="ml-2 text-[#D8D6CE]">{u.input_token + u.output_token} tok</span>}
+                      {u.api_cost > 0 && <span className="ml-1 text-[#7A1E1E]/50">${u.api_cost.toFixed(5)}</span>}
                     </div>
                   </div>
-                  <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full capitalize">
+                  <span className="text-xs bg-[#F1F0EB] text-[#5A5852] px-2 py-1 rounded-full capitalize">
                     {u.platform}
                   </span>
                 </div>

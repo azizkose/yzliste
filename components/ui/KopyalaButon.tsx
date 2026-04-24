@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Check } from 'lucide-react'
 
 interface KopyalaButonProps {
   metin: string
@@ -22,13 +23,13 @@ export default function KopyalaButon({ metin, getDuzenlenmisMevin }: KopyalaButo
       onClick={kopyala}
       className={`text-xs font-medium px-3 py-1 rounded-lg transition-all duration-200 ${
         kopyalandi
-          ? 'bg-green-100 text-green-700 border border-green-300 scale-95'
-          : 'bg-gray-100 text-gray-500 hover:bg-indigo-50 hover:text-indigo-600'
+          ? 'bg-[#E8F5EE] text-[#0F5132] border border-[#0F5132]/20 scale-95'
+          : 'bg-[#F1F0EB] text-[#908E86] hover:bg-[#F0F4FB] hover:text-[#1E4DD8]'
       }`}
     >
       {kopyalandi ? (
-        <span className="flex items-center gap-1 text-green-600">
-          <span>✓</span> Kopyalandı
+        <span className="flex items-center gap-1 text-[#0F5132]">
+          <Check size={12} strokeWidth={2} /> Kopyalandı
         </span>
       ) : (
         'Kopyala'

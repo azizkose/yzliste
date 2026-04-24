@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { FileText, Circle, Check, X as XIcon, Loader2 } from "lucide-react";
 
 type Uretim = {
   id: string;
@@ -34,10 +35,10 @@ function sonucuBolumle(sonuc: string): SonucBolum[] {
 const platformRenk: Record<string, string> = {
   trendyol: "bg-orange-100 text-orange-700",
   hepsiburada: "bg-orange-100 text-orange-600",
-  amazon: "bg-yellow-100 text-yellow-700",
-  n11: "bg-blue-100 text-blue-700",
+  amazon: "bg-[#FFF8E0] text-[#A87847]",
+  n11: "bg-[#F0F4FB] text-[#1E4DD8]",
   etsy: "bg-rose-100 text-rose-700",
-  amazon_usa: "bg-amber-100 text-amber-700",
+  amazon_usa: "bg-[#FFF3E0] text-[#E47911]",
 };
 
 const SAYFA_BOYUTU = 20;
@@ -94,73 +95,73 @@ export default function HesapUretimlerPage() {
 
   if (yukleniyor) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-indigo-200 border-t-indigo-500 rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
+        <Loader2 size={32} strokeWidth={1.5} className="text-[#1E4DD8] animate-spin" />
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-[#FAFAF8]">
       <div className="py-8 px-4">
         <div className="max-w-3xl mx-auto space-y-6">
 
-          <Link href="/hesap" className="text-sm text-gray-500 hover:text-gray-700">← Hesap</Link>
+          <Link href="/hesap" className="text-sm text-[#908E86] hover:text-[#5A5852]">← Hesap</Link>
 
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Üretim Geçmişi</h1>
-              <p className="text-sm text-gray-500 mt-0.5">Toplam {toplamSayfa} üretim</p>
+              <h1 className="text-xl font-medium text-[#1A1A17]">Üretim geçmişi</h1>
+              <p className="text-sm text-[#908E86] mt-0.5">Toplam {toplamSayfa} üretim</p>
             </div>
-            <Link href="/uret" className="bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors">
-              + Yeni Üretim
+            <Link href="/uret" className="bg-[#1E4DD8] hover:bg-[#163B9E] text-white text-xs font-medium px-4 py-2.5 rounded-xl transition-colors">
+              + Yeni üretim
             </Link>
           </div>
 
           {uretimler.length === 0 ? (
-            <div className="bg-white rounded-2xl shadow p-12 text-center space-y-3">
-              <div className="text-4xl">📝</div>
-              <p className="text-sm text-gray-500">Henüz hiç içerik üretmediniz.</p>
-              <Link href="/uret" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors">
+            <div className="bg-white rounded-xl border border-[#D8D6CE] p-12 text-center space-y-3">
+              <FileText size={40} strokeWidth={1.5} className="text-[#908E86] mx-auto" />
+              <p className="text-sm text-[#5A5852]">Henüz hiç içerik üretmediniz.</p>
+              <Link href="/uret" className="inline-block bg-[#1E4DD8] hover:bg-[#163B9E] text-white text-xs font-medium px-4 py-2 rounded-xl transition-colors">
                 İçerik Üret →
               </Link>
             </div>
           ) : (
-            <div className="bg-white rounded-2xl shadow overflow-hidden">
-              <div className="divide-y divide-gray-50">
+            <div className="bg-white rounded-xl border border-[#D8D6CE] overflow-hidden">
+              <div className="divide-y divide-[#F1F0EB]">
                 {uretimler.map((u) => {
                   const bolumler = sonucuBolumle(u.sonuc);
                   const acik = seciliUretim?.id === u.id;
                   return (
-                    <div key={u.id} className={`transition-all ${acik ? "bg-indigo-50" : "hover:bg-gray-50"}`}>
+                    <div key={u.id} className={`transition-all ${acik ? "bg-[#F0F4FB]" : "hover:bg-[#FAFAF8]"}`}>
                       <button onClick={() => setSeciliUretim(acik ? null : u)} className="w-full text-left p-4">
                         <div className="flex justify-between items-start gap-3">
                           <div className="flex-1 min-w-0">
-                            <span className="text-sm font-medium text-gray-800 block truncate">{u.urun_adi || "İsimsiz ürün"}</span>
+                            <span className="text-sm font-medium text-[#1A1A17] block truncate">{u.urun_adi || "İsimsiz ürün"}</span>
                             <div className="flex items-center gap-2 mt-1">
-                              <span className={`text-xs px-2 py-0.5 rounded-full ${platformRenk[u.platform] || "bg-gray-100 text-gray-600"}`}>{u.platform}</span>
-                              <span className="text-xs text-gray-400">
+                              <span className={`text-xs px-2 py-0.5 rounded-full ${platformRenk[u.platform] || "bg-[#F1F0EB] text-[#5A5852]"}`}>{u.platform}</span>
+                              <span className="text-xs text-[#908E86]">
                                 {new Date(u.created_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" })}
                               </span>
                             </div>
                           </div>
-                          <span className={`text-xs text-gray-400 flex-shrink-0 transition-transform ${acik ? "rotate-180" : ""}`}>▼</span>
+                          <span className={`text-xs text-[#908E86] flex-shrink-0 transition-transform ${acik ? "rotate-180" : ""}`}>▼</span>
                         </div>
                       </button>
                       {acik && (
-                        <div className="px-4 pb-4 space-y-2 border-t border-indigo-200 pt-3">
+                        <div className="px-4 pb-4 space-y-2 border-t border-[#BAC9EB] pt-3">
                           {bolumler.map((bolum, bi) => (
-                            <div key={bi} className="bg-white rounded-xl border border-gray-100 p-4">
+                            <div key={bi} className="bg-white rounded-xl border border-[#D8D6CE] p-4">
                               <div className="flex items-center justify-between mb-2">
-                                <span className="text-sm font-semibold text-gray-700">{bolum.ikon} {bolum.baslik}</span>
+                                <span className="text-sm font-medium text-[#1A1A17]">{bolum.ikon} {bolum.baslik}</span>
                                 <button
                                   onClick={() => navigator.clipboard.writeText(bolum.icerik)}
-                                  className="text-xs text-indigo-500 hover:text-indigo-600 font-medium px-2 py-1 rounded-lg hover:bg-indigo-50 transition-colors"
+                                  className="text-xs text-[#1E4DD8] hover:text-[#163B9E] font-medium px-2 py-1 rounded-lg hover:bg-[#F0F4FB] transition-colors"
                                 >
                                   Kopyala
                                 </button>
                               </div>
-                              <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{bolum.icerik}</p>
+                              <p className="text-sm text-[#5A5852] leading-relaxed whitespace-pre-line">{bolum.icerik}</p>
                             </div>
                           ))}
                         </div>
@@ -170,11 +171,11 @@ export default function HesapUretimlerPage() {
                 })}
               </div>
               {uretimler.length >= (sayfaNo + 1) * SAYFA_BOYUTU && (
-                <div className="px-5 py-4 border-t border-gray-50 text-center">
+                <div className="px-5 py-4 border-t border-[#F1F0EB] text-center">
                   <button
                     onClick={dahaFazlaYukle}
                     disabled={uretimYukleniyor}
-                    className="text-sm text-indigo-500 hover:text-indigo-700 font-medium disabled:opacity-50"
+                    className="text-sm text-[#1E4DD8] hover:text-[#163B9E] font-medium disabled:opacity-50"
                   >
                     {uretimYukleniyor ? "Yükleniyor..." : "Daha fazla göster ↓"}
                   </button>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { Loader2, Lock, User, Building2, X } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { PAKET_LISTESI } from '@/lib/paketler'
 import { analytics } from '@/lib/analytics'
@@ -161,31 +162,31 @@ export default function PaketModal({ kullanici, onKapat }: PaketModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl border border-[#D8D6CE] w-full max-w-lg max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between p-6 border-b border-[#D8D6CE]">
           <div>
             {adim === 'paket' && (
               <>
-                <h2 className="text-lg font-bold text-gray-900">İçerik Üretim Kredisi Satın Al</h2>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <h2 className="text-lg font-medium text-[#1A1A17]">İçerik üretim kredisi satın al</h2>
+                <p className="text-xs text-[#5A5852] mt-0.5">
                   Mevcut kredin:{' '}
-                  <span className="font-semibold text-indigo-500">{kullanici.kredi}</span>
+                  <span className="font-medium text-[#1E4DD8]">{kullanici.kredi}</span>
                 </p>
               </>
             )}
             {adim === 'fatura' && (
               <>
-                <h2 className="text-lg font-bold text-gray-900">Fatura Bilgileri</h2>
-                <p className="text-xs text-gray-500 mt-0.5">e-Arşiv fatura için gerekli bilgiler</p>
+                <h2 className="text-lg font-medium text-[#1A1A17]">Fatura bilgileri</h2>
+                <p className="text-xs text-[#5A5852] mt-0.5">e-Arşiv fatura için gerekli bilgiler</p>
               </>
             )}
             {adim === 'odeme' && (
-              <h2 className="text-lg font-bold text-gray-900">Güvenli Ödeme</h2>
+              <h2 className="text-lg font-medium text-[#1A1A17]">Güvenli ödeme</h2>
             )}
           </div>
-          <button onClick={onKapat} aria-label="Kapat" className="text-gray-400 hover:text-gray-600 text-2xl font-light">
-            ×
+          <button onClick={onKapat} aria-label="Kapat" className="text-[#908E86] hover:text-[#5A5852] transition-colors">
+            <X size={20} strokeWidth={1.5} />
           </button>
         </div>
 
@@ -193,35 +194,40 @@ export default function PaketModal({ kullanici, onKapat }: PaketModalProps) {
         {adim === 'paket' && (
           <div className="p-6 space-y-4">
             {paketler.map((p) => (
-              <div key={p.id} className={`border-2 ${p.renk} rounded-2xl p-5 relative`}>
+              <div key={p.id} className={`border-2 ${p.renk} rounded-xl p-5 relative`}>
                 {p.rozet && (
-                  <span className="absolute -top-3 left-4 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                    En Popüler
+                  <span className="absolute -top-3 left-4 bg-[#1E4DD8] text-white text-xs font-medium px-3 py-1 rounded-full">
+                    En popüler
                   </span>
                 )}
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-semibold text-gray-800">{p.isim}</p>
-                    <p className="text-sm text-gray-500">{p.krediStr}</p>
+                    <p className="font-medium text-[#1A1A17]">{p.isim}</p>
+                    <p className="text-sm text-[#5A5852]">{p.krediStr}</p>
                   </div>
-                  <p className="text-2xl font-bold text-gray-900">{p.fiyatStr}</p>
+                  <p className="text-2xl font-medium text-[#1A1A17]">{p.fiyatStr}</p>
                 </div>
                 <button
                   onClick={() => paketSec(p.id)}
                   disabled={yukleniyor || !tumOnaylar}
-                  className={`w-full mt-4 ${p.butonRenk} text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:bg-gray-300`}
+                  className={`w-full mt-4 ${p.butonRenk} text-white font-medium py-2.5 rounded-xl text-sm transition-colors disabled:bg-[#D8D6CE] disabled:cursor-not-allowed`}
                 >
-                  {yukleniyor && seciliPaket === p.id
-                    ? '⏳ Yükleniyor...'
-                    : !tumOnaylar
-                    ? 'Onayları işaretle'
-                    : 'Satın Al'}
+                  {yukleniyor && seciliPaket === p.id ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />
+                      Yükleniyor...
+                    </span>
+                  ) : !tumOnaylar ? (
+                    'Onayları işaretle'
+                  ) : (
+                    'Satın Al'
+                  )}
                 </button>
               </div>
             ))}
 
             {/* F-07d: 3 zorunlu onay checkbox'ı */}
-            <div className="space-y-2 border-t border-gray-100 pt-4">
+            <div className="space-y-2 border-t border-[#D8D6CE] pt-4">
               {[
                 { state: kosullarOnay, set: setKosullarOnay, href: '/kosullar', metin: 'Kullanım Koşulları' },
                 { state: mesafeliOnay, set: setMesafeliOnay, href: '/mesafeli-satis', metin: 'Mesafeli Satış Sözleşmesi' },
@@ -232,10 +238,10 @@ export default function PaketModal({ kullanici, onKapat }: PaketModalProps) {
                     type="checkbox"
                     checked={state}
                     onChange={(e) => set(e.target.checked)}
-                    className="mt-0.5 h-4 w-4 rounded border-gray-300 flex-shrink-0"
+                    className="mt-0.5 h-4 w-4 rounded border-[#D8D6CE] flex-shrink-0"
                   />
-                  <span className="text-xs text-gray-600">
-                    <a href={href} target="_blank" className="text-indigo-500 hover:underline font-medium">
+                  <span className="text-xs text-[#5A5852]">
+                    <a href={href} target="_blank" className="text-[#1E4DD8] hover:underline font-medium">
                       {metin}
                     </a>
                     &apos;ni okudum ve kabul ediyorum.
@@ -243,7 +249,10 @@ export default function PaketModal({ kullanici, onKapat }: PaketModalProps) {
                 </label>
               ))}
             </div>
-            <p className="text-xs text-gray-400 text-center pt-2">🔒 Güvenli ödeme — iyzico altyapısı</p>
+            <p className="text-xs text-[#908E86] text-center pt-2 flex items-center justify-center gap-1.5">
+              <Lock size={11} strokeWidth={1.5} />
+              Güvenli ödeme — iyzico altyapısı
+            </p>
           </div>
         )}
 
@@ -251,40 +260,42 @@ export default function PaketModal({ kullanici, onKapat }: PaketModalProps) {
         {adim === 'fatura' && (
           <div className="p-6 space-y-4">
             {/* Fatura tipi toggle */}
-            <div className="flex rounded-xl overflow-hidden border border-gray-200">
+            <div className="flex rounded-xl overflow-hidden border border-[#D8D6CE]">
               <button
                 onClick={() => setFaturaTipi('bireysel')}
-                className={`flex-1 py-2 text-sm font-medium transition-colors ${faturaTipi === 'bireysel' ? 'bg-indigo-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                className={`flex-1 py-2 text-sm font-medium transition-colors flex items-center justify-center gap-1.5 ${faturaTipi === 'bireysel' ? 'bg-[#1E4DD8] text-white' : 'bg-white text-[#5A5852] hover:bg-[#FAFAF8]'}`}
               >
-                👤 Bireysel
+                <User size={14} strokeWidth={1.5} />
+                Bireysel
               </button>
               <button
                 onClick={() => setFaturaTipi('kurumsal')}
-                className={`flex-1 py-2 text-sm font-medium transition-colors ${faturaTipi === 'kurumsal' ? 'bg-indigo-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                className={`flex-1 py-2 text-sm font-medium transition-colors flex items-center justify-center gap-1.5 ${faturaTipi === 'kurumsal' ? 'bg-[#1E4DD8] text-white' : 'bg-white text-[#5A5852] hover:bg-[#FAFAF8]'}`}
               >
-                🏢 Kurumsal
+                <Building2 size={14} strokeWidth={1.5} />
+                Kurumsal
               </button>
             </div>
 
             {/* Ad/Unvan */}
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
-                {faturaTipi === 'bireysel' ? 'Ad Soyad' : 'Şirket Unvanı'} <span className="text-red-500">*</span>
+              <label className="block text-xs font-medium text-[#5A5852] mb-1">
+                {faturaTipi === 'bireysel' ? 'Ad Soyad' : 'Şirket Unvanı'} <span className="text-[#7A1E1E]">*</span>
               </label>
               <input
                 type="text"
                 value={adSoyad}
                 onChange={(e) => setAdSoyad(e.target.value)}
                 placeholder={faturaTipi === 'bireysel' ? 'Örn: Ayşe Kaya' : 'Örn: Kaya Tekstil Ltd. Şti.'}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                className="w-full border border-[#D8D6CE] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#BAC9EB]"
               />
             </div>
 
             {/* Bireysel: TC Kimlik */}
             {faturaTipi === 'bireysel' && (
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
-                  TC Kimlik No <span className="text-red-500">*</span>
+                <label className="block text-xs font-medium text-[#5A5852] mb-1">
+                  TC Kimlik No <span className="text-[#7A1E1E]">*</span>
                 </label>
                 <input
                   type="text"
@@ -292,9 +303,9 @@ export default function PaketModal({ kullanici, onKapat }: PaketModalProps) {
                   onChange={(e) => setTcKimlik(e.target.value.replace(/\D/g, '').slice(0, 11))}
                   placeholder="11 haneli TC Kimlik No"
                   maxLength={11}
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                  className="w-full border border-[#D8D6CE] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#BAC9EB]"
                 />
-                <p className="text-xs text-gray-400 mt-1">TC Kimlik numaranız yalnızca e-Arşiv fatura için kullanılır.</p>
+                <p className="text-xs text-[#908E86] mt-1">TC Kimlik numaranız yalnızca e-Arşiv fatura için kullanılır.</p>
               </div>
             )}
 
@@ -302,8 +313,8 @@ export default function PaketModal({ kullanici, onKapat }: PaketModalProps) {
             {faturaTipi === 'kurumsal' && (
               <>
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Vergi Numarası <span className="text-red-500">*</span>
+                  <label className="block text-xs font-medium text-[#5A5852] mb-1">
+                    Vergi Numarası <span className="text-[#7A1E1E]">*</span>
                   </label>
                   <input
                     type="text"
@@ -311,19 +322,19 @@ export default function PaketModal({ kullanici, onKapat }: PaketModalProps) {
                     onChange={(e) => setVergiNo(e.target.value.replace(/\D/g, '').slice(0, 10))}
                     placeholder="10 haneli Vergi No"
                     maxLength={10}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                    className="w-full border border-[#D8D6CE] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#BAC9EB]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Vergi Dairesi <span className="text-red-500">*</span>
+                  <label className="block text-xs font-medium text-[#5A5852] mb-1">
+                    Vergi Dairesi <span className="text-[#7A1E1E]">*</span>
                   </label>
                   <input
                     type="text"
                     value={vergiDairesi}
                     onChange={(e) => setVergiDairesi(e.target.value)}
                     placeholder="Örn: Kadıköy VD"
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                    className="w-full border border-[#D8D6CE] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#BAC9EB]"
                   />
                 </div>
               </>
@@ -331,35 +342,42 @@ export default function PaketModal({ kullanici, onKapat }: PaketModalProps) {
 
             {/* Adres */}
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
-                Fatura Adresi <span className="text-red-500">*</span>
+              <label className="block text-xs font-medium text-[#5A5852] mb-1">
+                Fatura Adresi <span className="text-[#7A1E1E]">*</span>
               </label>
               <textarea
                 value={adres}
                 onChange={(e) => setAdres(e.target.value)}
                 placeholder="Açık adres (Mahalle, Sokak, No, İlçe, İl)"
                 rows={3}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 resize-none"
+                className="w-full border border-[#D8D6CE] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#BAC9EB] resize-none"
               />
             </div>
 
             {faturaHata && (
-              <p className="text-sm text-red-500 bg-red-50 rounded-xl px-3 py-2">{faturaHata}</p>
+              <p className="text-sm text-[#7A1E1E] bg-[#FCECEC] rounded-xl px-3 py-2">{faturaHata}</p>
             )}
 
             <div className="flex gap-3 pt-2">
               <button
                 onClick={() => setAdim('paket')}
-                className="flex-1 border border-gray-200 text-gray-600 font-medium py-2.5 rounded-xl text-sm hover:bg-gray-50 transition-colors"
+                className="flex-1 border border-[#D8D6CE] text-[#5A5852] font-medium py-2.5 rounded-xl text-sm hover:bg-[#FAFAF8] transition-colors"
               >
                 ← Geri
               </button>
               <button
                 onClick={faturaKaydetVeOde}
                 disabled={faturaKaydediliyor}
-                className="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:bg-gray-300"
+                className="flex-1 bg-[#1E4DD8] hover:bg-[#163B9E] text-white font-medium py-2.5 rounded-xl text-sm transition-colors disabled:bg-[#D8D6CE] disabled:cursor-not-allowed"
               >
-                {faturaKaydediliyor ? '⏳ Kaydediliyor...' : 'Kaydet ve Ödemeye Geç →'}
+                {faturaKaydediliyor ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />
+                    Kaydediliyor...
+                  </span>
+                ) : (
+                  'Kaydet ve ödemeye geç →'
+                )}
               </button>
             </div>
           </div>

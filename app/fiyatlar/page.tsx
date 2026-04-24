@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { Gift, Check, Lock } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { PAKET_LISTESI } from "@/lib/paketler";
 import FiyatlarCta from "@/components/ui/FiyatlarCta";
+import { Icon3D } from "@/components/ui/Icon3D";
 
 export const metadata: Metadata = {
   title: "Fiyatlar — E-ticaret Listing Üretici",
@@ -40,31 +42,31 @@ const paketler = PAKET_LISTESI;
 
 const krediAciklamalari = [
   {
-    ikon: "🎁",
+    ikon: <Gift size={40} strokeWidth={1.5} className="text-[#1E4DD8]" />,
     baslik: "3 ücretsiz kredi ile başla",
     icerik:
       "Kayıt olunca 3 ücretsiz kredi tanımlanır — kredi kartı gerekmez. İstediğin içerik türünü (metin, görsel, video, sosyal medya) denemek için kullanabilirsin.",
   },
   {
-    ikon: "📝",
+    ikon: <Icon3D name="pencil" size={48} bgColor="#F0F4FB" />,
     baslik: "Listing metni — 1 kredi",
     icerik:
       "1 kredi = 1 ürün için tam listing metni. Başlık, madde madde özellikler, açıklama ve arama etiketlerinin tamamı tek seferde gelir. Hepsi ayrı kutularda, tek tıkla kopyalanır.",
   },
   {
-    ikon: "📷",
+    ikon: <Icon3D name="camera" size={48} bgColor="#FBEAF0" />,
     baslik: "AI görsel — stil başına 1 kredi",
     icerik:
       "7 farklı stil (Beyaz, Koyu, Lifestyle, Mermer, Ahşap, Gradient, Doğal). Seçtiğin her stil için 1 görsel üretilir, kredi üretimde düşer. 1 stil = 1 görsel = 1 kredi.",
   },
   {
-    ikon: "🎬",
+    ikon: <Icon3D name="video-cam" size={48} bgColor="#FAEEDA" />,
     baslik: "Video — 5sn: 10 kredi · 10sn: 20 kredi",
     icerik:
       "Ürün fotoğrafından tanıtım videosu üretilir. 5 saniyelik video için 10 kredi, 10 saniyelik için 20 kredi. Dikey (9:16 · Reels/TikTok), kare (1:1 · Feed) veya yatay (16:9 · YouTube) format seçilebilir.",
   },
   {
-    ikon: "📱",
+    ikon: <Icon3D name="mobile" size={48} bgColor="#E1F5EE" />,
     baslik: "Sosyal medya — 1 kredi / platform · Kit: 3 kredi (4 platform)",
     icerik:
       "Tek platform için 1 kredi: Instagram, TikTok, Facebook veya Twitter/X. Sosyal Medya Kiti ile 4 platform birden sadece 3 kredi — %25 tasarruf. Her platform için ayrı ton ve format.",
@@ -188,60 +190,64 @@ export default function FiyatlarPage() {
 
       {/* HERO */}
       <section className="px-4 sm:px-6 pt-14 pb-10 text-center max-w-2xl mx-auto">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
+        <h1 className="text-3xl sm:text-4xl font-medium text-[#1A1A17] mb-4" style={{ letterSpacing: "-0.02em" }}>
           Kullandığın kadar öde,<br />
-          <span className="text-indigo-500">abonelik yok</span>
+          <span className="text-[#1E4DD8]">abonelik yok</span>
         </h1>
-        <p className="text-gray-500 text-base mb-6">
+        <p className="text-[#5A5852] text-base mb-6">
           3 ücretsiz krediyle başla, beğenince istediğin paketi al. Krediler listing metni, görsel, video ve sosyal medya içeriği arasında serbestçe kullanılır.
         </p>
-        <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 text-sm font-medium px-4 py-2 rounded-full border border-green-200">
-          🎁 Yeni kayıtta 3 ücretsiz kredi · Kredi kartı gerekmez
+        <div className="inline-flex items-center gap-2 bg-[#E8F5EE] text-[#0F5132] text-sm font-medium px-4 py-2 rounded-full border border-[#0F5132]/20">
+          <Gift size={14} strokeWidth={1.5} />
+          Yeni kayıtta 3 ücretsiz kredi · Kredi kartı gerekmez
         </div>
       </section>
 
       {/* KREDİ AÇIKLAMALARI */}
-      <section className="px-4 sm:px-6 py-10 bg-gray-50 border-y border-gray-100">
+      <section className="px-4 sm:px-6 py-10 bg-[#F1F0EB] border-y border-[#D8D6CE]">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-xl font-bold text-gray-800 text-center mb-8">Kredi nasıl çalışır?</h2>
+          <h2 className="text-xl font-medium text-[#1A1A17] text-center mb-8">Kredi nasıl çalışır?</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
             {krediAciklamalari.map((k, i) => (
-              <div key={i} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-                <div className="text-2xl mb-3">{k.ikon}</div>
-                <h3 className="font-semibold text-gray-800 text-sm mb-2">{k.baslik}</h3>
-                <p className="text-xs text-gray-500 leading-relaxed">{k.icerik}</p>
+              <div key={i} className="bg-white rounded-xl p-5 border border-[#D8D6CE]">
+                <div className="mb-3">{k.ikon}</div>
+                <h3 className="font-medium text-[#1A1A17] text-sm mb-2">{k.baslik}</h3>
+                <p className="text-xs text-[#5A5852] leading-relaxed">{k.icerik}</p>
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-gray-400">✅ Krediler tüm içerik türlerinde kullanılır · Süre sınırı yok · Abonelik yok</p>
+          <p className="text-center text-xs text-[#908E86] flex items-center justify-center gap-1.5">
+            <Check size={12} strokeWidth={2} className="text-[#0F5132]" />
+            Krediler tüm içerik türlerinde kullanılır · Süre sınırı yok · Abonelik yok
+          </p>
         </div>
       </section>
 
       {/* PAKETLER */}
       <section className="px-4 sm:px-6 py-16">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-800 text-center mb-3">Paketler</h2>
-          <p className="text-center text-sm text-gray-400 mb-10">
+          <h2 className="text-2xl font-medium text-[#1A1A17] text-center mb-3" style={{ letterSpacing: "-0.01em" }}>Paketler</h2>
+          <p className="text-center text-sm text-[#908E86] mb-10">
             Bir kez al, sona erene kadar kullan. Süre sınırı yok.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {paketler.map((p) => (
-              <div key={p.id} className={`border-2 ${p.renk} rounded-2xl p-6 relative flex flex-col`}>
+              <div key={p.id} className={`border-2 ${p.renk} rounded-xl p-6 relative flex flex-col`}>
                 {p.rozet && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-500 text-white text-xs font-bold px-4 py-1 rounded-full">
-                    En Popüler
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1E4DD8] text-white text-xs font-medium px-4 py-1 rounded-full">
+                    En popüler
                   </span>
                 )}
                 <div className="mb-4">
-                  <p className="font-bold text-gray-800 text-lg">{p.isim}</p>
-                  <p className="text-3xl font-extrabold text-gray-900 mt-1">{p.fiyatStr}</p>
-                  <p className="text-sm text-gray-500 mt-1">{p.kredi} kredi · <span className="text-gray-400">{(p.fiyat / p.kredi).toFixed(2).replace('.', ',')}₺/kredi</span></p>
-                  <p className="text-xs text-gray-400 mt-2 leading-relaxed">{p.aciklama}</p>
+                  <p className="font-medium text-[#1A1A17] text-lg">{p.isim}</p>
+                  <p className="text-3xl font-medium text-[#1A1A17] mt-1">{p.fiyatStr}</p>
+                  <p className="text-sm text-[#5A5852] mt-1">{p.kredi} kredi · <span className="text-[#908E86]">{(p.fiyat / p.kredi).toFixed(2).replace('.', ',')}₺/kredi</span></p>
+                  <p className="text-xs text-[#908E86] mt-2 leading-relaxed">{p.aciklama}</p>
                 </div>
                 <ul className="space-y-2 flex-1 mb-6">
                   {p.ozellikler.map((o, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-gray-600">
-                      <span className="text-green-500 flex-shrink-0 mt-0.5">✓</span>
+                    <li key={i} className="flex items-start gap-2 text-xs text-[#5A5852]">
+                      <Check size={12} strokeWidth={2} className="text-[#0F5132] flex-shrink-0 mt-0.5" />
                       {o}
                     </li>
                   ))}
@@ -250,39 +256,40 @@ export default function FiyatlarPage() {
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-gray-400 mt-8">
-            🔒 Güvenli ödeme — iyzico altyapısı · Fatura her alışverişte e-postayla gönderilir
+          <p className="text-center text-xs text-[#908E86] mt-8 flex items-center justify-center gap-1.5">
+            <Lock size={11} strokeWidth={1.5} />
+            Güvenli ödeme — iyzico altyapısı · Fatura her alışverişte e-postayla gönderilir
           </p>
         </div>
       </section>
 
       {/* KREDİ HESAPLAYICI — basit örnek tablo */}
-      <section className="px-4 sm:px-6 py-14 bg-indigo-50 border-y border-indigo-100">
+      <section className="px-4 sm:px-6 py-14 bg-[#F0F4FB] border-y border-[#BAC9EB]">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-xl font-bold text-gray-800 text-center mb-2">Örnek kullanım senaryoları</h2>
-          <p className="text-center text-sm text-gray-400 mb-8">Kredileri metin ve görsel arasında dilediğin gibi bölebilirsin</p>
+          <h2 className="text-xl font-medium text-[#1A1A17] text-center mb-2">Örnek kullanım senaryoları</h2>
+          <p className="text-center text-sm text-[#908E86] mb-8">Kredileri metin ve görsel arasında dilediğin gibi bölebilirsin</p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-indigo-200">
-                  <th className="text-left py-3 px-4 text-gray-600 font-semibold">Senaryo</th>
-                  <th className="text-center py-3 px-4 text-gray-600 font-semibold">Kullanılan kredi</th>
-                  <th className="text-center py-3 px-4 text-gray-600 font-semibold">Önerilen paket</th>
+                <tr className="border-b border-[#BAC9EB]">
+                  <th className="text-left py-3 px-4 text-[#5A5852] font-medium">Senaryo</th>
+                  <th className="text-center py-3 px-4 text-[#5A5852] font-medium">Kullanılan kredi</th>
+                  <th className="text-center py-3 px-4 text-[#5A5852] font-medium">Önerilen paket</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-indigo-100">
+              <tbody className="divide-y divide-[#BAC9EB]">
                 {[
-                  { senaryo: "10 ürün için listing metni", kredi: "10 kredi", paket: "Başlangıç (₺39)" },
-                  { senaryo: "5 ürün metin + 5 stil görsel", kredi: "10 kredi", paket: "Başlangıç (₺39)" },
-                  { senaryo: "2 adet 5sn ürün videosu", kredi: "20 kredi", paket: "Popüler (₺99)" },
-                  { senaryo: "20 ürün metin + 10 stil görsel", kredi: "30 kredi", paket: "Popüler (₺99)" },
-                  { senaryo: "30 ürün listing metni + 30 sosyal medya seti", kredi: "60 kredi", paket: "Büyük (₺249)" },
-                  { senaryo: "100 ürün listing metni (toplu)", kredi: "100 kredi", paket: "Büyük (₺249)" },
+                  { senaryo: "10 ürün için listing metni", kredi: "10 kredi", paket: "Başlangıç (₺49)" },
+                  { senaryo: "5 ürün metin + 5 stil görsel", kredi: "10 kredi", paket: "Başlangıç (₺49)" },
+                  { senaryo: "2 adet 5sn ürün videosu", kredi: "20 kredi", paket: "Popüler (₺129)" },
+                  { senaryo: "20 ürün metin + 10 stil görsel", kredi: "30 kredi", paket: "Popüler (₺129)" },
+                  { senaryo: "30 ürün listing metni + 30 sosyal medya seti", kredi: "60 kredi", paket: "Büyük (₺299)" },
+                  { senaryo: "100 ürün listing metni (toplu)", kredi: "100 kredi", paket: "Büyük (₺299)" },
                 ].map((row, i) => (
                   <tr key={i} className="bg-white/60">
-                    <td className="py-3 px-4 text-gray-700">{row.senaryo}</td>
-                    <td className="py-3 px-4 text-center font-semibold text-indigo-600">{row.kredi}</td>
-                    <td className="py-3 px-4 text-center text-gray-500">{row.paket}</td>
+                    <td className="py-3 px-4 text-[#5A5852]">{row.senaryo}</td>
+                    <td className="py-3 px-4 text-center font-medium text-[#1E4DD8]">{row.kredi}</td>
+                    <td className="py-3 px-4 text-center text-[#908E86]">{row.paket}</td>
                   </tr>
                 ))}
               </tbody>
@@ -294,12 +301,12 @@ export default function FiyatlarPage() {
       {/* SSS */}
       <section className="px-4 sm:px-6 py-16">
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-800 text-center mb-10">Sık sorulan sorular</h2>
+          <h2 className="text-2xl font-medium text-[#1A1A17] text-center mb-10" style={{ letterSpacing: "-0.01em" }}>Sık sorulan sorular</h2>
           <div className="space-y-5">
             {sss.map((s, i) => (
-              <div key={i} className="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm">
-                <p className="font-semibold text-gray-800 text-sm mb-2">{s.soru}</p>
-                <p className="text-xs text-gray-500 leading-relaxed">{s.cevap}</p>
+              <div key={i} className="border border-[#D8D6CE] rounded-xl p-5 bg-white">
+                <p className="font-medium text-[#1A1A17] text-sm mb-2">{s.soru}</p>
+                <p className="text-xs text-[#5A5852] leading-relaxed">{s.cevap}</p>
               </div>
             ))}
           </div>
@@ -307,11 +314,11 @@ export default function FiyatlarPage() {
       </section>
 
       {/* CTA */}
-      <section className="px-4 sm:px-6 py-14 bg-gray-50 border-t border-gray-100 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-3">Hemen ücretsiz dene</h2>
-        <p className="text-gray-500 text-sm mb-6">3 kredi, kredi kartı yok. Hesap oluştur, hemen başla.</p>
+      <section className="px-4 sm:px-6 py-14 bg-[#F1F0EB] border-t border-[#D8D6CE] text-center">
+        <h2 className="text-2xl font-medium text-[#1A1A17] mb-3" style={{ letterSpacing: "-0.01em" }}>Hemen ücretsiz dene</h2>
+        <p className="text-[#5A5852] text-sm mb-6">3 kredi, kredi kartı yok. Hesap oluştur, hemen başla.</p>
         <FiyatlarCta
-          className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-10 py-4 rounded-2xl text-base transition-colors shadow-lg shadow-indigo-100"
+          className="inline-block bg-[#1E4DD8] hover:bg-[#163B9E] text-white font-medium px-10 py-4 rounded-xl text-base transition-colors"
         />
       </section>
 
