@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Check, FileText, X, ZoomIn, RotateCw, Lightbulb, Leaf, ScanSearch, Wind, Timer, Film, Columns2, Camera, Tag, Hash } from "lucide-react";
-import { Icon3D } from "@/components/ui/Icon3D";
+import { Check, FileText, X, ZoomIn, RotateCw, Lightbulb, Leaf, ScanSearch, Wind, Timer, Film, Columns2, Camera, Tag, Hash, Clapperboard, Share2 } from "lucide-react";
 
 type PlatformKey = "trendyol" | "amazon" | "etsy";
 
@@ -117,10 +116,10 @@ Perfect 80ml Size — Designed specifically for Turkish coffee, espresso, and ma
 };
 
 const KUTULAR = [
-  { idx: 0, ikonAdi: "pencil" as const, ikonRenk: "#F0F4FB", baslik: "Listing Metni", aciklama: "Başlık, özellikler, açıklama, etiketler", kredi: "1 kredi" },
-  { idx: 1, ikonAdi: "camera" as const, ikonRenk: "#FBEAF0", baslik: "Görsel", aciklama: "7 stil, stil başına 1 görsel", kredi: "Stil başına 1 kredi" },
-  { idx: 2, ikonAdi: "video-cam" as const, ikonRenk: "#FAEEDA", baslik: "Video", aciklama: "Ürün tanıtım videosu, 1080p", kredi: "5sn veya 10sn" },
-  { idx: 3, ikonAdi: "mobile" as const, ikonRenk: "#E1F5EE", baslik: "Sosyal Medya", aciklama: "Caption + hashtag, tüm platformlar", kredi: "1 kredi / platform · Kit: 3 kredi" },
+  { idx: 0, Ikon: FileText, baslik: "Listing Metni", aciklama: "Başlık, özellikler, açıklama, etiketler", kredi: "1 kredi" },
+  { idx: 1, Ikon: Camera, baslik: "Görsel", aciklama: "7 stil, stil başına 1 görsel", kredi: "Stil başına 1 kredi" },
+  { idx: 2, Ikon: Clapperboard, baslik: "Video", aciklama: "Ürün tanıtım videosu, 1080p", kredi: "5sn veya 10sn" },
+  { idx: 3, Ikon: Share2, baslik: "Sosyal Medya", aciklama: "Caption + hashtag, tüm platformlar", kredi: "1 kredi / platform · Kit: 3 kredi" },
 ];
 
 function BolumIkon({ ikon }: { ikon: string }) {
@@ -162,7 +161,7 @@ export default function FeaturesTabbed() {
         <h2 className="text-2xl font-medium text-center text-[#1A1A17] mb-2" style={{ letterSpacing: "-0.01em" }}>Tek platformda 4 içerik türü</h2>
         <p className="text-center text-base text-[#5A5852] max-w-2xl mx-auto mt-2 mb-6">Pazaryerlerinde ürün listelemek için metin, görsel, video ve sosyal içerik gerekir. Ayrı ayrı araçlarla uğraşmak yerine hepsini tek platformdan üretin.</p>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-0">
           {KUTULAR.map((k) => (
             <button
               key={k.idx}
@@ -170,13 +169,13 @@ export default function FeaturesTabbed() {
               onClick={() => setOzellikTab(k.idx)}
               className={`cursor-pointer text-left rounded-xl border overflow-hidden transition-all ${
                 ozellikTab === k.idx
-                  ? "border-transparent ring-2 ring-[#1E4DD8] bg-[#F0F4FB]"
-                  : "border-[#D8D6CE] bg-white hover:border-[#1E4DD8]/40"
+                  ? "border-[#1E4DD8] border-b-0 rounded-b-none bg-[#F0F4FB] z-10"
+                  : "border-[#D8D6CE] bg-white hover:border-[#1E4DD8]/40 mb-0"
               }`}
             >
               <div className="px-4 pt-5 pb-4">
-                <div className="mb-2">
-                  <Icon3D name={k.ikonAdi} size={48} bgColor={k.ikonRenk} />
+                <div className="mb-3">
+                  <k.Ikon size={22} strokeWidth={1.5} className="text-[#1E4DD8]" />
                 </div>
                 <p className="font-medium text-[#1A1A17] text-sm">{k.baslik}</p>
                 <p className="text-xs text-[#908E86] mt-1 leading-snug">{k.aciklama}</p>
@@ -186,7 +185,7 @@ export default function FeaturesTabbed() {
           ))}
         </div>
 
-        <div className="bg-white rounded-xl border border-[#D8D6CE] overflow-hidden border-t-4 border-t-[#1E4DD8]">
+        <div className="bg-[#F0F4FB] rounded-xl rounded-tl-none border border-[#1E4DD8] overflow-hidden mt-0">
           {ozellikTab === 0 && (
             <div className="p-5 sm:p-7">
               <p className="text-sm text-[#5A5852] mb-4">Her pazaryerinin kendine özel karakter limiti, format kuralları ve yasaklı kelimeleri var. yzliste bunları bilir — platforma özel başlık, madde madde özellikler, SEO uyumlu açıklama ve arama etiketleri üretir.</p>

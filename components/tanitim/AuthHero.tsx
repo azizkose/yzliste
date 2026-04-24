@@ -28,7 +28,7 @@ export default function AuthHero() {
             Trendyol · Hepsiburada · Amazon TR · N11 · Etsy · Amazon USA
           </span>
           <span className="px-3 py-1 rounded-full text-xs font-medium bg-white/10 text-white border border-white/20">
-            Video + Sosyal Medya
+            Metin · Görsel · Video · Sosyal Medya
           </span>
         </div>
 

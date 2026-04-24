@@ -1,3 +1,5 @@
+"use client";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Lightbulb, Zap, Target, Wallet } from "lucide-react";
 
@@ -9,19 +11,59 @@ const OZELLIKLER = [
 ];
 
 export default function BenefitsGrid() {
+  const [visible, setVisible] = useState(OZELLIKLER.map(() => false));
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      setVisible(OZELLIKLER.map(() => true));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          OZELLIKLER.forEach((_, i) => {
+            setTimeout(() => {
+              setVisible((prev) => {
+                const next = [...prev];
+                next[i] = true;
+                return next;
+              });
+            }, i * 200);
+          });
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
-      <section className="px-4 sm:px-6 py-16">
-        <div className="max-w-4xl mx-auto">
+      <section ref={sectionRef} className="px-4 sm:px-6 py-16">
+        <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-medium text-center text-[#1A1A17] mb-3" style={{ letterSpacing: "-0.01em" }}>Neden yzliste?</h2>
           <p className="text-center text-sm text-[#908E86] mb-10">Genel amaçlı AI araçlarından farkımız</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {OZELLIKLER.map((o, i) => (
-              <div key={i} className="bg-white rounded-xl p-5 border border-[#D8D6CE]">
-                <div className="w-12 h-12 bg-[#F1F0EB] rounded-xl flex items-center justify-center mb-3">
-                  <o.Ikon size={22} strokeWidth={1.5} className="text-[#5A5852]" />
+              <div
+                key={i}
+                className="bg-white rounded-xl p-5 border border-[#D8D6CE]"
+                style={{
+                  opacity: visible[i] ? 1 : 0,
+                  transform: visible[i] ? "translateY(0)" : "translateY(20px)",
+                  transition: "opacity 0.4s ease, transform 0.4s ease",
+                }}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <o.Ikon size={18} strokeWidth={1.5} className="text-[#1E4DD8] flex-shrink-0" />
+                  <h3 className="font-medium text-[#1A1A17] text-sm leading-snug">{o.baslik}</h3>
                 </div>
-                <h3 className="font-medium text-[#1A1A17] text-sm mb-1">{o.baslik}</h3>
                 <p className="text-xs text-[#908E86] leading-relaxed">{o.aciklama}</p>
               </div>
             ))}
