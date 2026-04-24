@@ -1,6 +1,7 @@
 "use client";
 import { Minus, Plus } from "lucide-react";
 import { STUDIO_KREDI } from "@/lib/studio-constants";
+import KrediButon from "@/components/ui/KrediButon";
 
 interface TryonAyarlarProps {
   mode: "performance" | "balanced" | "quality";
@@ -71,20 +72,20 @@ export function TryonAyarlar({
       </div>
 
       <div className="pt-1">
-        <button
+        <KrediButon
+          label="Mankene giydirme"
+          kredi={toplamKredi}
+          kalanKredi={kredi}
           onClick={onUret}
-          disabled={yukleniyor || yetersizKredi}
-          className="w-full py-3 rounded-lg bg-[#1E4DD8] text-white text-sm font-medium hover:bg-[#163B9E] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          {yukleniyor ? "Hazırlanıyor..." : `Mankene giydirme — ${toplamKredi} kredi`}
-        </button>
-        <p className="text-xs text-[#908E86] text-center mt-2">
-          {yetersizKredi ? (
-            <span className="text-[#7A1E1E]">Yetersiz kredi — {toplamKredi} kredi gerekli</span>
-          ) : (
-            `Kalan bakiye: ${kredi} kredi`
-          )}
-        </p>
+          disabled={yetersizKredi}
+          yukleniyor={yukleniyor}
+          yukleniyorLabel="Hazırlanıyor..."
+        />
+        {yetersizKredi && (
+          <p className="text-xs text-[#7A1E1E] text-center mt-2">
+            Yetersiz kredi — {toplamKredi} kredi gerekli
+          </p>
+        )}
       </div>
     </div>
   );

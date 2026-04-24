@@ -34,7 +34,7 @@ export function useMetinUretim(deps: MetinDeps) {
   const [duzenleYukleniyor, setDuzenleYukleniyor] = useState(false);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [yukleniyorMesaj, setYukleniyorMesaj] = useState(0);
-  const [girisTipi, setGirisTipi] = useState<"manuel" | "foto" | "barkod">("manuel");
+  const [girisTipi, setGirisTipi] = useState<"manuel" | "foto" | "barkod" | "excel">("manuel");
   const [barkod, setBarkod] = useState("");
   const [barkodYukleniyor, setBarkodYukleniyor] = useState(false);
   const [barkodBilgi, setBarkodBilgi] = useState<{ isim: string; marka: string; aciklama: string; kategori: string; renk: string; boyut: string } | null>(null);

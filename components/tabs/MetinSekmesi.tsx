@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
-import { Edit3, Camera, ScanLine, FileSpreadsheet, FileText, AlertTriangle, RotateCcw, Scissors } from "lucide-react";
+import { useState, useRef } from "react";
+import { Edit3, Camera, ScanLine, FileSpreadsheet, FileText, AlertTriangle, RotateCcw, Scissors, FolderOpen, Check, X as XIcon, Loader2, Download, ClipboardList, BarChart3, CreditCard, Tag, Lightbulb } from "lucide-react";
 import { PLATFORM_BILGI, PLATFORM_PLACEHOLDER, YUKLENIYOR_MESAJLARI, KATEGORI_LISTESI } from "@/lib/constants";
 import { sonucuBolumle, docxIndir } from "@/lib/listing-utils";
+import { parseExcel, excelOlustur, type ParseSonucu } from "@/lib/excel-parser";
 import KopyalaButon from "@/components/ui/KopyalaButon";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
 import KrediButon from "@/components/ui/KrediButon";
@@ -19,10 +20,28 @@ type Kullanici = {
   marka_adi?: string;
 };
 
+type TopluAdim = "yukle" | "onizleme" | "islem" | "tamamlandi";
+type TopluPlatform = "trendyol" | "hepsiburada" | "amazon" | "n11" | "etsy" | "amazon_usa";
+
+type TopluIlerleme = {
+  indeks: number;
+  urun: string;
+  durum: "bekliyor" | "isleniyor" | "tamam" | "hata";
+};
+
+const TOPLU_PLATFORM_ETIKET: Record<TopluPlatform, string> = {
+  trendyol: "Trendyol",
+  hepsiburada: "Hepsiburada",
+  amazon: "Amazon TR",
+  n11: "N11",
+  etsy: "Etsy",
+  amazon_usa: "Amazon USA",
+};
+
 interface MetinSekmesiProps {
   aktif: boolean;
-  girisTipi: "manuel" | "foto" | "barkod";
-  setGirisTipi: (v: "manuel" | "foto" | "barkod") => void;
+  girisTipi: "manuel" | "foto" | "barkod" | "excel";
+  setGirisTipi: (v: "manuel" | "foto" | "barkod" | "excel") => void;
   platform: string;
   urunAdi: string;
   setUrunAdi: (v: string) => void;
@@ -79,6 +98,18 @@ export default function MetinSekmesi({
   const [digerMod, setDigerMod] = useState(false);
   const [gelismisAcik, setGelismisAcik] = useState(false);
 
+  // Excel toplu üretim state
+  const [topluAdim, setTopluAdim] = useState<TopluAdim>("yukle");
+  const [topluParse, setTopluParse] = useState<ParseSonucu | null>(null);
+  const [topluPlatform, setTopluPlatform] = useState<TopluPlatform>("trendyol");
+  const [topluTon, setTopluTon] = useState("samimi");
+  const [markaOverride, setMarkaOverride] = useState("");
+  const [topluIlerlemeler, setTopluIlerlemeler] = useState<TopluIlerleme[]>([]);
+  const [topluTamamlanan, setTopluTamamlanan] = useState(0);
+  const [topluHata, setTopluHata] = useState<string | null>(null);
+  const dosyaRef = useRef<HTMLInputElement>(null);
+  const topluSonuclarRef = useRef<string[]>([]);
+
   const uretButonAktif = !yukleniyor && (
     (girisTipi === "manuel" && urunAdi.trim().length > 0 && kategori.trim().length > 0) ||
     (girisTipi === "foto" && fotolar.length > 0) ||
@@ -105,11 +136,16 @@ export default function MetinSekmesi({
           <span>{label}</span>
         </button>
       ))}
-      <a href="/toplu"
-        className="flex items-center gap-1.5 py-2 px-3 text-xs font-medium transition-colors border-b-2 border-transparent -mb-px text-[#908E86] hover:text-[#1A1A17]">
+      <button
+        onClick={() => setGirisTipi("excel")}
+        className={`flex items-center gap-1.5 py-2 px-3 text-xs font-medium transition-colors border-b-2 -mb-px ${
+          girisTipi === "excel"
+            ? "border-[#1E4DD8] text-[#1A1A17]"
+            : "border-transparent text-[#908E86] hover:text-[#1A1A17]"
+        }`}>
         <FileSpreadsheet size={14} strokeWidth={1.5} />
         <span>Excel</span>
-      </a>
+      </button>
     </div>
   );
 
@@ -144,6 +180,299 @@ export default function MetinSekmesi({
                 </button>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  const topluDosyaSec = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTopluHata(null);
+    const dosya = e.target.files?.[0];
+    if (!dosya) return;
+    const buffer = await dosya.arrayBuffer();
+    try {
+      const sonuc = parseExcel(buffer);
+      if (sonuc.toplam === 0) { setTopluHata("Dosyada geçerli ürün satırı bulunamadı."); return; }
+      if (!kullanici || kullanici.anonim) { window.location.href = "/giris?redirect=/uret"; return; }
+      setTopluParse(sonuc);
+      setTopluAdim("onizleme");
+    } catch {
+      setTopluHata("Dosya okunamadı. Excel (.xlsx) veya CSV formatında olduğundan emin olun.");
+    }
+    e.target.value = "";
+  };
+
+  const topluIslemeBaslat = async () => {
+    if (!topluParse || !kullanici || kullanici.anonim) return;
+    setTopluHata(null);
+    const basla: TopluIlerleme[] = topluParse.satirlar.map((s, i) => ({
+      indeks: i,
+      urun: s.urun_adi || s.aciklama || `Ürün ${i + 1}`,
+      durum: "bekliyor",
+    }));
+    setTopluIlerlemeler(basla);
+    topluSonuclarRef.current = new Array(topluParse.satirlar.length).fill("");
+    setTopluTamamlanan(0);
+    setTopluAdim("islem");
+
+    const res = await fetch("/api/toplu", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        satirlar: topluParse.satirlar,
+        platform: topluPlatform,
+        ton: topluTon,
+        markaOverride: markaOverride.trim() || undefined,
+        userId: kullanici.id,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      setTopluHata(err.hata || "Bir hata oluştu.");
+      setTopluAdim("onizleme");
+      return;
+    }
+
+    const reader = res.body!.getReader();
+    const decoder = new TextDecoder();
+    let tampon = "";
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      tampon += decoder.decode(value, { stream: true });
+      const satirlar = tampon.split("\n\n");
+      tampon = satirlar.pop() ?? "";
+      for (const satir of satirlar) {
+        if (!satir.startsWith("data: ")) continue;
+        try {
+          const mesaj = JSON.parse(satir.slice(6));
+          if (mesaj.tip === "ilerleme") {
+            setTopluIlerlemeler((prev) => prev.map((it) => it.indeks === mesaj.mevcut - 1 ? { ...it, durum: "isleniyor" } : it));
+          } else if (mesaj.tip === "sonuc") {
+            topluSonuclarRef.current[mesaj.indeks] = mesaj.icerik;
+            setTopluIlerlemeler((prev) => prev.map((it) => it.indeks === mesaj.indeks ? { ...it, durum: "tamam" } : it));
+            setTopluTamamlanan((t) => t + 1);
+          } else if (mesaj.tip === "hata") {
+            setTopluIlerlemeler((prev) => prev.map((it) => it.indeks === mesaj.indeks ? { ...it, durum: "hata" } : it));
+            setTopluTamamlanan((t) => t + 1);
+          } else if (mesaj.tip === "tamamlandi") {
+            setTopluAdim("tamamlandi");
+          }
+        } catch { /* kötü satır */ }
+      }
+    }
+  };
+
+  const topluExcelIndir = () => {
+    if (!topluParse) return;
+    const buffer = excelOlustur(topluParse.satirlar, topluSonuclarRef.current, topluPlatform);
+    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `toplu_${topluPlatform}_${Date.now()}.xlsx`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const topluMarkaVarMi = topluParse?.kolonlar.some((k) => k.hedef === "marka");
+  const topluTamam = topluIlerlemeler.filter((i) => i.durum === "tamam").length;
+  const topluHatali = topluIlerlemeler.filter((i) => i.durum === "hata").length;
+
+  const TopluExcelUI = (
+    <div className="space-y-4">
+      {GirisTipiChips}
+
+      {topluHata && (
+        <div className="bg-[#FCECEC] border border-[#7A1E1E]/20 rounded-lg p-4 flex items-center justify-between gap-3">
+          <p className="text-sm text-[#7A1E1E]">{topluHata}</p>
+          <button onClick={() => setTopluHata(null)} className="text-[#7A1E1E]/60 hover:text-[#7A1E1E]">
+            <XIcon size={16} strokeWidth={1.5} />
+          </button>
+        </div>
+      )}
+
+      {/* ADIM 1 — Dosya Yükle */}
+      {topluAdim === "yukle" && (
+        <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { Ikon: CreditCard, baslik: "Kredi nasıl işler?", icerik: "Her ürün için 1 kredi düşer. İşlem başlamadan önce toplam kredi gösterilir." },
+              { Ikon: BarChart3, baslik: "Ne alacaksın?", icerik: "Orijinal dosyan + üretilen listing metinleri tek bir .xlsx dosyasında." },
+              { Ikon: AlertTriangle, baslik: "Sayfayı kapatma!", icerik: "İşlem sırasında bu sekmeyi kapatırsan üretim yarıda kesilir." },
+              { Ikon: Tag, baslik: "Limit var mı?", icerik: "Tek seferde mevcut kredin kadar ürün işleyebilirsin." },
+            ].map((kart, i) => (
+              <div key={i} className="bg-[#F1F0EB] rounded-lg border border-[#D8D6CE] p-3">
+                <kart.Ikon size={18} strokeWidth={1.5} className="text-[#908E86] mb-1.5" />
+                <p className="text-xs font-medium text-[#1A1A17] mb-1">{kart.baslik}</p>
+                <p className="text-xs text-[#5A5852]">{kart.icerik}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-[#F0F4FB] border border-[#BAC9EB] rounded-lg p-4">
+            <p className="text-xs font-medium text-[#1E4DD8] mb-2 flex items-center gap-1.5">
+              <ClipboardList size={13} strokeWidth={1.5} />
+              Dosyanda ne olmalı?
+            </p>
+            <p className="text-xs text-[#5A5852] mb-2">Sütun adları Türkçe veya İngilizce olabilir — sistem otomatik algılar.</p>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+              {[["Ürün Adı / Product Name", "zorunlu"], ["Kategori / Category", "önerilir"], ["Açıklama / Description", "önerilir"], ["Marka / Brand", "isteğe bağlı"]].map(([alan, durum]) => (
+                <div key={alan} className="flex items-center gap-1.5 text-xs text-[#5A5852]">
+                  <span className={durum === "zorunlu" ? "text-[#0F5132] font-medium" : durum === "önerilir" ? "text-[#1E4DD8]" : "text-[#D8D6CE]"}>•</span>
+                  <span>{alan}</span>
+                  <span className={`ml-auto text-[10px] ${durum === "zorunlu" ? "text-[#0F5132] font-medium" : "text-[#908E86]"}`}>{durum}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="border border-[#D8D6CE] rounded-lg p-6 text-center">
+            <FolderOpen size={32} strokeWidth={1.5} className="text-[#908E86] mx-auto mb-3" />
+            <p className="text-sm font-medium text-[#1A1A17] mb-1">Excel veya CSV yükle</p>
+            <p className="text-xs text-[#5A5852] mb-4">Şablon gerekmez — sütunlar otomatik algılanır</p>
+            <button
+              onClick={() => dosyaRef.current?.click()}
+              className="bg-[#1E4DD8] hover:bg-[#163B9E] text-white font-medium px-6 py-2.5 rounded-lg transition-colors text-sm"
+            >
+              Dosya seç
+            </button>
+            <input ref={dosyaRef} type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={topluDosyaSec} />
+            <p className="text-xs text-[#908E86] mt-3">Desteklenen formatlar: .xlsx, .xls, .csv</p>
+          </div>
+        </div>
+      )}
+
+      {/* ADIM 2 — Önizleme & Ayarlar */}
+      {topluAdim === "onizleme" && topluParse && (
+        <div className="space-y-3">
+          <div className="border border-[#D8D6CE] rounded-lg p-4">
+            <p className="text-sm font-medium text-[#1A1A17] mb-3">Dosya analizi</p>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xl font-medium text-[#1E4DD8]">{topluParse.toplam}</span>
+              <span className="text-sm text-[#5A5852]">ürün bulundu</span>
+            </div>
+            <div className="space-y-1.5">
+              {topluParse.kolonlar.map((k) => (
+                <div key={k.hedef} className="flex items-center gap-2 text-sm">
+                  <Check size={13} strokeWidth={2} className="text-[#0F5132]" />
+                  <span className="font-medium text-[#5A5852]">{k.etiket}</span>
+                  <span className="text-[#908E86]">← &quot;{k.kaynak}&quot;</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="border border-[#D8D6CE] rounded-lg p-4">
+            <p className="text-xs font-medium text-[#5A5852] mb-2">Platform</p>
+            <div className="grid grid-cols-3 gap-2">
+              {(Object.keys(TOPLU_PLATFORM_ETIKET) as TopluPlatform[]).map((p) => (
+                <button key={p} onClick={() => setTopluPlatform(p)}
+                  className={`py-2 px-2 rounded-lg text-xs font-medium border transition-all ${topluPlatform === p ? "border-[#1E4DD8] bg-[#F0F4FB] text-[#1E4DD8]" : "border-[#D8D6CE] text-[#5A5852] hover:border-[#1E4DD8]/40"}`}>
+                  {TOPLU_PLATFORM_ETIKET[p]}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="border border-[#D8D6CE] rounded-lg p-4">
+            <p className="text-xs font-medium text-[#5A5852] mb-2">Metin tonu</p>
+            <div className="grid grid-cols-3 gap-2">
+              {[{ id: "samimi", label: "Samimi" }, { id: "profesyonel", label: "Profesyonel" }, { id: "premium", label: "Premium" }].map((t) => (
+                <button key={t.id} onClick={() => setTopluTon(t.id)}
+                  className={`py-2 rounded-lg border text-xs font-medium transition-all ${topluTon === t.id ? "border-[#1E4DD8] bg-[#F0F4FB] text-[#1E4DD8]" : "border-[#D8D6CE] text-[#5A5852] hover:border-[#1E4DD8]/40"}`}>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {!topluMarkaVarMi && (
+            <div className="bg-[#FEF4E7] border border-[#8B4513]/20 rounded-lg p-4">
+              <p className="text-xs font-medium text-[#8B4513] mb-2 flex items-center gap-1.5">
+                <Lightbulb size={13} strokeWidth={1.5} /> Marka sütunu bulunamadı
+              </p>
+              <input type="text" value={markaOverride} onChange={(e) => setMarkaOverride(e.target.value)}
+                placeholder="Marka adı gir (isteğe bağlı)"
+                className="w-full border border-[#8B4513]/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#8B4513]/40 bg-white" />
+            </div>
+          )}
+
+          <div className="border border-[#D8D6CE] rounded-lg p-4">
+            <p className="text-sm font-medium text-[#1A1A17] mb-1">
+              {topluParse.toplam} ürün işlenecek — {topluParse.toplam} kredi düşecek
+            </p>
+            {kullanici && !kullanici.is_admin && (
+              <p className={`text-xs mb-3 ${(kullanici.kredi ?? 0) < topluParse.toplam ? "text-[#7A1E1E] font-medium" : "text-[#908E86]"}`}>
+                {(kullanici.kredi ?? 0) < topluParse.toplam
+                  ? `Yetersiz kredi (mevcut: ${kullanici.kredi})`
+                  : `Mevcut krediniz: ${kullanici.kredi}`}
+              </p>
+            )}
+            <button onClick={topluIslemeBaslat}
+              disabled={kullanici ? (!kullanici.is_admin && (kullanici.kredi ?? 0) < topluParse.toplam) : false}
+              className="w-full bg-[#1E4DD8] hover:bg-[#163B9E] disabled:bg-[#D8D6CE] text-white font-medium py-3 rounded-lg transition-colors text-sm">
+              Başlat
+            </button>
+            <button onClick={() => { setTopluParse(null); setTopluAdim("yukle"); }}
+              className="w-full mt-2 text-sm text-[#908E86] hover:text-[#5A5852] py-2">
+              Farklı dosya yükle
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ADIM 3 & 4 — İşlem & Tamamlandı */}
+      {(topluAdim === "islem" || topluAdim === "tamamlandi") && (
+        <div className="space-y-3">
+          {topluAdim === "islem" && (
+            <div className="bg-[#FEF4E7] border border-[#8B4513]/20 rounded-lg p-4 flex items-start gap-3">
+              <AlertTriangle size={16} strokeWidth={1.5} className="text-[#8B4513] flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-[#8B4513]">Üretim devam ediyor — bu sekmeyi kapatma.</p>
+            </div>
+          )}
+          <div className="border border-[#D8D6CE] rounded-lg p-4">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-medium text-[#1A1A17]">{topluAdim === "tamamlandi" ? "Tamamlandı" : "İşleniyor..."}</p>
+              <span className="text-xs text-[#908E86]">{topluTamamlanan} / {topluIlerlemeler.length}</span>
+            </div>
+            <div className="h-2 bg-[#F1F0EB] rounded-full mb-4 overflow-hidden">
+              <div className="h-full bg-[#1E4DD8] rounded-full transition-all duration-500"
+                style={{ width: topluIlerlemeler.length ? `${(topluTamamlanan / topluIlerlemeler.length) * 100}%` : "0%" }} />
+            </div>
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {topluIlerlemeler.map((item) => (
+                <div key={item.indeks} className="flex items-center gap-3 py-1.5 border-b border-[#F1F0EB] last:border-0">
+                  <div className="w-5 flex-shrink-0 flex items-center justify-center">
+                    {item.durum === "bekliyor" && <span className="w-3 h-3 rounded-full border border-[#D8D6CE] block" />}
+                    {item.durum === "isleniyor" && <Loader2 size={14} strokeWidth={1.5} className="text-[#1E4DD8] animate-spin" />}
+                    {item.durum === "tamam" && <Check size={14} strokeWidth={2} className="text-[#0F5132]" />}
+                    {item.durum === "hata" && <XIcon size={14} strokeWidth={2} className="text-[#7A1E1E]" />}
+                  </div>
+                  <span className={`text-sm flex-1 truncate ${item.durum === "isleniyor" ? "text-[#1E4DD8] font-medium" : item.durum === "tamam" ? "text-[#5A5852]" : item.durum === "hata" ? "text-[#7A1E1E]" : "text-[#908E86]"}`}>
+                    {item.urun}
+                  </span>
+                </div>
+              ))}
+            </div>
+            {topluAdim === "tamamlandi" && (
+              <div className="mt-4 pt-4 border-t border-[#F1F0EB]">
+                <p className="text-sm text-[#5A5852] mb-3">
+                  <span className="text-[#0F5132] font-medium">{topluTamam} başarılı</span>
+                  {topluHatali > 0 && <span className="text-[#7A1E1E] font-medium">, {topluHatali} hatalı</span>}
+                </p>
+                <button onClick={topluExcelIndir}
+                  className="w-full bg-[#0F5132] hover:bg-[#0a3d25] text-white font-medium py-3 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm">
+                  <Download size={15} strokeWidth={1.5} /> Excel indir (.xlsx)
+                </button>
+                <button onClick={() => { setTopluParse(null); setTopluAdim("yukle"); setTopluIlerlemeler([]); setTopluTamamlanan(0); }}
+                  className="w-full mt-2 text-sm text-[#908E86] hover:text-[#5A5852] py-2">
+                  Yeni işlem başlat
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -260,7 +589,12 @@ export default function MetinSekmesi({
         </div>
       )}
 
-      {/* Üret butonu */}
+      {/* Excel toplu üretim */}
+      {girisTipi === "excel" && TopluExcelUI}
+
+      {/* Üret butonu + sonuçlar — sadece tekli modlar için */}
+      {girisTipi !== "excel" && (
+        <>
       <KrediButon
         label={(!kullanici || kullanici.anonim) ? "Giriş yap ve başla" : "İçerik üret"}
         kredi={(!kullanici || kullanici.anonim || kullanici.is_admin) ? undefined : 1}
@@ -404,6 +738,8 @@ export default function MetinSekmesi({
 
           <GenerationFeedback platform={platform} category={kategori} />
         </div>
+      )}
+        </>
       )}
     </div>
   );
