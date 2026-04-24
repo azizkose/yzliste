@@ -36,7 +36,7 @@ Listing metni sadece teknik detay değil, markanın sesini taşımalı. Ton seç
 
 ## BİLGİ KUTUSU
 
-💡 Trendyol ve Hepsiburada'da "Mağaza Hakkında" bölümünü mutlaka doldur. Müşterilerin yüzde 30'u satın almadan önce mağaza sayfasına bakıyor. Hikayeni buraya koy.
+💡 Trendyol ve Hepsiburada'da "Mağaza Hakkında" bölümünü mutlaka doldur. Müşterilerin önemli bir kısmı satın almadan önce mağaza sayfasına bakıyor. Hikayeni buraya koy.
 
 ---
 

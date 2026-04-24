@@ -53,7 +53,7 @@ export const PAKETLER: Record<PaketId, Paket> = {
     renk: "border-[#1E4DD8] ring-2 ring-[#1E4DD8]",
     butonRenk: "bg-[#1E4DD8] hover:bg-[#163B9E]",
     rozet: true,
-    aciklama: "Aktif satıcılar için en çok tercih edilen paket.",
+    aciklama: "Aktif satıcılar için önerilen paket.",
     ozellikler: [
       "30 kredi (tüm içerik türlerinde kullan)",
       "Listing metni — 1 kredi / ürün",
@@ -80,7 +80,7 @@ export const PAKETLER: Record<PaketId, Paket> = {
       "AI görsel — 1 kredi / stil",
       "Video — 10 kredi (5sn) · 20 kredi (10sn)",
       "Sosyal medya — 1 kredi / platform",
-      "Süre sınırı yok · Toplu kullanım için en ekonomik",
+      "Süre sınırı yok · Toplu kullanım için uygun fiyatlı",
     ],
   },
 };

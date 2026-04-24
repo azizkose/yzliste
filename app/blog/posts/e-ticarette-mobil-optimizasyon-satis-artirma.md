@@ -1,6 +1,6 @@
 ---
 slug: e-ticarette-mobil-optimizasyon-satis-artirma
-baslik: E-Ticarette Mobil Optimizasyon: Satışların %70'i Telefondan Geliyor
+baslik: E-Ticarette Mobil Optimizasyon: Müşterilerin Çoğu Mobilden Alışveriş Yapıyor
 ozet: Pazaryeri alışverişlerinin büyük çoğunluğu mobil cihazlardan yapılıyor. Listing'lerini mobil uyumlu hazırlamanın ipuçlarını bu rehberde bul.
 yayinTarihi: 2026-04-11
 yazarAdi: yzliste Ekibi
@@ -12,7 +12,7 @@ kapakGorsel:
 
 # GİRİŞ
 
-Türkiye'de e-ticaret trafiğinin yüzde 70'inden fazlası mobil cihazlardan geliyor. Ama çoğu satıcı listing'ini masaüstü bilgisayarda hazırlayıp mobilden nasıl göründüğünü hiç kontrol etmiyor. Bu rehberde listing'lerini mobil müşteriye göre optimize etmenin yollarını anlattık.
+Türkiye'de e-ticaret trafiğinin büyük çoğunluğu mobil cihazlardan geliyor. Ama çoğu satıcı listing'ini masaüstü bilgisayarda hazırlayıp mobilden nasıl göründüğünü hiç kontrol etmiyor. Bu rehberde listing'lerini mobil müşteriye göre optimize etmenin yollarını anlattık.
 
 ---
 

@@ -73,6 +73,7 @@ interface MetinSekmesiProps {
   kullanici: Kullanici | null;
   paketModalAc: () => void;
   icerikUret: () => void;
+  onGirisAc?: () => void;
   skor: number | null;
   oneriler: string[];
   ucretsizRevizeKullanildi: boolean;
@@ -152,7 +153,7 @@ export default function MetinSekmesi({
   sonuc, setSonuc,
   duzenleYukleniyor, setDuzenleYukleniyor,
   uretimId, yenidenUretHakki, setYenidenUretHakki,
-  kullanici, paketModalAc, icerikUret,
+  kullanici, paketModalAc, icerikUret, onGirisAc,
   skor, oneriler, ucretsizRevizeKullanildi, ucretsizRevizeBaslat,
 }: MetinSekmesiProps) {
   const platformBilgi = PLATFORM_BILGI[platform] || PLATFORM_BILGI.trendyol;
@@ -658,7 +659,7 @@ export default function MetinSekmesi({
       {girisTipi !== "excel" && (
         <>
       <KrediButon
-        label={(!kullanici || kullanici.anonim) ? "Giriş yap ve başla" : "İçerik üret"}
+        label={(!kullanici || kullanici.anonim) ? "Ücretsiz başla — 3 kredi hediye" : "İçerik üret"}
         kredi={(!kullanici || kullanici.anonim || kullanici.is_admin) ? undefined : 1}
         kalanKredi={kullanici?.kredi}
         onClick={icerikUret}
@@ -666,6 +667,14 @@ export default function MetinSekmesi({
         yukleniyor={yukleniyor}
         yukleniyorLabel={YUKLENIYOR_MESAJLARI[yukleniyorMesaj]}
       />
+      {(!kullanici || kullanici.anonim) && (
+        <p className="text-xs text-center text-[#908E86]">
+          Hesabın var mı?{" "}
+          <button onClick={onGirisAc} className="text-[#1E4DD8] hover:text-[#163B9E] transition-colors">
+            Giriş yap →
+          </button>
+        </p>
+      )}
 
       <p className="text-xs text-[#908E86] text-center">yzliste her platformun karakter limiti ve SEO kuralına göre üretir ancak pazaryeri kuralları sık değişir — yayınlamadan önce içeriği kontrol etmeni öneririz</p>
 

@@ -403,6 +403,7 @@ export default function Home() {
               duzenleYukleniyor={metin.duzenleYukleniyor} setDuzenleYukleniyor={metin.setDuzenleYukleniyor}
               uretimId={metin.uretimId} yenidenUretHakki={metin.yenidenUretHakki} setYenidenUretHakki={metin.setYenidenUretHakki}
               kullanici={kullanici} paketModalAc={paketModalAc} icerikUret={metin.icerikUret}
+              onGirisAc={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }}
               skor={metin.skor} oneriler={metin.oneriler}
               ucretsizRevizeKullanildi={metin.ucretsizRevizeKullanildi}
               ucretsizRevizeBaslat={metin.ucretsizRevizeBaslat}
