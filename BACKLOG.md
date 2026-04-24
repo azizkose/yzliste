@@ -25,14 +25,14 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | ID | Başlık | Durum | Spec |
 |---|---|---|---|
 | LP-08 | Araçlar dropdown — hero kartları + CTA | Kısmen OK | [specs/lp-08.md](specs/lp-08.md) |
-| NF-02 | yzstudio — premium araçlar sayfası | Açık | [specs/nf-02-yzstudio.md](specs/nf-02-yzstudio.md) |
+| NF-02 | yzstudio — premium araçlar sayfası | Faz 1-3 OK, Faz 4-5 kaldı | [specs/nf-02-yzstudio.md](specs/nf-02-yzstudio.md) |
 | NF-06 | Kredi tüketim UX — bilgilendirme + onay | Kısmen OK | [specs/nf-06.md](specs/nf-06.md) |
 | REF-01 | Referans programı — davet et, +10 kredi | Açık | [specs/ref-01.md](specs/ref-01.md) |
 | UX-03 | Üretim sayfası navigasyon düzenlemesi | Açık (REVISED) | [specs/ux-03.md](specs/ux-03.md) |
 | LS-01 | Listing skor + ücretsiz revize | Açık | [specs/ls-01.md](specs/ls-01.md) |
 | HERO-VID | Hero video tam versiyon + kırpmasız | Açık | [specs/hero-video-tam.md](specs/hero-video-tam.md) |
-| DA-01 | /uret sayfası tasarım denetimi — 8 düzeltme | Açık | [specs/da-01-uret-tasarim-denetimi.md](specs/da-01-uret-tasarim-denetimi.md) |
-| DA-02 | Ana sayfa tasarım denetimi — 9 düzeltme | Açık (DA-01 sonrası) | [specs/da-02-anasayfa-tasarim-denetimi.md](specs/da-02-anasayfa-tasarim-denetimi.md) |
+| DA-01 | /uret sayfası tasarım denetimi — 8 düzeltme | Tamamlandı | [specs/da-01-uret-tasarim-denetimi.md](specs/da-01-uret-tasarim-denetimi.md) |
+| DA-02 | Ana sayfa tasarım denetimi — 9 düzeltme | Tamamlandı | [specs/da-02-anasayfa-tasarim-denetimi.md](specs/da-02-anasayfa-tasarim-denetimi.md) |
 | OPS-20 | KVKK + yasal uyumluluk tamamlama | Aziz — hukuki | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P2 — Orta vadeli
