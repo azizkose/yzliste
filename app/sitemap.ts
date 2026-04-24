@@ -67,6 +67,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.3,
       lastModified: new Date(),
     },
+    {
+      url: `${baseUrl}/mesafeli-satis`,
+      changeFrequency: "monthly",
+      priority: 0.3,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/teslimat-iade`,
+      changeFrequency: "monthly",
+      priority: 0.3,
+      lastModified: new Date(),
+    },
   ];
 
   // Blog yazıları — dinamik

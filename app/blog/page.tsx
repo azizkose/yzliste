@@ -8,9 +8,9 @@ import BlogListesi from "./BlogListesi";
 export const revalidate = 3600; // 1 saat ISR cache
 
 export const metadata: Metadata = {
-  title: "Blog — E-ticaret Listing ve AI Görsel Rehberleri",
+  title: "Blog — E-ticaret Listing, AI Görsel, Video ve Satış Rehberleri",
   description:
-    "Trendyol, Hepsiburada, Amazon ve Etsy'de satışlarını artırmak için listing yazma rehberleri, AI görsel kullanımı, platform karşılaştırmaları ve e-ticaret ipuçları.",
+    "Trendyol, Hepsiburada, Amazon, Etsy ve N11'de satış artıran listing rehberleri. AI ürün görseli ve videosu, sosyal medya içeriği, SEO, fiyatlandırma stratejileri ve e-ticaret ipuçları.",
   keywords: [
     "e-ticaret blog",
     "trendyol listing rehberi",
@@ -18,10 +18,18 @@ export const metadata: Metadata = {
     "etsy türk satıcı",
     "ürün açıklaması nasıl yazılır",
     "ai görsel e-ticaret",
+    "ai ürün videosu",
+    "n11 satış rehberi",
+    "e-ticaret seo",
+    "sosyal medya e-ticaret",
+    "tiktok ürün tanıtımı",
+    "e-ticaret fiyatlandırma",
+    "amazon listing optimizasyonu",
+    "mankene giydirme ai",
   ],
   openGraph: {
     title: "Blog | yzliste",
-    description: "E-ticaret satıcıları için listing, görsel ve platform rehberleri.",
+    description: "Listing yazma, AI görsel ve video üretimi, SEO, fiyatlandırma ve 7 pazaryeri için satış rehberleri.",
     url: "https://www.yzliste.com/blog",
     type: "website",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "yzliste blog" }],
@@ -34,7 +42,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Blog | yzliste",
-    description: "E-ticaret satıcıları için listing, görsel ve platform rehberleri.",
+    description: "Listing yazma, AI görsel ve video üretimi, SEO, fiyatlandırma ve 7 pazaryeri için satış rehberleri.",
   },
 };
 
@@ -49,7 +57,7 @@ async function BlogJsonLd() {
           "@context": "https://schema.org",
           "@type": "Blog",
           name: "yzliste Blog",
-          description: "E-ticaret satıcıları için listing ve görsel rehberleri",
+          description: "Listing yazma, AI görsel ve video üretimi, SEO, fiyatlandırma ve 7 pazaryeri için satış rehberleri",
           url: "https://www.yzliste.com/blog",
           publisher: { "@id": "https://www.yzliste.com/#organization" },
           blogPost: yazilar.map((y) => ({

@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: ["/"],
-      disallow: ["/api/", "/admin", "/hesap", "/odeme", "/giris", "/kayit"],
+      disallow: ["/api/", "/admin", "/hesap", "/odeme", "/giris", "/kayit", "/sifre-sifirla", "/profil", "/kredi-yukle", "/toplu"],
     },
     sitemap: "https://www.yzliste.com/sitemap.xml",
   };

@@ -56,11 +56,11 @@
 
 ### Hafta 1 (21-25 Nisan 2026)
 - Pzt: **Etsy'de Satış Yapmak: Türk Satıcılar İçin Başlangıç Rehberi** [Platform Rehberleri / Pratik] ✅ `etsy-satis-baslangic-rehberi-2026` (2026-04-18)
-- Per: **E-Ticarette Ürün Başlığı Nasıl Yazılır? Platformlara Göre Kurallar** [İşletme ve SEO / Pratik]
+- Per: **E-Ticarette Ürün Başlığı Nasıl Yazılır? Platformlara Göre Kurallar** [İşletme ve SEO / Pratik] ✅ `e-ticaret-urun-basligi-nasil-yazilir-platform-kurallari` (2026-04-20)
 
 ### Hafta 2 (28 Nisan - 2 Mayıs)
-- Pzt: **yzliste ile İlk Listinginizi 2 Dakikada Oluşturun** [Ürün Rehberleri / Pratik]
-- Per: **Trendyol vs Hepsiburada vs Amazon: Hangi Pazaryeri Sana Uygun?** [İşletme ve SEO / Analiz]
+- Pzt: **yzliste ile İlk Listinginizi 2 Dakikada Oluşturun** [Ürün Rehberleri / Pratik] ✅ `yzliste-ile-ilk-listing-2-dakikada` (2026-04-23)
+- Per: **Trendyol vs Hepsiburada vs Amazon: Hangi Pazaryeri Sana Uygun?** [İşletme ve SEO / Analiz] ✅ `trendyol-hepsiburada-amazon-karsilastirma` (2026-04-23)
 
 ### Hafta 3 (5-9 Mayıs)
 - Pzt: **Amazon Türkiye'de Satıcı Olma Rehberi (2026)** [Platform Rehberleri / Pratik]
