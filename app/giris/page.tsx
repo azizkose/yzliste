@@ -10,11 +10,14 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://www.yzliste.com/giris' },
 }
 
-export default function GirisPage({
+export default async function GirisPage({
   searchParams,
 }: {
   searchParams: Promise<{ redirect?: string }>
 }) {
+  const params = await searchParams;
+  const redirectTo = params.redirect || '/uret';
+
   return (
     <main className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -25,7 +28,7 @@ export default function GirisPage({
           <h1 className="text-2xl font-bold text-gray-900 mt-4">Giriş Yap</h1>
         </div>
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <AuthForm defaultMode="giris" redirectTo="/uret" />
+          <AuthForm defaultMode="giris" redirectTo={redirectTo} />
         </div>
       </div>
     </main>
