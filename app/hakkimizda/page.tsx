@@ -32,7 +32,7 @@ export default function HakkimizdaPage() {
               SaaS platformudur.
             </p>
             <p>
-              Trendyol, Hepsiburada, Amazon TR ve N11 gibi Türkiye&apos;nin önde gelen e-ticaret
+              Trendyol, Hepsiburada, Amazon TR, Amazon USA, N11 ve Etsy gibi yurt içi ve yurt dışı e-ticaret
               platformlarına özel, Türk alıcı davranışına göre optimize edilmiş ürün başlıkları,
               açıklamaları, özellik maddeleri ve arama etiketleri ortalama 20–60 saniyede üretilmektedir.
             </p>

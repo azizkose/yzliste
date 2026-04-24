@@ -32,6 +32,7 @@ const nextConfig: NextConfig = {
       { source: "/auth", destination: "/", permanent: true },
       // Blog slug düzeltmeleri — Google'da indexli ama 404 veren eski URL'ler
       { source: "/blog/trendyol-urun-listeleme-rehberi", destination: "/blog/trendyol-listing-nasil-yazilir", permanent: true },
+      { source: "/blog/amazon-a9-algoritmasi-ile-satis-katlama", destination: "/blog/amazon-a9-algoritmasi", permanent: true },
     ];
   },
 };
