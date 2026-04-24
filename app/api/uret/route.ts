@@ -4,6 +4,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 import logger from "@/lib/logger";
 import { Redis } from "@upstash/redis";
 import { METIN_PROMPT_VERSION } from "@/lib/prompts/metin";
+import { listingSkorHesapla } from "@/lib/listingSkor";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -568,6 +569,7 @@ export async function POST(req: NextRequest) {
     urunAdi, kategori, ozellikler, platform, fotolar,
     girisTipi, barkodBilgi, userId, dil, ton,
     hedefKitle, fiyatSegmenti, anahtarKelimeler, markaliUrun,
+    ucretsizRevize, orijinalUretimId,
   } = await req.json();
 
   if (!userId) return NextResponse.json({ hata: "Giris yapilmadi" }, { status: 401 });
@@ -602,8 +604,24 @@ export async function POST(req: NextRequest) {
 
   const isAdmin = profil.is_admin === true || profil.is_test === true;
 
+  // Ücretsiz revize kontrolü
+  let ucretsizRevizeGecerli = false;
+  if (ucretsizRevize && orijinalUretimId) {
+    const { data: orijinal } = await supabaseAdmin
+      .from("uretimler")
+      .select("id, user_id, ucretsiz_revize_kullanildi")
+      .eq("id", orijinalUretimId)
+      .eq("user_id", userId)
+      .single();
+    if (orijinal && !orijinal.ucretsiz_revize_kullanildi) {
+      ucretsizRevizeGecerli = true;
+      // Hakkı hemen kullanıldı olarak işaretle
+      await supabaseAdmin.from("uretimler").update({ ucretsiz_revize_kullanildi: true }).eq("id", orijinalUretimId);
+    }
+  }
+
   // Atomik kredi düşme: kredi > 0 olanı tek sorguda düş, başarısız olursa 402
-  if (!isAdmin) {
+  if (!isAdmin && !ucretsizRevizeGecerli) {
     const { data: updated } = await supabaseAdmin
       .from("profiles")
       .update({ kredi: profil.kredi - 1 })
@@ -733,5 +751,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "İçerik kaydedilemedi, lütfen tekrar deneyin." }, { status: 500 });
   }
 
-  return NextResponse.json({ icerik, isAdmin, uretimId: insertData.id });
+  const { skor, oneriler } = listingSkorHesapla({
+    icerik,
+    platform: platformKey,
+    urunAdi: urunAdi ?? barkodBilgi?.isim,
+    kategori,
+    ozellikler,
+    anahtarKelimeler,
+    fotolarVar: fotolar && fotolar.length > 0,
+  });
+
+  return NextResponse.json({ icerik, isAdmin, uretimId: insertData.id, skor, oneriler });
 }
