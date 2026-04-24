@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
             body: JSON.stringify({
               model: AI_MODELS.listing,
               temperature: AI_TEMPERATURES.listing,
-              max_tokens: 2000,
+              max_tokens: ["etsy", "amazon_usa", "amazon"].includes(platformKey) ? 2500 : 1800,
               system: sistemPrompt,
               messages: [{ role: "user", content: kullaniciBilgi }],
             }),
