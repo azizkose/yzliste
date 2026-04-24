@@ -1,7 +1,7 @@
 ---
 slug: e-ticarette-gorsel-kalitenin-satis-etkisi
 baslik: Görsel Kalitesi Satışı Nasıl Etkiler? E-Ticarette Fotoğrafın Gücü
-ozet: Düşük kaliteli görseller satışı yüzde 60'a kadar düşürebilir. Ürün görselinin satışa etkisini ve kaliteyi artırmanın yollarını bu rehberde bul.
+ozet: Düşük kaliteli görseller dönüşüm oranını ciddi oranda olumsuz etkileyebilir. Ürün görselinin satışa etkisini ve kaliteyi artırmanın yollarını bu rehberde bul.
 yayinTarihi: 2026-04-19
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
@@ -18,7 +18,7 @@ Online alışverişte müşteri ürüne dokunamaz, koklayamaz, deneyemez — tek
 
 ## Rakamlar Ne Diyor?
 
-Profesyonel görselli ürünler, amatör görsellilere göre ortalama yüzde 40 daha fazla tıklanıyor. Beyaz arka planlı temiz görseller, karmaşık arka planlılara göre dönüşüm oranını 2 kata kadar artırabiliyor. Çoklu görsel (ön, yan, detay) kullanan listing'ler tek görsellilere göre iade oranı daha düşük.
+Profesyonel görselli ürünler, amatör görsellilere göre belirgin şekilde daha fazla tıklanıyor. Beyaz arka planlı temiz görseller, karmaşık arka planlılara göre dönüşüm oranını olumlu yönde etkiliyor. Çoklu görsel (ön, yan, detay) kullanan listing'ler tek görsellilere göre iade oranı daha düşük.
 
 ---
 
@@ -48,6 +48,6 @@ Kısa ürün videoları statik görselden çok daha etkili. Ürünü hareket hal
 
 ## SONUÇ
 
-Görsel kalitesi, e-ticarette sessiz satıcındır. Profesyonel görsellere yatırım yapmak en yüksek getirili satış artırma stratejisi. yzliste ile AI destekli görsel ve video üretimi yaparak stüdyo maliyeti olmadan profesyonel sonuçlar elde edebilirsin.
+Görsel kalitesi, e-ticarette sessiz satıcındır. Profesyonel görsellere yatırım yapmak etkili bir satış artırma stratejisidir. yzliste ile AI destekli görsel ve video üretimi yaparak stüdyo maliyeti olmadan profesyonel sonuçlar elde edebilirsin.
 
 [Hemen dene — ücretsiz başla](/uret)

@@ -12,7 +12,7 @@ kapakGorsel:
 
 # GİRİŞ
 
-E-ticaretin en büyük gizli maliyeti iadelerdir. Çoğu iade, ürünün kötü olmasından değil, müşterinin beklediğinden farklı gelmesinden kaynaklanır. Doğru kurgulanmış bir ürün listing'i, iadeleri %30'a kadar azaltabilir.
+E-ticaretin en büyük gizli maliyeti iadelerdir. Çoğu iade, ürünün kötü olmasından değil, müşterinin beklediğinden farklı gelmesinden kaynaklanır. Doğru kurgulanmış bir ürün listing'i, iadeleri önemli ölçüde azaltabilir.
 
 ## Beklentiyi Yönetmek: Şeffaf Olun
 

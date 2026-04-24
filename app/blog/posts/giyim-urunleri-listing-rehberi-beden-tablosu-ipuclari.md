@@ -18,7 +18,7 @@ Giyim, e-ticaretin en yüksek hacimli ama aynı zamanda en yüksek iade oranına
 
 ## Beden Tablosu: En Önemli Detay
 
-Giyim iadelerinin yarısından fazlası beden kaynaklı. Listing'ine mutlaka santimetre bazlı beden tablosu ekle: göğüs, bel, kalça ve boy ölçüleri. Mümkünse "170 cm, 65 kg modelimiz M beden giyiyor" gibi referans bilgisi ver. Bu tek detay iade oranını yüzde 20'ye kadar düşürebilir.
+Giyim iadelerinin yarısından fazlası beden kaynaklı. Listing'ine mutlaka santimetre bazlı beden tablosu ekle: göğüs, bel, kalça ve boy ölçüleri. Mümkünse "170 cm, 65 kg modelimiz M beden giyiyor" gibi referans bilgisi ver. Bu tek detay iade oranını belirgin şekilde düşürebilir.
 
 ---
 

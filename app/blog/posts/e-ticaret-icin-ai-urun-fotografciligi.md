@@ -12,7 +12,7 @@ kapakGorsel:
 
 # GİRİŞ
 
-AI ürün fotoğrafçılığı sihir değil — input'un kalitesi output'un kalitesini belirler. yzliste'nin sana verdiği stüdyo görselinin ne kadar iyi çıkacağının yaklaşık %80'i senin çektiğin orijinal fotoğrafa bağlı. İyi bir ham fotoğraftan muhteşem sonuç çıkar, kötü bir ham fotoğraftan ise kullanılabilir ama "eksik" bir sonuç. Bu rehberde telefon veya kamera ile çekeceğin input fotoğrafının nasıl olması gerektiğini, AI'ın tam olarak neyi görmek istediğini ve sık yapılan hataları öğreneceksin.
+AI ürün fotoğrafçılığı sihir değil — input'un kalitesi output'un kalitesini belirler. yzliste'nin sana verdiği görselin ne kadar iyi çıkacağının büyük bölümü senin çektiğin orijinal fotoğrafa bağlı. İyi bir ham fotoğraftan muhteşem sonuç çıkar, kötü bir ham fotoğraftan ise kullanılabilir ama "eksik" bir sonuç. Bu rehberde telefon veya kamera ile çekeceğin input fotoğrafının nasıl olması gerektiğini, AI'ın tam olarak neyi görmek istediğini ve sık yapılan hataları öğreneceksin.
 
 ---
 

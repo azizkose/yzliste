@@ -1,7 +1,7 @@
 ---
 slug: musteri-yorumlari-satis-etkisi-yonetim-rehberi
 baslik: Müşteri Yorumları Satışı Nasıl Etkiler? Yorum Yönetimi Rehberi
-ozet: Olumsuz yorumlar satışı yüzde 30'a kadar düşürebilir. Yorum toplamaktan olumsuz yorumla başa çıkmaya kadar müşteri yorum yönetimi stratejilerini öğren.
+ozet: Olumsuz yorumlar satış performansını belirgin şekilde olumsuz etkileyebilir. Yorum toplamaktan olumsuz yorumla başa çıkmaya kadar müşteri yorum yönetimi stratejilerini öğren.
 yayinTarihi: 2026-03-12
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
@@ -12,19 +12,19 @@ kapakGorsel:
 
 # GİRİŞ
 
-Pazaryerlerinde alışveriş yapanların yüzde 90'ından fazlası satın almadan önce yorumları okuyor. Tek bir olumsuz yorum, onlarca potansiyel müşteriyi kaybetmene neden olabilir. Ama doğru yönetildiğinde, yorumlar en güçlü satış aracın haline gelir. Bu rehberde yorum yönetiminin inceliklerini anlattık.
+Pazaryerlerinde alışveriş yapanların büyük çoğunluğu satın almadan önce yorumları okuyor. Tek bir olumsuz yorum, onlarca potansiyel müşteriyi kaybetmene neden olabilir. Ama doğru yönetildiğinde, yorumlar en güçlü satış aracın haline gelir. Bu rehberde yorum yönetiminin inceliklerini anlattık.
 
 ---
 
 ## Yorumların Satışa Etkisi: Rakamlarla Gerçek
 
-Araştırmalar, 4.0 üzeri puana sahip ürünlerin 3.5 altındakilere göre 2-3 kat daha fazla sattığını gösteriyor. Trendyol'da yorumsuz ürünler arama sonuçlarında gerilere düşerken, 10 üzeri yorumlu ürünler algoritmik avantaj kazanıyor. Yorum sayısı ve kalitesi doğrudan sıralamayı etkiliyor.
+Araştırmalar, 4.0 üzeri puana sahip ürünlerin 3.5 altındakilere göre belirgin şekilde daha fazla sattığını gösteriyor. Trendyol'da yorumsuz ürünler arama sonuçlarında gerilere düşerken, 10 üzeri yorumlu ürünler algoritmik avantaj kazanıyor. Yorum sayısı ve kalitesi doğrudan sıralamayı etkiliyor.
 
 ---
 
 ## Daha Fazla Olumlu Yorum Nasıl Toplanır?
 
-Yorum toplama pasif bir süreç değil. Sipariş sonrası kibar bir mesajla yorum isteyen satıcılar, istemeyenlere göre 3 kat daha fazla yorum alıyor. Mesajı siparişin tesliminden 2-3 gün sonra gönder — müşteri ürünü deneyimlemiş olsun. Zorlama yapma, samimi ol.
+Yorum toplama pasif bir süreç değil. Sipariş sonrası kibar bir mesajla yorum isteyen satıcılar, istemeyenlere göre çok daha fazla yorum alıyor. Mesajı siparişin tesliminden 2-3 gün sonra gönder — müşteri ürünü deneyimlemiş olsun. Zorlama yapma, samimi ol.
 
 ---
 

@@ -28,7 +28,7 @@ Depoda veya mağazada sadece telefonunuzun kamerasını kullanarak ürünleriniz
 
 ## BİLGİ KUTUSU
 
-💡 Barkod tarama teknolojisi, tek bir çalışanın günde 10 kat daha fazla ürün listelemesine olanak tanır.
+💡 Barkod tarama teknolojisi, tek bir çalışanın günde çok daha hızlı ürün listelemesine olanak tanır.
 
 ## SONUÇ
 

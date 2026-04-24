@@ -17,7 +17,7 @@ Amazon, dünyanın en zorlu ama en kazançlı pazaryeridir. Burada başarılı o
 
 ## Bullet Points: Müşteriyi 10 Saniyede İkna Edin
 
-Amazon'da "Ürün Özellikleri" (Bullet Points) alanı kritiktir. İlk madde en büyük faydayı anlatmalı, son madde ise güven (garanti/destek) vermelidir. Okuması kolay, büyük harf kullanımıyla vurgulanmış ve fayda odaklı maddeler dönüşümü %20 artırır.
+Amazon'da "Ürün Özellikleri" (Bullet Points) alanı kritiktir. İlk madde en büyük faydayı anlatmalı, son madde ise güven (garanti/destek) vermelidir. Okuması kolay, büyük harf kullanımıyla vurgulanmış ve fayda odaklı maddeler dönüşümü olumlu etkiler.
 
 ## Backend Keywords: Görünmez Anahtar Kelimeler
 
