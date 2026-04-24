@@ -34,6 +34,7 @@
     "posthog-js": "^1.369.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "recharts": "^3.8.1",
     "vanilla-cookieconsent": "^3.1.0",
     "xlsx": "^0.18.5",
     "zustand": "^5.0.12"
