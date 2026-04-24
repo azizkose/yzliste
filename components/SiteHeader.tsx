@@ -94,9 +94,9 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-[#1A1A17]">{a.baslik}</p>
                       <p className="text-xs text-[#908E86] mt-0.5">{a.aciklama}</p>
-                      <div className="flex gap-3 mt-2">
-                        <a href={a.href} className="text-xs font-medium text-[#1E4DD8] hover:text-[#163B9E]">Kullan →</a>
+                      <div className="flex items-center gap-2 mt-2">
                         <a href={a.detay} className="text-xs text-[#908E86] hover:text-[#5A5852]">Detaylar</a>
+                        <a href={a.href} className="text-xs font-medium bg-[#1E4DD8] hover:bg-[#163B9E] text-white px-3 py-1 rounded-lg transition-colors">Kullan →</a>
                       </div>
                     </div>
                   </div>
@@ -187,16 +187,12 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               {mobilAraclarAcik && (
                 <div className="pl-4 space-y-0.5 pb-1">
                   {ARACLAR.map((a) => (
-                    <a
-                      key={a.href}
-                      href={a.href}
-                      onClick={() => setMenuAcik(false)}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[#5A5852] hover:bg-[#FAFAF8] hover:text-[#1A1A17] transition-colors"
-                    >
-                      <Icon3D name={a.ikon} size={20} />
-                      <span>{a.baslik}</span>
-                      <span className="text-xs text-[#D8D6CE] ml-auto">{a.aciklama}</span>
-                    </a>
+                    <div key={a.href} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#FAFAF8] transition-colors">
+                      <Icon3D name={a.ikon} size={20} className="flex-shrink-0" />
+                      <span className="text-sm text-[#5A5852] flex-1">{a.baslik}</span>
+                      <a href={a.detay} onClick={() => setMenuAcik(false)} className="text-xs text-[#908E86] hover:text-[#5A5852] whitespace-nowrap">Detaylar</a>
+                      <a href={a.href} onClick={() => setMenuAcik(false)} className="text-xs font-medium bg-[#1E4DD8] hover:bg-[#163B9E] text-white px-3 py-1 rounded-lg transition-colors whitespace-nowrap">Kullan →</a>
+                    </div>
                   ))}
                 </div>
               )}
