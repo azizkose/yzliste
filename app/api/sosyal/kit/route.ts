@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")
-    .select("kredi, is_admin, marka_adi, hedef_kitle, vurgulanan_ozellikler, ton")
+    .select("kredi, is_admin, marka_adi, hedef_kitle, vurgulanan_ozellikler, ton, magaza_kategorileri, teslimat_vurgulari")
     .eq("id", userId)
     .single();
 
@@ -90,6 +90,8 @@ export async function POST(req: NextRequest) {
     profil.hedef_kitle ? `Hedef kitle: ${profil.hedef_kitle}` : "",
     profil.vurgulanan_ozellikler ? `Öne çıkarılacak özellikler: ${profil.vurgulanan_ozellikler}` : "",
     (profil.ton || ton) ? `Marka tonu: ${profil.ton || ton}` : "",
+    profil.magaza_kategorileri?.length ? `Mağaza kategorileri: ${profil.magaza_kategorileri.join(", ")}` : "",
+    profil.teslimat_vurgulari?.length ? `Hizmet vurguları: ${profil.teslimat_vurgulari.join(", ")}` : "",
   ].filter(Boolean).join("\n");
 
   const captionParams = { urunAdi, ekBilgi, ton, markaBaglami, sezon };

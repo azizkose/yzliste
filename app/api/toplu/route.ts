@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")
-    .select("kredi, is_admin, marka_adi, hedef_kitle, vurgulanan_ozellikler")
+    .select("kredi, is_admin, marka_adi, hedef_kitle, vurgulanan_ozellikler, magaza_kategorileri, fiyat_bandi, teslimat_vurgulari, benchmark_magaza")
     .eq("id", userId)
     .single();
 
@@ -104,6 +104,10 @@ export async function POST(req: NextRequest) {
   if (markaAdi) markaBaglami.push(dil === "en" ? `Brand: ${markaAdi}` : `Marka: ${markaAdi}`);
   if (profil.hedef_kitle) markaBaglami.push(dil === "en" ? `Target audience: ${profil.hedef_kitle}` : `Hedef kitle: ${profil.hedef_kitle}`);
   if (profil.vurgulanan_ozellikler) markaBaglami.push(dil === "en" ? `Key selling points: ${profil.vurgulanan_ozellikler}` : `Vurgulanacak ozellikler: ${profil.vurgulanan_ozellikler}`);
+  if (profil.magaza_kategorileri?.length) markaBaglami.push(dil === "en" ? `Store categories: ${profil.magaza_kategorileri.join(", ")}` : `Mağaza kategorileri: ${profil.magaza_kategorileri.join(", ")}`);
+  if (profil.fiyat_bandi) markaBaglami.push(dil === "en" ? `Price segment: ${profil.fiyat_bandi}` : `Fiyat bandı: ${profil.fiyat_bandi}`);
+  if (profil.teslimat_vurgulari?.length) markaBaglami.push(dil === "en" ? `Service highlights: ${profil.teslimat_vurgulari.join(", ")}` : `Hizmet vurguları: ${profil.teslimat_vurgulari.join(", ")}`);
+  if (profil.benchmark_magaza) markaBaglami.push(dil === "en" ? `Reference store style: ${profil.benchmark_magaza}` : `Referans mağaza tarzı: ${profil.benchmark_magaza}`);
 
   const encoder = new TextEncoder();
   let islenenKredi = 0;
