@@ -1,10 +1,23 @@
-"use client";
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
+
+export const metadata: Metadata = {
+  title: 'Teslimat ve İade',
+  description: 'yzliste dijital hizmet teslimatı ve iade politikası. Satın alınan kredilerin iadesi hakkında bilgi.',
+  alternates: { canonical: 'https://www.yzliste.com/teslimat-iade' },
+  robots: { index: false, follow: false },
+}
+
 export default function TeslimatIadePage() {
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-3xl mx-auto">
+    <>
+    <SiteHeader />
+    <main className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="flex-1 max-w-3xl mx-auto py-12 px-4">
         <div className="mb-8">
-          <a href="/" className="text-sm text-gray-400 hover:text-orange-500">← Ana Sayfa</a>
+          <Link href="/" className="text-sm text-gray-400 hover:text-indigo-500">← Ana Sayfa</Link>
         </div>
         <div className="bg-white rounded-2xl shadow p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Teslimat ve İade Şartları</h1>
@@ -29,7 +42,7 @@ export default function TeslimatIadePage() {
               <p>
                 Dijital hizmet niteliğinde olan kullanım hakları, teslim edildiği andan
                 itibaren kullanılabilir durumdadır. Bu nedenle, 6502 sayılı Tüketicinin
-                Korunması Hakkında Kanun'un 49. maddesi uyarınca dijital içerik ve
+                Korunması Hakkında Kanun&apos;un 49. maddesi uyarınca dijital içerik ve
                 hizmetlerde cayma hakkı kullanılamaz.
               </p>
               <p className="mt-2">
@@ -48,12 +61,14 @@ export default function TeslimatIadePage() {
               <p>SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI</p>
               <p>Mehmet Akif Mah. Ulubatlı Hasan Cad. Paradise City Sitesi C1 Blok No: 43L İç Kapı No: 31 Çekmeköy / İstanbul</p>
               <p className="mt-1">
-                <a href="mailto:destek@yzliste.com" className="text-orange-500 hover:underline">destek@yzliste.com</a>
+                <a href="mailto:destek@yzliste.com" className="text-indigo-500 hover:underline">destek@yzliste.com</a>
               </p>
             </div>
           </div>
         </div>
       </div>
+      <SiteFooter />
     </main>
+    </>
   );
 }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import logger from "@/lib/logger";
 
 const SYSTEM_PROMPT = `Sen yzliste'nin destek asistanısın. Adın "yzliste".
 
@@ -16,12 +17,14 @@ Nasıl çalışır:
 4. İsterse görsel de üretebilir
 
 Paketler ve fiyatlar:
-- Baslangic: 29 TL - 10 kullanim hakki (tek seferlik)
-- Populer: 79 TL - 30 kullanim hakki (tek seferlik)
-- Sinırsız: 199 TL/ay - Sinirsiz kullanim (aylik abonelik)
-- Yeni kayit olanlara 3 kullanim hakki hediye verilir
-- Metin listesi uretmek 1 hak tutar
-- Gorsel indirmek 1 hak tutar (uretmek ucretsiz, sadece indirince duser)
+- Baslangic: 49 TL - 10 kredi (tek seferlik)
+- Populer: 129 TL - 30 kredi (tek seferlik)
+- Buyuk: 299 TL - 100 kredi (tek seferlik)
+- Yeni kayit olanlara 3 kredi hediye verilir, kredi karti gerekmez
+- Listing metni: 1 kredi
+- Gorsel: stil basina 1 kredi (inceleme ucretsiz, sadece indirince duser)
+- Video: 5sn=5 kredi, 10sn=8 kredi
+- Sosyal medya: 1 kredi
 
 Iletisim:
 - Destek maili: destek@yzliste.com
@@ -64,7 +67,7 @@ export async function POST(req: NextRequest) {
 
     if (!response.ok) {
       const hata = await response.text();
-      console.error("Anthropic API hatasi:", hata);
+      logger.error({ err: hata }, "Anthropic API hatası");
       return NextResponse.json({ hata: "AI servisi hatasi" }, { status: 500 });
     }
 
@@ -73,7 +76,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ cevap });
   } catch (hata) {
-    console.error("Chat route hatasi:", hata);
+    logger.error({ err: hata }, "Chat route hatası");
     return NextResponse.json({ hata: "Sunucu hatasi" }, { status: 500 });
   }
 }

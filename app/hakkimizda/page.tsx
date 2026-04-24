@@ -1,10 +1,27 @@
-"use client";
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
+
+export const metadata: Metadata = {
+  title: 'Hakkımızda',
+  description: 'yzliste, Türk e-ticaret satıcıları için AI destekli listing metni ve görsel üretim platformudur. SIMOON PAZARLAMA VE DANISMANLIK LTD. ŞTİ. tarafından geliştirilmektedir.',
+  openGraph: { title: 'Hakkımızda | yzliste' },
+  alternates: {
+    canonical: 'https://www.yzliste.com/hakkimizda',
+    languages: { 'tr': 'https://www.yzliste.com/hakkimizda', 'x-default': 'https://www.yzliste.com/hakkimizda' },
+  },
+  robots: { index: true, follow: true },
+}
+
 export default function HakkimizdaPage() {
   return (
+    <>
+    <SiteHeader />
     <main className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-3xl mx-auto">
         <div className="mb-8">
-          <a href="/" className="text-sm text-gray-400 hover:text-orange-500">← Ana Sayfa</a>
+          <Link href="/" className="text-sm text-gray-400 hover:text-indigo-500">← Ana Sayfa</Link>
         </div>
         <div className="bg-white rounded-2xl shadow p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Hakkımızda</h1>
@@ -15,9 +32,9 @@ export default function HakkimizdaPage() {
               SaaS platformudur.
             </p>
             <p>
-              Trendyol, Hepsiburada, Amazon TR ve N11 gibi Türkiye'nin önde gelen e-ticaret
+              Trendyol, Hepsiburada, Amazon TR ve N11 gibi Türkiye&apos;nin önde gelen e-ticaret
               platformlarına özel, Türk alıcı davranışına göre optimize edilmiş ürün başlıkları,
-              açıklamaları, özellik maddeleri ve arama etiketleri saniyeler içinde üretilmektedir.
+              açıklamaları, özellik maddeleri ve arama etiketleri ortalama 20–60 saniyede üretilmektedir.
             </p>
             <p>
               Platformumuz; manuel metin girişi, ürün fotoğrafı yükleme ve barkod tarama gibi
@@ -36,13 +53,15 @@ export default function HakkimizdaPage() {
               <p><span className="font-medium text-gray-700">Vergi Dairesi:</span> Sarıgazi</p>
               <p><span className="font-medium text-gray-700">Vergi No:</span> 7701113995</p>
               <p><span className="font-medium text-gray-700">E-posta:</span>{" "}
-                <a href="mailto:destek@yzliste.com" className="text-orange-500 hover:underline">destek@yzliste.com</a>
+                <a href="mailto:destek@yzliste.com" className="text-indigo-500 hover:underline">destek@yzliste.com</a>
               </p>
               <p><span className="font-medium text-gray-700">Web:</span> yzliste.com</p>
             </div>
           </div>
         </div>
       </div>
+      <SiteFooter />
     </main>
+    </>
   );
 }

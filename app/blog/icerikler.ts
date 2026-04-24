@@ -15,10 +15,10 @@ export type BlogYazisi = {
 };
 
 export type BlogBolum = {
-  tip: "giris" | "baslik" | "paragraf" | "liste" | "bilgi-kutusu" | "sonuc";
+  tip: "giris" | "baslik" | "paragraf" | "liste" | "bilgi-kutusu" | "sonuc" | "video-grid";
   baslik?: string; // "baslik" tipi için
   metin?: string; // "paragraf", "giris", "bilgi-kutusu", "sonuc" için
-  maddeler?: string[]; // "liste" tipi için
+  maddeler?: string[]; // "liste" ve "video-grid" tipi için — video-grid: "src|etiket" formatı
 };
 
 // YENİ YAZILARI EKLEMEK İÇİN:

@@ -4,12 +4,19 @@ import { getYazilar } from "./blog/icerikler";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.yzliste.com";
 
+
   // Ana sayfalar
   const mainPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       changeFrequency: "daily",
       priority: 1,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/uret`,
+      changeFrequency: "weekly",
+      priority: 0.9,
       lastModified: new Date(),
     },
     {
@@ -22,6 +29,54 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/fiyatlar`,
       changeFrequency: "monthly",
       priority: 0.8,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/sss`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/hakkimizda`,
+      changeFrequency: "monthly",
+      priority: 0.4,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/gizlilik`,
+      changeFrequency: "monthly",
+      priority: 0.3,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/kosullar`,
+      changeFrequency: "monthly",
+      priority: 0.3,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/kvkk-aydinlatma`,
+      changeFrequency: "monthly",
+      priority: 0.3,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/cerez-politikasi`,
+      changeFrequency: "monthly",
+      priority: 0.3,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/mesafeli-satis`,
+      changeFrequency: "monthly",
+      priority: 0.3,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/teslimat-iade`,
+      changeFrequency: "monthly",
+      priority: 0.3,
       lastModified: new Date(),
     },
   ];

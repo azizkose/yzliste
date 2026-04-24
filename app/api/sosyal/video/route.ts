@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { fal } from "@fal-ai/client";
+import { rmbgUygula } from "@/lib/fal/rmbg";
+import { krediDus, krediIade } from "@/lib/credits";
+import { TON_VIDEO_MAP, TON_VIDEO_DEFAULT } from "@/lib/constants/ton";
+
+export const maxDuration = 30; // sadece fal storage upload + queue.submit — GPU bekleme yok
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -9,8 +14,8 @@ const supabaseAdmin = createClient(
 
 fal.config({ credentials: process.env.FAL_KEY });
 
-// sure: "5" → 5 kredi, "10" → 8 kredi
-const VIDEO_KREDI: Record<string, number> = { "5": 5, "10": 8 };
+// sure: "5" → 10 kredi, "10" → 20 kredi
+const VIDEO_KREDI: Record<string, number> = { "5": 10, "10": 20 };
 
 export async function POST(req: NextRequest) {
   const { foto, prompt, userId, sure = "5", format = "9:16" } = await req.json();
@@ -29,7 +34,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")
-    .select("kredi, is_admin")
+    .select("kredi, is_admin, marka_adi, ton, hedef_kitle, vurgulanan_ozellikler")
     .eq("id", userId)
     .single();
 
@@ -46,46 +51,59 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Base64'ü fal.ai storage'a yükle
+  // Base64 → FAL storage
   const base64Data = foto.split(",")[1];
   const mediaType = foto.split(";")[0].split(":")[1];
   const buffer = Buffer.from(base64Data, "base64");
   const blob = new Blob([buffer], { type: mediaType });
-  const uploadResult = await fal.storage.upload(blob);
-  const imageUrl = uploadResult;
+  const imageUrl = await fal.storage.upload(blob);
 
-  // Video prompt — kullanıcı yazmadıysa otomatik
-  const videoPrompt = prompt?.trim() ||
-    "Product showcase with smooth slow rotation, cinematic lighting, professional e-commerce video";
+  // RMBG — Kling'e göndermeden önce arka planı temizle
+  const cleanImageUrl = await rmbgUygula(imageUrl);
 
-  // Kling v2.1 standard
+  // Video prompt — kullanıcı yazmadıysa marka bilgisine göre otomatik
+  let videoPrompt: string;
+  if (prompt?.trim()) {
+    videoPrompt = prompt.trim();
+  } else {
+    const stilIpucu = profil.ton ? (TON_VIDEO_MAP[profil.ton] || TON_VIDEO_DEFAULT) : TON_VIDEO_DEFAULT;
+    const markaIpucu = profil.marka_adi ? ` for ${profil.marka_adi}` : "";
+    const hedefIpucu = profil.hedef_kitle ? `, appealing to ${profil.hedef_kitle}` : "";
+    const ozellikIpucu = profil.vurgulanan_ozellikler ? `, highlighting ${profil.vurgulanan_ozellikler}` : "";
+    videoPrompt = `${stilIpucu}${markaIpucu}${hedefIpucu}${ozellikIpucu}, camera slowly zooms in and holds on product, clean studio lighting, white background, high quality e-commerce video`;
+  }
+
+  // Krediyi atomik olarak önceden düş
+  if (!isAdmin) {
+    const sonuc = await krediDus(userId, gereken_kredi);
+    if (!sonuc.success) {
+      return NextResponse.json(
+        { hata: `Video üretimi ${gereken_kredi} kredi gerektirir. Yetersiz kredi.` },
+        { status: 402 }
+      );
+    }
+  }
+
+  let queued: { request_id: string };
+  try {
+  // Kling v2.1 standard — kuyruğa gönder, GPU bekleme
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const result = await fal.subscribe("fal-ai/kling-video/v2.1/standard/image-to-video", {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  queued = await fal.queue.submit("fal-ai/kling-video/v2.1/standard/image-to-video", {
     input: {
       prompt: videoPrompt,
-      image_url: imageUrl,
+      image_url: cleanImageUrl,
       duration: sureDeger,
       aspect_ratio: formatDeger,
-      negative_prompt: "blur, distort, low quality, watermark, text overlay",
+      negative_prompt: "blur, distort, low quality, watermark, text overlay, static, jerky, pixelated, morphing, unnatural movement, deformed product",
       cfg_scale: 0.5,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any,
-  }) as unknown as { video: { url: string } };
-
-  const videoUrl = result?.video?.url;
-
-  if (!videoUrl) {
-    return NextResponse.json({ hata: "Video üretilemedi, tekrar deneyin." }, { status: 500 });
+  });
+  } catch (e) {
+    if (!isAdmin) await krediIade(userId, gereken_kredi);
+    const err = e as { message?: string };
+    return NextResponse.json({ hata: "Video kuyruğa eklenemedi: " + (err?.message || "bilinmiyor") }, { status: 500 });
   }
 
-  // Kredi düş
-  if (!isAdmin) {
-    await supabaseAdmin
-      .from("profiles")
-      .update({ kredi: profil.kredi - gereken_kredi })
-      .eq("id", userId);
-  }
-
-  return NextResponse.json({ videoUrl, isAdmin, kullanilanKredi: gereken_kredi });
+  return NextResponse.json({ requestId: queued.request_id, isAdmin, kullanilanKredi: gereken_kredi });
 }

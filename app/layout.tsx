@@ -1,27 +1,31 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
 import { GoogleAnalytics } from '@next/third-parties/google';
+import QueryProvider from "@/components/providers/QueryProvider";
+import PostHogProvider from "@/components/providers/PostHogProvider";
+import PostHogPageView from "@/components/analytics/PostHogPageView";
+import CookieConsentBanner from "@/components/consent/CookieConsent";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const inter = Inter({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-inter",
+  display: "swap",
 });
 
 
 export const metadata: Metadata = {
-  title: "yzliste — E-ticaret listing için en kolay çözüm",
-  description: "Trendyol, Hepsiburada, Amazon TR ve N11 için AI ile optimize listing metni ve stüdyo görseli üret. Fotoğraf yükle veya barkod tara, gerisini YZ halleder.",
+  title: {
+    default: "yzliste — Ürünün için metin, görsel, video ve sosyal medya postu",
+    template: "%s | yzliste",
+  },
+  description: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA için AI ile listing metni, stüdyo görseli, ürün videosu ve sosyal medya postu üret. Fotoğraf yükle veya barkod tara, gerisini YZ halleder.",
   metadataBase: new URL("https://www.yzliste.com"),
   openGraph: {
-    title: "yzliste — E-ticaret listing için en kolay çözüm",
-    description: "Trendyol, Hepsiburada, Amazon TR ve N11 için AI ile optimize listing metni ve stüdyo görseli üret.",
+    title: "yzliste — Ürünün için metin, görsel, video ve sosyal medya postu",
+    description: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA için AI ile listing metni, görsel, video ve sosyal medya içeriği üret.",
     url: "https://www.yzliste.com",
     siteName: "yzliste",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "yzliste" }],
@@ -33,6 +37,13 @@ export const metadata: Metadata = {
     title: "yzliste — E-ticaret listing için en kolay çözüm",
     description: "Trendyol, Hepsiburada, Amazon TR ve N11 için AI ile optimize listing metni üret.",
     images: ["/og-image.png"],
+  },
+  alternates: {
+    canonical: "https://www.yzliste.com",
+    languages: {
+      'tr': 'https://www.yzliste.com',
+      'x-default': 'https://www.yzliste.com',
+    },
   },
   robots: { index: true, follow: true },
   icons: {
@@ -85,7 +96,7 @@ function RootJsonLd() {
               offers: {
                 "@type": "AggregateOffer",
                 priceCurrency: "TRY",
-                highPrice: "149",
+                highPrice: "249",
                 lowPrice: "0",
                 offerCount: "4",
               },
@@ -118,22 +129,48 @@ function RootJsonLd() {
   );
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal?: React.ReactNode;
 }>) {
+  const nonce = (await headers()).get('x-nonce') ?? ''
+
   return (
     <html
       lang="tr"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} antialiased`}
     >
       <head>
         <RootJsonLd />
+        {/* Google Consent Mode v2 — GA yüklenmeden önce default reddedildi */}
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('consent', 'default', {
+                analytics_storage: 'denied',
+                ad_storage: 'denied',
+                wait_for_update: 500
+              });
+            `,
+          }}
+        />
       </head>
-      <body className="min-h-full flex flex-col">
-        {children}
-        <ChatWidget />
+      <body className="min-h-screen flex flex-col">
+        <PostHogProvider>
+          <QueryProvider>
+            {children}
+            {modal}
+            <ChatWidget />
+            <PostHogPageView />
+            <CookieConsentBanner />
+          </QueryProvider>
+        </PostHogProvider>
         {/* Google Analytics Ölçüm Kimliği */}
         <GoogleAnalytics gaId="G-J5VWD7Y74M" />
       </body>

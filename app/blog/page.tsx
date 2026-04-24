@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getYazilar, kategoriler } from "./icerikler";
+import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
+import BlogListesi from "./BlogListesi";
 
 export const revalidate = 3600; // 1 saat ISR cache
 
 export const metadata: Metadata = {
-  title: "Blog | yzliste — E-ticaret Listing ve AI Görsel Rehberleri",
+  title: "Blog — E-ticaret Listing, AI Görsel, Video ve Satış Rehberleri",
   description:
-    "Trendyol, Hepsiburada, Amazon ve Etsy'de satışlarını artırmak için listing yazma rehberleri, AI görsel kullanımı, platform karşılaştırmaları ve e-ticaret ipuçları.",
+    "Trendyol, Hepsiburada, Amazon, Etsy ve N11'de satış artıran listing rehberleri. AI ürün görseli ve videosu, sosyal medya içeriği, SEO, fiyatlandırma stratejileri ve e-ticaret ipuçları.",
   keywords: [
     "e-ticaret blog",
     "trendyol listing rehberi",
@@ -15,21 +18,31 @@ export const metadata: Metadata = {
     "etsy türk satıcı",
     "ürün açıklaması nasıl yazılır",
     "ai görsel e-ticaret",
+    "ai ürün videosu",
+    "n11 satış rehberi",
+    "e-ticaret seo",
+    "sosyal medya e-ticaret",
+    "tiktok ürün tanıtımı",
+    "e-ticaret fiyatlandırma",
+    "amazon listing optimizasyonu",
+    "mankene giydirme ai",
   ],
   openGraph: {
     title: "Blog | yzliste",
-    description: "E-ticaret satıcıları için listing, görsel ve platform rehberleri.",
-    url: "https://yzliste.com/blog",
+    description: "Listing yazma, AI görsel ve video üretimi, SEO, fiyatlandırma ve 7 pazaryeri için satış rehberleri.",
+    url: "https://www.yzliste.com/blog",
     type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "yzliste blog" }],
   },
   alternates: {
-    canonical: "https://yzliste.com/blog",
+    canonical: "https://www.yzliste.com/blog",
+    languages: { 'tr': 'https://www.yzliste.com/blog', 'x-default': 'https://www.yzliste.com/blog' },
   },
   robots: { index: true, follow: true },
   twitter: {
     card: "summary_large_image",
     title: "Blog | yzliste",
-    description: "E-ticaret satıcıları için listing, görsel ve platform rehberleri.",
+    description: "Listing yazma, AI görsel ve video üretimi, SEO, fiyatlandırma ve 7 pazaryeri için satış rehberleri.",
   },
 };
 
@@ -44,13 +57,9 @@ async function BlogJsonLd() {
           "@context": "https://schema.org",
           "@type": "Blog",
           name: "yzliste Blog",
-          description: "E-ticaret satıcıları için listing ve görsel rehberleri",
-          url: "https://yzliste.com/blog",
-          publisher: {
-            "@type": "Organization",
-            name: "yzliste",
-            url: "https://yzliste.com",
-          },
+          description: "Listing yazma, AI görsel ve video üretimi, SEO, fiyatlandırma ve 7 pazaryeri için satış rehberleri",
+          url: "https://www.yzliste.com/blog",
+          publisher: { "@id": "https://www.yzliste.com/#organization" },
           blogPost: yazilar.map((y) => ({
             "@type": "BlogPosting",
             headline: y.baslik,
@@ -58,7 +67,7 @@ async function BlogJsonLd() {
             datePublished: y.yayinTarihi,
             dateModified: y.guncellemeTarihi ?? y.yayinTarihi,
             url: `https://yzliste.com/blog/${y.slug}`,
-            author: { "@type": "Organization", name: y.yazarAdi },
+            author: { "@id": "https://www.yzliste.com/#organization" },
           })),
         }),
       }}
@@ -74,140 +83,35 @@ export default async function BlogPage() {
     <main className="min-h-screen bg-white font-sans">
       <BlogJsonLd />
 
-      {/* HEADER */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 px-4 sm:px-6 py-2.5">
-        <div className="max-w-6xl mx-auto flex items-center gap-2">
-          <a href="/" className="flex-shrink-0 mr-1">
-            <img src="/yzliste_logo.png" alt="yzliste" className="h-8" />
-          </a>
-          <nav className="flex items-center gap-0.5 text-xs sm:text-sm text-gray-500">
-            <a href="/auth" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Ana Sayfa</a>
-            <a href="/" className="hidden sm:block px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">İçerik</a>
-            <a href="/fiyatlar" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors whitespace-nowrap">Fiyatlar</a>
-            <a href="/blog" className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-orange-600 font-medium whitespace-nowrap">Blog</a>
-          </nav>
-          <div className="flex gap-1 sm:gap-2 ml-auto items-center">
-            <a href="/auth?giris=1" className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">Giriş Yap</a>
-            <a href="/auth?kayit=1" className="hidden sm:block text-xs sm:text-sm bg-orange-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap">Ücretsiz Başla</a>
-          </div>
-        </div>
-      </header>
+      <SiteHeader aktifSayfa="blog" />
 
       {/* HERO */}
       <section className="px-4 sm:px-6 pt-14 pb-8 max-w-3xl mx-auto text-center">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
           E-ticaret satıcıları için<br />
-          <span className="text-orange-500">pratik rehberler</span>
+          <span className="text-indigo-500">pratik rehberler</span>
         </h1>
         <p className="text-gray-500 text-base">
-          Trendyol, Hepsiburada, Amazon ve Etsy'de listing yazma, AI görsel kullanımı ve platform stratejileri.
+          Trendyol, Hepsiburada, Amazon ve Etsy&apos;de listing yazma, AI görsel kullanımı ve platform stratejileri.
         </p>
       </section>
 
-      {/* KATEGORİLER */}
-      {cats.length > 1 && (
-        <section className="px-4 sm:px-6 pb-6">
-          <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-2">
-            {cats.map((k) => (
-              <span key={k} className="text-xs bg-orange-50 text-orange-700 border border-orange-200 px-3 py-1.5 rounded-full font-medium">
-                {k}
-              </span>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* YAZI LİSTESİ */}
-      <section className="px-4 sm:px-6 py-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {yazilar.map((yazi) => (
-              <Link
-                key={yazi.slug}
-                href={`/blog/${yazi.slug}`}
-                className="group bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
-              >
-                {yazi.kapakGorsel && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={yazi.kapakGorsel}
-                    alt={yazi.baslik}
-                    style={{ width: "100%", height: "176px", objectFit: "cover", display: "block" }}
-                  />
-                )}
-                {!yazi.kapakGorsel && (
-                  <div className="w-full h-40 bg-orange-50 flex items-center justify-center">
-                    <span className="text-4xl">📝</span>
-                  </div>
-                )}
-                <div className="p-5 flex flex-col flex-1">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs bg-orange-50 text-orange-600 border border-orange-100 px-2 py-0.5 rounded-full font-medium">
-                      {yazi.kategori}
-                    </span>
-                    <span className="text-xs text-gray-400">{yazi.okumaSuresi} dk okuma</span>
-                  </div>
-                  <h2 className="font-bold text-gray-800 text-sm leading-snug mb-2 group-hover:text-orange-600 transition-colors line-clamp-3">
-                    {yazi.baslik}
-                  </h2>
-                  <p className="text-xs text-gray-500 leading-relaxed flex-1 line-clamp-3">
-                    {yazi.ozet}
-                  </p>
-                  <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
-                    <span className="text-xs text-gray-400">
-                      {new Date(yazi.yayinTarihi).toLocaleDateString("tr-TR", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </span>
-                    <span className="text-xs text-orange-500 font-medium group-hover:underline">
-                      Oku →
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          {yazilar.length === 0 && (
-            <div className="text-center py-20 text-gray-400">
-              <div className="text-4xl mb-4">✍️</div>
-              <p className="text-sm">Yazılar yakında eklenecek.</p>
-            </div>
-          )}
-        </div>
-      </section>
+      <BlogListesi yazilar={yazilar} kategoriler={cats} />
 
       {/* CTA */}
-      <section className="px-4 sm:px-6 py-14 bg-orange-50 border-y border-orange-100 text-center">
+      <section className="px-4 sm:px-6 py-14 bg-indigo-50 border-y border-indigo-100 text-center">
         <h2 className="text-xl font-bold text-gray-800 mb-3">Okuduktan sonra dene</h2>
-        <p className="text-sm text-gray-500 mb-6">3 ücretsiz kredi ile listing ve görsel üret. Kayıt bile olmadan misafir olarak başla.</p>
-        <a
-          href="/?anonim=1"
-          className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-orange-100"
+        <p className="text-sm text-gray-500 mb-6">Ücretsiz hesap oluştur, 3 krediyle hemen listing ve görsel üret.</p>
+        <Link
+          href="/kayit"
+          className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-indigo-100"
         >
-          3 Ücretsiz Kredi ile Başla →
-        </a>
+          Ücretsiz Hesap Oluştur →
+        </Link>
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-white border-t border-gray-100 px-4 sm:px-6 py-8">
-        <div className="max-w-4xl mx-auto space-y-4">
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 text-xs text-gray-400">
-            <a href="/fiyatlar" className="hover:text-orange-500">Fiyatlar</a>
-            <span>·</span>
-            <a href="/blog" className="hover:text-orange-500">Blog</a>
-            <span>·</span>
-            <a href="/hakkimizda" className="hover:text-orange-500">Hakkımızda</a>
-            <span>·</span>
-            <a href="/gizlilik" className="hover:text-orange-500">Gizlilik Politikası</a>
-            <span>·</span>
-            <a href="mailto:destek@yzliste.com" className="hover:text-orange-500">destek@yzliste.com</a>
-          </div>
-          <p className="text-center text-xs text-gray-400">© 2026 yzliste · SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
