@@ -80,18 +80,18 @@ export default async function BlogPage() {
   const cats = await kategoriler();
 
   return (
-    <main className="min-h-screen bg-white font-sans">
+    <main className="min-h-screen bg-[#FAFAF8] font-sans">
       <BlogJsonLd />
 
       <SiteHeader aktifSayfa="blog" />
 
       {/* HERO */}
       <section className="px-4 sm:px-6 pt-14 pb-8 max-w-3xl mx-auto text-center">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
+        <h1 className="text-3xl sm:text-4xl font-medium text-[#1A1A17] mb-4">
           E-ticaret satıcıları için<br />
-          <span className="text-indigo-500">pratik rehberler</span>
+          <span className="text-[#1E4DD8]">pratik rehberler</span>
         </h1>
-        <p className="text-gray-500 text-base">
+        <p className="text-[#908E86] text-base">
           Trendyol, Hepsiburada, Amazon ve Etsy&apos;de listing yazma, AI görsel kullanımı ve platform stratejileri.
         </p>
       </section>
@@ -99,14 +99,14 @@ export default async function BlogPage() {
       <BlogListesi yazilar={yazilar} kategoriler={cats} />
 
       {/* CTA */}
-      <section className="px-4 sm:px-6 py-14 bg-indigo-50 border-y border-indigo-100 text-center">
-        <h2 className="text-xl font-bold text-gray-800 mb-3">Okuduktan sonra dene</h2>
-        <p className="text-sm text-gray-500 mb-6">Ücretsiz hesap oluştur, 3 krediyle hemen listing ve görsel üret.</p>
+      <section className="px-4 sm:px-6 py-14 bg-[#F0F4FB] border-y border-[#BAC9EB] text-center">
+        <h2 className="text-xl font-medium text-[#1A1A17] mb-3">Okuduktan sonra dene</h2>
+        <p className="text-sm text-[#5A5852] mb-6">Ücretsiz hesap oluştur, 3 krediyle hemen listing ve görsel üret.</p>
         <Link
           href="/kayit"
-          className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors shadow-lg shadow-indigo-100"
+          className="inline-block bg-[#1E4DD8] hover:bg-[#163B9E] text-white font-medium px-8 py-3.5 rounded-lg text-sm transition-colors"
         >
-          Ücretsiz Hesap Oluştur →
+          Ücretsiz hesap oluştur →
         </Link>
       </section>
 
