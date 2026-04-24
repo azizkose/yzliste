@@ -17,9 +17,9 @@ Nasıl çalışır:
 4. İsterse görsel de üretebilir
 
 Paketler ve fiyatlar:
-- Baslangic: 39 TL - 10 kredi (tek seferlik)
-- Populer: 99 TL - 30 kredi (tek seferlik)
-- Buyuk: 249 TL - 100 kredi (tek seferlik)
+- Baslangic: 49 TL - 10 kredi (tek seferlik)
+- Populer: 129 TL - 30 kredi (tek seferlik)
+- Buyuk: 299 TL - 100 kredi (tek seferlik)
 - Yeni kayit olanlara 3 kredi hediye verilir, kredi karti gerekmez
 - Listing metni: 1 kredi
 - Gorsel: stil basina 1 kredi (inceleme ucretsiz, sadece indirince duser)

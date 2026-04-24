@@ -49,9 +49,9 @@ export default function MesafeliSatisPage() {
             <div>
               <h2 className="text-base font-semibold text-gray-800 mb-2">3. Hizmet ve Fiyat Bilgileri</h2>
               <ul className="list-disc ml-5 space-y-1">
-                <li>Başlangıç Paketi: 10 kredi — 39 TL (KDV dahil)</li>
-                <li>Popüler Paket: 30 kredi — 99 TL (KDV dahil)</li>
-                <li>Büyük Paket: 100 kredi — 249 TL (KDV dahil)</li>
+                <li>Başlangıç Paketi: 10 kredi — 49 TL (KDV dahil)</li>
+                <li>Popüler Paket: 30 kredi — 129 TL (KDV dahil)</li>
+                <li>Büyük Paket: 100 kredi — 299 TL (KDV dahil)</li>
               </ul>
               <p className="mt-2">
                 Kullanım hakları ödeme tamamlandıktan hemen sonra hesaba tanımlanır.

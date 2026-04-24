@@ -7,7 +7,7 @@ const SORULAR = [
   },
   {
     s: "Abonelik var mı?",
-    c: "Hayır. yzliste tamamen kullandığın kadar öde modeli ile çalışır. Aylık abonelik yoktur. 39₺'den başlayan kredi paketleri mevcuttur.",
+    c: "Hayır. yzliste tamamen kullandığın kadar öde modeli ile çalışır. Aylık abonelik yoktur. 49₺'den başlayan kredi paketleri mevcuttur.",
   },
   {
     s: "Hangi pazaryerlerini destekliyorsunuz?",

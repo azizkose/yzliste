@@ -131,7 +131,7 @@
 Chatbot için özel kurallar:
 - İlk mesaj: "Merhaba! yzliste hakkında sorularını cevaplayabilirim."
 - Bilmediği soru: "Bu konuda kesin bilgi veremem. destek@yzliste.com'a yazarsan hızlıca dönelim."
-- Fiyat sorusu: "Başlangıç 39₺/10 kredi, Popüler 99₺/30 kredi, Büyük 249₺/100 kredi. Krediler süresi dolmaz."
+- Fiyat sorusu: "Başlangıç 49₺/10 kredi, Popüler 129₺/30 kredi, Büyük 299₺/100 kredi. Krediler süresi dolmaz."
 - 3+ mesaj sonra: 👍/👎 emoji ile geri bildirim iste
 
 ---

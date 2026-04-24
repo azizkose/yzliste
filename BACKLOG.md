@@ -1405,13 +1405,13 @@ Hardcoded 29/79/149 TL → `PAKET_LISTESI` import'una çevrildi. Detay: `BACKLOG
 **Bağlam:** Enflasyon telafisi + strateji raporu önerisi. Mevcut fiyatlar (39/99/249) reel olarak aşınmış. Tek seferlik kredi satışı olduğu için kullanıcı direnci düşük.
 
 **Değişiklik:**
-- [ ] `lib/paketler.ts`'de fiyatları güncelle:
+- [x] `lib/paketler.ts`'de fiyatları güncelle:
   - Başlangıç: 39 → **49 TL** (10 kredi, birim 4,90 TL)
   - Popüler: 99 → **129 TL** (30 kredi, birim 4,30 TL)
   - Büyük: 249 → **299 TL** (100 kredi, birim 2,99 TL)
-- [ ] `app/fiyatlar/page.tsx`'deki senaryo tablosunda hardcoded fiyat varsa güncelle
-- [ ] KF-04 tamamlandığı için diğer tüm sayfalar otomatik güncellenir (PaketModal, kredi-yukle, API)
-- [ ] **CB-01 chatbot system prompt'unu da güncelle:** `components/ChatWidget.tsx`'deki fiyat bilgisi hâlâ 39/99/249 TL diyor — yeni fiyatlarla (49/129/299) değiştirilmeli
+- [x] `app/fiyatlar/page.tsx`'deki senaryo tablosunda hardcoded fiyat varsa güncelle
+- [x] KF-04 tamamlandığı için diğer tüm sayfalar otomatik güncellenir (PaketModal, kredi-yukle, API)
+- [x] **CB-01 chatbot system prompt'unu da güncelle:** `app/api/chat/route.ts` ve `docs/marka-sesi.md` güncellendi
 
 **Test:**
 - [ ] /fiyatlar sayfasında yeni fiyatlar görünmeli
