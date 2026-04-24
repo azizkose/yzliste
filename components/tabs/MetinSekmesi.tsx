@@ -73,6 +73,67 @@ interface MetinSekmesiProps {
   kullanici: Kullanici | null;
   paketModalAc: () => void;
   icerikUret: () => void;
+  skor: number | null;
+  oneriler: string[];
+  ucretsizRevizeKullanildi: boolean;
+  ucretsizRevizeBaslat: () => void;
+}
+
+function SkorBari({ skor, oneriler, ucretsizRevizeKullanildi, onUcretsizRevize }: {
+  skor: number;
+  oneriler: string[];
+  ucretsizRevizeKullanildi: boolean;
+  onUcretsizRevize: () => void;
+}) {
+  const [goster, setGoster] = useState(false);
+
+  // Animasyon: mount'ta 0'dan başla
+  const [animSkor, setAnimSkor] = useState(0);
+  useState(() => { setTimeout(() => setGoster(true), 50); });
+  if (goster && animSkor !== skor) setAnimSkor(skor);
+
+  const { renk, bg, metin } = skor >= 75
+    ? { renk: "bg-[#0F5132]", bg: "bg-[#E8F5EE] border-[#0F5132]/20", metin: "Harika listing! Pazaryerine hazır." }
+    : skor >= 50
+    ? { renk: "bg-[#8B4513]", bg: "bg-[#FEF4E7] border-[#8B4513]/20", metin: "İyileştirilebilir" }
+    : { renk: "bg-[#7A1E1E]", bg: "bg-[#FCECEC] border-[#7A1E1E]/20", metin: "Eksik bilgi çok fazla" };
+
+  const skorRenk = skor >= 75 ? "text-[#0F5132]" : skor >= 50 ? "text-[#8B4513]" : "text-[#7A1E1E]";
+
+  return (
+    <div className={`border rounded-lg p-4 space-y-3 ${bg}`}>
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <span className={`text-2xl font-medium ${skorRenk}`}>{animSkor}</span>
+          <span className={`text-sm ${skorRenk}`}>/100</span>
+          <p className={`text-xs font-medium mt-0.5 ${skorRenk}`}>{metin}</p>
+        </div>
+        <div className="flex-1 h-3 bg-white/60 rounded-full overflow-hidden">
+          <div
+            className={`h-full ${renk} rounded-full transition-all duration-1000`}
+            style={{ width: `${goster ? skor : 0}%` }}
+          />
+        </div>
+      </div>
+      {skor < 75 && oneriler.length > 0 && (
+        <div className="space-y-1">
+          {oneriler.map((o, i) => (
+            <p key={i} className={`text-xs flex items-start gap-1.5 ${skor >= 50 ? "text-[#8B4513]" : "text-[#7A1E1E]"}`}>
+              <span className="mt-0.5 flex-shrink-0">•</span>{o}
+            </p>
+          ))}
+        </div>
+      )}
+      {skor < 75 && !ucretsizRevizeKullanildi && (
+        <button
+          onClick={onUcretsizRevize}
+          className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors ${skor >= 50 ? "bg-[#FEF4E7] border-[#8B4513]/30 text-[#8B4513] hover:bg-[#F9E8D0]" : "bg-[#FCECEC] border-[#7A1E1E]/30 text-[#7A1E1E] hover:bg-[#F9DCDC]"}`}
+        >
+          Ücretsiz yeniden üret
+        </button>
+      )}
+    </div>
+  );
 }
 
 export default function MetinSekmesi({
@@ -92,6 +153,7 @@ export default function MetinSekmesi({
   duzenleYukleniyor, setDuzenleYukleniyor,
   uretimId, yenidenUretHakki, setYenidenUretHakki,
   kullanici, paketModalAc, icerikUret,
+  skor, oneriler, ucretsizRevizeKullanildi, ucretsizRevizeBaslat,
 }: MetinSekmesiProps) {
   const platformBilgi = PLATFORM_BILGI[platform] || PLATFORM_BILGI.trendyol;
   const platformPh = PLATFORM_PLACEHOLDER[platform] || PLATFORM_PLACEHOLDER.trendyol;
@@ -480,7 +542,7 @@ export default function MetinSekmesi({
   );
 
   return (
-    <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white border border-[#D8D6CE] rounded-xl p-6 space-y-4">
+    <div id="giris-formu" style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white border border-[#D8D6CE] rounded-xl p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-medium text-[#1A1A17]">Listing metni</h2>
         <span className="text-xs text-[#5A5852] font-mono">1 kredi</span>
@@ -621,6 +683,9 @@ export default function MetinSekmesi({
 
       {sonuc && !yukleniyor && (
         <div id="sonuc-alani" className="space-y-3">
+          {/* Listing skor barı */}
+          {skor !== null && <SkorBari skor={skor} oneriler={oneriler} ucretsizRevizeKullanildi={ucretsizRevizeKullanildi} onUcretsizRevize={() => { ucretsizRevizeBaslat(); document.getElementById("giris-formu")?.scrollIntoView({ behavior: "smooth" }); }} />}
+
           <div className="flex justify-between items-center px-1">
             <h2 className="text-base font-medium text-[#1A1A17]">Üretilen içerik</h2>
             <button onClick={() => docxIndir(sonucBolumleri, urunAdi || "listing")} className="flex items-center gap-1.5 text-xs bg-[#EBF1FB] hover:bg-[#F0F4FB] text-[#1E4DD8] font-medium px-3 py-1.5 rounded-lg transition-colors border border-[#1E4DD8]/20">

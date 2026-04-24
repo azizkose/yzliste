@@ -31,6 +31,9 @@ export function useMetinUretim(deps: MetinDeps) {
   const [sonuc, setSonuc] = useState("");
   const [uretimId, setUretimId] = useState<string | null>(null);
   const [yenidenUretHakki, setYenidenUretHakki] = useState(3);
+  const [skor, setSkor] = useState<number | null>(null);
+  const [oneriler, setOneriler] = useState<string[]>([]);
+  const [ucretsizRevizeKullanildi, setUcretsizRevizeKullanildi] = useState(false);
   const [duzenleYukleniyor, setDuzenleYukleniyor] = useState(false);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [yukleniyorMesaj, setYukleniyorMesaj] = useState(0);
@@ -44,6 +47,8 @@ export function useMetinUretim(deps: MetinDeps) {
   const scannerBaslatildi = useRef(false);
   const sorguCalisiyor = useRef(false);
   const mesajInterval = useRef<ReturnType<typeof setInterval> | null>(null);
+  const ucretsizRevizeAktifRef = useRef(false);
+  const uretimIdRef = useRef<string | null>(null);
 
   // Keep deps in a ref so async functions always see fresh values
   const depsRef = useRef(deps);
@@ -140,13 +145,25 @@ export function useMetinUretim(deps: MetinDeps) {
       const res = await fetch("/api/uret", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi, userId: kullanici.id, dil: platformDil, ton: kullanici.ton, hedefKitle, fiyatSegmenti, anahtarKelimeler, markaliUrun }),
+        body: JSON.stringify({
+          urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi,
+          userId: kullanici.id, dil: platformDil, ton: kullanici.ton,
+          hedefKitle, fiyatSegmenti, anahtarKelimeler, markaliUrun,
+          ucretsizRevize: ucretsizRevizeAktifRef.current,
+          orijinalUretimId: ucretsizRevizeAktifRef.current ? uretimIdRef.current : undefined,
+        }),
       });
+      ucretsizRevizeAktifRef.current = false;
       const data = await res.json();
       if (mesajInterval.current) clearInterval(mesajInterval.current);
       if (res.status === 402) { analytics.creditExhausted(); paketModalAc(); setYukleniyor(false); return; }
       setSonuc(data.icerik);
+      setSkor(data.skor ?? null);
+      setOneriler(data.oneriler ?? []);
+      const prevUretimId = uretimIdRef.current;
       setUretimId(data.uretimId ?? null);
+      uretimIdRef.current = data.uretimId ?? null;
+      setUcretsizRevizeKullanildi(prevUretimId === data.uretimId);
       setYenidenUretHakki(3);
       if (kullanici.is_admin) setKullanici(k => k ? { ...k, toplam_kullanilan: k.toplam_kullanilan + 1 } : k);
       else setKullanici(k => k ? { ...k, kredi: k.kredi - 1, toplam_kullanilan: k.toplam_kullanilan + 1 } : k);
@@ -186,5 +203,8 @@ export function useMetinUretim(deps: MetinDeps) {
     kameraAcik,
     kameraAc, kameraKapat,
     icerikUret,
+    skor, oneriler,
+    ucretsizRevizeKullanildi,
+    ucretsizRevizeBaslat: () => { ucretsizRevizeAktifRef.current = true; },
   };
 }
