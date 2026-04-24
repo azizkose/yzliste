@@ -8,6 +8,30 @@ import { ModelPicker } from "./ModelPicker";
 import { TryonAyarlar } from "./TryonAyarlar";
 import { TryonSonuc } from "./TryonSonuc";
 
+function OrnekCiktilar() {
+  const ornekler = [
+    { etiket: "Düz tişört → Kadın 1 modelde" },
+    { etiket: "Askıda gömlek → Erkek 2 modelde" },
+  ];
+
+  return (
+    <div className="bg-white border border-[#D8D6CE] rounded-xl p-4">
+      <h3 className="text-sm font-medium text-[#1A1A17] mb-4">Örnek çıktılar</h3>
+      <div className="space-y-4">
+        {ornekler.map((ornek, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <div className="aspect-square w-16 rounded-lg bg-[#F1F0EB] flex-shrink-0" />
+            <span className="text-xs text-[#908E86]">→</span>
+            <div className="aspect-square w-16 rounded-lg bg-[#F1F0EB] flex-shrink-0" />
+            <p className="text-xs text-[#908E86]">{ornek.etiket}</p>
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-[#908E86] mt-4">Kıyafet fotoğrafı yükleyin, manken seçin ve başlatın</p>
+    </div>
+  );
+}
+
 export function TryonSekmesi() {
   const { data: currentUser } = useCurrentUser();
   const { data: krediData } = useCredits();
@@ -45,7 +69,6 @@ export function TryonSekmesi() {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Sol: Girdiler */}
         <div className="space-y-8">
           <GarmentUpload
             foto={state.garmentFoto}
@@ -84,7 +107,6 @@ export function TryonSekmesi() {
           />
         </div>
 
-        {/* Sağ: Sonuç */}
         <div>
           {(state.sonuclar.length > 0 || state.yukleniyor) ? (
             <TryonSonuc
@@ -106,9 +128,7 @@ export function TryonSekmesi() {
               onVideoUret={videoUret}
             />
           ) : (
-            <div className="flex flex-col items-center justify-center h-full min-h-64 rounded-xl border border-dashed border-[#2A2A26] text-center px-6 py-12">
-              <p className="text-sm text-[#5A5852]">Kıyafet fotoğrafı yükleyin, manken seçin ve giydirmeyi başlatın</p>
-            </div>
+            <OrnekCiktilar />
           )}
         </div>
       </div>

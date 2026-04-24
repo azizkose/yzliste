@@ -28,10 +28,8 @@ export function TryonAyarlar({
 
   return (
     <div className="space-y-5">
-      <h3 className="text-sm font-medium text-[#D8D6CE]">Ayarlar</h3>
-
       <div>
-        <p className="text-xs text-[#908E86] mb-2">Kalite modu</p>
+        <p className="text-sm font-medium text-[#1A1A17] mb-2">Kalite modu</p>
         <div className="flex gap-2">
           {MODLAR.map((m) => (
             <button
@@ -39,8 +37,8 @@ export function TryonAyarlar({
               onClick={() => onModeChange(m.id)}
               className={`flex-1 py-2 px-3 rounded-lg border text-xs transition-colors ${
                 mode === m.id
-                  ? "border-[#1E4DD8] bg-[#1E4DD8]/10 text-[#BAC9EB]"
-                  : "border-[#2A2A26] text-[#5A5852] hover:border-[#3A3A36]"
+                  ? "border-[#1E4DD8] bg-[#1E4DD8] text-white"
+                  : "bg-white border-[#D8D6CE] text-[#5A5852] hover:border-[#7B9BD9]"
               }`}
             >
               <div className="font-medium">{m.etiket}</div>
@@ -51,20 +49,20 @@ export function TryonAyarlar({
       </div>
 
       <div>
-        <p className="text-xs text-[#908E86] mb-2">Varyasyon sayısı</p>
+        <p className="text-sm font-medium text-[#1A1A17] mb-2">Varyasyon sayısı</p>
         <div className="flex items-center gap-3">
           <button
             onClick={() => onNumSamplesChange(Math.max(minSamples, numSamples - 1))}
             disabled={numSamples <= minSamples}
-            className="w-8 h-8 rounded-lg border border-[#2A2A26] flex items-center justify-center text-[#908E86] hover:border-[#3A3A36] disabled:opacity-30 transition-colors"
+            className="w-8 h-8 rounded-lg border border-[#D8D6CE] flex items-center justify-center text-[#908E86] hover:border-[#7B9BD9] disabled:text-[#D8D6CE] disabled:cursor-not-allowed transition-colors"
           >
             <Minus size={14} strokeWidth={1.5} />
           </button>
-          <span className="text-base font-medium text-[#D8D6CE] w-4 text-center">{numSamples}</span>
+          <span className="text-base font-medium text-[#1A1A17] w-4 text-center">{numSamples}</span>
           <button
             onClick={() => onNumSamplesChange(Math.min(maxSamples, numSamples + 1))}
             disabled={numSamples >= maxSamples}
-            className="w-8 h-8 rounded-lg border border-[#2A2A26] flex items-center justify-center text-[#908E86] hover:border-[#3A3A36] disabled:opacity-30 transition-colors"
+            className="w-8 h-8 rounded-lg border border-[#D8D6CE] flex items-center justify-center text-[#908E86] hover:border-[#7B9BD9] disabled:text-[#D8D6CE] disabled:cursor-not-allowed transition-colors"
           >
             <Plus size={14} strokeWidth={1.5} />
           </button>
@@ -80,9 +78,9 @@ export function TryonAyarlar({
         >
           {yukleniyor ? "Hazırlanıyor..." : `Mankene giydirme — ${toplamKredi} kredi`}
         </button>
-        <p className="text-xs text-[#5A5852] text-center mt-2">
+        <p className="text-xs text-[#908E86] text-center mt-2">
           {yetersizKredi ? (
-            <span className="text-[#C0392B]">Yetersiz kredi — {toplamKredi} kredi gerekli</span>
+            <span className="text-[#7A1E1E]">Yetersiz kredi — {toplamKredi} kredi gerekli</span>
           ) : (
             `Kalan bakiye: ${kredi} kredi`
           )}

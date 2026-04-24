@@ -20,8 +20,8 @@ export function TryonVideoSonuc({ videoUrl, videoIlerleme, videoYukleniyor }: Tr
 
   return (
     <div className="space-y-3">
-      <p className="text-sm font-medium text-[#D8D6CE]">Video hazır</p>
-      <div className="rounded-xl overflow-hidden border border-[#2A2A26] bg-[#1A1A17]">
+      <p className="text-sm font-medium text-[#1A1A17]">Video hazır</p>
+      <div className="rounded-xl overflow-hidden border border-[#D8D6CE] bg-white">
         <video
           src={videoUrl}
           controls
@@ -33,7 +33,7 @@ export function TryonVideoSonuc({ videoUrl, videoIlerleme, videoYukleniyor }: Tr
       <a
         href={videoUrl}
         download
-        className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-[#D8D6CE] text-[#D8D6CE] text-sm hover:bg-[#2A2A26] transition-colors"
+        className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-[#D8D6CE] text-[#908E86] text-sm hover:border-[#7B9BD9] hover:text-[#5A5852] transition-colors"
       >
         <Download size={14} strokeWidth={1.5} />
         Video indir
