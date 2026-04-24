@@ -30,7 +30,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | REF-01 | Referans programı — davet et, +10 kredi | Tamamlandı | [specs/ref-01.md](specs/ref-01.md) |
 | UX-03 | Üretim sayfası navigasyon düzenlemesi | Tamamlandı | [specs/ux-03.md](specs/ux-03.md) |
 | LS-01 | Listing skor + ücretsiz revize | Tamamlandı | [specs/ls-01.md](specs/ls-01.md) |
-| HERO-VID | Hero video tam versiyon + kırpmasız | Açık | [specs/hero-video-tam.md](specs/hero-video-tam.md) |
+| HERO-VID | Hero video tam versiyon + kırpmasız | Tamamlandı | [specs/hero-video-tam.md](specs/hero-video-tam.md) |
 | DA-01 | /uret sayfası tasarım denetimi — 8 düzeltme | Tamamlandı | [specs/da-01-uret-tasarim-denetimi.md](specs/da-01-uret-tasarim-denetimi.md) |
 | DA-02 | Ana sayfa tasarım denetimi — 9 düzeltme | Tamamlandı | [specs/da-02-anasayfa-tasarim-denetimi.md](specs/da-02-anasayfa-tasarim-denetimi.md) |
 | DA-03 | /giris sayfası UX revizyonu — best practice | Tamamlandı | [specs/da-03-giris-sayfasi-redesign.md](specs/da-03-giris-sayfasi-redesign.md) |
