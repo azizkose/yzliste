@@ -21,6 +21,8 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | OPS-07 | Sentry error monitoring | Kısmen OK, DSN sonrası 3 madde | inline |
 | DR-01 | Denetim raporu hızlı düzeltmeler — 6 madde | Tamamlandı | [specs/dr-01-hizli-duzeltmeler.md](specs/dr-01-hizli-duzeltmeler.md) |
 | DR-02 | Blog kaynaksız istatistik temizliği + içerik kuralları | Tamamlandı | [specs/dr-02-blog-istatistik-temizlik.md](specs/dr-02-blog-istatistik-temizlik.md) |
+| AI-01 | Chatbot SYSTEM_PROMPT güncelle — fiyat/platform/stil/yzstudio yanlış | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-1 |
+| AI-02 | Merkezi AI config — model + temperature + cost haritası (`lib/ai-config.ts`) | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-2, P0-3 |
 
 ### P1 — Yakın vadeli
 
@@ -37,11 +39,16 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | DA-02 | Ana sayfa tasarım denetimi — 9 düzeltme | Tamamlandı | [specs/da-02-anasayfa-tasarim-denetimi.md](specs/da-02-anasayfa-tasarim-denetimi.md) |
 | DA-03 | /giris sayfası UX revizyonu — best practice | Tamamlandı | [specs/da-03-giris-sayfasi-redesign.md](specs/da-03-giris-sayfasi-redesign.md) |
 | DA-04 | /yzstudio dark→light + UX revizyonu — 10 madde | Tamamlandı | [specs/da-04-yzstudio-tasarim-denetimi.md](specs/da-04-yzstudio-tasarim-denetimi.md) |
-| DR-03 | /hakkimizda kurucu bölümü — kısa, profesyonel, şirket adı yok | Açık — spec güncellendi | [specs/dr-03-hakkimizda-yeniden-yaz.md](specs/dr-03-hakkimizda-yeniden-yaz.md) |
+| DR-03 | /hakkimizda kurucu bölümü — kısa, profesyonel, şirket adı yok | Tamamlandı | [specs/dr-03-hakkimizda-yeniden-yaz.md](specs/dr-03-hakkimizda-yeniden-yaz.md) |
 | DR-05 | /uret "Giriş yap ve başla" CTA düzeltmesi | Tamamlandı | [specs/dr-05-uret-cta-duzeltme.md](specs/dr-05-uret-cta-duzeltme.md) |
 | LP-11 | Landing page section revizyonları — 4 madde | Tamamlandı | [specs/lp-11-landing-section-revizyonlari.md](specs/lp-11-landing-section-revizyonlari.md) |
 | LP-12 | /fiyatlar "Kredi nasıl çalışır?" kısaltma | Tamamlandı | [specs/lp-12-fiyatlar-kredi-kisalt.md](specs/lp-12-fiyatlar-kredi-kisalt.md) |
 | DA-05 | /uret modern UX — monochrome çözümü | Açık | [specs/da-05-uret-modern-ux.md](specs/da-05-uret-modern-ux.md) |
+| AI-04 | /duzenle marka bağlamı + kategori kuralları eksik — sistemPromptOlustur paylaş | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-1 |
+| AI-05 | Platform karakter limiti tutarsızlığı — Hepsiburada 100→150, tek kaynak | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-2 |
+| AI-06 | TON_TANIMLARI 3→7 ton genişlet, tek dosyaya taşı | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-3 |
+| AI-07 | max_tokens platforma göre + stop_reason:max_tokens yakala | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-4 |
+| AI-08 | Çıktı doğrulama — karakter limiti aşımı + yasaklı kelime regex check | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-5 |
 | OPS-20 | KVKK + yasal uyumluluk tamamlama | Aziz — hukuki | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P2 — Orta vadeli
@@ -57,6 +64,10 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | SC-04 | Blog meta description güncelle | Tamamlandı | inline |
 | NF-04 | fal.ai model takip scheduled task | Tamamlandı — her Pazartesi 09:00 | inline |
 | DR-04 | Blog iç link stratejisi — yazılar arası cross-link | Tamamlandı | [specs/dr-04-blog-ic-link.md](specs/dr-04-blog-ic-link.md) |
+| AI-09 | Sosyal üretim DB kaydına prompt_version ekle | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-1 |
+| AI-10 | /toplu route sistemPromptOlustur paylaşsın (kategori+yasaklı+marka) | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-2 |
+| AI-11 | "Bilinen ürün özellikleri" kuralı sıkılaştır — hallucination riski | Açık — Aziz kararı gerek | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-3 |
+| AI-12 | /studio/manken promptuna profil ton + hedef_kitle ekle | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-4 |
 | OPS-14~19 | KÜME 11 — operasyonel olgunluk faz 2 | OPS-14/15/16 tamamlandı, 17/18/19 açık | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P3 — Gelecek / Ertelenmiş
@@ -197,4 +208,4 @@ Eşik: 1.000 tekil/ay, 100 kayıtlı, 20 gerçek ödeme, 50 günlük üretim —
 
 - **Tamamlanan işler:** `BACKLOG-DONE.md` dosyasında (RD-01~RD-04, IC-01, LP-01~LP-09, PQ-01~PQ-34, QA-01~QA-21, KÜME 9, KÜME 12, ve daha fazlası).
 - **yzstudio detaylı spec:** `specs/nf-02-yzstudio.md` (549 satır).
-- **Design system referans:** `docs/redesign/yzliste-design-tokens.md`.
+- **Design system referans:** `docs/redesign/yzliste-design-tok

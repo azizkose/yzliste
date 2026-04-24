@@ -36,22 +36,12 @@ export default function HakkimizdaPage() {
           {/* Neden yzliste */}
           <section className="mb-10">
             <h2 className="text-base font-medium text-[#1A1A17] mb-3">Neden yzliste?</h2>
-            <div className="space-y-3 text-sm text-[#5A5852] leading-relaxed">
-              <p>
-                E-ticaret satıcıları aynı ürün için Trendyol'a, Hepsiburada'ya, Amazon'a, Etsy'ye
-                ayrı ayrı içerik hazırlamak zorunda. Her platformun karakter limiti, başlık formatı,
-                SEO mantığı farklı.
-              </p>
-              <p>
-                Mevcut AI araçları genel amaçlı — platform kurallarını bilmiyor. Her biri ayrı abonelik
-                istiyor; görsel için bir araç, metin için başka bir araç, video için üçüncüsü.
-                Entegrasyon derdi bitmez, maliyet birikir.
-              </p>
-              <p>
-                yzliste bunu tek çatı altında toplar: ürün bilgisini bir kez gir, 7 platforma özel
-                listing metni, AI görsel, video ve sosyal medya içeriği çıkar — dakikalar içinde.
-              </p>
-            </div>
+            <p className="text-sm text-[#5A5852] leading-relaxed">
+              E-ticaret satıcıları her platform için ayrı içerik hazırlamak zorunda. Her platformun
+              karakter limiti, format ve SEO mantığı farklı; genel amaçlı AI araçları bunu bilmiyor.
+              yzliste bu içerikleri tek çatı altında toplar: ürün bilgisini bir kez gir, 7 platforma
+              özel metin, görsel, video ve sosyal içerik çıkar — dakikalar içinde.
+            </p>
           </section>
 
           {/* Platform listesi */}
@@ -72,13 +62,10 @@ export default function HakkimizdaPage() {
             <div className="text-sm text-[#5A5852] leading-relaxed space-y-3">
               <p>
                 <span className="font-medium text-[#1A1A17]">Aziz Köse</span> — fintech ve inovasyon
-                alanında 18 yıllık deneyime sahip bir girişimci. DenizBank&apos;ta Chief Innovation Officer
-                olarak kurumsal girişim fonu yönetti, 600&apos;den fazla startup değerlendirdi; daha önce
-                AI tabanlı bir derin öğrenme şirketi kurarak çıkış yaptı.
-              </p>
-              <p>
-                yzliste, e-ticaret satıcılarının içerik sorununu yakından görünce kişisel bir proje
-                olarak başladı. Kurumsal değil — sadece işe yarayan bir araç yapma fikri.
+                alanında 18 yıllık deneyime sahip bir girişimci. Kurumsal inovasyon ve girişim yatırımı
+                üzerine çalıştı, 600&apos;den fazla startup değerlendirdi; AI tabanlı bir derin öğrenme
+                şirketi kurup çıkış yaptı. E-ticaret satıcılarının içerik sorununu yakından görünce
+                yzliste&apos;yi kişisel bir proje olarak başlattı.
               </p>
               <a
                 href="https://linkedin.com/in/azizkose"
