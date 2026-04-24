@@ -1,11 +1,12 @@
 'use client'
 
+import { Camera } from 'lucide-react'
+
 interface FotoEkleAlaniProps {
   id: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   renk?: 'gray' | 'purple' | 'red' | 'pink'
   metin?: string
-  ikon?: string
   altMetin?: string
 }
 
@@ -14,28 +15,30 @@ export default function FotoEkleAlani({
   onChange,
   renk = 'gray',
   metin = 'Fotoğraf ekle',
-  ikon = '📷',
   altMetin,
 }: FotoEkleAlaniProps) {
+  // Tüm varyantlar aynı design system renklerini kullanır
   const sinirRenk: Record<string, string> = {
-    gray:   'border-gray-300 hover:border-indigo-400 hover:bg-indigo-50',
-    purple: 'border-violet-300 hover:border-violet-400 hover:bg-violet-50',
-    red:    'border-amber-200 hover:border-amber-400 hover:bg-amber-50',
-    pink:   'border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50',
+    gray:   'border-[#D8D6CE] hover:border-[#1E4DD8] hover:bg-[#EBF1FB]',
+    purple: 'border-[#D8D6CE] hover:border-[#1E4DD8] hover:bg-[#EBF1FB]',
+    red:    'border-[#D8D6CE] hover:border-[#1E4DD8] hover:bg-[#EBF1FB]',
+    pink:   'border-[#D8D6CE] hover:border-[#1E4DD8] hover:bg-[#EBF1FB]',
   }
   const metinRenk: Record<string, string> = {
-    gray: 'text-gray-500', purple: 'text-violet-700', red: 'text-amber-600', pink: 'text-emerald-500',
+    gray: 'text-[#5A5852]', purple: 'text-[#5A5852]', red: 'text-[#5A5852]', pink: 'text-[#5A5852]',
   }
   const altRenk: Record<string, string> = {
-    gray: 'text-gray-400', purple: 'text-violet-400', red: 'text-amber-400', pink: 'text-emerald-400',
+    gray: 'text-[#908E86]', purple: 'text-[#908E86]', red: 'text-[#908E86]', pink: 'text-[#908E86]',
   }
 
   return (
     <label
       htmlFor={id}
-      className={`block border-2 border-dashed ${sinirRenk[renk]} rounded-xl p-6 text-center cursor-pointer transition-all`}
+      className={`block border border-dashed ${sinirRenk[renk]} rounded-xl p-6 text-center cursor-pointer transition-all`}
     >
-      <div className="text-3xl mb-2">{ikon}</div>
+      <div className="flex justify-center mb-2">
+        <Camera size={28} strokeWidth={1.5} className="text-[#908E86]" />
+      </div>
       <p className={`text-sm font-medium ${metinRenk[renk]}`}>{metin}</p>
       {altMetin && <p className={`text-xs ${altRenk[renk]} mt-1`}>{altMetin}</p>}
       <input type="file" accept="image/*" onChange={onChange} className="hidden" id={id} />

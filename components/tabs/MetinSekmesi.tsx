@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Edit3, Camera, ScanLine, FileSpreadsheet } from "lucide-react";
+import { Edit3, Camera, ScanLine, FileSpreadsheet, FileText, AlertTriangle, RotateCcw, Scissors } from "lucide-react";
 import { PLATFORM_BILGI, PLATFORM_PLACEHOLDER, YUKLENIYOR_MESAJLARI, KATEGORI_LISTESI } from "@/lib/constants";
 import { sonucuBolumle, docxIndir } from "@/lib/listing-utils";
 import KopyalaButon from "@/components/ui/KopyalaButon";
@@ -116,15 +116,15 @@ export default function MetinSekmesi({
   const GelismisAyarlar = (
     <div className="pt-1">
       <button type="button" onClick={() => setGelismisAcik(v => !v)}
-        className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-gray-700 transition-colors">
+        className="flex items-center gap-1 text-xs font-medium text-[#5A5852] hover:text-[#1A1A17] transition-colors">
         <span>{gelismisAcik ? "▾" : "▸"}</span>
         Daha fazla seçenek
       </button>
       {gelismisAcik && (
         <div className="mt-3 space-y-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Hedef Kitle <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-            <select value={hedefKitle} onChange={(e) => setHedefKitle(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <label className="block text-sm font-medium text-[#1A1A17] mb-1">Hedef kitle <span className="text-[#908E86] font-normal">(isteğe bağlı)</span></label>
+            <select value={hedefKitle} onChange={(e) => setHedefKitle(e.target.value)} className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]">
               <option value="genel">Genel</option>
               <option value="kadinlar">Kadınlar</option>
               <option value="erkekler">Erkekler</option>
@@ -135,12 +135,12 @@ export default function MetinSekmesi({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Fiyat Segmenti <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
+            <label className="block text-sm font-medium text-[#1A1A17] mb-1">Fiyat segmenti <span className="text-[#908E86] font-normal">(isteğe bağlı)</span></label>
             <div className="grid grid-cols-3 gap-2">
               {(["butce", "orta", "premium"] as const).map((seg) => (
                 <button key={seg} type="button" onClick={() => setFiyatSegmenti(seg)}
-                  className={`py-2 rounded-xl border-2 text-xs font-semibold transition-all ${fiyatSegmenti === seg ? "border-blue-400 bg-blue-50 text-blue-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
-                  {seg === "butce" ? "💰 Bütçe" : seg === "orta" ? "⚖️ Orta" : "👑 Premium"}
+                  className={`py-2 rounded-lg border text-xs font-medium transition-all ${fiyatSegmenti === seg ? "border-[#1E4DD8] bg-[#EBF1FB] text-[#1E4DD8]" : "border-[#D8D6CE] text-[#5A5852] hover:border-[#1E4DD8]"}`}>
+                  {seg === "butce" ? "Bütçe" : seg === "orta" ? "Orta" : "Premium"}
                 </button>
               ))}
             </div>
@@ -162,18 +162,18 @@ export default function MetinSekmesi({
         <>
           {GirisTipiChips}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Adı <span className="text-red-400">*</span></label>
-            <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)} placeholder={platformPh.urun} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <label className="block text-sm font-medium text-[#1A1A17] mb-1">Ürün adı <span className="text-[#7A1E1E]">*</span></label>
+            <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)} placeholder={platformPh.urun} className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Kategori <span className="text-red-400">*</span></label>
+            <label className="block text-sm font-medium text-[#1A1A17] mb-1">Kategori <span className="text-[#7A1E1E]">*</span></label>
             <select
               value={digerMod ? "Diğer" : (kategori || "")}
               onChange={(e) => {
                 if (e.target.value === "Diğer") { setDigerMod(true); setKategori(""); }
                 else { setDigerMod(false); setKategori(e.target.value); }
               }}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]"
             >
               <option value="">— Seç (isteğe bağlı) —</option>
               {KATEGORI_LISTESI.map((k) => (
@@ -183,14 +183,14 @@ export default function MetinSekmesi({
             {digerMod && (
               <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)}
                 placeholder="Kategori yaz..." autoFocus
-                className="mt-2 w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+                className="mt-2 w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]" />
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Detayları <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
+            <label className="block text-sm font-medium text-[#1A1A17] mb-1">Ürün detayları <span className="text-[#908E86] font-normal">(isteğe bağlı)</span></label>
             <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)}
               placeholder="Renk, beden, malzeme, öne çıkan özellikler, arama kelimeleri — ne kadar detay girersen içerik o kadar iyi olur"
-              rows={3} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+              rows={3} className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]" />
           </div>
           {GelismisAyarlar}
         </>
@@ -201,25 +201,25 @@ export default function MetinSekmesi({
         <div className="space-y-3">
           {GirisTipiChips}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Kategori <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
-            <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder="örn: Ayakkabı & Çanta / Erkek Bot" className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <label className="block text-sm font-medium text-[#1A1A17] mb-1">Kategori <span className="text-[#908E86] font-normal">(isteğe bağlı)</span></label>
+            <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder="örn: Ayakkabı & Çanta / Erkek Bot" className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Ürün Fotoğrafı</label>
+            <label className="block text-sm font-medium text-[#1A1A17] mb-2">Ürün fotoğrafı</label>
             {fotolar.length === 0 ? (
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center space-y-1">
-                <p className="text-xs text-blue-700">📷 Fotoğraf metin kalitesini artırır — yukarıdan yükleyebilirsin</p>
-                <button type="button" onClick={() => setGirisTipi("manuel")} className="text-xs text-blue-500 hover:text-blue-700 underline">Fotoğrafsız devam et →</button>
+              <div className="bg-[#EBF1FB] border border-[#1E4DD8]/20 rounded-lg p-4 text-center space-y-1">
+                <p className="text-xs text-[#1E4DD8] flex items-center justify-center gap-1.5"><Camera size={14} strokeWidth={1.5} /> Fotoğraf metin kalitesini artırır — yukarıdan yükleyebilirsin</p>
+                <button type="button" onClick={() => setGirisTipi("manuel")} className="text-xs text-[#1E4DD8] hover:text-[#163B9E] underline">Fotoğrafsız devam et</button>
               </div>
             ) : (
               <FotoThumbnail src={fotolar[0]} onKaldir={() => fotoKaldir(0)} renk="green" />
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Detayları <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
+            <label className="block text-sm font-medium text-[#1A1A17] mb-1">Ürün detayları <span className="text-[#908E86] font-normal">(isteğe bağlı)</span></label>
             <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)}
               placeholder="Renk, beden, malzeme, öne çıkan özellikler, arama kelimeleri — ne kadar detay girersen içerik o kadar iyi olur"
-              rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+              rows={2} className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]" />
           </div>
           {GelismisAyarlar}
         </div>
@@ -230,31 +230,30 @@ export default function MetinSekmesi({
         <div className="space-y-3">
           {GirisTipiChips}
           {!kameraAcik && !barkodBilgi && (
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 text-center space-y-3">
-              <div className="text-3xl">🔍</div>
-              <p className="text-sm text-gray-600">Ürünün barkodunu kameraya göster, bilgiler otomatik dolacak.</p>
-              <button onClick={kameraAc} className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-5 py-2 rounded-xl transition-colors">
-                📷 Kamerayı Aç
+            <div className="bg-[#EBF1FB] border border-[#1E4DD8]/20 rounded-lg p-5 text-center space-y-3">
+              <p className="text-sm text-[#5A5852]">Ürünün barkodunu kameraya göster, bilgiler otomatik dolacak.</p>
+              <button onClick={kameraAc} className="bg-[#1E4DD8] hover:bg-[#163B9E] text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors flex items-center gap-1.5 mx-auto">
+                <Camera size={14} strokeWidth={1.5} /> Kamerayı aç
               </button>
             </div>
           )}
           {kameraAcik && (
             <div className="space-y-2">
-              <div id="barkod-okuyucu" className="w-full rounded-xl overflow-hidden" />
-              {barkodYukleniyor && <p className="text-center text-sm text-gray-500 animate-pulse">🔄 Ürün sorgulanıyor...</p>}
-              <button onClick={kameraKapat} className="w-full text-xs text-gray-400 hover:text-gray-600 py-1 transition-colors">
-                ✕ Kamerayı Kapat
+              <div id="barkod-okuyucu" className="w-full rounded-lg overflow-hidden" />
+              {barkodYukleniyor && <p className="text-center text-sm text-[#5A5852] animate-pulse">Ürün sorgulanıyor...</p>}
+              <button onClick={kameraKapat} className="w-full text-xs text-[#908E86] hover:text-[#5A5852] py-1 transition-colors">
+                Kamerayı kapat
               </button>
             </div>
           )}
           {barkodBilgi && (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4 space-y-1">
-              <p className="text-sm font-semibold text-green-700">✅ Ürün Tanındı</p>
-              <p className="text-sm text-gray-700"><span className="font-medium">İsim:</span> {barkodBilgi.isim}</p>
-              {barkodBilgi.marka && <p className="text-sm text-gray-600"><span className="font-medium">Marka:</span> {barkodBilgi.marka}</p>}
-              {barkodBilgi.kategori && <p className="text-sm text-gray-600"><span className="font-medium">Kategori:</span> {barkodBilgi.kategori}</p>}
-              <button onClick={() => { setBarkodBilgi(null); setUrunAdi(""); setKategori(""); setOzellikler(""); }} className="text-xs text-blue-500 hover:text-blue-700 underline mt-1 transition-colors">
-                Tekrar Tara
+            <div className="bg-[#E8F5EE] border border-[#0F5132]/20 rounded-lg p-4 space-y-1">
+              <p className="text-sm font-medium text-[#0F5132]">Ürün tanındı</p>
+              <p className="text-sm text-[#1A1A17]"><span className="font-medium">İsim:</span> {barkodBilgi.isim}</p>
+              {barkodBilgi.marka && <p className="text-sm text-[#5A5852]"><span className="font-medium">Marka:</span> {barkodBilgi.marka}</p>}
+              {barkodBilgi.kategori && <p className="text-sm text-[#5A5852]"><span className="font-medium">Kategori:</span> {barkodBilgi.kategori}</p>}
+              <button onClick={() => { setBarkodBilgi(null); setUrunAdi(""); setKategori(""); setOzellikler(""); }} className="text-xs text-[#1E4DD8] hover:text-[#163B9E] underline mt-1 transition-colors">
+                Tekrar tara
               </button>
             </div>
           )}
@@ -272,10 +271,10 @@ export default function MetinSekmesi({
         yukleniyorLabel={YUKLENIYOR_MESAJLARI[yukleniyorMesaj]}
       />
 
-      <p className="text-xs text-gray-400 text-center">💡 yzliste her platformun karakter limiti ve SEO kuralına göre üretir ancak pazaryeri kuralları sık değişir — yayınlamadan önce içeriği kontrol etmeni öneririz</p>
+      <p className="text-xs text-[#908E86] text-center">yzliste her platformun karakter limiti ve SEO kuralına göre üretir ancak pazaryeri kuralları sık değişir — yayınlamadan önce içeriği kontrol etmeni öneririz</p>
 
       {!yukleniyor && kullanici && !kullanici.anonim && !kullanici.is_admin && (kullanici.kredi ?? 0) <= 0 && (
-        <p className="text-center text-xs text-red-500">İçerik üretim krediniz bitti. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
+        <p className="text-center text-xs text-[#7A1E1E]">İçerik üretim krediniz bitti. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al</button></p>
       )}
 
       {yukleniyor && (
@@ -289,9 +288,9 @@ export default function MetinSekmesi({
       {sonuc && !yukleniyor && (
         <div id="sonuc-alani" className="space-y-3">
           <div className="flex justify-between items-center px-1">
-            <h2 className="text-base font-medium text-[#1A1A17]">✅ Üretilen içerik</h2>
-            <button onClick={() => docxIndir(sonucBolumleri, urunAdi || "listing")} className="flex items-center gap-1.5 text-xs bg-blue-50 hover:bg-blue-100 text-blue-600 font-medium px-3 py-1.5 rounded-lg transition-colors border border-blue-200">
-              📄 Word İndir
+            <h2 className="text-base font-medium text-[#1A1A17]">Üretilen içerik</h2>
+            <button onClick={() => docxIndir(sonucBolumleri, urunAdi || "listing")} className="flex items-center gap-1.5 text-xs bg-[#EBF1FB] hover:bg-[#F0F4FB] text-[#1E4DD8] font-medium px-3 py-1.5 rounded-lg transition-colors border border-[#1E4DD8]/20">
+              <FileText size={12} strokeWidth={1.5} /> Word indir
             </button>
           </div>
 
@@ -322,20 +321,20 @@ export default function MetinSekmesi({
                   } else {
                     icerikUret();
                   }
-                }} disabled={yukleniyor || duzenleYukleniyor} className="flex items-center gap-1 text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-200 transition-colors disabled:opacity-40">
-                  🔁 Yeniden üret{uretimId && yenidenUretHakki > 0 ? ` (${yenidenUretHakki} ücretsiz)` : ""}
+                }} disabled={yukleniyor || duzenleYukleniyor} className="flex items-center gap-1 text-xs bg-[#EBF1FB] hover:bg-[#F0F4FB] text-[#1E4DD8] px-3 py-1.5 rounded-lg border border-[#1E4DD8]/20 transition-colors disabled:opacity-40">
+                  <RotateCcw size={12} strokeWidth={1.5} /> Yeniden üret{uretimId && yenidenUretHakki > 0 ? ` (${yenidenUretHakki} ücretsiz)` : ""}
                 </button>
-                <button onClick={() => mikro("kisalt")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-gray-50 hover:bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors disabled:opacity-40">
-                  {duzenleYukleniyor ? "⏳" : "✂️"} Kısalt
+                <button onClick={() => mikro("kisalt")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-[#F1F0EB] hover:bg-[#D8D6CE]/40 text-[#5A5852] px-3 py-1.5 rounded-lg border border-[#D8D6CE] transition-colors disabled:opacity-40">
+                  <Scissors size={12} strokeWidth={1.5} /> Kısalt
                 </button>
-                <button onClick={() => mikro("genislet")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-gray-50 hover:bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors disabled:opacity-40">
-                  ➕ Genişlet
+                <button onClick={() => mikro("genislet")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-[#F1F0EB] hover:bg-[#D8D6CE]/40 text-[#5A5852] px-3 py-1.5 rounded-lg border border-[#D8D6CE] transition-colors disabled:opacity-40">
+                  Genişlet
                 </button>
-                <button onClick={() => mikro("ton_samimi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-gray-50 hover:bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors disabled:opacity-40">
-                  🎭 Samimi
+                <button onClick={() => mikro("ton_samimi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-[#F1F0EB] hover:bg-[#D8D6CE]/40 text-[#5A5852] px-3 py-1.5 rounded-lg border border-[#D8D6CE] transition-colors disabled:opacity-40">
+                  Samimi
                 </button>
-                <button onClick={() => mikro("ton_resmi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-gray-50 hover:bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors disabled:opacity-40">
-                  🎭 Resmi
+                <button onClick={() => mikro("ton_resmi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-[#F1F0EB] hover:bg-[#D8D6CE]/40 text-[#5A5852] px-3 py-1.5 rounded-lg border border-[#D8D6CE] transition-colors disabled:opacity-40">
+                  Resmi
                 </button>
               </div>
             );
@@ -350,8 +349,12 @@ export default function MetinSekmesi({
             const platformAdi = { trendyol: "Trendyol", hepsiburada: "Hepsiburada", amazon: "Amazon TR", n11: "N11", etsy: "Etsy", amazon_usa: "Amazon USA" }[platform] ?? platform;
             if (!baslik) return null;
             return (
-              <div className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium ${baslikUygun ? "bg-emerald-50 border border-emerald-200 text-emerald-700" : "bg-amber-50 border border-amber-200 text-amber-700"}`}>
-                <span>{baslikUygun ? "✓" : "⚠️"}</span>
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium ${baslikUygun ? "bg-[#E8F5EE] border border-[#0F5132]/20 text-[#0F5132]" : "bg-[#FEF4E7] border border-[#8B4513]/20 text-[#8B4513]"}`}>
+                {baslikUygun ? (
+                  <span>✓</span>
+                ) : (
+                  <AlertTriangle size={14} strokeWidth={1.5} />
+                )}
                 <span className="flex-1">
                   {baslikUygun
                     ? `${platformAdi} kurallarına uygun — Başlık ${baslikUzunluk}/${pb.baslikLimit} karakter`
@@ -368,11 +371,11 @@ export default function MetinSekmesi({
             if (!eslesmeler) return null;
             const tekil = [...new Set(eslesmeler.map(m => m.trim()))];
             return (
-              <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-red-50 border border-red-200">
-                <span className="text-red-500 flex-shrink-0">⚠️</span>
+              <div className="flex items-start gap-2 px-3 py-2.5 rounded-lg bg-[#FCECEC] border border-[#7A1E1E]/20">
+                <AlertTriangle size={14} strokeWidth={1.5} className="text-[#7A1E1E] flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-xs font-semibold text-red-700">Marka/IP Uyarısı</p>
-                  <p className="text-xs text-red-600 mt-0.5">Tespit edilen marka adı: <span className="font-medium">{tekil.join(", ")}</span>. Yetkili satıcı değilseniz içeriği gözden geçirin.</p>
+                  <p className="text-xs font-medium text-[#7A1E1E]">Marka/IP uyarısı</p>
+                  <p className="text-xs text-[#7A1E1E]/80 mt-0.5">Tespit edilen marka adı: <span className="font-medium">{tekil.join(", ")}</span>. Yetkili satıcı değilseniz içeriği gözden geçirin.</p>
                 </div>
               </div>
             );
@@ -385,14 +388,14 @@ export default function MetinSekmesi({
                 <div className="flex justify-between items-center mb-3">
                   <span className="text-sm font-medium text-[#1A1A17]">{bolum.ikon} {bolum.baslik}</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-300 hidden sm:block">✎ düzenlenebilir</span>
+                    <span className="text-xs text-[#D8D6CE] hidden sm:block">✎ düzenlenebilir</span>
                     <KopyalaButon metin={bolum.icerik} getDuzenlenmisMevin={() => ref.current?.innerText || bolum.icerik} />
                   </div>
                 </div>
                 <div ref={ref} contentEditable suppressContentEditableWarning
                   onFocus={(e) => { e.currentTarget.style.outline = "2px solid #f97316"; e.currentTarget.style.borderRadius = "8px"; e.currentTarget.style.padding = "8px"; }}
                   onBlur={(e) => { e.currentTarget.style.outline = "none"; e.currentTarget.style.padding = "0"; }}
-                  className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed font-sans cursor-text">
+                  className="whitespace-pre-wrap text-sm text-[#5A5852] leading-relaxed font-sans cursor-text">
                   {bolum.icerik}
                 </div>
               </div>
