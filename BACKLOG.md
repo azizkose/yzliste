@@ -41,7 +41,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 
 | ID | Başlık | Durum | Spec |
 |---|---|---|---|
-| KF-05 | Blog yazısı güncelle — video hareket | Reopened | [specs/kf-05.md](specs/kf-05.md) |
+| KF-05 | Blog yazısı güncelle — video hareket | Tamamlandı | [specs/kf-05.md](specs/kf-05.md) |
 | LP-10 | Araçlar dropdown — buton düzeni | Açık | inline |
 | KG-01 | Kredi geçmişi + kullanım analitiği | Açık | [specs/kg-01.md](specs/kg-01.md) |
 | MP-01 | Mağaza profili genişletme — 4 yeni alan | Açık | [specs/mp-01.md](specs/mp-01.md) |
