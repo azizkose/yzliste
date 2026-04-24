@@ -52,7 +52,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | OVERSCROLL | Sayfa sonu overscroll / boş alan temizliği | Tamamlandı | inline |
 | KREDİ-SYNC | Kredi gösterimi tutarsızlığı — tek kaynak | Tamamlandı | inline |
 | SC-04 | Blog meta description güncelle | Tamamlandı | inline |
-| NF-04 | fal.ai model takip scheduled task | Açık | inline |
+| NF-04 | fal.ai model takip scheduled task | Tamamlandı — her Pazartesi 09:00 | inline |
 | DR-04 | Blog iç link stratejisi — yazılar arası cross-link | Açık | [specs/dr-04-blog-ic-link.md](specs/dr-04-blog-ic-link.md) |
 | OPS-14~19 | KÜME 11 — operasyonel olgunluk faz 2 | Açık | [specs/kume-11.md](specs/kume-11.md) |
 
