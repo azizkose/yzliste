@@ -50,7 +50,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | KG-01 | Kredi geçmişi + kullanım analitiği | Tamamlandı | [specs/kg-01.md](specs/kg-01.md) |
 | MP-01 | Mağaza profili genişletme — 4 yeni alan | Tamamlandı | [specs/mp-01.md](specs/mp-01.md) |
 | OVERSCROLL | Sayfa sonu overscroll / boş alan temizliği | Tamamlandı | inline |
-| KREDİ-SYNC | Kredi gösterimi tutarsızlığı — tek kaynak | Açık | inline |
+| KREDİ-SYNC | Kredi gösterimi tutarsızlığı — tek kaynak | Tamamlandı | inline |
 | SC-04 | Blog meta description güncelle | Açık | inline |
 | NF-04 | fal.ai model takip scheduled task | Açık | inline |
 | DR-04 | Blog iç link stratejisi — yazılar arası cross-link | Açık | [specs/dr-04-blog-ic-link.md](specs/dr-04-blog-ic-link.md) |
