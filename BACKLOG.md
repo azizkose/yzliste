@@ -19,6 +19,8 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | AUTH-01 | Mobilde kayıt engeli — Turnstile devre dışı | Kod OK, mobil test kaldı | inline |
 | FY-01 | Fiyat artışı — 49/129/299 TL | Kod OK, test kaldı | inline |
 | OPS-07 | Sentry error monitoring | Kısmen OK, DSN sonrası 3 madde | inline |
+| DR-01 | Denetim raporu hızlı düzeltmeler — 6 madde | Tamamlandı | [specs/dr-01-hizli-duzeltmeler.md](specs/dr-01-hizli-duzeltmeler.md) |
+| DR-02 | Blog kaynaksız istatistik temizliği + içerik kuralları | Açık | [specs/dr-02-blog-istatistik-temizlik.md](specs/dr-02-blog-istatistik-temizlik.md) |
 
 ### P1 — Yakın vadeli
 
@@ -35,6 +37,8 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | DA-02 | Ana sayfa tasarım denetimi — 9 düzeltme | Tamamlandı | [specs/da-02-anasayfa-tasarim-denetimi.md](specs/da-02-anasayfa-tasarim-denetimi.md) |
 | DA-03 | /giris sayfası UX revizyonu — best practice | Tamamlandı | [specs/da-03-giris-sayfasi-redesign.md](specs/da-03-giris-sayfasi-redesign.md) |
 | DA-04 | /yzstudio dark→light + UX revizyonu — 10 madde | Tamamlandı | [specs/da-04-yzstudio-tasarim-denetimi.md](specs/da-04-yzstudio-tasarim-denetimi.md) |
+| DR-03 | /hakkimizda sayfası yeniden yazımı | Açık | [specs/dr-03-hakkimizda-yeniden-yaz.md](specs/dr-03-hakkimizda-yeniden-yaz.md) |
+| DR-05 | /uret "Giriş yap ve başla" CTA düzeltmesi | Açık | [specs/dr-05-uret-cta-duzeltme.md](specs/dr-05-uret-cta-duzeltme.md) |
 | OPS-20 | KVKK + yasal uyumluluk tamamlama | Aziz — hukuki | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P2 — Orta vadeli
@@ -49,6 +53,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | KREDİ-SYNC | Kredi gösterimi tutarsızlığı — tek kaynak | Açık | inline |
 | SC-04 | Blog meta description güncelle | Açık | inline |
 | NF-04 | fal.ai model takip scheduled task | Açık | inline |
+| DR-04 | Blog iç link stratejisi — yazılar arası cross-link | Açık | [specs/dr-04-blog-ic-link.md](specs/dr-04-blog-ic-link.md) |
 | OPS-14~19 | KÜME 11 — operasyonel olgunluk faz 2 | Açık | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P3 — Gelecek / Ertelenmiş
@@ -163,6 +168,15 @@ Eşik: 1.000 tekil/ay, 100 kayıtlı, 20 gerçek ödeme, 50 günlük üretim —
 - F-21 A11y tam audit (Lighthouse 95+)
 - F-32 /changelog + sürüm notu
 - F-33 Kredi süre sınırı politikası
+- DR-CRO: Sticky CTA + exit-intent modal + CTA sayısı azaltma (CRO)
+- DR-EMAIL: Welcome e-mail dizisi (1/3/7 gün)
+- DR-VIRAL: "yzliste ile hazırlandı" rozeti (viral loop)
+- DR-SOCIAL: Twitter Card meta + sosyal medya paylaşım önizlemesi
+- DR-COMMUNITY: Satıcı topluluğu (Telegram/WhatsApp)
+- DR-ANNUAL: Yıllık + kurumsal paket seçenekleri
+- DR-CALC: Fiyat sayfası kredi hesaplayıcı widget
+- DR-ONBOARD: Kayıt sonrası onboarding wizard (3-4 adım)
+- DR-EEAT: Blog sticky tarih + yazar bilgisi (SEO EEAT)
 
 ---
 
@@ -181,6 +195,3 @@ Eşik: 1.000 tekil/ay, 100 kayıtlı, 20 gerçek ödeme, 50 günlük üretim —
 - **Tamamlanan işler:** `BACKLOG-DONE.md` dosyasında (RD-01~RD-04, IC-01, LP-01~LP-09, PQ-01~PQ-34, QA-01~QA-21, KÜME 9, KÜME 12, ve daha fazlası).
 - **yzstudio detaylı spec:** `specs/nf-02-yzstudio.md` (549 satır).
 - **Design system referans:** `docs/redesign/yzliste-design-tokens.md`.
-- **UI kuralları:** `CLAUDE.md` dosyasında.
-- Bir iş için detaylı bilgi gerekiyorsa → `specs/{ID}.md` dosyasını oku.
-- `[DECIDE]` olmayan her karar default'la git: TanStack Query v5, PostHog EU, Upstash Redis,
