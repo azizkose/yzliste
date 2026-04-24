@@ -20,7 +20,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | FY-01 | Fiyat artışı — 49/129/299 TL | Kod OK, test kaldı | inline |
 | OPS-07 | Sentry error monitoring | Kısmen OK, DSN sonrası 3 madde | inline |
 | DR-01 | Denetim raporu hızlı düzeltmeler — 6 madde | Tamamlandı | [specs/dr-01-hizli-duzeltmeler.md](specs/dr-01-hizli-duzeltmeler.md) |
-| DR-02 | Blog kaynaksız istatistik temizliği + içerik kuralları | Açık | [specs/dr-02-blog-istatistik-temizlik.md](specs/dr-02-blog-istatistik-temizlik.md) |
+| DR-02 | Blog kaynaksız istatistik temizliği + içerik kuralları | Tamamlandı | [specs/dr-02-blog-istatistik-temizlik.md](specs/dr-02-blog-istatistik-temizlik.md) |
 
 ### P1 — Yakın vadeli
 
