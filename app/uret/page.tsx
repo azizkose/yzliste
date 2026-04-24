@@ -150,8 +150,12 @@ export default function Home() {
     const paketParam = params.get("paket") === "ac";
     const odemeParam = params.get("odeme");
     const tabParam = params.get("tab");
+    const girisParam = params.get("giris");
     if (tabParam && (["metin", "gorsel", "video", "sosyal"] as AnaSekme[]).includes(tabParam as AnaSekme)) {
       setAnaSekme(tabParam as AnaSekme);
+    }
+    if (tabParam === "metin" && girisParam === "excel") {
+      metin.setGirisTipi("excel");
     }
     if (paketParam || odemeParam || tabParam) window.history.replaceState({}, "", "/uret");
     const { data: { user } } = await supabase.auth.getUser();

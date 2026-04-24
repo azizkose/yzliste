@@ -24,7 +24,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 
 | ID | Başlık | Durum | Spec |
 |---|---|---|---|
-| LP-08 | Araçlar dropdown — hero kartları + CTA | Kısmen OK | [specs/lp-08.md](specs/lp-08.md) |
+| LP-08 | Araçlar dropdown — hero kartları + CTA | Tamamlandı | [specs/lp-08.md](specs/lp-08.md) |
 | NF-02 | yzstudio — premium araçlar sayfası | Faz 1-3 OK, Faz 4-5 kaldı | [specs/nf-02-yzstudio.md](specs/nf-02-yzstudio.md) |
 | NF-06 | Kredi tüketim UX — bilgilendirme + onay | Kısmen OK | [specs/nf-06.md](specs/nf-06.md) |
 | REF-01 | Referans programı — davet et, +10 kredi | Açık | [specs/ref-01.md](specs/ref-01.md) |
@@ -33,6 +33,8 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | HERO-VID | Hero video tam versiyon + kırpmasız | Açık | [specs/hero-video-tam.md](specs/hero-video-tam.md) |
 | DA-01 | /uret sayfası tasarım denetimi — 8 düzeltme | Tamamlandı | [specs/da-01-uret-tasarim-denetimi.md](specs/da-01-uret-tasarim-denetimi.md) |
 | DA-02 | Ana sayfa tasarım denetimi — 9 düzeltme | Tamamlandı | [specs/da-02-anasayfa-tasarim-denetimi.md](specs/da-02-anasayfa-tasarim-denetimi.md) |
+| DA-03 | /giris sayfası UX revizyonu — best practice | Açık | [specs/da-03-giris-sayfasi-redesign.md](specs/da-03-giris-sayfasi-redesign.md) |
+| DA-04 | /yzstudio dark→light + UX revizyonu — 10 madde | Tamamlandı | [specs/da-04-yzstudio-tasarim-denetimi.md](specs/da-04-yzstudio-tasarim-denetimi.md) |
 | OPS-20 | KVKK + yasal uyumluluk tamamlama | Aziz — hukuki | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P2 — Orta vadeli
@@ -181,4 +183,4 @@ Eşik: 1.000 tekil/ay, 100 kayıtlı, 20 gerçek ödeme, 50 günlük üretim —
 - **Design system referans:** `docs/redesign/yzliste-design-tokens.md`.
 - **UI kuralları:** `CLAUDE.md` dosyasında.
 - Bir iş için detaylı bilgi gerekiyorsa → `specs/{ID}.md` dosyasını oku.
-- `[DECIDE]` olmayan her karar default'la git: TanStack Query v5, PostHog EU, Upstash Redis, Inter font.
+- `[DECIDE]` olmayan her karar default'la git: TanStack Query v5, PostHog EU, Upstash Redis,
