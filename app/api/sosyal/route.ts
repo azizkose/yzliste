@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { captionSistemPrompt, captionCiktiParse } from "@/lib/prompts/sosyal";
 import { krediDus, krediIade } from "@/lib/credits";
 import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
+import { SOSYAL_PROMPT_VERSION } from "@/lib/prompts/sosyal";
 
 export async function POST(req: NextRequest) {
   const { urunAdi, ekBilgi, platform, ton, userId, sezon = "normal" } = await req.json();
@@ -84,5 +85,16 @@ export async function POST(req: NextRequest) {
   }
 
   const { caption, hashtag } = captionCiktiParse(metin);
+
+  // Fire-and-forget DB log — failure doesn't block response
+  supabase.from("sosyal_uretimler").insert({
+    user_id: userId,
+    urun_adi: urunAdi,
+    platform,
+    caption,
+    hashtag,
+    prompt_version: SOSYAL_PROMPT_VERSION,
+  }).then();
+
   return NextResponse.json({ caption, hashtag });
 }

@@ -1,7 +1,7 @@
 // Listing (metin) üretimi için prompt sabitleri
 // Versiyon arttırıldığında BACKLOG.md'ye not düşülmeli
 
-export const METIN_PROMPT_VERSION = "metin-v1.1";
+export const METIN_PROMPT_VERSION = "metin-v1.2";
 
 export type Platform = "trendyol" | "hepsiburada" | "amazon" | "n11" | "etsy" | "amazon_usa";
 
@@ -52,7 +52,7 @@ KRITIK KURALLAR — KESINLIKLE UY:
 BILGI KULLANIMI:
 - Kullanicinin verdigi bilgileri temel al. Elindeki bilgilerle mumkun olan en iyi icerigi uret.
 - Kullanicidan ek bilgi isteme, soru sorma veya eksik bilgi oldugunu belirtme. Sessizce en iyisini yap.
-- AMA: spesifik model numarasi, fiyat, garanti suresi, stok durumu, olcu/boyut gibi degisken bilgileri ASLA uydurma. Sadece kullanici verdiyse yaz.
+- Spesifik model numarasi, fiyat, garanti suresi, stok durumu, olcu/boyut, teknik spec gibi HICBIR bilgiyi uydurma. Kullanici verdiyse yaz, vermemisse yazma.
 - "Muhtemelen", "olabilir", "tahminimizce" gibi belirsiz ifadeler KULLANMA. Ya biliyorsun ya yazma.
 - Rakip marka ismi yazma.
 - Saglik iddiasi, tibbi oneri, "sertifikali", "onayli", "klinik kanitli" gibi dogrulanamaz ifade kullanma.

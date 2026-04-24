@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fal } from "@fal-ai/client";
 import { createClient } from "@supabase/supabase-js";
 import { MANKEN_KREDI, MANKEN_SECENEKLER } from "@/lib/studio-constants";
+import { TON_EN_MAP } from "@/lib/constants/ton";
 import logger from "@/lib/logger";
 
 export const maxDuration = 60;
@@ -19,6 +20,8 @@ function promptOlustur(params: {
   vucutTipi: string;
   boy: string;
   serbest: string;
+  ton?: string;
+  hedefKitle?: string;
 }): string {
   const cinsiyetStr = params.cinsiyet === "erkek" ? "male man" : "female woman";
 
@@ -31,8 +34,10 @@ function promptOlustur(params: {
   const boyPrompt = boySec?.prompt ?? "average height";
 
   const extra = params.serbest?.trim() ? `, ${params.serbest.trim()}` : "";
+  const tonStr = params.ton && TON_EN_MAP[params.ton] ? `, ${TON_EN_MAP[params.ton]}` : "";
+  const hedefStr = params.hedefKitle?.trim() ? `, model suits target audience: ${params.hedefKitle.trim()}` : "";
 
-  return `full length fashion model photo showing entire body from top of head to feet, legs fully visible, feet on ground, ${cinsiyetStr}, ${tenPrompt}, ${vucutPrompt}, ${boyPrompt}, white seamless studio background, soft studio lighting, face clearly visible, standing straight, arms at sides, wearing simple neutral solid color outfit, editorial fashion photography, professional studio shot${extra}`;
+  return `full length fashion model photo showing entire body from top of head to feet, legs fully visible, feet on ground, ${cinsiyetStr}, ${tenPrompt}, ${vucutPrompt}, ${boyPrompt}, white seamless studio background, soft studio lighting, face clearly visible, standing straight, arms at sides, wearing simple neutral solid color outfit, editorial fashion photography, professional studio shot${extra}${tonStr}${hedefStr}`;
 }
 
 export async function POST(req: NextRequest) {
@@ -44,6 +49,8 @@ export async function POST(req: NextRequest) {
     boy = "orta",
     serbest = "",
     userId,
+    ton,
+    hedefKitle,
   } = body;
 
   if (!userId) {
@@ -52,7 +59,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")
-    .select("kredi, is_admin, is_test")
+    .select("kredi, is_admin, is_test, ton, hedef_kitle")
     .eq("id", userId)
     .single();
 
@@ -77,7 +84,11 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const prompt = promptOlustur({ cinsiyet, tenRengi, vucutTipi, boy, serbest });
+    const prompt = promptOlustur({
+      cinsiyet, tenRengi, vucutTipi, boy, serbest,
+      ton: ton || profil.ton,
+      hedefKitle: hedefKitle || profil.hedef_kitle,
+    });
 
     const result = await fal.subscribe("fal-ai/flux-pro/v1.1", {
       input: {
