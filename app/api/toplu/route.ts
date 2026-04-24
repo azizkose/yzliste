@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -156,7 +157,8 @@ export async function POST(req: NextRequest) {
               "anthropic-version": "2023-06-01",
             },
             body: JSON.stringify({
-              model: "claude-sonnet-4-6",
+              model: AI_MODELS.listing,
+              temperature: AI_TEMPERATURES.listing,
               max_tokens: 2000,
               system: sistemPrompt,
               messages: [{ role: "user", content: kullaniciBilgi }],

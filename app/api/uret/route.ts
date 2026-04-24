@@ -5,6 +5,7 @@ import logger from "@/lib/logger";
 import { Redis } from "@upstash/redis";
 import { METIN_PROMPT_VERSION } from "@/lib/prompts/metin";
 import { listingSkorHesapla } from "@/lib/listingSkor";
+import { AI_MODELS, AI_TEMPERATURES, AI_COSTS } from "@/lib/ai-config";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -699,7 +700,8 @@ export async function POST(req: NextRequest) {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
+        model: AI_MODELS.listing,
+        temperature: AI_TEMPERATURES.listing,
         max_tokens: 2000,
         system: sistemPromptOlustur(platformKey, platformDil, ton, kategoriKoduBul(kategori || ""), fiyatSegmenti, markaliUrun),
         messages: [{ role: "user", content: mesajIcerikleri }],
@@ -715,10 +717,10 @@ export async function POST(req: NextRequest) {
   const data = await response.json();
   const icerik = data.content?.[0]?.text;
 
-  // Token kullanımı ve maliyet — claude-sonnet-4-6: $3/MTok input, $15/MTok output
   const inputTokens: number = data.usage?.input_tokens || 0;
   const outputTokens: number = data.usage?.output_tokens || 0;
-  const apiCost = (inputTokens / 1_000_000) * 3 + (outputTokens / 1_000_000) * 15;
+  const modelCost = AI_COSTS[AI_MODELS.listing] ?? AI_COSTS["claude-sonnet-4-6"];
+  const apiCost = (inputTokens / 1_000_000) * modelCost.input + (outputTokens / 1_000_000) * modelCost.output;
 
   if (!icerik) {
     // LLM boş döndü — krediyi geri yükle

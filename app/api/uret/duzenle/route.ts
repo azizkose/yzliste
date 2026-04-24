@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import logger from "@/lib/logger";
+import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -96,7 +97,8 @@ export async function POST(req: NextRequest) {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
+        model: AI_MODELS.edit,
+        temperature: AI_TEMPERATURES.edit,
         max_tokens: 2048,
         system: [
           DUZENLE_SISTEM_PROMPT,

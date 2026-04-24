@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { captionSistemPrompt, captionCiktiParse } from "@/lib/prompts/sosyal";
 import { krediDus, krediIade } from "@/lib/credits";
+import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
 
 export async function POST(req: NextRequest) {
   const { urunAdi, ekBilgi, platform, ton, userId, sezon = "normal" } = await req.json();
@@ -63,7 +64,8 @@ export async function POST(req: NextRequest) {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
+        model: AI_MODELS.social,
+        temperature: AI_TEMPERATURES.social,
         max_tokens: 1024,
         system: sistem,
         messages: [{ role: "user", content: kullanici }],

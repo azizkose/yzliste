@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { fal } from "@fal-ai/client";
 import { captionSistemPrompt, captionCiktiParse } from "@/lib/prompts/sosyal";
 import { rmbgUygula } from "@/lib/fal/rmbg";
+import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
 
 fal.config({ credentials: process.env.FAL_KEY });
 
@@ -37,7 +38,8 @@ async function captionUret(params: {
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: "claude-haiku-4-5-20251001",
+      model: AI_MODELS.social,
+      temperature: AI_TEMPERATURES.social,
       max_tokens: 1024,
       system: sistem,
       messages: [{ role: "user", content: kullanici }],
