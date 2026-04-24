@@ -18,7 +18,8 @@ interface TryonState {
   category: "auto" | "tops" | "bottoms" | "one-pieces";
   modelStokId: string | null;
   modelOzelFoto: string | null;
-  modelKaynagi: "stok" | "ozel";
+  modelUretilenUrl: string | null;
+  modelKaynagi: "stok" | "ozel" | "uretilen";
   mode: "performance" | "balanced" | "quality";
   numSamples: number;
 
@@ -41,6 +42,7 @@ export function useTryonUretim(deps: TryonDeps) {
     category: "auto",
     modelStokId: "kadin-1",
     modelOzelFoto: null,
+    modelUretilenUrl: null,
     modelKaynagi: "stok",
     mode: "balanced",
     numSamples: 1,
@@ -71,6 +73,7 @@ export function useTryonUretim(deps: TryonDeps) {
     if (!state.garmentFoto) { setHata("Kıyafet fotoğrafı ekleyin."); return; }
     if (state.modelKaynagi === "stok" && !state.modelStokId) { setHata("Bir manken seçin."); return; }
     if (state.modelKaynagi === "ozel" && !state.modelOzelFoto) { setHata("Manken fotoğrafı yükleyin."); return; }
+    if (state.modelKaynagi === "uretilen" && !state.modelUretilenUrl) { setHata("Manken oluşturun."); return; }
 
     const gerekliKredi = STUDIO_KREDI.tryon.hesapla(state.numSamples);
     if (!isAdmin && kredi < gerekliKredi) { paketModalAc(); return; }
@@ -84,6 +87,7 @@ export function useTryonUretim(deps: TryonDeps) {
         body: JSON.stringify({
           garmentImage: state.garmentFoto,
           modelImage: state.modelKaynagi === "ozel" ? state.modelOzelFoto : null,
+          modelImageUrl: state.modelKaynagi === "uretilen" ? state.modelUretilenUrl : null,
           modelStokId: state.modelKaynagi === "stok" ? state.modelStokId : null,
           category: state.category,
           garmentPhotoType: state.garmentPhotoType,

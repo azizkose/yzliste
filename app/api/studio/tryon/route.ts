@@ -26,9 +26,10 @@ async function base64ToUrl(base64: string): Promise<string> {
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const {
-    garmentImage,   // base64
-    modelImage,     // base64 | null (özel yükleme)
-    modelStokId,    // string | null (stok manken id)
+    garmentImage,    // base64
+    modelImage,      // base64 | null (özel yükleme)
+    modelImageUrl,   // string | null (üretilmiş manken URL'i)
+    modelStokId,     // string | null (stok manken id)
     category = "auto",
     garmentPhotoType = "auto",
     mode = "balanced",
@@ -39,7 +40,7 @@ export async function POST(req: NextRequest) {
   if (!garmentImage) {
     return NextResponse.json({ hata: "Kıyafet fotoğrafı gerekli" }, { status: 400 });
   }
-  if (!modelImage && !modelStokId) {
+  if (!modelImage && !modelImageUrl && !modelStokId) {
     return NextResponse.json({ hata: "Manken seçimi gerekli" }, { status: 400 });
   }
   if (!userId) {
@@ -79,12 +80,15 @@ export async function POST(req: NextRequest) {
     const garmentRaw = await base64ToUrl(garmentImage);
     const garmentUrl = await rmbgUygula(garmentRaw);
 
-    // Manken görseli: stok veya özel yükleme
+    // Manken görseli: stok, üretilmiş URL veya özel yükleme
     let modelUrl: string;
     if (modelStokId) {
       const stok = STOK_MANKENLER.find((m) => m.id === modelStokId);
       if (!stok) return NextResponse.json({ hata: "Geçersiz manken seçimi" }, { status: 400 });
       modelUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.yzliste.com"}${stok.url}`;
+    } else if (modelImageUrl) {
+      // Üretilmiş manken — zaten fal.ai CDN'de, direkt kullan
+      modelUrl = modelImageUrl;
     } else {
       modelUrl = await base64ToUrl(modelImage);
     }

@@ -15,9 +15,37 @@ export const VIDEO_KREDI: Record<"5" | "10", number> = {
 export const STOK_MANKENLER = [
   { id: "kadin-1", label: "Kadın 1", url: "/mankenler/kadin-1.jpg", cinsiyet: "kadin" as const },
   { id: "kadin-2", label: "Kadın 2", url: "/mankenler/kadin-2.jpg", cinsiyet: "kadin" as const },
+  { id: "kadin-3", label: "Kadın 3", url: "/mankenler/kadin-3.jpg", cinsiyet: "kadin" as const },
   { id: "erkek-1", label: "Erkek 1", url: "/mankenler/erkek-1.jpg", cinsiyet: "erkek" as const },
   { id: "erkek-2", label: "Erkek 2", url: "/mankenler/erkek-2.jpg", cinsiyet: "erkek" as const },
+  { id: "erkek-3", label: "Erkek 3", url: "/mankenler/erkek-3.jpg", cinsiyet: "erkek" as const },
 ] as const;
+
+export const MANKEN_KREDI = 1;
+
+// Dinamik manken üretimi için seçenekler
+export const MANKEN_SECENEKLER = {
+  cinsiyet: [
+    { id: "kadin", label: "Kadın" },
+    { id: "erkek", label: "Erkek" },
+  ],
+  tenRengi: [
+    { id: "acik", label: "Açık ten", prompt: "light fair caucasian skin" },
+    { id: "bugday", label: "Buğday ten", prompt: "medium olive tan skin" },
+    { id: "esmer", label: "Esmer ten", prompt: "warm brown skin" },
+    { id: "koyu", label: "Koyu ten", prompt: "dark brown skin" },
+  ],
+  vucutTipi: [
+    { id: "ince", label: "İnce", prompt: "slim slender build" },
+    { id: "orta", label: "Orta", prompt: "average medium build" },
+    { id: "dolgun", label: "Dolgun", prompt: "curvy full figure build" },
+  ],
+  boy: [
+    { id: "uzun", label: "Uzun boy", prompt: "tall" },
+    { id: "orta", label: "Orta boy", prompt: "average height" },
+    { id: "kisa", label: "Kısa boy", prompt: "petite short" },
+  ],
+} as const;
 
 export type StokMankenId = (typeof STOK_MANKENLER)[number]["id"];
 

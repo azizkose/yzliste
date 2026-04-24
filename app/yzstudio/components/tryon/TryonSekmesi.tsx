@@ -60,9 +60,16 @@ export function TryonSekmesi() {
             modelKaynagi={state.modelKaynagi}
             modelStokId={state.modelStokId}
             modelOzelFoto={state.modelOzelFoto}
+            modelUretilenUrl={state.modelUretilenUrl}
+            kredi={kredi}
+            userId={currentUser?.id ?? null}
+            isAdmin={currentUser?.is_admin === true}
             onKaynagiChange={(v) => set("modelKaynagi", v)}
             onStokIdChange={(v) => set("modelStokId", v)}
             onOzelFotoChange={(v) => set("modelOzelFoto", v)}
+            onUretilenUrlChange={(v) => set("modelUretilenUrl", v)}
+            onKrediDus={(miktar) => setKredi(k => Math.max(0, k - miktar))}
+            onHata={setHata}
           />
 
           <TryonAyarlar
