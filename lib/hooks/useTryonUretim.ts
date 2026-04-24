@@ -130,7 +130,7 @@ export function useTryonUretim(deps: TryonDeps) {
     }
     setState(prev => ({ ...prev, yukleniyor: false, ilerleme: "" }));
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.garmentFoto, state.garmentPhotoType, state.category, state.modelStokId, state.modelOzelFoto, state.modelKaynagi, state.mode, state.numSamples]);
+  }, [state.garmentFoto, state.garmentPhotoType, state.category, state.modelStokId, state.modelOzelFoto, state.modelUretilenUrl, state.modelKaynagi, state.mode, state.numSamples]);
 
   const videoUret = useCallback(async (tryonImageUrl: string) => {
     const { userId, isAdmin, kredi, paketModalAc, setHata, invalidateCredits, setKredi } = depsRef.current;

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fal } from "@fal-ai/client";
 import { createClient } from "@supabase/supabase-js";
+import { readFileSync } from "fs";
+import { join } from "path";
 import { rmbgUygula } from "@/lib/fal/rmbg";
 import { STUDIO_KREDI, STOK_MANKENLER } from "@/lib/studio-constants";
 import logger from "@/lib/logger";
@@ -85,7 +87,10 @@ export async function POST(req: NextRequest) {
     if (modelStokId) {
       const stok = STOK_MANKENLER.find((m) => m.id === modelStokId);
       if (!stok) return NextResponse.json({ hata: "Geçersiz manken seçimi" }, { status: 400 });
-      modelUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.yzliste.com"}${stok.url}`;
+      // Filesystem'den oku → fal.ai'ye yükle (hem local hem production'da çalışır)
+      const dosyaYolu = join(process.cwd(), "public", stok.url);
+      const dosyaIcerigi = readFileSync(dosyaYolu);
+      modelUrl = await fal.storage.upload(new Blob([dosyaIcerigi], { type: "image/jpeg" }));
     } else if (modelImageUrl) {
       // Üretilmiş manken — zaten fal.ai CDN'de, direkt kullan
       modelUrl = modelImageUrl;
