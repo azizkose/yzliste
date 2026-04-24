@@ -1,69 +1,13 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
+import { Platform, sistemPromptOlustur, kategoriKoduBul } from "@/lib/prompts/metin";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!
 );
 
-type Platform = "trendyol" | "hepsiburada" | "amazon" | "n11" | "etsy" | "amazon_usa";
-
-const PLATFORM_KURALLARI: Record<Platform, {
-  baslikLimit: number; ozellikSayisi: number; aciklamaKelime: number;
-  etiketSayisi: number; emojiDestekli: boolean; dil: "tr" | "en"; notlar: string;
-}> = {
-  trendyol:    { baslikLimit: 100, ozellikSayisi: 5, aciklamaKelime: 300, etiketSayisi: 10, emojiDestekli: true,  dil: "tr", notlar: "Trendyol baslik formati: Marka + Urun Adi + Ana Ozellik + Model/Renk." },
-  hepsiburada: { baslikLimit: 150, ozellikSayisi: 5, aciklamaKelime: 350, etiketSayisi: 10, emojiDestekli: true,  dil: "tr", notlar: "Hepsiburada baslik daha uzun tutulabilir. Teknik ozellikler one cikarilmalidir." },
-  amazon:      { baslikLimit: 200, ozellikSayisi: 5, aciklamaKelime: 400, etiketSayisi: 0,  emojiDestekli: false, dil: "tr", notlar: "Amazon TR: Title Case, emoji yok, bullet fayda odakli." },
-  n11:         { baslikLimit: 100, ozellikSayisi: 5, aciklamaKelime: 250, etiketSayisi: 8,  emojiDestekli: true,  dil: "tr", notlar: "N11 icin sade ve anlasılir bir dil kullanilmalidir." },
-  etsy:        { baslikLimit: 140, ozellikSayisi: 0, aciklamaKelime: 300, etiketSayisi: 13, emojiDestekli: false, dil: "en", notlar: "Etsy: natural conversational English, no keyword stuffing, gift-focused tags." },
-  amazon_usa:  { baslikLimit: 200, ozellikSayisi: 5, aciklamaKelime: 400, etiketSayisi: 0,  emojiDestekli: false, dil: "en", notlar: "Amazon USA: Title Case, no emoji, benefit-first bullets, backend search terms." },
-};
-
-const ICERIK_KURALLARI = `
-KRITIK KURALLAR — KESINLIKLE UY:
-- Kullanicinin verdigi bilgileri temel al. Eksik bilgi oldugunu belirtme, sessizce en iyisini yap.
-- Spesifik model numarasi, fiyat, garanti suresi gibi degisken bilgileri ASLA uydurma.
-- "Muhtemelen", "olabilir" gibi belirsiz ifadeler KULLANMA.
-- Rakip marka ismi yazma.
-- Saglik iddiasi veya dogrulanamaz ifade kullanma.
-- Satis odakli, ikna edici ve profesyonel yaz. Ozellik degil FAYDA vurgula.
-- Her platformun karakter/kelime limitine KESINLIKLE uy.
-`;
-
-const TON_TANIMLARI: Record<string, { tr: string; en: string }> = {
-  samimi:      { tr: "Sicak, samimi ve yakin bir dil kullan. Seni-beni formunda yaz.", en: "Use a warm, friendly, approachable tone. Write conversationally." },
-  profesyonel: { tr: "Resmi, kurumsal ve guvene dayali bir dil kullan. Net, kesin ifadeler sec.", en: "Use a formal, corporate tone. Choose precise, clear language." },
-  premium:     { tr: "Luks, seckin bir dil kullan. Urunu ozel hissettir. Kisa etkili cumleler kur.", en: "Use a luxury, exclusive tone. Make the product feel special." },
-};
-
-function sistemPromptOlustur(platform: Platform, dil: "tr" | "en", ton?: string): string {
-  const kural = PLATFORM_KURALLARI[platform];
-  const tonTanimi = ton && TON_TANIMLARI[ton] ? TON_TANIMLARI[ton][dil] : "";
-  if (dil === "en") {
-    return `You are a professional e-commerce copywriter for ${platform.toUpperCase()}.
-Platform rules: title max ${kural.baslikLimit} chars, ${kural.ozellikSayisi > 0 ? kural.ozellikSayisi + " bullet points" : "no bullets"}, description max ${kural.aciklamaKelime} words${kural.etiketSayisi > 0 ? `, ${kural.etiketSayisi} tags` : ""}, ${kural.emojiDestekli ? "emojis allowed" : "no emojis"}.
-${kural.notlar}
-${ICERIK_KURALLARI}
-${tonTanimi ? `BRAND VOICE:\n${tonTanimi}\n` : ""}
-Output format — use these exact headers:
-## Başlık
-## Özellikler
-## Açıklama
-${kural.etiketSayisi > 0 ? "## Etiketler\n" : ""}`;
-  }
-  return `Sen ${platform.toUpperCase()} icin profesyonel bir e-ticaret metin yazarisin.
-Platform kurallari: baslik max ${kural.baslikLimit} karakter, ${kural.ozellikSayisi > 0 ? kural.ozellikSayisi + " madde" : "madde yok"}, aciklama max ${kural.aciklamaKelime} kelime${kural.etiketSayisi > 0 ? `, ${kural.etiketSayisi} etiket` : ""}, ${kural.emojiDestekli ? "emoji kullanilabilir" : "emoji kullanilmaz"}.
-${kural.notlar}
-${ICERIK_KURALLARI}
-${tonTanimi ? `MARKA TONU:\n${tonTanimi}\n` : ""}
-Cikti formati — tam olarak bu basliklari kullan:
-## Başlık
-## Özellikler
-## Açıklama
-${kural.etiketSayisi > 0 ? "## Etiketler\n" : ""}`;
-}
 
 export async function POST(req: NextRequest) {
   const { satirlar, platform, ton, markaOverride, userId } = await req.json() as {

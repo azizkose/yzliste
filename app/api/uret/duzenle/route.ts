@@ -46,7 +46,7 @@ Teknik ifadeler ve olgusal dil kullan, duygusal ifadeleri kaldır. Bölüm forma
 
 const PLATFORM_CONTEXT: Record<string, string> = {
   trendyol:    "Platform: Trendyol — başlık max 100 karakter, 5 özellik maddesi, Türkçe",
-  hepsiburada: "Platform: Hepsiburada — başlık max 100 karakter, 5 özellik maddesi, Türkçe",
+  hepsiburada: "Platform: Hepsiburada — başlık max 150 karakter, 5 özellik maddesi, Türkçe",
   amazon:      "Platform: Amazon TR — başlık max 200 karakter, 5 bullet point, Türkçe",
   n11:         "Platform: N11 — başlık max 100 karakter, 5 özellik maddesi, Türkçe",
   etsy:        "Platform: Etsy — başlık max 140 karakter, 13 etiket, İngilizce",
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")
-    .select("is_admin, kredi")
+    .select("is_admin, kredi, marka_adi, hedef_kitle, vurgulanan_ozellikler, magaza_kategorileri, fiyat_bandi, teslimat_vurgulari")
     .eq("id", userId)
     .single();
 
@@ -104,6 +104,12 @@ export async function POST(req: NextRequest) {
           DUZENLE_SISTEM_PROMPT,
           platform && PLATFORM_CONTEXT[platform] ? PLATFORM_CONTEXT[platform] : "",
           kategori ? `Ürün kategorisi: ${kategori}` : "",
+          profil.marka_adi ? `Marka adı: ${profil.marka_adi}` : "",
+          profil.hedef_kitle ? `Hedef kitle: ${profil.hedef_kitle}` : "",
+          profil.vurgulanan_ozellikler ? `Vurgulanacak özellikler: ${profil.vurgulanan_ozellikler}` : "",
+          profil.magaza_kategorileri?.length ? `Mağaza kategorileri: ${profil.magaza_kategorileri.join(", ")}` : "",
+          profil.fiyat_bandi ? `Fiyat bandı: ${profil.fiyat_bandi}` : "",
+          profil.teslimat_vurgulari?.length ? `Hizmet vurguları: ${profil.teslimat_vurgulari.join(", ")}` : "",
         ].filter(Boolean).join("\n"),
         messages: [{ role: "user", content: `${prompt}\n\n---\n\n${sonuc}` }],
       }),
