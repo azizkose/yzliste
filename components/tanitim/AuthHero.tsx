@@ -24,17 +24,17 @@ export default function AuthHero() {
 
       <div className="relative z-10 w-full flex flex-col items-center justify-center text-center px-6 py-16 sm:py-24 md:py-32">
         <div className="flex gap-2 flex-wrap justify-center mb-4">
-          <span className="px-3 py-1 rounded-full text-xs font-medium bg-indigo-500/30 text-indigo-200">
+          <span className="px-3 py-1 rounded-full text-xs font-medium bg-white/10 text-white border border-white/20">
             Trendyol · Hepsiburada · Amazon TR · N11 · Etsy · Amazon USA
           </span>
-          <span className="px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/30 text-emerald-200">
-            🆕 Video + Sosyal Medya
+          <span className="px-3 py-1 rounded-full text-xs font-medium bg-white/10 text-white border border-white/20">
+            Video + Sosyal Medya
           </span>
         </div>
 
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight mb-4">
+        <h1 className="text-4xl md:text-5xl font-medium text-white leading-tight mb-4">
           E-ticaret içeriğini<br />
-          <span className="text-indigo-300">AI ile üret</span>
+          <span className="text-[#BAC9EB]">AI ile üret</span>
         </h1>
 
         <p className="text-white/80 text-lg max-w-xl mb-8">
@@ -49,7 +49,7 @@ export default function AuthHero() {
             "Prompt yazmana gerek yok — formu doldur, butona bas",
           ].map((t) => (
             <div key={t} className="flex items-center gap-2 text-white/80 text-sm">
-              <span className="w-5 h-5 rounded-full bg-emerald-500/30 text-emerald-300 flex items-center justify-center text-xs flex-shrink-0">✓</span>
+              <span className="w-5 h-5 rounded-full bg-white/15 text-white flex items-center justify-center text-xs flex-shrink-0">✓</span>
               {t}
             </div>
           ))}
@@ -58,12 +58,12 @@ export default function AuthHero() {
         <div className="flex flex-col sm:flex-row gap-3 mb-3">
           <Link
             href="/kayit"
-            className="bg-indigo-500 hover:bg-indigo-600 text-white px-7 py-3.5 rounded-xl font-semibold text-base transition-colors"
+            className="bg-[#1E4DD8] hover:bg-[#163B9E] text-white px-7 py-3.5 rounded-xl font-medium text-base transition-colors"
           >
-            Ücretsiz Başla — 3 Kredi Hediye →
+            Ücretsiz başla — 3 kredi hediye →
           </Link>
-          <a href="/#araclar" className="border-2 border-white text-white hover:bg-white/10 px-7 py-3.5 rounded-xl font-semibold text-base transition-colors">
-            Araçları İncele ↓
+          <a href="/#araclar" className="border-2 border-white text-white hover:bg-white/10 px-7 py-3.5 rounded-xl font-medium text-base transition-colors">
+            Araçları incele ↓
           </a>
         </div>
         <p className="text-white/40 text-xs">Kredi kartı gerekmez</p>

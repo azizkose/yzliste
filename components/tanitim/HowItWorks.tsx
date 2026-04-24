@@ -1,9 +1,9 @@
-import { Icon3D } from "@/components/ui/Icon3D";
+import { Package, Store, Sparkles } from "lucide-react";
 
 const ADIMLAR = [
-  { no: "1", ikonAdi: "cube" as const, ikonRenk: "#F0F4FB", baslik: "Ürünü anlat", aciklama: "Fotoğraf yükle, barkod tara veya elle yaz. YZ ürünü otomatik analiz eder." },
-  { no: "2", ikonAdi: "bag" as const, ikonRenk: "#FBEAF0", baslik: "Platform seç", aciklama: "Trendyol, Amazon, Etsy... Her platformun kuralları otomatik uygulanır." },
-  { no: "3", ikonAdi: "magic-trick" as const, ikonRenk: "#E1F5EE", baslik: "İçeriğini al", aciklama: "Metin, görsel, video, sosyal medya — hepsi tek seferde, kopyala yapıştır hazır." },
+  { no: "1", Ikon: Package, baslik: "Ürünü anlat", aciklama: "Fotoğraf yükle, barkod tara veya elle yaz. YZ ürünü otomatik analiz eder." },
+  { no: "2", Ikon: Store, baslik: "Platform seç", aciklama: "Trendyol, Amazon, Etsy... Her platformun kuralları otomatik uygulanır." },
+  { no: "3", Ikon: Sparkles, baslik: "İçeriğini al", aciklama: "Metin, görsel, video, sosyal medya — hepsi tek seferde, kopyala yapıştır hazır." },
 ];
 
 export default function HowItWorks() {
@@ -15,7 +15,9 @@ export default function HowItWorks() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {ADIMLAR.map((adim) => (
             <div key={adim.no} className="bg-white rounded-xl p-5 border border-[#D8D6CE] flex gap-4">
-              <Icon3D name={adim.ikonAdi} size={56} bgColor={adim.ikonRenk} className="flex-shrink-0" />
+              <div className="w-14 h-14 bg-[#F1F0EB] rounded-xl flex items-center justify-center flex-shrink-0">
+                <adim.Ikon size={24} strokeWidth={1.5} className="text-[#5A5852]" />
+              </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-[11px] font-medium px-1.5 py-0.5 rounded bg-[#F0F4FB] text-[#1E4DD8]">{adim.no}</span>

@@ -29,22 +29,22 @@ const SORULAR = [
 
 export default function LandingFAQ() {
   return (
-    <section className="px-4 sm:px-6 py-16 bg-white border-t border-gray-100">
+    <section className="px-4 sm:px-6 py-16 bg-white border-t border-[#D8D6CE]">
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-2xl font-bold text-gray-900 text-center mb-10">Sık Sorulan Sorular</h2>
+        <h2 className="text-2xl font-medium text-[#1A1A17] text-center mb-10">Sık sorulan sorular</h2>
         <div className="space-y-2">
           {SORULAR.map((item) => (
-            <details key={item.s} className="group border border-gray-100 rounded-xl overflow-hidden">
-              <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none font-semibold text-sm text-gray-800 hover:bg-gray-50 transition-colors">
+            <details key={item.s} className="group border border-[#D8D6CE] rounded-xl overflow-hidden">
+              <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none font-medium text-sm text-[#1A1A17] hover:bg-[#F1F0EB] transition-colors">
                 {item.s}
-                <span className="ml-4 flex-shrink-0 text-gray-400 group-open:rotate-180 transition-transform duration-200">▾</span>
+                <span className="ml-4 flex-shrink-0 text-[#908E86] group-open:rotate-180 transition-transform duration-200">▾</span>
               </summary>
-              <p className="px-5 pb-4 text-sm text-gray-500 leading-relaxed">{item.c}</p>
+              <p className="px-5 pb-4 text-sm text-[#5A5852] leading-relaxed">{item.c}</p>
             </details>
           ))}
         </div>
         <div className="text-center mt-8">
-          <Link href="/sss" className="text-sm text-indigo-500 hover:text-indigo-700 font-medium">
+          <Link href="/sss" className="text-sm text-[#1E4DD8] hover:text-[#163B9E] font-medium">
             Tüm sorular →
           </Link>
         </div>

@@ -1,5 +1,11 @@
-import { Check } from "lucide-react";
-import { Icon3D } from "@/components/ui/Icon3D";
+import { Check, Store, Target, Palette, Lightbulb, Sparkles } from "lucide-react";
+
+const MARKA_OZELLIKLERI = [
+  { Ikon: Store, metin: "Mağaza adın ve marka kimliğin metne yansır" },
+  { Ikon: Target, metin: "Hedef kitlenin dilinde yazar — '25-40 yaş kadınlar' dedin mi, o kitleye hitap eder" },
+  { Ikon: Palette, metin: "Samimi, profesyonel veya premium — tonunu seç, her üretimde uygular" },
+  { Ikon: Lightbulb, metin: "Hızlı kargo, yerli üretim gibi değerlerin her ürüne otomatik eklenir" },
+];
 
 export default function BrandProfile() {
   return (
@@ -9,7 +15,7 @@ export default function BrandProfile() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <div className="flex-1">
               <span className="inline-flex items-center gap-1.5 bg-white border border-[#BAC9EB] text-[#1E4DD8] text-xs font-medium px-3 py-1 rounded-full mb-3">
-                <Icon3D name="star" size={14} />
+                <Sparkles size={12} strokeWidth={1.5} />
                 Yeni özellik
               </span>
               <h2 className="text-2xl font-medium text-[#1A1A17] mb-3" style={{ letterSpacing: "-0.01em" }}>
@@ -20,15 +26,12 @@ export default function BrandProfile() {
                 Profilinden mağaza adını, hedef kitlenini ve metin tonunu belirle. Bundan sonra her üretimde AI bu bilgileri kullanır — metinler artık senin marka dilinle konuşur.
               </p>
               <div className="space-y-3">
-                {[
-                  { ikonAdi: "bag" as const, ikonRenk: "#F0F4FB", metin: "Mağaza adın ve marka kimliğin metne yansır" },
-                  { ikonAdi: "target" as const, ikonRenk: "#FBEAF0", metin: "Hedef kitlenin dilinde yazar — '25-40 yaş kadınlar' dedin mi, o kitleye hitap eder" },
-                  { ikonAdi: "painting-kit" as const, ikonRenk: "#EEEDFE", metin: "Samimi, profesyonel veya premium — tonunu seç, her üretimde uygular" },
-                  { ikonAdi: "bulb" as const, ikonRenk: "#FAEEDA", metin: "Hızlı kargo, yerli üretim gibi değerlerin her ürüne otomatik eklenir" },
-                ].map((m, i) => (
+                {MARKA_OZELLIKLERI.map((m, i) => (
                   <div key={i} className="flex items-start gap-3 text-sm text-[#5A5852]">
-                    <Icon3D name={m.ikonAdi} size={48} bgColor={m.ikonRenk} className="flex-shrink-0" />
-                    <span className="pt-3">{m.metin}</span>
+                    <div className="w-10 h-10 bg-[#F1F0EB] rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <m.Ikon size={18} strokeWidth={1.5} className="text-[#5A5852]" />
+                    </div>
+                    <span className="pt-2">{m.metin}</span>
                   </div>
                 ))}
               </div>

@@ -34,12 +34,12 @@ export default function TanitimSayfasi() {
           className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"
           onClick={(e) => { if (e.target === e.currentTarget) setModalAcik(false); }}
         >
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b border-gray-100">
-              <h2 className="text-lg font-bold text-gray-900">
-                {modalUyeMod === "kayit" ? "Hesap Oluştur" : "Giriş Yap"}
+          <div className="bg-white rounded-xl border border-[#D8D6CE] w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-[#D8D6CE]">
+              <h2 className="text-lg font-medium text-[#1A1A17]">
+                {modalUyeMod === "kayit" ? "Hesap oluştur" : "Giriş yap"}
               </h2>
-              <button onClick={() => setModalAcik(false)} aria-label="Kapat" className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+              <button onClick={() => setModalAcik(false)} aria-label="Kapat" className="text-[#908E86] hover:text-[#5A5852] text-2xl">×</button>
             </div>
             <div className="p-6">
               <AuthForm defaultMode={modalUyeMod} onSuccess={handleModalAuthSuccess} />

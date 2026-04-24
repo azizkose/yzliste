@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Check, FileText, X, ZoomIn, RotateCw, Lightbulb, Leaf, ScanSearch, Wind, Timer, Film, Columns2, Camera, Tag } from "lucide-react";
+import { Check, FileText, X, ZoomIn, RotateCw, Lightbulb, Leaf, ScanSearch, Wind, Timer, Film, Columns2, Camera, Tag, Hash } from "lucide-react";
 import { Icon3D } from "@/components/ui/Icon3D";
 
 type PlatformKey = "trendyol" | "amazon" | "etsy";
@@ -23,11 +23,11 @@ const platformVerileri: Record<PlatformKey, {
       {
         ikon: "bullet",
         baslik: "Özellikler",
-        icerik: `🏆 Birinci Kalite Porselen — Kurşunsuz, gıda güvenli materyal; günlük kullanıma uygun dayanıklılık.
-☕ 80ml Espresso & Türk Kahvesi Hacmi — Geleneksel Türk kahvesi ve espresso severler için ideal boyut.
-🌸 El İşlemeli Çiçek Deseni + 24 Ayar Altın Yaldız — Her fincan benzersiz, özel gün hediyesi için birebir.
-🎁 6 Fincan + 6 Tabak Komple Set — Şık hediye kutusunda teslim; düğün, nişan ve çeyiz hediyesi.
-✅ Bulaşık Makinesine Uygun — Yaldız detayları bozulmadan güvenle yıkanır.`,
+        icerik: `Birinci Kalite Porselen — Kurşunsuz, gıda güvenli materyal; günlük kullanıma uygun dayanıklılık.
+80ml Espresso & Türk Kahvesi Hacmi — Geleneksel Türk kahvesi ve espresso severler için ideal boyut.
+El İşlemeli Çiçek Deseni + 24 Ayar Altın Yaldız — Her fincan benzersiz, özel gün hediyesi için birebir.
+6 Fincan + 6 Tabak Komple Set — Şık hediye kutusunda teslim; düğün, nişan ve çeyiz hediyesi.
+Bulaşık Makinesine Uygun — Yaldız detayları bozulmadan güvenle yıkanır.`,
         renk: "border-l-orange-400",
       },
       {
@@ -93,11 +93,11 @@ BULAŞIK MAKİNESİ GÜVENLİ: Altın yaldız detayları bulaşık makinesinde 5
       {
         ikon: "bullet",
         baslik: "Features",
-        icerik: `☕ Artisan-Crafted — Each cup is hand-painted by skilled artisans, making every piece one-of-a-kind with delicate floral motifs.
-✨ Real Gold Detailing — 24K gold trim applied by hand adds timeless elegance to your coffee ritual.
-🎁 Complete Gift Set — 6 cups + 6 saucers arrive in a premium gift box, ready to give for weddings, housewarmings, or special occasions.
-🌿 Food-Safe & Lead-Free — Fired at high temperatures for durability. Meets international food safety standards.
-💛 Perfect 80ml Size — Designed specifically for Turkish coffee, espresso, and macchiato lovers who appreciate a perfectly proportioned cup.`,
+        icerik: `Artisan-Crafted — Each cup is hand-painted by skilled artisans, making every piece one-of-a-kind with delicate floral motifs.
+Real Gold Detailing — 24K gold trim applied by hand adds timeless elegance to your coffee ritual.
+Complete Gift Set — 6 cups + 6 saucers arrive in a premium gift box, ready to give for weddings, housewarmings, or special occasions.
+Food-Safe & Lead-Free — Fired at high temperatures for durability. Meets international food safety standards.
+Perfect 80ml Size — Designed specifically for Turkish coffee, espresso, and macchiato lovers who appreciate a perfectly proportioned cup.`,
         renk: "border-l-rose-400",
       },
       {
@@ -124,8 +124,8 @@ const KUTULAR = [
 ];
 
 function BolumIkon({ ikon }: { ikon: string }) {
-  if (ikon === "pin") return <Icon3D name="pin" size={16} className="flex-shrink-0" />;
-  if (ikon === "bookmark") return <Icon3D name="bookmark" size={16} className="flex-shrink-0" />;
+  if (ikon === "pin") return <Tag size={14} strokeWidth={1.5} className="text-[#5A5852] flex-shrink-0" />;
+  if (ikon === "bookmark") return <Hash size={14} strokeWidth={1.5} className="text-[#5A5852] flex-shrink-0" />;
   if (ikon === "filetext") return <FileText size={14} strokeWidth={1.5} className="text-[#5A5852] flex-shrink-0" />;
   return <span className="w-2 h-2 rounded-full bg-[#D8D6CE] flex-shrink-0 mt-1" />;
 }
@@ -195,9 +195,9 @@ export default function FeaturesTabbed() {
                   const p = platformVerileri[key];
                   const aktif = platformTab === key;
                   const renkMap: Record<PlatformKey, string> = {
-                    trendyol: aktif ? "bg-orange-500 text-white" : "bg-[#F1F0EB] text-[#5A5852] hover:bg-orange-50 hover:text-orange-600",
-                    amazon:   aktif ? "bg-[#E47911] text-white"  : "bg-[#F1F0EB] text-[#5A5852] hover:bg-[#FFF3E0] hover:text-[#E47911]",
-                    etsy:     aktif ? "bg-rose-500 text-white"   : "bg-[#F1F0EB] text-[#5A5852] hover:bg-rose-50 hover:text-rose-600",
+                    trendyol: aktif ? "bg-orange-500 text-white" : "bg-[#F1F0EB] text-[#5A5852] hover:bg-[#F1F0EB] hover:text-[#1A1A17]",
+                    amazon:   aktif ? "bg-[#E47911] text-white"  : "bg-[#F1F0EB] text-[#5A5852] hover:bg-[#F1F0EB] hover:text-[#1A1A17]",
+                    etsy:     aktif ? "bg-rose-500 text-white"   : "bg-[#F1F0EB] text-[#5A5852] hover:bg-[#F1F0EB] hover:text-[#1A1A17]",
                   };
                   return (
                     <button
@@ -391,8 +391,8 @@ export default function FeaturesTabbed() {
                     <span className="text-xs bg-white border border-[#D8D6CE] text-[#908E86] px-2 py-0.5 rounded-lg">Kopyala</span>
                   </div>
                   <p className="text-sm text-[#5A5852] leading-relaxed">
-                    El yapımı çiçek deseni ve altın yaldızlarıyla bu porselen fincan seti her sofrayı şölen sofrasına dönüştürüyor ✨☕{"\n\n"}
-                    Sevdiklerinize en güzel hediye — 6 kişilik komple set, özel kutusunda! 🎁
+                    El yapımı çiçek deseni ve altın yaldızlarıyla bu porselen fincan seti her sofrayı şölen sofrasına dönüştürüyor.{"\n\n"}
+                    Sevdiklerinize en güzel hediye — 6 kişilik komple set, özel kutusunda!
                   </p>
                 </div>
                 <div className="rounded-xl border border-[#D8D6CE] bg-[#FAFAF8] p-4">
@@ -413,7 +413,7 @@ export default function FeaturesTabbed() {
                     <span className="text-xs bg-white border border-[#D8D6CE] text-[#908E86] px-2 py-0.5 rounded-lg">Kopyala</span>
                   </div>
                   <p className="text-sm text-[#5A5852] leading-relaxed">
-                    El yapımı porselen + altın yaldız + 6 kişilik set = mükemmel hediye 🎁☕ Her sipariş özel kutusunda geliyor. #porselen #hediye
+                    El yapımı porselen + altın yaldız + 6 kişilik set = mükemmel hediye. Her sipariş özel kutusunda geliyor. #porselen #hediye
                   </p>
                 </div>
               </div>
