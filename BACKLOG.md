@@ -19,8 +19,8 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | AUTH-01 | Mobilde kayıt engeli — Turnstile devre dışı | Kod OK, mobil test kaldı | inline |
 | FY-01 | Fiyat artışı — 49/129/299 TL | Kod OK, test kaldı | inline |
 | OPS-07 | Sentry error monitoring | Kısmen OK, DSN sonrası 3 madde | inline |
-| AI-01 | Chatbot SYSTEM_PROMPT güncelle — fiyat/platform/stil/yzstudio yanlış | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-1 |
-| AI-02 | Merkezi AI config — model + temperature + cost haritası (`lib/ai-config.ts`) | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-2, P0-3 |
+| AI-01 | Chatbot SYSTEM_PROMPT güncelle — fiyat/platform/stil/yzstudio yanlış | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-1 |
+| AI-02 | Merkezi AI config — model + temperature + cost haritası (`lib/ai-config.ts`) | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-2, P0-3 |
 
 ### P1 — Yakın vadeli
 
@@ -29,21 +29,21 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | NF-02 | yzstudio — premium araçlar sayfası | Faz 1-3 OK, Faz 4-5 kaldı | [specs/nf-02-yzstudio.md](specs/nf-02-yzstudio.md) |
 | DR-03 | /hakkimizda kurucu bölümü — kısa, profesyonel, şirket adı yok | Tamamlandı | [specs/dr-03-hakkimizda-yeniden-yaz.md](specs/dr-03-hakkimizda-yeniden-yaz.md) |
 | DA-05 | /uret modern UX — monochrome çözümü | Tamamlandı | [specs/da-05-uret-modern-ux.md](specs/da-05-uret-modern-ux.md) |
-| AI-04 | /duzenle marka bağlamı + kategori kuralları eksik | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-1 |
-| AI-05 | Platform karakter limiti tutarsızlığı — Hepsiburada 100→150, tek kaynak | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-2 |
-| AI-06 | TON_TANIMLARI 3→7 ton genişlet, tek dosyaya taşı | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-3 |
-| AI-07 | max_tokens platforma göre + stop_reason:max_tokens yakala | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-4 |
-| AI-08 | Çıktı doğrulama — karakter limiti aşımı + yasaklı kelime regex check | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-5 |
+| AI-04 | /duzenle marka bağlamı + kategori kuralları eksik | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-1 |
+| AI-05 | Platform karakter limiti tutarsızlığı — Hepsiburada 100→150, tek kaynak | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-2 |
+| AI-06 | TON_TANIMLARI 3→7 ton genişlet, tek dosyaya taşı | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-3 |
+| AI-07 | max_tokens platforma göre + stop_reason:max_tokens yakala | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-4 |
+| AI-08 | Çıktı doğrulama — karakter limiti aşımı + yasaklı kelime regex check | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-5 |
 | OPS-20 | KVKK + yasal uyumluluk tamamlama | Aziz — hukuki | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P2 — Orta vadeli
 
 | ID | Başlık | Durum | Spec |
 |---|---|---|---|
-| AI-09 | Sosyal üretim DB kaydına prompt_version ekle | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-1 |
-| AI-10 | /toplu route sistemPromptOlustur paylaşsın (kategori+yasaklı+marka) | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-2 |
-| AI-11 | "Bilinen ürün özellikleri" kuralı sıkılaştır — hallucination riski | Açık — Aziz kararı gerek | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-3 |
-| AI-12 | /studio/manken promptuna profil ton + hedef_kitle ekle | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-4 |
+| AI-09 | Sosyal üretim DB kaydına prompt_version ekle | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-1 |
+| AI-10 | /toplu route sistemPromptOlustur paylaşsın (kategori+yasaklı+marka) | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-2 |
+| AI-11 | "Bilinen ürün özellikleri" kuralı kaldır — sadece kullanıcı verisini kullan | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-3 |
+| AI-12 | /studio/manken promptuna profil ton + hedef_kitle ekle | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-4 |
 | OPS-14~19 | KÜME 11 — operasyonel olgunluk faz 2 | OPS-14/15/16 OK, 17/18/19 açık | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P3 — Gelecek / Ertelenmiş
@@ -53,6 +53,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | NF-01 | Video Kling 3.0 Pro + ses desteği | Ertelenmiş | [specs/nf-01.md](specs/nf-01.md) |
 | NF-05 | Premium video — Seedance 2.0 | Ertelenmiş | inline |
 | SC-07 | Product snippets — aggregateRating | Gerçek review gelince | inline |
+| BLOG-01 | Scheduled task `blog-seo-yazisi` — toplu üretim moduna geçirildi (5-8 yazı/çalışma, çakışma kontrolü, 100 hedef) | Tamamlandı (2026-04-24) | inline |
 
 ### Test kalan (kod tamamlandı)
 
@@ -154,3 +155,4 @@ Eşik: 1.000 tekil/ay, 100 kayıtlı, 20 gerçek ödeme, 50 günlük üretim —
 - **AI denetim raporu:** `specs/ai-denetim-01.md` — 12 bulgu, AI-01~AI-12
 - **yzstudio detaylı spec:** `specs/nf-02-yzstudio.md`
 - **Design system referans:** `docs/redesign/yzliste-design-tokens.md`
+            
