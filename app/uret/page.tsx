@@ -286,7 +286,9 @@ export default function Home() {
                   aria-controls={`sekme-panel-${id}`}
                   onClick={() => { setAnaSekme(id); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                   className={`flex-1 py-2.5 rounded-lg text-xs sm:text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
-                    anaSekme === id ? "bg-[#F1F0EB] text-[#1A1A17]" : "text-[#5A5852] hover:text-[#1A1A17] hover:bg-[#FAFAF8]"
+                    anaSekme === id
+                      ? "bg-[#F0F4FB] text-[#1E4DD8] border border-[#BAC9EB]"
+                      : "text-[#5A5852] hover:text-[#1A1A17] hover:bg-[#FAFAF8]"
                   }`}>
                   <Icon size={16} strokeWidth={1.5} />
                   <span>{label}</span>
@@ -385,6 +387,9 @@ export default function Home() {
               )}
             </div>
 
+            {/* Tab content — key triggers fade animation on switch */}
+            <div key={anaSekme} className="animate-tab-enter">
+
             {/* ===== METİN SEKMESİ ===== */}
             <MetinSekmesi
               aktif={anaSekme === "metin"}
@@ -460,6 +465,8 @@ export default function Home() {
               captionUret={sosyal.captionUret} kitUret={sosyal.kitUret} sosyalGorselUret={sosyal.sosyalGorselUret}
               setAnaSekme={setAnaSekme}
             />
+
+            </div> {/* /animate-tab-enter */}
 
         </div>
 

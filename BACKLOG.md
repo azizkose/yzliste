@@ -6,7 +6,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 - Her oturumun başında bu dosyayı oku, nerede kaldığımızı anla.
 - Detaylı spec gerekiyorsa `specs/{ID}.md` dosyasını oku.
 - Bir iş bittiğinde `- [ ]` → `- [x]` olarak güncelle. Yarım iş `[x]` olmaz.
-- Tamamlanmış kümelerin detayı `BACKLOG-DONE.md` dosyasında.
+- Tamamlanmış maddelerin detayı `BACKLOG-DONE.md` dosyasında.
 
 ---
 
@@ -19,8 +19,6 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | AUTH-01 | Mobilde kayıt engeli — Turnstile devre dışı | Kod OK, mobil test kaldı | inline |
 | FY-01 | Fiyat artışı — 49/129/299 TL | Kod OK, test kaldı | inline |
 | OPS-07 | Sentry error monitoring | Kısmen OK, DSN sonrası 3 madde | inline |
-| DR-01 | Denetim raporu hızlı düzeltmeler — 6 madde | Tamamlandı | [specs/dr-01-hizli-duzeltmeler.md](specs/dr-01-hizli-duzeltmeler.md) |
-| DR-02 | Blog kaynaksız istatistik temizliği + içerik kuralları | Tamamlandı | [specs/dr-02-blog-istatistik-temizlik.md](specs/dr-02-blog-istatistik-temizlik.md) |
 | AI-01 | Chatbot SYSTEM_PROMPT güncelle — fiyat/platform/stil/yzstudio yanlış | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-1 |
 | AI-02 | Merkezi AI config — model + temperature + cost haritası (`lib/ai-config.ts`) | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-2, P0-3 |
 
@@ -28,23 +26,10 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 
 | ID | Başlık | Durum | Spec |
 |---|---|---|---|
-| LP-08 | Araçlar dropdown — hero kartları + CTA | Tamamlandı | [specs/lp-08.md](specs/lp-08.md) |
 | NF-02 | yzstudio — premium araçlar sayfası | Faz 1-3 OK, Faz 4-5 kaldı | [specs/nf-02-yzstudio.md](specs/nf-02-yzstudio.md) |
-| NF-06 | Kredi tüketim UX — bilgilendirme + onay | Tamamlandı | [specs/nf-06.md](specs/nf-06.md) |
-| REF-01 | Referans programı — davet et, +10 kredi | Tamamlandı | [specs/ref-01.md](specs/ref-01.md) |
-| UX-03 | Üretim sayfası navigasyon düzenlemesi | Tamamlandı | [specs/ux-03.md](specs/ux-03.md) |
-| LS-01 | Listing skor + ücretsiz revize | Tamamlandı | [specs/ls-01.md](specs/ls-01.md) |
-| HERO-VID | Hero video tam versiyon + kırpmasız | Tamamlandı | [specs/hero-video-tam.md](specs/hero-video-tam.md) |
-| DA-01 | /uret sayfası tasarım denetimi — 8 düzeltme | Tamamlandı | [specs/da-01-uret-tasarim-denetimi.md](specs/da-01-uret-tasarim-denetimi.md) |
-| DA-02 | Ana sayfa tasarım denetimi — 9 düzeltme | Tamamlandı | [specs/da-02-anasayfa-tasarim-denetimi.md](specs/da-02-anasayfa-tasarim-denetimi.md) |
-| DA-03 | /giris sayfası UX revizyonu — best practice | Tamamlandı | [specs/da-03-giris-sayfasi-redesign.md](specs/da-03-giris-sayfasi-redesign.md) |
-| DA-04 | /yzstudio dark→light + UX revizyonu — 10 madde | Tamamlandı | [specs/da-04-yzstudio-tasarim-denetimi.md](specs/da-04-yzstudio-tasarim-denetimi.md) |
 | DR-03 | /hakkimizda kurucu bölümü — kısa, profesyonel, şirket adı yok | Tamamlandı | [specs/dr-03-hakkimizda-yeniden-yaz.md](specs/dr-03-hakkimizda-yeniden-yaz.md) |
-| DR-05 | /uret "Giriş yap ve başla" CTA düzeltmesi | Tamamlandı | [specs/dr-05-uret-cta-duzeltme.md](specs/dr-05-uret-cta-duzeltme.md) |
-| LP-11 | Landing page section revizyonları — 4 madde | Tamamlandı | [specs/lp-11-landing-section-revizyonlari.md](specs/lp-11-landing-section-revizyonlari.md) |
-| LP-12 | /fiyatlar "Kredi nasıl çalışır?" kısaltma | Tamamlandı | [specs/lp-12-fiyatlar-kredi-kisalt.md](specs/lp-12-fiyatlar-kredi-kisalt.md) |
-| DA-05 | /uret modern UX — monochrome çözümü | Açık | [specs/da-05-uret-modern-ux.md](specs/da-05-uret-modern-ux.md) |
-| AI-04 | /duzenle marka bağlamı + kategori kuralları eksik — sistemPromptOlustur paylaş | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-1 |
+| DA-05 | /uret modern UX — monochrome çözümü | Tamamlandı | [specs/da-05-uret-modern-ux.md](specs/da-05-uret-modern-ux.md) |
+| AI-04 | /duzenle marka bağlamı + kategori kuralları eksik | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-1 |
 | AI-05 | Platform karakter limiti tutarsızlığı — Hepsiburada 100→150, tek kaynak | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-2 |
 | AI-06 | TON_TANIMLARI 3→7 ton genişlet, tek dosyaya taşı | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-3 |
 | AI-07 | max_tokens platforma göre + stop_reason:max_tokens yakala | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-4 |
@@ -55,20 +40,11 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 
 | ID | Başlık | Durum | Spec |
 |---|---|---|---|
-| KF-05 | Blog yazısı güncelle — video hareket | Tamamlandı | [specs/kf-05.md](specs/kf-05.md) |
-| LP-10 | Araçlar dropdown — buton düzeni | Tamamlandı | inline |
-| KG-01 | Kredi geçmişi + kullanım analitiği | Tamamlandı | [specs/kg-01.md](specs/kg-01.md) |
-| MP-01 | Mağaza profili genişletme — 4 yeni alan | Tamamlandı | [specs/mp-01.md](specs/mp-01.md) |
-| OVERSCROLL | Sayfa sonu overscroll / boş alan temizliği | Tamamlandı | inline |
-| KREDİ-SYNC | Kredi gösterimi tutarsızlığı — tek kaynak | Tamamlandı | inline |
-| SC-04 | Blog meta description güncelle | Tamamlandı | inline |
-| NF-04 | fal.ai model takip scheduled task | Tamamlandı — her Pazartesi 09:00 | inline |
-| DR-04 | Blog iç link stratejisi — yazılar arası cross-link | Tamamlandı | [specs/dr-04-blog-ic-link.md](specs/dr-04-blog-ic-link.md) |
 | AI-09 | Sosyal üretim DB kaydına prompt_version ekle | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-1 |
 | AI-10 | /toplu route sistemPromptOlustur paylaşsın (kategori+yasaklı+marka) | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-2 |
 | AI-11 | "Bilinen ürün özellikleri" kuralı sıkılaştır — hallucination riski | Açık — Aziz kararı gerek | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-3 |
 | AI-12 | /studio/manken promptuna profil ton + hedef_kitle ekle | Açık | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-4 |
-| OPS-14~19 | KÜME 11 — operasyonel olgunluk faz 2 | OPS-14/15/16 tamamlandı, 17/18/19 açık | [specs/kume-11.md](specs/kume-11.md) |
+| OPS-14~19 | KÜME 11 — operasyonel olgunluk faz 2 | OPS-14/15/16 OK, 17/18/19 açık | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P3 — Gelecek / Ertelenmiş
 
@@ -118,38 +94,9 @@ Kod tamamlandı: `lib/paketler.ts` güncellendi, chatbot prompt güncellendi. Ka
 - [ ] Alert kuralı: her yeni hata → e-posta
 - [ ] Test: kasıtlı hata → Sentry'de görünsün
 
-### LP-10: Araçlar Dropdown Buton Düzeni
-
-```
-components/SiteHeader.tsx'de:
-1. "Detaylar" sola, "Kullan →" sağa
-2. "Kullan →" buton stili (bg-[#1E4DD8] text-white px-3 py-1 rounded-lg)
-3. Mobil hamburger'de de aynı
-```
-
-### OVERSCROLL: Sayfa Sonu Boş Alan
-
-iOS overscroll-behavior: none eklendi. Kalan:
-- [ ] `/cerez-politikasi`, `/teslimat-iade` — kısa içerik, footer'a kadar boşluk → `flex-1` ile düzelt
-
-### KREDİ-SYNC: Kredi Gösterimi Tutarsızlığı
-
-Tüm kredi gösterimlerini `useCredits()` hook'una bağla. `/hesap/page.tsx` RSC'deki kredi kartını client component'a çevir. staleTime düşür veya invalidate ekle.
-- [ ] Üretim sonrası kredi hemen düşsün
-- [ ] Kredi satın al → tüm sayfalarda yeni değer
-- [ ] `/hesap` → profil → geri → aynı kredi
-
-### NF-04: fal.ai Model Takip
-
-Cowork scheduled task: haftalık Pazartesi, kullandığımız modellerin (Kling, Bria, FASHN) yeni versiyonlarını kontrol et.
-
 ### NF-05: Premium Video — Seedance 2.0
 
 Ertelenmiş. Seedance 2.0 fal.ai'de mevcut, 2K@60fps, native audio. Maliyet ~$0.24-0.30/sn. Demo sonrası değerlendirilecek.
-
-### SC-04: Blog Meta Description Güncelle
-
-`app/blog/page.tsx` description'ı dar. 40 blog yazısının kapsamı geniş — description + keywords + OG/Twitter + JSON-LD güncelle.
 
 ---
 
@@ -182,7 +129,7 @@ Eşik: 1.000 tekil/ay, 100 kayıtlı, 20 gerçek ödeme, 50 günlük üretim —
 - F-21 A11y tam audit (Lighthouse 95+)
 - F-32 /changelog + sürüm notu
 - F-33 Kredi süre sınırı politikası
-- DR-CRO: Sticky CTA + exit-intent modal + CTA sayısı azaltma (CRO)
+- DR-CRO: Sticky CTA + exit-intent modal + CTA sayısı azaltma
 - DR-EMAIL: Welcome e-mail dizisi (1/3/7 gün)
 - DR-VIRAL: "yzliste ile hazırlandı" rozeti (viral loop)
 - DR-SOCIAL: Twitter Card meta + sosyal medya paylaşım önizlemesi
@@ -199,13 +146,11 @@ Eşik: 1.000 tekil/ay, 100 kayıtlı, 20 gerçek ödeme, 50 günlük üretim —
 ### SC-02: 14 sayfa "Discovered — currently not indexed"
 **Aziz manuel:** Search Console → URL Inspection → Request Indexing: `/blog`, `/fiyatlar`, blog yazıları. Sitemap yeniden submit.
 
-### SC-06: Merchant Listings — image field ✅ DONE
-### SC-07: Product Snippets — aggregateRating eksik → gerçek review gelince
-
 ---
 
 ## Notlar
 
-- **Tamamlanan işler:** `BACKLOG-DONE.md` dosyasında (RD-01~RD-04, IC-01, LP-01~LP-09, PQ-01~PQ-34, QA-01~QA-21, KÜME 9, KÜME 12, ve daha fazlası).
-- **yzstudio detaylı spec:** `specs/nf-02-yzstudio.md` (549 satır).
-- **Design system referans:** `docs/redesign/yzliste-design-tok
+- **Tamamlanan işler:** `BACKLOG-DONE.md` dosyasında (RD-01~RD-04, IC-01, LP-01~LP-12, DA-01~DA-04, DR-01~DR-05, PQ-01~PQ-34, QA-01~QA-21, KÜME 9, KÜME 12, ve daha fazlası).
+- **AI denetim raporu:** `specs/ai-denetim-01.md` — 12 bulgu, AI-01~AI-12
+- **yzstudio detaylı spec:** `specs/nf-02-yzstudio.md`
+- **Design system referans:** `docs/redesign/yzliste-design-tokens.md`
