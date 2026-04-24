@@ -6,6 +6,7 @@ import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { useCredits } from "@/lib/hooks/useCredits";
+import { useFeatureFlag, FF } from "@/lib/feature-flags";
 import { StudioSekmeler } from "./components/StudioSekmeler";
 import { TryonSekmesi } from "./components/tryon/TryonSekmesi";
 
@@ -14,6 +15,24 @@ const queryClient = new QueryClient();
 function YzstudioContent() {
   const [aktifSekme, setAktifSekme] = useState("tryon");
   const { data: kredi } = useCredits();
+  const yzstudioEnabled = useFeatureFlag(FF.YZSTUDIO);
+
+  // null = flag henüz yüklenmedi, render bekle (kısa an)
+  if (yzstudioEnabled === false) {
+    return (
+      <div className="min-h-screen bg-[#FAFAF8] flex flex-col">
+        <SiteHeader />
+        <main className="flex-1 flex items-center justify-center px-4">
+          <div className="text-center max-w-sm">
+            <p className="text-[#1A1A17] font-medium mb-2">yzstudio şu an erişime kapalı</p>
+            <p className="text-sm text-[#908E86] mb-6">Yakında tekrar açılacak.</p>
+            <Link href="/" className="text-sm text-[#1E4DD8] hover:text-[#163B9E]">Ana sayfaya dön</Link>
+          </div>
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FAFAF8] flex flex-col">
