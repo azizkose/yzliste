@@ -11,12 +11,11 @@ import { resizeFoto } from "@/lib/listing-utils";
 import type { Kullanici } from "@/lib/listing-utils";
 import { PLATFORM_BILGI } from "@/lib/constants";
 import PaketModal from "@/components/PaketModal";
-import ChatWidget from "@/components/ChatWidget";
 import MetinSekmesi from "@/components/tabs/MetinSekmesi";
 import GorselSekmesi from "@/components/tabs/GorselSekmesi";
 import VideoSekmesi from "@/components/tabs/VideoSekmesi";
 import SosyalSekmesi from "@/components/tabs/SosyalSekmesi";
-import { FileText, Image as ImageIcon, Video, Share2, ImagePlus } from "lucide-react";
+import { FileText, Image as ImageIcon, PlayCircle, Share2, ImagePlus } from "lucide-react";
 import { useMetinUretim } from "@/lib/hooks/useMetinUretim";
 import { useGorselUretim } from "@/lib/hooks/useGorselUretim";
 import { useVideoUretim } from "@/lib/hooks/useVideoUretim";
@@ -275,7 +274,7 @@ export default function Home() {
                 { id: "metin" as AnaSekme, label: "Metin", Icon: FileText },
                 { id: "gorsel" as AnaSekme, label: "Görsel", Icon: ImageIcon },
                 { id: "sosyal" as AnaSekme, label: "Sosyal medya", Icon: Share2 },
-                { id: "video" as AnaSekme, label: "Video", Icon: Video },
+                { id: "video" as AnaSekme, label: "Video", Icon: PlayCircle },
               ]).map(({ id, label, Icon }) => (
                 <button key={id}
                   role="tab"
@@ -464,7 +463,7 @@ export default function Home() {
                 <h2 className="text-lg font-medium text-[#1A1A17]">
                   {authPopupMod === "kayit" ? "Hesap oluştur" : "Giriş yap"}
                 </h2>
-                <button onClick={() => setAuthPopupAcik(false)} aria-label="Kapat" className="text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
+                <button onClick={() => setAuthPopupAcik(false)} aria-label="Kapat" className="text-[#908E86] hover:text-[#5A5852] text-2xl font-light">×</button>
               </div>
               <div className="p-5">
                 <AuthForm defaultMode={authPopupMod} onSuccess={handleAuthSuccess} />
@@ -475,7 +474,6 @@ export default function Home() {
 
         {paketModalAcik && kullanici && <PaketModal kullanici={kullanici} onKapat={() => setPaketModalAcik(false)} />}
 
-        <ChatWidget />
       </div>
       <SiteFooter />
     </main>

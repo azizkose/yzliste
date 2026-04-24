@@ -9,15 +9,16 @@ interface KrediButonProps {
   disabled?: boolean;
   yukleniyor?: boolean;
   yukleniyorLabel?: string;
-  renk?: "primary" | "amber" | "green" | "gray";
+  renk?: "primary" | "secondary" | "amber" | "green" | "gray";
   className?: string;
 }
 
 const renkSinif: Record<string, string> = {
-  primary: "bg-[#1E4DD8] hover:bg-[#163B9E]",
-  amber:   "bg-[#A87847] hover:bg-[#7D5630]",
-  green:   "bg-[#0F5132] hover:bg-[#0a3d25]",
-  gray:    "bg-[#1A1A17] hover:bg-[#333330]",
+  primary:   "bg-[#1E4DD8] hover:bg-[#163B9E] text-white",
+  secondary: "bg-white border border-[#D8D6CE] text-[#1A1A17] hover:bg-[#F1F0EB]",
+  amber:     "bg-[#A87847] hover:bg-[#7D5630] text-white",
+  green:     "bg-[#0F5132] hover:bg-[#0a3d25] text-white",
+  gray:      "bg-[#1A1A17] hover:bg-[#333330] text-white",
 };
 
 export default function KrediButon({
@@ -50,7 +51,7 @@ export default function KrediButon({
       <button
         onClick={handleClick}
         disabled={disabled || yukleniyor}
-        className={`w-full ${renkSinif[renk]} disabled:bg-[#D8D6CE] text-white font-medium py-3 rounded-lg transition-all ${className}`}
+        className={`w-full ${renkSinif[renk]} disabled:bg-[#D8D6CE] disabled:text-[#908E86] disabled:border-0 font-medium py-3 rounded-lg transition-all ${className}`}
       >
         {butonLabel}
       </button>

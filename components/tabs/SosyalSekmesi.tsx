@@ -113,7 +113,7 @@ export default function SosyalSekmesi({
 
         {/* Platform seçimi */}
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-2">Platform</label>
+          <label className="block text-xs font-medium text-[#5A5852] mb-2">Platform</label>
           <div className="flex gap-2 flex-wrap">
             {([
               { id: "instagram", label: "Instagram" },
@@ -196,28 +196,28 @@ export default function SosyalSekmesi({
         {sosyalIcerikTipi === "metin" && (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Adı <span className="text-red-400">*</span></label>
+              <label className="block text-sm font-medium text-[#1A1A17] mb-1">Ürün Adı <span className="text-[#C0392B]">*</span></label>
               <input type="text" value={sosyalUrunAdi} onChange={(e) => setSosyalUrunAdi(e.target.value)} placeholder="örn: Bakır Cezve Set, Kadın Deri Çanta" className="w-full border border-[#D8D6CE] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]/30" />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Ek Bilgi <span className="text-gray-400 font-normal">(isteğe bağlı)</span></label>
+              <label className="block text-sm font-medium text-[#1A1A17] mb-1">Ek Bilgi <span className="text-[#908E86] font-normal">(isteğe bağlı)</span></label>
               <textarea value={sosyalEkBilgi} onChange={(e) => setSosyalEkBilgi(e.target.value)} placeholder="örn: %20 indirimde, yeni sezon, el yapımı, hediye seçeneği" rows={2} className="w-full border border-[#D8D6CE] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]/30" />
             </div>
 
             <button type="button" onClick={() => setGelismisAcik(v => !v)}
-              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 transition-colors cursor-pointer">
+              className="flex items-center gap-1.5 text-xs text-[#5A5852] hover:text-[#1A1A17] transition-colors cursor-pointer">
               <span>{gelismisAcik ? "▾" : "▸"}</span>
               <span>Daha fazla seçenek</span>
               {!gelismisAcik && (sosyalTon !== "tanitim" || sosyalSezon !== "normal") && (
-                <span className="text-emerald-500 font-medium">• değiştirildi</span>
+                <span className="text-[#0F5132] font-medium">• değiştirildi</span>
               )}
             </button>
 
             {gelismisAcik && (
-              <div className="space-y-4 pl-1 border-l-2 border-gray-100">
+              <div className="space-y-4 pl-1 border-l-2 border-[#D8D6CE]">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Ton</label>
+                  <label className="block text-sm font-medium text-[#1A1A17] mb-2">Ton</label>
                   <div className="grid grid-cols-3 gap-2">
                     {([
                       { id: "tanitim", label: "Tanıtım", aciklama: "Ürünü öne çıkar" },
@@ -234,16 +234,16 @@ export default function SosyalSekmesi({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Sezon / Etkinlik</label>
+                  <label className="block text-sm font-medium text-[#1A1A17] mb-2">Sezon / Etkinlik</label>
                   <select value={sosyalSezon} onChange={(e) => setSosyalSezon(e.target.value)}
                     className="w-full border border-[#D8D6CE] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]/30 bg-white">
                     <option value="normal">Normal (sezon yok)</option>
-                    <option value="anneler_gunu">💐 Anneler Günü</option>
-                    <option value="babalar_gunu">👔 Babalar Günü</option>
-                    <option value="bayram">🌙 Bayram</option>
-                    <option value="yilbasi">🎉 Yılbaşı</option>
-                    <option value="black_friday">🔥 Black Friday</option>
-                    <option value="sevgililer_gunu">❤️ Sevgililer Günü</option>
+                    <option value="anneler_gunu">Anneler Günü</option>
+                    <option value="babalar_gunu">Babalar Günü</option>
+                    <option value="bayram">Bayram</option>
+                    <option value="yilbasi">Yılbaşı</option>
+                    <option value="black_friday">Black Friday</option>
+                    <option value="sevgililer_gunu">Sevgililer Günü</option>
                   </select>
                 </div>
               </div>
@@ -255,7 +255,7 @@ export default function SosyalSekmesi({
             </button>
 
             {!kullanici ? (
-              <button disabled className="w-full bg-[#D8D6CE] text-[#908E86] font-medium py-3 rounded-xl">
+              <button disabled className="w-full bg-white border border-[#D8D6CE] text-[#908E86] font-medium py-3 rounded-lg">
                 Sosyal medya kiti — giriş gerekli
               </button>
             ) : (
@@ -267,12 +267,13 @@ export default function SosyalSekmesi({
                 disabled={sosyalKitYukleniyor || captionYukleniyor || !sosyalUrunAdi.trim() || (!kullanici.is_admin && (kullanici.kredi ?? 0) < (sosyalFoto ? 4 : 3))}
                 yukleniyor={sosyalKitYukleniyor}
                 yukleniyorLabel="Kit üretiliyor..."
+                renk="secondary"
               />
             )}
-            <p className="text-xs text-gray-400 text-center -mt-2">Instagram · TikTok · Facebook · Twitter/X aynı anda</p>
+            <p className="text-xs text-[#908E86] text-center -mt-2">Instagram · TikTok · Facebook · Twitter/X aynı anda</p>
 
             {kullanici && !kullanici.is_admin && (kullanici.kredi ?? 0) <= 0 && !captionYukleniyor && (
-              <p className="text-center text-xs text-red-500">İçerik üretim krediniz bitti. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
+              <p className="text-center text-xs text-[#7A1E1E]">İçerik üretim krediniz bitti. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
             )}
 
             {(sosyalCaption || sosyalHashtag) && (
@@ -295,7 +296,7 @@ export default function SosyalSekmesi({
                     <p className="text-sm text-[#1E4DD8] leading-relaxed">{sosyalHashtag}</p>
                   </div>
                 )}
-                <button onClick={() => { setSosyalCaption(""); setSosyalHashtag(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni metin üret</button>
+                <button onClick={() => { setSosyalCaption(""); setSosyalHashtag(""); }} className="w-full text-xs text-[#908E86] hover:text-[#5A5852] py-2 transition-colors">Yeni metin üret</button>
               </div>
             )}
 
@@ -304,7 +305,7 @@ export default function SosyalSekmesi({
               <div className="space-y-3 mt-4">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium text-[#1A1A17]">Sosyal medya kiti</p>
-                  <button onClick={() => { setSosyalKitSonuc(null); setSosyalKitAcik(null); }} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Temizle</button>
+                  <button onClick={() => { setSosyalKitSonuc(null); setSosyalKitAcik(null); }} className="text-xs text-[#908E86] hover:text-[#5A5852] transition-colors">Temizle</button>
                 </div>
                 {([
                   { id: "instagram_tiktok", label: "Instagram & TikTok" },
@@ -365,7 +366,7 @@ export default function SosyalSekmesi({
 
             {/* Boyut seçimi */}
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-2">Görsel Boyutu</label>
+              <label className="block text-xs font-medium text-[#5A5852] mb-2">Görsel Boyutu</label>
               <div className="grid grid-cols-3 gap-2">
                 {([
                   { id: "1:1", label: "1:1", aciklama: "Feed / Post" },
@@ -383,7 +384,7 @@ export default function SosyalSekmesi({
 
             {/* Stil seçimi */}
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-2">Arka Plan Stili</label>
+              <label className="block text-xs font-medium text-[#5A5852] mb-2">Arka Plan Stili</label>
               <div className="grid grid-cols-4 gap-2">
                 {([
                   { id: "beyaz", label: "Beyaz" },
@@ -403,7 +404,7 @@ export default function SosyalSekmesi({
             </div>
 
             <div>
-              <label className="text-xs text-gray-600 font-medium block mb-1">Sahne açıklaması (isteğe bağlı)</label>
+              <label className="text-xs text-[#5A5852] font-medium block mb-1">Sahne açıklaması (isteğe bağlı)</label>
               <textarea
                 value={sosyalGorselPrompt}
                 onChange={(e) => setSosyalGorselPrompt(e.target.value)}
@@ -428,11 +429,11 @@ export default function SosyalSekmesi({
 
             {sosyalGorselSonuclar.length > 0 && !sosyalGorselYukleniyor && (
               <div className="space-y-3">
-                <p className="text-sm font-medium text-[#1A1A17] px-1">✅ Görseller hazır — {sosyalGorselFormat} · {sosyalGorselStil}</p>
+                <p className="text-sm font-medium text-[#1A1A17] px-1">Görseller hazır — {sosyalGorselFormat} · {sosyalGorselStil}</p>
                 {sosyalGorselSonuclar.map((stil) => (
                   <div key={stil.stil} className="grid grid-cols-2 gap-2">
                     {stil.gorseller.map((url, i) => (
-                      <div key={i} className="relative group rounded-xl overflow-hidden border border-gray-200">
+                      <div key={i} className="relative group rounded-xl overflow-hidden border border-[#D8D6CE]">
                         <img src={url} alt={`${stil.label} ${i + 1}`} className="w-full object-cover" />
                         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <a href={url} download target="_blank" rel="noopener noreferrer" className="bg-white text-[#1A1A17] text-xs font-medium px-3 py-1.5 rounded-lg border border-[#D8D6CE]">İndir</a>
@@ -441,7 +442,7 @@ export default function SosyalSekmesi({
                     ))}
                   </div>
                 ))}
-                <button onClick={() => { setSosyalGorselSonuclar([]); setSosyalFoto(null); }} className="w-full text-xs text-gray-400 hover:text-gray-600 py-2 transition-colors">Yeni görsel üret</button>
+                <button onClick={() => { setSosyalGorselSonuclar([]); setSosyalFoto(null); }} className="w-full text-xs text-[#908E86] hover:text-[#5A5852] py-2 transition-colors">Yeni görsel üret</button>
               </div>
             )}
           </div>

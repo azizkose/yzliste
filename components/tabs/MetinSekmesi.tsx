@@ -124,7 +124,7 @@ export default function MetinSekmesi({
         <div className="mt-3 space-y-3">
           <div>
             <label className="block text-sm font-medium text-[#1A1A17] mb-1">Hedef kitle <span className="text-[#908E86] font-normal">(isteğe bağlı)</span></label>
-            <select value={hedefKitle} onChange={(e) => setHedefKitle(e.target.value)} className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]">
+            <select value={hedefKitle} onChange={(e) => setHedefKitle(e.target.value)} className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]/20 focus:border-[#1E4DD8]">
               <option value="genel">Genel</option>
               <option value="kadinlar">Kadınlar</option>
               <option value="erkekler">Erkekler</option>
@@ -163,7 +163,7 @@ export default function MetinSekmesi({
           {GirisTipiChips}
           <div>
             <label className="block text-sm font-medium text-[#1A1A17] mb-1">Ürün adı <span className="text-[#7A1E1E]">*</span></label>
-            <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)} placeholder={platformPh.urun} className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]" />
+            <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)} placeholder={platformPh.urun} className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]/20 focus:border-[#1E4DD8]" />
           </div>
           <div>
             <label className="block text-sm font-medium text-[#1A1A17] mb-1">Kategori <span className="text-[#7A1E1E]">*</span></label>
@@ -173,7 +173,7 @@ export default function MetinSekmesi({
                 if (e.target.value === "Diğer") { setDigerMod(true); setKategori(""); }
                 else { setDigerMod(false); setKategori(e.target.value); }
               }}
-              className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]"
+              className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]/20 focus:border-[#1E4DD8]"
             >
               <option value="">— Seç (isteğe bağlı) —</option>
               {KATEGORI_LISTESI.map((k) => (
@@ -183,14 +183,14 @@ export default function MetinSekmesi({
             {digerMod && (
               <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)}
                 placeholder="Kategori yaz..." autoFocus
-                className="mt-2 w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]" />
+                className="mt-2 w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]/20 focus:border-[#1E4DD8]" />
             )}
           </div>
           <div>
             <label className="block text-sm font-medium text-[#1A1A17] mb-1">Ürün detayları <span className="text-[#908E86] font-normal">(isteğe bağlı)</span></label>
             <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)}
               placeholder="Renk, beden, malzeme, öne çıkan özellikler, arama kelimeleri — ne kadar detay girersen içerik o kadar iyi olur"
-              rows={3} className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]" />
+              rows={3} className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]/20 focus:border-[#1E4DD8]" />
           </div>
           {GelismisAyarlar}
         </>
@@ -202,7 +202,7 @@ export default function MetinSekmesi({
           {GirisTipiChips}
           <div>
             <label className="block text-sm font-medium text-[#1A1A17] mb-1">Kategori <span className="text-[#908E86] font-normal">(isteğe bağlı)</span></label>
-            <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder="örn: Ayakkabı & Çanta / Erkek Bot" className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]" />
+            <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder="örn: Ayakkabı & Çanta / Erkek Bot" className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]/20 focus:border-[#1E4DD8]" />
           </div>
           <div>
             <label className="block text-sm font-medium text-[#1A1A17] mb-2">Ürün fotoğrafı</label>
@@ -219,7 +219,7 @@ export default function MetinSekmesi({
             <label className="block text-sm font-medium text-[#1A1A17] mb-1">Ürün detayları <span className="text-[#908E86] font-normal">(isteğe bağlı)</span></label>
             <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)}
               placeholder="Renk, beden, malzeme, öne çıkan özellikler, arama kelimeleri — ne kadar detay girersen içerik o kadar iyi olur"
-              rows={2} className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]" />
+              rows={2} className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]/20 focus:border-[#1E4DD8]" />
           </div>
           {GelismisAyarlar}
         </div>
@@ -393,7 +393,7 @@ export default function MetinSekmesi({
                   </div>
                 </div>
                 <div ref={ref} contentEditable suppressContentEditableWarning
-                  onFocus={(e) => { e.currentTarget.style.outline = "2px solid #f97316"; e.currentTarget.style.borderRadius = "8px"; e.currentTarget.style.padding = "8px"; }}
+                  onFocus={(e) => { e.currentTarget.style.outline = "2px solid #1E4DD8"; e.currentTarget.style.borderRadius = "8px"; e.currentTarget.style.padding = "8px"; }}
                   onBlur={(e) => { e.currentTarget.style.outline = "none"; e.currentTarget.style.padding = "0"; }}
                   className="whitespace-pre-wrap text-sm text-[#5A5852] leading-relaxed font-sans cursor-text">
                   {bolum.icerik}
