@@ -24,8 +24,8 @@ export default function CerezPolitikasiPage() {
   return (
     <>
     <SiteHeader />
-    <main className="min-h-screen bg-white">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 space-y-8 text-sm text-gray-700 leading-relaxed">
+    <main className="min-h-screen bg-white flex flex-col">
+      <div className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 py-12 space-y-8 text-sm text-gray-700 leading-relaxed">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-1">Çerez Politikası</h1>
           <p className="text-gray-400 text-xs">Son güncelleme: Nisan 2026</p>

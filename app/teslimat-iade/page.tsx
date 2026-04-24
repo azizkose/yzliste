@@ -14,8 +14,8 @@ export default function TeslimatIadePage() {
   return (
     <>
     <SiteHeader />
-    <main className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-3xl mx-auto">
+    <main className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="flex-1 max-w-3xl mx-auto py-12 px-4">
         <div className="mb-8">
           <Link href="/" className="text-sm text-gray-400 hover:text-indigo-500">← Ana Sayfa</Link>
         </div>

@@ -416,19 +416,19 @@ Derin prompt engine analizinden çıkan 14 bulgu. Detaylı rapor: `yzliste test/
 **3 Temizlik:**
 
 1. **Orphan dosya sil:** `/uret_route.ts` — proje kökünde 347 satırlık eski route handler kopyası. Aktif route `app/api/uret/route.ts`'de. Bu dosya hiçbir yerden import edilmiyor.
-   - [ ] `/uret_route.ts` dosyasını sil
+   - [x] `/uret_route.ts` dosyasını sil — zaten mevcut değil, önceden silinmiş
 
 2. **Unused component sil:** `/components/tanitim/FeatureCards.tsx` — LP-07'de `_tanitim.tsx`'den kaldırıldı ama dosya hâlâ duruyor. Hiçbir yerden import edilmiyor.
-   - [ ] `components/tanitim/FeatureCards.tsx` dosyasını sil
+   - [x] `components/tanitim/FeatureCards.tsx` dosyasını sil — zaten mevcut değil, önceden silinmiş
 
 3. **gitignore güncelle:** `tsconfig.tsbuildinfo` dosyası git'e girmamalı (build artifact).
-   - [ ] `.gitignore`'a `tsconfig.tsbuildinfo` ekle
-   - [ ] Zaten git'teyse: `git rm --cached tsconfig.tsbuildinfo`
+   - [x] `.gitignore`'da `*.tsbuildinfo` zaten var (satır 41) — kapsıyor
+   - [x] Zaten git'teyse: `git rm --cached tsconfig.tsbuildinfo`
 
 **Test:**
+- [x] Silinen dosyalara referans kalmamış (grep ile doğrulandı)
 - [ ] `npm run build` hatasız tamamlanıyor
 - [ ] `npm run lint` geçiyor
-- [ ] Silinen dosyalara referans kalmamış (grep ile doğrula)
 
 **Dosyalar:** `/uret_route.ts` (sil), `components/tanitim/FeatureCards.tsx` (sil), `.gitignore`
 
