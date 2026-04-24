@@ -46,10 +46,10 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | ID | Başlık | Durum | Spec |
 |---|---|---|---|
 | KF-05 | Blog yazısı güncelle — video hareket | Tamamlandı | [specs/kf-05.md](specs/kf-05.md) |
-| LP-10 | Araçlar dropdown — buton düzeni | Açık | inline |
+| LP-10 | Araçlar dropdown — buton düzeni | Tamamlandı | inline |
 | KG-01 | Kredi geçmişi + kullanım analitiği | Tamamlandı | [specs/kg-01.md](specs/kg-01.md) |
 | MP-01 | Mağaza profili genişletme — 4 yeni alan | Tamamlandı | [specs/mp-01.md](specs/mp-01.md) |
-| OVERSCROLL | Sayfa sonu overscroll / boş alan temizliği | iOS fix OK, sticky footer kaldı | inline |
+| OVERSCROLL | Sayfa sonu overscroll / boş alan temizliği | Tamamlandı | inline |
 | KREDİ-SYNC | Kredi gösterimi tutarsızlığı — tek kaynak | Açık | inline |
 | SC-04 | Blog meta description güncelle | Açık | inline |
 | NF-04 | fal.ai model takip scheduled task | Açık | inline |

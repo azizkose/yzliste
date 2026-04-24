@@ -14,17 +14,17 @@ export default function TeslimatIadePage() {
   return (
     <>
     <SiteHeader />
-    <main className="min-h-screen bg-gray-50 flex flex-col">
+    <main className="min-h-screen bg-[#FAFAF8] flex flex-col">
       <div className="flex-1 max-w-3xl mx-auto py-12 px-4">
         <div className="mb-8">
-          <Link href="/" className="text-sm text-gray-400 hover:text-indigo-500">← Ana Sayfa</Link>
+          <Link href="/" className="text-sm text-[#908E86] hover:text-[#1E4DD8]">← Ana Sayfa</Link>
         </div>
-        <div className="bg-white rounded-2xl shadow p-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Teslimat ve İade Şartları</h1>
-          <div className="space-y-6 text-gray-600 text-sm leading-relaxed">
+        <div className="bg-white rounded-xl border border-[#D8D6CE] p-8">
+          <h1 className="text-2xl font-medium text-[#1A1A17] mb-6">Teslimat ve iade şartları</h1>
+          <div className="space-y-6 text-[#5A5852] text-sm leading-relaxed">
 
             <div>
-              <h2 className="text-base font-semibold text-gray-800 mb-2">Teslimat</h2>
+              <h2 className="text-base font-medium text-[#1A1A17] mb-2">Teslimat</h2>
               <p>
                 yzliste, dijital bir hizmet platformudur. Satın alınan kullanım hakları
                 ödeme işlemi tamamlandıktan hemen sonra kullanıcı hesabına otomatik olarak
@@ -38,7 +38,7 @@ export default function TeslimatIadePage() {
             </div>
 
             <div>
-              <h2 className="text-base font-semibold text-gray-800 mb-2">İade Politikası</h2>
+              <h2 className="text-base font-medium text-[#1A1A17] mb-2">İade politikası</h2>
               <p>
                 Dijital hizmet niteliğinde olan kullanım hakları, teslim edildiği andan
                 itibaren kullanılabilir durumdadır. Bu nedenle, 6502 sayılı Tüketicinin
@@ -56,12 +56,12 @@ export default function TeslimatIadePage() {
               </p>
             </div>
 
-            <div className="border-t border-gray-100 pt-4">
-              <h2 className="text-base font-semibold text-gray-800 mb-2">İletişim</h2>
+            <div className="border-t border-[#D8D6CE] pt-4">
+              <h2 className="text-base font-medium text-[#1A1A17] mb-2">İletişim</h2>
               <p>SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI</p>
               <p>Mehmet Akif Mah. Ulubatlı Hasan Cad. Paradise City Sitesi C1 Blok No: 43L İç Kapı No: 31 Çekmeköy / İstanbul</p>
               <p className="mt-1">
-                <a href="mailto:destek@yzliste.com" className="text-indigo-500 hover:underline">destek@yzliste.com</a>
+                <a href="mailto:destek@yzliste.com" className="text-[#1E4DD8] hover:text-[#163B9E]">destek@yzliste.com</a>
               </p>
             </div>
           </div>
