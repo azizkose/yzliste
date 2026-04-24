@@ -4,7 +4,6 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { PAKET_LISTESI } from "@/lib/paketler";
 import FiyatlarCta from "@/components/ui/FiyatlarCta";
-import { Icon3D } from "@/components/ui/Icon3D";
 
 export const metadata: Metadata = {
   title: "Fiyatlar — E-ticaret Listing Üretici",
@@ -40,38 +39,6 @@ export const metadata: Metadata = {
 // Paketler lib/paketler.ts'den geliyor — fiyat değişikliği için orayı güncelle
 const paketler = PAKET_LISTESI;
 
-const krediAciklamalari = [
-  {
-    ikon: <Gift size={40} strokeWidth={1.5} className="text-[#1E4DD8]" />,
-    baslik: "3 ücretsiz kredi ile başla",
-    icerik:
-      "Kayıt olunca 3 ücretsiz kredi tanımlanır — kredi kartı gerekmez. İstediğin içerik türünü (metin, görsel, video, sosyal medya) denemek için kullanabilirsin.",
-  },
-  {
-    ikon: <Icon3D name="pencil" size={48} bgColor="#F0F4FB" />,
-    baslik: "Listing metni — 1 kredi",
-    icerik:
-      "1 kredi = 1 ürün için tam listing metni. Başlık, madde madde özellikler, açıklama ve arama etiketlerinin tamamı tek seferde gelir. Hepsi ayrı kutularda, tek tıkla kopyalanır.",
-  },
-  {
-    ikon: <Icon3D name="camera" size={48} bgColor="#FBEAF0" />,
-    baslik: "AI görsel — stil başına 1 kredi",
-    icerik:
-      "7 farklı stil (Beyaz, Koyu, Lifestyle, Mermer, Ahşap, Gradient, Doğal). Seçtiğin her stil için 1 görsel üretilir, kredi üretimde düşer. 1 stil = 1 görsel = 1 kredi.",
-  },
-  {
-    ikon: <Icon3D name="video-cam" size={48} bgColor="#FAEEDA" />,
-    baslik: "Video — 5sn: 10 kredi · 10sn: 20 kredi",
-    icerik:
-      "Ürün fotoğrafından tanıtım videosu üretilir. 5 saniyelik video için 10 kredi, 10 saniyelik için 20 kredi. Dikey (9:16 · Reels/TikTok), kare (1:1 · Feed) veya yatay (16:9 · YouTube) format seçilebilir.",
-  },
-  {
-    ikon: <Icon3D name="mobile" size={48} bgColor="#E1F5EE" />,
-    baslik: "Sosyal medya — 1 kredi / platform · Kit: 3 kredi (4 platform)",
-    icerik:
-      "Tek platform için 1 kredi: Instagram, TikTok, Facebook veya Twitter/X. Sosyal Medya Kiti ile 4 platform birden sadece 3 kredi — %25 tasarruf. Her platform için ayrı ton ve format.",
-  },
-];
 
 const sss = [
   {
@@ -203,26 +170,6 @@ export default function FiyatlarPage() {
         </div>
       </section>
 
-      {/* KREDİ AÇIKLAMALARI */}
-      <section className="px-4 sm:px-6 py-10 bg-[#F1F0EB] border-y border-[#D8D6CE]">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-xl font-medium text-[#1A1A17] text-center mb-8">Kredi nasıl çalışır?</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
-            {krediAciklamalari.map((k, i) => (
-              <div key={i} className="bg-white rounded-xl p-5 border border-[#D8D6CE]">
-                <div className="mb-3">{k.ikon}</div>
-                <h3 className="font-medium text-[#1A1A17] text-sm mb-2">{k.baslik}</h3>
-                <p className="text-xs text-[#5A5852] leading-relaxed">{k.icerik}</p>
-              </div>
-            ))}
-          </div>
-          <p className="text-center text-xs text-[#908E86] flex items-center justify-center gap-1.5">
-            <Check size={12} strokeWidth={2} className="text-[#0F5132]" />
-            Krediler tüm içerik türlerinde kullanılır · Süre sınırı yok · Abonelik yok
-          </p>
-        </div>
-      </section>
-
       {/* PAKETLER */}
       <section className="px-4 sm:px-6 py-16">
         <div className="max-w-4xl mx-auto">
@@ -260,6 +207,24 @@ export default function FiyatlarPage() {
             <Lock size={11} strokeWidth={1.5} />
             Güvenli ödeme — iyzico altyapısı · Fatura her alışverişte e-postayla gönderilir
           </p>
+        </div>
+      </section>
+
+      {/* KREDİ NASIL ÇALIŞIR — kompakt */}
+      <section className="px-4 sm:px-6 py-8 border-b border-[#D8D6CE]">
+        <div className="max-w-2xl mx-auto">
+          <details className="group">
+            <summary className="cursor-pointer text-sm font-medium text-[#5A5852] flex items-center gap-2 list-none select-none">
+              <span className="text-[#1E4DD8] text-base leading-none">+</span>
+              Kredi nasıl çalışır?
+            </summary>
+            <ul className="mt-4 space-y-2 text-xs text-[#5A5852] leading-relaxed pl-4 border-l border-[#D8D6CE]">
+              <li><span className="text-[#1A1A17] font-medium">Metin · Görsel · Sosyal medya</span> — her biri 1 kredi</li>
+              <li><span className="text-[#1A1A17] font-medium">Video</span> — 5sn = 10 kredi · 10sn = 20 kredi</li>
+              <li><span className="text-[#1A1A17] font-medium">Sosyal medya kiti</span> — 4 platform birden = 3 kredi</li>
+              <li><span className="text-[#1A1A17] font-medium">Krediler süresiz</span> — sona erme tarihi yoktur · Paketler tek seferlik ödeme</li>
+            </ul>
+          </details>
         </div>
       </section>
 

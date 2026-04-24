@@ -37,8 +37,11 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | DA-02 | Ana sayfa tasarım denetimi — 9 düzeltme | Tamamlandı | [specs/da-02-anasayfa-tasarim-denetimi.md](specs/da-02-anasayfa-tasarim-denetimi.md) |
 | DA-03 | /giris sayfası UX revizyonu — best practice | Tamamlandı | [specs/da-03-giris-sayfasi-redesign.md](specs/da-03-giris-sayfasi-redesign.md) |
 | DA-04 | /yzstudio dark→light + UX revizyonu — 10 madde | Tamamlandı | [specs/da-04-yzstudio-tasarim-denetimi.md](specs/da-04-yzstudio-tasarim-denetimi.md) |
-| DR-03 | /hakkimizda sayfası yeniden yazımı | Tamamlandı | [specs/dr-03-hakkimizda-yeniden-yaz.md](specs/dr-03-hakkimizda-yeniden-yaz.md) |
+| DR-03 | /hakkimizda kurucu bölümü — kısa, profesyonel, şirket adı yok | Açık — spec güncellendi | [specs/dr-03-hakkimizda-yeniden-yaz.md](specs/dr-03-hakkimizda-yeniden-yaz.md) |
 | DR-05 | /uret "Giriş yap ve başla" CTA düzeltmesi | Tamamlandı | [specs/dr-05-uret-cta-duzeltme.md](specs/dr-05-uret-cta-duzeltme.md) |
+| LP-11 | Landing page section revizyonları — 4 madde | Açık | [specs/lp-11-landing-section-revizyonlari.md](specs/lp-11-landing-section-revizyonlari.md) |
+| LP-12 | /fiyatlar "Kredi nasıl çalışır?" kısaltma | Tamamlandı | [specs/lp-12-fiyatlar-kredi-kisalt.md](specs/lp-12-fiyatlar-kredi-kisalt.md) |
+| DA-05 | /uret modern UX — monochrome çözümü | Açık | [specs/da-05-uret-modern-ux.md](specs/da-05-uret-modern-ux.md) |
 | OPS-20 | KVKK + yasal uyumluluk tamamlama | Aziz — hukuki | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P2 — Orta vadeli
