@@ -596,7 +596,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")
-    .select("kredi, is_admin, is_test, marka_adi, hedef_kitle, vurgulanan_ozellikler")
+    .select("kredi, is_admin, is_test, marka_adi, hedef_kitle, vurgulanan_ozellikler, magaza_kategorileri, fiyat_bandi, teslimat_vurgulari, benchmark_magaza")
     .eq("id", userId)
     .single();
 
@@ -674,6 +674,10 @@ export async function POST(req: NextRequest) {
   if (profil.marka_adi) markaBaglami.push(platformDilOnceki === "en" ? `Brand: ${profil.marka_adi}` : `Marka: ${profil.marka_adi}`);
   if (profil.hedef_kitle) markaBaglami.push(platformDilOnceki === "en" ? `Target audience: ${profil.hedef_kitle}` : `Hedef kitle: ${profil.hedef_kitle}`);
   if (profil.vurgulanan_ozellikler) markaBaglami.push(platformDilOnceki === "en" ? `Key selling points to emphasize: ${profil.vurgulanan_ozellikler}` : `Vurgulanacak ozellikler: ${profil.vurgulanan_ozellikler}`);
+  if (profil.magaza_kategorileri?.length) markaBaglami.push(platformDilOnceki === "en" ? `Store categories: ${profil.magaza_kategorileri.join(", ")}` : `Mağaza kategorileri: ${profil.magaza_kategorileri.join(", ")}`);
+  if (profil.fiyat_bandi) markaBaglami.push(platformDilOnceki === "en" ? `Price segment: ${profil.fiyat_bandi}` : `Fiyat bandı: ${profil.fiyat_bandi}`);
+  if (profil.teslimat_vurgulari?.length) markaBaglami.push(platformDilOnceki === "en" ? `Service highlights: ${profil.teslimat_vurgulari.join(", ")}` : `Hizmet vurguları: ${profil.teslimat_vurgulari.join(", ")}`);
+  if (profil.benchmark_magaza) markaBaglami.push(platformDilOnceki === "en" ? `Reference store style: ${profil.benchmark_magaza}` : `Referans mağaza tarzı: ${profil.benchmark_magaza}`);
   if (markaBaglami.length > 0) {
     kullaniciBilgi += platformDilOnceki === "en"
       ? `\n\nBrand context:\n${markaBaglami.join("\n")}`

@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")
-    .select("kredi, is_admin, marka_adi, ton, hedef_kitle, vurgulanan_ozellikler")
+    .select("kredi, is_admin, marka_adi, ton, hedef_kitle, vurgulanan_ozellikler, magaza_kategorileri")
     .eq("id", userId)
     .single();
 
@@ -70,7 +70,8 @@ export async function POST(req: NextRequest) {
     const markaIpucu = profil.marka_adi ? ` for ${profil.marka_adi}` : "";
     const hedefIpucu = profil.hedef_kitle ? `, appealing to ${profil.hedef_kitle}` : "";
     const ozellikIpucu = profil.vurgulanan_ozellikler ? `, highlighting ${profil.vurgulanan_ozellikler}` : "";
-    videoPrompt = `${stilIpucu}${markaIpucu}${hedefIpucu}${ozellikIpucu}, camera slowly zooms in and holds on product, clean studio lighting, white background, high quality e-commerce video`;
+    const kategoriIpucu = profil.magaza_kategorileri?.length ? `, ${profil.magaza_kategorileri.join("/")} product` : "";
+    videoPrompt = `${stilIpucu}${markaIpucu}${hedefIpucu}${ozellikIpucu}${kategoriIpucu}, camera slowly zooms in and holds on product, clean studio lighting, white background, high quality e-commerce video`;
   }
 
   // Krediyi atomik olarak önceden düş

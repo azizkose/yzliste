@@ -20,7 +20,7 @@ Google Translate ile yapılan çeviriler profesyonel durmaz. AI, hedef pazarın 
 
 ## Global SEO ve Etiket Yönetimi
 
-Etsy gibi platformlarda etiketler (tags) satışın %80'ini belirler. Yapay zeka, o kategoride yurtdışında en çok aratılan terimleri analiz ederek listing'inize yerleştirir. Böylece e-ihracat süreciniz teknik bir engele takılmadan başlar.
+Etsy gibi platformlarda etiketler (tags) satış performansını önemli ölçüde belirler. Yapay zeka, o kategoride yurtdışında en çok aratılan terimleri analiz ederek listing'inize yerleştirir. Böylece e-ihracat süreciniz teknik bir engele takılmadan başlar.
 
 ## BİLGİ KUTUSU
 

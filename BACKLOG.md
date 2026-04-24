@@ -19,6 +19,8 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | AUTH-01 | Mobilde kayıt engeli — Turnstile devre dışı | Kod OK, mobil test kaldı | inline |
 | FY-01 | Fiyat artışı — 49/129/299 TL | Kod OK, test kaldı | inline |
 | OPS-07 | Sentry error monitoring | Kısmen OK, DSN sonrası 3 madde | inline |
+| DR-01 | Denetim raporu hızlı düzeltmeler — 6 madde | Tamamlandı | [specs/dr-01-hizli-duzeltmeler.md](specs/dr-01-hizli-duzeltmeler.md) |
+| DR-02 | Blog kaynaksız istatistik temizliği + içerik kuralları | Tamamlandı | [specs/dr-02-blog-istatistik-temizlik.md](specs/dr-02-blog-istatistik-temizlik.md) |
 
 ### P1 — Yakın vadeli
 
@@ -26,29 +28,32 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 |---|---|---|---|
 | LP-08 | Araçlar dropdown — hero kartları + CTA | Tamamlandı | [specs/lp-08.md](specs/lp-08.md) |
 | NF-02 | yzstudio — premium araçlar sayfası | Faz 1-3 OK, Faz 4-5 kaldı | [specs/nf-02-yzstudio.md](specs/nf-02-yzstudio.md) |
-| NF-06 | Kredi tüketim UX — bilgilendirme + onay | Kısmen OK | [specs/nf-06.md](specs/nf-06.md) |
-| REF-01 | Referans programı — davet et, +10 kredi | Açık | [specs/ref-01.md](specs/ref-01.md) |
-| UX-03 | Üretim sayfası navigasyon düzenlemesi | Açık (REVISED) | [specs/ux-03.md](specs/ux-03.md) |
-| LS-01 | Listing skor + ücretsiz revize | Açık | [specs/ls-01.md](specs/ls-01.md) |
-| HERO-VID | Hero video tam versiyon + kırpmasız | Açık | [specs/hero-video-tam.md](specs/hero-video-tam.md) |
+| NF-06 | Kredi tüketim UX — bilgilendirme + onay | Tamamlandı | [specs/nf-06.md](specs/nf-06.md) |
+| REF-01 | Referans programı — davet et, +10 kredi | Tamamlandı | [specs/ref-01.md](specs/ref-01.md) |
+| UX-03 | Üretim sayfası navigasyon düzenlemesi | Tamamlandı | [specs/ux-03.md](specs/ux-03.md) |
+| LS-01 | Listing skor + ücretsiz revize | Tamamlandı | [specs/ls-01.md](specs/ls-01.md) |
+| HERO-VID | Hero video tam versiyon + kırpmasız | Tamamlandı | [specs/hero-video-tam.md](specs/hero-video-tam.md) |
 | DA-01 | /uret sayfası tasarım denetimi — 8 düzeltme | Tamamlandı | [specs/da-01-uret-tasarim-denetimi.md](specs/da-01-uret-tasarim-denetimi.md) |
 | DA-02 | Ana sayfa tasarım denetimi — 9 düzeltme | Tamamlandı | [specs/da-02-anasayfa-tasarim-denetimi.md](specs/da-02-anasayfa-tasarim-denetimi.md) |
-| DA-03 | /giris sayfası UX revizyonu — best practice | Açık | [specs/da-03-giris-sayfasi-redesign.md](specs/da-03-giris-sayfasi-redesign.md) |
+| DA-03 | /giris sayfası UX revizyonu — best practice | Tamamlandı | [specs/da-03-giris-sayfasi-redesign.md](specs/da-03-giris-sayfasi-redesign.md) |
 | DA-04 | /yzstudio dark→light + UX revizyonu — 10 madde | Tamamlandı | [specs/da-04-yzstudio-tasarim-denetimi.md](specs/da-04-yzstudio-tasarim-denetimi.md) |
+| DR-03 | /hakkimizda sayfası yeniden yazımı | Tamamlandı | [specs/dr-03-hakkimizda-yeniden-yaz.md](specs/dr-03-hakkimizda-yeniden-yaz.md) |
+| DR-05 | /uret "Giriş yap ve başla" CTA düzeltmesi | Tamamlandı | [specs/dr-05-uret-cta-duzeltme.md](specs/dr-05-uret-cta-duzeltme.md) |
 | OPS-20 | KVKK + yasal uyumluluk tamamlama | Aziz — hukuki | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P2 — Orta vadeli
 
 | ID | Başlık | Durum | Spec |
 |---|---|---|---|
-| KF-05 | Blog yazısı güncelle — video hareket | Reopened | [specs/kf-05.md](specs/kf-05.md) |
+| KF-05 | Blog yazısı güncelle — video hareket | Tamamlandı | [specs/kf-05.md](specs/kf-05.md) |
 | LP-10 | Araçlar dropdown — buton düzeni | Açık | inline |
-| KG-01 | Kredi geçmişi + kullanım analitiği | Açık | [specs/kg-01.md](specs/kg-01.md) |
-| MP-01 | Mağaza profili genişletme — 4 yeni alan | Açık | [specs/mp-01.md](specs/mp-01.md) |
+| KG-01 | Kredi geçmişi + kullanım analitiği | Tamamlandı | [specs/kg-01.md](specs/kg-01.md) |
+| MP-01 | Mağaza profili genişletme — 4 yeni alan | Tamamlandı | [specs/mp-01.md](specs/mp-01.md) |
 | OVERSCROLL | Sayfa sonu overscroll / boş alan temizliği | iOS fix OK, sticky footer kaldı | inline |
 | KREDİ-SYNC | Kredi gösterimi tutarsızlığı — tek kaynak | Açık | inline |
 | SC-04 | Blog meta description güncelle | Açık | inline |
 | NF-04 | fal.ai model takip scheduled task | Açık | inline |
+| DR-04 | Blog iç link stratejisi — yazılar arası cross-link | Açık | [specs/dr-04-blog-ic-link.md](specs/dr-04-blog-ic-link.md) |
 | OPS-14~19 | KÜME 11 — operasyonel olgunluk faz 2 | Açık | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P3 — Gelecek / Ertelenmiş
@@ -163,6 +168,15 @@ Eşik: 1.000 tekil/ay, 100 kayıtlı, 20 gerçek ödeme, 50 günlük üretim —
 - F-21 A11y tam audit (Lighthouse 95+)
 - F-32 /changelog + sürüm notu
 - F-33 Kredi süre sınırı politikası
+- DR-CRO: Sticky CTA + exit-intent modal + CTA sayısı azaltma (CRO)
+- DR-EMAIL: Welcome e-mail dizisi (1/3/7 gün)
+- DR-VIRAL: "yzliste ile hazırlandı" rozeti (viral loop)
+- DR-SOCIAL: Twitter Card meta + sosyal medya paylaşım önizlemesi
+- DR-COMMUNITY: Satıcı topluluğu (Telegram/WhatsApp)
+- DR-ANNUAL: Yıllık + kurumsal paket seçenekleri
+- DR-CALC: Fiyat sayfası kredi hesaplayıcı widget
+- DR-ONBOARD: Kayıt sonrası onboarding wizard (3-4 adım)
+- DR-EEAT: Blog sticky tarih + yazar bilgisi (SEO EEAT)
 
 ---
 
@@ -181,6 +195,3 @@ Eşik: 1.000 tekil/ay, 100 kayıtlı, 20 gerçek ödeme, 50 günlük üretim —
 - **Tamamlanan işler:** `BACKLOG-DONE.md` dosyasında (RD-01~RD-04, IC-01, LP-01~LP-09, PQ-01~PQ-34, QA-01~QA-21, KÜME 9, KÜME 12, ve daha fazlası).
 - **yzstudio detaylı spec:** `specs/nf-02-yzstudio.md` (549 satır).
 - **Design system referans:** `docs/redesign/yzliste-design-tokens.md`.
-- **UI kuralları:** `CLAUDE.md` dosyasında.
-- Bir iş için detaylı bilgi gerekiyorsa → `specs/{ID}.md` dosyasını oku.
-- `[DECIDE]` olmayan her karar default'la git: TanStack Query v5, PostHog EU, Upstash Redis,

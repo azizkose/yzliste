@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
   if (userId) {
     const { data: profil } = await supabaseAdmin
       .from("profiles")
-      .select("kredi, is_admin, is_test, marka_adi, ton, hedef_kitle")
+      .select("kredi, is_admin, is_test, marka_adi, ton, hedef_kitle, magaza_kategorileri, fiyat_bandi")
       .eq("id", userId)
       .single();
 
@@ -96,6 +96,8 @@ export async function POST(req: NextRequest) {
     if (profil.marka_adi) ctxParcalar.push(`brand: ${profil.marka_adi}`);
     if (profil.ton && TON_EN_MAP[profil.ton]) ctxParcalar.push(TON_EN_MAP[profil.ton]);
     if (profil.hedef_kitle) ctxParcalar.push(`targeted at: ${profil.hedef_kitle}`);
+    if (profil.magaza_kategorileri?.length) ctxParcalar.push(`product categories: ${profil.magaza_kategorileri.join(", ")}`);
+    if (profil.fiyat_bandi) ctxParcalar.push(`price segment: ${profil.fiyat_bandi}`);
     if (ctxParcalar.length > 0) brandContext = `, ${ctxParcalar.join(", ")}`;
   }
 

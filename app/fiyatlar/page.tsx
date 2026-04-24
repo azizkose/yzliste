@@ -130,7 +130,7 @@ function PricingJsonLd() {
       "@type": "MerchantReturnPolicy",
       applicableCountry: "TR",
       returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
-      merchantReturnDays: 14,
+      merchantReturnDays: 3,
       returnMethod: "https://schema.org/ReturnByMail",
       returnFees: "https://schema.org/FreeReturn",
     },
@@ -235,7 +235,7 @@ export default function FiyatlarPage() {
               <div key={p.id} className={`border-2 ${p.renk} rounded-xl p-6 relative flex flex-col`}>
                 {p.rozet && (
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1E4DD8] text-white text-xs font-medium px-4 py-1 rounded-full">
-                    En popüler
+                    Önerilen
                   </span>
                 )}
                 <div className="mb-4">

@@ -1,7 +1,7 @@
 ---
 slug: ai-urun-fotografciligi
-baslik: Ürün Fotoğrafçılığında Yapay Zeka Devrimi: Stüdyo Kalitesinde Çekimler
-ozet: Profesyonel fotoğrafçı maliyetine son! Yapay zeka ile evden stüdyo kalitesinde ürün fotoğrafları üretmenin yolları.
+baslik: Ürün Fotoğrafçılığında Yapay Zeka Devrimi: Profesyonel Görünümlü Çekimler
+ozet: Profesyonel fotoğrafçı maliyetine son! Yapay zeka ile evden profesyonel görünümlü ürün fotoğrafları üretmenin yolları.
 yayinTarihi: 2026-04-11
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5 

@@ -10,7 +10,7 @@ export default function KrediYukleModal() {
           <div key={p.id} className={`border-2 ${p.renk} rounded-2xl p-4 relative`}>
             {p.rozet && (
               <span className="absolute -top-3 left-4 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                En Popüler
+                Önerilen
               </span>
             )}
             <div className="flex items-center justify-between">
