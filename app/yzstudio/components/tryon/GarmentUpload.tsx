@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useCallback } from "react";
-import { Upload, X } from "lucide-react";
+import { ImageUp, X } from "lucide-react";
 import Image from "next/image";
 
 interface GarmentUploadProps {
@@ -32,7 +32,7 @@ export function GarmentUpload({
 
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-medium text-[#D8D6CE]">Kıyafet fotoğrafı</h3>
+      <h3 className="text-sm font-medium text-[#1A1A17]">Kıyafet fotoğrafı</h3>
 
       <div
         onDrop={onDrop}
@@ -41,8 +41,8 @@ export function GarmentUpload({
         className={`relative border rounded-xl overflow-hidden transition-colors ${
           foto
             ? "border-[#D8D6CE]"
-            : "border-dashed border-[#2A2A26] hover:border-[#1E4DD8] cursor-pointer"
-        } bg-[#1A1A17]`}
+            : "border-dashed border-[#D8D6CE] hover:border-[#1E4DD8] cursor-pointer"
+        } bg-white`}
         style={{ minHeight: 160 }}
       >
         {foto ? (
@@ -50,16 +50,18 @@ export function GarmentUpload({
             <Image src={foto} alt="Kıyafet" fill className="object-contain" />
             <button
               onClick={(e) => { e.stopPropagation(); onFotoChange(null); }}
-              className="absolute top-2 right-2 p-1 rounded bg-[#111110]/80 text-[#908E86] hover:text-[#D8D6CE] transition-colors"
+              className="absolute top-2 right-2 p-1 rounded bg-white/80 border border-[#D8D6CE] text-[#5A5852] hover:text-[#1A1A17] transition-colors"
             >
               <X size={14} strokeWidth={1.5} />
             </button>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center gap-2 py-10 px-4 text-center">
-            <Upload size={24} strokeWidth={1.5} className="text-[#5A5852]" />
-            <p className="text-sm text-[#5A5852]">Fotoğraf yükle veya sürükle bırak</p>
-            <p className="text-xs text-[#3A3A36]">JPG, PNG — en fazla 10 MB</p>
+          <div className="flex flex-col items-center justify-center gap-2 py-12 px-4 text-center">
+            <div className="w-14 h-14 rounded-lg bg-[#F1F0EB] flex items-center justify-center mb-1">
+              <ImageUp size={24} strokeWidth={1.5} className="text-[#5A5852]" />
+            </div>
+            <p className="text-sm font-medium text-[#1A1A17]">Fotoğraf yükle veya sürükle bırak</p>
+            <p className="text-xs text-[#908E86] mt-1">JPG, PNG — en fazla 10 MB</p>
           </div>
         )}
       </div>
@@ -81,8 +83,8 @@ export function GarmentUpload({
                 onClick={() => onPhotoTypeChange(t)}
                 className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
                   garmentPhotoType === t
-                    ? "border-[#1E4DD8] bg-[#1E4DD8]/10 text-[#BAC9EB]"
-                    : "border-[#2A2A26] text-[#5A5852] hover:border-[#3A3A36]"
+                    ? "border-[#1E4DD8] bg-[#1E4DD8] text-white"
+                    : "border-[#D8D6CE] text-[#5A5852] hover:border-[#7B9BD9]"
                 }`}
               >
                 {t === "auto" ? "Otomatik" : t === "flat-lay" ? "Düz/askı" : "Mankendeki"}
@@ -100,8 +102,8 @@ export function GarmentUpload({
                 onClick={() => onCategoryChange(c)}
                 className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
                   category === c
-                    ? "border-[#1E4DD8] bg-[#1E4DD8]/10 text-[#BAC9EB]"
-                    : "border-[#2A2A26] text-[#5A5852] hover:border-[#3A3A36]"
+                    ? "border-[#1E4DD8] bg-[#1E4DD8] text-white"
+                    : "border-[#D8D6CE] text-[#5A5852] hover:border-[#7B9BD9]"
                 }`}
               >
                 {c === "auto" ? "Otomatik" : c === "tops" ? "Üst" : c === "bottoms" ? "Alt" : "Tek parça"}

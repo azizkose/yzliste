@@ -20,8 +20,8 @@ export function TryonVideoAyarlar({
   const yetersizKredi = kredi < videoKredi;
 
   return (
-    <div className="border-t border-[#2A2A26] pt-5 space-y-4 mt-2">
-      <h4 className="text-sm font-medium text-[#D8D6CE]">Bu görseli videoya dönüştür</h4>
+    <div className="border-t border-[#D8D6CE] pt-5 space-y-4 mt-2">
+      <h4 className="text-sm font-medium text-[#1A1A17]">Bu görseli videoya dönüştür</h4>
 
       <div>
         <p className="text-xs text-[#908E86] mb-2">Hareket stili</p>
@@ -32,8 +32,8 @@ export function TryonVideoAyarlar({
               onClick={() => onPresetChange(p.id)}
               className={`text-left px-3 py-2.5 rounded-lg border transition-colors ${
                 preset === p.id
-                  ? "border-[#1E4DD8] bg-[#1E4DD8]/10 text-[#BAC9EB]"
-                  : "border-[#2A2A26] text-[#5A5852] hover:border-[#3A3A36]"
+                  ? "border-[#1E4DD8] bg-[#1E4DD8] text-white"
+                  : "border-[#D8D6CE] text-[#5A5852] hover:border-[#7B9BD9]"
               }`}
             >
               <div className="text-xs font-medium">{p.etiket}</div>
@@ -52,8 +52,8 @@ export function TryonVideoAyarlar({
               onClick={() => onSureChange(s)}
               className={`flex-1 py-2 rounded-lg border text-xs transition-colors ${
                 sure === s
-                  ? "border-[#1E4DD8] bg-[#1E4DD8]/10 text-[#BAC9EB]"
-                  : "border-[#2A2A26] text-[#5A5852] hover:border-[#3A3A36]"
+                  ? "border-[#1E4DD8] bg-[#1E4DD8] text-white"
+                  : "border-[#D8D6CE] text-[#5A5852] hover:border-[#7B9BD9]"
               }`}
             >
               {s} saniye — {VIDEO_KREDI[s]} kredi
@@ -65,12 +65,12 @@ export function TryonVideoAyarlar({
       <button
         onClick={() => onVideoUret(tryonImageUrl)}
         disabled={videoYukleniyor || yetersizKredi}
-        className="w-full py-3 rounded-lg border border-[#1E4DD8] text-[#BAC9EB] text-sm font-medium hover:bg-[#1E4DD8]/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full py-3 rounded-lg bg-[#1E4DD8] text-white text-sm font-medium hover:bg-[#163B9E] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {videoYukleniyor ? "Video oluşturuluyor..." : `Videoya dönüştür — ${videoKredi} kredi`}
       </button>
       {yetersizKredi && (
-        <p className="text-xs text-[#C0392B] text-center">Yetersiz kredi — {videoKredi} kredi gerekli</p>
+        <p className="text-xs text-[#7A1E1E] text-center">Yetersiz kredi — {videoKredi} kredi gerekli</p>
       )}
     </div>
   );

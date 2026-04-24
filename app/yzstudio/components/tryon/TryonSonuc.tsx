@@ -45,12 +45,12 @@ export function TryonSonuc({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-[#D8D6CE]">
+        <p className="text-sm font-medium text-[#1A1A17]">
           Giydirme sonucu {sonuclar.length > 1 ? `(${sonuclar.length} varyasyon)` : ""}
         </p>
         <button
           onClick={onTekrar}
-          className="flex items-center gap-1.5 text-xs text-[#908E86] hover:text-[#D8D6CE] transition-colors"
+          className="flex items-center gap-1.5 text-xs text-[#908E86] hover:text-[#5A5852] transition-colors"
         >
           <RefreshCw size={12} strokeWidth={1.5} />
           Tekrar üret
@@ -60,13 +60,13 @@ export function TryonSonuc({
       <div className={`grid gap-3 ${sonuclar.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}>
         {sonuclar.map((sonuc) => (
           <div key={sonuc.index} className="space-y-2">
-            <div className="relative rounded-xl overflow-hidden border border-[#2A2A26] bg-[#1A1A17]" style={{ paddingBottom: "150%" }}>
+            <div className="relative rounded-xl overflow-hidden border border-[#D8D6CE] bg-white" style={{ paddingBottom: "150%" }}>
               <Image src={sonuc.url} alt={`Giydirme sonucu ${sonuc.index + 1}`} fill className="object-contain" />
             </div>
             <a
               href={sonuc.url}
               download
-              className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg border border-[#2A2A26] text-[#908E86] text-xs hover:border-[#3A3A36] hover:text-[#D8D6CE] transition-colors"
+              className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg border border-[#D8D6CE] text-[#908E86] text-xs hover:border-[#7B9BD9] hover:text-[#5A5852] transition-colors"
             >
               <Download size={12} strokeWidth={1.5} />
               İndir
@@ -75,10 +75,9 @@ export function TryonSonuc({
         ))}
       </div>
 
-      {/* Video dönüştürme */}
       <button
         onClick={() => onVideoAktifToggle(!videoAktif)}
-        className="flex items-center justify-between w-full py-2.5 px-3 rounded-lg border border-[#2A2A26] text-sm text-[#908E86] hover:border-[#3A3A36] hover:text-[#D8D6CE] transition-colors"
+        className="flex items-center justify-between w-full py-2.5 px-3 rounded-lg border border-[#D8D6CE] text-sm text-[#908E86] hover:border-[#7B9BD9] hover:text-[#5A5852] transition-colors"
       >
         <span>Bu görseli videoya dönüştür</span>
         <ChevronDown

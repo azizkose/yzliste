@@ -32,7 +32,6 @@ export function ModelPicker({
   const [aktifSekme, setAktifSekme] = useState<Sekme>("hazir");
   const [uretimYukleniyor, setUretimYukleniyor] = useState(false);
 
-  // Dinamik manken üretim state
   const [cinsiyet, setCinsiyet] = useState("kadin");
   const [tenRengi, setTenRengi] = useState("bugday");
   const [vucutTipi, setVucutTipi] = useState("orta");
@@ -81,18 +80,17 @@ export function ModelPicker({
 
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-medium text-[#D8D6CE]">Manken seçimi</h3>
+      <h3 className="text-sm font-medium text-[#1A1A17]">Manken seçimi</h3>
 
-      {/* Sekme navigasyon */}
-      <div className="flex gap-1 p-1 rounded-lg bg-[#1A1A17] border border-[#2A2A26]">
+      <div className="flex gap-1 p-1 rounded-lg bg-[#F1F0EB] border border-[#D8D6CE]">
         {sekmeler.map((s) => (
           <button
             key={s.id}
             onClick={() => setAktifSekme(s.id)}
             className={`flex-1 py-1.5 px-2 rounded text-xs font-medium transition-colors ${
               aktifSekme === s.id
-                ? "bg-[#2A2A26] text-[#D8D6CE]"
-                : "text-[#5A5852] hover:text-[#908E86]"
+                ? "bg-white text-[#1A1A17]"
+                : "text-[#5A5852] hover:text-[#1A1A17]"
             }`}
           >
             {s.label}
@@ -100,41 +98,39 @@ export function ModelPicker({
         ))}
       </div>
 
-      {/* Hazır mankenler */}
       {aktifSekme === "hazir" && (
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
           {STOK_MANKENLER.map((manken) => {
             const secili = modelKaynagi === "stok" && modelStokId === manken.id;
             return (
-              <button
-                key={manken.id}
-                onClick={() => { onKaynagiChange("stok"); onStokIdChange(manken.id); }}
-                className={`relative aspect-[2/3] rounded-lg border overflow-hidden transition-colors ${
-                  secili ? "border-[#1E4DD8] ring-1 ring-[#1E4DD8]" : "border-[#2A2A26] hover:border-[#3A3A36]"
-                } bg-[#1A1A17]`}
-              >
-                <Image src={manken.url} alt={manken.label} fill className="object-cover object-top" />
-                {secili && (
-                  <div className="absolute top-1 right-1">
-                    <span className="w-4 h-4 rounded-full bg-[#1E4DD8] flex items-center justify-center">
-                      <Check size={10} strokeWidth={2.5} className="text-white" />
-                    </span>
-                  </div>
-                )}
-                <div className="absolute bottom-0 inset-x-0 bg-[#111110]/70 px-1 py-0.5">
-                  <span className="text-[9px] text-[#908E86] block text-center">{manken.label}</span>
-                </div>
-              </button>
+              <div key={manken.id} className="flex flex-col">
+                <button
+                  onClick={() => { onKaynagiChange("stok"); onStokIdChange(manken.id); }}
+                  className={`relative aspect-[2/3] rounded-lg border overflow-hidden transition-colors ${
+                    secili
+                      ? "border-2 border-[#1E4DD8] ring-1 ring-[#1E4DD8]"
+                      : "border border-[#D8D6CE] hover:border-[#7B9BD9]"
+                  } bg-white`}
+                >
+                  <Image src={manken.url} alt={manken.label} fill className="object-cover object-top" />
+                  {secili && (
+                    <div className="absolute top-1 right-1">
+                      <span className="w-4 h-4 rounded-full bg-[#1E4DD8] flex items-center justify-center">
+                        <Check size={10} strokeWidth={2.5} className="text-white" />
+                      </span>
+                    </div>
+                  )}
+                </button>
+                <p className="text-xs font-medium text-[#1A1A17] mt-2 text-center">{manken.label}</p>
+              </div>
             );
           })}
         </div>
       )}
 
-      {/* Manken oluştur */}
       {aktifSekme === "uret" && (
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            {/* Cinsiyet */}
             <div>
               <p className="text-xs text-[#908E86] mb-1.5">Cinsiyet</p>
               <div className="flex gap-1.5">
@@ -144,8 +140,8 @@ export function ModelPicker({
                     onClick={() => setCinsiyet(c.id)}
                     className={`flex-1 py-1.5 text-xs rounded-lg border transition-colors ${
                       cinsiyet === c.id
-                        ? "border-[#1E4DD8] bg-[#1E4DD8]/10 text-[#BAC9EB]"
-                        : "border-[#2A2A26] text-[#5A5852] hover:border-[#3A3A36]"
+                        ? "border-[#1E4DD8] bg-[#1E4DD8] text-white"
+                        : "border-[#D8D6CE] text-[#5A5852] hover:border-[#7B9BD9]"
                     }`}
                   >
                     {c.label}
@@ -154,7 +150,6 @@ export function ModelPicker({
               </div>
             </div>
 
-            {/* Boy */}
             <div>
               <p className="text-xs text-[#908E86] mb-1.5">Boy</p>
               <div className="flex gap-1">
@@ -164,8 +159,8 @@ export function ModelPicker({
                     onClick={() => setBoy(b.id)}
                     className={`flex-1 py-1.5 text-xs rounded-lg border transition-colors ${
                       boy === b.id
-                        ? "border-[#1E4DD8] bg-[#1E4DD8]/10 text-[#BAC9EB]"
-                        : "border-[#2A2A26] text-[#5A5852] hover:border-[#3A3A36]"
+                        ? "border-[#1E4DD8] bg-[#1E4DD8] text-white"
+                        : "border-[#D8D6CE] text-[#5A5852] hover:border-[#7B9BD9]"
                     }`}
                   >
                     {b.label}
@@ -175,7 +170,6 @@ export function ModelPicker({
             </div>
           </div>
 
-          {/* Ten rengi */}
           <div>
             <p className="text-xs text-[#908E86] mb-1.5">Ten rengi</p>
             <div className="flex gap-1.5 flex-wrap">
@@ -185,8 +179,8 @@ export function ModelPicker({
                   onClick={() => setTenRengi(t.id)}
                   className={`py-1.5 px-3 text-xs rounded-lg border transition-colors ${
                     tenRengi === t.id
-                      ? "border-[#1E4DD8] bg-[#1E4DD8]/10 text-[#BAC9EB]"
-                      : "border-[#2A2A26] text-[#5A5852] hover:border-[#3A3A36]"
+                      ? "border-[#1E4DD8] bg-[#1E4DD8] text-white"
+                      : "border-[#D8D6CE] text-[#5A5852] hover:border-[#7B9BD9]"
                   }`}
                 >
                   {t.label}
@@ -195,7 +189,6 @@ export function ModelPicker({
             </div>
           </div>
 
-          {/* Vücut tipi */}
           <div>
             <p className="text-xs text-[#908E86] mb-1.5">Vücut tipi</p>
             <div className="flex gap-1.5">
@@ -205,8 +198,8 @@ export function ModelPicker({
                   onClick={() => setVucutTipi(v.id)}
                   className={`flex-1 py-1.5 text-xs rounded-lg border transition-colors ${
                     vucutTipi === v.id
-                      ? "border-[#1E4DD8] bg-[#1E4DD8]/10 text-[#BAC9EB]"
-                      : "border-[#2A2A26] text-[#5A5852] hover:border-[#3A3A36]"
+                      ? "border-[#1E4DD8] bg-[#1E4DD8] text-white"
+                      : "border-[#D8D6CE] text-[#5A5852] hover:border-[#7B9BD9]"
                   }`}
                 >
                   {v.label}
@@ -215,7 +208,6 @@ export function ModelPicker({
             </div>
           </div>
 
-          {/* Serbest metin */}
           <div>
             <p className="text-xs text-[#908E86] mb-1.5">Ek detay (opsiyonel)</p>
             <input
@@ -223,11 +215,10 @@ export function ModelPicker({
               value={serbest}
               onChange={(e) => setSerbest(e.target.value)}
               placeholder='örn. "kızıl saçlı, genç, gözlüklü"'
-              className="w-full bg-[#1A1A17] border border-[#2A2A26] rounded-lg px-3 py-2 text-xs text-[#D8D6CE] placeholder:text-[#3A3A36] focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]/20 focus:border-[#1E4DD8]"
+              className="w-full bg-white border border-[#D8D6CE] rounded-lg px-3 py-2 text-xs text-[#1A1A17] placeholder:text-[#908E86] focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]/20 focus:border-[#1E4DD8]"
             />
           </div>
 
-          {/* Üretilen önizleme */}
           {modelUretilenUrl && modelKaynagi === "uretilen" && (
             <div className="relative aspect-[2/3] w-24 rounded-lg overflow-hidden border border-[#1E4DD8]">
               <Image src={modelUretilenUrl} alt="Üretilen manken" fill className="object-cover object-top" />
@@ -249,12 +240,11 @@ export function ModelPicker({
             )}
           </button>
           {!isAdmin && kredi < MANKEN_KREDI && (
-            <p className="text-xs text-[#C0392B] text-center">Yetersiz kredi</p>
+            <p className="text-xs text-[#7A1E1E] text-center">Yetersiz kredi</p>
           )}
         </div>
       )}
 
-      {/* Fotoğraf yükle */}
       {aktifSekme === "ozel-yukle" && (
         <div className="space-y-3">
           <div
@@ -262,8 +252,8 @@ export function ModelPicker({
             className={`border rounded-xl overflow-hidden cursor-pointer transition-colors ${
               modelOzelFoto && modelKaynagi === "ozel"
                 ? "border-[#1E4DD8]"
-                : "border-dashed border-[#2A2A26] hover:border-[#3A3A36]"
-            } bg-[#1A1A17]`}
+                : "border-dashed border-[#D8D6CE] hover:border-[#1E4DD8]"
+            } bg-white`}
           >
             {modelOzelFoto && modelKaynagi === "ozel" ? (
               <div className="relative w-full" style={{ paddingBottom: "150%" }}>
@@ -271,9 +261,11 @@ export function ModelPicker({
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center gap-2 py-10 px-4 text-center">
-                <Upload size={24} strokeWidth={1.5} className="text-[#5A5852]" />
-                <p className="text-sm text-[#5A5852]">Manken fotoğrafı yükle</p>
-                <p className="text-xs text-[#3A3A36]">Tam boy, açık arka plan, yüz görünür</p>
+                <div className="w-14 h-14 rounded-lg bg-[#F1F0EB] flex items-center justify-center mb-1">
+                  <Upload size={24} strokeWidth={1.5} className="text-[#5A5852]" />
+                </div>
+                <p className="text-sm font-medium text-[#1A1A17]">Manken fotoğrafı yükle</p>
+                <p className="text-xs text-[#908E86]">Tam boy, açık arka plan, yüz görünür</p>
               </div>
             )}
           </div>

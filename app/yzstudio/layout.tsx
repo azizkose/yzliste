@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "yzstudio — Premium Araçlar",
-  description: "Mankene giydirme, premium video ve deneysel AI araçları.",
+  title: "yzstudio — Premium AI Görsel Araçları | yzliste",
+  description: "Mankenlere kıyafet giydirme, stüdyo çekimi ve daha fazlası. yzliste premium AI görsel araçları.",
   robots: { index: false, follow: false },
 };
 
