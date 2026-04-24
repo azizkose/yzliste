@@ -1446,7 +1446,9 @@ Projede grep ile eski fiyatların (39 TL, 99 TL, 249 TL) başka yerde kalmadığ
 
 **Sıralama:** RD-01 → RD-02 → RD-03 → RD-04 (sıralı, her biri öncekine bağımlı).
 
-**IC-01 ile ilişki:** RD serisi /uret'i tamamen yeni design system'e geçirir. IC-01 sonra gelir ve /uret dışındaki sayfaları (landing, fiyatlar, hesap vb.) temizler. IC-01'in /uret dosyalarına dokunmasına gerek yok.
+**Durum:** ✅ TAMAMLANDI (Nisan 2026). Tüm 4 görev bitti, build temiz.
+
+**IC-01 ile ilişki:** RD serisi /uret'i tamamen yeni design system'e geçirdi. IC-01 sırada — /uret dışındaki sayfaları (landing, fiyatlar, hesap vb.) temizleyecek.
 
 ### RD-01: Altyapı — Font + İkon Sistemi Değişikliği (P1 — 1-2 saat)
 
@@ -1626,7 +1628,7 @@ NOT: Bu son görev — tamamlanınca /uret redesign bitti.
 
 ---
 
-### IC-01: Emoji Temizliği ve İkon Sistemi (P1 — 4-6 saat)
+### ✅ IC-01: Emoji Temizliği ve İkon Sistemi (P1 — 4-6 saat) — DONE (c30c059)
 
 **Bağlam:** Sitedeki tüm emoji kullanımı iki katmanlı ikon sistemine geçiyor. Marketing alanları → 3D ikonlar (3dicons.co), fonksiyonel UI → Lucide React. Kalıcı kural: bundan sonra UI'da emoji YASAK.
 
