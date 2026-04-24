@@ -5,6 +5,7 @@ import { PLATFORM_BILGI, PLATFORM_PLACEHOLDER, YUKLENIYOR_MESAJLARI, KATEGORI_LI
 import { sonucuBolumle, docxIndir } from "@/lib/listing-utils";
 import KopyalaButon from "@/components/ui/KopyalaButon";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
+import KrediButon from "@/components/ui/KrediButon";
 import GenerationFeedback from "@/components/GenerationFeedback";
 
 type Kullanici = {
@@ -261,13 +262,15 @@ export default function MetinSekmesi({
       )}
 
       {/* Üret butonu */}
-      <button onClick={icerikUret} disabled={!uretButonAktif} className="w-full bg-[#1E4DD8] hover:bg-[#163B9E] disabled:bg-[#D8D6CE] disabled:text-[#908E86] text-white font-medium py-3 rounded-lg transition-colors">
-        {yukleniyor
-          ? YUKLENIYOR_MESAJLARI[yukleniyorMesaj]
-          : (!kullanici || kullanici.anonim)
-            ? "Giriş yap ve başla"
-            : `Üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
-      </button>
+      <KrediButon
+        label={(!kullanici || kullanici.anonim) ? "Giriş yap ve başla" : "İçerik üret"}
+        kredi={(!kullanici || kullanici.anonim || kullanici.is_admin) ? undefined : 1}
+        kalanKredi={kullanici?.kredi}
+        onClick={icerikUret}
+        disabled={!uretButonAktif}
+        yukleniyor={yukleniyor}
+        yukleniyorLabel={YUKLENIYOR_MESAJLARI[yukleniyorMesaj]}
+      />
 
       <p className="text-xs text-gray-400 text-center">💡 yzliste her platformun karakter limiti ve SEO kuralına göre üretir ancak pazaryeri kuralları sık değişir — yayınlamadan önce içeriği kontrol etmeni öneririz</p>
 

@@ -1,6 +1,7 @@
 "use client";
 import { GORSEL_STILLER, kategoriKoduHesapla } from "@/lib/constants";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
+import KrediButon from "@/components/ui/KrediButon";
 
 type Kullanici = {
   id: string;
@@ -163,18 +164,23 @@ export default function GorselSekmesi({
         </div>
       )}
 
-      <button onClick={gorselUret} disabled={gorselYukleniyor || seciliStiller.size === 0 || fotolar.length === 0}
-        className="w-full bg-[#1E4DD8] hover:bg-[#163B9E] disabled:bg-[#D8D6CE] disabled:text-[#908E86] text-white font-medium py-3 rounded-lg transition-colors">
-        {gorselYukleniyor
-          ? `${seciliStiller.size} görsel üretiliyor...`
-          : fotolar.length === 0
+      <KrediButon
+        label={
+          fotolar.length === 0
             ? "Fotoğraf ekle"
             : seciliStiller.size === 0
               ? "Stil seç"
               : (!kullanici || kullanici.anonim)
                 ? "Giriş yap ve başla"
-                : `${seciliStiller.size} görsel üret — ${kullanici.is_admin ? "∞" : seciliStiller.size} kredi`}
-      </button>
+                : `${seciliStiller.size} görsel üret`
+        }
+        kredi={(!kullanici || kullanici.anonim || kullanici.is_admin) ? undefined : seciliStiller.size || undefined}
+        kalanKredi={kullanici?.kredi}
+        onClick={gorselUret}
+        disabled={gorselYukleniyor || seciliStiller.size === 0 || fotolar.length === 0}
+        yukleniyor={gorselYukleniyor}
+        yukleniyorLabel={`${seciliStiller.size} görsel üretiliyor...`}
+      />
 
       {gorselYukleniyor && (
         <p className="text-xs text-violet-600 text-center">Sayfayı kapatmayın — görsel üretimi yaklaşık 1 dakika sürer</p>
