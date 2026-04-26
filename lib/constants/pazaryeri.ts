@@ -387,4 +387,10 @@ export const SAMPLE_PRODUCT = {
   brand: 'Selin Porselen',
   category: 'Mutfak > Fincan',
   imageIcon: 'Coffee',
+  specs: {
+    weight: '320 g',
+    material: 'Porselen',
+    pieces: '12 parça',
+    color: 'Beyaz / Altın',
+  },
 } as const

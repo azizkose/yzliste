@@ -1,11 +1,16 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { FileText, Image as ImageIcon, Video, Share2, ChevronDown, ArrowRight } from 'lucide-react'
+import {
+  FileText, Image as ImageIcon, Video, Share2,
+  ChevronDown, ArrowRight, Camera, Pencil, ScanLine,
+} from 'lucide-react'
 import SectionHeader from '@/components/primitives/SectionHeader'
 import { cn } from '@/lib/utils'
-import { CONTENT_TYPES, PLATFORMS } from '@/lib/constants/pazaryeri'
+import { CONTENT_TYPES, PLATFORMS, SAMPLE_PRODUCT, INPUT_METHODS } from '@/lib/constants/pazaryeri'
 import type { ContentTypeId, PlatformId } from '@/lib/constants/pazaryeri'
+
+// ---- Icon maps ----
 
 const CONTENT_TYPE_ICONS = {
   FileText,
@@ -14,7 +19,96 @@ const CONTENT_TYPE_ICONS = {
   Share2,
 } as const
 
+const INPUT_METHOD_ICONS = {
+  Camera,
+  Pencil,
+  Barcode: ScanLine,  // ScanLine as Barcode fallback
+} as const
+
 type ContentTypeIconKey = keyof typeof CONTENT_TYPE_ICONS
+type InputMethodIconKey = keyof typeof INPUT_METHOD_ICONS
+
+// ---- ProductInputCard ----
+
+function ProductInputCard() {
+  const specs = [
+    { label: 'Ağırlık', value: SAMPLE_PRODUCT.specs.weight },
+    { label: 'Malzeme', value: SAMPLE_PRODUCT.specs.material },
+    { label: 'Parça', value: SAMPLE_PRODUCT.specs.pieces },
+    { label: 'Renk', value: SAMPLE_PRODUCT.specs.color },
+  ]
+
+  return (
+    <div className="md:sticky md:top-5">
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        {/* ProductImage area */}
+        <div className="flex min-h-[140px] flex-col items-center justify-center bg-slate-50 p-6">
+          <ImageIcon size={48} strokeWidth={1.5} className="text-slate-300" />
+          <p className="mt-2 text-xs text-slate-400">{SAMPLE_PRODUCT.name}</p>
+        </div>
+
+        {/* ProductInfo */}
+        <div className="p-4">
+          <p className="text-sm font-medium text-slate-900">{SAMPLE_PRODUCT.name}</p>
+          <p className="mt-0.5 text-xs text-slate-500">{SAMPLE_PRODUCT.brand}</p>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {specs.map(({ label, value }) => (
+              <div key={label} className="rounded-lg bg-slate-50 px-2.5 py-1.5">
+                <p className="text-[10px] uppercase tracking-wide text-slate-400">{label}</p>
+                <p className="text-xs font-medium text-slate-700">{value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* InputMethods */}
+        <div className="px-4 pb-4">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-slate-400">
+            Girdi yöntemi
+          </p>
+          <div className="flex gap-2">
+            {INPUT_METHODS.map((method, idx) => {
+              const MethodIcon = INPUT_METHOD_ICONS[method.icon as InputMethodIconKey]
+              const isSelected = idx === 0
+              return (
+                <div
+                  key={method.icon}
+                  className={cn(
+                    'flex-1 rounded-lg border p-2 text-center',
+                    isSelected
+                      ? 'border-rd-primary bg-rd-primary-50'
+                      : 'border-slate-200 bg-white',
+                  )}
+                >
+                  {MethodIcon && (
+                    <MethodIcon
+                      size={16}
+                      strokeWidth={2}
+                      className={cn(
+                        'mx-auto',
+                        isSelected ? 'text-rd-primary' : 'text-slate-400',
+                      )}
+                    />
+                  )}
+                  <p
+                    className={cn(
+                      'mt-1 text-[10px] font-medium leading-tight',
+                      isSelected ? 'text-rd-primary' : 'text-slate-500',
+                    )}
+                  >
+                    {method.label}
+                  </p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ---- Section ----
 
 export default function PazaryeriSection() {
   const [activeContentType, setActiveContentType] = useState<ContentTypeId>('text')
@@ -22,7 +116,7 @@ export default function PazaryeriSection() {
   const [copiedField, setCopiedField] = useState<string | null>(null)
   const tablistRef = useRef<HTMLDivElement>(null)
 
-  // setActivePlatform, setCopiedField — PZ-05+ kullanılacak
+  // setActivePlatform, setCopiedField — PZ-06+ kullanılacak
   void setActivePlatform
   void setCopiedField
 
@@ -152,11 +246,9 @@ export default function PazaryeriSection() {
           className="min-h-[400px] rounded-b-xl border bg-white p-5 transition-colors duration-300 md:p-6"
         >
           <div className="flex flex-col gap-6 md:flex-row md:items-start">
-            {/* Sol: ProductInputCard placeholder (PZ-05) */}
+            {/* Sol: ProductInputCard */}
             <div className="md:w-[300px] md:shrink-0">
-              <div className="flex min-h-[120px] items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-400">
-                Ürün girişi (PZ-05)
-              </div>
+              <ProductInputCard />
             </div>
 
             {/* ArrowConnector — desktop only */}

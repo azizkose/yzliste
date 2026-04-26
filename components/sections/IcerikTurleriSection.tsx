@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { FileText, Image as ImageIcon, Video, Share2, ArrowRight, X, Info } from 'lucide-react'
+import { FileText, Image as ImageIcon, Video, Share2, ArrowRight, X, Info, Sparkles } from 'lucide-react'
 import SectionHeader from '@/components/primitives/SectionHeader'
 import Button from '@/components/primitives/Button'
 import { cn } from '@/lib/utils'
@@ -236,8 +236,7 @@ export default function IcerikTurleriSection() {
   const [openModal, setOpenModal] = useState<IcerikTuruId | null>(null)
   const prevFocusRef = useRef<HTMLElement | null>(null)
 
-  // BOTTOM_NOTE — IT-06'da kullanılacak
-  void BOTTOM_NOTE
+  // BOTTOM_NOTE — IT-06 (bu ticket'ta kullanılıyor)
 
   const handleOpenModal = useCallback((id: IcerikTuruId) => {
     prevFocusRef.current = document.activeElement as HTMLElement
@@ -275,9 +274,19 @@ export default function IcerikTurleriSection() {
           ))}
         </div>
 
-        {/* BottomNote — IT-06 */}
-        <div className="mt-10 text-center text-sm text-rd-neutral-400">
-          [BottomNote — IT-06]
+        {/* BottomNote */}
+        <div className="mt-8 md:mt-10">
+          <div className="flex flex-wrap items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-4 md:gap-3">
+            <Sparkles size={16} strokeWidth={2} className="text-rd-primary shrink-0" />
+            <span className="text-sm text-slate-600">{BOTTOM_NOTE.text}</span>
+            <a
+              href={BOTTOM_NOTE.linkHref}
+              className="flex items-center gap-1 text-sm font-medium text-rd-primary hover:underline"
+            >
+              {BOTTOM_NOTE.linkText}
+              <ArrowRight size={12} strokeWidth={2} />
+            </a>
+          </div>
         </div>
       </div>
 
