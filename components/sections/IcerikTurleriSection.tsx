@@ -162,7 +162,7 @@ function SampleModal({ type, onClose }: SampleModalProps) {
           aria-labelledby="modal-title"
           tabIndex={-1}
           onKeyDown={handleKeyDown}
-          className="relative bg-white rounded-[20px] max-w-[520px] w-full p-8 max-h-[90vh] overflow-y-auto animate-[modal-panel-in_250ms_ease-out] focus:outline-none"
+          className="relative bg-white rounded-[20px] max-w-[520px] w-full p-6 md:p-8 max-h-[90vh] overflow-y-auto animate-[modal-panel-in_250ms_ease-out] focus:outline-none"
         >
           {/* Close button */}
           <button
@@ -253,7 +253,7 @@ export default function IcerikTurleriSection() {
     : null
 
   return (
-    <section className="bg-rd-neutral-50 py-20">
+    <section className="bg-rd-neutral-50 py-16 md:py-20 lg:py-28">
       <div className="mx-auto max-w-[1200px] px-6">
         <SectionHeader
           eyebrow="4 araç, tek platform"

@@ -4,10 +4,12 @@ import { useState, useRef } from 'react'
 import {
   FileText, Image as ImageIcon, Video, Share2,
   ChevronDown, ArrowRight, Camera, Pencil, ScanLine,
+  Ruler, Globe, Key, ClipboardList, Maximize, Sparkles,
+  Search, Sun, Palette, BookOpen, Timer, Target, Smartphone, Hash,
 } from 'lucide-react'
 import SectionHeader from '@/components/primitives/SectionHeader'
 import { cn } from '@/lib/utils'
-import { CONTENT_TYPES, PLATFORMS, SAMPLE_PRODUCT, INPUT_METHODS } from '@/lib/constants/pazaryeri'
+import { CONTENT_TYPES, PLATFORMS, PAZARYERI_DEMO_DATA, SAMPLE_PRODUCT, INPUT_METHODS } from '@/lib/constants/pazaryeri'
 import type { ContentTypeId, PlatformId } from '@/lib/constants/pazaryeri'
 
 // ---- Icon maps ----
@@ -25,8 +27,14 @@ const INPUT_METHOD_ICONS = {
   Barcode: ScanLine,  // ScanLine as Barcode fallback
 } as const
 
+const RULE_ICONS = {
+  Ruler, Globe, Key, ClipboardList, Maximize, Sparkles,
+  Search, Sun, Palette, BookOpen, Timer, Target, Smartphone, Hash,
+} as const
+
 type ContentTypeIconKey = keyof typeof CONTENT_TYPE_ICONS
 type InputMethodIconKey = keyof typeof INPUT_METHOD_ICONS
+type RuleIconKey = keyof typeof RULE_ICONS
 
 // ---- ProductInputCard ----
 
@@ -116,8 +124,7 @@ export default function PazaryeriSection() {
   const [copiedField, setCopiedField] = useState<string | null>(null)
   const tablistRef = useRef<HTMLDivElement>(null)
 
-  // setActivePlatform, setCopiedField — PZ-06+ kullanılacak
-  void setActivePlatform
+  // setCopiedField — PZ-07+ kullanılacak
   void setCopiedField
 
   const activeType = CONTENT_TYPES.find((ct) => ct.id === activeContentType)!
@@ -256,14 +263,87 @@ export default function PazaryeriSection() {
               <ArrowRight size={20} strokeWidth={1.5} className="animate-pulse text-slate-300" />
             </div>
 
-            {/* Sağ: Output area placeholder (PZ-06+) */}
-            <div className="min-w-0 flex-1">
-              <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4">
-                <p className="mb-1 text-xs text-slate-400">
-                  Platform: {activePlatform} · İçerik: {activeContentType}
-                </p>
-                <p className="text-sm text-slate-400">Output alanı (PZ-06+)</p>
+            {/* Sağ: PlatformTabs + PlatformRulesBar + output placeholder */}
+            <div className="min-w-0 flex-1 space-y-4">
+
+              {/* PlatformTabs */}
+              <div
+                role="tablist"
+                aria-label="Platform seçimi"
+                className="flex flex-wrap gap-2"
+              >
+                {(Object.keys(PLATFORMS) as PlatformId[]).map((id) => {
+                  const platform = PLATFORMS[id]
+                  const isActive = activePlatform === id
+                  return (
+                    <button
+                      key={id}
+                      role="tab"
+                      aria-selected={isActive}
+                      onClick={() => setActivePlatform(id)}
+                      style={
+                        isActive
+                          ? { borderColor: platform.color, backgroundColor: platform.bgColor }
+                          : undefined
+                      }
+                      className={cn(
+                        'flex items-center gap-2 rounded-xl px-3 py-2 text-sm',
+                        'transition-all duration-200',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary/40 focus-visible:ring-offset-2',
+                        isActive
+                          ? 'border-2 font-medium'
+                          : 'border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50',
+                      )}
+                    >
+                      <span
+                        style={
+                          isActive
+                            ? { backgroundColor: platform.color, color: '#ffffff' }
+                            : undefined
+                        }
+                        className={cn(
+                          'inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-medium',
+                          !isActive && 'bg-slate-100 text-slate-500',
+                        )}
+                      >
+                        {platform.letter}
+                      </span>
+                      <span
+                        style={isActive ? { color: platform.color } : undefined}
+                        className={cn(!isActive && 'text-slate-600')}
+                      >
+                        {platform.name}
+                      </span>
+                    </button>
+                  )
+                })}
               </div>
+
+              {/* PlatformRulesBar */}
+              <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
+                <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                  Platform kuralları
+                </p>
+                <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                  {PAZARYERI_DEMO_DATA[activeContentType][activePlatform].rules.map((rule, i) => {
+                    const RuleIcon = RULE_ICONS[rule.icon as RuleIconKey]
+                    return (
+                      <li key={i} className="flex items-center gap-2">
+                        {RuleIcon && (
+                          <RuleIcon size={13} strokeWidth={2} className="shrink-0 text-slate-400" />
+                        )}
+                        <span className="text-xs text-slate-600">{rule.text}</span>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+
+              {/* Output area placeholder (PZ-07+) */}
+              <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4">
+                <p className="text-sm text-slate-400">Çıktı içeriği (PZ-07+)</p>
+              </div>
+
             </div>
           </div>
         </div>
