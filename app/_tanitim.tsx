@@ -15,16 +15,11 @@ import RefBanner from "@/components/RefBanner";
 
 export default function TanitimSayfasi() {
   const [modalAcik, setModalAcik] = useState(false);
-  const [modalUyeMod, setModalUyeMod] = useState<"giris" | "kayit">("kayit");
-  const [modalAmac, setModalAmac] = useState<"auth" | "satin_al">("auth");
+  const modalUyeMod = "kayit" as const;
   const router = useRouter();
 
   const handleModalAuthSuccess = () => {
-    if (modalAmac === "satin_al") {
-      router.push("/uret?paket=ac");
-    } else {
-      router.push("/uret");
-    }
+    router.push("/uret");
   };
 
   return (

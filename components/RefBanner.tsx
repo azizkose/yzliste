@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
 import Link from "next/link";
 import { Gift } from "lucide-react";
 
@@ -14,7 +14,7 @@ export default function RefBanner() {
 
   useEffect(() => {
     const code = getCookie("ref_code");
-    if (code) setVisible(true);
+    if (code) startTransition(() => setVisible(true));
   }, []);
 
   if (!visible) return null;

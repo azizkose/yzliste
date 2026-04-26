@@ -88,7 +88,6 @@ export async function POST(req: NextRequest) {
   let queued: { request_id: string };
   try {
   // Kling v2.1 standard — kuyruğa gönder, GPU bekleme
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   queued = await fal.queue.submit("fal-ai/kling-video/v2.1/standard/image-to-video", {
     input: {
       prompt: videoPrompt,

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, startTransition } from "react";
 import { Package, Store, Sparkles } from "lucide-react";
 
 const ADIMLAR = [
@@ -15,7 +15,7 @@ export default function HowItWorks() {
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) {
-      setVisible(ADIMLAR.map(() => true));
+      startTransition(() => setVisible(ADIMLAR.map(() => true)));
       return;
     }
 
@@ -24,11 +24,11 @@ export default function HowItWorks() {
         if (entries[0].isIntersecting) {
           ADIMLAR.forEach((_, i) => {
             setTimeout(() => {
-              setVisible((prev) => {
+              startTransition(() => setVisible((prev) => {
                 const next = [...prev];
                 next[i] = true;
                 return next;
-              });
+              }));
             }, i * 300);
           });
           observer.disconnect();

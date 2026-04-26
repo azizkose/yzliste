@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, startTransition } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -61,7 +61,7 @@ export default function HesapMarkaPage() {
     setYukleniyor(false);
   }, [router]);
 
-  useEffect(() => { yukle(); }, [yukle]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { startTransition(() => { yukle(); }); }, [yukle]);
 
   const toggleKategori = (k: string) => {
     setMagazaKategorileri(prev =>

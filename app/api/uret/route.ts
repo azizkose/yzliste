@@ -122,10 +122,23 @@ export async function POST(req: NextRequest) {
   // Kullanıcı bilgisi
   let kullaniciBilgi = "";
   if (girisTipi === "foto") {
-    kullaniciBilgi = `Generate listing from this product photo.\nCategory: ${kategori || "not specified"}\nExtra info: ${ozellikler || "none"}`;
-    if (dil === "tr") kullaniciBilgi = `Bu urun fotografina bakarak icerik uret.\nKategori: ${kategori || "belirtilmedi"}\nEk bilgi: ${ozellikler || "yok"}`;
+    const fotoDil: "tr" | "en" = ["etsy", "amazon_usa"].includes(platform) ? "en" : (dil || "tr");
+    if (fotoDil === "en") {
+      kullaniciBilgi = `Generate listing from this product photo.\nCategory: ${kategori || "not specified"}\nExtra info: ${ozellikler || "none"}`;
+      if (hedefKitle && hedefKitle !== "genel") kullaniciBilgi += `\nTarget audience: ${hedefKitle}`;
+      if (fiyatSegmenti) kullaniciBilgi += `\nPrice segment: ${fiyatSegmenti}`;
+      if (anahtarKelimeler) kullaniciBilgi += `\nPriority keywords: ${anahtarKelimeler}`;
+    } else {
+      kullaniciBilgi = `Bu urun fotografina bakarak icerik uret.\nKategori: ${kategori || "belirtilmedi"}\nEk bilgi: ${ozellikler || "yok"}`;
+      if (hedefKitle && hedefKitle !== "genel") kullaniciBilgi += `\nHedef kitle: ${hedefKitle}`;
+      if (fiyatSegmenti) kullaniciBilgi += `\nFiyat segmenti: ${fiyatSegmenti}`;
+      if (anahtarKelimeler) kullaniciBilgi += `\nOncelikli anahtar kelimeler: ${anahtarKelimeler}`;
+    }
   } else if (girisTipi === "barkod" && barkodBilgi) {
     kullaniciBilgi = `Urun adi: ${barkodBilgi.isim}\nMarka: ${barkodBilgi.marka || "belirtilmedi"}\nKategori: ${kategori || "belirtilmedi"}\nAciklama: ${barkodBilgi.aciklama || "yok"}`;
+    if (hedefKitle && hedefKitle !== "genel") kullaniciBilgi += `\nHedef kitle: ${hedefKitle}`;
+    if (fiyatSegmenti) kullaniciBilgi += `\nFiyat segmenti: ${fiyatSegmenti}`;
+    if (anahtarKelimeler) kullaniciBilgi += `\nOncelikli anahtar kelimeler: ${anahtarKelimeler}`;
   } else {
     const platformDil: "tr" | "en" = ["etsy", "amazon_usa"].includes(platform) ? "en" : (dil || "tr");
     if (platformDil === "en") {

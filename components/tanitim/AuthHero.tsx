@@ -62,9 +62,9 @@ export default function AuthHero() {
           >
             Ücretsiz başla — 3 kredi hediye →
           </Link>
-          <a href="/#araclar" className="border-2 border-white text-white hover:bg-white/10 px-7 py-3.5 rounded-xl font-medium text-base transition-colors">
+          <Link href="/#araclar" className="border-2 border-white text-white hover:bg-white/10 px-7 py-3.5 rounded-xl font-medium text-base transition-colors">
             Araçları incele ↓
-          </a>
+          </Link>
         </div>
         <p className="text-white/40 text-xs">Kredi kartı gerekmez</p>
       </div>

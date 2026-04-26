@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FileText, Circle, Check, X as XIcon, Loader2 } from "lucide-react";
+import { FileText, Loader2 } from "lucide-react";
 
 type Uretim = {
   id: string;

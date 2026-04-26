@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
-import { Platform, sistemPromptOlustur, kategoriKoduBul } from "@/lib/prompts/metin";
+import { Platform, sistemPromptOlustur } from "@/lib/prompts/metin";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

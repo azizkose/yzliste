@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Prototype/design files — not production code
+    "yzliste-uret-prototype.tsx",
+    "docs/redesign/yzliste-uret-prototype.tsx",
   ]),
 ]);
 

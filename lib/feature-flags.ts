@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, startTransition } from 'react'
 import posthog from 'posthog-js'
 
 /**
@@ -22,16 +22,16 @@ export function useFeatureFlag(flagName: string): boolean | null {
       const flag = posthog.isFeatureEnabled(flagName)
       // undefined = not yet loaded, wait for onFeatureFlags callback
       if (flag !== undefined) {
-        setValue(flag ?? true)
+        startTransition(() => setValue(flag ?? true))
         return
       }
 
       posthog.onFeatureFlags(() => {
         const loaded = posthog.isFeatureEnabled(flagName)
-        setValue(loaded ?? true) // flag missing in PostHog → treat as enabled
+        startTransition(() => setValue(loaded ?? true)) // flag missing in PostHog → treat as enabled
       })
     } catch {
-      setValue(true) // PostHog not initialized → fail open
+      startTransition(() => setValue(true)) // PostHog not initialized → fail open
     }
   }, [flagName])
 

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, startTransition } from "react";
 import Link from "next/link";
 import { Lightbulb, Zap, Target, Wallet } from "lucide-react";
 
@@ -17,7 +17,7 @@ export default function BenefitsGrid() {
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) {
-      setVisible(OZELLIKLER.map(() => true));
+      startTransition(() => setVisible(OZELLIKLER.map(() => true)));
       return;
     }
 
@@ -26,11 +26,11 @@ export default function BenefitsGrid() {
         if (entries[0].isIntersecting) {
           OZELLIKLER.forEach((_, i) => {
             setTimeout(() => {
-              setVisible((prev) => {
+              startTransition(() => setVisible((prev) => {
                 const next = [...prev];
                 next[i] = true;
                 return next;
-              });
+              }));
             }, i * 200);
           });
           observer.disconnect();

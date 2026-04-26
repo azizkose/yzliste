@@ -119,7 +119,6 @@ export async function POST(req: NextRequest) {
         const shotSize = FORMAT_BOYUT[gorselFormat] ?? FORMAT_BOYUT["1:1"];
         const sahne = STIL_SAHNELERI[gorselStil] ?? STIL_SAHNELERI.beyaz;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result = await fal.subscribe("fal-ai/bria/product-shot", {
           input: {
             image_url: cleanImageUrl,
@@ -133,7 +132,6 @@ export async function POST(req: NextRequest) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }) as any;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return (result?.data?.images ?? result?.images ?? []).map((img: { url: string }) => img.url) as string[];
       } catch {
         return [];
