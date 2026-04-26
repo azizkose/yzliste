@@ -533,18 +533,46 @@ const PROTECTED_PATHS = ['/app', '/hesap', '/kredi-yukle', '/admin', '/yzstudio'
 - [ ] Loading state: skeleton/spinner + ilerleme mesajları
 - [ ] Responsive: mobilde de çalışsın (tek kolon layout)
 
-**Faz 5 — Test:**
-- [ ] Flat-lay kıyafet + stok manken → try-on kalite değerlendir
-- [ ] On-model kıyafet + stok manken → try-on kalite değerlendir
-- [ ] Kullanıcı yüklediği manken ile test
-- [ ] num_samples=2 ile test (birden fazla sonuç)
-- [ ] Try-on sonucu → "Videoya Dönüştür" → podyum yürüyüşü 5sn test
-- [ ] Try-on sonucu → "Videoya Dönüştür" → 360° dönüş 10sn test
-- [ ] Video preset'lerinin hepsini test et (doğal poz, rüzgar efekti)
-- [ ] Kredi düşümü doğrulama: try-on (3 kredi) + video (10 kredi) = ayrı ayrı düşmeli
-- [ ] Yetersiz kredi durumu (try-on için yeterli ama video için yetersiz)
-- [ ] Büyük dosya yükleme (10MB+ görsel)
-- [ ] Mobile responsive test
+**Faz 5 — Production Test Planı**
+
+> **Önkoşul:** Test hesabı (test@gmail.com / 111111), en az 60 kredi yüklü.
+> **URL:** yzliste.com/yzstudio
+
+**Blok A — Temel try-on akışı (önce bunları geç)**
+
+- [ ] A1: Flat-lay t-shirt + Kadın 1 manken + balanced + 1 sample → 3 kredi düşmeli, ~20-40 sn sonuç
+- [ ] A2: On-model kıyafet (garment_photo_type=model) + Erkek 1 manken → sonuç kalitesini gözlemle
+- [ ] A3: Elbise (kategori=one-pieces) + Kadın 2 manken → kategori doğru algılanmalı
+- [ ] A4: Pantolon (kategori=bottoms) + Erkek 2 manken → kredi 3 düşmeli, sonuç makul görünmeli
+- [ ] A5: num_samples=2 → Kadın 3 manken + flat-lay → **6 kredi** düşmeli, **2 görsel** gelmeli
+
+**Blok B — Özel manken yükleme**
+
+- [ ] B1: Kendi fotoğrafını manken olarak yükle (düz arka plan, tam boy) → try-on çalışmalı
+- [ ] B2: Uygunsuz görsel yükle (yatay, kesik görüntü) → hata mesajı Türkçe gelsin
+
+**Blok C — Video dönüşüm (A1 sonucunu kullan)**
+
+- [ ] C1: A1 sonucu → Podyum Yürüyüşü → 5sn → **10 kredi** düşmeli, MP4 inmeli
+- [ ] C2: A1 sonucu → 360° Dönüş → 10sn → **20 kredi** düşmeli, video gelsin
+- [ ] C3: Doğal Poz preset → 5sn → video çalışsın
+- [ ] C4: Rüzgar Efekti preset → 5sn → video çalışsın
+
+**Blok D — Kredi ve hata durumları**
+
+- [ ] D1: Hesap sayfasında kredi geçmişini kontrol et — her üretim ayrı kayıt olarak görünmeli
+- [ ] D2: 2 krediyle try-on dene → "Yetersiz kredi" uyarısı görmeli, kredi düşmemeli
+- [ ] D3: Try-on sonrası 2 kredi kalan durum → video butonu devre dışı veya uyarı vermeli
+- [ ] D4: Onay dialogu → "Bu işlem 3 kredi harcar. Devam et?" → Hayır deyince kredi düşmemeli
+
+**Blok E — Edge case ve responsive**
+
+- [ ] E1: 10 MB+ görsel yükle → yükleme kabul etmeli veya net hata vermeli (timeout değil)
+- [ ] E2: Performance mod ile quality mod karşılaştır — sonuç kalite farkı değerlendirilebilir mi?
+- [ ] E3: Mobil 375px — kıyafet yükleme, manken seçimi, üret butonu kullanılabilir olmalı
+- [ ] E4: API timeout simülasyonu — çok büyük RMBG görseli yükle → "Tekrar dene" çıkmalı
+
+**Kabul kriteri:** A bloğu tamamen geçerse NF-02 "Done" sayılır. B-E blokları bulgu ile kapanabilir.
 
 **Dosyalar:** `app/yzstudio/` (tüm yeni), `app/api/studio/tryon/` (yeni, video/ alt-route dahil), `lib/studio-constants.ts` (yeni), `lib/hooks/useTryonUretim.ts` (yeni), `middleware.ts` (güncelle), `public/mankenler/` (yeni assets)
 
