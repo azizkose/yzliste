@@ -65,6 +65,16 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | SC-07 | Product snippets — aggregateRating | Gerçek review gelince | inline |
 | BLOG-01 | Scheduled task `blog-seo-yazisi` — toplu üretim moduna geçirildi (5-8 yazı/çalışma, çakışma kontrolü, 100 hedef) | Tamamlandı (2026-04-24) | inline |
 
+#### Ertelenmiş / Eski backlog'dan aktarılan
+
+| ID | Başlık | Durum | Spec |
+|---|---|---|---|
+| LP-08 | Araçlar dropdown — hero kartları + CTA | Ertelenmiş | — |
+| REF-01 | Referans programı — davet et, +10 kredi | Ertelenmiş | — |
+| UX-03 | Üretim sayfası navigasyon düzenlemesi | Ertelenmiş | — |
+| LS-01 | Listing skor + ücretsiz revize | Ertelenmiş | — |
+| HERO-VID | Hero video tam versiyon + kırpmasız | Ertelenmiş | — |
+
 ### Test kalan (kod tamamlandı)
 
 | ID | Başlık | Test |
