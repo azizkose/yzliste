@@ -19,7 +19,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | AUTH-01 | Mobilde kayıt engeli — Turnstile devre dışı | Kod OK, mobil test kaldı | inline |
 | FY-01 | Fiyat artışı — 49/129/299 TL | Kod OK, test kaldı | inline |
 | OPS-07 | Sentry error monitoring | Kısmen OK, DSN sonrası 3 madde | inline |
-| CI-01 | CI lint hataları düzelt — 12 error (setState in effect + prototype dosyaları) | Açık | inline |
+| CI-01 | CI lint hataları düzelt — 12 error (setState in effect + prototype dosyaları) | Tamamlandı | inline |
 | AI-01 | Chatbot SYSTEM_PROMPT güncelle — fiyat/platform/stil/yzstudio yanlış | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-1 |
 | AI-02 | Merkezi AI config — model + temperature + cost haritası (`lib/ai-config.ts`) | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-2, P0-3 |
 
@@ -30,11 +30,14 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | NF-02 | yzstudio — premium araçlar sayfası | Faz 1-3 OK, Faz 4-5 kaldı | [specs/nf-02-yzstudio.md](specs/nf-02-yzstudio.md) |
 | DR-03 | /hakkimizda kurucu bölümü — kısa, profesyonel, şirket adı yok | Tamamlandı | [specs/dr-03-hakkimizda-yeniden-yaz.md](specs/dr-03-hakkimizda-yeniden-yaz.md) |
 | DA-05 | /uret modern UX — monochrome çözümü | Tamamlandı | [specs/da-05-uret-modern-ux.md](specs/da-05-uret-modern-ux.md) |
-| AI-04 | /duzenle marka bağlamı + kategori kuralları eksik | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-1 |
+| AI-04 | /duzenle marka bağlamı + kategori kuralları eksik | Tamamlandı (AI-14 ile) | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-1 |
 | AI-05 | Platform karakter limiti tutarsızlığı — Hepsiburada 100→150, tek kaynak | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-2 |
 | AI-06 | TON_TANIMLARI 3→7 ton genişlet, tek dosyaya taşı | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-3 |
-| AI-07 | max_tokens platforma göre + stop_reason:max_tokens yakala | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-4 |
+| AI-07 | max_tokens platforma göre + stop_reason:max_tokens yakala | Tamamlandı (AI-16 ile) | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-4 |
 | AI-08 | Çıktı doğrulama — karakter limiti aşımı + yasaklı kelime regex check | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-5 |
+| AI-13 | Blog paket/kredi/platform yanlışlarını düzelt — Pro/Enterprise yok, süresiz kredi, 6 platform | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P1-1 |
+| AI-14 | /uret/duzenle KATEGORI_KURALLARI + YASAKLI_KELIMELER ekle (AI-04 tamamlama) | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P1-2 |
+| AI-15 | /api/chat rate limit ekle — Upstash per-user 30 req/dk | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P1-3 |
 | OPS-20 | KVKK + yasal uyumluluk tamamlama | Aziz — hukuki | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P2 — Orta vadeli
@@ -45,7 +48,11 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | AI-10 | /toplu route sistemPromptOlustur paylaşsın (kategori+yasaklı+marka) | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-2 |
 | AI-11 | "Bilinen ürün özellikleri" kuralı kaldır — sadece kullanıcı verisini kullan | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-3 |
 | AI-12 | /studio/manken promptuna profil ton + hedef_kitle ekle | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-4 |
-| OPS-14~19 | KÜME 11 — operasyonel olgunluk faz 2 | OPS-14/15/16 OK, 17/18/19 açık | [specs/kume-11.md](specs/kume-11.md) |
+| AI-16 | stop_reason:max_tokens yakala — 6 route'ta log + uyarı + truncated flag | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P2-1 |
+| AI-17 | ciktiDogrula helper'ı çıkar — /duzenle, /sosyal, /kit, /toplu'dan çağır | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P2-2 |
+| AI-18 | 3 küçük fix: kit DB log + toplu kategori param + chat fotoğraflı kit 4kr | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P2-5 |
+| AI-19 | GORSEL_STILLER emoji kaldır + PLATFORM_BILGI Tailwind default → proje paleti hex | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P2-6 |
+| OPS-14~19 | KÜME 11 — operasyonel olgunluk faz 2 | OPS-14/15/16/17/18/19 OK | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P3 — Gelecek / Ertelenmiş
 
