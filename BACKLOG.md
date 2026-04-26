@@ -27,7 +27,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 
 | ID | Başlık | Durum | Spec |
 |---|---|---|---|
-| NF-02 | yzstudio — premium araçlar sayfası | Faz 1-3 OK, Faz 4-5 kaldı | [specs/nf-02-yzstudio.md](specs/nf-02-yzstudio.md) |
+| NF-02 | yzstudio — premium araçlar sayfası | Faz 1-4 OK (kod), Faz 5 test + stok fotoğraf kaldı | [specs/nf-02-yzstudio.md](specs/nf-02-yzstudio.md) |
 | DR-03 | /hakkimizda kurucu bölümü — kısa, profesyonel, şirket adı yok | Tamamlandı | [specs/dr-03-hakkimizda-yeniden-yaz.md](specs/dr-03-hakkimizda-yeniden-yaz.md) |
 | DA-05 | /uret modern UX — monochrome çözümü | Tamamlandı | [specs/da-05-uret-modern-ux.md](specs/da-05-uret-modern-ux.md) |
 | AI-04 | /duzenle marka bağlamı + kategori kuralları eksik | Tamamlandı (AI-14 ile) | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-1 |
