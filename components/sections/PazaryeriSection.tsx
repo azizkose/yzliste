@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { FileText, Image as ImageIcon, Video, Share2, ChevronDown } from 'lucide-react'
+import { FileText, Image as ImageIcon, Video, Share2, ChevronDown, ArrowRight } from 'lucide-react'
 import SectionHeader from '@/components/primitives/SectionHeader'
 import { cn } from '@/lib/utils'
 import { CONTENT_TYPES, PLATFORMS } from '@/lib/constants/pazaryeri'
@@ -22,12 +22,12 @@ export default function PazaryeriSection() {
   const [copiedField, setCopiedField] = useState<string | null>(null)
   const tablistRef = useRef<HTMLDivElement>(null)
 
-  // setActivePlatform, setCopiedField, PLATFORMS — sonraki ticket'larda (PZ-05+) kullanılacak
+  // setActivePlatform, setCopiedField — PZ-05+ kullanılacak
   void setActivePlatform
   void setCopiedField
-  void PLATFORMS
 
   const activeType = CONTENT_TYPES.find((ct) => ct.id === activeContentType)!
+  const ActiveIcon = CONTENT_TYPE_ICONS[activeType.icon as ContentTypeIconKey]
 
   const handleTabKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const tabs = tablistRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
@@ -61,7 +61,7 @@ export default function PazaryeriSection() {
         >
           {CONTENT_TYPES.map((ct) => {
             const isActive = activeContentType === ct.id
-            const IconComp = CONTENT_TYPE_ICONS[ct.icon as ContentTypeIconKey]
+            const TabIcon = CONTENT_TYPE_ICONS[ct.icon as ContentTypeIconKey]
             return (
               <button
                 key={ct.id}
@@ -83,7 +83,7 @@ export default function PazaryeriSection() {
                     : 'border border-slate-200 bg-white text-slate-600 font-medium hover:border-slate-300 hover:bg-slate-50',
                 )}
               >
-                {IconComp && <IconComp size={16} strokeWidth={2} />}
+                {TabIcon && <TabIcon size={16} strokeWidth={2} />}
                 <span>{ct.label}</span>
               </button>
             )
@@ -109,13 +109,75 @@ export default function PazaryeriSection() {
           />
         </div>
 
-        {/* OutputContainer — PZ-04+ */}
-        <div id="pazaryeri-output" className="mb-8 text-center text-sm text-rd-neutral-400">
-          [OutputContainer — PZ-04+] · platform: {activePlatform}
+        {/* DynamicTitleBar */}
+        <div className="flex items-center justify-between rounded-t-xl border border-b-0 border-slate-200 bg-white px-4 py-4 md:px-6">
+          <div className="flex min-w-0 items-center gap-3">
+            <div
+              style={{ backgroundColor: activeType.bgColor }}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-300"
+            >
+              {ActiveIcon && (
+                <ActiveIcon
+                  size={16}
+                  strokeWidth={2}
+                  style={{ color: activeType.color }}
+                  className="transition-colors duration-300"
+                />
+              )}
+            </div>
+            <div className="min-w-0">
+              <p
+                style={{ color: activeType.color }}
+                className="text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors duration-300"
+              >
+                Üretilen örnek
+              </p>
+              <h3 className="truncate text-base font-bold text-slate-900 md:text-lg">
+                {activeType.label} — {PLATFORMS[activePlatform].name} için
+              </h3>
+            </div>
+          </div>
+          <span
+            style={{ backgroundColor: activeType.bgColor, color: activeType.color }}
+            className="ml-4 shrink-0 rounded-full px-2.5 py-1 text-xs font-medium transition-colors duration-300"
+          >
+            {activeType.credit}
+          </span>
+        </div>
+
+        {/* OutputCard frame */}
+        <div
+          id="pazaryeri-output"
+          style={{ borderColor: activeType.color }}
+          className="min-h-[400px] rounded-b-xl border bg-white p-5 transition-colors duration-300 md:p-6"
+        >
+          <div className="flex flex-col gap-6 md:flex-row md:items-start">
+            {/* Sol: ProductInputCard placeholder (PZ-05) */}
+            <div className="md:w-[300px] md:shrink-0">
+              <div className="flex min-h-[120px] items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-400">
+                Ürün girişi (PZ-05)
+              </div>
+            </div>
+
+            {/* ArrowConnector — desktop only */}
+            <div className="hidden items-center self-center md:flex">
+              <ArrowRight size={20} strokeWidth={1.5} className="animate-pulse text-slate-300" />
+            </div>
+
+            {/* Sağ: Output area placeholder (PZ-06+) */}
+            <div className="min-w-0 flex-1">
+              <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4">
+                <p className="mb-1 text-xs text-slate-400">
+                  Platform: {activePlatform} · İçerik: {activeContentType}
+                </p>
+                <p className="text-sm text-slate-400">Output alanı (PZ-06+)</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {copiedField && (
-          <div className="text-center text-xs text-rd-neutral-400">
+          <div className="mt-4 text-center text-xs text-rd-neutral-400">
             Kopyalanan alan: {copiedField}
           </div>
         )}
