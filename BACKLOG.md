@@ -19,6 +19,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | AUTH-01 | Mobilde kayıt engeli — Turnstile devre dışı | Kod OK, mobil test kaldı | inline |
 | FY-01 | Fiyat artışı — 49/129/299 TL | Kod OK, test kaldı | inline |
 | OPS-07 | Sentry error monitoring | Kısmen OK, DSN sonrası 3 madde | inline |
+| CI-01 | CI lint hataları düzelt — 12 error (setState in effect + prototype dosyaları) | Açık | inline |
 | AI-01 | Chatbot SYSTEM_PROMPT güncelle — fiyat/platform/stil/yzstudio yanlış | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-1 |
 | AI-02 | Merkezi AI config — model + temperature + cost haritası (`lib/ai-config.ts`) | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-2, P0-3 |
 
@@ -94,6 +95,23 @@ Kod tamamlandı: `lib/paketler.ts` güncellendi, chatbot prompt güncellendi. Ka
 - [ ] Source maps upload aktif et
 - [ ] Alert kuralı: her yeni hata → e-posta
 - [ ] Test: kasıtlı hata → Sentry'de görünsün
+
+### CI-01: CI Lint Hataları — 12 Error
+
+`npm run lint` 12 error veriyor, CI kırık. 2 kategori:
+
+**A) `setState in effect` (5 error) — Next.js 15 strict mode kuralı:**
+- [ ] `app/(auth)/hesap/marka/page.tsx:64` — setState'i effect dışına al veya `useLayoutEffect` kullan
+- [ ] `components/RefBanner.tsx:17` — aynı pattern
+- [ ] `components/tanitim/BenefitsGrid.tsx:20` — aynı pattern
+- [ ] `components/tanitim/HowItWorks.tsx:18` — aynı pattern
+- [ ] `lib/feature-flags.ts:25` — aynı pattern
+
+**B) Prototype dosyaları `<a>` yerine `<Link>` (7 error):**
+- [ ] `yzliste-uret-prototype.tsx` (root) — `.eslintignore`'a ekle veya sil
+- [ ] `docs/redesign/yzliste-uret-prototype.tsx` — `.eslintignore`'a ekle veya sil
+
+**En hızlı çözüm:** Prototype dosyalarını `.eslintignore`'a ekle (7 error gider), setState hatalarını `startTransition` veya koşullu çağrıya çevir (5 error gider).
 
 ### NF-05: Premium Video — Seedance 2.0
 

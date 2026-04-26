@@ -6,11 +6,12 @@
 yzliste.com — 7 pazaryeri (Trendyol, Hepsiburada, Amazon TR, N11, Etsy, Amazon USA) için AI listing üretici SaaS. Next.js 14/15 + Vercel + Supabase + iyzico.
 
 ## İş takibi
-Tüm yapılacak işler **BACKLOG.md** dosyasında.
+- **BACKLOG.md** → kısa takip listesi (açık işler, öncelik, durum).
+- **specs/{ID}.md** → her işin detaylı spec'i (yapılacaklar, test, prompt).
+- **BACKLOG-DONE.md** → tamamlanan işlerin arşivi.
 - Her oturumun başında BACKLOG.md'yi oku, nerede kaldığımızı anla.
+- Detaylı bilgi gerekiyorsa `specs/{ID}.md` dosyasını oku.
 - Bir iş bittiğinde `- [ ]` → `- [x]` olarak güncelle. Yarım iş `[x]` olmaz.
-- Sırayı takip et: küme içi sıralı, kümeler arası paralel gidilebilir.
-- Küme 1 (Foundation) bitmeden diğer kümeler boşa gider.
 
 ## Kod kuralları
 - DB şema değişiklikleri için migration yaz — direkt SQL çalıştırma
@@ -30,6 +31,16 @@ Tüm yapılacak işler **BACKLOG.md** dosyasında.
 - Kod: İngilizce (değişken, fonksiyon, commit mesajları)
 - UI metinleri: Türkçe (`messages/tr.json` hazırlanınca oradan besle)
 - Route isimleri: Türkçe slug (örn: /fiyatlar, /giris, /hesap)
+
+## Blog içerik kuralları
+Blog yazılarında şu ifadeler YASAK:
+- **Kaynaksız istatistik/yüzde:** "%60", "yüzde X" gibi rakamlar kaynak dipnotsuz kullanılamaz
+- **Abartılı satış iddiaları:** "satışları katla", "X kat artır", "katlama"
+- **Kanıtsız üstünlük iddiaları:** "en çok", "en iyi", "en popüler", "en gelişmiş", "1 numara"
+- **Subjektif kalite iddiaları:** "stüdyo kalitesinde", "profesyonel kalitede" (kanıtsız bağlamda)
+- **Garantili sonuç iddiaları:** "kesin artış", "garantili dönüşüm"
+- Rakam yerine nitel dil kullan: "ciddi oranda", "belirgin şekilde", "önemli ölçüde"
+- Kaynak varsa dipnot ekle: "(Kaynak: Baymard Institute, 2024)"
 
 ## Commit
 - Conventional commits: `feat:`, `fix:`, `chore:`, `docs:`
@@ -101,4 +112,4 @@ Sonra şu raporu ver: hangi dosyaları değiştirdin, hangi branch'e commitledin
 
 ## Önemli
 
-İçten gelen "burada bir emoji koyayım yumuşatsın", "burada bir gölge koyayım vurgu olsun" gibi sezgilerini bastır. Bu kurallar tasarım kararıdır, estetik tercih değil. Şüphe duyduğunda `docs/redesign/yzliste-design-tokens.md` dosyasını oku.
+İçten gelen "burada bir emoji koyayım yumuşatsın", "burada bir gölge koyayım vurgu olsun" gibi sezgilerini bastır. Bu kurallar tasarım kararıdı
