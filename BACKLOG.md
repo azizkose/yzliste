@@ -19,7 +19,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | AUTH-01 | Mobilde kayıt engeli — Turnstile devre dışı | Kod OK, mobil test kaldı | inline |
 | FY-01 | Fiyat artışı — 49/129/299 TL | Kod OK, test kaldı | inline |
 | OPS-07 | Sentry error monitoring | Kısmen OK, DSN sonrası 3 madde | inline |
-| CI-01 | CI lint hataları düzelt — 12 error (setState in effect + prototype dosyaları) | Tamamlandı | inline |
+| CI-01 | CI lint hataları düzelt — 12 error (setState in effect + prototype dosyaları) | Tamamlandı (0 error) | inline |
 | AI-01 | Chatbot SYSTEM_PROMPT güncelle — fiyat/platform/stil/yzstudio yanlış | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-1 |
 | AI-02 | Merkezi AI config — model + temperature + cost haritası (`lib/ai-config.ts`) | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-2, P0-3 |
 
@@ -38,6 +38,8 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | AI-13 | Blog paket/kredi/platform yanlışlarını düzelt — Pro/Enterprise yok, süresiz kredi, 6 platform | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P1-1 |
 | AI-14 | /uret/duzenle KATEGORI_KURALLARI + YASAKLI_KELIMELER ekle (AI-04 tamamlama) | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P1-2 |
 | AI-15 | /api/chat rate limit ekle — Upstash per-user 30 req/dk | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P1-3 |
+| UI-01 | Araçlar dropdown menüsünde ikonlar güncel değil — LP-11'deki Lucide ikonlarıyla eşitle | Tamamlandı | inline |
+| UI-02 | /fiyatlar "Kredi nasıl çalışır?" bölümünü daha görünür yap | Tamamlandı | inline |
 | OPS-20 | KVKK + yasal uyumluluk tamamlama | Aziz — hukuki | [specs/kume-11.md](specs/kume-11.md) |
 
 ### P2 — Orta vadeli
@@ -180,4 +182,4 @@ Eşik: 1.000 tekil/ay, 100 kayıtlı, 20 gerçek ödeme, 50 günlük üretim —
 - **AI denetim raporu:** `specs/ai-denetim-01.md` — 12 bulgu, AI-01~AI-12
 - **yzstudio detaylı spec:** `specs/nf-02-yzstudio.md`
 - **Design system referans:** `docs/redesign/yzliste-design-tokens.md`
-            
+                              

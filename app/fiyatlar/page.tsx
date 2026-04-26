@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Gift, Check, Lock, FileText, Camera, Clapperboard, Share2, Infinity } from "lucide-react";
+import { Gift, Check, Lock, FileText, Camera, Clapperboard, Share2, Infinity as InfinityIcon } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { PAKET_LISTESI } from "@/lib/paketler";
@@ -233,7 +233,7 @@ export default function FiyatlarPage() {
             ))}
           </div>
           <div className="flex items-center gap-2 mt-4 text-xs text-[#5A5852]">
-            <Infinity size={13} strokeWidth={1.5} className="text-[#908E86] flex-shrink-0" />
+            <InfinityIcon size={13} strokeWidth={1.5} className="text-[#908E86] flex-shrink-0" />
             Krediler süresiz geçerlidir — sona erme tarihi yoktur. Paketler tek seferlik ödeme.
           </div>
         </div>
