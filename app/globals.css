@@ -96,6 +96,11 @@ body {
   overscroll-behavior: none; /* iOS/Safari elastic bounce engelleme */
 }
 
+@keyframes subtle-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
 @keyframes tab-enter {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0);   }
