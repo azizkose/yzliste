@@ -63,9 +63,9 @@ Manuel listing yazımının maliyetini hesaplayalım.
 Kendi yazma yolu: zamanın opportunity cost'u. 80 saat zamanın değeri (saatlik 100-300 TL e-ticaret operatörü için) 8.000-24.000 TL.
 
 yzliste maliyetine bakalım:
-- Aylık abonelik (Pro paket): 800-2000 TL
-- Bu paketle 200-500 ürün üretim
-- 50 ürün için maliyet: ~200-500 TL
+- Paket fiyatı: ₺49 – ₺299 arası (tek seferlik, süresi dolmaz)
+- 50 listing için gereken kredi: 50 kredi
+- Popüler paket (30 kredi, ₺129) veya Büyük paket (100 kredi, ₺299) bu kullanımı karşılıyor
 
 Maliyet farkı yaklaşık 40-50 kat avantajlı yzliste lehine. Ölçek arttıkça yzliste'nin avantajı katlanıyor; manuel maliyet doğrusal artarken yzliste sabit.
 

@@ -3,7 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { Ratelimit } from "@upstash/ratelimit";
 import logger from "@/lib/logger";
 import { Redis } from "@upstash/redis";
-import { METIN_PROMPT_VERSION, Platform, sistemPromptOlustur, kategoriKoduBul, PLATFORM_KURALLARI, YASAKLI_KELIMELER } from "@/lib/prompts/metin";
+import { METIN_PROMPT_VERSION, Platform, sistemPromptOlustur, kategoriKoduBul } from "@/lib/prompts/metin";
+import { ciktiDogrula } from "@/lib/output-validator";
 import { listingSkorHesapla } from "@/lib/listingSkor";
 import { AI_MODELS, AI_TEMPERATURES, AI_COSTS } from "@/lib/ai-config";
 
@@ -202,6 +203,10 @@ export async function POST(req: NextRequest) {
   const data = await response.json();
   const icerik = data.content?.[0]?.text;
 
+  if (data.stop_reason === "max_tokens") {
+    logger.warn({ userId, platform: platformKey }, "uret stop_reason:max_tokens — çıktı kesildi");
+  }
+
   const inputTokens: number = data.usage?.input_tokens || 0;
   const outputTokens: number = data.usage?.output_tokens || 0;
   const modelCost = AI_COSTS[AI_MODELS.listing] ?? AI_COSTS["claude-sonnet-4-6"];
@@ -253,20 +258,7 @@ export async function POST(req: NextRequest) {
   });
 
   // Post-generation validation
-  const uyarilar: string[] = [];
-  const baslikMatch = icerik.match(/(?:📌\s*)?(?:BAŞLIK|BASLIK|TITLE)[:\n]+([^\n]+)/i);
-  if (baslikMatch) {
-    const baslik = baslikMatch[1].trim();
-    const limit = PLATFORM_KURALLARI[platformKey]?.baslikLimit;
-    if (limit && baslik.length > limit) {
-      uyarilar.push(`Başlık ${baslik.length} karakter — limit ${limit} karakter aşıldı`);
-    }
-    const yasaklar = YASAKLI_KELIMELER[platformKey] ?? [];
-    const bulunan = yasaklar.filter((k) => icerik.toLowerCase().includes(k.toLowerCase()));
-    if (bulunan.length > 0) {
-      uyarilar.push(`Yasaklı ifade tespit edildi: ${bulunan.slice(0, 3).join(", ")}`);
-    }
-  }
+  const uyarilar = ciktiDogrula({ icerik, platform: platformKey });
 
   return NextResponse.json({ icerik, isAdmin, uretimId: insertData.id, skor, oneriler, uyarilar });
 }

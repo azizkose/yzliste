@@ -1,138 +1,85 @@
 ---
 slug: yzliste-kredi-sistemi-paketler
-baslik: yzliste Kredi Sistemi ve Paketleri: Hangi Paket Sana Uygun?
-ozet: yzliste kredi sistemi nasıl çalışır? Başlangıç, Pro ve Enterprise paketleri arasında doğru seçim, kredi tüketim mantığı ve yükseltme stratejisi rehberde.
+baslik: yzliste Kredi Sistemi ve Paketleri Rehberi
+ozet: yzliste kredi sistemi nasıl çalışır? Başlangıç, Popüler ve Büyük paketleri arasında doğru seçim, kredi tüketim mantığı ve ne zaman hangi paketi almanız gerektiği.
 yayinTarihi: 2026-04-23
 yazarAdi: yzliste Ekibi
-okumaSuresi: 5
+okumaSuresi: 4
 kategori: Ürün Rehberleri
-etiketler: yzliste,kredi sistemi,paket,fiyatlandırma,abonelik,saas
+etiketler: yzliste,kredi sistemi,paket,fiyatlandırma
 kapakGorsel: 
 ---
 
 # GİRİŞ
 
-yzliste'yi kullanmaya başlamadan önce hangi paketin sana uygun olduğunu anlamak, doğru başlangıç için kritik. Çok küçük paket aldıysan ay ortasında kredilerin biter ve operasyon kesintiye uğrar; çok büyük paket aldıysan kullanmadığın krediler ay sonunda boşa gider. Bu rehberde yzliste paket sistemini, kredi tüketim mantığını ve doğru paket seçimini ele alacağız.
+yzliste'de tüm içerik üretimlerini (listing metni, görsel, video, sosyal medya) kredi sistemiyle yapıyorsunuz. Bu rehberde kredi mantığını, paket seçeneklerini ve hangi kullanıcı için hangisinin uygun olduğunu açıklıyoruz.
 
-## Kredi Mantığı Nasıl Çalışıyor?
+## Kredi Mantığı
 
-yzliste'de her üretim belirli sayıda krediye mal oluyor. Kredi miktarı işlemin türüne göre değişiyor:
+Her üretim türü belirli sayıda kredi tüketiyor:
 
-- Listing üretimi (tek pazaryeri için): 1 kredi
-- Listing üretimi (3+ pazaryeri için): 2-3 kredi
-- Görsel üretimi (basit arka plan değiştirme): 1 kredi
-- Görsel üretimi (model giydirme, lifestyle sahne): 2-3 kredi
-- Video üretimi: 5-10 kredi
-- Sosyal medya kiti (5 platform): 3-5 kredi
+- **Listing metni** (her platform için ayrı): 1 kredi
+- **AI görsel**: 1 kredi / stil
+- **Video** (kısa form): 10 kredi (5 saniyelik) · 20 kredi (10 saniyelik)
+- **Sosyal medya** caption: 1 kredi / platform
+- **Sosyal medya kiti** (4 platform): fotoğrafsız 3 kredi · fotoğraflı 4 kredi
+- **yzstudio mankene giydirme**: 2 kredi / görsel
+- **yzstudio manken üretimi**: 1 kredi
 
-Bu rakamlar yzliste'nin güncel kredi tablosuna göre değişebilir; panel içinde her işlem öncesi maliyet görünüyor.
+Tüm krediler **süresizdir** — sona erme tarihi yoktur. Aldığınız krediyi istediğiniz zaman kullanabilirsiniz.
 
-Kredi tüketim mantığı şu şekilde işliyor: ay başında alınan paket kredi olarak hesaba yükleniyor. İşlemler oldukça krediler düşüyor. Ay sonuna kadar tüketilmeyen krediler bir sonraki aya devretmiyor; kullan ya da kaybet.
+## Paket Seçenekleri
 
-## Başlangıç Paketi
+yzliste'de üç paket var. Hepsi tek seferlik satın alımdır; aylık abonelik sistemi yoktur. İstediğiniz zaman ek kredi satın alabilirsiniz.
 
-Başlangıç paketi yeni satıcılar ve test aşamasındaki kullanıcılar için. Tipik olarak:
+### Başlangıç — ₺49 (10 kredi)
 
-- Aylık 50-100 kredi
-- Tek pazaryeri odaklı (Trendyol veya Hepsiburada gibi)
-- Temel görsel üretimi
-- Standart dil desteği
+Az sayıda ürün için test etmek veya küçük bir koleksiyonu işlemek isteyenler için uygun. 10 krediyle:
 
-Aylık ürün ekleme hacmi 20-30 olan satıcılar için başlangıç paketi yeterli. Bu hacim:
+- 10 listing metni, veya
+- 5 görsel + 5 listing, veya
+- Birkaç farklı türde içerik karışık
 
-- Ayda 25 yeni listing × 1 kredi = 25 kredi
-- Ayda 20 görsel düzeltme × 1 kredi = 20 kredi
-- Ayda 5 sosyal medya kiti × 3 kredi = 15 kredi
-- Toplam: 60 kredi
+Birkaç ürünle yzliste'yi tanımak istiyorsanız başlangıç paketi doğru tercih.
 
-Başlangıç paketinin 100 kredisi bu kullanıma rahat yetiyor.
+### Popüler — ₺129 (30 kredi)
 
-## Pro Paketi
+Aktif satıcılar için önerilen paket. 30 krediyle:
 
-Pro paketi orta ölçekli mağazalar için. Tipik olarak:
+- 30 listing metni (farklı platformlar için), veya
+- 15-20 ürün için görsel + listing kombinasyonu, veya
+- 1-2 video + birçok listing ve görsel
 
-- Aylık 300-500 kredi
-- Tüm pazaryeri desteği (7 platform)
-- Gelişmiş görsel özellikleri (model giydirme, lifestyle)
-- Toplu yükleme (Excel/CSV)
-- Sosyal medya kiti tam paket
-- Öncelikli destek
+Ayda 10-25 ürün ekleyen veya düzenli içerik üretimi yapan satıcılar için tercih edilen seçenek.
 
-Aylık 100-200 ürün ekleyen mağazalar için Pro mantıklı. Bu hacim:
+### Büyük — ₺299 (100 kredi)
 
-- Ayda 150 yeni listing × 1.5 kredi (çoklu pazaryeri ortalama) = 225 kredi
-- Ayda 100 görsel iyileştirme × 1.5 kredi = 150 kredi
-- Ayda 20 sosyal medya kiti × 4 kredi = 80 kredi
-- Toplam: 455 kredi
+Toplu işlemler ve sık içerik üretimi yapan mağazalar için. 100 kredi geniş bir kullanım alanı sunuyor; birim kredi başı maliyet en düşük bu pakette.
 
-500 kredilik Pro paket bu kullanıma uygun. Yoğun aylarda kredi yetmeyebilir; ek kredi tek seferlik satın alınabiliyor.
+Düzenli olarak çok sayıda ürün işleyen, Excel toplu yükleme kullanan veya görsel-video üretimini sıklaştırmak isteyen satıcılar için uygundur.
 
-## Enterprise Paketi
+## Hangi Paketi Seçmelisiniz?
 
-Enterprise paketi büyük markalar ve agresif büyüyen mağazalar için. Tipik olarak:
+Üç soruyla karar verebilirsiniz:
 
-- Aylık 1500+ kredi (özelleştirilebilir)
-- Özel hesap yöneticisi
-- API erişimi (sistem entegrasyonu)
-- Özel marka şablonları
-- Eğitim ve onboarding desteği
-- SLA destek
+1. Ne sıklıkla içerik üreteceksiniz?
+2. Kaç farklı içerik türüne ihtiyacınız var (sadece metin mi, görsel de mi)?
+3. yzliste'yi ilk kez mi deniyorsunuz?
 
-Aylık 500+ ürün ekleyen veya çok pazaryerinde aktif markalar için Enterprise verimli. Aylık fiyat yüksek ama birim kredi maliyeti düşüyor; ölçek ekonomisi avantajı.
+**İlk kez deniyorsanız:** Başlangıç paketi yeterli. Sistemi öğrenin, üretim kalitesini görün. Sonra ihtiyaca göre ek kredi alabilirsiniz.
 
-Enterprise için fiyatlandırma satıcı bazlı; standart liste fiyat yok. yzliste satış ekibiyle iletişime geçip ihtiyaç değerlendirmesi yapılıyor.
+**Aktif satıcıysanız:** Popüler paket genellikle iyi bir başlangıç noktası. Birim maliyeti dengelidir.
 
-## Doğru Paket Seçimi
+**Toplu işlem yapıyorsanız:** Büyük paket birim başı maliyeti düşürür.
 
-Hangi paket sana uygun, üç soruyla netleşiyor:
+## Kredi Tasarruf İpuçları
 
-1. Aylık kaç yeni ürün ekliyorsun?
-2. Kaç pazaryerinde aktifsin?
-3. Görsel ve video üretimi ne kadar gerekli?
+**Toplu işlem kullanın.** Birden fazla ürünü tek seferde Excel ile yükleyip işlemek, tek tek işlemekle aynı krediyi kullanır ama zaman kazandırır.
 
-Cevaplar paketi doğal olarak işaret ediyor:
+**Platform seçimini planlayın.** Her platformun listing'i ayrı kredi tüketir; sadece aktif olduğunuz platformları seçin.
 
-- 30 ürün altı, 1-2 pazaryeri, basit görsel: Başlangıç
-- 100-200 ürün, 3-5 pazaryeri, gelişmiş görsel: Pro
-- 500+ ürün, 7 pazaryeri, video üretim, API: Enterprise
-
-Yanlış paket seçmenin maliyeti: küçükte sürekli kredi bitmesi, büyükte aylık abonelik fazlası ödenmesi.
-
-## 💡 İpucu
-
-İlk ay küçük paketle başla. Aylık aktif kullanım desenini gör; gerçek kredi tüketimini ölç. İkinci ayda gerçek kullanıma göre paketi ayarla. Çoğu satıcı baştan büyük paket alıp yarı kullanımda kalıyor; küçük başlayıp büyütmek daha verimli. Paket değişimi anlık yapılabiliyor; aydan aya yükseltebilir veya küçültebilirsin.
-
-## Kredi Tasarruf Taktikleri
-
-Kredilerini verimli kullanmak için:
-
-Aynı ürün için bir seferde tüm pazaryerlerini seç. Tek tek pazaryeri için ayrı işlem yapmak yerine çoklu pazaryeri seçimi krediyi daha iyi değerlendiriyor.
-
-Görsel öncelikleri planla. Önce ana görseli mükemmelleştir, sonra alt görselleri üret. Her ürün için 7 alt görsele kredi harcamak yerine 3-4 kaliteli görsel daha verimli.
-
-Excel toplu yükleme kullan. Manuel tek tek ürün eklemek yerine toplu yükleme aynı toplam krediyle daha çok ürün işliyor.
-
-Sosyal medya kitini hedefli kullan. Her ürün için sosyal medya kiti açmak yerine en güçlü 10-15 ürün için açıyorsun; kalan ürünler için manuel paylaşım veya basit kopya yapıyorsun.
-
-## Tek Seferlik Kredi Paketi
-
-Aylık abonelik dışında tek seferlik kredi paketi de var. Aylık aktif değilsen ya da bazı aylarda yoğun bazı aylarda durgun kullanıcısan tek seferlik krediler esnek.
-
-Tek seferlik paket aylık paketten birim başı biraz daha pahalı; ancak kullanılmayan kredilerin atılmaması bu farkı dengeliyor.
-
-Mevsimsel satıcılar (yaz koleksiyonu üreticileri, hediye sezonu satıcıları) için tek seferlik paket çok pratik.
-
-## Yükseltme Zamanlaması
-
-Paketini yükseltme zamanını şu sinyallerden anlıyorsun:
-
-- Ay sonuna 5-10 gün kala kredilerin bitiyor
-- Yeni pazaryeri eklemek istiyorsun ama paketin desteklemiyor
-- Ekibin büyüdü ve paralel kullanım gerekli
-- Yeni özellik (video, model giydirme) ihtiyacı doğdu
-
-Bu sinyallerden bir-ikisi 2-3 ay üst üste tekrar ediyorsa yükseltme zamanı. Aylık ekstra kredi satın almak orta vadede paket yükseltmekten daha pahalı.
+**Görsel önceliklerini belirleyin.** Her ürün için tüm stilleri denemek yerine en etkili 2-3 stille başlamak daha verimli.
 
 ## SONUÇ
 
-yzliste paket seçimi mağazanın ölçeğine ve operasyonel ihtiyacına göre yapılan bir karar. Başlangıç, Pro ve Enterprise arasındaki doğru seçim hem maliyeti optimize ediyor hem de operasyonel ihtiyacı karşılıyor. İlk ay küçük başla, kullanım desenini gör, gerçek tüketime göre yükselt — bu yaklaşım yanlış paket seçim riskini elimine ediyor. yzliste'nin temel değer önerisi içerik üretim sürelerini dakikalara indirgeme; doğru paket bu değeri sürdürülebilir maliyetle elde tutmana imkân sağlıyor.
+yzliste kredi sistemi basit ve şeffaf: her işlem kaç kredi tükettiğini panelde açıkça görüyorsunuz, süresi dolmayan kredilerle istediğiniz tempoda çalışıyorsunuz. Küçük başlamak, sistemi test etmek ve ihtiyaca göre ek kredi almak en rahat yaklaşım.

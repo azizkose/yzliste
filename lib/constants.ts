@@ -9,12 +9,12 @@ export const PLATFORM_BILGI: Record<string, {
   aciklama: string;
   dil: "tr" | "en";
 }> = {
-  trendyol:    { baslikLimit: 100, ozellikSayisi: 5, aciklamaKelime: 300, etiketSayisi: 10, renk: "bg-orange-50 text-orange-700 border-orange-200",  aciklama: "Emoji destekli · Marka + Ürün + Özellik formatı", dil: "tr" },
-  hepsiburada: { baslikLimit: 150, ozellikSayisi: 5, aciklamaKelime: 350, etiketSayisi: 10, renk: "bg-orange-50 text-orange-600 border-orange-200",  aciklama: "Emoji destekli · Teknik detay odaklı", dil: "tr" },
-  amazon:      { baslikLimit: 200, ozellikSayisi: 5, aciklamaKelime: 400, etiketSayisi:  0, renk: "bg-yellow-50 text-yellow-700 border-yellow-200",  aciklama: "Emoji kullanılmaz · Title Case · Backend arama terimleri", dil: "tr" },
-  n11:         { baslikLimit: 100, ozellikSayisi: 5, aciklamaKelime: 250, etiketSayisi:  8, renk: "bg-blue-50   text-blue-700   border-blue-200",    aciklama: "Emoji destekli · Sade ve anlaşılır dil", dil: "tr" },
-  etsy:        { baslikLimit: 140, ozellikSayisi: 0, aciklamaKelime: 300, etiketSayisi: 13, renk: "bg-orange-50 text-orange-800  border-orange-300",  aciklama: "Natural English · 13 multi-word tags · No keyword stuffing", dil: "en" },
-  amazon_usa:  { baslikLimit: 200, ozellikSayisi: 5, aciklamaKelime: 400, etiketSayisi:  0, renk: "bg-blue-50   text-blue-800   border-blue-300",    aciklama: "Title Case · No emoji · Benefit-first bullets · Backend search terms", dil: "en" },
+  trendyol:    { baslikLimit: 100, ozellikSayisi: 5, aciklamaKelime: 300, etiketSayisi: 10, renk: "bg-[#FEF4E7] text-[#8B4513] border-[#D8D6CE]", aciklama: "Emoji destekli · Marka + Ürün + Özellik formatı", dil: "tr" },
+  hepsiburada: { baslikLimit: 150, ozellikSayisi: 5, aciklamaKelime: 350, etiketSayisi: 10, renk: "bg-[#FEF4E7] text-[#8B4513] border-[#D8D6CE]", aciklama: "Emoji destekli · Teknik detay odaklı", dil: "tr" },
+  amazon:      { baslikLimit: 200, ozellikSayisi: 5, aciklamaKelime: 400, etiketSayisi:  0, renk: "bg-[#EBF1FB] text-[#0E2558] border-[#BAC9EB]", aciklama: "Emoji kullanılmaz · Title Case · Backend arama terimleri", dil: "tr" },
+  n11:         { baslikLimit: 100, ozellikSayisi: 5, aciklamaKelime: 250, etiketSayisi:  8, renk: "bg-[#EBF1FB] text-[#0E2558] border-[#BAC9EB]", aciklama: "Emoji destekli · Sade ve anlaşılır dil", dil: "tr" },
+  etsy:        { baslikLimit: 140, ozellikSayisi: 0, aciklamaKelime: 300, etiketSayisi: 13, renk: "bg-[#FEF4E7] text-[#8B4513] border-[#D8D6CE]", aciklama: "Natural English · 13 multi-word tags · No keyword stuffing", dil: "en" },
+  amazon_usa:  { baslikLimit: 200, ozellikSayisi: 5, aciklamaKelime: 400, etiketSayisi:  0, renk: "bg-[#EBF1FB] text-[#0E2558] border-[#BAC9EB]", aciklama: "Title Case · No emoji · Benefit-first bullets · Backend search terms", dil: "en" },
 };
 
 export const PLATFORM_PLACEHOLDER: Record<string, { urun: string; kategori: string; ozellik: string }> = {
@@ -48,15 +48,15 @@ export type GorselStil = {
 };
 
 export const GORSEL_STILLER: GorselStil[] = [
-  { id: "beyaz",    label: "⬜ Beyaz Zemin",   aciklama: "Trendyol standart",      img: "/ornek_beyaz.jpg",     kategoriler: ["kozmetik","elektronik","cocuk","giyim"] },
-  { id: "koyu",     label: "⬛ Koyu Zemin",    aciklama: "Premium / elektronik",   img: "/ornek_koyu.jpg",      kategoriler: ["elektronik","taki"] },
-  { id: "lifestyle",label: "🏠 Lifestyle",      aciklama: "Gerçek ortam",           img: "/ornek_lifestyle.jpg", kategoriler: ["giyim","ev","gida"] },
-  { id: "mermer",   label: "🪨 Mermer",         aciklama: "Lüks / kozmetik",        img: "/ornek_mermer.jpg",    kategoriler: ["kozmetik","taki"] },
-  { id: "ahsap",    label: "🪵 Ahşap",          aciklama: "El yapımı / organik",    img: "/ornek_ahsap.jpg",     kategoriler: ["gida","ev","spor"] },
-  { id: "gradient", label: "🎨 Gradient",       aciklama: "Modern / teknoloji",     img: "/ornek_gradient.jpg",  kategoriler: ["elektronik","cocuk","kozmetik"] },
-  { id: "dogal",    label: "🌿 Doğal",          aciklama: "Açık hava / taze",       img: "/ornek_dogal.jpg",     kategoriler: ["gida","spor","ev"] },
-  { id: "ozel",     label: "✏️ Sahneni Yaz",    aciklama: "Prompt ile tanımla",     img: null,                   kategoriler: [] },
-  { id: "referans", label: "🖼️ Arka Plan",      aciklama: "Fotoğraf yükle",         img: null,                   kategoriler: [] },
+  { id: "beyaz",    label: "Beyaz Zemin",  aciklama: "Trendyol standart",      img: "/ornek_beyaz.jpg",     kategoriler: ["kozmetik","elektronik","cocuk","giyim"] },
+  { id: "koyu",     label: "Koyu Zemin",   aciklama: "Premium / elektronik",   img: "/ornek_koyu.jpg",      kategoriler: ["elektronik","taki"] },
+  { id: "lifestyle",label: "Lifestyle",    aciklama: "Gerçek ortam",           img: "/ornek_lifestyle.jpg", kategoriler: ["giyim","ev","gida"] },
+  { id: "mermer",   label: "Mermer",       aciklama: "Lüks / kozmetik",        img: "/ornek_mermer.jpg",    kategoriler: ["kozmetik","taki"] },
+  { id: "ahsap",    label: "Ahşap",        aciklama: "El yapımı / organik",    img: "/ornek_ahsap.jpg",     kategoriler: ["gida","ev","spor"] },
+  { id: "gradient", label: "Gradient",     aciklama: "Modern / teknoloji",     img: "/ornek_gradient.jpg",  kategoriler: ["elektronik","cocuk","kozmetik"] },
+  { id: "dogal",    label: "Doğal",        aciklama: "Açık hava / taze",       img: "/ornek_dogal.jpg",     kategoriler: ["gida","spor","ev"] },
+  { id: "ozel",     label: "Sahneni Yaz",  aciklama: "Prompt ile tanımla",     img: null,                   kategoriler: [] },
+  { id: "referans", label: "Arka Plan",    aciklama: "Fotoğraf yükle",         img: null,                   kategoriler: [] },
 ];
 
 // ─── Video presetler ──────────────────────────────────────────────────────────

@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { fal } from "@fal-ai/client";
-import { captionSistemPrompt, captionCiktiParse } from "@/lib/prompts/sosyal";
+import { captionSistemPrompt, captionCiktiParse, SOSYAL_PROMPT_VERSION } from "@/lib/prompts/sosyal";
 import { rmbgUygula } from "@/lib/fal/rmbg";
 import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
+import logger from "@/lib/logger";
 
 fal.config({ credentials: process.env.FAL_KEY });
 
@@ -46,6 +47,9 @@ async function captionUret(params: {
     }),
   });
   const data = await response.json();
+  if (data.stop_reason === "max_tokens") {
+    logger.warn({ platform: params.platform }, "kit:captionUret stop_reason:max_tokens — çıktı kesildi");
+  }
   return captionCiktiParse(data.content?.[0]?.text || "");
 }
 
@@ -140,10 +144,30 @@ export async function POST(req: NextRequest) {
 
     const [captionResults, gorselUrls] = await Promise.all([Promise.all(captionPromises), gorselPromise]);
     const captions = Object.fromEntries(platformlar.map((p, i) => [p, captionResults[i]]));
+
+    // Fire-and-forget DB log — her platform için ayrı kayıt
+    platformlar.forEach((p, i) => {
+      const { caption, hashtag } = captionResults[i];
+      supabaseAdmin.from("sosyal_uretimler").insert({
+        user_id: userId, urun_adi: urunAdi, platform: p,
+        caption, hashtag, prompt_version: SOSYAL_PROMPT_VERSION,
+      }).then();
+    });
+
     return NextResponse.json({ captions, gorselUrls, kullanilanKredi: krediGereken, isAdmin });
   }
 
   const captionResults = await Promise.all(captionPromises);
   const captions = Object.fromEntries(platformlar.map((p, i) => [p, captionResults[i]]));
+
+  // Fire-and-forget DB log
+  platformlar.forEach((p, i) => {
+    const { caption, hashtag } = captionResults[i];
+    supabaseAdmin.from("sosyal_uretimler").insert({
+      user_id: userId, urun_adi: urunAdi, platform: p,
+      caption, hashtag, prompt_version: SOSYAL_PROMPT_VERSION,
+    }).then();
+  });
+
   return NextResponse.json({ captions, gorselUrls: [], kullanilanKredi: krediGereken, isAdmin });
 }

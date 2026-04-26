@@ -1,7 +1,8 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
-import { Platform, sistemPromptOlustur } from "@/lib/prompts/metin";
+import { Platform, sistemPromptOlustur, kategoriKoduBul } from "@/lib/prompts/metin";
+import logger from "@/lib/logger";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -41,7 +42,9 @@ export async function POST(req: NextRequest) {
 
   const platformKey = platform || "trendyol";
   const dil: "tr" | "en" = ["etsy", "amazon_usa"].includes(platformKey) ? "en" : "tr";
-  const sistemPrompt = sistemPromptOlustur(platformKey, dil, ton);
+  // kategoriKodu ilk satırdan tahmin et — tüm satırlar genellikle aynı kategoride
+  const tahminKategori = satirlar[0]?.kategori ?? "";
+  const sistemPrompt = sistemPromptOlustur(platformKey, dil, ton, kategoriKoduBul(tahminKategori) ?? undefined);
 
   // Marka bağlamı: override > profil
   const markaAdi = markaOverride || profil.marka_adi || null;
@@ -111,6 +114,9 @@ export async function POST(req: NextRequest) {
 
           const data = await res.json();
           const icerik = data.content?.[0]?.text || "";
+          if (data.stop_reason === "max_tokens") {
+            logger.warn({ userId, platformKey, urun: urunAdi }, "toplu stop_reason:max_tokens — çıktı kesildi");
+          }
 
           if (!isAdmin) {
             islenenKredi++;

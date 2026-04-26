@@ -4,6 +4,7 @@ import { captionSistemPrompt, captionCiktiParse } from "@/lib/prompts/sosyal";
 import { krediDus, krediIade } from "@/lib/credits";
 import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
 import { SOSYAL_PROMPT_VERSION } from "@/lib/prompts/sosyal";
+import logger from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
   const { urunAdi, ekBilgi, platform, ton, userId, sezon = "normal" } = await req.json();
@@ -74,6 +75,9 @@ export async function POST(req: NextRequest) {
     });
     const data = await response.json();
     metin = data.content?.[0]?.text || "";
+    if (data.stop_reason === "max_tokens") {
+      logger.warn({ userId, platform }, "sosyal stop_reason:max_tokens — çıktı kesildi");
+    }
   } catch {
     if (!isAdmin) await krediIade(userId, 1);
     return NextResponse.json({ hata: "İçerik üretilemedi, lütfen tekrar deneyin." }, { status: 502 });

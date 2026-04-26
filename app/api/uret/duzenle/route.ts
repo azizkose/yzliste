@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import logger from "@/lib/logger";
 import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
+import { KATEGORI_KURALLARI, YASAKLI_KELIMELER, kategoriKoduBul, type Platform } from "@/lib/prompts/metin";
+import { ciktiDogrula } from "@/lib/output-validator";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -54,7 +56,9 @@ const PLATFORM_CONTEXT: Record<string, string> = {
 };
 
 export async function POST(req: NextRequest) {
-  const { sonuc, aksiyon, userId, platform, kategori } = await req.json();
+  const { sonuc, aksiyon, userId, platform, kategori } = await req.json() as {
+    sonuc: string; aksiyon: string; userId: string; platform?: Platform; kategori?: string;
+  };
 
   if (!userId) return NextResponse.json({ hata: "Giriş yapılmadı" }, { status: 401 });
   if (!sonuc || !aksiyon) return NextResponse.json({ hata: "sonuc ve aksiyon gerekli" }, { status: 400 });
@@ -104,6 +108,15 @@ export async function POST(req: NextRequest) {
           DUZENLE_SISTEM_PROMPT,
           platform && PLATFORM_CONTEXT[platform] ? PLATFORM_CONTEXT[platform] : "",
           kategori ? `Ürün kategorisi: ${kategori}` : "",
+          // Kategori kuralları
+          (() => {
+            const kod = kategoriKoduBul(kategori || "");
+            return kod && KATEGORI_KURALLARI[kod] ? KATEGORI_KURALLARI[kod].tr : "";
+          })(),
+          // Yasaklı kelimeler hatırlatması
+          platform && YASAKLI_KELIMELER[platform]?.length
+            ? `YASAKLI KELİMELER — bu platformda kesinlikle kullanma: ${YASAKLI_KELIMELER[platform].slice(0, 8).join(", ")}`
+            : "",
           profil.marka_adi ? `Marka adı: ${profil.marka_adi}` : "",
           profil.hedef_kitle ? `Hedef kitle: ${profil.hedef_kitle}` : "",
           profil.vurgulanan_ozellikler ? `Vurgulanacak özellikler: ${profil.vurgulanan_ozellikler}` : "",
@@ -117,6 +130,9 @@ export async function POST(req: NextRequest) {
 
     const data = await res.json();
     yeniSonuc = data.content?.[0]?.text ?? "";
+    if (data.stop_reason === "max_tokens") {
+      logger.warn({ userId, platform, aksiyon }, "duzenle stop_reason:max_tokens — çıktı kesildi");
+    }
   } catch (e) {
     // Hata durumunda krediyi geri yükle
     if (!isAdmin) {
@@ -129,5 +145,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "İçerik düzenlenemedi, lütfen tekrar deneyin." }, { status: 500 });
   }
 
-  return NextResponse.json({ sonuc: yeniSonuc });
+  const uyarilar = platform ? ciktiDogrula({ icerik: yeniSonuc, platform }) : [];
+
+  return NextResponse.json({ sonuc: yeniSonuc, uyarilar });
 }

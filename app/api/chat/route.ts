@@ -3,6 +3,22 @@ import logger from "@/lib/logger";
 import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
 import { PAKET_LISTESI } from "@/lib/paketler";
 import { VIDEO_KREDI, STUDIO_KREDI } from "@/lib/studio-constants";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+// Rate limiter — opsiyonel: Upstash env yoksa devre dışı
+let rlChat: Ratelimit | null = null;
+if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+  const redis = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  });
+  rlChat = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(30, "1 m"),
+    prefix: "rl:chat:dk",
+  });
+}
 
 function buildChatSystemPrompt(): string {
   const paketler = PAKET_LISTESI.map(
@@ -29,7 +45,7 @@ Kredi sistemi:
 - Listing metni: 1 kredi
 - AI görsel: stil başına 1 kredi (indirme ücretsiz, üretimde düşer)
 - Video: 5sn = ${VIDEO_KREDI["5"]} kredi · 10sn = ${VIDEO_KREDI["10"]} kredi
-- Sosyal medya: 1 kredi/platform · Kit (4 platform): 3 kredi
+- Sosyal medya: 1 kredi/platform · Kit (4 platform, fotoğrafsız): 3 kredi · Kit (fotoğraflı): 4 kredi
 - yzstudio mankene giydirme: ${STUDIO_KREDI.tryon.birimKredi} kredi/görsel
 - yzstudio manken üretimi: 1 kredi
 
@@ -55,6 +71,20 @@ Nasıl konuşursun:
 }
 
 export async function POST(req: NextRequest) {
+  // Rate limiting — per-IP 30 req/dk
+  if (rlChat) {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim()
+      ?? req.headers.get("x-real-ip")
+      ?? "anonymous";
+    const { success } = await rlChat.limit(ip);
+    if (!success) {
+      return NextResponse.json(
+        { hata: "Çok fazla mesaj gönderdiniz. Lütfen bir dakika bekleyin." },
+        { status: 429 }
+      );
+    }
+  }
+
   try {
     const { mesajlar } = await req.json();
 

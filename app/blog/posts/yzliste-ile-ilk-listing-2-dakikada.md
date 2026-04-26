@@ -30,7 +30,7 @@ yzliste.com'da sağ üstteki "Ücretsiz Başla" butonuna tıkla. Google ile tek 
 
 İlk girişte seni paket seçim ekranı karşılıyor. Denemek için Başlangıç paketini seçebilir, belirli sayıda listing üretip sonucu görebilirsin. Üretici firma veya çok ürünlü mağazaysan aylık paketler dakikada onlarca listing üretmene imkân veriyor. Pakete karar verince panele düşüyorsun ve "Yeni Listing Oluştur" butonu seni karşılıyor.
 
-Paket seçiminde dikkat etmen gereken birkaç kriter var. Mağazanın aylık ürün ekleme hızı, kaç pazaryerinde satış yapacağın ve görsel üretim ihtiyacın paket kararını belirler. Ayda 20-30 ürün ekleyen butik bir mağaza için Başlangıç paketi yeterliyken, haftalık onlarca ürün ekleyen konfeksiyon firması doğrudan Pro veya Enterprise paketini tercih etmeli. yzliste'nin fiyatlandırma ekranında paketler arası farklar açıkça listelendiği için bu kararı dakikalar içinde verebilirsin.
+Paket seçiminde dikkat etmen gereken birkaç kriter var. Mağazanın ürün ekleme hacmi ve içerik türleri (sadece metin mi, görsel de mi?) ihtiyacını belirler. Az ürünle başlayanlar için Başlangıç paketi yeterliyken, aktif mağazalar için Popüler veya Büyük paketleri daha verimli. yzliste'nin fiyatlandırma ekranında paket içerikleri açıkça listelendiği için bu kararı dakikalar içinde verebilirsin.
 
 Hesap açma aşamasında doğrulama için kısa bir telefon/SMS süreci de olabilir. Bu güvenlik adımını atlamak, hesabını botlara karşı korumak için önemli. Doğrulama tamamlandığında mağaza ayarları ekranına yönlendiriliyorsun; firma adı, varsa vergi numarası ve ana satış kategorilerini bir kez doldurduğunda tüm listing üretimlerinde bu bilgi otomatik kullanılıyor.
 
