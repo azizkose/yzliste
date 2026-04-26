@@ -72,10 +72,10 @@ export function ModelPicker({
     }
   }, [userId, isAdmin, kredi, cinsiyet, tenRengi, vucutTipi, boy, serbest, onUretilenUrlChange, onKaynagiChange, onKrediDus, onHata]);
 
-  const sekmeler: { id: Sekme; label: string }[] = [
-    { id: "hazir", label: "Hazır mankenler" },
-    { id: "uret", label: `Manken oluştur (${MANKEN_KREDI} kredi)` },
-    { id: "ozel-yukle", label: "Fotoğraf yükle" },
+  const sekmeler: { id: Sekme; label: string; labelKisa: string }[] = [
+    { id: "hazir", label: "Hazır mankenler", labelKisa: "Hazır" },
+    { id: "uret", label: `Manken oluştur (${MANKEN_KREDI} kr)`, labelKisa: `Oluştur (${MANKEN_KREDI} kr)` },
+    { id: "ozel-yukle", label: "Fotoğraf yükle", labelKisa: "Fotoğraf" },
   ];
 
   return (
@@ -93,7 +93,8 @@ export function ModelPicker({
                 : "text-[#5A5852] hover:text-[#1A1A17]"
             }`}
           >
-            {s.label}
+            <span className="hidden sm:inline">{s.label}</span>
+            <span className="sm:hidden">{s.labelKisa}</span>
           </button>
         ))}
       </div>

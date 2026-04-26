@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import { STUDIO_KREDI } from "@/lib/studio-constants";
 import KrediButon from "@/components/ui/KrediButon";
@@ -26,6 +27,7 @@ export function TryonAyarlar({
 }: TryonAyarlarProps) {
   const { minSamples, maxSamples } = STUDIO_KREDI.tryon;
   const yetersizKredi = kredi < toplamKredi;
+  const [onayAktif, setOnayAktif] = useState(false);
 
   return (
     <div className="space-y-5">
@@ -72,19 +74,43 @@ export function TryonAyarlar({
       </div>
 
       <div className="pt-1">
-        <KrediButon
-          label="Mankene giydirme"
-          kredi={toplamKredi}
-          kalanKredi={kredi}
-          onClick={onUret}
-          disabled={yetersizKredi}
-          yukleniyor={yukleniyor}
-          yukleniyorLabel="Hazırlanıyor..."
-        />
-        {yetersizKredi && (
-          <p className="text-xs text-[#7A1E1E] text-center mt-2">
-            Yetersiz kredi — {toplamKredi} kredi gerekli
-          </p>
+        {onayAktif ? (
+          <div className="rounded-lg border border-[#BAC9EB] bg-[#F0F4FB] px-4 py-3 space-y-3">
+            <p className="text-sm text-[#1A1A17]">
+              Bu işlem <span className="font-medium">{toplamKredi} kredi</span> harcar. Devam?
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setOnayAktif(false)}
+                className="flex-1 py-2 rounded-lg border border-[#D8D6CE] bg-white text-sm text-[#5A5852] hover:border-[#7B9BD9] transition-colors"
+              >
+                İptal
+              </button>
+              <button
+                onClick={() => { setOnayAktif(false); onUret(); }}
+                className="flex-1 py-2 rounded-lg bg-[#1E4DD8] text-white text-sm hover:bg-[#163B9E] transition-colors"
+              >
+                Onayla
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <KrediButon
+              label="Mankene giydirme"
+              kredi={toplamKredi}
+              kalanKredi={kredi}
+              onClick={yetersizKredi ? onUret : () => setOnayAktif(true)}
+              disabled={yetersizKredi}
+              yukleniyor={yukleniyor}
+              yukleniyorLabel="Hazırlanıyor..."
+            />
+            {yetersizKredi && (
+              <p className="text-xs text-[#7A1E1E] text-center mt-2">
+                Yetersiz kredi — {toplamKredi} kredi gerekli
+              </p>
+            )}
+          </>
         )}
       </div>
     </div>

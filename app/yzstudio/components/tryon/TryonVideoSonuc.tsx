@@ -10,8 +10,10 @@ interface TryonVideoSonucProps {
 export function TryonVideoSonuc({ videoUrl, videoIlerleme, videoYukleniyor }: TryonVideoSonucProps) {
   if (videoYukleniyor) {
     return (
-      <div className="flex items-center justify-center py-8 text-sm text-[#908E86]">
-        {videoIlerleme || "Video oluşturuluyor..."}
+      <div className="flex flex-col items-center justify-center py-8 gap-3">
+        <div className="w-6 h-6 border-2 border-[#1E4DD8] border-t-transparent rounded-full animate-spin" />
+        <p className="text-sm text-[#908E86]">{videoIlerleme || "Video oluşturuluyor..."}</p>
+        <p className="text-xs text-[#908E86]">Bu işlem 1-3 dakika sürebilir</p>
       </div>
     );
   }

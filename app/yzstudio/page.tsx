@@ -40,13 +40,16 @@ function YzstudioContent() {
 
       <div className="border-b border-[#D8D6CE] bg-white">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h1 className="font-medium text-2xl tracking-[-0.01em] text-[#1A1A17]">yzstudio</h1>
-            <span className="bg-[#FAF4ED] text-[#3D2710] text-xs font-medium px-2.5 py-0.5 rounded">
+          <div className="flex items-center gap-2.5">
+            <h1 className="font-medium text-xl tracking-[-0.01em] text-[#1A1A17]">yzstudio</h1>
+            <span className="hidden sm:inline bg-[#FAF4ED] text-[#3D2710] text-xs font-medium px-2.5 py-0.5 rounded">
               Premium · Beta
             </span>
+            <span className="sm:hidden bg-[#FAF4ED] text-[#3D2710] text-xs font-medium px-1.5 py-0.5 rounded">
+              beta
+            </span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {kredi !== undefined && kredi !== null && (
               <span className="text-sm text-[#908E86]">{kredi} kredi</span>
             )}
@@ -55,7 +58,8 @@ function YzstudioContent() {
               className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg bg-[#1E4DD8] text-white hover:bg-[#163B9E] transition-colors"
             >
               <CreditCard size={14} strokeWidth={1.5} />
-              Kredi yükle
+              <span className="hidden sm:inline">Kredi yükle</span>
+              <span className="sm:hidden">Yükle</span>
             </Link>
           </div>
         </div>

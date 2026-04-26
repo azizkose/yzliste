@@ -31,9 +31,14 @@ export function TryonSonuc({
 }: TryonSonucProps) {
   if (yukleniyor) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 gap-3">
-        <div className="w-8 h-8 border-2 border-[#1E4DD8] border-t-transparent rounded-full animate-spin" />
-        <p className="text-sm text-[#908E86]">{ilerleme || "İşleniyor..."}</p>
+      <div className="space-y-3">
+        <div className="relative rounded-xl overflow-hidden border border-[#D8D6CE] bg-[#F1F0EB] animate-pulse" style={{ paddingBottom: "150%" }}>
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+            <div className="w-8 h-8 border-2 border-[#1E4DD8] border-t-transparent rounded-full animate-spin" />
+            <p className="text-sm text-[#908E86]">{ilerleme || "İşleniyor..."}</p>
+          </div>
+        </div>
+        <div className="h-8 rounded-lg bg-[#F1F0EB] animate-pulse" />
       </div>
     );
   }

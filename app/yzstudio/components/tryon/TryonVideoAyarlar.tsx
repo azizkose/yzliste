@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { TRYON_VIDEO_PRESETLER, VIDEO_KREDI } from "@/lib/studio-constants";
 
 interface TryonVideoAyarlarProps {
@@ -18,6 +19,7 @@ export function TryonVideoAyarlar({
   onPresetChange, onSureChange, onVideoUret,
 }: TryonVideoAyarlarProps) {
   const yetersizKredi = kredi < videoKredi;
+  const [onayAktif, setOnayAktif] = useState(false);
 
   return (
     <div className="border-t border-[#D8D6CE] pt-5 space-y-4 mt-2">
@@ -62,15 +64,39 @@ export function TryonVideoAyarlar({
         </div>
       </div>
 
-      <button
-        onClick={() => onVideoUret(tryonImageUrl)}
-        disabled={videoYukleniyor || yetersizKredi}
-        className="w-full py-3 rounded-lg bg-[#1E4DD8] text-white text-sm font-medium hover:bg-[#163B9E] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-      >
-        {videoYukleniyor ? "Video oluşturuluyor..." : `Videoya dönüştür — ${videoKredi} kredi`}
-      </button>
-      {yetersizKredi && (
-        <p className="text-xs text-[#7A1E1E] text-center">Yetersiz kredi — {videoKredi} kredi gerekli</p>
+      {onayAktif ? (
+        <div className="rounded-lg border border-[#BAC9EB] bg-[#F0F4FB] px-4 py-3 space-y-3">
+          <p className="text-sm text-[#1A1A17]">
+            Bu işlem <span className="font-medium">{videoKredi} kredi</span> harcar. Devam?
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setOnayAktif(false)}
+              className="flex-1 py-2 rounded-lg border border-[#D8D6CE] bg-white text-sm text-[#5A5852] hover:border-[#7B9BD9] transition-colors"
+            >
+              İptal
+            </button>
+            <button
+              onClick={() => { setOnayAktif(false); onVideoUret(tryonImageUrl); }}
+              className="flex-1 py-2 rounded-lg bg-[#1E4DD8] text-white text-sm hover:bg-[#163B9E] transition-colors"
+            >
+              Onayla
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <button
+            onClick={yetersizKredi ? () => {} : () => setOnayAktif(true)}
+            disabled={videoYukleniyor || yetersizKredi}
+            className="w-full py-3 rounded-lg bg-[#1E4DD8] text-white text-sm font-medium hover:bg-[#163B9E] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {videoYukleniyor ? "Video oluşturuluyor..." : `Videoya dönüştür — ${videoKredi} kredi`}
+          </button>
+          {yetersizKredi && (
+            <p className="text-xs text-[#7A1E1E] text-center">Yetersiz kredi — {videoKredi} kredi gerekli</p>
+          )}
+        </>
       )}
     </div>
   );
