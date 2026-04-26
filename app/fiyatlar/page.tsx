@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Gift, Check, Lock } from "lucide-react";
+import { Gift, Check, Lock, FileText, Camera, Clapperboard, Share2, Infinity } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { PAKET_LISTESI } from "@/lib/paketler";
@@ -210,21 +210,32 @@ export default function FiyatlarPage() {
         </div>
       </section>
 
-      {/* KREDİ NASIL ÇALIŞIR — kompakt */}
-      <section className="px-4 sm:px-6 py-8 border-b border-[#D8D6CE]">
+      {/* KREDİ NASIL ÇALIŞIR */}
+      <section className="px-4 sm:px-6 py-10 border-b border-[#D8D6CE] bg-[#F1F0EB]">
         <div className="max-w-2xl mx-auto">
-          <details className="group">
-            <summary className="cursor-pointer text-sm font-medium text-[#5A5852] flex items-center gap-2 list-none select-none">
-              <span className="text-[#1E4DD8] text-base leading-none">+</span>
-              Kredi nasıl çalışır?
-            </summary>
-            <ul className="mt-4 space-y-2 text-xs text-[#5A5852] leading-relaxed pl-4 border-l border-[#D8D6CE]">
-              <li><span className="text-[#1A1A17] font-medium">Metin · Görsel · Sosyal medya</span> — her biri 1 kredi</li>
-              <li><span className="text-[#1A1A17] font-medium">Video</span> — 5sn = 10 kredi · 10sn = 20 kredi</li>
-              <li><span className="text-[#1A1A17] font-medium">Sosyal medya kiti</span> — 4 platform birden = 3 kredi</li>
-              <li><span className="text-[#1A1A17] font-medium">Krediler süresiz</span> — sona erme tarihi yoktur · Paketler tek seferlik ödeme</li>
-            </ul>
-          </details>
+          <h2 className="text-base font-medium text-[#1A1A17] mb-5">Kredi nasıl çalışır?</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              { Ikon: FileText, baslik: "Listing metni", detay: "1 kredi" },
+              { Ikon: Camera, baslik: "Stüdyo görseli", detay: "Stil başına 1 kredi" },
+              { Ikon: Clapperboard, baslik: "Ürün videosu", detay: "5sn = 10 kredi · 10sn = 20 kredi" },
+              { Ikon: Share2, baslik: "Sosyal medya", detay: "1 kredi · Kit (4 platform) = 3 kredi" },
+            ].map((item) => (
+              <div key={item.baslik} className="flex items-start gap-3 rounded-xl border border-[#D8D6CE] bg-white px-4 py-3">
+                <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-[#F0F4FB] flex-shrink-0 mt-0.5">
+                  <item.Ikon size={14} strokeWidth={1.5} className="text-[#1E4DD8]" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-[#1A1A17]">{item.baslik}</p>
+                  <p className="text-xs text-[#908E86] mt-0.5">{item.detay}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center gap-2 mt-4 text-xs text-[#5A5852]">
+            <Infinity size={13} strokeWidth={1.5} className="text-[#908E86] flex-shrink-0" />
+            Krediler süresiz geçerlidir — sona erme tarihi yoktur. Paketler tek seferlik ödeme.
+          </div>
         </div>
       </section>
 
