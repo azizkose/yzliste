@@ -8,6 +8,7 @@ import {
   Search, Sun, Palette, BookOpen, Timer, Target, Smartphone, Hash,
 } from 'lucide-react'
 import SectionHeader from '@/components/primitives/SectionHeader'
+import CopyButton from '@/components/primitives/CopyButton'
 import { cn } from '@/lib/utils'
 import { CONTENT_TYPES, PLATFORMS, PAZARYERI_DEMO_DATA, SAMPLE_PRODUCT, INPUT_METHODS } from '@/lib/constants/pazaryeri'
 import type { ContentTypeId, PlatformId } from '@/lib/constants/pazaryeri'
@@ -71,7 +72,7 @@ function ProductInputCard() {
 
         {/* InputMethods */}
         <div className="px-4 pb-4">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-slate-400">
+          <p className="mb-2 text-xs font-medium uppercase tracking-[0.1em] text-slate-400">
             Girdi yöntemi
           </p>
           <div className="flex gap-2">
@@ -116,16 +117,94 @@ function ProductInputCard() {
   )
 }
 
+// ---- FieldHeader ----
+
+function FieldHeader({ label, copyText }: { label: string; copyText: string }) {
+  return (
+    <div className="flex items-center justify-between mb-2">
+      <span className="text-xs font-medium uppercase tracking-[0.1em] text-slate-400">
+        {label}
+      </span>
+      <CopyButton text={copyText} size="sm" variant="minimal" />
+    </div>
+  )
+}
+
+// ---- TextContentRenderer ----
+
+interface TextFields {
+  'Başlık': string
+  'Özellikler': string[]
+  'Açıklama': string
+  'Arama Etiketleri': string[]
+}
+
+function TextContentRenderer({
+  fields,
+  platformColor,
+  animKey,
+}: {
+  fields: TextFields
+  platformColor: string
+  animKey: string
+}) {
+  return (
+    <div
+      key={animKey}
+      className="space-y-5 animate-[fade-in_300ms_ease-out]"
+    >
+      <div>
+        <FieldHeader label="Başlık" copyText={fields['Başlık']} />
+        <p className="text-sm font-medium text-slate-900 leading-relaxed">
+          {fields['Başlık']}
+        </p>
+      </div>
+
+      <div>
+        <FieldHeader label="Özellikler" copyText={fields['Özellikler'].join('\n')} />
+        <ul className="space-y-1.5">
+          {fields['Özellikler'].map((item, i) => (
+            <li key={i} className="flex items-start gap-2">
+              <span
+                className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0"
+                style={{ backgroundColor: platformColor }}
+              />
+              <span className="text-sm text-slate-700 leading-relaxed">{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <FieldHeader label="Açıklama" copyText={fields['Açıklama']} />
+        <p className="text-sm text-slate-700 leading-relaxed">
+          {fields['Açıklama']}
+        </p>
+      </div>
+
+      <div>
+        <FieldHeader label="Arama Etiketleri" copyText={fields['Arama Etiketleri'].join(', ')} />
+        <div className="flex flex-wrap gap-1.5">
+          {fields['Arama Etiketleri'].map((tag, i) => (
+            <span
+              key={i}
+              className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ---- Section ----
 
 export default function PazaryeriSection() {
   const [activeContentType, setActiveContentType] = useState<ContentTypeId>('text')
   const [activePlatform, setActivePlatform] = useState<PlatformId>('trendyol')
-  const [copiedField, setCopiedField] = useState<string | null>(null)
   const tablistRef = useRef<HTMLDivElement>(null)
-
-  // setCopiedField — PZ-07+ kullanılacak
-  void setCopiedField
 
   const activeType = CONTENT_TYPES.find((ct) => ct.id === activeContentType)!
   const ActiveIcon = CONTENT_TYPE_ICONS[activeType.icon as ContentTypeIconKey]
@@ -180,7 +259,7 @@ export default function PazaryeriSection() {
                   'transition-all duration-200',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary/40 focus-visible:ring-offset-2',
                   isActive
-                    ? 'border-2 font-semibold'
+                    ? 'border-2 font-medium'
                     : 'border border-slate-200 bg-white text-slate-600 font-medium hover:border-slate-300 hover:bg-slate-50',
                 )}
               >
@@ -229,11 +308,11 @@ export default function PazaryeriSection() {
             <div className="min-w-0">
               <p
                 style={{ color: activeType.color }}
-                className="text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors duration-300"
+                className="text-[10px] font-medium uppercase tracking-[0.1em] transition-colors duration-300"
               >
                 Üretilen örnek
               </p>
-              <h3 className="truncate text-base font-bold text-slate-900 md:text-lg">
+              <h3 className="truncate text-base font-medium text-slate-900 md:text-lg">
                 {activeType.label} — {PLATFORMS[activePlatform].name} için
               </h3>
             </div>
@@ -339,20 +418,25 @@ export default function PazaryeriSection() {
                 </ul>
               </div>
 
-              {/* Output area placeholder (PZ-07+) */}
-              <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4">
-                <p className="text-sm text-slate-400">Çıktı içeriği (PZ-07+)</p>
-              </div>
+              {/* Output area */}
+              {activeContentType === 'text' ? (
+                <TextContentRenderer
+                  key={`text-${activePlatform}`}
+                  fields={PAZARYERI_DEMO_DATA.text[activePlatform].fields}
+                  platformColor={PLATFORMS[activePlatform].color}
+                  animKey={`text-${activePlatform}`}
+                />
+              ) : (
+                <div className="min-h-[200px] bg-slate-50 rounded-lg border border-dashed border-slate-300 p-4 flex items-center justify-center text-sm text-slate-400">
+                  {activeContentType === 'image' && 'Görsel çıktısı (PZ-08)'}
+                  {activeContentType === 'video' && 'Video çıktısı (PZ-09)'}
+                  {activeContentType === 'social' && 'Sosyal medya çıktısı (PZ-10)'}
+                </div>
+              )}
 
             </div>
           </div>
         </div>
-
-        {copiedField && (
-          <div className="mt-4 text-center text-xs text-rd-neutral-400">
-            Kopyalanan alan: {copiedField}
-          </div>
-        )}
 
         {/* CTA Footer — PZ-07 sonrası */}
       </div>

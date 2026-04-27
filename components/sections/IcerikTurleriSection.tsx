@@ -33,6 +33,7 @@ function ContentTypeCard({ type, onOpen }: ContentTypeCardProps) {
 
   return (
     <div
+      id={`content-card-${type.id}`}
       role="button"
       tabIndex={0}
       onClick={onOpen}
@@ -55,7 +56,7 @@ function ContentTypeCard({ type, onOpen }: ContentTypeCardProps) {
           : {}),
       } as React.CSSProperties}
       className={cn(
-        'flex flex-col bg-white border border-slate-200 rounded-2xl p-6',
+        'flex flex-col bg-white border border-slate-200 rounded-xl p-6',
         'transition-all duration-200 cursor-pointer',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] focus-visible:ring-offset-2',
       )}
@@ -66,9 +67,9 @@ function ContentTypeCard({ type, onOpen }: ContentTypeCardProps) {
       >
         {IconComp && <IconComp size={28} strokeWidth={2} style={{ color: type.color }} />}
       </div>
-      <h3 className="font-rd-display text-xl font-bold text-slate-900 mt-4">{type.title}</h3>
+      <h3 className="font-rd-display text-xl font-medium text-slate-900 mt-4">{type.title}</h3>
       <p className="text-sm text-slate-500 leading-relaxed min-h-[42px] mt-1">{type.tagline}</p>
-      <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-400 mt-4 mb-2">
+      <p className="text-xs font-medium uppercase tracking-[0.1em] text-slate-500 mt-4 mb-2">
         İçerir
       </p>
       <ul className="space-y-1.5 flex-1">
@@ -82,12 +83,12 @@ function ContentTypeCard({ type, onOpen }: ContentTypeCardProps) {
       <div className="border-t border-slate-100 my-4" />
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs text-slate-400">Kredi</p>
-          <p className="text-sm font-semibold text-slate-900">{type.pricing}</p>
+          <p className="text-xs text-slate-500">Kredi</p>
+          <p className="text-sm font-medium text-slate-900">{type.pricing}</p>
         </div>
         <div className="text-right">
-          <p className="text-xs text-slate-400">Süre</p>
-          <p className="text-sm font-semibold text-slate-900">{type.duration}</p>
+          <p className="text-xs text-slate-500">Süre</p>
+          <p className="text-sm font-medium text-slate-900">{type.duration}</p>
         </div>
       </div>
       <div
@@ -162,7 +163,7 @@ function SampleModal({ type, onClose }: SampleModalProps) {
           aria-labelledby="modal-title"
           tabIndex={-1}
           onKeyDown={handleKeyDown}
-          className="relative bg-white rounded-[20px] max-w-[520px] w-full p-6 md:p-8 max-h-[90vh] overflow-y-auto animate-[modal-panel-in_250ms_ease-out] focus:outline-none"
+          className="relative bg-white rounded-xl max-w-[520px] w-full p-6 md:p-8 max-h-[90vh] overflow-y-auto animate-[modal-panel-in_250ms_ease-out] focus:outline-none"
         >
           {/* Close button */}
           <button
@@ -182,7 +183,7 @@ function SampleModal({ type, onClose }: SampleModalProps) {
           </div>
 
           {/* Title */}
-          <h2 id="modal-title" className="text-xl font-bold text-slate-900">
+          <h2 id="modal-title" className="text-xl font-medium text-slate-900">
             {type.title} — Örnek Çıktı
           </h2>
 
@@ -194,11 +195,11 @@ function SampleModal({ type, onClose }: SampleModalProps) {
           {/* SampleBox */}
           <div className="bg-slate-50 rounded-xl p-5 space-y-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-400">Başlık</p>
+              <p className="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">Başlık</p>
               <p className="text-sm font-medium text-slate-900 mt-1">{type.sample.title}</p>
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-400">Önizleme</p>
+              <p className="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">Önizleme</p>
               <p className="text-sm text-slate-600 mt-1 leading-relaxed">{type.sample.snippet}</p>
             </div>
           </div>
@@ -277,7 +278,7 @@ export default function IcerikTurleriSection() {
         {/* BottomNote */}
         <div className="mt-8 md:mt-10">
           <div className="flex flex-wrap items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-4 md:gap-3">
-            <Sparkles size={16} strokeWidth={2} className="text-rd-primary shrink-0" />
+            <Sparkles size={16} strokeWidth={2} className="text-rd-primary shrink-0" aria-hidden="true" />
             <span className="text-sm text-slate-600">{BOTTOM_NOTE.text}</span>
             <a
               href={BOTTOM_NOTE.linkHref}
