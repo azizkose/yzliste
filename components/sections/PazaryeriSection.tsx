@@ -623,6 +623,8 @@ export default function PazaryeriSection() {
         {/* OutputCard frame */}
         <div
           id="pazaryeri-output"
+          role="tabpanel"
+          aria-label={`${activeType.label} içerik türü çıktısı`}
           style={{ borderColor: activeType.color }}
           className="min-h-[300px] md:min-h-[400px] rounded-b-xl border bg-white p-4 transition-colors duration-300 md:p-5 lg:p-6"
         >
