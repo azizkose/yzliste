@@ -4,16 +4,16 @@ import AppScreenshotMockup from './AppScreenshotMockup'
 export default function HeroSection() {
   return (
     <section
-      className="relative overflow-hidden bg-white px-6 py-16 md:py-24"
+      className="relative overflow-hidden px-6 pb-16 pt-10 md:pb-20 md:pt-14 lg:pb-24 lg:pt-16"
       aria-label="Hero"
     >
       {/* Radial blue glow — decorative */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute left-1/2 top-[-200px] h-[600px] w-[900px] -translate-x-1/2"
         style={{
           background:
-            'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37, 99, 235, 0.08) 0%, transparent 70%)',
+            'radial-gradient(ellipse, rgba(59, 130, 246, 0.08), transparent 70%)',
         }}
       />
 

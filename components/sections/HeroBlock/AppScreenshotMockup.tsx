@@ -1,4 +1,4 @@
-import { Camera, Pencil, ScanLine, ImageIcon, Zap } from 'lucide-react'
+import { Camera, Pencil, ScanLine, ImageIcon, Zap, Check } from 'lucide-react'
 import { MOCKUP_STEPS, MOCKUP_INPUT_METHODS } from '@/lib/constants/hero'
 
 const INPUT_ICONS: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>> = {
@@ -87,12 +87,18 @@ export default function AppScreenshotMockup() {
 
           {/* Upload area */}
           <div
-            className="mb-4 flex h-36 items-center justify-center rounded-xl border-2 border-dashed border-slate-200 bg-slate-50"
+            className="mb-4 flex items-center gap-3 rounded-xl border-[1.5px] border-dashed border-slate-300 bg-slate-50/50 px-4 py-3.5"
             aria-hidden="true"
           >
-            <div className="flex flex-col items-center gap-2 text-slate-400">
-              <ImageIcon size={28} strokeWidth={1} />
-              <span className="text-xs">Ürün fotoğrafı</span>
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-amber-50 to-amber-100">
+              <ImageIcon size={22} strokeWidth={1.5} className="text-amber-600" />
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <span className="text-xs font-semibold text-slate-700">fincan_01.jpg</span>
+              <span className="flex items-center gap-1 text-[11px] text-emerald-600">
+                <Check size={11} strokeWidth={2.5} />
+                Yüklendi · 2.4 MB
+              </span>
             </div>
           </div>
 

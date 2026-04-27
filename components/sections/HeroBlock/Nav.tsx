@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { Menu, X } from 'lucide-react'
+import { ArrowRight, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { NAV_LINKS, NAV_BRAND, NAV_CTAS } from '@/lib/constants/hero'
 import Button from '@/components/primitives/Button'
@@ -51,11 +51,11 @@ export default function Nav() {
     <>
       <nav
         className={cn(
-          'sticky top-0 z-40 transition-all duration-200',
+          'sticky top-0 z-50 transition-all duration-200',
           scrolled
             ? [
-                'border-b border-slate-200',
-                'bg-white/80',
+                'border-b border-slate-100',
+                'bg-white/85',
                 'backdrop-blur-md',
                 '[-webkit-backdrop-filter:blur(12px)]',
               ]
@@ -69,7 +69,7 @@ export default function Nav() {
             href="/"
             className="flex items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary/40"
           >
-            <span className="font-rd-display font-bold text-xl tracking-tight text-slate-900">
+            <span className="font-rd-display text-[22px] font-[800] tracking-tight text-slate-900">
               {NAV_BRAND.name}
             </span>
             {NAV_BRAND.betaBadge && (
@@ -100,7 +100,11 @@ export default function Nav() {
               </Button>
             </Link>
             <Link href={NAV_CTAS.primary.href} tabIndex={-1}>
-              <Button variant="primary" size="sm">
+              <Button
+                variant="primary"
+                size="sm"
+                iconRight={<ArrowRight size={14} strokeWidth={2} />}
+              >
                 {NAV_CTAS.primary.label}
               </Button>
             </Link>
@@ -183,7 +187,12 @@ export default function Nav() {
                 onClick={closeMenu}
                 tabIndex={-1}
               >
-                <Button variant="primary" size="md" fullWidth>
+                <Button
+                  variant="primary"
+                  size="md"
+                  fullWidth
+                  iconRight={<ArrowRight size={14} strokeWidth={2} />}
+                >
                   {NAV_CTAS.primary.label}
                 </Button>
               </Link>

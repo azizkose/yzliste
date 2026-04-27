@@ -126,3 +126,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .animate-tab-enter { animation: none; }
 }
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
