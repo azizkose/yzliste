@@ -90,7 +90,7 @@ function ProductInputCard() {
           <div className="mt-3 grid grid-cols-2 gap-2">
             {specs.map(({ label, value }) => (
               <div key={label} className="rounded-lg bg-slate-50 px-2.5 py-1.5">
-                <p className="text-[10px] uppercase tracking-wide text-slate-400">{label}</p>
+                <p className="text-[10px] uppercase tracking-wide text-slate-500">{label}</p>
                 <p className="text-xs font-medium text-slate-700">{value}</p>
               </div>
             ))}
@@ -99,7 +99,7 @@ function ProductInputCard() {
 
         {/* InputMethods */}
         <div className="px-4 pb-4">
-          <p className="mb-2 text-xs font-medium uppercase tracking-[0.1em] text-slate-400">
+          <p className="mb-2 text-xs font-medium uppercase tracking-[0.1em] text-slate-500">
             Girdi yöntemi
           </p>
           <div className="flex gap-2">
@@ -122,7 +122,7 @@ function ProductInputCard() {
                       strokeWidth={2}
                       className={cn(
                         'mx-auto',
-                        isSelected ? 'text-rd-primary' : 'text-slate-400',
+                        isSelected ? 'text-rd-primary' : 'text-slate-500',
                       )}
                     />
                   )}
@@ -149,7 +149,7 @@ function ProductInputCard() {
 function FieldHeader({ label, copyText }: { label: string; copyText: string }) {
   return (
     <div className="flex items-center justify-between mb-2">
-      <span className="text-xs font-medium uppercase tracking-[0.1em] text-slate-400">
+      <span className="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">
         {label}
       </span>
       <CopyButton text={copyText} size="sm" variant="minimal" />
@@ -287,13 +287,13 @@ function VideoContentRenderer({
 
       {/* Video spec */}
       <div className="mt-3 flex items-center gap-2">
-        <Monitor size={14} strokeWidth={2} className="text-slate-400" />
+        <Monitor size={14} strokeWidth={2} className="text-slate-500" />
         <p className="text-xs font-medium text-slate-500">{spec}</p>
       </div>
 
       {/* Scene list */}
       <div className="mt-5">
-        <p className="mb-3 text-xs font-medium uppercase tracking-[0.1em] text-slate-400">
+        <p className="mb-3 text-xs font-medium uppercase tracking-[0.1em] text-slate-500">
           Sahne planı
         </p>
         <div className="space-y-2">
@@ -304,7 +304,7 @@ function VideoContentRenderer({
                 key={i}
                 className="flex items-start gap-3 rounded-lg bg-slate-50 px-3 py-2.5"
               >
-                <span className="w-10 shrink-0 text-xs font-medium tabular-nums text-slate-400">
+                <span className="w-10 shrink-0 text-xs font-medium tabular-nums text-slate-500">
                   {scene.time}
                 </span>
                 {SceneIcon && (
@@ -357,7 +357,7 @@ function SocialPostCard({ platformName, platformKey, caption, hashtags, accentCo
       {hashtags && hashtags.length > 0 && (
         <div className="border-t border-slate-100 px-4 py-3">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Hashtag'ler</span>
+            <span className="text-xs font-medium text-slate-500">Hashtag'ler</span>
             <CopyButton text={hashtags.join(' ')} size="sm" variant="minimal" />
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -488,6 +488,7 @@ export default function PazaryeriSection() {
   const [activeContentType, setActiveContentType] = useState<ContentTypeId>('text')
   const [activePlatform, setActivePlatform] = useState<PlatformId>('trendyol')
   const tablistRef = useRef<HTMLDivElement>(null)
+  const platformTablistRef = useRef<HTMLDivElement>(null)
 
   const activeType = CONTENT_TYPES.find((ct) => ct.id === activeContentType)!
   const ActiveIcon = CONTENT_TYPE_ICONS[activeType.icon as ContentTypeIconKey]
@@ -503,8 +504,19 @@ export default function PazaryeriSection() {
     if (next !== null) { e.preventDefault(); arr[next].focus() }
   }
 
+  const handlePlatformTabKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const tabs = platformTablistRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
+    if (!tabs) return
+    const arr = Array.from(tabs)
+    const idx = arr.indexOf(document.activeElement as HTMLButtonElement)
+    let next: number | null = null
+    if (e.key === 'ArrowRight') next = (idx + 1) % arr.length
+    else if (e.key === 'ArrowLeft') next = (idx - 1 + arr.length) % arr.length
+    if (next !== null) { e.preventDefault(); arr[next].focus() }
+  }
+
   return (
-    <section className="bg-white py-20">
+    <section className="bg-white py-12 md:py-16 lg:py-20" aria-label="Pazaryeri içerik üretimi">
       <div className="mx-auto max-w-[1200px] px-6">
         <SectionHeader
           eyebrow="Tek üründen, 4 içerik · 3 platform"
@@ -554,7 +566,7 @@ export default function PazaryeriSection() {
         </div>
 
         {/* FlowConnector */}
-        <div className="mb-6 mt-6 flex flex-col items-center">
+        <div className="mb-4 mt-4 md:mb-6 md:mt-6 flex flex-col items-center" aria-hidden="true">
           <div
             style={{ borderColor: activeType.color }}
             className="flex h-8 w-8 items-center justify-center rounded-full border-2 transition-colors duration-300"
@@ -595,7 +607,7 @@ export default function PazaryeriSection() {
               >
                 Üretilen örnek
               </p>
-              <h3 className="truncate text-base font-medium text-slate-900 md:text-lg">
+              <h3 className="text-sm font-medium text-slate-900 md:text-base lg:text-lg">
                 {activeType.label} — {PLATFORMS[activePlatform].name} için
               </h3>
             </div>
@@ -612,7 +624,7 @@ export default function PazaryeriSection() {
         <div
           id="pazaryeri-output"
           style={{ borderColor: activeType.color }}
-          className="min-h-[400px] rounded-b-xl border bg-white p-5 transition-colors duration-300 md:p-6"
+          className="min-h-[300px] md:min-h-[400px] rounded-b-xl border bg-white p-4 transition-colors duration-300 md:p-5 lg:p-6"
         >
           <div className="flex flex-col gap-6 md:flex-row md:items-start">
             {/* Sol: ProductInputCard */}
@@ -620,8 +632,13 @@ export default function PazaryeriSection() {
               <ProductInputCard />
             </div>
 
-            {/* ArrowConnector — desktop only */}
-            <div className="hidden items-center self-center md:flex">
+            {/* Mobile ArrowConnector */}
+            <div className="flex items-center justify-center md:hidden" aria-hidden="true">
+              <ArrowRight size={20} strokeWidth={1.5} className="text-slate-300" />
+            </div>
+
+            {/* Desktop ArrowConnector */}
+            <div className="hidden items-center self-center md:flex" aria-hidden="true">
               <ArrowRight size={20} strokeWidth={1.5} className="animate-pulse text-slate-300" />
             </div>
 
@@ -630,9 +647,11 @@ export default function PazaryeriSection() {
 
               {/* PlatformTabs */}
               <div
+                ref={platformTablistRef}
                 role="tablist"
                 aria-label="Platform seçimi"
-                className="flex flex-wrap gap-2"
+                onKeyDown={handlePlatformTabKeyDown}
+                className="flex flex-wrap gap-1.5 md:gap-2"
               >
                 {(Object.keys(PLATFORMS) as PlatformId[]).map((id) => {
                   const platform = PLATFORMS[id]
@@ -642,6 +661,7 @@ export default function PazaryeriSection() {
                       key={id}
                       role="tab"
                       aria-selected={isActive}
+                      aria-controls="pazaryeri-platform-output"
                       onClick={() => setActivePlatform(id)}
                       style={
                         isActive
@@ -683,7 +703,7 @@ export default function PazaryeriSection() {
 
               {/* PlatformRulesBar */}
               <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
-                <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">
                   Platform kuralları
                 </p>
                 <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
@@ -692,7 +712,7 @@ export default function PazaryeriSection() {
                     return (
                       <li key={i} className="flex items-center gap-2">
                         {RuleIcon && (
-                          <RuleIcon size={13} strokeWidth={2} className="shrink-0 text-slate-400" />
+                          <RuleIcon size={13} strokeWidth={2} className="shrink-0 text-slate-500" />
                         )}
                         <span className="text-xs text-slate-600">{rule.text}</span>
                       </li>
@@ -702,6 +722,11 @@ export default function PazaryeriSection() {
               </div>
 
               {/* Output area */}
+              <div
+                id="pazaryeri-platform-output"
+                role="tabpanel"
+                aria-label={`${activeType.label} — ${PLATFORMS[activePlatform].name} için`}
+              >
               {activeContentType === 'text' && (
                 <TextContentRenderer
                   key={`text-${activePlatform}`}
@@ -738,6 +763,7 @@ export default function PazaryeriSection() {
                   animKey={`social-${activePlatform}`}
                 />
               )}
+              </div>
 
             </div>
           </div>
