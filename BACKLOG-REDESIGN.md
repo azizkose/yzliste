@@ -185,6 +185,7 @@ Amaç: Mevcut canlı siteyi koruyarak, ayrı branch'te modern UI redesign çalı
 | FY-10 | Mobile responsive pass | ✅ Tamam | FY-08 | Mobile: calculator tek kolon, paketler tek kolon (popular en üstte, translateY kaldırılır). Slider touch friendly. |
 | FY-11 | A11y pass | ✅ Tamam | FY-10 | Slider ARIA. `aria-live="polite"` recommendation güncelleme. Focus-visible. WCAG AA. |
 | FY-12 | Acceptance review | Bekliyor | FY-11 | Aziz preview kontrolü. Slider test, 3 paket görsel kontrol. |
+| FY-FIX-01 | Mavi border slider'la dinamik geçsin + CTA pozisyonu | ✅ Tamam | FY-11 | (1) Mavi border + 2px + md:-translate-y-2 + filled CTA → `isRecommended` ile bağla (slider'a göre dinamik). (2) "Senin için" yeşil badge'i KALDIR. (3) "En popüler" rozeti orta pakette statik kalır ama küçük (üstte rozet, border etkilemez). (4) "Paketi seç" CTA özelliklerin **altına** taşı (Header → Fiyat → Özellikler → CTA). (5) Mobil + desktop'ta her 3 paket için CTA görünür ve tıklanabilir. |
 
 **Durum:** Prompt hazır — Claude Code'a verilebilir.
 
@@ -1528,4 +1529,141 @@ Canlı sitedeki örnek çıktıları (üretilmiş text/görsel/video/sosyal örn
 | H-34 | A11y audit | Bekliyor | H-33 | WCAG AA tüm sayfalarda. |
 | H-35 | Aziz kabul | Bekliyor | H-34 | Preview'da 5 sayfa test + onay. |
 
-**Bağımlılıklar:** H-01 hepsinden önce. Grup 2-6 paralel. Grup 7 en son. 
+**Bağımlılıklar:** H-01 hepsinden önce. Grup 2-6 paralel. Grup 7 en son.
+
+---
+
+## 13 — Üretim ve Premium Sayfaları (Faz 2)
+
+**Branch:** `claude/redesign-modern-ui` (aynı branch).
+**Yaklaşım:** Landing page'den öğrenilen pattern (rd-* token, Manrope display + Inter body, eyebrow + H2 + subtitle, 2-kolon grid, Lucide ikonlar, fade animasyonlar, mobile-first, a11y-first). Ticket başına detaylı prompt sayfa sırası gelince eklenecek.
+**Bağımlılık:** Landing page (Faz 1) tamamlanmadan başlama — pattern olgunlaşıyor.
+**Öncelik gerekçesi:** Kullanıcı kayıttan ödemeye giderken bu 4 sayfayı sırayla görüyor. Landing modern → /uret eski → sonuç sayfası eski → ödeme eski geçişi dönüşüm öldürür.
+
+### Grup 1 — /uret refaktörü (Bölüm 11 ile paralel)
+
+Mevcut Bölüm 11 (U-01~U-21) zaten 21 ticket detaylı tanımlı — burada tekrarlanmıyor. Faz 2 sırası gelince **U-01 öncesi her grup için** detaylı prompt yazılacak (U-01, U-02-03, U-04-07, U-08-10, U-11-13, U-14-17, U-18-21 grupları).
+
+### Grup 2 — /yzstudio premium araçlar sayfası
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| YS-01 | Sayfa scaffold + redesign token swap | Bekliyor | Landing done | rd-* token'lar, Manrope display, eski palet temizlendi. |
+| YS-02 | Hero block (premium pozisyonlama) | Bekliyor | YS-01 | Eyebrow "PREMIUM ARAÇLAR" warm-earth accent, H1, subtitle, 1 CTA. |
+| YS-03 | Mankene Giydirme (FASHN) tab/kart | Bekliyor | YS-01 | Tab-pattern (DS-06 reuse), 2 kolon (input sol, demo sağ), 3 kredi rozet. |
+| YS-04 | Video Try-On tab/kart | Bekliyor | YS-03 | FASHN→Kling pipeline açıklaması, 13/23 kredi rozeti, demo video placeholder. |
+| YS-05 | Kullanım kuralları + örnek galeri | Bekliyor | YS-04 | "Düz çekim ürün fotosu", "model fotosu" rehberi, 4-6 örnek görsel mevcut. |
+| YS-06 | Mobile responsive | Bekliyor | YS-05 | Tab dikey istif veya scroll, demo görseller tek kolon. |
+| YS-07 | A11y + acceptance | Bekliyor | YS-06 | Tab ARIA, focus, kontrast. Aziz preview onayı. |
+
+### Grup 3 — Üretim sonuç sayfası `/(auth)/app/sonuc/[id]`
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| SR-01 | Sayfa scaffold + token swap | Bekliyor | Landing done | rd-* paleti aktif. |
+| SR-02 | Sonuç başlığı + üretim metadata | Bekliyor | SR-01 | "Üretim hazır" eyebrow + Sparkles, ürün adı, platform, içerik tipi, kredi düşüm bilgisi. |
+| SR-03 | İçerik tipine göre output renderer | Bekliyor | SR-02 | PZ-07~10'daki ContentRenderer pattern reuse: text/image/video/social. |
+| SR-04 | Kopyala/indir aksiyonları | Bekliyor | SR-03 | CopyButton (DS-08 reuse), ZIP indir, PDF indir butonları. |
+| SR-05 | "Yeni üretim" + "Geçmiş üretimler" CTA | Bekliyor | SR-04 | İki CTA — primary `/uret`, ghost `/hesap/uretimler`. |
+| SR-06 | Mobile + a11y + acceptance | Bekliyor | SR-05 | Aziz preview onayı. |
+
+### Grup 4 — Ödeme sonuç sayfaları
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| OD-01 | `/odeme/basarili` redesign | Bekliyor | Landing done | CheckCircle2 büyük ikon (success-700), eyebrow + H2 "Ödemen alındı", kredi yüklendiği rozet, "Üretime başla" primary + "Hesabım" ghost CTA. |
+| OD-02 | `/odeme/hata` redesign | Bekliyor | Landing done | XCircle danger ikon, hata sebebi metni (Aziz onayı sonrası), "Tekrar dene" primary + "Destek" link, calm ton. |
+| OD-03 | E-Arşiv fatura + iyzico güvence rozeti | Bekliyor | OD-01 | Footer alt: iyzico logo, e-Arşiv açıklaması. |
+| OD-04 | A11y + acceptance | Bekliyor | OD-03 | aria-live başarı/hata mesajı, focus management, Aziz preview onayı. |
+
+**Faz 2 toplam:** ~21 (U) + 7 (YS) + 6 (SR) + 4 (OD) = 38 ticket.
+
+---
+
+## 14 — Hesap Detay Sayfaları Genişletme (Faz 3 eklentisi)
+
+Bölüm 12'deki H-01~H-35 5 ana sayfayı kapsıyordu. Burada eksik 5 hesap sayfası ekleniyor — H ID serisi devam ediyor.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| H-36 | `/hesap/krediler` sayfası | Bekliyor | H-01 | Mevcut bakiye kartı, kredi geçmişi tablosu (DataTable pattern), "Kredi yükle" primary CTA → `/kredi-yukle`, düşük kredi uyarısı (≤5). |
+| H-37 | `/hesap/uretimler` sayfası | Bekliyor | H-01, SR-03 | Geçmiş üretim listesi, içerik tipine göre filtre chip'leri, kart başına thumbnail + metadata, "tekrar üret" + "indir" aksiyonları, infinite scroll veya pagination. |
+| H-38 | `/hesap/ayarlar` sayfası | Bekliyor | H-01 | Hesap bilgileri, parola değiştir, e-posta tercihleri (toggle'lar), KVKK veri indirme/silme talepleri, hesap silme (red destructive). |
+| H-39 | `/hesap/faturalar` sayfası | Bekliyor | H-01 | Paraşüt e-Arşiv fatura listesi, indir butonları, fatura no + tarih + tutar tablosu. |
+| H-40 | `/kredi-yukle` sayfası | Bekliyor | H-01, FY-09 | FiyatlarSection'daki PackageCard reuse, paket seç → iyzico checkout flow'a yönlendir. Sticky paket özet kartı (mobile). |
+| H-41 | Modal versiyonları (`@modal/(.)` rotaları) | Bekliyor | H-40, H-30, H-31 | `(.)giris`, `(.)kayit`, `(.)kredi-yukle` — backdrop blur + modal panel, ana sayfayla aynı stil, focus trap, Escape kapatma. |
+
+**Faz 3 toplam:** Bölüm 12'deki 35 + Bölüm 14'teki 6 = 41 ticket.
+
+---
+
+## 15 — Auth Sayfaları (Faz 4)
+
+Mevcut Bölüm 12'de H-30/H-31 sadece /giris için 2 ticket vardı. Burada `/giris` genişletiliyor + `/kayit`, `/sifre-sifirla` ekleniyor.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| AU-01 | `/giris` form layout (H-30/31'i kapsayacak) | Bekliyor | Landing done | 2 kolon (form sol, marka pitch sağ — gradient + 1-2 trust point), input ring primary, password toggle göz ikonu, "Beni hatırla" checkbox, "Şifremi unuttum" link. H-30/H-31 burada birleşiyor. |
+| AU-02 | `/giris` Google ile giriş + ayraç | Bekliyor | AU-01 | "veya" ayracı, Google logosu + "Google ile devam et" outline buton (mevcut OAuth korunur). |
+| AU-03 | `/giris` hata durumları | Bekliyor | AU-01 | Inline error mesajları (kırmızı eyebrow), Cloudflare Turnstile entegrasyonu görsel uyumlu. |
+| AU-04 | `/kayit` form layout | Bekliyor | AU-01 | AU-01 ile simetrik, "Şifre tekrar" alanı, KVKK + kullanım koşulları onay checkbox'ları (link'ler tıklanabilir). |
+| AU-05 | `/kayit` e-posta doğrulama akışı UI | Bekliyor | AU-04 | Kayıt sonrası "E-posta gönderildi" empty state, MailCheck ikon, "Tekrar gönder" link, ipucu metni. |
+| AU-06 | `/sifre-sifirla` form | Bekliyor | AU-01 | Tek input (e-posta), KeyRound ikon, success state ("Link gönderildi"), 2 step (e-posta gir → yeni şifre). |
+| AU-07 | Mobile responsive (3 sayfa) | Bekliyor | AU-06 | Tek kolon, sağ marka pitch mobilde gizli veya altta küçük. |
+| AU-08 | A11y + acceptance | Bekliyor | AU-07 | Form label/aria, error aria-live, autocomplete attr, Aziz preview onayı. |
+
+**Faz 4 toplam:** 8 ticket (H-30/31 burada absorb edildi, Bölüm 12'den çıkarılacak).
+
+---
+
+## 16 — İçerik Sayfaları (Faz 5)
+
+Mevcut Bölüm 12'de H-27/28/29 sadece blog liste için 3 ticket vardı. Burada blog detay + sss + hakkımızda ekleniyor. SEO + okunabilirlik öncelikli.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| IC-01 | `/blog` liste sayfası (H-27~29 dahil) | Bekliyor | Landing done | Hero başlık + arama + kategori chip filtresi (TabList primitive reuse), blog kartları grid (3 kolon desktop, 1 kolon mobile), kart hover lift, "Daha fazla yükle" pagination. |
+| IC-02 | `/blog/[slug]` detay sayfası tipografi | Bekliyor | IC-01 | Article max-w 720px, prose tipografi (h2/h3/p/ul/ol/blockquote), kod blok rd-neutral-900 bg, görsel rounded-xl + caption italic, line-height 1.75. |
+| IC-03 | `/blog/[slug]` meta + paylaş | Bekliyor | IC-02 | Yazar + tarih + okuma süresi eyebrow, kategori badge'leri, sosyal paylaş (Twitter/LinkedIn/WhatsApp), "Daha önce yazılanlar" bölümü 3 kart. |
+| IC-04 | `/blog/[slug]` İlgili yazılar + CTA | Bekliyor | IC-03 | Yazı sonu CTA bandı (rd-primary-50 bg, "Hemen üret" → /uret), 3 ilgili yazı kartı. |
+| IC-05 | `/sss` sayfa redesign | Bekliyor | Landing done | Landing'deki SSSSection (Bölüm 08) component reuse, ek olarak kategoriye göre filtreleme (Genel/Krediler/Faturalandırma/Teknik), arama. |
+| IC-06 | `/hakkimizda` sayfa redesign | Bekliyor | Landing done | Mevcut metin korunur (DR-03 elden geçirilmişti), tipografi + spacing redesign'a uyarlanır, kurucu fotoğraf bloğu warm-earth accent (premium ton). |
+| IC-07 | Mobile responsive (4 sayfa) | Bekliyor | IC-06 | Blog kart 1 kolon, article tipografi mobile-friendly, SSS accordion. |
+| IC-08 | A11y + acceptance | Bekliyor | IC-07 | Article semantic HTML, blog listesi tablist ARIA, Aziz preview onayı. |
+
+**Faz 5 toplam:** 8 ticket.
+
+---
+
+## 17 — Yasal + Hata Sayfaları (Faz 6 — Toplu Pas)
+
+**Yaklaşım:** Bu sayfalar düz metin içeriği. Ticket başına ayrı redesign verimli değil — tek toplu pasta global token swap, header/footer redesign component reuse, link rengi tutarlılığı sağlanacak.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| LG-01 | 6 yasal sayfa global token swap | Bekliyor | Landing done | `/kvkk-aydinlatma`, `/gizlilik`, `/kosullar`, `/cerez-politikasi`, `/mesafeli-satis`, `/teslimat-iade` — rd-* paleti, Manrope h1/h2/h3, prose body, max-w 720px, redesign Header + Footer aktif. |
+| LG-02 | 404 not-found sayfası | Bekliyor | LG-01 | "Sayfa bulunamadı" H1, kısa mesaj, anasayfa primary CTA + popüler linkler ghost CTA, illustrasyon (Lucide MapOff veya benzeri büyük). |
+| LG-03 | error.tsx genel hata sayfası | Bekliyor | LG-01 | "Bir şeyler ters gitti" H1, AlertTriangle danger ikon, "Tekrar dene" primary buton (reset() çağrısı), destek e-postası link. |
+| LG-04 | loading.tsx tutarlı loader | Bekliyor | LG-01 | Skeleton veya spinner — site genelinde tek pattern. Lucide Loader2 + animate-spin. |
+| LG-05 | Acceptance | Bekliyor | LG-04 | Aziz preview'da 6 yasal + 3 utility = 9 sayfa hızlı pas. |
+
+**Faz 6 toplam:** 5 ticket.
+
+---
+
+## Faz Özeti — Roadmap
+
+| Faz | Bölüm | Sayfa sayısı | Ticket sayısı | Durum |
+|---|---|---|---|---|
+| 1 | Landing (4-10) | 1 (anasayfa) | ~30 kalan | FY done, SSS sırada |
+| 2 | Üretim akışı (11, 13) | 4 (/uret, /yzstudio, /sonuc, /odeme) | 38 | Bekliyor (Landing done sonrası) |
+| 3 | Hesap alanı (12, 14) | 10 (5 ana + 5 detay) | 41 | Bekliyor (Faz 2 sonrası) |
+| 4 | Auth (15) | 3 (/giris, /kayit, /sifre-sifirla) | 8 | Bekliyor |
+| 5 | İçerik (16) | 4 (blog liste/detay, sss, hakkımızda) | 8 | Bekliyor |
+| 6 | Yasal + hata (17) | 9 (6 yasal + 3 utility) | 5 | Bekliyor |
+
+**Toplam kalan:** ~130 ticket. Tahmini süre 3-4 ay (UA+MB+NY+FY tempo: ~10-15 ticket/hafta).
+
+**Kapsam dışı (Aziz onayı):** `/admin`, `/hesap/admin/feedback`, `/(auth)/app` (eski), `/profil` (eski — `/hesap/profil` aktif), `/toplu` (zaten kaldırılıyor — UX-03'le `/uret` text sekmesine taşındı).
+
+**Detaylı prompt yazım kuralı:** Her ticket grubu için Cowork detaylı prompt'u BACKLOG'un ilgili bölümüne yazar, ondan sonra Aziz Claude Code'a verir. Prompt sırası gelmeden Claude Code ticket'a dokunmaz. (HR-FIX'te öğrendik: prompt olmadan 23 sapma çıkıyor.)

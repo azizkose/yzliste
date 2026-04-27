@@ -126,7 +126,7 @@ export default function FiyatlarSection() {
                 key={paket.id}
                 className={[
                   'relative rounded-xl border bg-white p-6 transition-transform duration-200',
-                  isPopular
+                  isRecommended
                     ? 'border-rd-primary-500 border-2 md:-translate-y-2'
                     : 'border-rd-neutral-200',
                 ].join(' ')}
@@ -136,15 +136,6 @@ export default function FiyatlarSection() {
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <span className="inline-flex items-center rounded-full bg-rd-primary-600 px-3 py-1 text-xs font-medium text-white tracking-wide">
                       En popüler
-                    </span>
-                  </div>
-                )}
-
-                {/* SENİN İÇİN badge — slider'a göre recommended pakette */}
-                {isRecommended && (
-                  <div className={`absolute -top-3 ${isPopular ? 'right-4' : 'left-1/2 -translate-x-1/2'}`}>
-                    <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium text-white tracking-wide" style={{ backgroundColor: '#059669' }}>
-                      Senin için
                     </span>
                   </div>
                 )}
@@ -164,19 +155,6 @@ export default function FiyatlarSection() {
                   <span className="ml-1 text-sm text-rd-neutral-400">/ {paket.krediStr}</span>
                 </p>
 
-                {/* CTA */}
-                <a
-                  href={FIYATLAR_CTA_ROUTE}
-                  className={[
-                    'mt-5 block w-full rounded-lg py-2.5 text-center text-sm font-medium transition-colors',
-                    isPopular
-                      ? 'bg-rd-primary-600 text-white hover:bg-rd-primary-700'
-                      : 'border border-rd-neutral-300 text-rd-neutral-700 hover:bg-rd-neutral-50',
-                  ].join(' ')}
-                >
-                  Paketi seç
-                </a>
-
                 {/* Özellikler */}
                 <ul className="mt-5 space-y-2.5" role="list">
                   {paket.ozellikler.map((ozellik, i) => (
@@ -186,6 +164,19 @@ export default function FiyatlarSection() {
                     </li>
                   ))}
                 </ul>
+
+                {/* CTA */}
+                <a
+                  href={FIYATLAR_CTA_ROUTE}
+                  className={[
+                    'mt-5 block w-full rounded-lg py-2.5 text-center text-sm font-medium transition-colors',
+                    isRecommended
+                      ? 'bg-rd-primary-600 text-white hover:bg-rd-primary-700'
+                      : 'border border-rd-neutral-300 text-rd-neutral-700 hover:bg-rd-neutral-50',
+                  ].join(' ')}
+                >
+                  Paketi seç
+                </a>
               </div>
             )
           })}
