@@ -23,6 +23,7 @@ import { useSosyalUretim } from "@/lib/hooks/useSosyalUretim";
 import IntentBanner from "@/components/uret/IntentBanner";
 import BrandProfileBlock from "@/components/uret/BrandProfileBlock";
 import { calculateCredits, type ActiveTab } from "@/components/uret/useCalculateCredits";
+import { getCTAState } from "@/components/uret/useCTAState";
 import StickySubmitBar from "@/components/uret/StickySubmitBar";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
@@ -124,6 +125,15 @@ export default function Home() {
     anaSekme === 'gorsel' ? gorsel.gorselYukleniyor :
     anaSekme === 'video' ? video.videoYukleniyor :
     sosyal.captionYukleniyor
+
+  const ctaState = getCTAState({
+    activeTab: anaSekme as ActiveTab,
+    productName: metin.urunAdi,
+    hasPhoto: fotolar.length > 0,
+    selectedStylesCount: gorsel.seciliStiller?.size,
+    selectedPlatformsCount: 1,
+    isLoggedIn: !!kullanici && !kullanici.anonim,
+  })
 
   // Sync shared photo to sosyal tab (T7-07)
   useEffect(() => {
@@ -467,9 +477,6 @@ export default function Home() {
               captionYukleniyor={sosyal.captionYukleniyor}
               sosyalCaption={sosyal.sosyalCaption} setSosyalCaption={sosyal.setSosyalCaption}
               sosyalHashtag={sosyal.sosyalHashtag} setSosyalHashtag={sosyal.setSosyalHashtag}
-              sosyalKitYukleniyor={sosyal.sosyalKitYukleniyor}
-              sosyalKitSonuc={sosyal.sosyalKitSonuc} setSosyalKitSonuc={sosyal.setSosyalKitSonuc}
-              sosyalKitAcik={sosyal.sosyalKitAcik} setSosyalKitAcik={sosyal.setSosyalKitAcik}
               sosyalFoto={sosyal.sosyalFoto} setSosyalFoto={sosyal.setSosyalFoto}
               sosyalGorselStil={sosyal.sosyalGorselStil} setSosyalGorselStil={sosyal.setSosyalGorselStil}
               sosyalGorselFormat={sosyal.sosyalGorselFormat} setSosyalGorselFormat={sosyal.setSosyalGorselFormat}
@@ -477,7 +484,7 @@ export default function Home() {
               sosyalGorselSonuclar={sosyal.sosyalGorselSonuclar} setSosyalGorselSonuclar={sosyal.setSosyalGorselSonuclar}
               sosyalGorselPrompt={sosyal.sosyalGorselPrompt} setSosyalGorselPrompt={sosyal.setSosyalGorselPrompt}
               kullanici={kullanici} paketModalAc={paketModalAc}
-              captionUret={sosyal.captionUret} kitUret={sosyal.kitUret} sosyalGorselUret={sosyal.sosyalGorselUret}
+              captionUret={sosyal.captionUret} sosyalGorselUret={sosyal.sosyalGorselUret}
               setAnaSekme={setAnaSekme}
             />
 
@@ -487,6 +494,7 @@ export default function Home() {
               cost={cost}
               remainingCredits={remainingCredits}
               isInsufficientCredit={isInsufficientCredit}
+              ctaState={ctaState}
               onSubmit={handleStickySubmit}
               isSubmitting={isStickySubmitting}
             />
