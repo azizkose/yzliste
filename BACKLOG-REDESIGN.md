@@ -216,18 +216,475 @@ Hedefler: LCP < 2.5s, CLS < 0.05, Lighthouse > 90
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| UA-01 | Constants (`lib/constants/uc-adim.ts`) | Bekliyor | DS-01 | UC_ADIM_STEPS (3 adım: title, description, duration, mockupType), TOTAL_TIME. |
-| UA-02 | Section scaffold + SectionHeader + bg | Bekliyor | DS-07, UA-01 | `components/sections/UcAdimSection.tsx`. bg-white. Eyebrow "KOLAY KULLANIM", h2 "3 adımda hazır", subtitle. |
-| UA-03 | StepCard + NumberCircle | Bekliyor | UA-02 | 80×80 outline circle, Manrope 800 sayı, title (h3), description, DurationLabel (Clock ikon + süre). Ortalı layout. |
-| UA-04 | MiniMockup — Step1: InputMockup | Bekliyor | UA-03 | 3 input metodu kartı (Fotoğraf seçili) + upload preview. slate-50 bg, border, min-h 180px. |
-| UA-05 | MiniMockup — Step2: SelectionMockup | Bekliyor | UA-03 | 4 platform chip (2 seçili) + 4 içerik tipi ikonu (2 seçili). |
-| UA-06 | MiniMockup — Step3: OutputMockup | Bekliyor | UA-03 | 2 çıktı kartı + "ve 2 tane daha..." satırı. |
-| UA-07 | ConnectorLine (dashed, desktop-only) | Bekliyor | UA-03 | `border-top: 2px dashed slate-300`, absolute, NumberCircle ortasıyla hizalı. Mobilde gizli. |
-| UA-08 | TotalTimeBar | Bekliyor | UA-02 | primary-50 bg, Clock ikon + "Ortalama tamamlama: **30 saniye**". Max-w 420px, ortalı. |
-| UA-09 | (Opsiyonel) Scroll-triggered reveal | Bekliyor | UA-03 | Stagger fade-in 100ms aralık. `prefers-reduced-motion` kontrolü. CSS veya framer-motion. |
-| UA-10 | Mobile responsive pass | Bekliyor | UA-07, UA-08 | Mobile: 1 kolon, connector gizli, gap 48px. Tablet: 3 kolon dar. Desktop: tam. |
-| UA-11 | A11y pass | Bekliyor | UA-10 | h2→h3 hiyerarşi. NumberCircle/ConnectorLine `aria-hidden`. Mockup'lar `role="img"`. WCAG AA. |
-| UA-12 | Acceptance review | Bekliyor | UA-11 | Aziz preview kontrolü. |
+| UA-01 | Constants (`lib/constants/uc-adim.ts`) | ✅ Tamam | DS-01 | UC_ADIM_STEPS + TOTAL_TIME. Süreler muğlak ("Birkaç saniyede"). |
+| UA-02 | Section scaffold + SectionHeader + bg | ✅ Tamam | DS-07, UA-01 | bg-white. Eyebrow "KOLAY KULLANIM", h2 "3 adımda hazır". |
+| UA-03 | StepCard + NumberCircle | ✅ Tamam | UA-02 | 80×80 outline circle (border-2 slate-200), Manrope 800, h3, desc, DurationLabel. |
+| UA-04 | MiniMockup — Step1: InputMockup | ✅ Tamam | UA-03 | 3 input metodu kartı (Fotoğraf seçili) + upload preview (fincan_01.jpg). |
+| UA-05 | MiniMockup — Step2: SelectionMockup | ✅ Tamam | UA-03 | 4 platform chip (Trendyol+Amazon seçili) + 4 içerik tipi (Metin+Görsel seçili). |
+| UA-06 | MiniMockup — Step3: OutputMockup | ✅ Tamam | UA-03 | 2 çıktı kartı (Trendyol listing + Amazon görsel) + "ve 2 tane daha...". |
+| UA-07 | ConnectorLine (dashed, desktop-only) | ✅ Tamam | UA-03 | 2px dashed #CBD5E1, absolute top-10, calc(100%/6), hidden lg:block, aria-hidden. |
+| UA-08 | TotalTimeBar + stagger animasyon | ✅ Tamam | UA-02 | rd-primary-50 bg, Clock ikon + "Saniyeler içinde tamamlanır". Max-w 420px. |
+| UA-09 | Mobile responsive + a11y pass | Bekliyor | UA-07, UA-08 | **Prompt → aşağıda** |
+| UA-10 | Acceptance review | Bekliyor | UA-09 | Aziz preview kontrolü. |
+
+#### UA-01~08 Detaylı Prompt (Claude Code bu bölümü okuyacak)
+
+**Branch:** `claude/redesign-modern-ui` · **Commit önerisi:** `feat: UA-01~08 3 adımda hazır bölümü`
+
+Mevcut pattern'ı takip et: `lib/constants/` → data, `components/sections/` → section component, primitive'ler `components/primitives/`'den import.
+
+---
+
+##### UA-01: Constants — `lib/constants/uc-adim.ts`
+
+```ts
+// UA-01 — 3 Adımda Hazır Bölümü Data
+// Emoji YASAK: tüm ikonlar Lucide string referansı
+
+export const UC_ADIM_HEADER = {
+  eyebrow: 'Kolay kullanım',
+  title: '3 adımda hazır',
+  subtitle: 'Ürün fotoğrafını yükle, platform ve içerik türünü seç — gerisini AI halleder.',
+} as const
+
+export interface UcAdimStep {
+  number: number
+  title: string
+  description: string
+  duration: string
+  icon: string // Lucide icon name
+}
+
+export const UC_ADIM_STEPS: UcAdimStep[] = [
+  {
+    number: 1,
+    title: 'Ürünü yükle',
+    description: 'Fotoğraf çek, galeri seç veya barkod tara.',
+    duration: '~5 saniye',
+    icon: 'Upload',
+  },
+  {
+    number: 2,
+    title: 'Seçimini yap',
+    description: 'Platform ve içerik türünü belirle.',
+    duration: '~5 saniye',
+    icon: 'Settings2',
+  },
+  {
+    number: 3,
+    title: 'İçeriğini al',
+    description: 'AI listing metni, görsel, video ve sosyal içerik üretir.',
+    duration: '~20 saniye',
+    icon: 'Sparkles',
+  },
+]
+
+export const UC_ADIM_TOTAL = {
+  label: 'Ortalama tamamlama',
+  duration: '30 saniye',
+} as const
+
+// Step 1 mockup data
+export const STEP1_INPUT_METHODS = [
+  { icon: 'Camera', label: 'Fotoğraf çek', active: true },
+  { icon: 'Image', label: 'Galeriden seç', active: false },
+  { icon: 'ScanLine', label: 'Barkod tara', active: false },
+] as const
+
+// Step 2 mockup data
+export const STEP2_PLATFORMS = [
+  { label: 'Trendyol', selected: true, color: '#F27A1A' },
+  { label: 'Amazon', selected: true, color: '#FF9900' },
+  { label: 'Hepsiburada', selected: false, color: '#4A90D9' },
+  { label: 'N11', selected: false, color: '#7B2BFC' },
+] as const
+
+export const STEP2_CONTENT_TYPES = [
+  { icon: 'FileText', label: 'Metin', selected: true, color: '#1E40AF' },
+  { icon: 'Image', label: 'Görsel', selected: true, color: '#7C3AED' },
+  { icon: 'Video', label: 'Video', selected: false, color: '#DC2626' },
+  { icon: 'Share2', label: 'Sosyal', selected: false, color: '#059669' },
+] as const
+
+// Step 3 mockup data
+export const STEP3_OUTPUTS = [
+  { icon: 'FileText', label: 'Trendyol listing metni', status: 'Hazır' },
+  { icon: 'Image', label: 'Amazon ürün görseli', status: 'Hazır' },
+] as const
+
+export const STEP3_MORE_COUNT = 2 // "ve 2 tane daha..."
+```
+
+---
+
+##### UA-02: Section — `components/sections/UcAdimSection.tsx`
+
+Ana wrapper. `_tanitim-redesign.tsx`'e HeroSection'dan SONRA, IcerikTurleri'nden ÖNCE eklenir.
+
+```tsx
+import SectionHeader from '@/components/primitives/SectionHeader'
+import { UC_ADIM_HEADER, UC_ADIM_STEPS, UC_ADIM_TOTAL } from '@/lib/constants/uc-adim'
+// ... diğer importlar
+
+export default function UcAdimSection() {
+  return (
+    <section className="bg-white py-16 md:py-20 lg:py-24 px-6" aria-label="Nasıl çalışır">
+      <div className="mx-auto max-w-[1200px]">
+        <SectionHeader
+          eyebrow={UC_ADIM_HEADER.eyebrow}
+          title={UC_ADIM_HEADER.title}
+          subtitle={UC_ADIM_HEADER.subtitle}
+        />
+
+        {/* 3 kolon grid — step kartları */}
+        <div className="relative grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
+          {/* ConnectorLine buraya (UA-07) */}
+          {UC_ADIM_STEPS.map((step, i) => (
+            <StepCard key={step.number} step={step} index={i} />
+          ))}
+        </div>
+
+        {/* TotalTimeBar (UA-08) */}
+        <TotalTimeBar />
+      </div>
+    </section>
+  )
+}
+```
+
+**`_tanitim-redesign.tsx`'e ekle:**
+```diff
+ import HeroSection from '@/components/sections/HeroBlock/HeroSection'
++import UcAdimSection from '@/components/sections/UcAdimSection'
+ import IcerikTurleriSection from '@/components/sections/IcerikTurleriSection'
+ ...
+ <HeroSection />
++<UcAdimSection />
+ <IcerikTurleriSection />
+```
+
+---
+
+##### UA-03: StepCard (UcAdimSection içinde veya ayrı dosya — tercihen aynı dosyada)
+
+```tsx
+function StepCard({ step, index }: { step: UcAdimStep; index: number }) {
+  return (
+    <div className="flex flex-col items-center text-center">
+      {/* NumberCircle */}
+      <div
+        className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-rd-primary-200 bg-white"
+        aria-hidden="true"
+      >
+        <span className="font-rd-display text-3xl font-[800] text-rd-primary-700">
+          {step.number}
+        </span>
+      </div>
+
+      {/* Title */}
+      <h3 className="mb-2 font-rd-display text-xl font-bold text-slate-900">
+        {step.title}
+      </h3>
+
+      {/* Description */}
+      <p className="mb-4 text-sm leading-relaxed text-slate-600">
+        {step.description}
+      </p>
+
+      {/* MiniMockup (UA-04/05/06 — aşağıda) */}
+      <div className="mb-4 w-full">
+        {index === 0 && <InputMockup />}
+        {index === 1 && <SelectionMockup />}
+        {index === 2 && <OutputMockup />}
+      </div>
+
+      {/* DurationLabel */}
+      <div className="inline-flex items-center gap-1.5 text-xs text-slate-500">
+        <Clock size={12} strokeWidth={2} aria-hidden="true" />
+        <span>{step.duration}</span>
+      </div>
+    </div>
+  )
+}
+```
+
+Import: `import { Clock } from 'lucide-react'`
+
+---
+
+##### UA-04: InputMockup (Step 1)
+
+```tsx
+function InputMockup() {
+  return (
+    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4" role="img" aria-label="Ürün yükleme ekranı">
+      {/* 3 input metodu */}
+      <div className="mb-3 flex gap-2">
+        {STEP1_INPUT_METHODS.map((m) => {
+          const Icon = STEP1_ICONS[m.icon]
+          return (
+            <div
+              key={m.label}
+              className={cn(
+                'flex flex-1 flex-col items-center gap-1 rounded-lg border px-2 py-2.5 text-[10px] font-medium transition-colors',
+                m.active
+                  ? 'border-rd-primary-200 bg-rd-primary-50 text-rd-primary-700'
+                  : 'border-slate-200 bg-white text-slate-500'
+              )}
+            >
+              {Icon && <Icon size={14} strokeWidth={1.5} />}
+              {m.label}
+            </div>
+          )
+        })}
+      </div>
+      {/* Upload preview */}
+      <div className="flex items-center gap-3 rounded-lg border border-dashed border-slate-300 bg-white p-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100">
+          <ImageIcon size={16} className="text-slate-400" />
+        </div>
+        <div className="min-w-0">
+          <p className="truncate text-xs font-medium text-slate-700">fincan_01.jpg</p>
+          <p className="text-[10px] text-slate-400">2.4 MB</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+Import: `import { Camera, Image as ImageIcon, ScanLine } from 'lucide-react'`
+
+STEP1_ICONS map (dosyanın üstünde):
+```tsx
+const STEP1_ICONS: Record<string, React.ComponentType<any>> = { Camera, Image: ImageIcon, ScanLine }
+```
+
+---
+
+##### UA-05: SelectionMockup (Step 2)
+
+```tsx
+function SelectionMockup() {
+  return (
+    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4" role="img" aria-label="Platform ve içerik seçimi">
+      {/* Platform chips */}
+      <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-slate-400">Platformlar</p>
+      <div className="mb-3 flex flex-wrap gap-1.5">
+        {STEP2_PLATFORMS.map((p) => (
+          <span
+            key={p.label}
+            className={cn(
+              'rounded-full px-2.5 py-1 text-[10px] font-medium',
+              p.selected
+                ? 'border border-transparent text-white'
+                : 'border border-slate-200 bg-white text-slate-500'
+            )}
+            style={p.selected ? { backgroundColor: p.color } : undefined}
+          >
+            {p.label}
+          </span>
+        ))}
+      </div>
+      {/* Content type icons */}
+      <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-slate-400">İçerik türleri</p>
+      <div className="flex gap-2">
+        {STEP2_CONTENT_TYPES.map((ct) => {
+          const Icon = STEP2_ICONS[ct.icon]
+          return (
+            <div
+              key={ct.label}
+              className={cn(
+                'flex flex-1 flex-col items-center gap-1 rounded-lg border px-2 py-2 text-[10px] font-medium',
+                ct.selected
+                  ? 'border-transparent'
+                  : 'border-slate-200 bg-white text-slate-400'
+              )}
+              style={ct.selected ? { backgroundColor: ct.color + '15', color: ct.color, borderColor: ct.color + '30' } : undefined}
+            >
+              {Icon && <Icon size={14} strokeWidth={1.5} />}
+              {ct.label}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+```
+
+STEP2_ICONS map: `{ FileText, Image: ImageIcon, Video, Share2 }`
+Import: `import { FileText, Video, Share2 } from 'lucide-react'`
+
+---
+
+##### UA-06: OutputMockup (Step 3)
+
+```tsx
+function OutputMockup() {
+  return (
+    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4" role="img" aria-label="Üretilen içerikler">
+      <div className="space-y-2">
+        {STEP3_OUTPUTS.map((out) => {
+          const Icon = STEP3_ICONS[out.icon]
+          return (
+            <div key={out.label} className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2.5">
+              {Icon && <Icon size={14} className="shrink-0 text-rd-primary-700" strokeWidth={1.5} />}
+              <span className="flex-1 truncate text-xs font-medium text-slate-700">{out.label}</span>
+              <span className="flex items-center gap-1 text-[10px] font-medium text-emerald-600">
+                <Check size={10} strokeWidth={2.5} />
+                {out.status}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">
+        ve {STEP3_MORE_COUNT} tane daha...
+      </p>
+    </div>
+  )
+}
+```
+
+STEP3_ICONS map: `{ FileText, Image: ImageIcon }`
+Import: `import { Check } from 'lucide-react'` (zaten var olabilir)
+
+---
+
+##### UA-07: ConnectorLine
+
+Grid wrapper (`relative`) içinde, NumberCircle'ların ortasını birleştiren yatay dashed çizgi. Sadece desktop'ta görünür.
+
+```tsx
+{/* ConnectorLine — desktop only */}
+<div
+  className="absolute left-0 right-0 top-10 hidden md:block"
+  style={{ marginLeft: 'calc(50% / 3)', marginRight: 'calc(50% / 3)' }}
+  aria-hidden="true"
+>
+  <div className="border-t-2 border-dashed border-slate-300" />
+</div>
+```
+
+`top-10` = 40px = NumberCircle'ın ortası (80px / 2). Grid container'da zaten `relative` var.
+
+Daha temiz alternatif: NumberCircle yüksekliği h-20 → merkez 40px. Connector `top-[40px]` ve her iki uçta padding bırakarak sadece circle'lar arasında çizgi çiz:
+
+```tsx
+<div
+  className="pointer-events-none absolute top-[40px] hidden md:block"
+  style={{ left: 'calc(100% / 6)', right: 'calc(100% / 6)' }}
+  aria-hidden="true"
+>
+  <div className="border-t-2 border-dashed border-slate-300" />
+</div>
+```
+
+---
+
+##### UA-08: TotalTimeBar
+
+Grid'in altında, ortalanmış bir bar.
+
+```tsx
+function TotalTimeBar() {
+  return (
+    <div className="mx-auto mt-12 max-w-[420px]">
+      <div className="flex items-center justify-center gap-2 rounded-full bg-rd-primary-50 px-6 py-3">
+        <Clock size={16} strokeWidth={2} className="text-rd-primary-700" aria-hidden="true" />
+        <span className="text-sm text-slate-700">
+          {UC_ADIM_TOTAL.label}:{' '}
+          <strong className="font-semibold text-rd-primary-700">{UC_ADIM_TOTAL.duration}</strong>
+        </span>
+      </div>
+    </div>
+  )
+}
+```
+
+**Stagger animasyon (opsiyonel ama güzel olur):** Her StepCard'a stagger fade-in ekle. globals.css'teki mevcut `fade-in` keyframe'ini kullan:
+
+```tsx
+// StepCard wrapper'ına:
+<div
+  className="flex flex-col items-center text-center"
+  style={{ animation: `fade-in 500ms ease-out ${index * 100}ms both` }}
+>
+```
+
+Ve globals.css'e reduced motion kontrolü:
+```css
+@media (prefers-reduced-motion: reduce) {
+  .uc-adim-card { animation: none !important; }
+}
+```
+Veya inline style kullanılıyorsa class gerekmez — browser `prefers-reduced-motion` ile inline style'daki animation'ı override edemez. Bu yüzden class bazlı yapmak daha iyi:
+
+```css
+.animate-step-card-1 { animation: fade-in 500ms ease-out both; }
+.animate-step-card-2 { animation: fade-in 500ms ease-out 100ms both; }
+.animate-step-card-3 { animation: fade-in 500ms ease-out 200ms both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-step-card-1,
+  .animate-step-card-2,
+  .animate-step-card-3 { animation: none; }
+}
+```
+
+StepCard'da: `className={cn("flex flex-col items-center text-center", \`animate-step-card-\${index + 1}\`)}`
+
+---
+
+##### UA-09: Mobile Responsive + A11y (tek geçiş)
+
+**Responsive:**
+- Grid zaten `grid-cols-1 md:grid-cols-3` — mobilde tek kolon ✓
+- ConnectorLine `hidden md:block` — mobilde gizli ✓
+- Mobilde gap: `gap-12 md:gap-8` (12 = 48px mobilde, 8 = 32px desktop'ta)
+- MiniMockup max-width: `max-w-[280px] mx-auto` ekle (mobilde çok geniş olmasın)
+
+**A11y:**
+- Section: `aria-label="Nasıl çalışır"` ✓
+- h2 (SectionHeader) → h3 (StepCard title) hiyerarşi ✓
+- NumberCircle: `aria-hidden="true"` ✓
+- ConnectorLine: `aria-hidden="true"` ✓
+- MiniMockup'lar: `role="img" aria-label="..."` ✓
+- DurationLabel Clock ikonu: `aria-hidden="true"` ✓
+- Tüm renk kontrastları slate-600 on white = 5.7:1 ✓
+
+---
+
+**Dosya listesi:**
+
+| Dosya | İşlem |
+|-------|-------|
+| `lib/constants/uc-adim.ts` | YENİ |
+| `components/sections/UcAdimSection.tsx` | YENİ (StepCard, InputMockup, SelectionMockup, OutputMockup, TotalTimeBar, ConnectorLine hepsi aynı dosyada) |
+| `app/_tanitim-redesign.tsx` | GÜNCELLE (import + render sırası) |
+| `app/globals.css` | GÜNCELLE (step-card animasyon class'ları + reduced motion) |
+
+**Kabul kontrol listesi (UA-01~09 topluca):**
+
+- [ ] Constants dosyası: tüm adım verileri, mockup verileri, header metinleri
+- [ ] SectionHeader: eyebrow "Kolay kullanım", title "3 adımda hazır"
+- [ ] 3 kolon grid desktop, tek kolon mobil
+- [ ] Her kart: NumberCircle (80×80, outline, Manrope 800) + h3 + açıklama + mockup + süre
+- [ ] Step 1 mockup: 3 input metodu (Fotoğraf seçili), upload preview
+- [ ] Step 2 mockup: 4 platform chip (2 seçili, renkli), 4 içerik türü (2 seçili)
+- [ ] Step 3 mockup: 2 output satırı (Check + Hazır), "ve 2 tane daha..."
+- [ ] ConnectorLine: dashed, desktop-only, circle ortası hizalı
+- [ ] TotalTimeBar: primary-50 bg, Clock + "30 saniye" bold
+- [ ] Stagger fade-in animasyon (3 kart, 100ms aralık)
+- [ ] `prefers-reduced-motion` → animasyon devre dışı
+- [ ] `_tanitim-redesign.tsx`'e Hero → **UcAdim** → IcerikTurleri sırasıyla ekli
+- [ ] `npm run build` hatasız
+- [ ] Emoji YOK
+- [ ] Tüm a11y kontrolleri (aria-hidden, role="img", heading hiyerarşi)
+- [ ] Commit: `feat: UA-01~08 3 adımda hazır bölümü`
+
+---
 
 ### Marka Bilgileri Bölümü — Bölüm 05
 
@@ -441,14 +898,4 @@ Hedefler: LCP < 2.5s, CLS < 0.05, Lighthouse > 90
 | U-21 | Aziz acceptance review | Bekliyor | U-20 | Aziz preview URL'de 5 iyileştirmeyi kontrol eder. |
 
 **Bağımlılık özeti:**
-- U-01 hepsinden önce (renk paleti)
-- Grup 2-6 paralel yapılabilir (her biri bağımsız iyileştirme)
-- U-18~21 en son (polish)
-
----
-
-## Tamamlanan
-
-(henüz yok)
-
--
+- U-01 he

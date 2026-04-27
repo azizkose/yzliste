@@ -3,6 +3,7 @@ import Nav from '@/components/sections/HeroBlock/Nav'
 import HeroSection from '@/components/sections/HeroBlock/HeroSection'
 import IcerikTurleriSection from '@/components/sections/IcerikTurleriSection'
 import PazaryeriSection from '@/components/sections/PazaryeriSection'
+import UcAdimSection from '@/components/sections/UcAdimSection'
 
 export default function TanitimRedesign() {
   return (
@@ -11,6 +12,7 @@ export default function TanitimRedesign() {
       <Nav />
       <main>
         <HeroSection />
+        <UcAdimSection />
         <IcerikTurleriSection />
         <PazaryeriSection />
       </main>
