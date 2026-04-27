@@ -18,7 +18,7 @@ export function StickerBadge({ icon, label, color, borderColor, className }: Sti
       )}
       style={{ border: `1px solid ${borderColor}` }}
     >
-      <span style={{ color }}>{icon}</span>
+      <span style={{ color }} aria-hidden="true">{icon}</span>
       {label}
     </div>
   )

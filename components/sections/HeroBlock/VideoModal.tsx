@@ -68,7 +68,7 @@ export default function VideoModal({ isOpen, onClose }: VideoModalProps) {
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/10">
               <Play size={28} className="ml-1 text-white" fill="currentColor" />
             </div>
-            <p className="text-sm text-white/60">Video yakında eklenecek</p>
+            <p className="text-sm text-white/80">Video yakında eklenecek</p>
           </div>
         </div>
       </div>

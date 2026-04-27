@@ -16,14 +16,14 @@ export default function AppScreenshotMockup() {
         label={HERO_BADGES.topRight.label}
         color="#1E40AF"
         borderColor="#DBEAFE"
-        className="absolute -top-3 right-5 z-10"
+        className="hidden sm:flex sm:absolute sm:-top-3 sm:right-5 z-10"
       />
       <StickerBadge
         icon={<Zap size={14} strokeWidth={2} />}
         label={HERO_BADGES.bottomLeft.label}
         color="#EA580C"
         borderColor="#FED7AA"
-        className="absolute -bottom-3 -left-3 z-10"
+        className="hidden sm:flex sm:absolute sm:-bottom-3 sm:-left-3 z-10"
       />
       {/* Browser chrome */}
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white [box-shadow:var(--shadow-rd-lg)]">

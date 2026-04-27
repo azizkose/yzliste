@@ -1,11 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { ArrowRight, Play, Check, Plug, CreditCard, Target, Zap } from 'lucide-react'
 import { HERO_COPY, HERO_TRUST_PILLS, NAV_CTAS } from '@/lib/constants/hero'
 import Button from '@/components/primitives/Button'
-import VideoModal from './VideoModal'
+
+const VideoModal = dynamic(() => import('./VideoModal'), { ssr: false })
 
 const TRUST_PILL_ICONS: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>> = {
   Plug,
@@ -73,11 +75,12 @@ export default function HeroContent() {
       </div>
 
       {/* CTA group */}
-      <div className="mb-5 flex flex-wrap items-center gap-3">
-        <Link href={NAV_CTAS.primary.href} tabIndex={-1}>
+      <div className="mb-5 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+        <Link href={NAV_CTAS.primary.href} tabIndex={-1} className="w-full sm:w-auto">
           <Button
             variant="primary"
             size="lg"
+            className="w-full sm:w-auto"
             iconRight={<ArrowRight size={16} strokeWidth={2.5} aria-hidden="true" />}
           >
             {HERO_COPY.ctaPrimary}
@@ -86,7 +89,7 @@ export default function HeroContent() {
         <button
           type="button"
           onClick={() => setVideoOpen(true)}
-          className="inline-flex items-center gap-2 rounded-xl px-5 py-3.5 text-[15px] font-medium text-slate-600 transition-colors duration-200 hover:text-slate-900"
+          className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-[15px] font-medium text-slate-600 transition-colors duration-200 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rd-primary-500"
           aria-label="Nasıl çalışır videosunu izle"
         >
           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100">
