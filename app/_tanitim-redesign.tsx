@@ -3,6 +3,7 @@ import Nav from '@/components/sections/HeroBlock/Nav'
 import HeroSection from '@/components/sections/HeroBlock/HeroSection'
 import IcerikTurleriSection from '@/components/sections/IcerikTurleriSection'
 import MarkaBilgileriSection from '@/components/sections/MarkaBilgileriSection'
+import FiyatlarSection from '@/components/sections/FiyatlarSection'
 import NedenYzlisteSection from '@/components/sections/NedenYzlisteSection'
 import PazaryeriSection from '@/components/sections/PazaryeriSection'
 import UcAdimSection from '@/components/sections/UcAdimSection'
@@ -19,6 +20,7 @@ export default function TanitimRedesign() {
         <PazaryeriSection />
         <MarkaBilgileriSection />
         <NedenYzlisteSection />
+        <FiyatlarSection />
       </main>
     </div>
   )
