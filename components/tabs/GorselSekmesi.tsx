@@ -74,8 +74,7 @@ export default function GorselSekmesi({
       )}
 
       <p className="text-xs text-rd-neutral-600">
-        Tek fotoğraftan 7 farklı stüdyo stili. Seçtiğin her stil için 1 görsel üretilir, kredi üretimde düşer.{" "}
-        <span className="text-xs text-rd-neutral-400">  <br /> Örnek: 1 stil seçersen → 1 görsel, 1 kredi <br />3 stil seçersen → 3 görsel, 3 kredi</span>
+        Tek fotoğraftan 7 farklı stüdyo stili. Seçtiğin her stil için ayrı bir görsel üretilir.
       </p>
 
       {fotolar.length === 0 ? (
@@ -97,7 +96,7 @@ export default function GorselSekmesi({
       </p>
 
       <div>
-        <p className="block text-xs font-medium text-rd-neutral-600 mb-2">Stil seç <span className="text-rd-neutral-400 font-normal">(1 stil = 1 görsel = 1 kredi)</span></p>
+        <p className="block text-xs font-medium text-rd-neutral-600 mb-2">Stil seç</p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {(() => {
             const gorselKategoriKodu = kategoriKoduHesapla(kategori);
@@ -165,23 +164,14 @@ export default function GorselSekmesi({
         </div>
       )}
 
-      <KrediButon
-        label={
-          fotolar.length === 0
-            ? "Fotoğraf ekle"
-            : seciliStiller.size === 0
-              ? "Stil seç"
-              : (!kullanici || kullanici.anonim)
-                ? "Giriş yap ve başla"
-                : `${seciliStiller.size} görsel üret`
-        }
-        kredi={(!kullanici || kullanici.anonim || kullanici.is_admin) ? undefined : seciliStiller.size || undefined}
-        kalanKredi={kullanici?.kredi}
+      <button
+        type="button"
         onClick={gorselUret}
         disabled={gorselYukleniyor || seciliStiller.size === 0 || fotolar.length === 0}
-        yukleniyor={gorselYukleniyor}
-        yukleniyorLabel={`${seciliStiller.size} görsel üretiliyor...`}
-      />
+        className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-lg transition-colors"
+      >
+        {gorselYukleniyor ? `${seciliStiller.size} görsel üretiliyor...` : "İçerik üret"}
+      </button>
 
       {gorselYukleniyor && (
         <p className="text-xs text-rd-primary-800 text-center">Sayfayı kapatmayın — görsel üretimi yaklaşık 1 dakika sürer</p>

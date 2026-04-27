@@ -546,7 +546,6 @@ export default function MetinSekmesi({
     <div id="giris-formu" style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white border border-rd-neutral-200 rounded-xl p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-medium text-rd-neutral-900">Listing metni</h2>
-        <span className="text-xs text-rd-neutral-600 font-mono">1 kredi</span>
       </div>
 
       {/* Manuel */}
@@ -658,15 +657,14 @@ export default function MetinSekmesi({
       {/* Üret butonu + sonuçlar — sadece tekli modlar için */}
       {girisTipi !== "excel" && (
         <>
-      <KrediButon
-        label={(!kullanici || kullanici.anonim) ? "Ücretsiz başla — 3 kredi hediye" : "İçerik üret"}
-        kredi={(!kullanici || kullanici.anonim || kullanici.is_admin) ? undefined : 1}
-        kalanKredi={kullanici?.kredi}
+      <button
+        type="button"
         onClick={icerikUret}
-        disabled={!uretButonAktif}
-        yukleniyor={yukleniyor}
-        yukleniyorLabel={YUKLENIYOR_MESAJLARI[yukleniyorMesaj]}
-      />
+        disabled={!uretButonAktif || yukleniyor}
+        className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-lg transition-colors"
+      >
+        {yukleniyor ? YUKLENIYOR_MESAJLARI[yukleniyorMesaj] : "İçerik üret"}
+      </button>
       {(!kullanici || kullanici.anonim) && (
         <p className="text-xs text-center text-rd-neutral-400">
           Hesabın var mı?{" "}
@@ -678,9 +676,6 @@ export default function MetinSekmesi({
 
       <p className="text-xs text-rd-neutral-400 text-center">yzliste her platformun karakter limiti ve SEO kuralına göre üretir ancak pazaryeri kuralları sık değişir — yayınlamadan önce içeriği kontrol etmeni öneririz</p>
 
-      {!yukleniyor && kullanici && !kullanici.anonim && !kullanici.is_admin && (kullanici.kredi ?? 0) <= 0 && (
-        <p className="text-center text-xs text-rd-danger-700">İçerik üretim krediniz bitti. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al</button></p>
-      )}
 
       {yukleniyor && (
         <div className="bg-white rounded-xl border border-rd-neutral-200 p-8 text-center space-y-4">

@@ -77,10 +77,7 @@ export default function VideoSekmesi({
 
       <div className="bg-rd-warning-50 rounded-lg p-3 flex items-start gap-2.5">
         <Zap size={16} strokeWidth={1.5} className="text-rd-warning-700 flex-shrink-0 mt-0.5" />
-        <div>
-          <p className="text-xs font-medium text-rd-warning-700">Kredi üretim anında düşer</p>
-          <p className="text-xs text-rd-warning-700/80 mt-0.5">AI işlem ~2 dakika sürer</p>
-        </div>
+        <p className="text-xs text-rd-warning-700/80">AI işlem ~2 dakika sürer</p>
       </div>
 
       {!fotolar[0] ? (
@@ -117,15 +114,12 @@ export default function VideoSekmesi({
         <label className="block text-xs font-medium text-rd-neutral-600 mb-2">Video süresi</label>
         <div className="grid grid-cols-2 gap-2">
           {([
-            { id: "5", label: "5 saniye", kredi: 10, aciklama: "Hızlı tanıtım · Reels ideal" },
-            { id: "10", label: "10 saniye", kredi: 20, aciklama: "Detaylı showcase · Pazaryeri" },
-          ] as { id: "5" | "10"; label: string; kredi: number; aciklama: string }[]).map((s) => (
+            { id: "5", label: "5 saniye", aciklama: "Hızlı tanıtım · Reels ideal" },
+            { id: "10", label: "10 saniye", aciklama: "Detaylı showcase · Pazaryeri" },
+          ] as { id: "5" | "10"; label: string; aciklama: string }[]).map((s) => (
             <button key={s.id} onClick={() => setVideoSure(s.id)}
               className={`p-3 rounded-xl text-left transition-all ${videoSure === s.id ? "border-2 border-rd-primary-800 bg-rd-primary-100" : "border border-rd-neutral-200 hover:border-rd-primary-800"}`}>
-              <div className="flex items-center justify-between mb-0.5">
-                <p className={`text-xs font-medium ${videoSure === s.id ? "text-rd-primary-800" : "text-rd-neutral-900"}`}>{s.label}</p>
-                <span className={`text-xs font-medium ${videoSure === s.id ? "text-rd-primary-800" : "text-rd-neutral-400"}`}>{s.kredi} kredi</span>
-              </div>
+              <p className={`text-xs font-medium mb-0.5 ${videoSure === s.id ? "text-rd-primary-800" : "text-rd-neutral-900"}`}>{s.label}</p>
               <p className="text-xs text-rd-neutral-400">{s.aciklama}</p>
             </button>
           ))}
@@ -167,30 +161,14 @@ export default function VideoSekmesi({
         <Link href="/blog/ai-urun-videosu-hareket-secenekleri" className="inline-block mt-2 text-xs text-rd-primary-800 hover:text-rd-primary-900 hover:underline">Bu hareketler ne anlama gelir? Ürün kategorine göre hangisi uygun?</Link>
       </div>
 
-      {!kullanici ? (
-        <button disabled className="w-full bg-rd-neutral-200 text-rd-neutral-400 font-medium py-3 rounded-lg">
-          Video üret — giriş gerekli
-        </button>
-      ) : fotolar.length === 0 ? (
-        <button disabled className="w-full bg-rd-neutral-200 text-rd-neutral-400 font-medium py-3 rounded-lg">
-          Önce fotoğraf ekle
-        </button>
-      ) : (
-        <KrediButon
-          label="Video üret"
-          kredi={kullanici.is_admin ? undefined : (videoSure === "10" ? 20 : 10)}
-          kalanKredi={kullanici.is_admin ? undefined : kullanici.kredi}
-          onClick={videoUret}
-          disabled={videoYukleniyor || (!kullanici.is_admin && (kullanici.kredi ?? 0) < (videoSure === "10" ? 20 : 10))}
-          yukleniyor={videoYukleniyor}
-          yukleniyorLabel="Video üretiliyor..."
-          renk="primary"
-        />
-      )}
-
-      {kullanici && !kullanici.is_admin && (kullanici.kredi ?? 0) < (videoSure === "10" ? 20 : 10) && !videoYukleniyor && (
-        <p className="text-center text-xs text-rd-danger-700">En az {videoSure === "10" ? 20 : 10} kredi gerekli. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al</button></p>
-      )}
+      <button
+        type="button"
+        onClick={videoUret}
+        disabled={videoYukleniyor || fotolar.length === 0}
+        className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-lg transition-colors"
+      >
+        {videoYukleniyor ? "Video üretiliyor..." : "İçerik üret"}
+      </button>
 
       {videoYukleniyor && (
         <div className="bg-rd-warning-50 border border-rd-warning-700/20 rounded-xl p-4 text-center space-y-2">
