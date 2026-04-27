@@ -2,8 +2,6 @@
 import { useState } from "react";
 import FotoEkleAlani from "@/components/ui/FotoEkleAlani";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
-import KrediButon from "@/components/ui/KrediButon";
-
 type SosyalPlatform = "instagram" | "tiktok" | "facebook" | "twitter";
 type SosyalTon = "tanitim" | "indirim" | "hikaye";
 
@@ -35,11 +33,6 @@ interface SosyalSekmesiProps {
   setSosyalCaption: (v: string) => void;
   sosyalHashtag: string;
   setSosyalHashtag: (v: string) => void;
-  sosyalKitYukleniyor: boolean;
-  sosyalKitSonuc: Record<string, { caption: string; hashtag: string }> | null;
-  setSosyalKitSonuc: (v: null) => void;
-  sosyalKitAcik: string | null;
-  setSosyalKitAcik: (v: string | null) => void;
   sosyalFoto: string | null;
   setSosyalFoto: (v: string | null) => void;
   sosyalGorselStil: string;
@@ -54,7 +47,6 @@ interface SosyalSekmesiProps {
   kullanici: Kullanici | null;
   paketModalAc: () => void;
   captionUret: () => void;
-  kitUret: () => void;
   sosyalGorselUret: () => void;
   setAnaSekme: (v: "video") => void;
 }
@@ -70,9 +62,6 @@ export default function SosyalSekmesi({
   captionYukleniyor,
   sosyalCaption, setSosyalCaption,
   sosyalHashtag, setSosyalHashtag,
-  sosyalKitYukleniyor,
-  sosyalKitSonuc, setSosyalKitSonuc,
-  sosyalKitAcik, setSosyalKitAcik,
   sosyalFoto, setSosyalFoto,
   sosyalGorselStil, setSosyalGorselStil,
   sosyalGorselFormat, setSosyalGorselFormat,
@@ -80,7 +69,7 @@ export default function SosyalSekmesi({
   sosyalGorselSonuclar, setSosyalGorselSonuclar,
   sosyalGorselPrompt, setSosyalGorselPrompt,
   kullanici, paketModalAc,
-  captionUret, kitUret, sosyalGorselUret, setAnaSekme,
+  captionUret, sosyalGorselUret, setAnaSekme,
 }: SosyalSekmesiProps) {
   const [gelismisAcik, setGelismisAcik] = useState(false);
 
@@ -97,7 +86,6 @@ export default function SosyalSekmesi({
       <div className="bg-white rounded-xl border border-rd-neutral-200 p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-medium text-rd-neutral-900">Sosyal medya içeriği üret</h2>
-          <span className="text-xs text-rd-neutral-600 font-mono">1 kredi</span>
         </div>
 
         <div className="grid grid-cols-2 gap-2">
@@ -249,32 +237,14 @@ export default function SosyalSekmesi({
               </div>
             )}
 
-            <button onClick={captionUret} disabled={captionYukleniyor || sosyalKitYukleniyor || !sosyalUrunAdi.trim() || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) <= 0)}
-              className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-xl transition-colors">
-              {captionYukleniyor ? "Üretiliyor..." : !kullanici ? "Caption üret — giriş gerekli" : `${sosyalPlatform === "instagram" ? "Instagram" : sosyalPlatform === "tiktok" ? "TikTok" : sosyalPlatform === "facebook" ? "Facebook" : "Twitter/X"} caption üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
+            <button
+              type="button"
+              onClick={captionUret}
+              disabled={captionYukleniyor || !sosyalUrunAdi.trim()}
+              className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-xl transition-colors"
+            >
+              {captionYukleniyor ? "Üretiliyor..." : "İçerik üret"}
             </button>
-
-            {!kullanici ? (
-              <button disabled className="w-full bg-white border border-rd-neutral-200 text-rd-neutral-400 font-medium py-3 rounded-lg">
-                Sosyal medya kiti — giriş gerekli
-              </button>
-            ) : (
-              <KrediButon
-                label="Sosyal medya kiti"
-                kredi={kullanici.is_admin ? 0 : (sosyalFoto ? 4 : 3)}
-                kalanKredi={kullanici.is_admin ? undefined : kullanici.kredi}
-                onClick={kitUret}
-                disabled={sosyalKitYukleniyor || captionYukleniyor || !sosyalUrunAdi.trim() || (!kullanici.is_admin && (kullanici.kredi ?? 0) < (sosyalFoto ? 4 : 3))}
-                yukleniyor={sosyalKitYukleniyor}
-                yukleniyorLabel="Kit üretiliyor..."
-                renk="secondary"
-              />
-            )}
-            <p className="text-xs text-rd-neutral-400 text-center -mt-2">Instagram · TikTok · Facebook · Twitter/X aynı anda</p>
-
-            {kullanici && !kullanici.is_admin && (kullanici.kredi ?? 0) <= 0 && !captionYukleniyor && (
-              <p className="text-center text-xs text-rd-danger-700">İçerik üretim krediniz bitti. <button onClick={() => paketModalAc()} className="underline font-medium">Kredi satın al →</button></p>
-            )}
 
             {(sosyalCaption || sosyalHashtag) && (
               <div className="space-y-3">
@@ -300,63 +270,13 @@ export default function SosyalSekmesi({
               </div>
             )}
 
-            {/* Sosyal Medya Kiti sonuçları */}
-            {sosyalKitSonuc && (
-              <div className="space-y-3 mt-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-rd-neutral-900">Sosyal medya kiti</p>
-                  <button onClick={() => { setSosyalKitSonuc(null); setSosyalKitAcik(null); }} className="text-xs text-rd-neutral-400 hover:text-rd-neutral-600 transition-colors">Temizle</button>
-                </div>
-                {([
-                  { id: "instagram_tiktok", label: "Instagram & TikTok" },
-                  { id: "facebook", label: "Facebook" },
-                  { id: "twitter", label: "Twitter/X" },
-                  { id: "linkedin", label: "LinkedIn" },
-                ]).map(({ id, label }) => {
-                  const sonuc = sosyalKitSonuc[id];
-                  if (!sonuc) return null;
-                  const acik = sosyalKitAcik === id;
-                  return (
-                    <div key={id} className="border border-rd-neutral-200 rounded-xl overflow-hidden">
-                      <button onClick={() => setSosyalKitAcik(acik ? null : id)}
-                        className="w-full flex items-center justify-between px-4 py-3 bg-rd-neutral-50 hover:bg-rd-neutral-100 transition-colors text-left">
-                        <span className="text-sm font-medium text-rd-neutral-900">{label}</span>
-                        <span className="text-rd-neutral-400 text-xs">{acik ? "▲" : "▼"}</span>
-                      </button>
-                      {acik && (
-                        <div className="p-4 space-y-3">
-                          {sonuc.caption && (
-                            <div>
-                              <div className="flex items-center justify-between mb-1">
-                                <span className="text-xs font-medium text-rd-neutral-600">Paylaşım metni</span>
-                                <button onClick={() => navigator.clipboard.writeText(sonuc.caption)} className="text-xs px-2 py-1 rounded bg-white border border-rd-neutral-200 text-rd-neutral-600 hover:text-rd-neutral-900 hover:border-rd-primary-800 transition-all">Kopyala</button>
-                              </div>
-                              <p className="text-sm text-rd-neutral-600 whitespace-pre-line leading-relaxed">{sonuc.caption}</p>
-                            </div>
-                          )}
-                          {sonuc.hashtag && (
-                            <div>
-                              <div className="flex items-center justify-between mb-1">
-                                <span className="text-xs font-medium text-rd-neutral-600">Hashtagler</span>
-                                <button onClick={() => navigator.clipboard.writeText(sonuc.hashtag)} className="text-xs px-2 py-1 rounded bg-white border border-rd-neutral-200 text-rd-neutral-600 hover:text-rd-neutral-900 hover:border-rd-primary-800 transition-all">Kopyala</button>
-                              </div>
-                              <p className="text-sm text-rd-primary-800">{sonuc.hashtag}</p>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
           </div>
         )}
 
         {/* GÖRSEL İÇERİĞİ */}
         {sosyalIcerikTipi === "gorsel" && (
           <div className="space-y-4">
-            <p className="text-xs text-rd-neutral-600">Ürün fotoğrafından seçtiğin platform boyutunda profesyonel görsel üretilir — 1 görsel, 1 kredi.</p>
+            <p className="text-xs text-rd-neutral-600">Ürün fotoğrafından seçtiğin platform boyutunda görsel üretilir.</p>
 
             {!sosyalFoto ? (
               <FotoEkleAlani id="sosyal-gorsel-foto-input" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onload = () => setSosyalFoto(r.result as string); r.readAsDataURL(f); } }} renk="pink" metin="Ürün fotoğrafı yükle" altMetin="Temiz arka planlı fotoğraf en iyi sonucu verir" />
@@ -414,9 +334,13 @@ export default function SosyalSekmesi({
               />
             </div>
 
-            <button onClick={sosyalGorselUret} disabled={sosyalGorselYukleniyor || !sosyalFoto || (kullanici !== null && !kullanici.is_admin && (kullanici?.kredi ?? 0) < 1)}
-              className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-xl transition-colors">
-              {sosyalGorselYukleniyor ? "Görsel üretiliyor..." : !kullanici ? "Görsel üret — giriş gerekli" : `Sosyal medya görseli üret — ${kullanici.is_admin ? "∞" : "1"} kredi`}
+            <button
+              type="button"
+              onClick={sosyalGorselUret}
+              disabled={sosyalGorselYukleniyor || !sosyalFoto}
+              className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-xl transition-colors"
+            >
+              {sosyalGorselYukleniyor ? "Görsel üretiliyor..." : "İçerik üret"}
             </button>
 
             {sosyalGorselYukleniyor && (
