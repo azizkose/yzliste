@@ -66,6 +66,23 @@
   --color-rd-platform-amazon-bg: #FFF8EB;
   --color-rd-platform-etsy: #F1641E;
   --color-rd-platform-etsy-bg: #FEF2EC;
+  --color-rd-platform-hepsiburada: #FF6000;
+  --color-rd-platform-hepsiburada-bg: #FFF1E6;
+  --color-rd-platform-n11: #F8B62D;
+  --color-rd-platform-n11-bg: #FEF6E0;
+
+  /* Redesign Colors — Semantic */
+  --color-rd-success-50: #ECFDF5;
+  --color-rd-success-600: #059669;
+  --color-rd-success-700: #047857;
+
+  --color-rd-warning-50: #FFFBEB;
+  --color-rd-warning-600: #D97706;
+  --color-rd-warning-700: #B45309;
+
+  --color-rd-danger-50: #FEF2F2;
+  --color-rd-danger-600: #DC2626;
+  --color-rd-danger-700: #B91C1C;
 
   /* Redesign Shadows */
   --shadow-rd-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
