@@ -6,9 +6,11 @@ import {
   ChevronDown, ArrowRight, Camera, Pencil, ScanLine,
   Ruler, Globe, Key, ClipboardList, Maximize, Sparkles,
   Search, Sun, Palette, BookOpen, Timer, Target, Smartphone, Hash,
+  Coffee, Leaf, Hand, Gift, Package, Download,
 } from 'lucide-react'
 import SectionHeader from '@/components/primitives/SectionHeader'
 import CopyButton from '@/components/primitives/CopyButton'
+import Button from '@/components/primitives/Button'
 import { cn } from '@/lib/utils'
 import { CONTENT_TYPES, PLATFORMS, PAZARYERI_DEMO_DATA, SAMPLE_PRODUCT, INPUT_METHODS } from '@/lib/constants/pazaryeri'
 import type { ContentTypeId, PlatformId } from '@/lib/constants/pazaryeri'
@@ -33,9 +35,14 @@ const RULE_ICONS = {
   Search, Sun, Palette, BookOpen, Timer, Target, Smartphone, Hash,
 } as const
 
+const GALLERY_ICONS = {
+  Coffee, Ruler, Package, Sparkles, Leaf, Hand, Gift, Palette, Sun,
+} as const
+
 type ContentTypeIconKey = keyof typeof CONTENT_TYPE_ICONS
 type InputMethodIconKey = keyof typeof INPUT_METHOD_ICONS
 type RuleIconKey = keyof typeof RULE_ICONS
+type GalleryIconKey = keyof typeof GALLERY_ICONS
 
 // ---- ProductInputCard ----
 
@@ -126,6 +133,92 @@ function FieldHeader({ label, copyText }: { label: string; copyText: string }) {
         {label}
       </span>
       <CopyButton text={copyText} size="sm" variant="minimal" />
+    </div>
+  )
+}
+
+// ---- ImageContentRenderer ----
+
+interface GalleryItemData {
+  label: string
+  icon: string
+  bg: string
+}
+
+interface GalleryItemCardProps {
+  item: GalleryItemData
+  isFirst: boolean
+}
+
+function GalleryItemCard({ item, isFirst }: GalleryItemCardProps) {
+  const GalleryIcon = GALLERY_ICONS[item.icon as GalleryIconKey]
+  return (
+    <div
+      className={cn(
+        'overflow-hidden rounded-xl bg-white',
+        isFirst ? 'border-2 border-rd-primary' : 'border border-slate-200',
+      )}
+    >
+      <div
+        className="flex aspect-square items-center justify-center"
+        style={{ backgroundColor: item.bg }}
+      >
+        {GalleryIcon && (
+          <GalleryIcon size={32} strokeWidth={1.5} className="text-slate-300" />
+        )}
+      </div>
+      <div className="px-3 py-2">
+        <p className="text-xs font-medium text-slate-600">{item.label}</p>
+        {isFirst && (
+          <span className="text-[10px] font-medium text-rd-primary">Ana görsel</span>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function ImageContentRenderer({
+  gallery,
+  styleNote,
+  platformColor,
+  platformBgColor,
+  animKey,
+}: {
+  gallery: GalleryItemData[]
+  styleNote: string
+  platformColor: string
+  platformBgColor: string
+  animKey: string
+}) {
+  return (
+    <div key={animKey} className="animate-[fade-in_300ms_ease-out]">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {gallery.map((item, i) => (
+          <GalleryItemCard key={i} item={item} isFirst={i === 0} />
+        ))}
+      </div>
+
+      <div
+        className="mt-4 flex items-center gap-2 rounded-xl px-4 py-3"
+        style={{
+          backgroundColor: platformBgColor,
+          borderLeft: `3px solid ${platformColor}`,
+        }}
+      >
+        <ImageIcon size={14} strokeWidth={2} style={{ color: platformColor }} />
+        <p className="text-xs font-medium text-slate-600">{styleNote}</p>
+      </div>
+
+      <div className="mt-4">
+        <Button
+          variant="outline"
+          size="sm"
+          icon={<Download size={14} strokeWidth={2} />}
+          onClick={() => {}}
+        >
+          Tümünü indir
+        </Button>
+      </div>
     </div>
   )
 }
@@ -419,16 +512,26 @@ export default function PazaryeriSection() {
               </div>
 
               {/* Output area */}
-              {activeContentType === 'text' ? (
+              {activeContentType === 'text' && (
                 <TextContentRenderer
                   key={`text-${activePlatform}`}
                   fields={PAZARYERI_DEMO_DATA.text[activePlatform].fields}
                   platformColor={PLATFORMS[activePlatform].color}
                   animKey={`text-${activePlatform}`}
                 />
-              ) : (
+              )}
+              {activeContentType === 'image' && (
+                <ImageContentRenderer
+                  key={`image-${activePlatform}`}
+                  gallery={PAZARYERI_DEMO_DATA.image[activePlatform].gallery}
+                  styleNote={PAZARYERI_DEMO_DATA.image[activePlatform].styleNote}
+                  platformColor={PLATFORMS[activePlatform].color}
+                  platformBgColor={PLATFORMS[activePlatform].bgColor}
+                  animKey={`image-${activePlatform}`}
+                />
+              )}
+              {activeContentType !== 'text' && activeContentType !== 'image' && (
                 <div className="min-h-[200px] bg-slate-50 rounded-lg border border-dashed border-slate-300 p-4 flex items-center justify-center text-sm text-slate-400">
-                  {activeContentType === 'image' && 'Görsel çıktısı (PZ-08)'}
                   {activeContentType === 'video' && 'Video çıktısı (PZ-09)'}
                   {activeContentType === 'social' && 'Sosyal medya çıktısı (PZ-10)'}
                 </div>
