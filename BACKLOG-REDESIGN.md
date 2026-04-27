@@ -569,12 +569,13 @@ Canlı sitedeki örnek çıktıları (text/görsel/video/sosyal) ve mevcut görs
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| SR-01 | Sayfa scaffold + token swap | Bekliyor | Landing done | rd-* paleti. |
-| SR-02 | Sonuç başlığı + üretim metadata | Bekliyor | SR-01 | "Üretim hazır" eyebrow, ürün/platform/içerik tipi. |
-| SR-03 | İçerik tipine göre output renderer | Bekliyor | SR-02 | PZ-07~10 ContentRenderer reuse. |
-| SR-04 | Kopyala/indir aksiyonları | Bekliyor | SR-03 | CopyButton reuse, ZIP/PDF indir. |
-| SR-05 | "Yeni üretim" + "Geçmiş" CTA | Bekliyor | SR-04 | Primary `/uret`, ghost `/hesap/uretimler`. |
-| SR-06 | Mobile + a11y + acceptance | Bekliyor | SR-05 | Aziz onayı. |
+| SR-01 | Sayfa scaffold + token swap | ✅ Tamam | Landing done | Commit `f9af79b` — bg-rd-neutral-50, rd-* tüm renkler. |
+| SR-02 | Sonuç başlığı + üretim metadata | ✅ Tamam | SR-01 | Commit `f9af79b` — CheckCircle2 eyebrow, Manrope H1, platform·tip·tarih subtitle. |
+| SR-03 | İçerik tipine göre output renderer | ✅ Tamam | SR-02 | Commit `f9af79b` — A branch (text-only). generations tablosu sadece output/sonuc. Boş durum kutusu + CTA. |
+| SR-04 | Kopyala/indir aksiyonları | ✅ Tamam | SR-03 | Commit `f9af79b` — CopyButton Lucide+aria-live, DownloadButton .txt blob. ZIP/PDF → SR-04b (bekliyor). |
+| SR-05 | "Yeni üretim" + "Geçmiş" CTA | ✅ Tamam | SR-04 | Commit `f9af79b` — iki kart, /uret + /hesap/uretimler (mevcut). |
+| SR-06 | Mobile + a11y + acceptance | ✅ Tamam | SR-05 | Commit `f9af79b` — flex-col mobile, aria-labelledby, sr-only H2, aria-hidden ikonlar. Aziz preview onayı bekliyor. |
+| SR-04b | ZIP/PDF indir (multimedia üretimler için) | Bekliyor | SR-04 | Kapsam dışı bırakıldı, gelecek ticket. |
 
 #### SR-01~SR-06 Birleşik Prompt (Üretim sonuç sayfası)
 
@@ -822,6 +823,240 @@ Bittikten sonra:
 | OD-02 | `/odeme/hata` redesign | Bekliyor | Landing done | XCircle danger, hata sebebi, "Tekrar dene" + "Destek". |
 | OD-03 | E-Arşiv + iyzico rozeti | Bekliyor | OD-01 | Footer alt: iyzico logo, e-Arşiv. |
 | OD-04 | A11y + acceptance | Bekliyor | OD-03 | aria-live, focus. |
+
+#### OD-01~OD-04 Birleşik Prompt (Ödeme sonuç sayfaları)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
+UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
+Bunun yerine BACKLOG-REDESIGN.md başındaki redesign branch UI 
+kuralları geçerli (font 400-800 serbest, gölge serbest, rounded-2xl 
+serbest, Manrope+Inter, rd-* token'lar, sadece emoji yasak — Lucide 
+ikon kullan).
+
+Branch: claude/redesign-modern-ui
+Görev: OD-01~OD-04 — `/odeme/basarili` ve `/odeme/hata` sayfaları redesign
+
+Mevcut durum:
+- app/odeme/basarili/page.tsx — zaten canlı paletteyle (#1E4DD8, 
+  #FAFAF8, #D8D6CE, #0F5132); analytics.creditPurchaseCompleted ve 
+  invalidateCredits davranışları KORUNACAK. rd-* token'a swap + 
+  Manrope display + ufak detaylar.
+- app/odeme/hata/page.tsx — tamamen eski (bg-gray-50, bg-red-100, 
+  "✗" karakter, font-bold, rounded-3xl, bg-indigo-500, "→" ok). 
+  Sıfırdan redesign gerekiyor, başarılı sayfasının simetriği olacak.
+
+Kapsam DIŞI: Faz 2 toplu acceptance Aziz tarafından yapılacak — bu 
+ticket'ta sadece kod, klavye+ekran okuyucu test'i kendin yap.
+
+────────────────────────────────────────────
+BÖLÜM 1 — OD-01: /odeme/basarili redesign
+────────────────────────────────────────────
+
+Mevcut sayfanın işlevselliğini KORU:
+- 'use client' + Suspense
+- searchParams'tan paket okuma
+- analytics.creditPurchaseCompleted call
+- useInvalidateCredits call
+- Layout merkezi card + 2 CTA
+
+Değişiklikler:
+
+1. Renk paleti: hardcoded hex'leri rd-* token'a çevir
+   - bg-[#FAFAF8] → bg-rd-neutral-50
+   - bg-white → bg-white (kalır)
+   - border-[#D8D6CE] → border-rd-neutral-200
+   - bg-[#E8F5EE] (success bg) → bg-rd-success-50
+   - text-[#0F5132] (success text) → text-rd-success-700
+   - text-[#1A1A17] (heading) → text-rd-neutral-900
+   - text-[#908E86] (muted) → text-rd-neutral-500
+   - bg-[#1E4DD8] hover:bg-[#163B9E] → bg-rd-primary-700 hover:bg-rd-primary-800
+   - text-[#5A5852] → text-rd-neutral-700
+
+2. İkon: `Check` → `CheckCircle2` (Lucide). Boyut size-7 (~28px), 
+   strokeWidth=2. Renk text-rd-success-700.
+
+3. Tipografi:
+   - H1: font-display (Manrope) text-2xl md:text-3xl font-medium 
+     "Ödeme başarılı" (ünlem yok — sade, kurumsal)
+   - p: text-rd-neutral-600 text-sm md:text-base leading-relaxed
+
+4. Yeni: Kredi miktarı rozet (paket biliniyorsa)
+   - p mesajının altında, CTA'ların üstünde
+   - Card içi ufak vurgu: bg-rd-primary-50 border border-rd-primary-200 
+     rounded-lg px-4 py-2 inline-flex items-center gap-2
+   - Lucide Coins (size-4 text-rd-primary-700)
+   - Text: text-rd-primary-700 font-medium "X kredi yüklendi"
+   - Eğer paket bilinmiyorsa rozeti gösterme
+
+5. CTA'lar (mevcut iki link):
+   - Primary "İçerik üret" → bg-rd-primary-700 hover:bg-rd-primary-800 
+     text-white font-medium py-3 rounded-lg text-sm. href="/uret" 
+     (ana sayfa "/" yerine — kullanıcı kredi yükledikten sonra direkt 
+     üretime gitsin)
+   - Ghost "Kredi geçmişini gör" → text-rd-neutral-500 
+     hover:text-rd-neutral-700 py-2 (mevcut href="/hesap/krediler" kalır 
+     — H-36'da gelecek; yoksa /hesap'a redirect veya disabled fallback)
+
+6. Card stil: bg-white border border-rd-neutral-200 rounded-xl p-8 md:p-10 
+   (rounded-2xl serbest ama rounded-xl daha sakin; Aziz'in canlı tarzına 
+   yakın)
+
+────────────────────────────────────────────
+BÖLÜM 2 — OD-02: /odeme/hata redesign
+────────────────────────────────────────────
+
+Tamamen yeniden yaz. Başarılı sayfasının simetriği ama danger ton.
+
+1. Server component kalabilir (mevcut Metadata, robots no-index korunur) 
+   AMA URL searchParams'tan ?reason= veya ?errorCode= okumak için 
+   client'a çevirmek faydalı olabilir. Karar: 'use client' + Suspense 
+   wrapper (başarılı sayfasıyla simetrik). Metadata için ayrı 
+   layout.tsx veya `export const metadata` kalır.
+
+2. Layout: başarılı ile aynı (merkezi card, max-w-md).
+
+3. İçerik:
+   - İkon: Lucide XCircle (size-7, strokeWidth=2 text-rd-danger-700)
+   - İkon arkaplan: bg-rd-danger-50 rounded-full size-16 (mevcut yapı)
+   - H1 (font-display): "Ödeme tamamlanamadı" (ünlem yok, "Başarısız" 
+     yerine daha nötr — kullanıcıyı ürkütmesin)
+   - p: text-rd-neutral-600 text-sm md:text-base leading-relaxed
+     "Ödeme işlemi tamamlanamadı. Krediniz çekilmedi. Tekrar deneyebilir 
+     veya farklı bir kart kullanabilirsin."
+   
+4. Hata sebebi (varsa):
+   - URL searchParams'tan ?reason= veya ?errorCode= oku (iyzico tipik 
+     parametreleri)
+   - Varsa: ufak gri kutu, ana mesajın altında — bg-rd-neutral-100 
+     border border-rd-neutral-200 rounded-lg p-3 text-xs 
+     text-rd-neutral-600 monospace
+     "Hata kodu: <reason>" formatında
+   - Yoksa: bu kutuyu gösterme
+
+5. CTA'lar:
+   - Primary "Tekrar dene" → href="/kredi-yukle" — 
+     bg-rd-primary-700 hover:bg-rd-primary-800 text-white font-medium 
+     py-3 rounded-lg text-sm. (Ok karakteri "→" KULLANMA — sade label)
+   - Ghost "Destek al" → mailto:destek@yzliste.com — 
+     text-rd-neutral-500 hover:text-rd-neutral-700 py-2 
+     (text-sm + Lucide Mail size-3.5 yanında)
+
+6. EMOJİ YASAK — mevcut sayfadaki "✗" karakteri (text-2xl span) Lucide 
+   XCircle ile değiştir. Mevcut "→" karakteri sade label ile değiştir.
+
+7. Eski class'ları sil:
+   - rounded-3xl → rounded-xl
+   - shadow-sm → kaldır (redesign'da serbest ama bu sayfada gerek yok)
+   - font-bold → font-medium (Manrope display zaten ağırlık veriyor)
+   - bg-indigo-500/600 → bg-rd-primary-700/800
+   - bg-red-100 → bg-rd-danger-50
+
+8. Analytics: hata sayfasında payment_failed event firle (varsa). 
+   lib/analytics.ts'te paymentFailed gibi bir method var mı kontrol 
+   et — yoksa eklemeyi atla, BACKLOG'a "OD-02b — payment_failed 
+   analytics event" ticket'ı [ ] olarak düş.
+
+────────────────────────────────────────────
+BÖLÜM 3 — OD-03: E-Arşiv + iyzico rozeti
+────────────────────────────────────────────
+
+Her iki sayfada (basarili + hata) card'ın ALTINA, sayfa footer'ının 
+hemen üstüne küçük bir trust strip:
+
+- mt-6 mx-auto max-w-md
+- flex flex-row items-center justify-center gap-4
+- text-xs text-rd-neutral-400
+
+İçerik (sıralı):
+1. iyzico rozeti
+   - public/iyzico-logo.* var mı kontrol et (Glob: public/**/iyzico*)
+   - Varsa: <Image> ile (height ~20px, width auto)
+   - Yoksa: text "Güvenli ödeme · iyzico" + Lucide Lock (size-3)
+2. Ayraç: <span className="text-rd-neutral-300">·</span>
+3. E-Arşiv: text "e-Arşiv fatura" + Lucide FileText (size-3)
+   - Tıklanabilir değil, sadece bilgi etiketi (KVKK / şeffaflık)
+
+Bu trip her iki sayfada DA gösterilir (başarılı = "ödemen güvenli + 
+faturan e-Arşiv"; hata = "kart bilgilerin iyzico'da güvende, 
+çekim yapılmadı" güvencesi).
+
+────────────────────────────────────────────
+BÖLÜM 4 — OD-04: A11y + bitirme kontrol
+────────────────────────────────────────────
+
+1. ARIA:
+   - main role="main" implicit — gerek yok ek attribute
+   - h1 sayfa başlığı tek (her iki sayfa)
+   - İkonlar (CheckCircle2, XCircle, Coins, Mail, Lock, FileText) 
+     aria-hidden="true"
+   - Hata sayfası: hata sebebi kutusu role="status" (passive) — 
+     navigasyondan sonra okunması yeterli, aria-live yok
+   - Başarılı sayfası: ana içerik render olduğunda screen reader 
+     başlığı okur, aria-live yok (sayfa zaten yenilendi)
+
+2. Klavye:
+   - Tab sırası: H1 (focus alamaz, ok) → Primary CTA → Ghost CTA → 
+     trust strip linkleri (yoksa skip)
+   - Focus visible: ring-2 ring-rd-primary-700/30 ring-offset-2
+
+3. Kontrast (WCAG AA):
+   - text-rd-success-700 (#0F5132) on bg-rd-success-50: 4.5:1+ ✓
+   - text-rd-danger-700 (#7A1E1E) on bg-rd-danger-50 (#FCECEC): 
+     hesapla, AA değilse rd-danger-800'e geç
+   - text-rd-neutral-500 (#908E86) on bg-rd-neutral-50: ufak metin 
+     için sınırda — text-rd-neutral-600'a yükselt eğer body p ise
+   - text-rd-primary-700 on bg-rd-primary-50: ✓
+
+4. Mobile (375px):
+   - Card max-w-md mobil otomatik viewport - 2rem padding
+   - CTA'lar full width zaten
+   - Trust strip uzun düşerse flex-wrap koru (gap-4 → gap-2)
+
+5. Edge case'ler:
+   - /odeme/basarili?paket=undefined → kredi rozeti gizle, 
+     analytics call yine fire (mevcut davranış)
+   - /odeme/hata reason yok → hata kodu kutusu gizle
+   - Suspense fallback={null} mevcut — bırak
+
+────────────────────────────────────────────
+Test (commit öncesi)
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde:
+  - /odeme/basarili?paket=populer → CheckCircle2, "30 kredi yüklendi" 
+    rozet, "İçerik üret" → /uret, trust strip görünür
+  - /odeme/basarili (paket yok) → rozet gizli, sayfa hatasız
+  - /odeme/hata?reason=card_declined → XCircle, "Hata kodu: 
+    card_declined" kutusu, "Tekrar dene" → /kredi-yukle, "Destek 
+    al" mailto, trust strip görünür
+  - /odeme/hata (param yok) → kod kutusu gizli
+  - 375px her iki sayfa: card düzgün, taşma yok
+  - Klavye: Tab → Primary → Ghost → (trust links yoksa son)
+
+Commit özeti (tek commit OK):
+- feat(odeme): OD-01~OD-04 ödeme sonuç sayfaları redesign 
+  (rd-* palette, Manrope, kredi rozet, hata kodu, iyzico+e-Arşiv 
+  trust strip)
+
+VEYA bölünmüş:
+- feat(odeme): OD-01 /odeme/basarili rd-* token swap + Manrope
+- feat(odeme): OD-02 /odeme/hata redesign (XCircle, hata kodu)
+- feat(odeme): OD-03 iyzico + e-Arşiv trust strip
+- chore(odeme): OD-04 a11y + acceptance polish
+
+BACKLOG-REDESIGN.md'de OD-01~OD-04 [x] işaretle. Eğer OD-02'de 
+analytics event eksikse OD-02b yeni ticket [ ] aç.
+
+Bittikten sonra:
+- Commit listesi
+- Değişen dosyalar (app/odeme/basarili/page.tsx, app/odeme/hata/page.tsx, 
+  varsa public/iyzico-logo, components/odeme/TrustStrip.tsx?)
+- iyzico logo durumu (public'te var mıydı, text fallback mi kullandın)
+- Açık riskler / Faz 2 toplu acceptance'ta dikkat edilmesi gereken
+```
 
 **Faz 2 toplam:** 21 (U) + 7 (YS) + 6 (SR) + 4 (OD) = 38 ticket. **U-01~17 done (17), kalan 21.**
 
