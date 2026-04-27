@@ -819,10 +819,11 @@ Bittikten sonra:
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| OD-01 | `/odeme/basarili` redesign | Bekliyor | Landing done | CheckCircle2 success-700, "Ödemen alındı", kredi rozet, 2 CTA. |
-| OD-02 | `/odeme/hata` redesign | Bekliyor | Landing done | XCircle danger, hata sebebi, "Tekrar dene" + "Destek". |
-| OD-03 | E-Arşiv + iyzico rozeti | Bekliyor | OD-01 | Footer alt: iyzico logo, e-Arşiv. |
-| OD-04 | A11y + acceptance | Bekliyor | OD-03 | aria-live, focus. |
+| OD-01 | `/odeme/basarili` redesign | ✅ Tamam | Landing done | Commit `d0c97c4` — CheckCircle2, rd-* token swap, Manrope H1, kredi rozet (Coins), href /uret. |
+| OD-02 | `/odeme/hata` redesign | ✅ Tamam | Landing done | Commit `d0c97c4` — XCircle danger, Manrope H1, hata kodu kutu (monospace), Mail CTA, Suspense+client, layout.tsx robots. |
+| OD-03 | E-Arşiv + iyzico rozeti | ✅ Tamam | OD-01 | Commit `d0c97c4` — TrustStrip.tsx: iyzico_footer_logo.png + e-Arşiv FileText; her iki sayfada. |
+| OD-04 | A11y + acceptance | ✅ Tamam | OD-03 | Commit `d0c97c4` — aria-hidden ikonlar, focus-visible ring, role="status" hata kutusu, klavye sırası doğru. Aziz preview onayı bekliyor. |
+| OD-02b | `payment_failed` analytics event | Bekliyor | OD-02 | lib/analytics.ts'e paymentFailed method ekle, /odeme/hata'da fire et. |
 
 #### OD-01~OD-04 Birleşik Prompt (Ödeme sonuç sayfaları)
 
