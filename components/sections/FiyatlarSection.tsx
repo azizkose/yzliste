@@ -116,7 +116,7 @@ export default function FiyatlarSection() {
         </div>
 
         {/* PackageCards — 3 kolon grid */}
-        <div className="mt-12 grid gap-6 md:grid-cols-3 items-start">
+        <div className="mt-12 grid gap-6 md:grid-cols-3 items-stretch">
           {PAKET_LISTESI.map(paket => {
             const isPopular = paket.rozet === true
             const isRecommended = paket.id === recommendedPackage.id
@@ -125,7 +125,7 @@ export default function FiyatlarSection() {
               <div
                 key={paket.id}
                 className={[
-                  'relative rounded-xl border bg-white p-6 transition-transform duration-200',
+                  'relative flex flex-col rounded-xl border bg-white p-6 transition-transform duration-200',
                   isRecommended
                     ? 'border-rd-primary-500 border-2 md:-translate-y-2'
                     : 'border-rd-neutral-200',
@@ -156,7 +156,7 @@ export default function FiyatlarSection() {
                 </p>
 
                 {/* Özellikler */}
-                <ul className="mt-5 space-y-2.5" role="list">
+                <ul className="mt-5 flex-1 space-y-2.5" role="list">
                   {paket.ozellikler.map((ozellik, i) => (
                     <li key={i} className="flex items-start gap-2.5 text-sm text-rd-neutral-600">
                       <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-rd-primary-500" aria-hidden="true" />
