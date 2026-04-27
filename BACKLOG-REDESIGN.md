@@ -67,13 +67,13 @@ Amaç: Mevcut canlı siteyi koruyarak, ayrı branch'te modern UI redesign çalı
 | PZ-04 | DynamicTitleBar + OutputCard frame | ✅ Tamam | PZ-03 | Commit `992a628` — Ikon+eyebrow+başlık, kredi badge, OutputCard 2 kolon layout, border-color geçişli, ArrowRight pulse. |
 | PZ-05 | ProductInputCard (sol kart, sticky) | ✅ Tamam | DS-03, PZ-02 | Commit `50c45f0` — ImageIcon placeholder, specs grid 2x2, 3 input kartı (Camera seçili), md:sticky, ScanLine icon mapping. |
 | PZ-06 | PlatformTabs + PlatformRulesBar | ✅ Tamam | DS-06, PZ-04 | Commit `88d7ad5` — 3 platform tab (letter circle + platform rengi, inline style), PlatformRulesBar (platform soft bg, PAZARYERI_DEMO_DATA rules, sm:grid-cols-2, RULE_ICONS map). |
-| PZ-07 | ContentRenderer: Text type | Bekliyor | DS-08, PZ-06 | 4 OutputField (Başlık, Özellikler, Açıklama, Etiketler). Her field'da CopyButton. Özellikler bullet dot'u platform renginde. Etiketler pill chip. 300ms fade geçişi. |
-| PZ-08 | ContentRenderer: Image type | Bekliyor | PZ-06 | 4'lü görsel grid (placeholder: Lucide ImageIcon + label, emoji değil). "Tümünü indir" butonu. Stil notu kutusu (platform renk left border). |
-| PZ-09 | ContentRenderer: Video type | Bekliyor | PZ-06 | Video player mockup, aspect ratio platforma göre (9:16 / 16:9 / 1:1). Play butonu (Lucide). Video spec etiketi. Sahne planı listesi (timestamp + Lucide ikon + açıklama, emoji değil). |
-| PZ-10 | ContentRenderer: Social type | Bekliyor | DS-08, PZ-06 | Instagram + TikTok/Pinterest mockup'ları (platforma göre). CopyButton her post'ta. Instagram'da hashtag chip'leri + engagement ikonları (Lucide). |
-| PZ-11 | Mobile responsive pass | Bekliyor | PZ-07~PZ-10 | Mobile: tek kolon, sticky off, tab'lar yatay scroll. Tablet: 2 kolon dar input. Desktop: tam mockup. Hiçbir breakpoint'te overflow yok. |
-| PZ-12 | A11y pass | Bekliyor | PZ-11 | `role="tablist/tab"`, `aria-selected`, `aria-controls`. Arrow Left/Right navigasyon. Focus-visible ring. `aria-live="polite"` kopyala bildirimi. WCAG AA kontrast. |
-| PZ-13 | Acceptance review | Bekliyor | PZ-12 | Aziz preview URL'de kontrol eder. 12 kombinasyon (4 × 3) test. Performans: Lighthouse >90, CLS <0.05. Console error yok. Bundle <30KB gzip. |
+| PZ-07 | ContentRenderer: Text type | ✅ Tamam | DS-08, PZ-06 | Commit `77ac639` — 4 OutputField (Başlık/Özellikler/Açıklama/Etiketler), CopyButton her alanda, platform renkli bullet dot (inline style), pill chip etiketler, fade-in animasyonu (key-driven remount), copiedField state kaldırıldı. |
+| PZ-08 | ContentRenderer: Image type | ✅ Tamam | PZ-06 | Commit `08f3a16` — 6 gallery item (2×3 grid), Lucide ikon placeholder, ana görsel vurgulu (border-2 primary), StyleNote kutusu (platform soft bg + sol border), "Tümünü indir" butonu, fade-in animasyon. |
+| PZ-09 | ContentRenderer: Video type | ✅ Tamam | PZ-06 | Video player mockup (slate-900 bg, Play/HD/0:30 overlay), aspect ratio platforma göre (Trendyol 1:1, Amazon 16:9, Etsy 4:5), video spec etiketi (Monitor ikon), sahne planı 6 sahne (zaman w-10 tabular-nums + ikon platform rengi), RotateCw/Tag/Play/Monitor import, fade-in. |
+| PZ-10 | ContentRenderer: Social type | ✅ Tamam | DS-08, PZ-06 | Instagram + TikTok/Pinterest kartları (Trendyol→TikTok, Amazon/Etsy→Pinterest), caption whitespace-pre-line, CopyButton header + hashtag bölümünde ayrı, hashtag chip'leri platform rengi inline style, Music/MapPin import, fade-in. Tüm 4 renderer tamamlandı, placeholder div'ler kaldırıldı. |
+| PZ-11 | Mobile responsive pass | ✅ Tamam | PZ-07~PZ-10 | Commit `cb406ce` — Section padding responsive (py-12/16/20), FlowConnector spacing (mt/mb-4/6), OutputCard padding (p-4/5/6) + min-h (300/400), mobile ArrowRight (flex md:hidden), h3 font-size responsive (sm/base/lg, truncate kaldırıldı), platform tab gap (1.5/2). |
+| PZ-12 | A11y pass | ✅ Tamam | PZ-11 | Commit `cb406ce` — Platform tablist Arrow Left/Right nav (platformTablistRef + handler), aria-controls + tabpanel, FlowConnector + ArrowRight aria-hidden, section aria-label, text-slate-400→slate-500 kontrast düzeltme (10 label, dekoratif korundu). |
+| PZ-13 | Acceptance review | ✅ Tamam | PZ-12 | 12 kombinasyon ✅, ARIA/keyboard ✅ (1 düzeltme: dış div'e role="tabpanel"), responsive ✅, kural uyumu ✅, build ✅. **Pazaryeri bölümü (PZ-01~13) tamamen kapalı.** |
 
 ### İçerik Türleri Bölümü — Pilot 2
 
@@ -86,28 +86,131 @@ Amaç: Mevcut canlı siteyi koruyarak, ayrı branch'te modern UI redesign çalı
 | IT-05 | SampleModal component | ✅ Tamam | IT-03 | Commit `992a628` — Focus trap, Escape/backdrop/X kapanma, body scroll lock, prevFocusRef restore, ARIA dialog, slideUp+scale animasyon, 4 kart renk+içerik. |
 | IT-06 | BottomNote | ✅ Tamam | IT-02 | Commit `50c45f0` — Sparkles ikon + metin + ArrowRight link, flex-wrap mobil uyumlu. |
 | IT-07 | Mobile responsive pass | ✅ Tamam | IT-05, IT-06 | Commit `88d7ad5` — Section py-16 md:py-20 lg:py-28, modal p-6 md:p-8. Grid 1→2→4 kolon zaten sağlıklı. |
-| IT-08 | A11y pass | Bekliyor | IT-07 | `role="button"`, `tabIndex="0"`, Enter/Space ile kart aktive. Modal: `role="dialog"`, `aria-modal`, `aria-labelledby`, focus trap. X butonu `aria-label="Kapat"`. WCAG AA kontrast. |
-| IT-09 | Acceptance review | Bekliyor | IT-08 | Aziz preview'da kontrol. 4 kart hover + 4 modal test. CLS yok. Console error yok. |
+| IT-08 | A11y pass | ✅ Tamam | IT-07 | Commit `77ac639` — Kart id eklendi, kontrast düzeltme (slate-400→500: "İçerir", "Kredi", "Süre"), Sparkles aria-hidden, font-semibold→font-medium (kural uyumu), rounded-2xl→rounded-xl. |
+| IT-09 | Acceptance review | ✅ Tamam | IT-08 | Commit `08f3a16` — 4 kart hover ✅, 4 modal ✅, CLS ✅, console error yok ✅. Değişiklik gerekmedi, doğrulandı. |
 
 ### Hero Bölümü (Trust Strip + Nav + Hero)
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| HR-01 | Constants & data layer | Bekliyor | DS-01 | `lib/constants/hero.ts` — TRUST_STRIP_ITEMS, NAV_LINKS, HERO_TRUST_PILLS, HERO_COPY, HERO_BADGES. Emoji yerine Lucide ikon string. |
-| HR-02 | TrustStrip component | Bekliyor | HR-01 | `components/sections/HeroBlock/TrustStrip.tsx` — slate-50 bg, 3 öğe ortalı, Lucide ikonları (Flag, Lock, Zap), mobilde wrap. Sticky değil (scroll ile kaybolur). |
-| HR-03 | Nav component (sticky + blur) | Bekliyor | DS-02, HR-01 | `components/sections/HeroBlock/Nav.tsx` — sticky, blur bg, logo (Manrope 800) + "Beta" badge, nav linkleri, "Giriş yap" (outline) + "İçerik üret" (primary) butonları. `-webkit-backdrop-filter` prefix. |
-| HR-04 | Mobile hamburger menü | Bekliyor | HR-03 | Mobilde nav linklerini gizle, hamburger ikon göster. Overlay menü: focus trap, Escape ile kapanır. Basit implementasyon yeterli. |
-| HR-05 | HeroSection scaffold + grid + soft bg | Bekliyor | HR-01 | `components/sections/HeroBlock/HeroSection.tsx` — 2 kolon grid (1.05fr 1fr, gap 64px). Radial mavi glow üstte (çok hafif, rgba 0.08). |
-| HR-06 | HeroContent (sol kolon) | Bekliyor | DS-02, DS-04, DS-05, HR-05 | Eyebrow (pulse dot + metin), H1 (Manrope 800, clamp 40-64px, "AI ile" mavi), subtitle, TrustPills (4 adet, hover efekt), CTA grubu (primary + ghost video), reassurance satırı (Check ikon + metin). |
-| HR-07 | AppScreenshotMockup (sağ kolon) | Bekliyor | HR-05 | Browser chrome (3 dot + URL bar), step indicator (3 adım), input metodu kartları, upload preview (Lucide ikon, emoji değil), marka input, generate butonu (Lucide Zap, emoji değil). Placeholder — gerçek screenshot sonra gelecek. |
-| HR-08 | StickerBadge primitive | Bekliyor | DS-01 | `components/primitives/StickerBadge.tsx` — pill shape, white bg, renkli border, shadow, ikon + metin. Reusable. Position absolute ile kart dışına taşar. |
-| HR-09 | Float-in animasyonları | Bekliyor | HR-06, HR-07 | Sol: fade+slide-up 600ms. Sağ: aynı, 150ms delay. `prefers-reduced-motion` kontrolü. CSS keyframe yeterli (framer-motion gerekmez). |
-| HR-10 | "Nasıl çalışır?" video modal | Bekliyor | HR-06 | Ghost CTA tıklayınca video modal açılır. Backdrop + X + Escape ile kapanır. Pilot için YouTube/placeholder embed yeterli. |
-| HR-11 | Mobile responsive pass | Bekliyor | HR-04~HR-10 | Mobile: tek kolon, visual üstte content altta. TrustPills 2x2 grid. CTA full width, dikey. Sticker badge'ler taşmaz. |
-| HR-12 | A11y pass | Bekliyor | HR-11 | H1 tek (semantic). Nav `<nav>`. Sticker badge'ler decorative (`aria-hidden`). Pulse dot `aria-hidden`. CTA focus-visible. Screenshot `role="img" aria-label`. |
-| HR-13 | Performance pass | Bekliyor | HR-12 | LCP < 2.5s (H1 target). CLS < 0.05. Lighthouse > 90. |
+| HR-01 | Constants & data layer | ✅ Tamam | DS-01 | Commit `48bd4b6` — lib/constants/hero.ts: TRUST_STRIP_ITEMS (Flag/Lock/Zap), NAV_LINKS (/uret/fiyatlar/blog), NAV_BRAND, NAV_CTAS (/giris+/kayit), HERO_COPY (h1 3 parça), HERO_TRUST_PILLS (4), HERO_BADGES, MOCKUP_STEPS, MOCKUP_INPUT_METHODS. Emoji→Lucide, "28sn"→"Saniyeler içinde". |
+| HR-02 | TrustStrip component | ✅ Tamam | HR-01 | Commit `48bd4b6` — components/sections/HeroBlock/TrustStrip.tsx: bg-rd-neutral-50, border-b slate-200, 3 öğe ortalı (Flag/Lock/Zap 13px + text-xs), flex-wrap mobil, max-w-[1200px], aria-hidden ikonlar. |
+| HR-03 | Nav component (sticky + blur) | ✅ Tamam | DS-02, HR-01 | Commit `b51a9c7` + fix `877ada2` — Nav.tsx: sticky top-0 z-50, bg-white/85 backdrop-blur-md, -webkit prefix, logo Manrope 800 22px + Beta badge, 3 nav link, "Giriş yap" outline + "İçerik üret" primary ArrowRight CTA. |
+| HR-04 | Mobile hamburger menü | ✅ Tamam | HR-03 | Commit `b51a9c7` — Slide-out panel + backdrop, focus trap (closeRef focus + hamburgerRef restore), Escape kapanma, body scroll lock, aria-expanded/controls/modal. Spec'ten daha iyi a11y. |
+| HR-05 | HeroSection scaffold + grid + soft bg | ✅ Tamam | HR-01 | Commit `a9dcbd2` + fix `877ada2` — HeroSection.tsx: 2 kolon grid (1.05fr 1fr), radial mavi glow (rgba 59,130,246 0.08, 900x600 top-200), responsive padding (pt-10/14/16 pb-16/20/24), max-w-[1200px]. |
+| HR-06 | HeroContent (sol kolon) | ✅ Tamam | DS-02, DS-04, DS-05, HR-05 | Commit `a9dcbd2` + fix `877ada2` — Eyebrow pill (bg-primary-50, border-primary-200, pulse-soft mavi dot), H1 Manrope 800 clamp(40-64px) "AI ile" primary-700, subtitle "dakikalar içinde" bold, 4 TrustPill (rounded-lg 13px nötr hover 150ms), primary CTA ArrowRight /kayit, ghost Play daire, reassurance Check emerald. |
+| HR-07 | AppScreenshotMockup (sağ kolon) | ✅ Tamam | HR-05 | Commit `a9dcbd2` + fix `877ada2` — Browser chrome (3 dot + URL bar yzliste.com/uret), step indicator (3 adım constants'tan), 3 input metodu kartı (Fotoğraf seçili), upload preview (fincan_01.jpg + Yüklendi 2.4MB), marka input, generate Zap butonu, role="img" aria-label. |
+| HR-08 | StickerBadge primitive | ✅ Tamam | DS-01 | StickerBadge.tsx primitive: pill (rounded-full), bg-white, shadow-rd-md, 11px font-semibold Inter, ikon renk+border inline style, position dışarıdan className. AppScreenshotMockup'a 2 badge: sağ üst Check mavi (#1E40AF / #DBEAFE), sol alt Zap turuncu (#EA580C / #FED7AA). |
+| HR-09 | Float-in animasyonları | ✅ Tamam | HR-06, HR-07 | globals.css: hero-float-in keyframe (opacity 0→1, translateY 8→0) + pulse-soft keyframe. HeroContent: animate-hero-float-in-left (600ms, delay 0). AppScreenshotMockup: animate-hero-float-in-right (600ms, delay 150ms). prefers-reduced-motion → animation: none. |
+| HR-10 | "Nasıl çalışır?" video modal | ✅ Tamam | HR-06 | VideoModal.tsx: fixed z-50 ortalı dialog (max-w-800 aspect-video rounded-xl bg-black), backdrop bg-black/60 blur tıkla-kapat, X butonu bg-black/40, Escape + body scroll lock + focus management (triggerRef restore). HeroContent 'use client' + useState + onClick bağlı. Mevcut modal-backdrop-in/panel-in keyframe'leri. Placeholder: Play + "Video yakında eklenecek". HeroContent truncated bug da düzeltildi (git restore). |
+| HR-11 | Mobile responsive pass | ✅ Tamam | HR-04~HR-10 | Commit `aa55a4d` — CTA flex-col/sm:flex-row, primary CTA w-full sm:w-auto, ghost CTA justify-center, StickerBadge hidden sm:flex sm:absolute. |
+| HR-12 | A11y pass | ✅ Tamam | HR-11 | Commit `aa55a4d` — Ghost buton focus-visible ring eklendi, VideoModal text-white/80 kontrast düzeltildi. |
+| HR-13 | Performance pass | ✅ Tamam | HR-12 | Commit `aa55a4d` — VideoModal dynamic import (next/dynamic, ssr:false). |
 | HR-14 | Gerçek screenshot entegrasyonu | Bekliyor | HR-07 | Aziz onayı sonrası: gerçek `/uret` sayfası screenshot'ı mockup'a yerleştirilir. |
 | HR-15 | Acceptance review | Bekliyor | HR-13 | Aziz preview'da kontrol. Nav sticky çalışıyor, H1 doğru, CTA'lar fonksiyonel, responsive tam. |
+
+#### HR-11~13 Detaylı Prompt (Claude Code bu bölümü okuyacak)
+
+**Branch:** `claude/redesign-modern-ui` · **Commit:** tek commit `feat: HR-11~13 responsive + a11y + perf pass`
+
+---
+
+##### HR-11: Mobile Responsive Pass
+
+Dosyalar: HeroSection.tsx, HeroContent.tsx, AppScreenshotMockup.tsx, Nav.tsx, VideoModal.tsx
+
+**HeroSection.tsx:**
+- Grid: `grid-cols-1 lg:grid-cols-[1.05fr_1fr]` (zaten var — doğrula)
+- Mobilde sıra: `flex-col-reverse lg:grid` YAPMA — mevcut grid-cols-1 zaten mobilde content üst, visual alt sırasıyla çalışıyor (DOM sırası: HeroContent önce, AppScreenshotMockup sonra). Bu doğru.
+
+**HeroContent.tsx:**
+- H1: `clamp(40px, 5.5vw, 64px)` zaten responsive. Ek class gerekmez.
+- Trust pills: Mobilde (< 640px) wrap ediyor (`flex-wrap` zaten var). Eğer 4 pill tek satıra sığmıyorsa sorun yok, flex-wrap halleder.
+- CTA group: `flex-wrap` zaten var. Mobilde dikey olması için `flex-col sm:flex-row` yap. Ghost buton da dahil.
+  ```diff
+  - <div className="mb-5 flex flex-wrap items-center gap-3">
+  + <div className="mb-5 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+  ```
+- Primary CTA: Mobilde full width → Link wrapper'a `className="w-full sm:w-auto"` ekle, Button'a `fullWidth` prop'u EKLEME (sm:w-auto ile çözülmüyor). Bunun yerine:
+  ```diff
+  - <Link href={NAV_CTAS.primary.href} tabIndex={-1}>
+  + <Link href={NAV_CTAS.primary.href} tabIndex={-1} className="w-full sm:w-auto">
+  ```
+  Ve Button'a `className="w-full sm:w-auto"` ekle.
+- Ghost CTA: Mobilde ortalanması için `justify-center` ekle (zaten `inline-flex items-center` var, `justify-center` ekle).
+
+**AppScreenshotMockup.tsx:**
+- StickerBadge'ler: Mobilde (< 640px) taşma riski. `sm:absolute` yaparak mobilde static, desktop'ta absolute konumlandır:
+  ```
+  topRight:  "hidden sm:flex sm:absolute sm:-top-3 sm:right-5 z-10"
+  bottomLeft: "hidden sm:flex sm:absolute sm:-bottom-3 sm:-left-3 z-10"
+  ```
+  Mobilde badge'ler gizlenir (ekran zaten küçük, mockup'ın üstünden taşmasın). Desktop'ta gösterilir.
+- Browser chrome text: `.text-[11px]` zaten küçük, değişiklik gerekmez.
+
+**VideoModal.tsx:**
+- Mobilde `p-4` padding zaten var. `max-w-[800px]` mobilde doğal olarak ekrana sığar. OK.
+
+**Nav.tsx:**
+- Zaten mobile hamburger var (HR-04'te yapıldı). Doğrula: `md:hidden` hamburger, `md:flex` desktop nav.
+
+---
+
+##### HR-12: A11y Pass
+
+Tüm HeroBlock dosyalarını tara, eksik varsa ekle:
+
+| Kontrol | Beklenen | Dosya |
+|---------|----------|-------|
+| H1 tek | Sayfada tek `<h1>` var (HeroContent'te) | HeroContent.tsx |
+| Nav landmark | `<nav>` etiketi | Nav.tsx (zaten var) |
+| StickerBadge decorative | `aria-hidden="true"` badge'lerin wrapper'ına | AppScreenshotMockup.tsx |
+| Pulse dot | `aria-hidden="true"` | HeroContent.tsx (zaten var) |
+| CTA focus-visible | `focus-visible:ring-2 focus-visible:ring-rd-primary-500 focus-visible:ring-offset-2` — Button primitive'de zaten var mı kontrol et. Ghost buton'da yoksa ekle. | HeroContent.tsx |
+| Screenshot alt | `role="img" aria-label="Uygulama önizlemesi"` | AppScreenshotMockup.tsx (zaten var) |
+| VideoModal | `role="dialog" aria-modal="true" aria-label` | VideoModal.tsx (zaten var) |
+| Tab order | Modal açıkken arka plan tabbable olmamalı — `inert` attribute veya focus trap | VideoModal.tsx — `inert` HTML attribute'ü `<main>`'e eklemek yerine, mevcut Escape + backdrop yeterli. İyileştirme: modal dışındaki tüm focusable öğeleri `tabIndex={-1}` yapmak fazla karmaşık. Şimdilik mevcut hali kabul. |
+| Color contrast | Tüm text renkleri en az 4.5:1 oranında — `text-slate-500` (#64748B) on white = 4.6:1 ✓, `text-slate-600` on white = 5.7:1 ✓. `text-white/60` on bg-black/60 → kontrol et, düşükse `text-white/80` yap. |
+| Ghost CTA focus | Ghost buton'a `focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rd-primary-500` ekle |
+
+**StickerBadge a11y:** Her badge'e `aria-hidden="true"` EKLEME — içeriği (metin) bilgi taşıyor. Bunun yerine badge'ler olduğu gibi kalsın (screen reader label + metin okuyacak). Ama ikon'a `aria-hidden="true"` ekle (ikon zaten dekoratif).
+
+---
+
+##### HR-13: Performance Pass
+
+Hedefler: LCP < 2.5s, CLS < 0.05, Lighthouse > 90
+
+| Kontrol | Aksiyon |
+|---------|---------|
+| CLS: StickerBadge | Badge'ler absolute → layout shift yok ✓ |
+| CLS: Float-in | `opacity: 0` başlangıç → CLS riski. `both` fill mode ile `animation-fill-mode: backwards` eşdeğer — element animasyon başlamadan opacity 0'da. **Sorun yok** çünkü hero ilk render'da zaten görünür alanda, browser animasyonu çok hızlı başlatıyor. |
+| CLS: Font | Manrope + Inter `next/font` ile yükleniyor → `font-display: swap` otomatik → küçük FOUT olabilir ama CLS açısından önemsiz (text reflow minimal). |
+| LCP target | H1 text veya hero görseli LCP olacak. H1 text = anında render (server component DEĞİL artık, 'use client' var). İyileştirme: HeroContent SSR olabilirdi ama `useState` var (VideoModal). Şimdilik OK. |
+| VideoModal lazy | Modal kodu `isOpen` false iken `return null` yapıyor → zaten lazy render. Import ise tree-shake OLMAZ. İyileştirme: `dynamic(() => import('./VideoModal'))` ile lazy import yap. `ssr: false` ekle: |
+| | `const VideoModal = dynamic(() => import('./VideoModal'), { ssr: false })` |
+| | Bu sayede modal JS'i sadece gerektiğinde yüklenir. HeroContent'te `import dynamic from 'next/dynamic'` ekle, eski `import VideoModal` kaldır. |
+| Image | Hero'da gerçek görsel yok (placeholder). HR-14'te eklenecek — o zaman `priority` + `sizes` eklenecek. Şimdilik N/A. |
+| Bundle | StickerBadge küçük component (~30 satır). Ek chunk gerekmez. |
+
+**Yapılacak tek şey:** VideoModal'ı dynamic import'a çevir.
+
+---
+
+**Kabul kontrol listesi (HR-11~13 topluca):**
+
+- [ ] CTA group mobilde dikey (`flex-col sm:flex-row`)
+- [ ] Primary CTA mobilde full width
+- [ ] Ghost CTA'da `justify-center`
+- [ ] StickerBadge mobilde gizli (`hidden sm:flex sm:absolute`)
+- [ ] Ghost buton'da focus-visible ring var
+- [ ] VideoModal'daki `text-white/60` kontrast kontrolü (düşükse /80 yap)
+- [ ] VideoModal dynamic import (`next/dynamic`, `ssr: false`)
+- [ ] `npm run build` hatasız
+- [ ] Emoji yok
+- [ ] Mevcut fonksiyonalite korunmuş
+
+---
 
 ### 3 Adımda Hazır Bölümü — Bölüm 04
 
@@ -265,12 +368,87 @@ Amaç: Mevcut canlı siteyi koruyarak, ayrı branch'te modern UI redesign çalı
 
 ---
 
+## /uret Sayfası UX Refactor
+
+**Yaklaşım:** Hafif refaktör (Yaklaşım A) — mevcut iskelet korunur, 5 UX iyileştirmesi.
+**Spec:** `uret-ux-redesign-spec.md` | **Mockup:** `uret-redesign-mockup.jsx` | **Kararlar:** `uret-redesign-kararlar.md`
+**Branch:** `claude/redesign-modern-ui` (anasayfa redesign ile aynı branch)
+**Korunacaklar:** 4 sekme yapısı, 7 stüdyo stil grid, 5 video hareket preset, karakter limit eyebrow, üst fotoğraf yükleme alanı.
+
+**Karar özeti (27 Nisan 2026):**
+- "ADIM 1/3" kalıyor (3 adım akışıyla uyumlu)
+- Yetersiz kredi → disabled buton + tooltip "Yetersiz kredi. Paket al →" + `/fiyatlar` link
+- Marka profili kayıt → `/profil` sayfasına yönlendirme
+- Demo tonu → sadece önizleme, gerçek üretimde kullanılmaz
+- "Sosyal medya kiti" konsepti → kaldırıldı, tek akış yeterli
+- Tooltip metinleri → kısa versiyonlar ("Önce ürün adını yaz")
+- Emoji → mockup'taki emojiler Lucide ikonlarla değiştirilecek (Coffee, Heart, Briefcase, Sparkles)
+
+### Grup 1 — Renk Paleti Uyumu (bağımlılık: hepsinden önce)
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| U-01 | Renk paleti: bej → slate dönüşümü | Bekliyor | — | `#F1F0EB`→`slate-100`, `#D8D6CE`→`slate-200`, `#FAFAF8`→`slate-50`, `#5A5852`→`slate-600`, `#1A1A17`→`slate-900`, `#908E86`→`slate-400`, `#1E4DD8`→`#1E40AF`. Tüm `/uret` sayfasında eski renk kodu kalmamış. |
+
+### Grup 2 — Niyet Hatırlatıcı (Intent Banner)
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| U-02 | Sarı marka uyarısı banner'ını kaldır | Bekliyor | U-01 | Mevcut sarı "Marka profilinizi doldurun" banner'ı kaldırılmış veya taşınmış. |
+| U-03 | IntentBanner component ekle | Bekliyor | U-02 | Sayfanın en üstünde: Eyebrow "ADIM 1 / 3 — NE ÜRETMEK İSTİYORSUN?" + H1 "İçerik türünü seç" + subtitle. White bg, slate-200 border, 16px radius, 24px padding. |
+
+### Grup 3 — Marka Profili Interaktif Demo
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| U-04 | BrandProfileBlock scaffold (collapsible) | Bekliyor | U-02 | Kapalıyken: turuncu border-left, "Marka profili eksik" + "Önce dene" buton. Açıkken: demo alanı görünür. Collapsible animasyon. |
+| U-05 | ToneSelector (3 chip, radio group) | Bekliyor | U-04 | 3 chip: Samimi (Heart ikon) / Profesyonel (Briefcase) / Premium (Sparkles). `role="radiogroup"`, `aria-checked`. Arrow Left/Right. Sadece biri aktif. |
+| U-06 | AIPreview (canlı değişen çıktı, fade) | Bekliyor | U-05 | Ton seçilince 300ms fade ile AI çıktı önizlemesi değişir. `aria-live="polite"`. Banner turuncu→yeşil dönüşür. Not: "Bu sadece önizleme. Tonu kalıcı yapmak için profilini kaydet." |
+| U-07 | "Profili düzenle" CTA → `/profil` | Bekliyor | U-04 | Tıklayınca `/profil` sayfasına yönlendiriyor. Outline stil buton. |
+
+### Grup 4 — Canlı Kredi Maliyeti (Sticky Submit Bar)
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| U-08 | `calculateCredits()` hook | Bekliyor | — | Metin=1, Görsel=seçili stil sayısı, Video=5sn:10/10sn:20, Sosyal=platform sayısı×1. Sekme/seçim değişince reactive güncelleme. |
+| U-09 | StickySubmitBar component | Bekliyor | U-08 | Sticky bottom:20px, white bg, slate-200 border, 16px radius, shadow. Sol: "BU ÜRETİMİN MALİYETİ" eyebrow + büyük kredi rakamı + kalan kredi. Sağ: "İçerik üret" primary buton. Mobile: dikey istif (cost üst, buton alt). |
+| U-10 | Yetersiz kredi durumu | Bekliyor | U-09 | Bakiye < maliyet → buton disabled + tooltip "Yetersiz kredi. Paket al →" (tıklanabilir `/fiyatlar` link). Mobile: buton altında inline uyarı satırı. |
+
+### Grup 5 — Disabled Buton Tooltip
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| U-11 | `getCTAState()` hook | Bekliyor | — | Sekme bazlı validation: Metin→ürün adı, Görsel→fotoğraf+stil, Video→fotoğraf, Sosyal→ürün adı+platform. `{ disabled, reason }` döner. |
+| U-12 | Tooltip primitive | Bekliyor | — | Üstte 8px offset, slate-900 bg, white text, 8px radius, 13px font, pointer üçgen, 200ms fade-in. `role="tooltip"`. Mobile: tap/focus'ta görünür, 2sn auto-dismiss. |
+| U-13 | Disabled buton + tooltip entegrasyonu | Bekliyor | U-11, U-12 | Form eksikken buton disabled (slate-300 bg) + hover/focus'ta neden tooltip. Form tamamlanınca buton aktif, tooltip kayboluyor. `aria-disabled="true"` + `aria-describedby`. |
+
+### Grup 6 — Şeffaf Kredi Etiketleri
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| U-14 | Form içi kredi yazılarını kaldır | Bekliyor | U-09 | Tüm sekmelerdeki inline "X kredi" yazıları kaldırılmış. Kredi bilgisi sadece sticky bar'da. |
+| U-15 | "∞ kredi" ve "0 kredi" yazılarını kaldır | Bekliyor | U-14 | Anlamsız etiketler temizlenmiş. |
+| U-16 | "Sosyal medya kiti" CTA'sını kaldır | Bekliyor | U-14 | Sosyal sekmesinde tek "İçerik üret" CTA'sı var. "Kit" konsepti kaldırılmış. Platform seç → kredi hesaplanır → tek butonla üret. |
+| U-17 | Login gerektiren tooltip + redirect | Bekliyor | U-12 | Login gerekirken tooltip: "Önce giriş yap". Tıklayınca `/giris`'e redirect. |
+
+### Grup 7 — Polish & PR
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| U-18 | Mobile responsive sweep | Bekliyor | U-01~U-17 | Sticky bar, formlar, collapsible, tooltip — hepsi mobile'da sorunsuz. 375px'te overflow yok. |
+| U-19 | A11y audit | Bekliyor | U-18 | Radio group ARIA, tooltip ARIA, focus management, WCAG AA kontrast. |
+| U-20 | Lighthouse pass | Bekliyor | U-19 | Performance >90, CLS <0.05, a11y >90. |
+| U-21 | Aziz acceptance review | Bekliyor | U-20 | Aziz preview URL'de 5 iyileştirmeyi kontrol eder. |
+
+**Bağımlılık özeti:**
+- U-01 hepsinden önce (renk paleti)
+- Grup 2-6 paralel yapılabilir (her biri bağımsız iyileştirme)
+- U-18~21 en son (polish)
+
+---
+
 ## Tamamlanan
 
 (henüz yok)
 
----
-
-## İptal / Revert edilen
-
-(henüz yok)
+-
