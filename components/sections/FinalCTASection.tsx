@@ -3,32 +3,27 @@ import { FINAL_CTA } from '@/lib/constants/final-cta'
 
 export default function FinalCTASection() {
   return (
-    <section className="relative overflow-hidden py-20 md:py-28" aria-labelledby="final-cta-heading">
-      {/* Gradient background */}
+    <section
+      className="relative overflow-hidden py-20 md:py-28"
+      style={{
+        background: 'linear-gradient(135deg, var(--color-rd-primary-600), var(--color-rd-primary-700))',
+      }}
+      aria-labelledby="final-cta-heading"
+    >
+      {/* Radial glow overlay */}
       <div
-        className="absolute inset-0 -z-10"
-        style={{
-          background: 'linear-gradient(135deg, var(--color-rd-primary-600), var(--color-rd-primary-700))',
-        }}
-        aria-hidden="true"
-      />
-
-      {/* Radial glow */}
-      <div
-        className="absolute inset-0 -z-10 opacity-30"
+        className="pointer-events-none absolute inset-0 opacity-30"
         style={{
           background: 'radial-gradient(ellipse at 30% 50%, var(--color-rd-primary-400), transparent 70%)',
         }}
         aria-hidden="true"
       />
 
-      <div className="mx-auto max-w-2xl px-5 text-center">
-        {/* Eyebrow */}
+      <div className="relative mx-auto max-w-2xl px-5 text-center">
         <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white/90 tracking-wide backdrop-blur-sm">
           {FINAL_CTA.eyebrow}
         </span>
 
-        {/* Title */}
         <h2
           id="final-cta-heading"
           className="mt-5 text-3xl font-bold text-white md:text-4xl"
@@ -37,12 +32,10 @@ export default function FinalCTASection() {
           {FINAL_CTA.title}
         </h2>
 
-        {/* Subtitle */}
         <p className="mt-4 text-base text-white/80 leading-relaxed md:text-lg">
           {FINAL_CTA.subtitle}
         </p>
 
-        {/* CTA Button */}
         <div className="mt-8">
           <a
             href={FINAL_CTA.ctaRoute}
@@ -53,7 +46,6 @@ export default function FinalCTASection() {
           </a>
         </div>
 
-        {/* Reassurance */}
         <p className="mt-5 text-sm text-white/60">
           {FINAL_CTA.reassurance}
         </p>
