@@ -1589,9 +1589,327 @@ BACKLOG-REDESIGN.md'de U-02 ve U-03 satırlarını [x] işaretle.
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| U-04 | BrandProfileBlock scaffold (collapsible) | Bekliyor | U-02 | Kapalıyken: turuncu border-left, "Marka profili eksik" + "Önce dene" buton. Açıkken: demo alanı görünür. Collapsible animasyon. |
-| U-05 | ToneSelector (3 chip, radio group) | Bekliyor | U-04 | 3 chip: Samimi (Heart ikon) / Profesyonel (Briefcase) / Premium (Sparkles). `role="radiogroup"`, `aria-checked`. Arrow Left/Right. Sadece biri aktif. |
-| U-06 | AIPreview (canlı değişen çıktı, fade) | Bekliyor | U-05 | Ton seçilince 300ms fade ile AI çıktı önizlemesi değişir. `aria-live="polite"`. Banner turuncu→yeşil dönüşür. Not: "Bu sadece önizleme. Tonu kalıcı yapmak için profilini kaydet." |
+| U-04 | BrandProfileBlock scaffold (collapsible) | ✅ Tamam | U-02, U-03 | Yeni component `components/uret/BrandProfileBlock.tsx`. Kapalıyken: rd-accent-600 4px border-left, Sparkles ikon, "Marka profili eksik" başlık, subtitle, "Önce dene" outline buton. Açıkken: collapsible demo alanı (şimdilik boş placeholder, U-05/U-06'da dolacak). Page.tsx'te IntentBanner ALTINA + sekmelerden ÖNCE yerleşir. |
+
+#### U-04 Detaylı Prompt
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
+UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
+Bunun yerine BACKLOG-REDESIGN.md başındaki redesign branch UI 
+kuralları geçerli:
+- Font 400–800 serbest
+- Gölge (shadow-*) serbest
+- rounded-2xl, rounded-xl, rounded-lg serbest
+- Manrope (display 18px+) + Inter (body)
+- Yeni spec paleti (rd-* token'ları)
+- Tek istisna — emoji YASAK (Lucide ikon kullan)
+
+Branch: claude/redesign-modern-ui
+Görev: U-04 — /uret BrandProfileBlock scaffold (collapsible iskelet)
+
+Hedef: U-02'de kaldırılan sarı "marka profili" uyarısı yerine, 
+kullanıcının tıklayıp "tona göre AI çıktı nasıl değişir" canlı 
+göreceği interaktif bir blok kuruyoruz. Bu ticket sadece İSKELET 
++ collapsible mantığı. İçerik (3 ton chip + AI preview) U-05 ve 
+U-06'da gelecek.
+
+────────────────────────────────────────────
+Yeni dosya: components/uret/BrandProfileBlock.tsx
+────────────────────────────────────────────
+
+```tsx
+'use client'
+
+import { useState, type ReactNode } from 'react'
+import { Sparkles, ChevronDown } from 'lucide-react'
+
+export type BrandTone = 'samimi' | 'profesyonel' | 'premium'
+
+interface BrandProfileBlockProps {
+  // U-05/U-06'da çocuk component'ler eklenecek; şimdilik opsiyonel
+  children?: ReactNode
+}
+
+export default function BrandProfileBlock({ children }: BrandProfileBlockProps) {
+  const [showDemo, setShowDemo] = useState(false)
+  const [activeTone, setActiveTone] = useState<BrandTone | null>(null)
+
+  // Border + ikon rengi: ton seçilmediyse accent (turuncu), 
+  // seçildiyse success (yeşil) — U-06'da activeTone set edilince geçiş olacak
+  const isToneSelected = activeTone !== null
+  const accentClass = isToneSelected ? 'border-l-rd-success-600' : 'border-l-rd-accent-600'
+  const iconColor = isToneSelected ? 'text-rd-success-600' : 'text-rd-accent-600'
+  const headerTitle = isToneSelected
+    ? `Marka tonu: ${capitalizeTone(activeTone!)}`
+    : 'Marka profili eksik'
+  const headerSubtitle = isToneSelected
+    ? 'Bu sadece önizleme. Tonu kalıcı yapmak için profilini kaydet.'
+    : 'Tona göre AI çıktısı nasıl değişiyor — canlı dene'
+
+  return (
+    <div
+      className={`bg-white border border-rd-neutral-200 ${accentClass} border-l-4 rounded-xl mb-6 overflow-hidden transition-colors duration-300`}
+    >
+      {/* Header */}
+      <div className="flex items-start gap-3 p-5">
+        <Sparkles className={`mt-0.5 h-5 w-5 flex-shrink-0 ${iconColor}`} aria-hidden="true" />
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-rd-neutral-900">{headerTitle}</p>
+          <p className="mt-0.5 text-xs text-rd-neutral-600">{headerSubtitle}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowDemo(v => !v)}
+          aria-expanded={showDemo}
+          aria-controls="brand-profile-demo"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-rd-neutral-300 px-3 py-1.5 text-xs font-medium text-rd-primary-700 hover:bg-rd-primary-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-500 focus-visible:ring-offset-2"
+        >
+          {showDemo ? 'Gizle' : 'Önce dene'}
+          <ChevronDown
+            className={`h-3.5 w-3.5 transition-transform duration-200 ${showDemo ? 'rotate-180' : ''}`}
+            aria-hidden="true"
+          />
+        </button>
+      </div>
+
+      {/* Demo area (collapsible) */}
+      {showDemo && (
+        <div
+          id="brand-profile-demo"
+          className="border-t border-rd-neutral-100 p-5 grid gap-5 md:grid-cols-[1fr_1.2fr]"
+        >
+          {children ?? (
+            <p className="text-sm text-rd-neutral-500 italic md:col-span-2">
+              Demo içeriği yakında eklenecek (U-05 + U-06).
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function capitalizeTone(tone: BrandTone): string {
+  const map: Record<BrandTone, string> = {
+    samimi: 'Samimi',
+    profesyonel: 'Profesyonel',
+    premium: 'Premium',
+  }
+  return map[tone]
+}
+```
+
+NOT: `setActiveTone` şu an dışarıdan çağrılmıyor; bu state U-06'da 
+ToneSelector ile güncellenecek. Şimdilik default `null`, header her 
+zaman "eksik" görünür. Bu doğru — Aziz scaffold'u gördüğünde turuncu 
+border + "Önce dene" butonunu test edecek.
+
+────────────────────────────────────────────
+Entegrasyon: app/uret/page.tsx
+────────────────────────────────────────────
+
+- Üstte: `import BrandProfileBlock from '@/components/uret/BrandProfileBlock'`
+- IntentBanner'ın HEMEN ALTINA + sekmelerden ÖNCE yerleştir:
+
+  <IntentBanner />
+  <BrandProfileBlock />     ← YENİ
+  {/* sekmeler container */}
+
+────────────────────────────────────────────
+Test (commit öncesi)
+────────────────────────────────────────────
+
+- /uret sayfasında IntentBanner'ın altında yeni blok görünmeli
+- Sol kenarında 4px turuncu çizgi (rd-accent-600)
+- Sparkles ikon turuncu, başlık "Marka profili eksik", subtitle gri
+- Sağda "Önce dene" outline buton, ChevronDown aşağı bakıyor
+- Butona tıklayınca:
+  - Buton metni "Gizle" oluyor
+  - ChevronDown 180° dönüyor
+  - Altta gri italic placeholder metni "Demo içeriği yakında eklenecek..."
+- Tekrar tıklayınca kapanıyor, blok scaffold'a dönüyor
+- ARIA: button aria-expanded değişiyor, demo div id="brand-profile-demo"
+- Mobil 375px taşma yok, butonun yeri kayıyor değişiyorsa flex-wrap koru
+
+Commit mesajı: feat(uret): U-04 BrandProfileBlock scaffold (collapsible)
+BACKLOG-REDESIGN.md'de U-04 [x] işaretle.
+```
+| U-05 | ToneSelector (3 chip, radio group) | Bekliyor | U-04 | 3 chip: Samimi (Heart ikon) / Profesyonel (Briefcase) / Premium (Sparkles). `role="radiogroup"`, `aria-checked`. Arrow Left/Right. TONE_CHIPS reuse from lib/constants/marka-bilgileri.ts. |
+| U-06 | AIPreview (canlı değişen çıktı, fade) | Bekliyor | U-05 | Ton seçilince 300ms fade ile AI çıktı önizlemesi değişir. `aria-live="polite"`. Banner turuncu (rd-accent-600) → yeşil (rd-success-600) dönüşür. Not: "Bu sadece önizleme. Tonu kalıcı yapmak için profilini kaydet." TONE_CHIPS.output reuse. |
+
+#### U-05 + U-06 Birleşik Prompt
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
+UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
+Bunun yerine BACKLOG-REDESIGN.md başındaki redesign branch UI 
+kuralları geçerli (font 400-800 serbest, gölge serbest, rounded-2xl 
+serbest, Manrope+Inter, rd-* token'lar, sadece emoji yasak — Lucide 
+ikon kullan).
+
+Branch: claude/redesign-modern-ui
+Görev: U-05 + U-06 — /uret BrandProfileBlock canlı interaktiflik
+
+Hedef: U-04'te kurduğumuz BrandProfileBlock scaffold'una 3 ton chip'i 
+ve canlı AI önizleme paneli ekle. Ton seçilince banner turuncu→yeşil 
+dönüşmeli, AI önizleme 300ms fade ile değişmeli. Hazır şablon — AI 
+çağrısı yok, anasayfadaki MB bölümüyle aynı TONE_CHIPS.output reuse.
+
+────────────────────────────────────────────
+U-04 component'ini güncelle: BrandProfileBlock state'i child'lara aç
+────────────────────────────────────────────
+
+components/uret/BrandProfileBlock.tsx — `setActiveTone` ve `activeTone`
+çocuk component'lere prop olarak geçilsin. Render içinde:
+
+  {showDemo && (
+    <div id="brand-profile-demo" className="border-t border-rd-neutral-100 p-5 grid gap-5 md:grid-cols-[1fr_1.2fr]">
+      <ToneSelector activeTone={activeTone} onChange={setActiveTone} />
+      <AIPreview activeTone={activeTone} />
+    </div>
+  )}
+
+children prop kaldırılabilir (artık iki sabit child).
+
+────────────────────────────────────────────
+Yeni dosya: components/uret/ToneSelector.tsx
+────────────────────────────────────────────
+
+```tsx
+'use client'
+
+import { useRef, type KeyboardEvent } from 'react'
+import { Heart, Briefcase, Sparkles } from 'lucide-react'
+import { TONE_CHIPS, type ToneKey } from '@/lib/constants/marka-bilgileri'
+
+const ICON_MAP = {
+  samimi: Heart,
+  profesyonel: Briefcase,
+  premium: Sparkles,
+} as const
+
+interface ToneSelectorProps {
+  activeTone: ToneKey | null
+  onChange: (tone: ToneKey) => void
+}
+
+export default function ToneSelector({ activeTone, onChange }: ToneSelectorProps) {
+  const refs = useRef<(HTMLButtonElement | null)[]>([])
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>, idx: number) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return
+    e.preventDefault()
+    const dir = e.key === 'ArrowRight' ? 1 : -1
+    const next = (idx + dir + TONE_CHIPS.length) % TONE_CHIPS.length
+    refs.current[next]?.focus()
+    onChange(TONE_CHIPS[next].key)
+  }
+
+  return (
+    <div>
+      <p className="mb-3 text-xs font-medium text-rd-neutral-500 uppercase tracking-wider">
+        Marka tonu
+      </p>
+      <div role="radiogroup" aria-label="Marka tonu seçimi" className="flex flex-wrap gap-2">
+        {TONE_CHIPS.map((chip, idx) => {
+          const Icon = ICON_MAP[chip.key]
+          const isActive = activeTone === chip.key
+          return (
+            <button
+              key={chip.key}
+              ref={el => { refs.current[idx] = el }}
+              type="button"
+              role="radio"
+              aria-checked={isActive}
+              tabIndex={isActive || (activeTone === null && idx === 0) ? 0 : -1}
+              onClick={() => onChange(chip.key)}
+              onKeyDown={e => handleKeyDown(e, idx)}
+              className={[
+                'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-500 focus-visible:ring-offset-2',
+                isActive
+                  ? 'bg-rd-primary-50 border-rd-primary-300 text-rd-primary-800'
+                  : 'bg-white border-rd-neutral-200 text-rd-neutral-700 hover:border-rd-neutral-300',
+              ].join(' ')}
+            >
+              <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+              {chip.label}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+```
+
+────────────────────────────────────────────
+Yeni dosya: components/uret/AIPreview.tsx
+────────────────────────────────────────────
+
+```tsx
+'use client'
+
+import { TONE_CHIPS, type ToneKey } from '@/lib/constants/marka-bilgileri'
+
+interface AIPreviewProps {
+  activeTone: ToneKey | null
+}
+
+const PLACEHOLDER = 'Solda bir ton seç, AI çıktısının nasıl değiştiğini gör.'
+
+export default function AIPreview({ activeTone }: AIPreviewProps) {
+  const chip = activeTone ? TONE_CHIPS.find(c => c.key === activeTone) : null
+  const text = chip?.output ?? PLACEHOLDER
+
+  return (
+    <div>
+      <p className="mb-3 text-xs font-medium text-rd-neutral-500 uppercase tracking-wider">
+        AI çıktısı önizleme
+      </p>
+      <div
+        key={activeTone ?? 'placeholder'}
+        className="rounded-lg border border-rd-neutral-200 bg-rd-neutral-50 p-4 text-sm leading-relaxed text-rd-neutral-700 animate-fade-in"
+        aria-live="polite"
+      >
+        {text}
+      </div>
+      {activeTone && (
+        <p className="mt-2 text-xs italic text-rd-neutral-500">
+          Bu sadece önizleme. Tonu kalıcı yapmak için profilini kaydet.
+        </p>
+      )}
+    </div>
+  )
+}
+```
+
+NOT: `key` prop'u activeTone değişince component'i unmount/remount eder, 
+bu sayede animate-fade-in keyframe'i her tonda tekrar tetiklenir. 
+animate-fade-in zaten globals.css'te tanımlı (landing page'den).
+
+────────────────────────────────────────────
+Test (commit öncesi)
+────────────────────────────────────────────
+
+- /uret BrandProfileBlock'ta "Önce dene" tıkla → demo açılır
+- Sol sütun: 3 chip (Heart Samimi, Briefcase Profesyonel, Sparkles Premium)
+- Bir chip'e tıkla → mavi seçili duruma geçer, BrandProfileBlock 
+  border-left turuncu → yeşil dönüşür, header "Marka tonu: X" + 
+  alt yazı "Bu sadece önizleme..." olur
+- Sağ sütunda AI çıktısı 300ms fade animasyonla değişir
+- Klavye Tab → ToneSelector'a gel, Arrow Left/Right ile chip'ler arası geç
+- Ekran okuyucu: aria-checked, aria-live="polite" çıktıyı duyurur
+- Mobil 375px tek kolon (md breakpoint altında), chip'ler flex-wrap
+
+Commit mesajları (mantıklı bölünebilir):
+1. feat(uret): U-05 ToneSelector (3 chip radio group)
+2. feat(uret): U-06 AIPreview canlı değişen çıktı
+
+BACKLOG-REDESIGN.md'de U-05 ve U-06 [x] işaretle.
+```
 | U-07 | "Profili düzenle" CTA → `/profil` | Bekliyor | U-04 | Tıklayınca `/profil` sayfasına yönlendiriyor. Outline stil buton. |
 
 ### Grup 4 — Canlı Kredi Maliyeti (Sticky Submit Bar)

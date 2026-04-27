@@ -21,6 +21,7 @@ import { useGorselUretim } from "@/lib/hooks/useGorselUretim";
 import { useVideoUretim } from "@/lib/hooks/useVideoUretim";
 import { useSosyalUretim } from "@/lib/hooks/useSosyalUretim";
 import IntentBanner from "@/components/uret/IntentBanner";
+import BrandProfileBlock from "@/components/uret/BrandProfileBlock";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
 
@@ -259,6 +260,7 @@ export default function Home() {
         <div>
 
             <IntentBanner />
+            <BrandProfileBlock />
 
             {/* SEKMELER */}
             <div role="tablist" aria-label="İçerik türü seçimi" className="bg-white border border-rd-neutral-200 rounded-xl p-1 flex gap-0.5">
