@@ -9,6 +9,7 @@ import SSSSection from '@/components/sections/SSSSection'
 import NedenYzlisteSection from '@/components/sections/NedenYzlisteSection'
 import PazaryeriSection from '@/components/sections/PazaryeriSection'
 import UcAdimSection from '@/components/sections/UcAdimSection'
+import FooterSection from '@/components/sections/FooterSection'
 
 export default function TanitimRedesign() {
   return (
@@ -26,6 +27,7 @@ export default function TanitimRedesign() {
         <SSSSection />
         <FinalCTASection />
       </main>
+      <FooterSection />
     </div>
   )
 }
