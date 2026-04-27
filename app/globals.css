@@ -233,3 +233,10 @@ body {
   border-radius: 3px;
   background: var(--color-rd-primary-500);
 }
+
+/* SSS accordion — reduced motion (SS-05) */
+@media (prefers-reduced-motion: reduce) {
+  [id^="faq-"][role="region"] {
+    transition: none;
+  }
+}

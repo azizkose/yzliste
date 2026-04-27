@@ -596,11 +596,11 @@ Tüm 3 paket kartında aynı route. `/fiyatlar` sayfasında kullanıcı detaylı
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| SS-01 | Constants (`lib/constants/sss.ts`) | Prompt hazır | DS-01 | FAQ_ITEMS (6 soru-cevap), SSS_COPY (header metinleri). |
-| SS-02 | Section scaffold + SectionHeader + grid | Prompt hazır | DS-07, SS-01 | `components/sections/SSSSection.tsx`. bg-white. 2 kolon grid (mobilde 1). |
-| SS-03 | FAQItem (collapsible + animation) | Prompt hazır | SS-02 | `grid-template-rows: 0fr→1fr` trick. +/− ikon dönüşümü. Açık: primary-50/30 bg, primary-200 border. 200ms geçiş. İlk item default açık. |
-| SS-04 | ContactNote | Prompt hazır | SS-02 | Mail ikon + "Daha fazla soru?" + email mailto link + "Tüm sorular →" link. slate-50 bg. |
-| SS-05 | A11y + responsive pass | Prompt hazır | SS-03, SS-04 | `aria-expanded`. Klavye aç/kapat. Mobile: 1 kolon. WCAG AA. |
+| SS-01 | Constants (`lib/constants/sss.ts`) | ✅ Tamam | DS-01 | FAQ_ITEMS (6 soru-cevap), SSS_COPY (header metinleri). |
+| SS-02 | Section scaffold + SectionHeader + grid | ✅ Tamam | DS-07, SS-01 | `components/sections/SSSSection.tsx`. bg-white. 2 kolon grid (mobilde 1). |
+| SS-03 | FAQItem (collapsible + animation) | ✅ Tamam | SS-02 | `grid-template-rows: 0fr→1fr` trick. +/− ikon dönüşümü. Açık: primary-50/30 bg, primary-200 border. 200ms geçiş. İlk item default açık. |
+| SS-04 | ContactNote | ✅ Tamam | SS-02 | Mail ikon + "Daha fazla soru?" + email mailto link + "Tüm sorular →" link. slate-50 bg. |
+| SS-05 | A11y + responsive pass | ✅ Tamam | SS-03, SS-04 | `aria-expanded`. Klavye aç/kapat. Mobile: 1 kolon. WCAG AA. |
 | SS-06 | Acceptance review | Bekliyor | SS-05 | Aziz preview kontrolü. 6 item test. |
 
 **Durum:** Prompt hazır — Claude Code'a verilebilir.
