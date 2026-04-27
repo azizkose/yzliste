@@ -1,7 +1,11 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Play, Check, Plug, CreditCard, Target, Zap } from 'lucide-react'
 import { HERO_COPY, HERO_TRUST_PILLS, NAV_CTAS } from '@/lib/constants/hero'
 import Button from '@/components/primitives/Button'
+import VideoModal from './VideoModal'
 
 const TRUST_PILL_ICONS: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>> = {
   Plug,
@@ -11,6 +15,8 @@ const TRUST_PILL_ICONS: Record<string, React.ComponentType<{ size?: number; stro
 }
 
 export default function HeroContent() {
+  const [videoOpen, setVideoOpen] = useState(false)
+
   return (
     <div className="animate-hero-float-in-left">
       {/* Eyebrow pill */}
@@ -79,6 +85,7 @@ export default function HeroContent() {
         </Link>
         <button
           type="button"
+          onClick={() => setVideoOpen(true)}
           className="inline-flex items-center gap-2 rounded-xl px-5 py-3.5 text-[15px] font-medium text-slate-600 transition-colors duration-200 hover:text-slate-900"
           aria-label="Nasıl çalışır videosunu izle"
         >
@@ -99,6 +106,9 @@ export default function HeroContent() {
         />
         <span>{HERO_COPY.reassurance}</span>
       </div>
+
+      {/* Video modal */}
+      <VideoModal isOpen={videoOpen} onClose={() => setVideoOpen(false)} />
     </div>
   )
 }
