@@ -7,6 +7,7 @@ import {
   Ruler, Globe, Key, ClipboardList, Maximize, Sparkles,
   Search, Sun, Palette, BookOpen, Timer, Target, Smartphone, Hash,
   Coffee, Leaf, Hand, Gift, Package, Download,
+  RotateCw, Tag, Play, Monitor, Music, MapPin,
 } from 'lucide-react'
 import SectionHeader from '@/components/primitives/SectionHeader'
 import CopyButton from '@/components/primitives/CopyButton'
@@ -39,10 +40,29 @@ const GALLERY_ICONS = {
   Coffee, Ruler, Package, Sparkles, Leaf, Hand, Gift, Palette, Sun,
 } as const
 
+const SCENE_ICONS = {
+  Coffee, RotateCw, Search, Hand, Camera, Tag, ClipboardList, Package,
+  Palette, Sparkles, Sun, Gift,
+} as const
+
+const SOCIAL_PLATFORM_ICONS = {
+  instagram: Camera,
+  tiktok: Music,
+  pinterest: MapPin,
+} as const
+
+const ASPECT_RATIOS: Record<PlatformId, string> = {
+  trendyol: '1 / 1',
+  amazon: '16 / 9',
+  etsy: '4 / 5',
+}
+
 type ContentTypeIconKey = keyof typeof CONTENT_TYPE_ICONS
 type InputMethodIconKey = keyof typeof INPUT_METHOD_ICONS
 type RuleIconKey = keyof typeof RULE_ICONS
 type GalleryIconKey = keyof typeof GALLERY_ICONS
+type SceneIconKey = keyof typeof SCENE_ICONS
+type SocialPlatformKey = keyof typeof SOCIAL_PLATFORM_ICONS
 
 // ---- ProductInputCard ----
 
@@ -219,6 +239,176 @@ function ImageContentRenderer({
           Tümünü indir
         </Button>
       </div>
+    </div>
+  )
+}
+
+// ---- VideoContentRenderer ----
+
+interface SceneItem {
+  time: string
+  text: string
+  icon: string
+}
+
+function VideoContentRenderer({
+  scenes,
+  spec,
+  platformId,
+  platformColor,
+  animKey,
+}: {
+  scenes: SceneItem[]
+  spec: string
+  platformId: PlatformId
+  platformColor: string
+  animKey: string
+}) {
+  const aspectRatio = ASPECT_RATIOS[platformId]
+  return (
+    <div key={animKey} className="animate-[fade-in_300ms_ease-out]">
+      {/* Player mockup */}
+      <div
+        className="relative overflow-hidden rounded-xl bg-slate-900"
+        style={{ aspectRatio }}
+      >
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+            <Play size={24} strokeWidth={2} className="ml-0.5 text-white" />
+          </div>
+        </div>
+        <div className="absolute bottom-3 left-3 rounded-lg bg-black/60 px-2 py-1 text-[10px] font-medium text-white">
+          0:30
+        </div>
+        <div className="absolute bottom-3 right-3 rounded-lg bg-black/60 px-2 py-1 text-[10px] font-medium text-white">
+          HD
+        </div>
+      </div>
+
+      {/* Video spec */}
+      <div className="mt-3 flex items-center gap-2">
+        <Monitor size={14} strokeWidth={2} className="text-slate-400" />
+        <p className="text-xs font-medium text-slate-500">{spec}</p>
+      </div>
+
+      {/* Scene list */}
+      <div className="mt-5">
+        <p className="mb-3 text-xs font-medium uppercase tracking-[0.1em] text-slate-400">
+          Sahne planı
+        </p>
+        <div className="space-y-2">
+          {scenes.map((scene, i) => {
+            const SceneIcon = SCENE_ICONS[scene.icon as SceneIconKey]
+            return (
+              <div
+                key={i}
+                className="flex items-start gap-3 rounded-lg bg-slate-50 px-3 py-2.5"
+              >
+                <span className="w-10 shrink-0 text-xs font-medium tabular-nums text-slate-400">
+                  {scene.time}
+                </span>
+                {SceneIcon && (
+                  <SceneIcon
+                    size={14}
+                    strokeWidth={2}
+                    style={{ color: platformColor }}
+                    className="mt-0.5 shrink-0"
+                  />
+                )}
+                <span className="text-sm text-slate-700">{scene.text}</span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ---- SocialContentRenderer ----
+
+interface SocialPost {
+  caption: string
+  hashtags?: string[]
+}
+
+interface SocialPostCardProps {
+  platformName: string
+  platformKey: SocialPlatformKey
+  caption: string
+  hashtags?: string[]
+  accentColor: string
+}
+
+function SocialPostCard({ platformName, platformKey, caption, hashtags, accentColor }: SocialPostCardProps) {
+  const SocialIcon = SOCIAL_PLATFORM_ICONS[platformKey]
+  return (
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+        <div className="flex items-center gap-2">
+          <SocialIcon size={16} strokeWidth={2} className="text-slate-500" />
+          <span className="text-sm font-medium text-slate-700">{platformName}</span>
+        </div>
+        <CopyButton text={caption} size="sm" variant="minimal" />
+      </div>
+      <div className="px-4 py-3">
+        <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700">{caption}</p>
+      </div>
+      {hashtags && hashtags.length > 0 && (
+        <div className="border-t border-slate-100 px-4 py-3">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-400">Hashtag'ler</span>
+            <CopyButton text={hashtags.join(' ')} size="sm" variant="minimal" />
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {hashtags.map((tag, i) => (
+              <span key={i} className="text-xs font-medium" style={{ color: accentColor }}>
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function SocialContentRenderer({
+  socialData,
+  platformColor,
+  animKey,
+}: {
+  socialData: { instagram: SocialPost; tiktok?: SocialPost; pinterest?: SocialPost }
+  platformColor: string
+  animKey: string
+}) {
+  return (
+    <div key={animKey} className="space-y-4 animate-[fade-in_300ms_ease-out]">
+      <SocialPostCard
+        platformName="Instagram"
+        platformKey="instagram"
+        caption={socialData.instagram.caption}
+        hashtags={socialData.instagram.hashtags}
+        accentColor={platformColor}
+      />
+      {socialData.tiktok && (
+        <SocialPostCard
+          platformName="TikTok"
+          platformKey="tiktok"
+          caption={socialData.tiktok.caption}
+          hashtags={socialData.tiktok.hashtags}
+          accentColor={platformColor}
+        />
+      )}
+      {socialData.pinterest && (
+        <SocialPostCard
+          platformName="Pinterest"
+          platformKey="pinterest"
+          caption={socialData.pinterest.caption}
+          hashtags={socialData.pinterest.hashtags}
+          accentColor={platformColor}
+        />
+      )}
     </div>
   )
 }
@@ -530,11 +720,23 @@ export default function PazaryeriSection() {
                   animKey={`image-${activePlatform}`}
                 />
               )}
-              {activeContentType !== 'text' && activeContentType !== 'image' && (
-                <div className="min-h-[200px] bg-slate-50 rounded-lg border border-dashed border-slate-300 p-4 flex items-center justify-center text-sm text-slate-400">
-                  {activeContentType === 'video' && 'Video çıktısı (PZ-09)'}
-                  {activeContentType === 'social' && 'Sosyal medya çıktısı (PZ-10)'}
-                </div>
+              {activeContentType === 'video' && (
+                <VideoContentRenderer
+                  key={`video-${activePlatform}`}
+                  scenes={PAZARYERI_DEMO_DATA.video[activePlatform].scenes}
+                  spec={PAZARYERI_DEMO_DATA.video[activePlatform].spec}
+                  platformId={activePlatform}
+                  platformColor={PLATFORMS[activePlatform].color}
+                  animKey={`video-${activePlatform}`}
+                />
+              )}
+              {activeContentType === 'social' && (
+                <SocialContentRenderer
+                  key={`social-${activePlatform}`}
+                  socialData={PAZARYERI_DEMO_DATA.social[activePlatform]}
+                  platformColor={PLATFORMS[activePlatform].color}
+                  animKey={`social-${activePlatform}`}
+                />
               )}
 
             </div>
