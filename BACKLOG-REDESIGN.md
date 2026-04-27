@@ -894,6 +894,8 @@ import SSSSection from '@/components/sections/SSSSection'
 | FC-04 | (Opsiyonel) Background pattern | ✅ Tamam | FC-02 | Subtle dot pattern veya radial glow. |
 | FC-05 | Mobile responsive + a11y | ✅ Tamam | FC-03 | Mobile: CTA full width. Focus-visible. Semantic h2. |
 | FC-06 | Acceptance review | Bekliyor | FC-05 | Aziz preview kontrolü. |
+| FC-FIX-01 | `--color-rd-primary-600` token eksikliği + FC render | ✅ Tamam | FC-05 | globals.css'te `--color-rd-primary-600: #2563EB;` (Tailwind blue-600) tanımı eklenecek. Sıra: 500 → **600** → 700. FinalCTASection gradient'i bu sayede render olacak. Preview'da SSS sonrası mavi gradient bg + büyük H1 "İlk 3 kredi hediye" + beyaz CTA görünür. |
+| FY-FIX-02 | (kontrol) Popüler rozeti hâlâ render oluyor mu | Bekliyor | FY-FIX-01 | Aziz screenshot'ında orta paket üstünde "En popüler" rozeti görünmüyor olabilir. Önce Aziz scroll ile doğrulayacak; gerçekten yoksa Claude Code rozet bloğunun (FiyatlarSection.tsx satır 135-141) hâlâ render olduğunu doğrulasın. |
 
 **Durum:** Prompt hazır — Claude Code'a verilebilir.
 
