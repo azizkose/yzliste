@@ -22,6 +22,8 @@ import { useVideoUretim } from "@/lib/hooks/useVideoUretim";
 import { useSosyalUretim } from "@/lib/hooks/useSosyalUretim";
 import IntentBanner from "@/components/uret/IntentBanner";
 import BrandProfileBlock from "@/components/uret/BrandProfileBlock";
+import { calculateCredits, type ActiveTab } from "@/components/uret/useCalculateCredits";
+import StickySubmitBar from "@/components/uret/StickySubmitBar";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
 
@@ -99,6 +101,29 @@ export default function Home() {
   const gorsel = useGorselUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
   const video = useVideoUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
   const sosyal = useSosyalUretim({ urunAdi: metin.urunAdi, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
+
+  // Sticky bar — cost + credit check
+  const cost = calculateCredits({
+    activeTab: anaSekme as ActiveTab,
+    selectedStylesCount: gorsel.seciliStiller?.size,
+    videoLengthSec: Number(video.videoSure) as 5 | 10,
+    selectedPlatformsCount: 1,
+  })
+  const remainingCredits = kredilerHook ?? kullanici?.kredi ?? 0
+  const isInsufficientCredit = !kullanici || kullanici.anonim || remainingCredits < cost
+
+  const handleStickySubmit = () => {
+    if (anaSekme === 'metin') metin.icerikUret()
+    else if (anaSekme === 'gorsel') gorsel.gorselUret()
+    else if (anaSekme === 'video') video.videoUret()
+    else if (anaSekme === 'sosyal') sosyal.captionUret()
+  }
+
+  const isStickySubmitting =
+    anaSekme === 'metin' ? metin.yukleniyor :
+    anaSekme === 'gorsel' ? gorsel.gorselYukleniyor :
+    anaSekme === 'video' ? video.videoYukleniyor :
+    sosyal.captionYukleniyor
 
   // Sync shared photo to sosyal tab (T7-07)
   useEffect(() => {
@@ -457,6 +482,14 @@ export default function Home() {
             />
 
             </div> {/* /animate-tab-enter */}
+
+            <StickySubmitBar
+              cost={cost}
+              remainingCredits={remainingCredits}
+              isInsufficientCredit={isInsufficientCredit}
+              onSubmit={handleStickySubmit}
+              isSubmitting={isStickySubmitting}
+            />
 
         </div>
 
