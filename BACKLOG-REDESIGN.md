@@ -888,11 +888,11 @@ import SSSSection from '@/components/sections/SSSSection'
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| FC-01 | Constants (`lib/constants/final-cta.ts`) | Prompt hazır | DS-01 | FINAL_CTA_COPY (eyebrow, heading, subheading, ctaText, reassurance). |
-| FC-02 | Section + gradient bg | Prompt hazır | DS-02, FC-01 | `components/sections/FinalCTASection.tsx`. `linear-gradient(135deg, primary-600, primary-700)`. |
-| FC-03 | Container + content | Prompt hazır | FC-02 | Max-w 720px. EyebrowBadge (beyaz transparan). H2 white. Sub white/80. CTA (white bg, primary-700 text, shadow, hover lift). ReassuranceLine white/70. |
-| FC-04 | (Opsiyonel) Background pattern | Prompt hazır | FC-02 | Subtle dot pattern veya radial glow. |
-| FC-05 | Mobile responsive + a11y | Prompt hazır | FC-03 | Mobile: CTA full width. Focus-visible. Semantic h2. |
+| FC-01 | Constants (`lib/constants/final-cta.ts`) | ✅ Tamam | DS-01 | FINAL_CTA_COPY (eyebrow, heading, subheading, ctaText, reassurance). |
+| FC-02 | Section + gradient bg | ✅ Tamam | DS-02, FC-01 | `components/sections/FinalCTASection.tsx`. `linear-gradient(135deg, primary-600, primary-700)`. |
+| FC-03 | Container + content | ✅ Tamam | FC-02 | Max-w 720px. EyebrowBadge (beyaz transparan). H2 white. Sub white/80. CTA (white bg, primary-700 text, shadow, hover lift). ReassuranceLine white/70. |
+| FC-04 | (Opsiyonel) Background pattern | ✅ Tamam | FC-02 | Subtle dot pattern veya radial glow. |
+| FC-05 | Mobile responsive + a11y | ✅ Tamam | FC-03 | Mobile: CTA full width. Focus-visible. Semantic h2. |
 | FC-06 | Acceptance review | Bekliyor | FC-05 | Aziz preview kontrolü. |
 
 **Durum:** Prompt hazır — Claude Code'a verilebilir.
