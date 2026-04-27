@@ -2,6 +2,7 @@ import TrustStrip from '@/components/sections/HeroBlock/TrustStrip'
 import Nav from '@/components/sections/HeroBlock/Nav'
 import HeroSection from '@/components/sections/HeroBlock/HeroSection'
 import IcerikTurleriSection from '@/components/sections/IcerikTurleriSection'
+import MarkaBilgileriSection from '@/components/sections/MarkaBilgileriSection'
 import PazaryeriSection from '@/components/sections/PazaryeriSection'
 import UcAdimSection from '@/components/sections/UcAdimSection'
 
@@ -15,6 +16,7 @@ export default function TanitimRedesign() {
         <UcAdimSection />
         <IcerikTurleriSection />
         <PazaryeriSection />
+        <MarkaBilgileriSection />
       </main>
     </div>
   )

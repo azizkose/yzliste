@@ -169,3 +169,15 @@ body {
   .animate-step-card-2,
   .animate-step-card-3 { animation: none; }
 }
+
+/* Marka Bilgileri — output tone fade-in (MB-07) */
+@keyframes output-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-output-fade-in {
+  animation: output-fade-in 300ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-output-fade-in { animation: none; }
+}

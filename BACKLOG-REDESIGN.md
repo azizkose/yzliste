@@ -225,7 +225,7 @@ Hedefler: LCP < 2.5s, CLS < 0.05, Lighthouse > 90
 | UA-07 | ConnectorLine (dashed, desktop-only) | ✅ Tamam | UA-03 | 2px dashed #CBD5E1, absolute top-10, calc(100%/6), hidden lg:block, aria-hidden. |
 | UA-08 | TotalTimeBar + stagger animasyon | ✅ Tamam | UA-02 | rd-primary-50 bg, Clock ikon + "Saniyeler içinde tamamlanır". Max-w 420px. |
 | UA-09 | Mobile responsive + a11y pass | ✅ Tamam | UA-07, UA-08 | md: breakpoint (lg→md), NumberCircle aria-hidden+rd-primary-200 border, mockup role="img" taşındı, max-w-[280px] mx-auto, stagger fade-in (globals.css), prefers-reduced-motion. |
-| UA-10 | Acceptance review | Bekliyor | UA-09 ✅ | Aziz preview kontrolü. |
+| UA-10 | Acceptance review | ✅ Tamam | UA-09 ✅ | Aziz onayladı (27 Nisan 2026). md breakpoint, a11y, responsive, build OK. |
 
 #### UA-01~08 Detaylı Prompt (Claude Code bu bölümü okuyacak)
 
@@ -690,16 +690,16 @@ StepCard'da: `className={cn("flex flex-col items-center text-center", \`animate-
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| MB-01 | Constants (`lib/constants/marka-bilgileri.ts`) | Prompt hazır | DS-01 | BRAND_FEATURES (4 item), TONE_CHIPS (samimi/profesyonel/premium + çıktı metinleri), BRAND_FORM_FIELDS. |
-| MB-02 | Section scaffold + grid + bg | Prompt hazır | DS-07, MB-01 | `components/sections/MarkaBilgileriSection.tsx`. bg-neutral-50. 2 kolon grid. |
-| MB-03 | LeftColumn (eyebrow + heading + features + CTA) | Prompt hazır | MB-02 | Accent Sparkles eyebrow "Yeni özellik". Heading. 4 feature item (icon box + title + desc). CTA link. |
-| MB-04 | BrandFormPreview card scaffold | Prompt hazır | MB-02 | BrandFormPreview aynı dosyada. white bg, border. Header "Marka Profili" + yeşil "Aktif" badge. |
-| MB-05 | Static fields (Mağaza adı, Hedef kitle) | Prompt hazır | MB-04 | 2 read-only field: primary-50 + neutral-50. |
-| MB-06 | Marka tonu radio group (3 chip) | Prompt hazır | MB-04 | 3 chip (samimi/profesyonel/premium). `role="radiogroup"`, `aria-checked`. Arrow Left/Right. Default: samimi. |
-| MB-07 | OutputPreview + fade animation | Prompt hazır | MB-06 | neutral-50 bg. Accent eyebrow "AI çıktısı — {tone} tonda". 300ms fade+slide-up on tone change. `aria-live="polite"`. |
-| MB-08 | Hint text | Prompt hazır | MB-07 | "Tonu değiştir, AI çıktısının nasıl değiştiğini gör" — italic, gri, ortalı. |
-| MB-09 | Mobile responsive pass | Prompt hazır | MB-08 | Mobile: tek kolon (sol önce sağ sonra). Desktop: 2 kolon. flex-wrap tone chips. |
-| MB-10 | A11y pass | Prompt hazır | MB-09 | radiogroup ARIA + roving tabindex. focus-visible. `prefers-reduced-motion`. WCAG AA. |
+| MB-01 | Constants (`lib/constants/marka-bilgileri.ts`) | ✅ Tamam | DS-01 | BRAND_FEATURES (4 item), TONE_CHIPS (samimi/profesyonel/premium + çıktı metinleri), BRAND_FORM_FIELDS. |
+| MB-02 | Section scaffold + grid + bg | ✅ Tamam | DS-07, MB-01 | `components/sections/MarkaBilgileriSection.tsx`. bg-neutral-50. 2 kolon grid. |
+| MB-03 | LeftColumn (eyebrow + heading + features + CTA) | ✅ Tamam | MB-02 | Accent Sparkles eyebrow "Yeni özellik". Heading. 4 feature item (icon box + title + desc). CTA link. |
+| MB-04 | BrandFormPreview card scaffold | ✅ Tamam | MB-02 | BrandFormPreview aynı dosyada. white bg, border. Header "Marka Profili" + yeşil "Aktif" badge. |
+| MB-05 | Static fields (Mağaza adı, Hedef kitle) | ✅ Tamam | MB-04 | 2 read-only field: primary-50 + neutral-50. |
+| MB-06 | Marka tonu radio group (3 chip) | ✅ Tamam | MB-04 | 3 chip (samimi/profesyonel/premium). `role="radiogroup"`, `aria-checked`. Arrow Left/Right. Default: samimi. |
+| MB-07 | OutputPreview + fade animation | ✅ Tamam | MB-06 | neutral-50 bg. Accent eyebrow "AI çıktısı — {tone} tonda". 300ms fade+slide-up on tone change. `aria-live="polite"`. |
+| MB-08 | Hint text | ✅ Tamam | MB-07 | "Tonu değiştir, AI çıktısının nasıl değiştiğini gör" — italic, gri, ortalı. |
+| MB-09 | Mobile responsive pass | ✅ Tamam | MB-08 | Mobile: tek kolon (sol önce sağ sonra). Desktop: 2 kolon. flex-wrap tone chips. |
+| MB-10 | A11y pass | ✅ Tamam | MB-09 | radiogroup ARIA + roving tabindex. focus-visible. `prefers-reduced-motion`. WCAG AA. |
 | MB-11 | Acceptance review | Bekliyor | MB-10 | Aziz preview kontrolü. 3 ton test. |
 
 #### MB-01~10 Detaylı Prompt (Claude Code bu bölümü okuyacak)
@@ -1192,7 +1192,4 @@ Hero → UcAdim → IcerikTurleri → Pazaryeri → MarkaBilgileri
 | U-18 | Mobile responsive sweep | Bekliyor | U-01~U-17 | Sticky bar, formlar, collapsible, tooltip — hepsi mobile'da sorunsuz. 375px'te overflow yok. |
 | U-19 | A11y audit | Bekliyor | U-18 | Radio group ARIA, tooltip ARIA, focus management, WCAG AA kontrast. |
 | U-20 | Lighthouse pass | Bekliyor | U-19 | Performance >90, CLS <0.05, a11y >90. |
-| U-21 | Aziz acceptance review | Bekliyor | U-20 | Aziz preview URL'de 5 iyileştirmeyi kontrol eder. |
-
-**Bağımlılık özeti:**
-- U-01 he
+| U-21 | Aziz 
