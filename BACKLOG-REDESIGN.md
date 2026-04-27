@@ -894,7 +894,8 @@ import SSSSection from '@/components/sections/SSSSection'
 | FC-04 | (Opsiyonel) Background pattern | ✅ Tamam | FC-02 | Subtle dot pattern veya radial glow. |
 | FC-05 | Mobile responsive + a11y | ✅ Tamam | FC-03 | Mobile: CTA full width. Focus-visible. Semantic h2. |
 | FC-06 | Acceptance review | Bekliyor | FC-05 | Aziz preview kontrolü. |
-| FC-FIX-01 | `--color-rd-primary-600` token eksikliği + FC render | ✅ Tamam | FC-05 | globals.css'te `--color-rd-primary-600: #2563EB;` (Tailwind blue-600) tanımı eklenecek. Sıra: 500 → **600** → 700. FinalCTASection gradient'i bu sayede render olacak. Preview'da SSS sonrası mavi gradient bg + büyük H1 "İlk 3 kredi hediye" + beyaz CTA görünür. |
+| FC-FIX-01 | `--color-rd-primary-600` token eksikliği + FC render | ✅ Tamam | FC-05 | globals.css'te `--color-rd-primary-600: #2563EB;` (Tailwind blue-600) tanımı eklendi (satır 24). Sıra: 500 → **600** → 700. |
+| FC-FIX-02 | FC gradient hâlâ render olmuyor — `-z-10` stacking context bug | Bekliyor | FC-FIX-01 | Token tanımlı, kod sağlam ama gradient görünmüyor. Sebep: gradient div'leri `-z-10` ile parent'ın stacking context'i içinde geri itiliyor, beyaz arka plan üstüne çıkamıyor. Fix: gradient'i child div'den çıkar, section element'inin kendi `style` prop'una taşı. Radial glow için tek overlay div (pointer-events-none, opacity-30, absolute inset-0, z-index DEĞİŞTİRME). İçerik wrapper `relative` olsun. Preview'da SSS sonrası mavi gradient + H1 "İlk 3 kredi hediye" + beyaz CTA görünür. |
 | FY-FIX-02 | (kontrol) Popüler rozeti hâlâ render oluyor mu | Bekliyor | FY-FIX-01 | Aziz screenshot'ında orta paket üstünde "En popüler" rozeti görünmüyor olabilir. Önce Aziz scroll ile doğrulayacak; gerçekten yoksa Claude Code rozet bloğunun (FiyatlarSection.tsx satır 135-141) hâlâ render olduğunu doğrulasın. |
 
 **Durum:** Prompt hazır — Claude Code'a verilebilir.
@@ -1073,15 +1074,15 @@ import FinalCTASection from '@/components/sections/FinalCTASection'
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| FT-01 | Constants (`lib/constants/footer.ts`) | Prompt hazır | DS-01 | FOOTER_BRAND, FOOTER_COLUMNS (3 sütun: Ürün/Şirket/Yasal), FOOTER_DISCLAIMER, COMPANY_INFO. |
-| FT-02 | Footer scaffold + grid | Prompt hazır | FT-01 | `components/sections/Footer.tsx`. bg-slate-50, border-top. 4 kolon grid. |
-| FT-03 | BrandColumn | Prompt hazır | FT-02 | Logo (Manrope 800) + tagline + lokasyon (Lucide MapPin, bayrak emojisi yerine). |
-| FT-04 | Link columns (3 sütun) | Prompt hazır | FT-02 | Ürün, Şirket, Yasal. Title uppercase. Links hover primary-700. Email mailto. |
-| FT-05 | FooterMid (copyright + badges) | Prompt hazır | FT-02 | Copyright sol, iyzico + SSL badge sağ. |
-| FT-06 | FooterDisclaimer | Prompt hazır | FT-02 | 12px italic slate-500, max-w 800px. Pazaryeri isimleri hakkında yasal not. |
-| FT-07 | iyzico + SSL badge asset | Prompt hazır | FT-05 | PNG/SVG asset public/ altına. Aziz'den asset gelecek. |
-| FT-08 | Mobile responsive | Prompt hazır | FT-06 | Mobile: 1 kolon. FooterMid dikey. |
-| FT-09 | A11y (semantic `<footer>`) | Prompt hazır | FT-08 | `<footer>` tag. Link labels. WCAG AA. |
+| FT-01 | Constants (`lib/constants/footer.ts`) | ✅ Tamam | DS-01 | FOOTER_BRAND, FOOTER_COLUMNS (3 sütun: Ürün/Şirket/Yasal), FOOTER_DISCLAIMER, COMPANY_INFO. |
+| FT-02 | Footer scaffold + grid | ✅ Tamam | FT-01 | `components/sections/Footer.tsx`. bg-slate-50, border-top. 4 kolon grid. |
+| FT-03 | BrandColumn | ✅ Tamam | FT-02 | Logo (Manrope 800) + tagline + lokasyon (Lucide MapPin, bayrak emojisi yerine). |
+| FT-04 | Link columns (3 sütun) | ✅ Tamam | FT-02 | Ürün, Şirket, Yasal. Title uppercase. Links hover primary-700. Email mailto. |
+| FT-05 | FooterMid (copyright + badges) | ✅ Tamam | FT-02 | Copyright sol, iyzico + SSL badge sağ. |
+| FT-06 | FooterDisclaimer | ✅ Tamam | FT-02 | 12px italic slate-500, max-w 800px. Pazaryeri isimleri hakkında yasal not. |
+| FT-07 | iyzico + SSL badge asset | ✅ Tamam | FT-05 | PNG/SVG asset public/ altına. Aziz'den asset gelecek. |
+| FT-08 | Mobile responsive | ✅ Tamam | FT-06 | Mobile: 1 kolon. FooterMid dikey. |
+| FT-09 | A11y (semantic `<footer>`) | ✅ Tamam | FT-08 | `<footer>` tag. Link labels. WCAG AA. |
 | FT-10 | Acceptance review | Bekliyor | FT-09 | Aziz preview kontrolü. |
 
 **Durum:** Prompt hazır — Claude Code'a verilebilir.
