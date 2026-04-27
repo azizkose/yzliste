@@ -700,7 +700,7 @@ StepCard'da: `className={cn("flex flex-col items-center text-center", \`animate-
 | MB-08 | Hint text | ✅ Tamam | MB-07 | "Tonu değiştir, AI çıktısının nasıl değiştiğini gör" — italic, gri, ortalı. |
 | MB-09 | Mobile responsive pass | ✅ Tamam | MB-08 | Mobile: tek kolon (sol önce sağ sonra). Desktop: 2 kolon. flex-wrap tone chips. |
 | MB-10 | A11y pass | ✅ Tamam | MB-09 | radiogroup ARIA + roving tabindex. focus-visible. `prefers-reduced-motion`. WCAG AA. |
-| MB-11 | Acceptance review | Bekliyor | MB-10 | Aziz preview kontrolü. 3 ton test. |
+| MB-11 | Acceptance review | ✅ Tamam | MB-10 | Aziz onayladı (27 Nisan 2026). Build OK, rd-* token, emoji yok, responsive OK. Commit 4ef11f5. |
 
 #### MB-01~10 Detaylı Prompt (Claude Code bu bölümü okuyacak)
 
@@ -1003,15 +1003,265 @@ Hero → UcAdim → IcerikTurleri → Pazaryeri → MarkaBilgileri
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| NY-01 | Constants (`lib/constants/neden-yzliste.ts`) | Bekliyor | DS-01 | NEDEN_YZLISTE_COMPARISONS (6 satır: generic vs yzliste), NEDEN_YZLISTE_FOOTNOTE. |
-| NY-02 | Section scaffold + SectionHeader | Bekliyor | DS-07, NY-01 | `components/sections/NedenYzlisteSection.tsx`. bg-white. Container max-w 900px. Eyebrow "NEDEN YZLISTE". H2 provokatif başlık. Subtitle. |
-| NY-03 | ComparisonTable (semantic `<table>`) | Bekliyor | NY-02 | `<table>` + `<thead>` + `<tbody>`. `aria-label`. border + radius 16px + shadow. overflow hidden. |
-| NY-04 | Table headers (Generic + yzliste) | Bekliyor | NY-03 | Generic: slate-50 bg, "GENEL AI ARAÇLARI" eyebrow, "ChatGPT · Claude · Gemini". yzliste: primary-50 bg, "YZLISTE" eyebrow, "E-ticaret için özel inşa edildi". |
-| NY-05 | ComparisonRow (6 satır) | Bekliyor | NY-03 | Generic cell: ❌ kırmızı yuvarlak + slate-500 metin. yzliste cell: ✓ yeşil yuvarlak + slate-900 metin + `#FAFCFF` bg tint. Ince border arası. |
-| NY-06 | Footnote | Bekliyor | NY-02 | italic gri yazı, ortalı. "ChatGPT ve Claude harika asistanlardır..." |
-| NY-07 | Mobile responsive pass | Bekliyor | NY-05 | Mobile: dikey karşılaştırma (her satır içinde alt alta). border-right kaldırılır. Desktop: 2 kolon tablo. |
-| NY-08 | A11y pass | Bekliyor | NY-07 | Semantic `<table>`, `scope="col"`. Icon'lar `aria-hidden`. WCAG AA kontrast. |
-| NY-09 | Acceptance review | Bekliyor | NY-08 | Aziz preview kontrolü. |
+| NY-01 | Constants (`lib/constants/neden-yzliste.ts`) | ✅ Tamam | DS-01 | NEDEN_HEADER, COMPARISONS (6 satır), FOOTNOTE. |
+| NY-02 | Section scaffold + SectionHeader | ✅ Tamam | DS-07, NY-01 | `components/sections/NedenYzlisteSection.tsx`. bg-white. max-w 900px. |
+| NY-03 | ComparisonTable (semantic `<table>`) | ✅ Tamam | NY-02 | Semantic table, border, rounded-xl, overflow hidden. |
+| NY-04 | Table headers (Generic + yzliste) | ✅ Tamam | NY-03 | 2 kolon header: neutral-100 vs primary-50. |
+| NY-05 | ComparisonRow (6 satır) | ✅ Tamam | NY-03 | X (kirmizi) vs Check (yesil) Lucide ikon. |
+| NY-06 | Footnote | ✅ Tamam | NY-02 | italic, gri, ortalı. |
+| NY-07 | Mobile responsive + a11y | ✅ Tamam | NY-05, NY-06 | Mobilde kart layout, semantic table, scope, aria-hidden, WCAG AA. |
+| NY-08 | Acceptance review | Bekliyor | NY-07 | Aziz preview kontrolü. |
+
+#### NY-01~07 Detaylı Prompt (Claude Code bu bölümü okuyacak)
+
+**Genel bilgi:** "Neden yzliste?" bölümü — genel AI araçları (ChatGPT, Claude, Gemini) ile yzliste'yi karşılaştıran tablo. 6 satırlık özellik karşılaştırması. Genel araçlar "yapamaz" (X), yzliste "yapar" (Check).
+
+**Branch:** `claude/redesign-modern-ui`
+
+---
+
+##### NY-01: Constants dosyası
+
+Dosya: `lib/constants/neden-yzliste.ts`
+
+```ts
+import type { LucideIcon } from "lucide-react";
+
+export const NEDEN_HEADER = {
+  eyebrow: "Neden yzliste",
+  eyebrowColor: "primary" as const,
+  title: "Genel AI araçlarıyla aynı şey değil",
+  subtitle: "ChatGPT, Claude ve Gemini genel amaçlı asistanlardır. yzliste e-ticaret için özel inşa edildi.",
+};
+
+export interface ComparisonRow {
+  feature: string;
+  generic: string;
+  yzliste: string;
+}
+
+export const NEDEN_COMPARISONS: ComparisonRow[] = [
+  {
+    feature: "Pazaryeri uyumlu metin",
+    generic: "Genel metin, format uyumsuz",
+    yzliste: "Trendyol, Hepsiburada, Amazon formatında",
+  },
+  {
+    feature: "SEO optimizasyonu",
+    generic: "Anahtar kelime bilmez",
+    yzliste: "Pazaryeri arama algoritmasına uygun",
+  },
+  {
+    feature: "Ürün görseli",
+    generic: "Görsel üretemez veya düşük kalite",
+    yzliste: "Arka plan kaldırma, stüdyo çekim, manken giydirme",
+  },
+  {
+    feature: "Ürün videosu",
+    generic: "Video üretemez",
+    yzliste: "AI ile ürün tanıtım videosu",
+  },
+  {
+    feature: "Marka tonu",
+    generic: "Her seferinde yeniden anlat",
+    yzliste: "Profilde bir kez belirle, her üretimde uygulansın",
+  },
+  {
+    feature: "Toplu üretim",
+    generic: "Tek tek kopyala yapıştır",
+    yzliste: "Excel yükle, yüzlerce ürünü tek seferde üret",
+  },
+];
+
+export const NEDEN_TABLE_HEADERS = {
+  generic: {
+    eyebrow: "Genel AI araçları",
+    subtitle: "ChatGPT, Claude, Gemini",
+  },
+  yzliste: {
+    eyebrow: "yzliste",
+    subtitle: "E-ticaret için özel inşa edildi",
+  },
+};
+
+export const NEDEN_FOOTNOTE = "ChatGPT, Claude ve Gemini harika genel amaçlı asistanlardır. Ancak e-ticaret listing'i üretmek için tasarlanmamışlardır. yzliste bu ihtiyaç için sıfırdan inşa edildi.";
+```
+
+---
+
+##### NY-02: Section scaffold + SectionHeader
+
+Dosya: `components/sections/NedenYzlisteSection.tsx`
+
+- Server component (interaktif state yok — `'use client'` gerekmez)
+- Section: `bg-white py-16 md:py-20 lg:py-28`
+- Container: `max-w-4xl mx-auto px-4 sm:px-6 lg:px-8`
+- `<SectionHeader>` primitive kullan:
+  ```tsx
+  <SectionHeader
+    eyebrow={NEDEN_HEADER.eyebrow}
+    eyebrowColor="primary"
+    title={NEDEN_HEADER.title}
+    subtitle={NEDEN_HEADER.subtitle}
+    maxWidth="700px"
+  />
+  ```
+
+---
+
+##### NY-03 + NY-04 + NY-05: ComparisonTable
+
+Tablo, SectionHeader'dan sonra. Tüm bileşenler aynı dosyada (ayrı component gerekmez, inline yeterli).
+
+**Desktop layout (md ve üstü):** Semantic `<table>`.
+
+```tsx
+<div className="mt-12 overflow-hidden rounded-xl border border-rd-neutral-200">
+  <table className="w-full" aria-label="yzliste ve genel AI araçları karşılaştırması">
+    <thead>
+      <tr>
+        <th scope="col" className="w-[28%] bg-white px-5 py-4 text-left text-xs font-medium text-rd-neutral-500 uppercase tracking-wider border-b border-rd-neutral-200">
+          Özellik
+        </th>
+        <th scope="col" className="w-[36%] bg-rd-neutral-100 px-5 py-4 text-left border-b border-rd-neutral-200">
+          <p className="text-xs font-medium text-rd-neutral-500 uppercase tracking-wider">{NEDEN_TABLE_HEADERS.generic.eyebrow}</p>
+          <p className="text-xs text-rd-neutral-400 mt-0.5">{NEDEN_TABLE_HEADERS.generic.subtitle}</p>
+        </th>
+        <th scope="col" className="w-[36%] bg-rd-primary-50 px-5 py-4 text-left border-b border-rd-neutral-200">
+          <p className="text-xs font-medium text-rd-primary uppercase tracking-wider">{NEDEN_TABLE_HEADERS.yzliste.eyebrow}</p>
+          <p className="text-xs text-rd-primary-700 mt-0.5">{NEDEN_TABLE_HEADERS.yzliste.subtitle}</p>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {NEDEN_COMPARISONS.map((row, i) => (
+        <tr key={i} className={i < NEDEN_COMPARISONS.length - 1 ? "border-b border-rd-neutral-100" : ""}>
+          <td className="px-5 py-4 text-sm font-medium text-rd-neutral-900">{row.feature}</td>
+          <td className="bg-rd-neutral-50/50 px-5 py-4">
+            <div className="flex items-start gap-2.5">
+              <span className="mt-0.5 w-5 h-5 rounded-full bg-red-100 flex items-center justify-center shrink-0" aria-hidden="true">
+                <X size={12} strokeWidth={2.5} className="text-red-500" />
+              </span>
+              <span className="text-sm text-rd-neutral-500">{row.generic}</span>
+            </div>
+          </td>
+          <td className="bg-[#FAFCFF] px-5 py-4">
+            <div className="flex items-start gap-2.5">
+              <span className="mt-0.5 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0" aria-hidden="true">
+                <Check size={12} strokeWidth={2.5} className="text-emerald-600" />
+              </span>
+              <span className="text-sm text-rd-neutral-900">{row.yzliste}</span>
+            </div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+```
+
+**CRITICAL:** `X` ve `Check` Lucide icon'dan import. ASLA emoji kullanma (ne ❌ ne ✓ ne ✅).
+
+Lucide import: `import { X, Check } from "lucide-react"`
+
+---
+
+##### NY-06: Footnote
+
+Tablodan sonra:
+
+```tsx
+<p className="mt-8 text-center text-sm text-rd-neutral-500 italic max-w-2xl mx-auto leading-relaxed">
+  {NEDEN_FOOTNOTE}
+</p>
+```
+
+---
+
+##### NY-07: Mobile responsive + a11y (tek geçiş)
+
+**Responsive (mobil alternatif — CRITICAL):**
+
+Mobilde `<table>` layout kötü görünür — satırlar çok dar, metin sarılır. Bunun yerine **mobilde kart tabanlı layout**, desktop'ta tablo göster:
+
+```tsx
+{/* Desktop: table (md ve üstü) */}
+<div className="hidden md:block mt-12 overflow-hidden rounded-xl border border-rd-neutral-200">
+  <table ...> {/* yukarıdaki tablo */} </table>
+</div>
+
+{/* Mobile: card layout (md altı) */}
+<div className="md:hidden mt-10 space-y-4">
+  {NEDEN_COMPARISONS.map((row, i) => (
+    <div key={i} className="rounded-xl border border-rd-neutral-200 overflow-hidden">
+      <div className="bg-rd-neutral-50 px-4 py-3 border-b border-rd-neutral-100">
+        <p className="text-sm font-medium text-rd-neutral-900">{row.feature}</p>
+      </div>
+      <div className="divide-y divide-rd-neutral-100">
+        <div className="px-4 py-3 flex items-start gap-2.5">
+          <span className="mt-0.5 w-5 h-5 rounded-full bg-red-100 flex items-center justify-center shrink-0" aria-hidden="true">
+            <X size={12} strokeWidth={2.5} className="text-red-500" />
+          </span>
+          <div>
+            <p className="text-xs text-rd-neutral-400 mb-0.5">Genel AI</p>
+            <p className="text-sm text-rd-neutral-500">{row.generic}</p>
+          </div>
+        </div>
+        <div className="px-4 py-3 bg-[#FAFCFF] flex items-start gap-2.5">
+          <span className="mt-0.5 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0" aria-hidden="true">
+            <Check size={12} strokeWidth={2.5} className="text-emerald-600" />
+          </span>
+          <div>
+            <p className="text-xs text-rd-primary mb-0.5">yzliste</p>
+            <p className="text-sm text-rd-neutral-900">{row.yzliste}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+```
+
+**A11y:**
+- Desktop table: `aria-label`, `scope="col"` her `<th>`'de ✓
+- Icon'lar: `aria-hidden="true"` ✓
+- Mobil kartlar: her kart semantik `<div>`, label metin zaten görünür
+- Renk kontrastı: rd-neutral-500 on white = 6.2:1, red-500 on red-100 ✓, emerald-600 on emerald-100 ✓
+- Section: `aria-label="Neden yzliste"` ekle
+
+---
+
+**Dosya listesi:**
+
+| Dosya | İşlem |
+|-------|-------|
+| `lib/constants/neden-yzliste.ts` | YENİ |
+| `components/sections/NedenYzlisteSection.tsx` | YENİ (server component, table + mobile cards aynı dosyada) |
+| `app/_tanitim-redesign.tsx` | GÜNCELLE (import + MarkaBilgileri'den sonra NedenYzlisteSection ekle) |
+
+**Sıra `_tanitim-redesign.tsx`'te:**
+```
+Hero → UcAdim → IcerikTurleri → Pazaryeri → MarkaBilgileri → NedenYzliste
+```
+
+**Kabul kontrol listesi (NY-01~07 topluca):**
+
+- [ ] Constants dosyası: header, 6 karşılaştırma satırı, tablo başlıkları, footnote
+- [ ] SectionHeader: "Neden yzliste" eyebrow, provokatif h2, subtitle
+- [ ] Desktop (md+): semantic `<table>`, 3 kolon (özellik / genel AI / yzliste)
+- [ ] Tablo header: neutral-100 bg (genel) vs primary-50 bg (yzliste)
+- [ ] 6 satır: X (kırmızı circle) + metin vs Check (yeşil circle) + metin
+- [ ] yzliste kolonu `#FAFCFF` bg tint
+- [ ] Mobil (md altı): kart tabanlı layout, her özellik ayrı kart
+- [ ] Footnote: italic, gri, ortalı
+- [ ] Lucide X ve Check — ASLA emoji
+- [ ] `aria-label`, `scope="col"`, `aria-hidden` icon'larda
+- [ ] `_tanitim-redesign.tsx`'e MarkaBilgileri'den sonra ekli
+- [ ] `npm run build` hatasız
+- [ ] Emoji YOK
+- [ ] Commit: `feat: NY-01~07 neden yzliste karşılaştırma bölümü`
+
+---
 
 ### Fiyatlar Bölümü — Bölüm 07
 
