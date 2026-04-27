@@ -109,106 +109,7 @@ Amaç: Mevcut canlı siteyi koruyarak, ayrı branch'te modern UI redesign çalı
 | HR-14 | Gerçek screenshot entegrasyonu | Bekliyor | HR-07 | Aziz onayı sonrası: gerçek `/uret` sayfası screenshot'ı mockup'a yerleştirilir. |
 | HR-15 | Acceptance review | Bekliyor | HR-13 | Aziz preview'da kontrol. Nav sticky çalışıyor, H1 doğru, CTA'lar fonksiyonel, responsive tam. |
 
-#### HR-11~13 Detaylı Prompt (Claude Code bu bölümü okuyacak)
-
-**Branch:** `claude/redesign-modern-ui` · **Commit:** tek commit `feat: HR-11~13 responsive + a11y + perf pass`
-
----
-
-##### HR-11: Mobile Responsive Pass
-
-Dosyalar: HeroSection.tsx, HeroContent.tsx, AppScreenshotMockup.tsx, Nav.tsx, VideoModal.tsx
-
-**HeroSection.tsx:**
-- Grid: `grid-cols-1 lg:grid-cols-[1.05fr_1fr]` (zaten var — doğrula)
-- Mobilde sıra: `flex-col-reverse lg:grid` YAPMA — mevcut grid-cols-1 zaten mobilde content üst, visual alt sırasıyla çalışıyor (DOM sırası: HeroContent önce, AppScreenshotMockup sonra). Bu doğru.
-
-**HeroContent.tsx:**
-- H1: `clamp(40px, 5.5vw, 64px)` zaten responsive. Ek class gerekmez.
-- Trust pills: Mobilde (< 640px) wrap ediyor (`flex-wrap` zaten var). Eğer 4 pill tek satıra sığmıyorsa sorun yok, flex-wrap halleder.
-- CTA group: `flex-wrap` zaten var. Mobilde dikey olması için `flex-col sm:flex-row` yap. Ghost buton da dahil.
-  ```diff
-  - <div className="mb-5 flex flex-wrap items-center gap-3">
-  + <div className="mb-5 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-  ```
-- Primary CTA: Mobilde full width → Link wrapper'a `className="w-full sm:w-auto"` ekle, Button'a `fullWidth` prop'u EKLEME (sm:w-auto ile çözülmüyor). Bunun yerine:
-  ```diff
-  - <Link href={NAV_CTAS.primary.href} tabIndex={-1}>
-  + <Link href={NAV_CTAS.primary.href} tabIndex={-1} className="w-full sm:w-auto">
-  ```
-  Ve Button'a `className="w-full sm:w-auto"` ekle.
-- Ghost CTA: Mobilde ortalanması için `justify-center` ekle (zaten `inline-flex items-center` var, `justify-center` ekle).
-
-**AppScreenshotMockup.tsx:**
-- StickerBadge'ler: Mobilde (< 640px) taşma riski. `sm:absolute` yaparak mobilde static, desktop'ta absolute konumlandır:
-  ```
-  topRight:  "hidden sm:flex sm:absolute sm:-top-3 sm:right-5 z-10"
-  bottomLeft: "hidden sm:flex sm:absolute sm:-bottom-3 sm:-left-3 z-10"
-  ```
-  Mobilde badge'ler gizlenir (ekran zaten küçük, mockup'ın üstünden taşmasın). Desktop'ta gösterilir.
-- Browser chrome text: `.text-[11px]` zaten küçük, değişiklik gerekmez.
-
-**VideoModal.tsx:**
-- Mobilde `p-4` padding zaten var. `max-w-[800px]` mobilde doğal olarak ekrana sığar. OK.
-
-**Nav.tsx:**
-- Zaten mobile hamburger var (HR-04'te yapıldı). Doğrula: `md:hidden` hamburger, `md:flex` desktop nav.
-
----
-
-##### HR-12: A11y Pass
-
-Tüm HeroBlock dosyalarını tara, eksik varsa ekle:
-
-| Kontrol | Beklenen | Dosya |
-|---------|----------|-------|
-| H1 tek | Sayfada tek `<h1>` var (HeroContent'te) | HeroContent.tsx |
-| Nav landmark | `<nav>` etiketi | Nav.tsx (zaten var) |
-| StickerBadge decorative | `aria-hidden="true"` badge'lerin wrapper'ına | AppScreenshotMockup.tsx |
-| Pulse dot | `aria-hidden="true"` | HeroContent.tsx (zaten var) |
-| CTA focus-visible | `focus-visible:ring-2 focus-visible:ring-rd-primary-500 focus-visible:ring-offset-2` — Button primitive'de zaten var mı kontrol et. Ghost buton'da yoksa ekle. | HeroContent.tsx |
-| Screenshot alt | `role="img" aria-label="Uygulama önizlemesi"` | AppScreenshotMockup.tsx (zaten var) |
-| VideoModal | `role="dialog" aria-modal="true" aria-label` | VideoModal.tsx (zaten var) |
-| Tab order | Modal açıkken arka plan tabbable olmamalı — `inert` attribute veya focus trap | VideoModal.tsx — `inert` HTML attribute'ü `<main>`'e eklemek yerine, mevcut Escape + backdrop yeterli. İyileştirme: modal dışındaki tüm focusable öğeleri `tabIndex={-1}` yapmak fazla karmaşık. Şimdilik mevcut hali kabul. |
-| Color contrast | Tüm text renkleri en az 4.5:1 oranında — `text-slate-500` (#64748B) on white = 4.6:1 ✓, `text-slate-600` on white = 5.7:1 ✓. `text-white/60` on bg-black/60 → kontrol et, düşükse `text-white/80` yap. |
-| Ghost CTA focus | Ghost buton'a `focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rd-primary-500` ekle |
-
-**StickerBadge a11y:** Her badge'e `aria-hidden="true"` EKLEME — içeriği (metin) bilgi taşıyor. Bunun yerine badge'ler olduğu gibi kalsın (screen reader label + metin okuyacak). Ama ikon'a `aria-hidden="true"` ekle (ikon zaten dekoratif).
-
----
-
-##### HR-13: Performance Pass
-
-Hedefler: LCP < 2.5s, CLS < 0.05, Lighthouse > 90
-
-| Kontrol | Aksiyon |
-|---------|---------|
-| CLS: StickerBadge | Badge'ler absolute → layout shift yok ✓ |
-| CLS: Float-in | `opacity: 0` başlangıç → CLS riski. `both` fill mode ile `animation-fill-mode: backwards` eşdeğer — element animasyon başlamadan opacity 0'da. **Sorun yok** çünkü hero ilk render'da zaten görünür alanda, browser animasyonu çok hızlı başlatıyor. |
-| CLS: Font | Manrope + Inter `next/font` ile yükleniyor → `font-display: swap` otomatik → küçük FOUT olabilir ama CLS açısından önemsiz (text reflow minimal). |
-| LCP target | H1 text veya hero görseli LCP olacak. H1 text = anında render (server component DEĞİL artık, 'use client' var). İyileştirme: HeroContent SSR olabilirdi ama `useState` var (VideoModal). Şimdilik OK. |
-| VideoModal lazy | Modal kodu `isOpen` false iken `return null` yapıyor → zaten lazy render. Import ise tree-shake OLMAZ. İyileştirme: `dynamic(() => import('./VideoModal'))` ile lazy import yap. `ssr: false` ekle: |
-| | `const VideoModal = dynamic(() => import('./VideoModal'), { ssr: false })` |
-| | Bu sayede modal JS'i sadece gerektiğinde yüklenir. HeroContent'te `import dynamic from 'next/dynamic'` ekle, eski `import VideoModal` kaldır. |
-| Image | Hero'da gerçek görsel yok (placeholder). HR-14'te eklenecek — o zaman `priority` + `sizes` eklenecek. Şimdilik N/A. |
-| Bundle | StickerBadge küçük component (~30 satır). Ek chunk gerekmez. |
-
-**Yapılacak tek şey:** VideoModal'ı dynamic import'a çevir.
-
----
-
-**Kabul kontrol listesi (HR-11~13 topluca):**
-
-- [ ] CTA group mobilde dikey (`flex-col sm:flex-row`)
-- [ ] Primary CTA mobilde full width
-- [ ] Ghost CTA'da `justify-center`
-- [ ] StickerBadge mobilde gizli (`hidden sm:flex sm:absolute`)
-- [ ] Ghost buton'da focus-visible ring var
-- [ ] VideoModal'daki `text-white/60` kontrast kontrolü (düşükse /80 yap)
-- [ ] VideoModal dynamic import (`next/dynamic`, `ssr: false`)
-- [ ] `npm run build` hatasız
-- [ ] Emoji yok
-- [ ] Mevcut fonksiyonalite korunmuş
+> Prompt arşivlendi → `BACKLOG-REDESIGN-ARCHIVE.md`
 
 ---
 
@@ -227,462 +128,7 @@ Hedefler: LCP < 2.5s, CLS < 0.05, Lighthouse > 90
 | UA-09 | Mobile responsive + a11y pass | ✅ Tamam | UA-07, UA-08 | md: breakpoint (lg→md), NumberCircle aria-hidden+rd-primary-200 border, mockup role="img" taşındı, max-w-[280px] mx-auto, stagger fade-in (globals.css), prefers-reduced-motion. |
 | UA-10 | Acceptance review | ✅ Tamam | UA-09 ✅ | Aziz onayladı (27 Nisan 2026). md breakpoint, a11y, responsive, build OK. |
 
-#### UA-01~08 Detaylı Prompt (Claude Code bu bölümü okuyacak)
-
-**Branch:** `claude/redesign-modern-ui` · **Commit önerisi:** `feat: UA-01~08 3 adımda hazır bölümü`
-
-Mevcut pattern'ı takip et: `lib/constants/` → data, `components/sections/` → section component, primitive'ler `components/primitives/`'den import.
-
----
-
-##### UA-01: Constants — `lib/constants/uc-adim.ts`
-
-```ts
-// UA-01 — 3 Adımda Hazır Bölümü Data
-// Emoji YASAK: tüm ikonlar Lucide string referansı
-
-export const UC_ADIM_HEADER = {
-  eyebrow: 'Kolay kullanım',
-  title: '3 adımda hazır',
-  subtitle: 'Ürün fotoğrafını yükle, platform ve içerik türünü seç — gerisini AI halleder.',
-} as const
-
-export interface UcAdimStep {
-  number: number
-  title: string
-  description: string
-  duration: string
-  icon: string // Lucide icon name
-}
-
-export const UC_ADIM_STEPS: UcAdimStep[] = [
-  {
-    number: 1,
-    title: 'Ürünü yükle',
-    description: 'Fotoğraf çek, galeri seç veya barkod tara.',
-    duration: '~5 saniye',
-    icon: 'Upload',
-  },
-  {
-    number: 2,
-    title: 'Seçimini yap',
-    description: 'Platform ve içerik türünü belirle.',
-    duration: '~5 saniye',
-    icon: 'Settings2',
-  },
-  {
-    number: 3,
-    title: 'İçeriğini al',
-    description: 'AI listing metni, görsel, video ve sosyal içerik üretir.',
-    duration: '~20 saniye',
-    icon: 'Sparkles',
-  },
-]
-
-export const UC_ADIM_TOTAL = {
-  label: 'Ortalama tamamlama',
-  duration: '30 saniye',
-} as const
-
-// Step 1 mockup data
-export const STEP1_INPUT_METHODS = [
-  { icon: 'Camera', label: 'Fotoğraf çek', active: true },
-  { icon: 'Image', label: 'Galeriden seç', active: false },
-  { icon: 'ScanLine', label: 'Barkod tara', active: false },
-] as const
-
-// Step 2 mockup data
-export const STEP2_PLATFORMS = [
-  { label: 'Trendyol', selected: true, color: '#F27A1A' },
-  { label: 'Amazon', selected: true, color: '#FF9900' },
-  { label: 'Hepsiburada', selected: false, color: '#4A90D9' },
-  { label: 'N11', selected: false, color: '#7B2BFC' },
-] as const
-
-export const STEP2_CONTENT_TYPES = [
-  { icon: 'FileText', label: 'Metin', selected: true, color: '#1E40AF' },
-  { icon: 'Image', label: 'Görsel', selected: true, color: '#7C3AED' },
-  { icon: 'Video', label: 'Video', selected: false, color: '#DC2626' },
-  { icon: 'Share2', label: 'Sosyal', selected: false, color: '#059669' },
-] as const
-
-// Step 3 mockup data
-export const STEP3_OUTPUTS = [
-  { icon: 'FileText', label: 'Trendyol listing metni', status: 'Hazır' },
-  { icon: 'Image', label: 'Amazon ürün görseli', status: 'Hazır' },
-] as const
-
-export const STEP3_MORE_COUNT = 2 // "ve 2 tane daha..."
-```
-
----
-
-##### UA-02: Section — `components/sections/UcAdimSection.tsx`
-
-Ana wrapper. `_tanitim-redesign.tsx`'e HeroSection'dan SONRA, IcerikTurleri'nden ÖNCE eklenir.
-
-```tsx
-import SectionHeader from '@/components/primitives/SectionHeader'
-import { UC_ADIM_HEADER, UC_ADIM_STEPS, UC_ADIM_TOTAL } from '@/lib/constants/uc-adim'
-// ... diğer importlar
-
-export default function UcAdimSection() {
-  return (
-    <section className="bg-white py-16 md:py-20 lg:py-24 px-6" aria-label="Nasıl çalışır">
-      <div className="mx-auto max-w-[1200px]">
-        <SectionHeader
-          eyebrow={UC_ADIM_HEADER.eyebrow}
-          title={UC_ADIM_HEADER.title}
-          subtitle={UC_ADIM_HEADER.subtitle}
-        />
-
-        {/* 3 kolon grid — step kartları */}
-        <div className="relative grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
-          {/* ConnectorLine buraya (UA-07) */}
-          {UC_ADIM_STEPS.map((step, i) => (
-            <StepCard key={step.number} step={step} index={i} />
-          ))}
-        </div>
-
-        {/* TotalTimeBar (UA-08) */}
-        <TotalTimeBar />
-      </div>
-    </section>
-  )
-}
-```
-
-**`_tanitim-redesign.tsx`'e ekle:**
-```diff
- import HeroSection from '@/components/sections/HeroBlock/HeroSection'
-+import UcAdimSection from '@/components/sections/UcAdimSection'
- import IcerikTurleriSection from '@/components/sections/IcerikTurleriSection'
- ...
- <HeroSection />
-+<UcAdimSection />
- <IcerikTurleriSection />
-```
-
----
-
-##### UA-03: StepCard (UcAdimSection içinde veya ayrı dosya — tercihen aynı dosyada)
-
-```tsx
-function StepCard({ step, index }: { step: UcAdimStep; index: number }) {
-  return (
-    <div className="flex flex-col items-center text-center">
-      {/* NumberCircle */}
-      <div
-        className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-rd-primary-200 bg-white"
-        aria-hidden="true"
-      >
-        <span className="font-rd-display text-3xl font-[800] text-rd-primary-700">
-          {step.number}
-        </span>
-      </div>
-
-      {/* Title */}
-      <h3 className="mb-2 font-rd-display text-xl font-bold text-slate-900">
-        {step.title}
-      </h3>
-
-      {/* Description */}
-      <p className="mb-4 text-sm leading-relaxed text-slate-600">
-        {step.description}
-      </p>
-
-      {/* MiniMockup (UA-04/05/06 — aşağıda) */}
-      <div className="mb-4 w-full">
-        {index === 0 && <InputMockup />}
-        {index === 1 && <SelectionMockup />}
-        {index === 2 && <OutputMockup />}
-      </div>
-
-      {/* DurationLabel */}
-      <div className="inline-flex items-center gap-1.5 text-xs text-slate-500">
-        <Clock size={12} strokeWidth={2} aria-hidden="true" />
-        <span>{step.duration}</span>
-      </div>
-    </div>
-  )
-}
-```
-
-Import: `import { Clock } from 'lucide-react'`
-
----
-
-##### UA-04: InputMockup (Step 1)
-
-```tsx
-function InputMockup() {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4" role="img" aria-label="Ürün yükleme ekranı">
-      {/* 3 input metodu */}
-      <div className="mb-3 flex gap-2">
-        {STEP1_INPUT_METHODS.map((m) => {
-          const Icon = STEP1_ICONS[m.icon]
-          return (
-            <div
-              key={m.label}
-              className={cn(
-                'flex flex-1 flex-col items-center gap-1 rounded-lg border px-2 py-2.5 text-[10px] font-medium transition-colors',
-                m.active
-                  ? 'border-rd-primary-200 bg-rd-primary-50 text-rd-primary-700'
-                  : 'border-slate-200 bg-white text-slate-500'
-              )}
-            >
-              {Icon && <Icon size={14} strokeWidth={1.5} />}
-              {m.label}
-            </div>
-          )
-        })}
-      </div>
-      {/* Upload preview */}
-      <div className="flex items-center gap-3 rounded-lg border border-dashed border-slate-300 bg-white p-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100">
-          <ImageIcon size={16} className="text-slate-400" />
-        </div>
-        <div className="min-w-0">
-          <p className="truncate text-xs font-medium text-slate-700">fincan_01.jpg</p>
-          <p className="text-[10px] text-slate-400">2.4 MB</p>
-        </div>
-      </div>
-    </div>
-  )
-}
-```
-
-Import: `import { Camera, Image as ImageIcon, ScanLine } from 'lucide-react'`
-
-STEP1_ICONS map (dosyanın üstünde):
-```tsx
-const STEP1_ICONS: Record<string, React.ComponentType<any>> = { Camera, Image: ImageIcon, ScanLine }
-```
-
----
-
-##### UA-05: SelectionMockup (Step 2)
-
-```tsx
-function SelectionMockup() {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4" role="img" aria-label="Platform ve içerik seçimi">
-      {/* Platform chips */}
-      <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-slate-400">Platformlar</p>
-      <div className="mb-3 flex flex-wrap gap-1.5">
-        {STEP2_PLATFORMS.map((p) => (
-          <span
-            key={p.label}
-            className={cn(
-              'rounded-full px-2.5 py-1 text-[10px] font-medium',
-              p.selected
-                ? 'border border-transparent text-white'
-                : 'border border-slate-200 bg-white text-slate-500'
-            )}
-            style={p.selected ? { backgroundColor: p.color } : undefined}
-          >
-            {p.label}
-          </span>
-        ))}
-      </div>
-      {/* Content type icons */}
-      <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-slate-400">İçerik türleri</p>
-      <div className="flex gap-2">
-        {STEP2_CONTENT_TYPES.map((ct) => {
-          const Icon = STEP2_ICONS[ct.icon]
-          return (
-            <div
-              key={ct.label}
-              className={cn(
-                'flex flex-1 flex-col items-center gap-1 rounded-lg border px-2 py-2 text-[10px] font-medium',
-                ct.selected
-                  ? 'border-transparent'
-                  : 'border-slate-200 bg-white text-slate-400'
-              )}
-              style={ct.selected ? { backgroundColor: ct.color + '15', color: ct.color, borderColor: ct.color + '30' } : undefined}
-            >
-              {Icon && <Icon size={14} strokeWidth={1.5} />}
-              {ct.label}
-            </div>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
-```
-
-STEP2_ICONS map: `{ FileText, Image: ImageIcon, Video, Share2 }`
-Import: `import { FileText, Video, Share2 } from 'lucide-react'`
-
----
-
-##### UA-06: OutputMockup (Step 3)
-
-```tsx
-function OutputMockup() {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4" role="img" aria-label="Üretilen içerikler">
-      <div className="space-y-2">
-        {STEP3_OUTPUTS.map((out) => {
-          const Icon = STEP3_ICONS[out.icon]
-          return (
-            <div key={out.label} className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2.5">
-              {Icon && <Icon size={14} className="shrink-0 text-rd-primary-700" strokeWidth={1.5} />}
-              <span className="flex-1 truncate text-xs font-medium text-slate-700">{out.label}</span>
-              <span className="flex items-center gap-1 text-[10px] font-medium text-emerald-600">
-                <Check size={10} strokeWidth={2.5} />
-                {out.status}
-              </span>
-            </div>
-          )
-        })}
-      </div>
-      <p className="mt-2 text-center text-[10px] text-slate-400">
-        ve {STEP3_MORE_COUNT} tane daha...
-      </p>
-    </div>
-  )
-}
-```
-
-STEP3_ICONS map: `{ FileText, Image: ImageIcon }`
-Import: `import { Check } from 'lucide-react'` (zaten var olabilir)
-
----
-
-##### UA-07: ConnectorLine
-
-Grid wrapper (`relative`) içinde, NumberCircle'ların ortasını birleştiren yatay dashed çizgi. Sadece desktop'ta görünür.
-
-```tsx
-{/* ConnectorLine — desktop only */}
-<div
-  className="absolute left-0 right-0 top-10 hidden md:block"
-  style={{ marginLeft: 'calc(50% / 3)', marginRight: 'calc(50% / 3)' }}
-  aria-hidden="true"
->
-  <div className="border-t-2 border-dashed border-slate-300" />
-</div>
-```
-
-`top-10` = 40px = NumberCircle'ın ortası (80px / 2). Grid container'da zaten `relative` var.
-
-Daha temiz alternatif: NumberCircle yüksekliği h-20 → merkez 40px. Connector `top-[40px]` ve her iki uçta padding bırakarak sadece circle'lar arasında çizgi çiz:
-
-```tsx
-<div
-  className="pointer-events-none absolute top-[40px] hidden md:block"
-  style={{ left: 'calc(100% / 6)', right: 'calc(100% / 6)' }}
-  aria-hidden="true"
->
-  <div className="border-t-2 border-dashed border-slate-300" />
-</div>
-```
-
----
-
-##### UA-08: TotalTimeBar
-
-Grid'in altında, ortalanmış bir bar.
-
-```tsx
-function TotalTimeBar() {
-  return (
-    <div className="mx-auto mt-12 max-w-[420px]">
-      <div className="flex items-center justify-center gap-2 rounded-full bg-rd-primary-50 px-6 py-3">
-        <Clock size={16} strokeWidth={2} className="text-rd-primary-700" aria-hidden="true" />
-        <span className="text-sm text-slate-700">
-          {UC_ADIM_TOTAL.label}:{' '}
-          <strong className="font-semibold text-rd-primary-700">{UC_ADIM_TOTAL.duration}</strong>
-        </span>
-      </div>
-    </div>
-  )
-}
-```
-
-**Stagger animasyon (opsiyonel ama güzel olur):** Her StepCard'a stagger fade-in ekle. globals.css'teki mevcut `fade-in` keyframe'ini kullan:
-
-```tsx
-// StepCard wrapper'ına:
-<div
-  className="flex flex-col items-center text-center"
-  style={{ animation: `fade-in 500ms ease-out ${index * 100}ms both` }}
->
-```
-
-Ve globals.css'e reduced motion kontrolü:
-```css
-@media (prefers-reduced-motion: reduce) {
-  .uc-adim-card { animation: none !important; }
-}
-```
-Veya inline style kullanılıyorsa class gerekmez — browser `prefers-reduced-motion` ile inline style'daki animation'ı override edemez. Bu yüzden class bazlı yapmak daha iyi:
-
-```css
-.animate-step-card-1 { animation: fade-in 500ms ease-out both; }
-.animate-step-card-2 { animation: fade-in 500ms ease-out 100ms both; }
-.animate-step-card-3 { animation: fade-in 500ms ease-out 200ms both; }
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-step-card-1,
-  .animate-step-card-2,
-  .animate-step-card-3 { animation: none; }
-}
-```
-
-StepCard'da: `className={cn("flex flex-col items-center text-center", \`animate-step-card-\${index + 1}\`)}`
-
----
-
-##### UA-09: Mobile Responsive + A11y (tek geçiş)
-
-**Responsive:**
-- Grid zaten `grid-cols-1 md:grid-cols-3` — mobilde tek kolon ✓
-- ConnectorLine `hidden md:block` — mobilde gizli ✓
-- Mobilde gap: `gap-12 md:gap-8` (12 = 48px mobilde, 8 = 32px desktop'ta)
-- MiniMockup max-width: `max-w-[280px] mx-auto` ekle (mobilde çok geniş olmasın)
-
-**A11y:**
-- Section: `aria-label="Nasıl çalışır"` ✓
-- h2 (SectionHeader) → h3 (StepCard title) hiyerarşi ✓
-- NumberCircle: `aria-hidden="true"` ✓
-- ConnectorLine: `aria-hidden="true"` ✓
-- MiniMockup'lar: `role="img" aria-label="..."` ✓
-- DurationLabel Clock ikonu: `aria-hidden="true"` ✓
-- Tüm renk kontrastları slate-600 on white = 5.7:1 ✓
-
----
-
-**Dosya listesi:**
-
-| Dosya | İşlem |
-|-------|-------|
-| `lib/constants/uc-adim.ts` | YENİ |
-| `components/sections/UcAdimSection.tsx` | YENİ (StepCard, InputMockup, SelectionMockup, OutputMockup, TotalTimeBar, ConnectorLine hepsi aynı dosyada) |
-| `app/_tanitim-redesign.tsx` | GÜNCELLE (import + render sırası) |
-| `app/globals.css` | GÜNCELLE (step-card animasyon class'ları + reduced motion) |
-
-**Kabul kontrol listesi (UA-01~09 topluca):**
-
-- [ ] Constants dosyası: tüm adım verileri, mockup verileri, header metinleri
-- [ ] SectionHeader: eyebrow "Kolay kullanım", title "3 adımda hazır"
-- [ ] 3 kolon grid desktop, tek kolon mobil
-- [ ] Her kart: NumberCircle (80×80, outline, Manrope 800) + h3 + açıklama + mockup + süre
-- [ ] Step 1 mockup: 3 input metodu (Fotoğraf seçili), upload preview
-- [ ] Step 2 mockup: 4 platform chip (2 seçili, renkli), 4 içerik türü (2 seçili)
-- [ ] Step 3 mockup: 2 output satırı (Check + Hazır), "ve 2 tane daha..."
-- [ ] ConnectorLine: dashed, desktop-only, circle ortası hizalı
-- [ ] TotalTimeBar: primary-50 bg, Clock + "30 saniye" bold
-- [ ] Stagger fade-in animasyon (3 kart, 100ms aralık)
-- [ ] `prefers-reduced-motion` → animasyon devre dışı
-- [ ] `_tanitim-redesign.tsx`'e Hero → **UcAdim** → IcerikTurleri sırasıyla ekli
-- [ ] `npm run build` hatasız
-- [ ] Emoji YOK
-- [ ] Tüm a11y kontrolleri (aria-hidden, role="img", heading hiyerarşi)
-- [ ] Commit: `feat: UA-01~08 3 adımda hazır bölümü`
+> Prompt arşivlendi → `BACKLOG-REDESIGN-ARCHIVE.md`
 
 ---
 
@@ -702,300 +148,7 @@ StepCard'da: `className={cn("flex flex-col items-center text-center", \`animate-
 | MB-10 | A11y pass | ✅ Tamam | MB-09 | radiogroup ARIA + roving tabindex. focus-visible. `prefers-reduced-motion`. WCAG AA. |
 | MB-11 | Acceptance review | ✅ Tamam | MB-10 | Aziz onayladı (27 Nisan 2026). Build OK, rd-* token, emoji yok, responsive OK. Commit 4ef11f5. |
 
-#### MB-01~10 Detaylı Prompt (Claude Code bu bölümü okuyacak)
-
-**Genel bilgi:** Marka Bilgileri bölümü — kullanıcıya marka profili oluşturma özelliğini tanıtan interaktif section. Sol tarafta özellik listesi, sağ tarafta canlı form preview kartı. Ton seçimi değiştikçe çıktı metni değişiyor.
-
-**Branch:** `claude/redesign-modern-ui`
-**Referans:** Eski `components/tanitim/BrandProfile.tsx` dosyası referans olarak okunabilir.
-
----
-
-##### MB-01: Constants dosyası
-
-Dosya: `lib/constants/marka-bilgileri.ts`
-
-```ts
-import { Store, Target, Palette, Lightbulb } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-
-export const MB_HEADER = {
-  eyebrow: "Yeni özellik",
-  eyebrowColor: "accent" as const,
-  title: "Marka bilgilerini gir, sana özel içerikler al",
-  subtitle: "Profilinden mağaza adını, hedef kitlenini ve metin tonunu belirle. Bundan sonra her üretimde AI bu bilgileri kullanır.",
-};
-
-export interface BrandFeature {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-}
-
-export const BRAND_FEATURES: BrandFeature[] = [
-  {
-    icon: Store,
-    title: "Marka kimliği",
-    description: "Mağaza adın ve marka kimliğin metne yansır",
-  },
-  {
-    icon: Target,
-    title: "Hedef kitle odaklı",
-    description: "Hedef kitlenin dilinde yazar — doğru kitleye hitap eder",
-  },
-  {
-    icon: Palette,
-    title: "Ton seçimi",
-    description: "Samimi, profesyonel veya premium — tonunu seç, her üretimde uygular",
-  },
-  {
-    icon: Lightbulb,
-    title: "Marka değerleri",
-    description: "Hızlı kargo, yerli üretim gibi değerlerin her ürüne otomatik eklenir",
-  },
-];
-
-export type ToneKey = "samimi" | "profesyonel" | "premium";
-
-export interface ToneChip {
-  key: ToneKey;
-  label: string;
-  output: string; // OutputPreview'da gösterilecek metin
-}
-
-export const TONE_CHIPS: ToneChip[] = [
-  {
-    key: "samimi",
-    label: "Samimi",
-    output: "Bu tişört tam sana göre! Yumuşacık kumaşı ve şık kesimi ile her kombine uyum sağlar. Hemen sipariş ver, yarın kapında.",
-  },
-  {
-    key: "profesyonel",
-    label: "Profesyonel",
-    output: "Premium pamuk karışımı kumaştan üretilmiş, ergonomik kesim tişört. Boyut tablosu için ürün detaylarını inceleyebilirsiniz.",
-  },
-  {
-    key: "premium",
-    label: "Premium",
-    output: "Özenle seçilmiş Ege pamuğundan, sınırlı üretim koleksiyon parçası. Minimalist tasarımı ile gardırobunuzun vazgeçilmezi olacak.",
-  },
-];
-
-export const BRAND_FORM_FIELDS = {
-  storeName: { label: "Mağaza adı", value: "Ayşe Tekstil" },
-  targetAudience: { label: "Hedef kitle", value: "25-40 yaş kadınlar" },
-};
-
-export const MB_CTA = {
-  text: "Marka profilimi oluştur",
-  href: "/uret",
-};
-
-export const MB_HINT = "Tonu değiştir, AI çıktısının nasıl değiştiğini gör";
-```
-
----
-
-##### MB-02: Section scaffold + 2 kolon grid
-
-Dosya: `components/sections/MarkaBilgileriSection.tsx`
-
-```
-'use client'
-
-import { useState } from "react"
-// Tüm sub-component'ler AYNI DOSYADA olacak (UA pattern'i gibi)
-```
-
-- Section: `bg-rd-neutral-50 py-16 md:py-20 lg:py-28`
-- Container: `max-w-6xl mx-auto px-4 sm:px-6 lg:px-8`
-- Grid: `grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start`
-- Sol kolon: özellikler + CTA
-- Sağ kolon: BrandFormPreview kartı
-
----
-
-##### MB-03: LeftColumn
-
-Sol kolon içeriği (grid'in ilk child'ı olarak, ayrı component değil inline):
-
-1. **Eyebrow:** `<Eyebrow>` primitive kullan, `color="accent"`, `icon={<Sparkles size={14} />}`. Sparkles lucide-react'tan.
-2. **Heading:** `<h2>` — font-rd-display, text-3xl md:text-4xl, font-extrabold, tracking-tight, text-rd-neutral-900. İçerik: `MB_HEADER.title`
-3. **Subtitle:** `<p>` — text-lg text-rd-neutral-600 leading-relaxed, mt-4. İçerik: `MB_HEADER.subtitle`
-4. **Feature list:** `<div className="mt-8 space-y-5">` — her feature:
-   - Flex row: `flex items-start gap-4`
-   - Icon box: `w-10 h-10 rounded-xl bg-rd-accent-50 flex items-center justify-center shrink-0`
-   - Icon: `<feature.icon size={20} strokeWidth={1.5} className="text-rd-accent-700" />`
-   - Text: `<div>` — title `text-sm font-medium text-rd-neutral-900` + description `text-sm text-rd-neutral-600 mt-0.5`
-5. **CTA link:** `<a href={MB_CTA.href} className="...">` — mt-8, inline-flex items-center gap-2, text-rd-primary font-medium text-sm, hover:text-rd-primary-800, transition-colors. İçerik: `MB_CTA.text` + ArrowRight ikonu (size 16).
-
----
-
-##### MB-04: BrandFormPreview kartı
-
-Sağ kolonda (grid'in ikinci child'ı). Ayrı bir function component `BrandFormPreview` ama aynı dosyada.
-
-- Props: `{ selectedTone, onToneChange }` — `ToneKey` tipi
-- Kart: `bg-white rounded-xl border border-rd-neutral-200 p-6 lg:p-8`
-- **NOT:** shadow yok (redesign branch'de shadow OK ama bu tasarımda border yeterli — spec'e sadık kal)
-
-Kart header:
-- Flex row: `flex items-center justify-between mb-6`
-- Sol: `<p className="text-xs font-medium text-rd-neutral-500 uppercase tracking-widest">Marka Profili</p>`
-- Sağ: `<Badge variant="success" size="sm">Aktif</Badge>` — `@/components/primitives/Badge` import et
-
----
-
-##### MB-05: Static fields (mağaza adı, hedef kitle)
-
-BrandFormPreview kartı içinde, header'dan sonra:
-
-- Container: `<div className="space-y-4 mb-6">`
-- Her field:
-  ```
-  <div>
-    <p className="text-xs text-rd-neutral-500 mb-1.5">{field.label}</p>
-    <div className="bg-rd-primary-50 border border-rd-primary-200 rounded-lg px-3 py-2.5 text-sm text-rd-primary-800 font-medium">
-      {field.value}
-    </div>
-  </div>
-  ```
-  - Mağaza adı field: `bg-rd-primary-50 border-rd-primary-200 text-rd-primary-800`
-  - Hedef kitle field: `bg-rd-neutral-50 border-rd-neutral-200 text-rd-neutral-700` (farklı renk — bu field daha nötr)
-
----
-
-##### MB-06: Marka tonu radio group (3 chip)
-
-BrandFormPreview kartı içinde, static fields'tan sonra:
-
-- Label: `<p className="text-xs text-rd-neutral-500 mb-2">Metin tonu</p>`
-- Container: `<div role="radiogroup" aria-label="Metin tonu seçimi" className="flex gap-2">`
-- Her chip (TONE_CHIPS.map):
-  ```tsx
-  <button
-    key={tone.key}
-    role="radio"
-    aria-checked={selectedTone === tone.key}
-    onClick={() => onToneChange(tone.key)}
-    className={cn(
-      "px-3.5 py-2 rounded-lg text-xs font-medium transition-colors",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary focus-visible:ring-offset-2",
-      selectedTone === tone.key
-        ? "bg-rd-primary text-white"
-        : "bg-rd-neutral-100 text-rd-neutral-600 hover:bg-rd-neutral-200"
-    )}
-  >
-    {tone.label}
-  </button>
-  ```
-- **Klavye:** Arrow Left/Right navigasyon — `onKeyDown` handler:
-  - ArrowRight → sonraki chip'e focus + select
-  - ArrowLeft → önceki chip'e focus + select
-  - `tabIndex={selectedTone === tone.key ? 0 : -1}` (roving tabindex pattern)
-
----
-
-##### MB-07: OutputPreview + fade animasyon
-
-BrandFormPreview kartı içinde, radio group'tan sonra:
-
-- Ayırıcı: `<div className="border-t border-rd-neutral-200 my-6" />`
-- Container: `<div className="bg-rd-neutral-50 rounded-lg p-4" aria-live="polite">`
-- Eyebrow: `<Eyebrow color="accent" icon={<Sparkles size={14} />} className="mb-3">AI çıktısı — {selectedTone} tonda</Eyebrow>`
-- Output text: 
-  ```tsx
-  <p
-    key={selectedTone} // key değişince remount → animasyon tetiklenir
-    className="text-sm text-rd-neutral-700 leading-relaxed animate-output-fade-in"
-  >
-    {currentTone.output}
-  </p>
-  ```
-- Alt not: `<p className="text-xs text-rd-neutral-500 mt-3 flex items-center gap-1"><Check size={12} strokeWidth={2} /> Her üretimde otomatik uygulanır</p>`
-
-**Animasyon (globals.css'e ekle):**
-```css
-@keyframes output-fade-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-output-fade-in {
-  animation: output-fade-in 300ms ease-out;
-}
-@media (prefers-reduced-motion: reduce) {
-  .animate-output-fade-in { animation: none; }
-}
-```
-
----
-
-##### MB-08: Hint text
-
-Section'ın en altında (grid'den SONRA, container içinde):
-
-```tsx
-<p className="text-center text-sm text-rd-neutral-500 italic mt-8 lg:mt-12">
-  {MB_HINT}
-</p>
-```
-
-**DİKKAT:** Spec'te "↑ Tonu değiştir" yazıyor ama oklu stage direction yasak. Constants'taki metni kullan: "Tonu değiştir, AI çıktısının nasıl değiştiğini gör".
-
----
-
-##### MB-09: Mobile responsive + A11y (tek geçiş)
-
-**Responsive:**
-- Grid zaten `grid-cols-1 lg:grid-cols-2` — mobilde sol kolon üstte, kart altta ✓
-- Tone chip'ler: `flex-wrap` ekle (çok dar ekranlarda sarılsın)
-- Feature icon box: mobilde aynı boyut (10×10 yeterli)
-- Padding: section `py-16 md:py-20 lg:py-28` ✓
-
-**A11y:**
-- Section: `aria-label="Marka bilgileri"`
-- Radio group: `role="radiogroup"` + `aria-label` + roving tabindex ✓
-- OutputPreview: `aria-live="polite"` ✓
-- Icon'lar: feature icon'ları `aria-hidden="true"` (başlık bilgiyi taşıyor)
-- Heading hiyerarşi: SectionHeader yok (h2 direkt), kart içinde h3 yok (label'lar yeterli)
-- Focus-visible: tüm interaktif elemanlar ✓
-- Renk kontrastı: rd-neutral-600 on white = 5.7:1 ✓
-
----
-
-**Dosya listesi:**
-
-| Dosya | İşlem |
-|-------|-------|
-| `lib/constants/marka-bilgileri.ts` | YENİ |
-| `components/sections/MarkaBilgileriSection.tsx` | YENİ ('use client', BrandFormPreview aynı dosyada) |
-| `app/_tanitim-redesign.tsx` | GÜNCELLE (import + Pazaryeri'den sonra MarkaBilgileriSection ekle) |
-| `app/globals.css` | GÜNCELLE (output-fade-in keyframe + reduced motion) |
-
-**Sıra `_tanitim-redesign.tsx`'te:**
-```
-Hero → UcAdim → IcerikTurleri → Pazaryeri → MarkaBilgileri
-```
-
-**Kabul kontrol listesi (MB-01~10 topluca):**
-
-- [ ] Constants dosyası: header, 4 feature, 3 ton (output metinleriyle), form fields, CTA, hint
-- [ ] 2 kolon grid: sol features + sağ kart, mobilde tek kolon
-- [ ] Sol kolon: accent Sparkles eyebrow, h2 başlık, subtitle, 4 feature (icon box + title + desc), CTA link
-- [ ] Sağ kolon: white kart, "Marka Profili" + yeşil "Aktif" badge
-- [ ] 2 static field (Mağaza adı primary-50, Hedef kitle neutral-50)
-- [ ] 3 ton chip (radiogroup): samimi seçili (mavi), diğerleri neutral. Tıklayınca değişir.
-- [ ] Arrow Left/Right klavye navigasyon (roving tabindex)
-- [ ] OutputPreview: accent eyebrow "AI çıktısı — {ton} tonda" + ton output metni
-- [ ] Ton değişince 300ms fade+slide-up animasyon
-- [ ] `aria-live="polite"` output container'da
-- [ ] "Her üretimde otomatik uygulanır" alt not (Check ikonu)
-- [ ] Hint text: italic, ortalı, grid altında
-- [ ] `prefers-reduced-motion` → animasyon devre dışı
-- [ ] `_tanitim-redesign.tsx`'e Pazaryeri'den sonra ekli
-- [ ] `npm run build` hatasız
-- [ ] Emoji YOK
-- [ ] Commit: `feat: MB-01~10 marka bilgileri bölümü`
+> Prompt arşivlendi → `BACKLOG-REDESIGN-ARCHIVE.md`
 
 ---
 
@@ -1010,256 +163,9 @@ Hero → UcAdim → IcerikTurleri → Pazaryeri → MarkaBilgileri
 | NY-05 | ComparisonRow (6 satır) | ✅ Tamam | NY-03 | X (kirmizi) vs Check (yesil) Lucide ikon. |
 | NY-06 | Footnote | ✅ Tamam | NY-02 | italic, gri, ortalı. |
 | NY-07 | Mobile responsive + a11y | ✅ Tamam | NY-05, NY-06 | Mobilde kart layout, semantic table, scope, aria-hidden, WCAG AA. |
-| NY-08 | Acceptance review | Bekliyor | NY-07 | Aziz preview kontrolü. |
+| NY-08 | Acceptance review | ✅ Tamam | NY-07 | Aziz onayladı (27 Nisan 2026). Semantic table, mobil kartlar, Lucide ikon, build OK. Commit ae19f42. |
 
-#### NY-01~07 Detaylı Prompt (Claude Code bu bölümü okuyacak)
-
-**Genel bilgi:** "Neden yzliste?" bölümü — genel AI araçları (ChatGPT, Claude, Gemini) ile yzliste'yi karşılaştıran tablo. 6 satırlık özellik karşılaştırması. Genel araçlar "yapamaz" (X), yzliste "yapar" (Check).
-
-**Branch:** `claude/redesign-modern-ui`
-
----
-
-##### NY-01: Constants dosyası
-
-Dosya: `lib/constants/neden-yzliste.ts`
-
-```ts
-import type { LucideIcon } from "lucide-react";
-
-export const NEDEN_HEADER = {
-  eyebrow: "Neden yzliste",
-  eyebrowColor: "primary" as const,
-  title: "Genel AI araçlarıyla aynı şey değil",
-  subtitle: "ChatGPT, Claude ve Gemini genel amaçlı asistanlardır. yzliste e-ticaret için özel inşa edildi.",
-};
-
-export interface ComparisonRow {
-  feature: string;
-  generic: string;
-  yzliste: string;
-}
-
-export const NEDEN_COMPARISONS: ComparisonRow[] = [
-  {
-    feature: "Pazaryeri uyumlu metin",
-    generic: "Genel metin, format uyumsuz",
-    yzliste: "Trendyol, Hepsiburada, Amazon formatında",
-  },
-  {
-    feature: "SEO optimizasyonu",
-    generic: "Anahtar kelime bilmez",
-    yzliste: "Pazaryeri arama algoritmasına uygun",
-  },
-  {
-    feature: "Ürün görseli",
-    generic: "Görsel üretemez veya düşük kalite",
-    yzliste: "Arka plan kaldırma, stüdyo çekim, manken giydirme",
-  },
-  {
-    feature: "Ürün videosu",
-    generic: "Video üretemez",
-    yzliste: "AI ile ürün tanıtım videosu",
-  },
-  {
-    feature: "Marka tonu",
-    generic: "Her seferinde yeniden anlat",
-    yzliste: "Profilde bir kez belirle, her üretimde uygulansın",
-  },
-  {
-    feature: "Toplu üretim",
-    generic: "Tek tek kopyala yapıştır",
-    yzliste: "Excel yükle, yüzlerce ürünü tek seferde üret",
-  },
-];
-
-export const NEDEN_TABLE_HEADERS = {
-  generic: {
-    eyebrow: "Genel AI araçları",
-    subtitle: "ChatGPT, Claude, Gemini",
-  },
-  yzliste: {
-    eyebrow: "yzliste",
-    subtitle: "E-ticaret için özel inşa edildi",
-  },
-};
-
-export const NEDEN_FOOTNOTE = "ChatGPT, Claude ve Gemini harika genel amaçlı asistanlardır. Ancak e-ticaret listing'i üretmek için tasarlanmamışlardır. yzliste bu ihtiyaç için sıfırdan inşa edildi.";
-```
-
----
-
-##### NY-02: Section scaffold + SectionHeader
-
-Dosya: `components/sections/NedenYzlisteSection.tsx`
-
-- Server component (interaktif state yok — `'use client'` gerekmez)
-- Section: `bg-white py-16 md:py-20 lg:py-28`
-- Container: `max-w-4xl mx-auto px-4 sm:px-6 lg:px-8`
-- `<SectionHeader>` primitive kullan:
-  ```tsx
-  <SectionHeader
-    eyebrow={NEDEN_HEADER.eyebrow}
-    eyebrowColor="primary"
-    title={NEDEN_HEADER.title}
-    subtitle={NEDEN_HEADER.subtitle}
-    maxWidth="700px"
-  />
-  ```
-
----
-
-##### NY-03 + NY-04 + NY-05: ComparisonTable
-
-Tablo, SectionHeader'dan sonra. Tüm bileşenler aynı dosyada (ayrı component gerekmez, inline yeterli).
-
-**Desktop layout (md ve üstü):** Semantic `<table>`.
-
-```tsx
-<div className="mt-12 overflow-hidden rounded-xl border border-rd-neutral-200">
-  <table className="w-full" aria-label="yzliste ve genel AI araçları karşılaştırması">
-    <thead>
-      <tr>
-        <th scope="col" className="w-[28%] bg-white px-5 py-4 text-left text-xs font-medium text-rd-neutral-500 uppercase tracking-wider border-b border-rd-neutral-200">
-          Özellik
-        </th>
-        <th scope="col" className="w-[36%] bg-rd-neutral-100 px-5 py-4 text-left border-b border-rd-neutral-200">
-          <p className="text-xs font-medium text-rd-neutral-500 uppercase tracking-wider">{NEDEN_TABLE_HEADERS.generic.eyebrow}</p>
-          <p className="text-xs text-rd-neutral-400 mt-0.5">{NEDEN_TABLE_HEADERS.generic.subtitle}</p>
-        </th>
-        <th scope="col" className="w-[36%] bg-rd-primary-50 px-5 py-4 text-left border-b border-rd-neutral-200">
-          <p className="text-xs font-medium text-rd-primary uppercase tracking-wider">{NEDEN_TABLE_HEADERS.yzliste.eyebrow}</p>
-          <p className="text-xs text-rd-primary-700 mt-0.5">{NEDEN_TABLE_HEADERS.yzliste.subtitle}</p>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      {NEDEN_COMPARISONS.map((row, i) => (
-        <tr key={i} className={i < NEDEN_COMPARISONS.length - 1 ? "border-b border-rd-neutral-100" : ""}>
-          <td className="px-5 py-4 text-sm font-medium text-rd-neutral-900">{row.feature}</td>
-          <td className="bg-rd-neutral-50/50 px-5 py-4">
-            <div className="flex items-start gap-2.5">
-              <span className="mt-0.5 w-5 h-5 rounded-full bg-red-100 flex items-center justify-center shrink-0" aria-hidden="true">
-                <X size={12} strokeWidth={2.5} className="text-red-500" />
-              </span>
-              <span className="text-sm text-rd-neutral-500">{row.generic}</span>
-            </div>
-          </td>
-          <td className="bg-[#FAFCFF] px-5 py-4">
-            <div className="flex items-start gap-2.5">
-              <span className="mt-0.5 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0" aria-hidden="true">
-                <Check size={12} strokeWidth={2.5} className="text-emerald-600" />
-              </span>
-              <span className="text-sm text-rd-neutral-900">{row.yzliste}</span>
-            </div>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-```
-
-**CRITICAL:** `X` ve `Check` Lucide icon'dan import. ASLA emoji kullanma (ne ❌ ne ✓ ne ✅).
-
-Lucide import: `import { X, Check } from "lucide-react"`
-
----
-
-##### NY-06: Footnote
-
-Tablodan sonra:
-
-```tsx
-<p className="mt-8 text-center text-sm text-rd-neutral-500 italic max-w-2xl mx-auto leading-relaxed">
-  {NEDEN_FOOTNOTE}
-</p>
-```
-
----
-
-##### NY-07: Mobile responsive + a11y (tek geçiş)
-
-**Responsive (mobil alternatif — CRITICAL):**
-
-Mobilde `<table>` layout kötü görünür — satırlar çok dar, metin sarılır. Bunun yerine **mobilde kart tabanlı layout**, desktop'ta tablo göster:
-
-```tsx
-{/* Desktop: table (md ve üstü) */}
-<div className="hidden md:block mt-12 overflow-hidden rounded-xl border border-rd-neutral-200">
-  <table ...> {/* yukarıdaki tablo */} </table>
-</div>
-
-{/* Mobile: card layout (md altı) */}
-<div className="md:hidden mt-10 space-y-4">
-  {NEDEN_COMPARISONS.map((row, i) => (
-    <div key={i} className="rounded-xl border border-rd-neutral-200 overflow-hidden">
-      <div className="bg-rd-neutral-50 px-4 py-3 border-b border-rd-neutral-100">
-        <p className="text-sm font-medium text-rd-neutral-900">{row.feature}</p>
-      </div>
-      <div className="divide-y divide-rd-neutral-100">
-        <div className="px-4 py-3 flex items-start gap-2.5">
-          <span className="mt-0.5 w-5 h-5 rounded-full bg-red-100 flex items-center justify-center shrink-0" aria-hidden="true">
-            <X size={12} strokeWidth={2.5} className="text-red-500" />
-          </span>
-          <div>
-            <p className="text-xs text-rd-neutral-400 mb-0.5">Genel AI</p>
-            <p className="text-sm text-rd-neutral-500">{row.generic}</p>
-          </div>
-        </div>
-        <div className="px-4 py-3 bg-[#FAFCFF] flex items-start gap-2.5">
-          <span className="mt-0.5 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0" aria-hidden="true">
-            <Check size={12} strokeWidth={2.5} className="text-emerald-600" />
-          </span>
-          <div>
-            <p className="text-xs text-rd-primary mb-0.5">yzliste</p>
-            <p className="text-sm text-rd-neutral-900">{row.yzliste}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
-```
-
-**A11y:**
-- Desktop table: `aria-label`, `scope="col"` her `<th>`'de ✓
-- Icon'lar: `aria-hidden="true"` ✓
-- Mobil kartlar: her kart semantik `<div>`, label metin zaten görünür
-- Renk kontrastı: rd-neutral-500 on white = 6.2:1, red-500 on red-100 ✓, emerald-600 on emerald-100 ✓
-- Section: `aria-label="Neden yzliste"` ekle
-
----
-
-**Dosya listesi:**
-
-| Dosya | İşlem |
-|-------|-------|
-| `lib/constants/neden-yzliste.ts` | YENİ |
-| `components/sections/NedenYzlisteSection.tsx` | YENİ (server component, table + mobile cards aynı dosyada) |
-| `app/_tanitim-redesign.tsx` | GÜNCELLE (import + MarkaBilgileri'den sonra NedenYzlisteSection ekle) |
-
-**Sıra `_tanitim-redesign.tsx`'te:**
-```
-Hero → UcAdim → IcerikTurleri → Pazaryeri → MarkaBilgileri → NedenYzliste
-```
-
-**Kabul kontrol listesi (NY-01~07 topluca):**
-
-- [ ] Constants dosyası: header, 6 karşılaştırma satırı, tablo başlıkları, footnote
-- [ ] SectionHeader: "Neden yzliste" eyebrow, provokatif h2, subtitle
-- [ ] Desktop (md+): semantic `<table>`, 3 kolon (özellik / genel AI / yzliste)
-- [ ] Tablo header: neutral-100 bg (genel) vs primary-50 bg (yzliste)
-- [ ] 6 satır: X (kırmızı circle) + metin vs Check (yeşil circle) + metin
-- [ ] yzliste kolonu `#FAFCFF` bg tint
-- [ ] Mobil (md altı): kart tabanlı layout, her özellik ayrı kart
-- [ ] Footnote: italic, gri, ortalı
-- [ ] Lucide X ve Check — ASLA emoji
-- [ ] `aria-label`, `scope="col"`, `aria-hidden` icon'larda
-- [ ] `_tanitim-redesign.tsx`'e MarkaBilgileri'den sonra ekli
-- [ ] `npm run build` hatasız
-- [ ] Emoji YOK
-- [ ] Commit: `feat: NY-01~07 neden yzliste karşılaştırma bölümü`
+> Prompt arşivlendi → `BACKLOG-REDESIGN-ARCHIVE.md`
 
 ---
 
@@ -1267,55 +173,1137 @@ Hero → UcAdim → IcerikTurleri → Pazaryeri → MarkaBilgileri → NedenYzli
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| FY-01 | Gerçek paket verilerini `/fiyatlar`'dan oku + constants | Bekliyor | DS-01 | `lib/constants/fiyatlar.ts` — PACKAGES (isim, fiyat, kredi, features), CREDIT_PER_PRODUCT, SLIDER config. **Gerçek fiyatlar Aziz'den onay sonrası.** |
-| FY-02 | Section scaffold + SectionHeader + bg | Bekliyor | DS-07, FY-01 | `components/sections/FiyatlarSection.tsx`. bg-slate-50. Eyebrow "FİYATLANDIRMA". H2, subtitle. |
-| FY-03 | CreditCalculator scaffold | Bekliyor | FY-02 | `components/sections/FiyatlarSection/CreditCalculator.tsx`. white card, shadow, border. Header + 2 kolon grid (slider sol, recommendation sağ). |
-| FY-04 | Slider component (custom CSS) | Bekliyor | FY-03 | Range input 1-100. Mavi gradient dolu kısım. Beyaz thumb mavi border. Klavye Arrow key kontrolü. `role="slider"`, `aria-valuemin/max/now`. |
-| FY-05 | RecommendationCard + hesaplama | Bekliyor | FY-04 | primary-50 bg. "SANA UYGUN PAKET" eyebrow. `useMemo` ile recommendedPackage. Tahmini ihtiyaç = productCount × CREDIT_PER_PRODUCT. |
-| FY-06 | PackageCard component | Bekliyor | FY-01 | `components/sections/FiyatlarSection/PackageCard.tsx`. Default + popular (2px primary border, translateY -8px, "★ EN POPÜLER" rozet) varyantları. Fiyat Manrope 800 36px. Features ✓ listesi. CTA solid/outline. |
-| FY-07 | "SENİN İÇİN" badge logic | Bekliyor | FY-05, FY-06 | Slider'a göre recommended package'a yeşil badge. Badge slider değiştikçe hareket eder. |
-| FY-08 | FooterNote (trust points) | Bekliyor | FY-02 | 4 trust point yatay: Aboneliksiz, Krediler süresiz, iyzico, Faturalandırma. Ayraçlar `·`. |
-| FY-09 | CTA route entegrasyonu | Bekliyor | FY-06 | Paket "Seç" butonu doğru route'a yönlendirir. Route Aziz'den gelecek. |
-| FY-10 | Mobile responsive pass | Bekliyor | FY-08 | Mobile: calculator tek kolon, paketler tek kolon (popular en üstte, translateY kaldırılır). Slider touch friendly. |
-| FY-11 | A11y pass | Bekliyor | FY-10 | Slider ARIA. `aria-live="polite"` recommendation güncelleme. Focus-visible. WCAG AA. |
+| FY-01 | Gerçek paket verilerini `/fiyatlar`'dan oku + constants | ✅ Tamam | DS-01 | `lib/constants/fiyatlar.ts` — PACKAGES (isim, fiyat, kredi, features), CREDIT_PER_PRODUCT, SLIDER config. **Gerçek fiyatlar Aziz'den onay sonrası.** |
+| FY-02 | Section scaffold + SectionHeader + bg | ✅ Tamam | DS-07, FY-01 | `components/sections/FiyatlarSection.tsx`. bg-slate-50. Eyebrow "FİYATLANDIRMA". H2, subtitle. |
+| FY-03 | CreditCalculator scaffold | ✅ Tamam | FY-02 | `components/sections/FiyatlarSection/CreditCalculator.tsx`. white card, shadow, border. Header + 2 kolon grid (slider sol, recommendation sağ). |
+| FY-04 | Slider component (custom CSS) | ✅ Tamam | FY-03 | Range input 1-100. Mavi gradient dolu kısım. Beyaz thumb mavi border. Klavye Arrow key kontrolü. `role="slider"`, `aria-valuemin/max/now`. |
+| FY-05 | RecommendationCard + hesaplama | ✅ Tamam | FY-04 | primary-50 bg. "SANA UYGUN PAKET" eyebrow. `useMemo` ile recommendedPackage. Tahmini ihtiyaç = productCount × CREDIT_PER_PRODUCT. |
+| FY-06 | PackageCard component | ✅ Tamam | FY-01 | `components/sections/FiyatlarSection/PackageCard.tsx`. Default + popular (2px primary border, translateY -8px, "★ EN POPÜLER" rozet) varyantları. Fiyat Manrope 800 36px. Features ✓ listesi. CTA solid/outline. |
+| FY-07 | "SENİN İÇİN" badge logic | ✅ Tamam | FY-05, FY-06 | Slider'a göre recommended package'a yeşil badge. Badge slider değiştikçe hareket eder. |
+| FY-08 | FooterNote (trust points) | ✅ Tamam | FY-02 | 4 trust point yatay: Aboneliksiz, Krediler süresiz, iyzico, Faturalandırma. Ayraçlar `·`. |
+| FY-09 | CTA route entegrasyonu | ✅ Tamam | FY-06 | Paket "Seç" butonu doğru route'a yönlendirir. Route Aziz'den gelecek. |
+| FY-10 | Mobile responsive pass | ✅ Tamam | FY-08 | Mobile: calculator tek kolon, paketler tek kolon (popular en üstte, translateY kaldırılır). Slider touch friendly. |
+| FY-11 | A11y pass | ✅ Tamam | FY-10 | Slider ARIA. `aria-live="polite"` recommendation güncelleme. Focus-visible. WCAG AA. |
 | FY-12 | Acceptance review | Bekliyor | FY-11 | Aziz preview kontrolü. Slider test, 3 paket görsel kontrol. |
+
+**Durum:** Prompt hazır — Claude Code'a verilebilir.
+
+#### FY-01~11 Birleşik Prompt
+
+> **ÖNEMLİ — İÇERİK KURALI:** Canlı sitedeki örnek çıktıları (üretilmiş text örnekleri, görsel örnekler, video örnekler, sosyal medya çıktı örnekleri) olduğu gibi koru — yeniden görsel/video üretmeye gerek olmasın. Diğer metinler (başlık, açıklama, CTA, feature listesi) tasarıma uygun şekilde değiştirilebilir.
+
+> **Hedef:** Landing page'e "Fiyatlar" bölümü ekle. Kullanıcı ürün sayısını slider ile seçer, ona uygun paket önerilir, 3 paket kartı yan yana görünür. Altta güven noktaları.
+
+---
+
+##### FY-01: Constants — `lib/constants/fiyatlar-landing.ts`
+
+**Gerçek fiyat verileri `lib/paketler.ts`'den gelecek.** Bu constants dosyası sadece landing page'e özel UI metinlerini ve slider config'ini tutar.
+
+```ts
+// lib/constants/fiyatlar-landing.ts
+
+import { PAKET_LISTESI, type Paket } from '@/lib/paketler'
+
+// Re-export — section component sadece bu dosyayı import etsin
+export { PAKET_LISTESI }
+export type { Paket }
+
+export const FIYATLAR_HEADER = {
+  eyebrow: 'Fiyatlandırma',
+  title: 'Kullandıkça öde, abonelik yok',
+  subtitle: 'Kredi paketini al, istediğin içerik türünde kullan. Süre sınırı yok.',
+}
+
+export const SLIDER_CONFIG = {
+  min: 1,
+  max: 100,
+  defaultValue: 15,
+  label: 'Aylık ürün sayısı',
+}
+
+// Kredi maliyetleri (landing page gösterimi için)
+export const CREDIT_PER_PRODUCT = 1 // listing metni = 1 kredi
+// Not: Video (10-20 kr) ve try-on (3 kr) farklı ama slider sadece listing bazlı hesap yapar
+
+export const RECOMMENDATION_EYEBROW = 'Sana uygun paket'
+
+export const TRUST_POINTS = [
+  'Abonelik yok',
+  'Krediler süresiz',
+  'iyzico güvencesi',
+  'e-Arşiv fatura',
+] as const
+
+export const FIYATLAR_CTA_ROUTE = '/fiyatlar'
+```
+
+---
+
+##### FY-02: Section scaffold — `components/sections/FiyatlarSection.tsx`
+
+`'use client'` — slider state gerektirir.
+
+```tsx
+// components/sections/FiyatlarSection.tsx
+'use client'
+
+import { useState, useMemo } from 'react'
+import SectionHeader from '@/components/primitives/SectionHeader'
+import {
+  FIYATLAR_HEADER,
+  SLIDER_CONFIG,
+  PAKET_LISTESI,
+  CREDIT_PER_PRODUCT,
+  RECOMMENDATION_EYEBROW,
+  TRUST_POINTS,
+  FIYATLAR_CTA_ROUTE,
+} from '@/lib/constants/fiyatlar-landing'
+
+export default function FiyatlarSection() {
+  const [productCount, setProductCount] = useState(SLIDER_CONFIG.defaultValue)
+
+  const recommendedPackage = useMemo(() => {
+    const needed = productCount * CREDIT_PER_PRODUCT
+    // İlk yeten paketi bul, yoksa son paketi döndür
+    return PAKET_LISTESI.find(p => p.kredi >= needed) ?? PAKET_LISTESI[PAKET_LISTESI.length - 1]
+  }, [productCount])
+
+  return (
+    <section className="py-20 md:py-28 bg-rd-neutral-50" aria-labelledby="fiyatlar-heading">
+      <div className="mx-auto max-w-6xl px-5">
+        <SectionHeader
+          eyebrow={FIYATLAR_HEADER.eyebrow}
+          eyebrowColor="primary"
+          title={FIYATLAR_HEADER.title}
+          subtitle={FIYATLAR_HEADER.subtitle}
+          id="fiyatlar-heading"
+        />
+
+        {/* CreditCalculator */}
+        {/* PackageCards grid */}
+        {/* TrustFooter */}
+      </div>
+    </section>
+  )
+}
+```
+
+Section bg: `bg-rd-neutral-50`. `_tanitim-redesign.tsx`'de NedenYzlisteSection'dan **sonra** ekle.
+
+---
+
+##### FY-03 + FY-04 + FY-05: CreditCalculator (slider + recommendation)
+
+Section içinde, SectionHeader'dan sonra. Ayrı component dosyası **gerekmez** — section içinde inline yeterli.
+
+**Layout:** Tek white kart, içinde 2 kolon (lg grid). Sol: slider. Sağ: recommendation.
+
+```tsx
+{/* CreditCalculator — SectionHeader'dan sonra, mt-12 */}
+<div className="mt-12 rounded-xl border border-rd-neutral-200 bg-white p-6 md:p-8">
+  <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
+
+    {/* Sol: Slider */}
+    <div>
+      <label htmlFor="product-slider" className="block text-sm font-medium text-rd-neutral-600 mb-6">
+        {SLIDER_CONFIG.label}
+      </label>
+
+      <div className="flex items-center gap-4">
+        <span className="text-sm text-rd-neutral-400 tabular-nums w-8 text-right">{SLIDER_CONFIG.min}</span>
+        <input
+          id="product-slider"
+          type="range"
+          min={SLIDER_CONFIG.min}
+          max={SLIDER_CONFIG.max}
+          value={productCount}
+          onChange={e => setProductCount(Number(e.target.value))}
+          className="fiyatlar-slider flex-1"
+          role="slider"
+          aria-valuemin={SLIDER_CONFIG.min}
+          aria-valuemax={SLIDER_CONFIG.max}
+          aria-valuenow={productCount}
+          aria-valuetext={`${productCount} ürün`}
+        />
+        <span className="text-sm text-rd-neutral-400 tabular-nums w-8">{SLIDER_CONFIG.max}</span>
+      </div>
+
+      {/* Seçilen değer */}
+      <p className="mt-4 text-center">
+        <span className="text-3xl font-bold text-rd-primary-700 tabular-nums" style={{ fontFamily: 'var(--font-rd-display)' }}>
+          {productCount}
+        </span>
+        <span className="ml-2 text-sm text-rd-neutral-500">ürün / ay</span>
+      </p>
+    </div>
+
+    {/* Sağ: Recommendation */}
+    <div className="rounded-lg bg-rd-primary-50 p-5 border border-rd-primary-100" aria-live="polite">
+      <p className="text-xs font-medium text-rd-primary-600 uppercase tracking-wider mb-2">
+        {RECOMMENDATION_EYEBROW}
+      </p>
+      <p className="text-xl font-bold text-rd-neutral-900" style={{ fontFamily: 'var(--font-rd-display)' }}>
+        {recommendedPackage.isim}
+      </p>
+      <p className="mt-1 text-sm text-rd-neutral-500">
+        {recommendedPackage.kredi} kredi · {recommendedPackage.fiyatStr}
+      </p>
+      <p className="mt-2 text-xs text-rd-neutral-400">
+        {productCount} ürün × {CREDIT_PER_PRODUCT} kredi = {productCount * CREDIT_PER_PRODUCT} kredi ihtiyacı
+      </p>
+    </div>
+
+  </div>
+</div>
+```
+
+**Slider custom CSS** — `globals.css`'e ekle:
+
+```css
+/* Fiyatlar slider */
+.fiyatlar-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--color-rd-primary-500) var(--slider-fill, 0%), var(--color-rd-neutral-200) var(--slider-fill, 0%));
+  outline: none;
+  cursor: pointer;
+}
+
+.fiyatlar-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--color-rd-primary-500);
+  cursor: pointer;
+  transition: box-shadow 150ms ease;
+}
+
+.fiyatlar-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-rd-primary-500) 15%, transparent);
+}
+
+.fiyatlar-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--color-rd-primary-200);
+}
+
+.fiyatlar-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--color-rd-primary-500);
+  cursor: pointer;
+}
+
+.fiyatlar-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-rd-neutral-200);
+}
+
+.fiyatlar-slider::-moz-range-progress {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-rd-primary-500);
+}
+```
+
+**Slider fill JS** — gradient background'u slider değerine göre güncelle. `onChange` handler'a ekle:
+
+```ts
+const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const val = Number(e.target.value)
+  setProductCount(val)
+  const pct = ((val - SLIDER_CONFIG.min) / (SLIDER_CONFIG.max - SLIDER_CONFIG.min)) * 100
+  e.target.style.setProperty('--slider-fill', `${pct}%`)
+}
+```
+
+Slider'ın `onChange`'ini bu fonksiyonla değiştir. Ayrıca `useEffect` ile ilk render'da da `--slider-fill`'i set et (defaultValue'ya göre).
+
+---
+
+##### FY-06 + FY-07: PackageCard grid + "SENİN İÇİN" badge
+
+CreditCalculator'dan sonra, `mt-12`.
+
+```tsx
+{/* PackageCards — 3 kolon grid */}
+<div className="mt-12 grid gap-6 md:grid-cols-3 items-start">
+  {PAKET_LISTESI.map(paket => {
+    const isPopular = paket.rozet === true
+    const isRecommended = paket.id === recommendedPackage.id
+
+    return (
+      <div
+        key={paket.id}
+        className={`
+          relative rounded-xl border bg-white p-6 transition-transform duration-200
+          ${isPopular
+            ? 'border-rd-primary-500 border-2 md:-translate-y-2'
+            : 'border-rd-neutral-200'
+          }
+        `}
+      >
+        {/* EN POPÜLER rozet — sadece popular pakette */}
+        {isPopular && (
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+            <span className="inline-flex items-center rounded-full bg-rd-primary-600 px-3 py-1 text-xs font-medium text-white tracking-wide">
+              En popüler
+            </span>
+          </div>
+        )}
+
+        {/* SENİN İÇİN badge — slider'a göre recommended pakette */}
+        {isRecommended && (
+          <div className={`absolute -top-3 ${isPopular ? 'right-4' : 'left-1/2 -translate-x-1/2'}`}>
+            <span className="inline-flex items-center rounded-full bg-emerald-600 px-3 py-1 text-xs font-medium text-white tracking-wide">
+              Senin için
+            </span>
+          </div>
+        )}
+
+        {/* Paket adı */}
+        <h3 className="text-lg font-medium text-rd-neutral-900">{paket.isim}</h3>
+        <p className="mt-1 text-sm text-rd-neutral-500">{paket.aciklama}</p>
+
+        {/* Fiyat */}
+        <p className="mt-5">
+          <span className="text-4xl font-extrabold text-rd-neutral-900 tabular-nums" style={{ fontFamily: 'var(--font-rd-display)' }}>
+            {paket.fiyatStr}
+          </span>
+          <span className="ml-1 text-sm text-rd-neutral-400">/ {paket.krediStr}</span>
+        </p>
+
+        {/* CTA */}
+        <a
+          href={FIYATLAR_CTA_ROUTE}
+          className={`
+            mt-5 block w-full rounded-lg py-2.5 text-center text-sm font-medium transition-colors
+            ${isPopular
+              ? 'bg-rd-primary-600 text-white hover:bg-rd-primary-700'
+              : 'border border-rd-neutral-300 text-rd-neutral-700 hover:bg-rd-neutral-50'
+            }
+          `}
+        >
+          Paketi seç
+        </a>
+
+        {/* Özellikler — Lucide Check ikonu ile */}
+        <ul className="mt-5 space-y-2.5" role="list">
+          {paket.ozellikler.map((ozellik, i) => (
+            <li key={i} className="flex items-start gap-2.5 text-sm text-rd-neutral-600">
+              <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-rd-primary-500" aria-hidden="true" />
+              <span>{ozellik}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  })}
+</div>
+```
+
+Import'a `Check` from `lucide-react` ekle.
+
+**"SENİN İÇİN" badge davranışı:**
+- Slider değiştikçe `recommendedPackage` useMemo ile güncellenir
+- Badge ilgili karttan kaybolur, yeni karta geçer
+- `isPopular && isRecommended` durumunda: popular rozet sol-üstte (veya üst-orta), senin için sağ-üstte — çakışmasın
+- Badge position: popular pakette `right-4`, diğerlerinde `left-1/2 -translate-x-1/2`
+
+---
+
+##### FY-08: FooterNote (trust points)
+
+PackageCards'dan sonra, `mt-10`.
+
+```tsx
+{/* Trust points */}
+<p className="mt-10 text-center text-sm text-rd-neutral-400">
+  {TRUST_POINTS.map((point, i) => (
+    <span key={i}>
+      {i > 0 && <span className="mx-2" aria-hidden="true">·</span>}
+      {point}
+    </span>
+  ))}
+</p>
+```
+
+---
+
+##### FY-09: CTA route
+
+Paket "Seç" butonu: `href={FIYATLAR_CTA_ROUTE}` → `/fiyatlar`.
+
+Tüm 3 paket kartında aynı route. `/fiyatlar` sayfasında kullanıcı detaylı karşılaştırma + satın alma yapacak.
+
+---
+
+##### FY-10: Mobile responsive
+
+- CreditCalculator: `lg:grid-cols-2` → mobilde tek kolon (default `grid-cols-1`)
+- PackageCards: `md:grid-cols-3` → mobilde tek kolon
+- Mobilde popular paket `md:-translate-y-2` → mobilde translateY yok (class zaten `md:` prefix ile)
+- Mobilde popular paketi **ilk sıraya** almak önerilir ama `PAKET_LISTESI` sırası Başlangıç → Popüler → Büyük. Sıralama değiştirmeyeceğiz, mobilde de bu sıra kalır. (İstenmezse mobile'da `order-first` eklenebilir.)
+- Slider: thumb boyutu 22px, touch-friendly (minimum 44px hit area — padding ile sağla)
+- Slider min/max label'ları mobilde de görünsün
+
+---
+
+##### FY-11: A11y
+
+- Slider: `role="slider"`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext`
+- Recommendation: `aria-live="polite"` — slider değiştikçe screen reader yeni paketi okur
+- Section: `aria-labelledby="fiyatlar-heading"`
+- Trust points ayraçları: `aria-hidden="true"`
+- Check ikonları: `aria-hidden="true"`
+- PackageCard: semantic `h3`
+- Focus-visible: slider thumb'da ring
+- Keyboard: Arrow keys ile slider kontrolü (native `<input type="range">` zaten destekler)
+
+---
+
+##### Kabul kontrol listesi (FY-12)
+
+- [ ] `lib/constants/fiyatlar-landing.ts` oluştu, `lib/paketler.ts`'den import ediyor
+- [ ] `components/sections/FiyatlarSection.tsx` oluştu, `'use client'`
+- [ ] Slider 1-100 arası çalışıyor, mavi gradient fill
+- [ ] Recommendation değişiyor (slider değerine göre)
+- [ ] `aria-live="polite"` recommendation div'inde
+- [ ] 3 paket kartı görünüyor, popular olanın 2px primary border + translateY
+- [ ] "Senin için" yeşil badge slider'a göre doğru pakete geçiyor
+- [ ] "En popüler" ve "Senin için" badge'leri çakışmıyor
+- [ ] Trust points 4 madde, `·` ayraçlı
+- [ ] CTA route: `/fiyatlar`
+- [ ] `_tanitim-redesign.tsx`'e NedenYzlisteSection sonrası eklendi
+- [ ] `globals.css`'e slider CSS eklendi
+- [ ] Mobile: tek kolon, slider touch-friendly
+- [ ] `npm run build` hatasız
+- [ ] Emoji YOK
+- [ ] Commit: `feat: FY-01~11 fiyatlar landing bölümü`
+
+---
 
 ### SSS Bölümü — Bölüm 08
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| SS-01 | Constants (`lib/constants/sss.ts`) | Bekliyor | DS-01 | FAQ_ITEMS (6 soru-cevap), SSS_COPY (header metinleri). |
-| SS-02 | Section scaffold + SectionHeader + grid | Bekliyor | DS-07, SS-01 | `components/sections/SSSSection.tsx`. bg-white. 2 kolon grid (mobilde 1). |
-| SS-03 | FAQItem (collapsible + animation) | Bekliyor | SS-02 | `grid-template-rows: 0fr→1fr` trick. +/− ikon dönüşümü. Açık: primary-50/30 bg, primary-200 border. 200ms geçiş. İlk item default açık. |
-| SS-04 | ContactNote | Bekliyor | SS-02 | Mail ikon + "Daha fazla soru?" + email mailto link + "Tüm sorular →" link. slate-50 bg. |
-| SS-05 | A11y + responsive pass | Bekliyor | SS-03, SS-04 | `aria-expanded`. Klavye aç/kapat. Mobile: 1 kolon. WCAG AA. |
+| SS-01 | Constants (`lib/constants/sss.ts`) | Prompt hazır | DS-01 | FAQ_ITEMS (6 soru-cevap), SSS_COPY (header metinleri). |
+| SS-02 | Section scaffold + SectionHeader + grid | Prompt hazır | DS-07, SS-01 | `components/sections/SSSSection.tsx`. bg-white. 2 kolon grid (mobilde 1). |
+| SS-03 | FAQItem (collapsible + animation) | Prompt hazır | SS-02 | `grid-template-rows: 0fr→1fr` trick. +/− ikon dönüşümü. Açık: primary-50/30 bg, primary-200 border. 200ms geçiş. İlk item default açık. |
+| SS-04 | ContactNote | Prompt hazır | SS-02 | Mail ikon + "Daha fazla soru?" + email mailto link + "Tüm sorular →" link. slate-50 bg. |
+| SS-05 | A11y + responsive pass | Prompt hazır | SS-03, SS-04 | `aria-expanded`. Klavye aç/kapat. Mobile: 1 kolon. WCAG AA. |
 | SS-06 | Acceptance review | Bekliyor | SS-05 | Aziz preview kontrolü. 6 item test. |
+
+**Durum:** Prompt hazır — Claude Code'a verilebilir.
+
+#### SS-01~05 Birleşik Prompt
+
+> **ÖNEMLİ — İÇERİK KURALI:** Canlı sitedeki örnek çıktıları (üretilmiş text/görsel/video/sosyal örnekleri) olduğu gibi koru. Diğer metinler (başlık, açıklama, SSS cevapları, CTA) tasarıma uygun şekilde değiştirilebilir.
+
+> **Hedef:** Landing page'e "Sık sorulan sorular" bölümü ekle. Mevcut `/sss` sayfasından en kritik 6 soruyu seç, collapsible accordion UI, iletişim notu.
+
+---
+
+##### SS-01: Constants — `lib/constants/sss-landing.ts`
+
+Mevcut `app/sss/page.tsx`'deki `SORULAR` dizisinden landing page için en önemli 6 soru seçildi. Fiyat güncellendi (49₺).
+
+```ts
+// lib/constants/sss-landing.ts
+
+export const SSS_HEADER = {
+  eyebrow: 'Sık sorulan sorular',
+  title: 'Merak ettiklerin',
+  subtitle: 'Cevabını bulamazsan destek@yzliste.com adresine yaz.',
+}
+
+export const FAQ_ITEMS = [
+  {
+    question: 'Kredi nedir, nasıl çalışır?',
+    answer: 'Her içerik üretimi kredi tüketir. Listing metni 1 kredi, görsel 1 kredi (stil başına), sosyal medya 1 kredi, video 10-20 kredi. Kayıt olunca 3 ücretsiz kredi hediye edilir.',
+  },
+  {
+    question: 'Kredilerim süresiz mi?',
+    answer: 'Evet. Satın alınan kredilerin son kullanma tarihi yoktur. Hesabınızda kaldığı sürece geçerlidir.',
+  },
+  {
+    question: 'Abonelik var mı?',
+    answer: 'Hayır. yzliste tamamen kullandığın kadar öde modeli ile çalışır. Aylık abonelik yoktur. 49₺\'den başlayan kredi paketleri mevcuttur.',
+  },
+  {
+    question: 'Hangi pazaryerlerini destekliyorsunuz?',
+    answer: 'Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA. Her platform için başlık uzunlukları, özellik sayısı ve dil kuralları ayrı ayrı optimize edilmiştir.',
+  },
+  {
+    question: 'Fotoğraf olmadan kullanabilir miyim?',
+    answer: 'Evet. Ürün adı ve birkaç özellik yazarak metin üretebilirsiniz. Fotoğraf yüklerseniz AI ürünü otomatik analiz eder ve daha doğru içerik üretir.',
+  },
+  {
+    question: 'İade nasıl yapılır?',
+    answer: 'Kullanılmamış krediler için satın alma tarihinden itibaren 14 gün içinde destek@yzliste.com adresine yazarak iade talep edebilirsiniz.',
+  },
+] as const
+
+export const CONTACT_NOTE = {
+  text: 'Daha fazla soru mu var?',
+  email: 'destek@yzliste.com',
+  allQuestionsLink: '/sss',
+  allQuestionsText: 'Tüm sorular',
+}
+```
+
+---
+
+##### SS-02: Section scaffold — `components/sections/SSSSection.tsx`
+
+`'use client'` — accordion state gerektirir.
+
+```tsx
+// components/sections/SSSSection.tsx
+'use client'
+
+import { useState } from 'react'
+import SectionHeader from '@/components/primitives/SectionHeader'
+import { ChevronDown, Mail, ArrowRight } from 'lucide-react'
+import {
+  SSS_HEADER,
+  FAQ_ITEMS,
+  CONTACT_NOTE,
+} from '@/lib/constants/sss-landing'
+
+export default function SSSSection() {
+  // İlk item default açık
+  const [openIndex, setOpenIndex] = useState<number | null>(0)
+
+  const toggle = (i: number) => {
+    setOpenIndex(prev => (prev === i ? null : i))
+  }
+
+  return (
+    <section className="py-20 md:py-28 bg-white" aria-labelledby="sss-heading">
+      <div className="mx-auto max-w-3xl px-5">
+        <SectionHeader
+          eyebrow={SSS_HEADER.eyebrow}
+          eyebrowColor="primary"
+          title={SSS_HEADER.title}
+          subtitle={SSS_HEADER.subtitle}
+          id="sss-heading"
+        />
+
+        {/* FAQ list */}
+        <div className="mt-12 divide-y divide-rd-neutral-200" role="list">
+          {FAQ_ITEMS.map((item, i) => (
+            <FAQItem
+              key={i}
+              question={item.question}
+              answer={item.answer}
+              isOpen={openIndex === i}
+              onToggle={() => toggle(i)}
+              index={i}
+            />
+          ))}
+        </div>
+
+        {/* ContactNote */}
+        {/* ... */}
+      </div>
+    </section>
+  )
+}
+```
+
+**Not:** `max-w-3xl` (768px) — FAQ tek kolon, geniş ekranda bile dar tutulur (okunabilirlik). 2 kolon grid ticket'ta vardı ama 6 soru için tek kolon daha okunur. Claude Code bunu `max-w-3xl` ile yapsın; **2 kolon gerekmez.**
+
+---
+
+##### SS-03: FAQItem (collapsible + animation)
+
+Section dosyası içinde inline component (ayrı dosya gerekmez).
+
+```tsx
+function FAQItem({
+  question,
+  answer,
+  isOpen,
+  onToggle,
+  index,
+}: {
+  question: string
+  answer: string
+  isOpen: boolean
+  onToggle: () => void
+  index: number
+}) {
+  const id = `faq-${index}`
+
+  return (
+    <div role="listitem">
+      <button
+        id={`${id}-trigger`}
+        aria-expanded={isOpen}
+        aria-controls={`${id}-panel`}
+        onClick={onToggle}
+        className="flex w-full items-center justify-between gap-4 py-5 text-left transition-colors hover:text-rd-primary-600"
+      >
+        <span className="text-sm font-medium text-rd-neutral-900">{question}</span>
+        <ChevronDown
+          className={`h-4 w-4 flex-shrink-0 text-rd-neutral-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          aria-hidden="true"
+        />
+      </button>
+
+      <div
+        id={`${id}-panel`}
+        role="region"
+        aria-labelledby={`${id}-trigger`}
+        className="grid transition-[grid-template-rows] duration-200 ease-out"
+        style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
+      >
+        <div className="overflow-hidden">
+          <p className="pb-5 text-sm leading-relaxed text-rd-neutral-500">
+            {answer}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+**Animasyon detayları:**
+- `grid-template-rows: 0fr → 1fr` trick — smooth height animation
+- `overflow-hidden` on inner div
+- `duration-200 ease-out`
+- ChevronDown `rotate-180` when open
+- İlk item (`index === 0`) default açık (`openIndex` state = 0)
+- Aynı anda sadece 1 item açık (accordion behavior)
+
+**Açık item'da ek stil yok** — ticket'ta "primary-50 bg, primary-200 border" vardı ama 6 item'lık düz accordion'da gereksiz. Sadece hover + ChevronDown dönüşü yeterli. Claude Code bu basit versiyonu implemente etsin.
+
+---
+
+##### SS-04: ContactNote
+
+FAQ listesinden sonra, `mt-10`.
+
+```tsx
+{/* ContactNote */}
+<div className="mt-10 flex flex-col items-center gap-3 rounded-lg bg-rd-neutral-50 p-6 text-center sm:flex-row sm:justify-between sm:text-left">
+  <div className="flex items-center gap-3">
+    <Mail className="h-5 w-5 text-rd-neutral-400" aria-hidden="true" />
+    <div>
+      <p className="text-sm font-medium text-rd-neutral-700">{CONTACT_NOTE.text}</p>
+      <a
+        href={`mailto:${CONTACT_NOTE.email}`}
+        className="text-sm text-rd-primary-600 hover:text-rd-primary-700 transition-colors"
+      >
+        {CONTACT_NOTE.email}
+      </a>
+    </div>
+  </div>
+  <a
+    href={CONTACT_NOTE.allQuestionsLink}
+    className="inline-flex items-center gap-1 text-sm text-rd-primary-600 hover:text-rd-primary-700 transition-colors"
+  >
+    {CONTACT_NOTE.allQuestionsText}
+    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+  </a>
+</div>
+```
+
+---
+
+##### SS-05: A11y + responsive
+
+**A11y:**
+- `role="list"` on container, `role="listitem"` on each FAQItem
+- `aria-expanded` on trigger button
+- `aria-controls` pointing to panel id
+- `role="region"` on panel with `aria-labelledby`
+- ChevronDown `aria-hidden="true"`
+- Mail + ArrowRight icons `aria-hidden="true"`
+- Keyboard: Enter/Space toggle (native `<button>` handles this)
+
+**Responsive:**
+- `max-w-3xl` → mobilde de full width (padding handles it)
+- ContactNote: `flex-col` → `sm:flex-row`
+- No 2-column → single column throughout
+- Touch targets: button `py-5` = 40px+ height, adequate
+
+**Reduced motion:**
+- `grid-template-rows` transition + ChevronDown rotation: Add `@media (prefers-reduced-motion: reduce)` to disable both → `globals.css`'e ekle:
+```css
+@media (prefers-reduced-motion: reduce) {
+  [id^="faq-"][role="region"] {
+    transition: none;
+  }
+}
+```
+
+---
+
+##### SS-02~SS-05 entegrasyon notu
+
+`_tanitim-redesign.tsx`'de FiyatlarSection'dan **sonra** ekle:
+
+```tsx
+import SSSSection from '@/components/sections/SSSSection'
+
+// ... inside <main>
+<FiyatlarSection />
+<SSSSection />
+```
+
+---
+
+##### Kabul kontrol listesi (SS-06)
+
+- [ ] `lib/constants/sss-landing.ts` oluştu, 6 soru-cevap doğru
+- [ ] Fiyat "49₺" doğru (eski "29₺"/"39₺" yok)
+- [ ] `components/sections/SSSSection.tsx` oluştu, `'use client'`
+- [ ] Accordion çalışıyor: tıklayınca aç/kapat, aynı anda sadece 1 açık
+- [ ] İlk item default açık
+- [ ] `grid-template-rows` animasyonu smooth
+- [ ] ChevronDown 180° dönüyor
+- [ ] `aria-expanded` doğru toggle oluyor
+- [ ] ContactNote: email mailto link, "Tüm sorular" → `/sss`
+- [ ] `_tanitim-redesign.tsx`'e FiyatlarSection sonrası eklendi
+- [ ] Mobile: tek kolon, touch-friendly
+- [ ] `npm run build` hatasız
+- [ ] Emoji YOK
+- [ ] Commit: `feat: SS-01~05 sss landing bölümü`
+
+---
 
 ### Final CTA Bölümü — Bölüm 09
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| FC-01 | Constants (`lib/constants/final-cta.ts`) | Bekliyor | DS-01 | FINAL_CTA_COPY (eyebrow, heading, subheading, ctaText, reassurance). |
-| FC-02 | Section + gradient bg | Bekliyor | DS-02, FC-01 | `components/sections/FinalCTASection.tsx`. `linear-gradient(135deg, primary-600, primary-700)`. |
-| FC-03 | Container + content | Bekliyor | FC-02 | Max-w 720px. EyebrowBadge (beyaz transparan). H2 white. Sub white/80. CTA (white bg, primary-700 text, shadow, hover lift). ReassuranceLine white/70. |
-| FC-04 | (Opsiyonel) Background pattern | Bekliyor | FC-02 | Subtle dot pattern veya radial glow. |
-| FC-05 | Mobile responsive + a11y | Bekliyor | FC-03 | Mobile: CTA full width. Focus-visible. Semantic h2. |
+| FC-01 | Constants (`lib/constants/final-cta.ts`) | Prompt hazır | DS-01 | FINAL_CTA_COPY (eyebrow, heading, subheading, ctaText, reassurance). |
+| FC-02 | Section + gradient bg | Prompt hazır | DS-02, FC-01 | `components/sections/FinalCTASection.tsx`. `linear-gradient(135deg, primary-600, primary-700)`. |
+| FC-03 | Container + content | Prompt hazır | FC-02 | Max-w 720px. EyebrowBadge (beyaz transparan). H2 white. Sub white/80. CTA (white bg, primary-700 text, shadow, hover lift). ReassuranceLine white/70. |
+| FC-04 | (Opsiyonel) Background pattern | Prompt hazır | FC-02 | Subtle dot pattern veya radial glow. |
+| FC-05 | Mobile responsive + a11y | Prompt hazır | FC-03 | Mobile: CTA full width. Focus-visible. Semantic h2. |
 | FC-06 | Acceptance review | Bekliyor | FC-05 | Aziz preview kontrolü. |
+
+**Durum:** Prompt hazır — Claude Code'a verilebilir.
+
+#### FC-01~05 Birleşik Prompt
+
+> **ÖNEMLİ — İÇERİK KURALI:** Canlı sitedeki örnek çıktıları (üretilmiş text/görsel/video/sosyal örnekleri) olduğu gibi koru. Diğer metinler (başlık, açıklama, CTA) tasarıma uygun şekilde değiştirilebilir.
+
+> **Hedef:** Landing page'in son bölümü olarak güçlü bir CTA bandı ekle. Gradient bg, kısa mesaj, tek buton. Kullanıcıyı kayıt sayfasına yönlendir.
+
+---
+
+##### FC-01: Constants — `lib/constants/final-cta.ts`
+
+```ts
+// lib/constants/final-cta.ts
+
+export const FINAL_CTA = {
+  eyebrow: 'Hemen başla',
+  title: 'İlk 3 kredi hediye',
+  subtitle: 'Kayıt ol, ürün fotoğrafını yükle, saniyeler içinde listing metni hazır.',
+  ctaText: 'Ücretsiz başla',
+  ctaRoute: '/kayit',
+  reassurance: 'Kredi kartı gerekmez · 3 ücretsiz kredi · Abonelik yok',
+}
+```
+
+---
+
+##### FC-02 + FC-03: Section — `components/sections/FinalCTASection.tsx`
+
+Server component yeterli (state yok).
+
+```tsx
+// components/sections/FinalCTASection.tsx
+import { ArrowRight } from 'lucide-react'
+import { FINAL_CTA } from '@/lib/constants/final-cta'
+
+export default function FinalCTASection() {
+  return (
+    <section className="relative overflow-hidden py-20 md:py-28" aria-labelledby="final-cta-heading">
+      {/* Gradient background */}
+      <div
+        className="absolute inset-0 -z-10"
+        style={{
+          background: 'linear-gradient(135deg, var(--color-rd-primary-600), var(--color-rd-primary-700))',
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Optional: subtle radial glow */}
+      <div
+        className="absolute inset-0 -z-10 opacity-30"
+        style={{
+          background: 'radial-gradient(ellipse at 30% 50%, var(--color-rd-primary-400), transparent 70%)',
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="mx-auto max-w-2xl px-5 text-center">
+        {/* Eyebrow */}
+        <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white/90 tracking-wide backdrop-blur-sm">
+          {FINAL_CTA.eyebrow}
+        </span>
+
+        {/* Title */}
+        <h2
+          id="final-cta-heading"
+          className="mt-5 text-3xl font-bold text-white md:text-4xl"
+          style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.02em', lineHeight: '1.3' }}
+        >
+          {FINAL_CTA.title}
+        </h2>
+
+        {/* Subtitle */}
+        <p className="mt-4 text-base text-white/80 leading-relaxed md:text-lg">
+          {FINAL_CTA.subtitle}
+        </p>
+
+        {/* CTA Button — white bg, primary text */}
+        <div className="mt-8">
+          <a
+            href={FINAL_CTA.ctaRoute}
+            className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-medium text-rd-primary-700 transition-all hover:bg-white/90 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-rd-primary-700"
+          >
+            {FINAL_CTA.ctaText}
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </a>
+        </div>
+
+        {/* Reassurance */}
+        <p className="mt-5 text-sm text-white/60">
+          {FINAL_CTA.reassurance}
+        </p>
+      </div>
+    </section>
+  )
+}
+```
+
+**Tasarım notları:**
+- Gradient: `primary-600 → primary-700` (135°) — derin mavi
+- Radial glow: `primary-400` opacity 30% — opsiyonel subtle ışık efekti (FC-04)
+- Eyebrow: white/15 bg + backdrop-blur — transparan rozet
+- CTA: beyaz bg, primary-700 text, hover lift (`-translate-y-0.5`)
+- `max-w-2xl` (672px) — dar ve odaklı
+- `font-bold` kullanıldı (redesign branch'te 400-800 serbest)
+
+---
+
+##### FC-04: Background pattern (opsiyonel)
+
+Yukarıdaki radial glow yeterli. Dot pattern eklemek istenirse:
+
+```css
+/* globals.css — opsiyonel */
+.final-cta-dots {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+```
+
+Kullanım: `<div className="absolute inset-0 -z-10 final-cta-dots" aria-hidden="true" />` — gradient'in üstüne. Claude Code bunu atlayabilir, radial glow yeterli.
+
+---
+
+##### FC-05: Responsive + a11y
+
+**Responsive:**
+- `py-20 md:py-28` — mobilde daha sıkı
+- `text-3xl md:text-4xl` — mobilde biraz küçük
+- CTA buton: mobilde de inline, full width gerekmez (kısa metin)
+- `max-w-2xl px-5` — mobilde side padding yeterli
+
+**A11y:**
+- `aria-labelledby="final-cta-heading"`
+- Gradient + glow divler `aria-hidden="true"`
+- ArrowRight `aria-hidden="true"`
+- Focus-visible: white ring with offset (gradient bg'da görünsün)
+- Kontrast: white text on primary-600/700 → AA geçer (4.5:1+)
+
+---
+
+##### Entegrasyon
+
+`_tanitim-redesign.tsx`'de SSSSection'dan **sonra**, Footer'dan **önce** ekle:
+
+```tsx
+import FinalCTASection from '@/components/sections/FinalCTASection'
+
+// ... inside <main>
+<SSSSection />
+<FinalCTASection />
+```
+
+---
+
+##### Kabul kontrol listesi (FC-06)
+
+- [ ] `lib/constants/final-cta.ts` oluştu
+- [ ] `components/sections/FinalCTASection.tsx` oluştu, server component
+- [ ] Gradient bg mavi (primary-600 → primary-700)
+- [ ] Eyebrow transparan rozet (white/15)
+- [ ] CTA beyaz buton, hover lift
+- [ ] Reassurance text white/60
+- [ ] `_tanitim-redesign.tsx`'e SSSSection sonrası eklendi
+- [ ] Mobile: düzgün padding, text responsive
+- [ ] Kontrast: beyaz metin okunuyor
+- [ ] `npm run build` hatasız
+- [ ] Emoji YOK
+- [ ] Commit: `feat: FC-01~05 final cta bölümü`
+
+---
 
 ### Footer Bölümü — Bölüm 10
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| FT-01 | Constants (`lib/constants/footer.ts`) | Bekliyor | DS-01 | FOOTER_BRAND, FOOTER_COLUMNS (3 sütun: Ürün/Şirket/Yasal), FOOTER_DISCLAIMER, COMPANY_INFO. |
-| FT-02 | Footer scaffold + grid | Bekliyor | FT-01 | `components/sections/Footer.tsx`. bg-slate-50, border-top. 4 kolon grid. |
-| FT-03 | BrandColumn | Bekliyor | FT-02 | Logo (Manrope 800) + tagline + lokasyon (Lucide MapPin, bayrak emojisi yerine). |
-| FT-04 | Link columns (3 sütun) | Bekliyor | FT-02 | Ürün, Şirket, Yasal. Title uppercase. Links hover primary-700. Email mailto. |
-| FT-05 | FooterMid (copyright + badges) | Bekliyor | FT-02 | Copyright sol, iyzico + SSL badge sağ. |
-| FT-06 | FooterDisclaimer | Bekliyor | FT-02 | 12px italic slate-500, max-w 800px. Pazaryeri isimleri hakkında yasal not. |
-| FT-07 | iyzico + SSL badge asset | Bekliyor | FT-05 | PNG/SVG asset public/ altına. Aziz'den asset gelecek. |
-| FT-08 | Mobile responsive | Bekliyor | FT-06 | Mobile: 1 kolon. FooterMid dikey. |
-| FT-09 | A11y (semantic `<footer>`) | Bekliyor | FT-08 | `<footer>` tag. Link labels. WCAG AA. |
+| FT-01 | Constants (`lib/constants/footer.ts`) | Prompt hazır | DS-01 | FOOTER_BRAND, FOOTER_COLUMNS (3 sütun: Ürün/Şirket/Yasal), FOOTER_DISCLAIMER, COMPANY_INFO. |
+| FT-02 | Footer scaffold + grid | Prompt hazır | FT-01 | `components/sections/Footer.tsx`. bg-slate-50, border-top. 4 kolon grid. |
+| FT-03 | BrandColumn | Prompt hazır | FT-02 | Logo (Manrope 800) + tagline + lokasyon (Lucide MapPin, bayrak emojisi yerine). |
+| FT-04 | Link columns (3 sütun) | Prompt hazır | FT-02 | Ürün, Şirket, Yasal. Title uppercase. Links hover primary-700. Email mailto. |
+| FT-05 | FooterMid (copyright + badges) | Prompt hazır | FT-02 | Copyright sol, iyzico + SSL badge sağ. |
+| FT-06 | FooterDisclaimer | Prompt hazır | FT-02 | 12px italic slate-500, max-w 800px. Pazaryeri isimleri hakkında yasal not. |
+| FT-07 | iyzico + SSL badge asset | Prompt hazır | FT-05 | PNG/SVG asset public/ altına. Aziz'den asset gelecek. |
+| FT-08 | Mobile responsive | Prompt hazır | FT-06 | Mobile: 1 kolon. FooterMid dikey. |
+| FT-09 | A11y (semantic `<footer>`) | Prompt hazır | FT-08 | `<footer>` tag. Link labels. WCAG AA. |
 | FT-10 | Acceptance review | Bekliyor | FT-09 | Aziz preview kontrolü. |
+
+**Durum:** Prompt hazır — Claude Code'a verilebilir.
+
+#### FT-01~09 Birleşik Prompt
+
+> **ÖNEMLİ — İÇERİK KURALI:** Canlı sitedeki örnek çıktıları (üretilmiş text/görsel/video/sosyal örnekleri) ve mevcut görsel öğeleri (toplar vb.) olduğu gibi koru. Diğer metinler (footer linkleri, copyright, disclaimer) tasarıma uygun şekilde değiştirilebilir.
+
+> **Hedef:** Landing page footer'ı. 4 kolon grid (brand + 3 link grubu), altında copyright + iyzico badge, en altta yasal disclaimer. Mevcut `SiteFooter.tsx` referans, redesign token'larına taşınacak.
+
+---
+
+##### FT-01: Constants — `lib/constants/footer-landing.ts`
+
+```ts
+// lib/constants/footer-landing.ts
+
+export const FOOTER_BRAND = {
+  name: 'yzliste',
+  tagline: 'Pazaryeri içeriklerini AI ile üret',
+  location: 'Türkiye',
+}
+
+export const FOOTER_COLUMNS = [
+  {
+    title: 'Ürün',
+    links: [
+      { label: 'Fiyatlar', href: '/fiyatlar' },
+      { label: 'Blog', href: '/blog' },
+      { label: 'Sık sorulan sorular', href: '/sss' },
+    ],
+  },
+  {
+    title: 'Şirket',
+    links: [
+      { label: 'Hakkımızda', href: '/hakkimizda' },
+      { label: 'İletişim', href: 'mailto:destek@yzliste.com' },
+    ],
+  },
+  {
+    title: 'Yasal',
+    links: [
+      { label: 'Kullanım koşulları', href: '/kosullar' },
+      { label: 'Gizlilik politikası', href: '/gizlilik' },
+      { label: 'Mesafeli satış', href: '/mesafeli-satis' },
+      { label: 'Teslimat ve iade', href: '/teslimat-iade' },
+      { label: 'KVKK aydınlatma', href: '/kvkk-aydinlatma' },
+      { label: 'Çerez politikası', href: '/cerez-politikasi' },
+    ],
+  },
+] as const
+
+export const FOOTER_COPYRIGHT = '© 2026 yzliste · SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI'
+
+export const FOOTER_DISCLAIMER = 'yzliste; Trendyol, Hepsiburada, Amazon, N11 ve Etsy ile resmi bir iş birliği içinde değildir. Belirtilen marka adları yalnızca desteklenen pazaryerlerini tanımlamak için kullanılmaktadır. Tüm markalar kendi sahiplerine aittir.'
+
+export const FOOTER_IYZICO_LOGO = '/iyzico_footer_logo.png'
+```
+
+---
+
+##### FT-02 + FT-03 + FT-04: Footer scaffold + grid
+
+Server component (state yok).
+
+```tsx
+// components/sections/FooterSection.tsx
+import Link from 'next/link'
+import { MapPin } from 'lucide-react'
+import {
+  FOOTER_BRAND,
+  FOOTER_COLUMNS,
+  FOOTER_COPYRIGHT,
+  FOOTER_DISCLAIMER,
+  FOOTER_IYZICO_LOGO,
+} from '@/lib/constants/footer-landing'
+
+export default function FooterSection() {
+  return (
+    <footer className="border-t border-rd-neutral-200 bg-rd-neutral-50 pt-12 pb-8" role="contentinfo">
+      <div className="mx-auto max-w-6xl px-5">
+
+        {/* Top grid: brand + 3 link columns */}
+        <div className="grid gap-8 md:grid-cols-4">
+
+          {/* Brand column */}
+          <div>
+            <p
+              className="text-lg font-bold text-rd-neutral-900"
+              style={{ fontFamily: 'var(--font-rd-display)' }}
+            >
+              {FOOTER_BRAND.name}
+            </p>
+            <p className="mt-2 text-sm text-rd-neutral-500">{FOOTER_BRAND.tagline}</p>
+            <p className="mt-3 flex items-center gap-1.5 text-xs text-rd-neutral-400">
+              <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+              {FOOTER_BRAND.location}
+            </p>
+          </div>
+
+          {/* Link columns */}
+          {FOOTER_COLUMNS.map(col => (
+            <div key={col.title}>
+              <p className="text-xs font-medium text-rd-neutral-400 uppercase tracking-wider">
+                {col.title}
+              </p>
+              <ul className="mt-3 space-y-2" role="list">
+                {col.links.map(link => (
+                  <li key={link.href}>
+                    {link.href.startsWith('mailto:') ? (
+                      <a
+                        href={link.href}
+                        className="text-sm text-rd-neutral-600 transition-colors hover:text-rd-primary-600"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-sm text-rd-neutral-600 transition-colors hover:text-rd-primary-600"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div className="mt-10 border-t border-rd-neutral-200" aria-hidden="true" />
+
+        {/* FooterMid: copyright + iyzico */}
+        <div className="mt-6 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+          <p className="text-xs text-rd-neutral-400">{FOOTER_COPYRIGHT}</p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={FOOTER_IYZICO_LOGO}
+            alt="iyzico ile güvenli ödeme"
+            className="h-6 w-auto"
+          />
+        </div>
+
+        {/* Disclaimer */}
+        <p className="mt-6 mx-auto max-w-3xl text-center text-xs italic text-rd-neutral-400 leading-relaxed">
+          {FOOTER_DISCLAIMER}
+        </p>
+
+      </div>
+    </footer>
+  )
+}
+```
+
+**Tasarım notları:**
+- `bg-rd-neutral-50` + `border-t border-rd-neutral-200` — soft separator
+- Brand name: Manrope 800 (`font-bold` + display font)
+- Location: Lucide MapPin (bayrak emojisi yasak)
+- Link columns: uppercase title, text links hover primary-600
+- `<Link>` for internal, `<a>` for mailto
+- iyzico logo: mevcut `public/iyzico_footer_logo.png` kullanılır
+
+---
+
+##### FT-05: FooterMid (copyright + badges)
+
+Yukarıdaki kodda zaten var. `sm:flex-row sm:justify-between` — mobilde dikey, masaüstünde yatay.
+
+**FT-07 (iyzico asset):** Mevcut `public/iyzico_footer_logo.png` dosyası kullanılacak. Yeni asset gerekmez. SSL badge şimdilik yok — Aziz'den gelirse eklenebilir.
+
+---
+
+##### FT-08: Mobile responsive
+
+- Grid: `md:grid-cols-4` → mobilde `grid-cols-1` (default)
+- Mobilde brand column üstte, link columns alta sıralanır
+- FooterMid: `flex-col` → `sm:flex-row`
+- Disclaimer: `max-w-3xl mx-auto text-center` — mobilde de okunur
+
+---
+
+##### FT-09: A11y
+
+- `<footer>` semantic tag + `role="contentinfo"`
+- Link listleri `role="list"` + `<li>` items
+- MapPin + divider `aria-hidden="true"`
+- iyzico logo: `alt="iyzico ile güvenli ödeme"`
+- Focus-visible: links default browser outline yeterli (veya `focus-visible:text-rd-primary-600`)
+
+---
+
+##### Entegrasyon
+
+`_tanitim-redesign.tsx`'de FinalCTASection'dan **sonra**, `</main>`'den sonra ekle (footer main dışında):
+
+```tsx
+import FooterSection from '@/components/sections/FooterSection'
+
+// ... layout
+<main>
+  ...
+  <FinalCTASection />
+</main>
+<FooterSection />
+```
+
+---
+
+##### Kabul kontrol listesi (FT-10)
+
+- [ ] `lib/constants/footer-landing.ts` oluştu
+- [ ] `components/sections/FooterSection.tsx` oluştu, server component
+- [ ] 4 kolon grid: brand + Ürün + Şirket + Yasal
+- [ ] Brand: Manrope, MapPin lokasyon (emoji yok)
+- [ ] Linkler doğru route'lara gidiyor
+- [ ] iyzico logo görünüyor
+- [ ] Copyright doğru
+- [ ] Disclaimer italic, küçük
+- [ ] `_tanitim-redesign.tsx`'e main dışında, en sonda eklendi
+- [ ] Mobile: tek kolon, FooterMid dikey
+- [ ] `npm run build` hatasız
+- [ ] Emoji YOK
+- [ ] Commit: `feat: FT-01~09 footer bölümü`
 
 ---
 
@@ -1442,4 +1430,102 @@ Hero → UcAdim → IcerikTurleri → Pazaryeri → MarkaBilgileri → NedenYzli
 | U-18 | Mobile responsive sweep | Bekliyor | U-01~U-17 | Sticky bar, formlar, collapsible, tooltip — hepsi mobile'da sorunsuz. 375px'te overflow yok. |
 | U-19 | A11y audit | Bekliyor | U-18 | Radio group ARIA, tooltip ARIA, focus management, WCAG AA kontrast. |
 | U-20 | Lighthouse pass | Bekliyor | U-19 | Performance >90, CLS <0.05, a11y >90. |
-| U-21 | Aziz 
+| U-21 | Aziz kabul | Bekliyor | U-20 | Preview URL'de test, onay. |
+
+---
+
+## 12 — Hesap Alanı + Diğer Sayfalar Refactor
+
+**Spec:** `specs/hesap-alani-refactor-spec.md`
+**Mockup'lar:** `specs/marka-profili-mockup.jsx`, `specs/hesabim-mockup.jsx`
+**Durum:** Landing page tamamlandıktan sonra başlayacak.
+
+### Aziz Kararları (2026-04-27)
+
+1. **Canlı önizleme:** Hazır şablon (template-based). Ton seçimine göre önceden yazılmış metin şablonları. AI çağrısı yok, maliyetsiz, anlık.
+2. **Düşük kredi eşiği:** 5 kredi. Uyarı (kırmızı border, "Kredi al" vurgusu) 5 ve altında tetiklenir.
+3. **Referans istatistikleri:** İlk davetten sonra göster. 0 davet = sadece CTA, 1+ davet = istatistikler görünür.
+4. **Fiyatlar SSS:** Kredi ve fiyat odaklı. Landing page SSS'den kredi/fiyat olanları seç + fiyatlara özel 1-2 soru ekle.
+5. **Karşılaştırma tablosu:** Şimdilik gerekli değil, atlıyoruz.
+6. **Üretim sonuç sayfası:** Kapsama dahil ama ayrı iş — `/uret` spec'inde ele alınacak.
+
+### Genel İçerik Kuralı
+
+Canlı sitedeki örnek çıktıları (üretilmiş text/görsel/video/sosyal örnekleri) ve mevcut görsel öğeleri (toplar vb.) olduğu gibi koru — yeniden üretim gerektirmesin. Diğer metinler (başlık, açıklama, CTA, UI copy) tasarıma uygun şekilde değiştirilebilir.
+
+### Mockup Uyarıları
+
+- Mockup'larda emoji var (ton chip'leri, "Neden bu önemli?" vb.) — CLAUDE.md kuralı gereği Lucide ikonlarıyla değiştirilecek.
+- Mockup paleti (slate scale + #1E40AF) landing page redesign token'larıyla uyumlu.
+
+### Grup 1 — Renk Paleti Uyumu (bağımlılık, önce yapılacak)
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| H-01 | Anasayfa paletini tüm sayfalara uygula | Bekliyor | Landing page done | `/hesap`, `/hesap/marka`, `/hesap/profil`, `/fiyatlar`, `/blog`, `/giris` sayfalarında redesign token'ları (`rd-` prefix) kullanılıyor. Eski `#D8D6CE`, `#908E86`, `#1E4DD8` renkleri kalmamış. |
+
+### Grup 2 — Marka Profili `/hesap/marka` (en büyük iş)
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| H-02 | ProgressIndicator component | Bekliyor | H-01 | Header'da ilerleme çubuğu. 6px yükseklik. Renk: <50% slate, 50-99% primary, 100% success. |
+| H-03 | Form alanları (5 alan) | Bekliyor | H-01 | storeName, tone, audience, features, extraInfo. Label + input + helper + tamamlandı tik. |
+| H-04 | Ton chip selector | Bekliyor | H-03 | 3 chip (samimi/profesyonel/premium), radio group. Lucide ikonları (emoji yok). |
+| H-05 | `generatePreview()` şablon fonksiyonu | Bekliyor | H-04 | Ton seçimine göre hazır metin şablonları. AI yok. 3 varyasyon. `useMemo`. |
+| H-06 | BrandedAIPreview (sticky kolon) | Bekliyor | H-05 | Sağ kolon sticky. Form değişince fade animasyonuyla güncellenir. |
+| H-07 | GenericAIPreview (kıyas paneli) | Bekliyor | H-06 | Statik "marka bilgisi olmadan" örneği. Branded ile yan yana. |
+| H-08 | WhyItMatters tooltip | Bekliyor | H-01 | Lucide Info ikonu + tooltip. Hover/focus ile açılır. |
+| H-09 | StickySaveBar | Bekliyor | H-03 | Yapışkan bar. Dirty state'te görünür. "Kaydet" + durum mesajı. |
+| H-10 | `beforeunload` dirty state warning | Bekliyor | H-09 | Kaydedilmemişse sayfa kapatmada tarayıcı uyarısı. |
+| H-11 | Save POST `/api/marka-profili` | Bekliyor | H-09 | API'ye POST. Loading, error handling, success toast. |
+| H-12 | Toast başarı bildirimi | Bekliyor | H-11 | Yeşil toast. 3sn auto-dismiss. |
+| H-13 | Mobile responsive | Bekliyor | H-06 | Tek kolon (form üst, preview alt). 375px overflow yok. |
+| H-14 | A11y pass | Bekliyor | H-13 | Radio group ARIA, focus, `aria-live`, WCAG AA. |
+
+### Grup 3 — Hesabım `/hesap`
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| H-15 | Tasarruf rozeti | Bekliyor | H-01 | Mavi gradient badge, Trophy ikonu. "X içerik — Y TL tasarruf". |
+| H-16 | 3 KPI grid | Bekliyor | H-01 | Kalan kredi (<=5'te kırmızı + "Kredi al" CTA), bu ay üretim, toplam üretim. |
+| H-17 | Denenmemiş özellikler keşif bloğu | Bekliyor | H-01 | Dinamik grid. Her kart ilgili sayfaya yönlendirir. |
+| H-18 | 6 menü kartı + uyarı durumları | Bekliyor | H-01 | Marka (eksikse turuncu), Profil, Üretimler, Krediler (<=5'te kırmızı), Faturalar, Ayarlar. |
+| H-19 | Davet kutusu basitleştirme | Bekliyor | H-01 | Amber gradient, Gift ikonu. 0 davet=CTA only; 1+=istatistik. |
+| H-20 | "Favori platform" KPI kaldırma | Bekliyor | H-16 | 4 KPI -> 3 KPI. |
+| H-21 | Mobile responsive | Bekliyor | H-19 | 375px overflow yok. |
+
+### Grup 4 — Fiyatlar `/fiyatlar`
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| H-22 | "Önerilen" -> "En popüler" güncelle | Bekliyor | H-01 | Terim değişikliği. |
+| H-23 | Kredi calculator entegrasyonu | Bekliyor | H-01, FY done | Landing page CreditCalculator reuse. |
+| H-24 | SSS bölümü | Bekliyor | H-01 | 4-6 soru, kredi/fiyat odaklı. Landing SSS component reuse. |
+| H-25 | ~~Karşılaştırma tablosu~~ | Atlandı | — | Gerekli değil (Aziz kararı). |
+| H-26 | Trust strip alt bant | Bekliyor | H-01 | Landing page güven noktaları tekrarı. |
+
+### Grup 5 — Blog `/blog`
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| H-27 | Kategori filtre state'leri | Bekliyor | H-01 | Aktif primary bg, pasif neutral. |
+| H-28 | Kart hover state | Bekliyor | H-01 | Lift + shadow (redesign branch'te OK). |
+| H-29 | Arama input focus | Bekliyor | H-01 | Primary ring. |
+
+### Grup 6 — Giriş `/giris`
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| H-30 | Form input focus ring | Bekliyor | H-01 | Primary ring. |
+| H-31 | Tab aktif/pasif border | Bekliyor | H-01 | Primary 2px aktif, neutral pasif. |
+
+### Grup 7 — Polish & QA
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| H-32 | Cross-page navigation | Bekliyor | H-01~H-31 | Tüm geçişler sorunsuz. |
+| H-33 | Lighthouse pass | Bekliyor | H-32 | 5 sayfada Performance >90, a11y >90. |
+| H-34 | A11y audit | Bekliyor | H-33 | WCAG AA tüm sayfalarda. |
+| H-35 | Aziz kabul | Bekliyor | H-34 | Preview'da 5 sayfa test + onay. |
+
+**Bağımlılıklar:** H-01 hepsinden önce. Grup 2-6 paralel. Grup 7 en son. 
