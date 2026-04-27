@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import TanitimSayfasi from "./_tanitim";
+import TanitimSayfasi from "./_tanitim-redesign";
 
 export const metadata: Metadata = {
   title: { absolute: "yzliste — AI ile E-ticaret Listing, Görsel ve Video Üret" },
@@ -25,3 +25,4 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return <TanitimSayfasi />;
 }
+
