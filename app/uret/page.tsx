@@ -20,6 +20,7 @@ import { useMetinUretim } from "@/lib/hooks/useMetinUretim";
 import { useGorselUretim } from "@/lib/hooks/useGorselUretim";
 import { useVideoUretim } from "@/lib/hooks/useVideoUretim";
 import { useSosyalUretim } from "@/lib/hooks/useSosyalUretim";
+import IntentBanner from "@/components/uret/IntentBanner";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
 
@@ -46,7 +47,6 @@ export default function Home() {
   const [gecmisPlatformFiltre, setGecmisPlatformFiltre] = useState("");
   const [paketModalAcik, setPaketModalAcik] = useState(false);
   const [hata, setHata] = useState<string | null>(null);
-  const [profilBannerKapatildi, setProfilBannerKapatildi] = useState(false);
   const [hosgeldiniBannerKapatildi, setHosgeldiniBannerKapatildi] = useState(() =>
     typeof window !== "undefined" && localStorage.getItem("hbk") === "1"
   );
@@ -216,20 +216,6 @@ export default function Home() {
               </div>
             )}
 
-            {/* Marka profili eksik */}
-            {kullanici && !kullanici.anonim && !kullanici.marka_adi && !profilBannerKapatildi && (
-              <div className="bg-rd-neutral-100 border border-rd-neutral-200 rounded-xl p-4 mb-5 flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium text-rd-neutral-900">Marka profilinizi doldurun</p>
-                  <p className="text-xs text-rd-neutral-600 mt-0.5">Marka adı, hedef kitle ve ton bilgileri girilince AI metinleri ve görseller çok daha kaliteli sonuç verir.</p>
-                </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <a href="/hesap/profil" className="bg-rd-primary-800 hover:bg-rd-primary-900 text-white text-xs font-medium px-4 py-2 rounded-lg whitespace-nowrap transition-colors">Profili düzenle</a>
-                  <button onClick={() => setProfilBannerKapatildi(true)} aria-label="Bildirimi kapat" className="text-rd-neutral-400 hover:text-rd-neutral-600 text-xl leading-none transition-colors">×</button>
-                </div>
-              </div>
-            )}
-
             {/* Hoş geldiniz — ilk ziyarette, bir kez */}
             {kullanici && !kullanici.anonim && kullanici.toplam_kullanilan === 0 && !metin.sonuc && !hosgeldiniBannerKapatildi && (
               <div className="mb-4 bg-rd-neutral-100 border border-rd-neutral-200 rounded-xl p-4 flex items-start gap-3">
@@ -271,6 +257,8 @@ export default function Home() {
         )}
 
         <div>
+
+            <IntentBanner />
 
             {/* SEKMELER */}
             <div role="tablist" aria-label="İçerik türü seçimi" className="bg-white border border-rd-neutral-200 rounded-xl p-1 flex gap-0.5">

@@ -1469,8 +1469,121 @@ BACKLOG-REDESIGN.md'de U-01 satırını [x] işaretle.
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| U-02 | Sarı marka uyarısı banner'ını kaldır | Bekliyor | U-01 | Mevcut sarı "Marka profilinizi doldurun" banner'ı kaldırılmış veya taşınmış. |
-| U-03 | IntentBanner component ekle | Bekliyor | U-02 | Sayfanın en üstünde: Eyebrow "ADIM 1 / 3 — NE ÜRETMEK İSTİYORSUN?" + H1 "İçerik türünü seç" + subtitle. White bg, slate-200 border, 16px radius, 24px padding. |
+| U-02 | Sarı marka uyarısı banner'ını kaldır | ✅ Tamam | U-01 | app/uret/page.tsx satır 220-228 civarındaki "Marka profilinizi doldurun" conditional bloğu tamamen kaldırılır. Marka profili kavramı U-04~U-07'de farklı interaktif demo olarak geri gelecek. |
+| U-03 | IntentBanner component ekle | ✅ Tamam | U-02 | Sayfanın en üstünde (form/sekmelerden ÖNCE): Eyebrow "ADIM 1 / 3 — NE ÜRETMEK İSTİYORSUN?" + H1 "İçerik türünü seç" + subtitle "Her tür için ayrı bir form var. Aynı ürün için birkaçını üst üste de üretebilirsin." White bg, rd-neutral-200 border, rounded-2xl, p-6 padding. |
+
+#### U-02 + U-03 Birleşik Prompt
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
+UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
+Bunun yerine BACKLOG-REDESIGN.md başındaki redesign branch UI 
+kuralları geçerli:
+- Font 400–800 serbest
+- Gölge (shadow-*) serbest
+- rounded-2xl, rounded-xl, rounded-lg serbest
+- Manrope (display 18px+) + Inter (body)
+- Yeni spec paleti (rd-* token'ları)
+- Tek istisna — emoji YASAK (Lucide ikon kullan)
+
+Branch: claude/redesign-modern-ui
+Görev: U-02 + U-03 — /uret sayfası niyet hatırlatıcı (IntentBanner)
+
+Hedef: /uret sayfası açılınca kullanıcı önce kendi niyetini hatırlasın 
+("ben buraya içerik üretmeye geldim, hangi türü istiyorum?"). Mevcut 
+"Marka profilinizi doldurun" uyarısı bu niyetle ilgisiz, kafa karıştırıyor.
+
+────────────────────────────────────────────
+U-02: Sarı marka uyarısı banner'ını kaldır
+────────────────────────────────────────────
+
+Dosya: app/uret/page.tsx
+Konum: satır 220-228 civarı
+
+Şu blok TAMAMEN KALDIRILSIN:
+
+  {kullanici && !kullanici.anonim && !kullanici.marka_adi && !profilBannerKapatildi && (
+    <div className="bg-rd-neutral-100 border border-rd-neutral-200 rounded-xl p-4 mb-5 flex items-center justify-between gap-4">
+      <div>
+        <p className="text-sm font-medium text-rd-neutral-900">Marka profilinizi doldurun</p>
+        ...
+      </div>
+      ...
+    </div>
+  )}
+
+Ayrıca artık kullanılmayan state'leri ve handler'ları temizle:
+- profilBannerKapatildi state (varsa)
+- onProfilBannerKapat handler (varsa)
+- localStorage anahtar kaldırma — varsa açıklama yorumu bırak
+
+DİKKAT: Marka profili konsepti tamamen kaybolmuyor. U-04~U-07'de 
+farklı bir interaktif demo (BrandProfileBlock — "önce dene" tıklanabilir 
+kart) olarak geri gelecek. Şimdi sadece sarı uyarı kaldırılıyor.
+
+────────────────────────────────────────────
+U-03: IntentBanner component ekle
+────────────────────────────────────────────
+
+Yeni component: components/uret/IntentBanner.tsx
+(uret klasörü yoksa oluştur, /uret'e özel componentler için)
+
+Component spec:
+
+```tsx
+// components/uret/IntentBanner.tsx
+import type { ReactNode } from 'react'
+
+export default function IntentBanner() {
+  return (
+    <div
+      className="bg-white border border-rd-neutral-200 rounded-2xl p-6 mb-6"
+      aria-labelledby="intent-banner-heading"
+    >
+      <p className="text-xs font-medium text-rd-primary-700 uppercase tracking-wider">
+        Adım 1 / 3 — Ne üretmek istiyorsun?
+      </p>
+      <h1
+        id="intent-banner-heading"
+        className="mt-2 text-2xl font-bold text-rd-neutral-900 md:text-3xl"
+        style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em', lineHeight: '1.3' }}
+      >
+        İçerik türünü seç
+      </h1>
+      <p className="mt-2 text-sm text-rd-neutral-600 leading-relaxed md:text-base">
+        Her tür için ayrı bir form var. Aynı ürün için birkaçını üst üste de üretebilirsin.
+      </p>
+    </div>
+  )
+}
+```
+
+Kullanım — app/uret/page.tsx içinde:
+- Üstte: import IntentBanner from '@/components/uret/IntentBanner'
+- U-02'de kaldırılan sarı banner'ın YERİNE değil, sayfanın en üstüne 
+  (sekmelerden ÖNCE) yerleştir. Form container'ının ilk child'ı olsun.
+- Sekmeler (metin/görsel/video/sosyal) IntentBanner'ın altında kalır.
+
+────────────────────────────────────────────
+Test (commit öncesi)
+────────────────────────────────────────────
+
+- /uret açıldığında ilk görünen blok IntentBanner
+- "ADIM 1 / 3 — NE ÜRETMEK İSTİYORSUN?" eyebrow uppercase, primary-700 mavi
+- "İçerik türünü seç" H1 Manrope 800, koyu (rd-neutral-900)
+- Subtitle gri (rd-neutral-600), 1-2 satır
+- Banner beyaz, rd-neutral-200 border, rounded-2xl, p-6
+- Sarı "Marka profilinizi doldurun" uyarısı tamamen yok
+- Build temiz (TypeScript clean)
+- Mobil 375px'te H1 taşmıyor, padding korunuyor
+
+Commit mesajları (mantıklı bölünebilir):
+1. refactor(uret): U-02 sarı marka uyarısı kaldırıldı
+2. feat(uret): U-03 IntentBanner component eklendi
+
+BACKLOG-REDESIGN.md'de U-02 ve U-03 satırlarını [x] işaretle.
+```
 
 ### Grup 3 — Marka Profili Interaktif Demo
 
