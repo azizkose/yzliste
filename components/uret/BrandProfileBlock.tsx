@@ -1,26 +1,22 @@
 'use client'
 
-import { useState, type ReactNode } from 'react'
+import { useState } from 'react'
 import { Sparkles, ChevronDown } from 'lucide-react'
+import ToneSelector from './ToneSelector'
+import AIPreview from './AIPreview'
+import type { ToneKey } from '@/lib/constants/marka-bilgileri'
 
-export type BrandTone = 'samimi' | 'profesyonel' | 'premium'
+export type BrandTone = ToneKey
 
-interface BrandProfileBlockProps {
-  // U-05/U-06'da çocuk component'ler eklenecek; şimdilik opsiyonel
-  children?: ReactNode
-}
-
-export default function BrandProfileBlock({ children }: BrandProfileBlockProps) {
+export default function BrandProfileBlock() {
   const [showDemo, setShowDemo] = useState(false)
-  const [activeTone, setActiveTone] = useState<BrandTone | null>(null)
+  const [activeTone, setActiveTone] = useState<ToneKey | null>(null)
 
-  // Border + ikon rengi: ton seçilmediyse accent (turuncu),
-  // seçildiyse success (yeşil) — U-06'da activeTone set edilince geçiş olacak
   const isToneSelected = activeTone !== null
   const accentClass = isToneSelected ? 'border-l-rd-success-600' : 'border-l-rd-accent-600'
   const iconColor = isToneSelected ? 'text-rd-success-600' : 'text-rd-accent-600'
   const headerTitle = isToneSelected
-    ? `Marka tonu: ${capitalizeTone(activeTone!)}`
+    ? `Marka tonu: ${capitalizeTone(activeTone)}`
     : 'Marka profili eksik'
   const headerSubtitle = isToneSelected
     ? 'Bu sadece önizleme. Tonu kalıcı yapmak için profilini kaydet.'
@@ -58,19 +54,16 @@ export default function BrandProfileBlock({ children }: BrandProfileBlockProps) 
           id="brand-profile-demo"
           className="border-t border-rd-neutral-100 p-5 grid gap-5 md:grid-cols-[1fr_1.2fr]"
         >
-          {children ?? (
-            <p className="text-sm text-rd-neutral-500 italic md:col-span-2">
-              Demo içeriği yakında eklenecek (U-05 + U-06).
-            </p>
-          )}
+          <ToneSelector activeTone={activeTone} onChange={setActiveTone} />
+          <AIPreview activeTone={activeTone} />
         </div>
       )}
     </div>
   )
 }
 
-function capitalizeTone(tone: BrandTone): string {
-  const map: Record<BrandTone, string> = {
+function capitalizeTone(tone: ToneKey): string {
+  const map: Record<ToneKey, string> = {
     samimi: 'Samimi',
     profesyonel: 'Profesyonel',
     premium: 'Premium',
