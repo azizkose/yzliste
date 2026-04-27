@@ -224,8 +224,8 @@ Hedefler: LCP < 2.5s, CLS < 0.05, Lighthouse > 90
 | UA-06 | MiniMockup — Step3: OutputMockup | ✅ Tamam | UA-03 | 2 çıktı kartı (Trendyol listing + Amazon görsel) + "ve 2 tane daha...". |
 | UA-07 | ConnectorLine (dashed, desktop-only) | ✅ Tamam | UA-03 | 2px dashed #CBD5E1, absolute top-10, calc(100%/6), hidden lg:block, aria-hidden. |
 | UA-08 | TotalTimeBar + stagger animasyon | ✅ Tamam | UA-02 | rd-primary-50 bg, Clock ikon + "Saniyeler içinde tamamlanır". Max-w 420px. |
-| UA-09 | Mobile responsive + a11y pass | Bekliyor | UA-07, UA-08 | **Prompt → aşağıda** |
-| UA-10 | Acceptance review | Bekliyor | UA-09 | Aziz preview kontrolü. |
+| UA-09 | Mobile responsive + a11y pass | ✅ Tamam | UA-07, UA-08 | md: breakpoint (lg→md), NumberCircle aria-hidden+rd-primary-200 border, mockup role="img" taşındı, max-w-[280px] mx-auto, stagger fade-in (globals.css), prefers-reduced-motion. |
+| UA-10 | Acceptance review | Bekliyor | UA-09 ✅ | Aziz preview kontrolü. |
 
 #### UA-01~08 Detaylı Prompt (Claude Code bu bölümü okuyacak)
 
@@ -690,17 +690,314 @@ StepCard'da: `className={cn("flex flex-col items-center text-center", \`animate-
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| MB-01 | Constants (`lib/constants/marka-bilgileri.ts`) | Bekliyor | DS-01 | BRAND_FEATURES (4 item), TONE_CHIPS (samimi/profesyonel/premium + çıktı metinleri), BRAND_FORM_FIELDS. |
-| MB-02 | Section scaffold + grid + bg | Bekliyor | DS-07, MB-01 | `components/sections/MarkaBilgileriSection.tsx`. bg-slate-50. 2 kolon grid (gap 64px). |
-| MB-03 | LeftColumn (eyebrow + heading + features + CTA) | Bekliyor | MB-02 | Turuncu Sparkles eyebrow "YENİ ÖZELLİK". Heading. 4 feature item (icon box + title + desc). CTA link "Marka profilimi oluştur →". |
-| MB-04 | BrandFormPreview card scaffold | Bekliyor | MB-02 | `components/sections/MarkaBilgileriSection/BrandFormPreview.tsx`. white bg, shadow-sm, border. Header "Marka Profili" + yeşil "Aktif" badge. |
-| MB-05 | Static fields (Mağaza adı, Hedef kitle) | Bekliyor | MB-04 | 2 read-only field: slate-50 bg, label + value. |
-| MB-06 | Marka tonu radio group (3 chip) | Bekliyor | MB-04 | 3 chip (samimi/profesyonel/premium). `role="radiogroup"`, `aria-checked`. Arrow Left/Right navigasyon. Default: samimi. |
-| MB-07 | OutputPreview + fade animation | Bekliyor | MB-06 | slate-50 bg. Sparkles eyebrow "AI çıktısı — {tone} tonda". 400ms fade+slide-up on tone change. `aria-live="polite"`. |
-| MB-08 | Hint text | Bekliyor | MB-07 | "↑ Tonu değiştir, AI çıktısı değişiyor" — italic, gri, ortalı. |
-| MB-09 | Mobile responsive pass | Bekliyor | MB-08 | Mobile: tek kolon (sol önce sağ sonra). Desktop: 2 kolon. Overflow yok. |
-| MB-10 | A11y pass | Bekliyor | MB-09 | radiogroup ARIA. focus-visible. `prefers-reduced-motion`. WCAG AA. |
+| MB-01 | Constants (`lib/constants/marka-bilgileri.ts`) | Prompt hazır | DS-01 | BRAND_FEATURES (4 item), TONE_CHIPS (samimi/profesyonel/premium + çıktı metinleri), BRAND_FORM_FIELDS. |
+| MB-02 | Section scaffold + grid + bg | Prompt hazır | DS-07, MB-01 | `components/sections/MarkaBilgileriSection.tsx`. bg-neutral-50. 2 kolon grid. |
+| MB-03 | LeftColumn (eyebrow + heading + features + CTA) | Prompt hazır | MB-02 | Accent Sparkles eyebrow "Yeni özellik". Heading. 4 feature item (icon box + title + desc). CTA link. |
+| MB-04 | BrandFormPreview card scaffold | Prompt hazır | MB-02 | BrandFormPreview aynı dosyada. white bg, border. Header "Marka Profili" + yeşil "Aktif" badge. |
+| MB-05 | Static fields (Mağaza adı, Hedef kitle) | Prompt hazır | MB-04 | 2 read-only field: primary-50 + neutral-50. |
+| MB-06 | Marka tonu radio group (3 chip) | Prompt hazır | MB-04 | 3 chip (samimi/profesyonel/premium). `role="radiogroup"`, `aria-checked`. Arrow Left/Right. Default: samimi. |
+| MB-07 | OutputPreview + fade animation | Prompt hazır | MB-06 | neutral-50 bg. Accent eyebrow "AI çıktısı — {tone} tonda". 300ms fade+slide-up on tone change. `aria-live="polite"`. |
+| MB-08 | Hint text | Prompt hazır | MB-07 | "Tonu değiştir, AI çıktısının nasıl değiştiğini gör" — italic, gri, ortalı. |
+| MB-09 | Mobile responsive pass | Prompt hazır | MB-08 | Mobile: tek kolon (sol önce sağ sonra). Desktop: 2 kolon. flex-wrap tone chips. |
+| MB-10 | A11y pass | Prompt hazır | MB-09 | radiogroup ARIA + roving tabindex. focus-visible. `prefers-reduced-motion`. WCAG AA. |
 | MB-11 | Acceptance review | Bekliyor | MB-10 | Aziz preview kontrolü. 3 ton test. |
+
+#### MB-01~10 Detaylı Prompt (Claude Code bu bölümü okuyacak)
+
+**Genel bilgi:** Marka Bilgileri bölümü — kullanıcıya marka profili oluşturma özelliğini tanıtan interaktif section. Sol tarafta özellik listesi, sağ tarafta canlı form preview kartı. Ton seçimi değiştikçe çıktı metni değişiyor.
+
+**Branch:** `claude/redesign-modern-ui`
+**Referans:** Eski `components/tanitim/BrandProfile.tsx` dosyası referans olarak okunabilir.
+
+---
+
+##### MB-01: Constants dosyası
+
+Dosya: `lib/constants/marka-bilgileri.ts`
+
+```ts
+import { Store, Target, Palette, Lightbulb } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+export const MB_HEADER = {
+  eyebrow: "Yeni özellik",
+  eyebrowColor: "accent" as const,
+  title: "Marka bilgilerini gir, sana özel içerikler al",
+  subtitle: "Profilinden mağaza adını, hedef kitlenini ve metin tonunu belirle. Bundan sonra her üretimde AI bu bilgileri kullanır.",
+};
+
+export interface BrandFeature {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
+export const BRAND_FEATURES: BrandFeature[] = [
+  {
+    icon: Store,
+    title: "Marka kimliği",
+    description: "Mağaza adın ve marka kimliğin metne yansır",
+  },
+  {
+    icon: Target,
+    title: "Hedef kitle odaklı",
+    description: "Hedef kitlenin dilinde yazar — doğru kitleye hitap eder",
+  },
+  {
+    icon: Palette,
+    title: "Ton seçimi",
+    description: "Samimi, profesyonel veya premium — tonunu seç, her üretimde uygular",
+  },
+  {
+    icon: Lightbulb,
+    title: "Marka değerleri",
+    description: "Hızlı kargo, yerli üretim gibi değerlerin her ürüne otomatik eklenir",
+  },
+];
+
+export type ToneKey = "samimi" | "profesyonel" | "premium";
+
+export interface ToneChip {
+  key: ToneKey;
+  label: string;
+  output: string; // OutputPreview'da gösterilecek metin
+}
+
+export const TONE_CHIPS: ToneChip[] = [
+  {
+    key: "samimi",
+    label: "Samimi",
+    output: "Bu tişört tam sana göre! Yumuşacık kumaşı ve şık kesimi ile her kombine uyum sağlar. Hemen sipariş ver, yarın kapında.",
+  },
+  {
+    key: "profesyonel",
+    label: "Profesyonel",
+    output: "Premium pamuk karışımı kumaştan üretilmiş, ergonomik kesim tişört. Boyut tablosu için ürün detaylarını inceleyebilirsiniz.",
+  },
+  {
+    key: "premium",
+    label: "Premium",
+    output: "Özenle seçilmiş Ege pamuğundan, sınırlı üretim koleksiyon parçası. Minimalist tasarımı ile gardırobunuzun vazgeçilmezi olacak.",
+  },
+];
+
+export const BRAND_FORM_FIELDS = {
+  storeName: { label: "Mağaza adı", value: "Ayşe Tekstil" },
+  targetAudience: { label: "Hedef kitle", value: "25-40 yaş kadınlar" },
+};
+
+export const MB_CTA = {
+  text: "Marka profilimi oluştur",
+  href: "/uret",
+};
+
+export const MB_HINT = "Tonu değiştir, AI çıktısının nasıl değiştiğini gör";
+```
+
+---
+
+##### MB-02: Section scaffold + 2 kolon grid
+
+Dosya: `components/sections/MarkaBilgileriSection.tsx`
+
+```
+'use client'
+
+import { useState } from "react"
+// Tüm sub-component'ler AYNI DOSYADA olacak (UA pattern'i gibi)
+```
+
+- Section: `bg-rd-neutral-50 py-16 md:py-20 lg:py-28`
+- Container: `max-w-6xl mx-auto px-4 sm:px-6 lg:px-8`
+- Grid: `grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start`
+- Sol kolon: özellikler + CTA
+- Sağ kolon: BrandFormPreview kartı
+
+---
+
+##### MB-03: LeftColumn
+
+Sol kolon içeriği (grid'in ilk child'ı olarak, ayrı component değil inline):
+
+1. **Eyebrow:** `<Eyebrow>` primitive kullan, `color="accent"`, `icon={<Sparkles size={14} />}`. Sparkles lucide-react'tan.
+2. **Heading:** `<h2>` — font-rd-display, text-3xl md:text-4xl, font-extrabold, tracking-tight, text-rd-neutral-900. İçerik: `MB_HEADER.title`
+3. **Subtitle:** `<p>` — text-lg text-rd-neutral-600 leading-relaxed, mt-4. İçerik: `MB_HEADER.subtitle`
+4. **Feature list:** `<div className="mt-8 space-y-5">` — her feature:
+   - Flex row: `flex items-start gap-4`
+   - Icon box: `w-10 h-10 rounded-xl bg-rd-accent-50 flex items-center justify-center shrink-0`
+   - Icon: `<feature.icon size={20} strokeWidth={1.5} className="text-rd-accent-700" />`
+   - Text: `<div>` — title `text-sm font-medium text-rd-neutral-900` + description `text-sm text-rd-neutral-600 mt-0.5`
+5. **CTA link:** `<a href={MB_CTA.href} className="...">` — mt-8, inline-flex items-center gap-2, text-rd-primary font-medium text-sm, hover:text-rd-primary-800, transition-colors. İçerik: `MB_CTA.text` + ArrowRight ikonu (size 16).
+
+---
+
+##### MB-04: BrandFormPreview kartı
+
+Sağ kolonda (grid'in ikinci child'ı). Ayrı bir function component `BrandFormPreview` ama aynı dosyada.
+
+- Props: `{ selectedTone, onToneChange }` — `ToneKey` tipi
+- Kart: `bg-white rounded-xl border border-rd-neutral-200 p-6 lg:p-8`
+- **NOT:** shadow yok (redesign branch'de shadow OK ama bu tasarımda border yeterli — spec'e sadık kal)
+
+Kart header:
+- Flex row: `flex items-center justify-between mb-6`
+- Sol: `<p className="text-xs font-medium text-rd-neutral-500 uppercase tracking-widest">Marka Profili</p>`
+- Sağ: `<Badge variant="success" size="sm">Aktif</Badge>` — `@/components/primitives/Badge` import et
+
+---
+
+##### MB-05: Static fields (mağaza adı, hedef kitle)
+
+BrandFormPreview kartı içinde, header'dan sonra:
+
+- Container: `<div className="space-y-4 mb-6">`
+- Her field:
+  ```
+  <div>
+    <p className="text-xs text-rd-neutral-500 mb-1.5">{field.label}</p>
+    <div className="bg-rd-primary-50 border border-rd-primary-200 rounded-lg px-3 py-2.5 text-sm text-rd-primary-800 font-medium">
+      {field.value}
+    </div>
+  </div>
+  ```
+  - Mağaza adı field: `bg-rd-primary-50 border-rd-primary-200 text-rd-primary-800`
+  - Hedef kitle field: `bg-rd-neutral-50 border-rd-neutral-200 text-rd-neutral-700` (farklı renk — bu field daha nötr)
+
+---
+
+##### MB-06: Marka tonu radio group (3 chip)
+
+BrandFormPreview kartı içinde, static fields'tan sonra:
+
+- Label: `<p className="text-xs text-rd-neutral-500 mb-2">Metin tonu</p>`
+- Container: `<div role="radiogroup" aria-label="Metin tonu seçimi" className="flex gap-2">`
+- Her chip (TONE_CHIPS.map):
+  ```tsx
+  <button
+    key={tone.key}
+    role="radio"
+    aria-checked={selectedTone === tone.key}
+    onClick={() => onToneChange(tone.key)}
+    className={cn(
+      "px-3.5 py-2 rounded-lg text-xs font-medium transition-colors",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary focus-visible:ring-offset-2",
+      selectedTone === tone.key
+        ? "bg-rd-primary text-white"
+        : "bg-rd-neutral-100 text-rd-neutral-600 hover:bg-rd-neutral-200"
+    )}
+  >
+    {tone.label}
+  </button>
+  ```
+- **Klavye:** Arrow Left/Right navigasyon — `onKeyDown` handler:
+  - ArrowRight → sonraki chip'e focus + select
+  - ArrowLeft → önceki chip'e focus + select
+  - `tabIndex={selectedTone === tone.key ? 0 : -1}` (roving tabindex pattern)
+
+---
+
+##### MB-07: OutputPreview + fade animasyon
+
+BrandFormPreview kartı içinde, radio group'tan sonra:
+
+- Ayırıcı: `<div className="border-t border-rd-neutral-200 my-6" />`
+- Container: `<div className="bg-rd-neutral-50 rounded-lg p-4" aria-live="polite">`
+- Eyebrow: `<Eyebrow color="accent" icon={<Sparkles size={14} />} className="mb-3">AI çıktısı — {selectedTone} tonda</Eyebrow>`
+- Output text: 
+  ```tsx
+  <p
+    key={selectedTone} // key değişince remount → animasyon tetiklenir
+    className="text-sm text-rd-neutral-700 leading-relaxed animate-output-fade-in"
+  >
+    {currentTone.output}
+  </p>
+  ```
+- Alt not: `<p className="text-xs text-rd-neutral-500 mt-3 flex items-center gap-1"><Check size={12} strokeWidth={2} /> Her üretimde otomatik uygulanır</p>`
+
+**Animasyon (globals.css'e ekle):**
+```css
+@keyframes output-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-output-fade-in {
+  animation: output-fade-in 300ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-output-fade-in { animation: none; }
+}
+```
+
+---
+
+##### MB-08: Hint text
+
+Section'ın en altında (grid'den SONRA, container içinde):
+
+```tsx
+<p className="text-center text-sm text-rd-neutral-500 italic mt-8 lg:mt-12">
+  {MB_HINT}
+</p>
+```
+
+**DİKKAT:** Spec'te "↑ Tonu değiştir" yazıyor ama oklu stage direction yasak. Constants'taki metni kullan: "Tonu değiştir, AI çıktısının nasıl değiştiğini gör".
+
+---
+
+##### MB-09: Mobile responsive + A11y (tek geçiş)
+
+**Responsive:**
+- Grid zaten `grid-cols-1 lg:grid-cols-2` — mobilde sol kolon üstte, kart altta ✓
+- Tone chip'ler: `flex-wrap` ekle (çok dar ekranlarda sarılsın)
+- Feature icon box: mobilde aynı boyut (10×10 yeterli)
+- Padding: section `py-16 md:py-20 lg:py-28` ✓
+
+**A11y:**
+- Section: `aria-label="Marka bilgileri"`
+- Radio group: `role="radiogroup"` + `aria-label` + roving tabindex ✓
+- OutputPreview: `aria-live="polite"` ✓
+- Icon'lar: feature icon'ları `aria-hidden="true"` (başlık bilgiyi taşıyor)
+- Heading hiyerarşi: SectionHeader yok (h2 direkt), kart içinde h3 yok (label'lar yeterli)
+- Focus-visible: tüm interaktif elemanlar ✓
+- Renk kontrastı: rd-neutral-600 on white = 5.7:1 ✓
+
+---
+
+**Dosya listesi:**
+
+| Dosya | İşlem |
+|-------|-------|
+| `lib/constants/marka-bilgileri.ts` | YENİ |
+| `components/sections/MarkaBilgileriSection.tsx` | YENİ ('use client', BrandFormPreview aynı dosyada) |
+| `app/_tanitim-redesign.tsx` | GÜNCELLE (import + Pazaryeri'den sonra MarkaBilgileriSection ekle) |
+| `app/globals.css` | GÜNCELLE (output-fade-in keyframe + reduced motion) |
+
+**Sıra `_tanitim-redesign.tsx`'te:**
+```
+Hero → UcAdim → IcerikTurleri → Pazaryeri → MarkaBilgileri
+```
+
+**Kabul kontrol listesi (MB-01~10 topluca):**
+
+- [ ] Constants dosyası: header, 4 feature, 3 ton (output metinleriyle), form fields, CTA, hint
+- [ ] 2 kolon grid: sol features + sağ kart, mobilde tek kolon
+- [ ] Sol kolon: accent Sparkles eyebrow, h2 başlık, subtitle, 4 feature (icon box + title + desc), CTA link
+- [ ] Sağ kolon: white kart, "Marka Profili" + yeşil "Aktif" badge
+- [ ] 2 static field (Mağaza adı primary-50, Hedef kitle neutral-50)
+- [ ] 3 ton chip (radiogroup): samimi seçili (mavi), diğerleri neutral. Tıklayınca değişir.
+- [ ] Arrow Left/Right klavye navigasyon (roving tabindex)
+- [ ] OutputPreview: accent eyebrow "AI çıktısı — {ton} tonda" + ton output metni
+- [ ] Ton değişince 300ms fade+slide-up animasyon
+- [ ] `aria-live="polite"` output container'da
+- [ ] "Her üretimde otomatik uygulanır" alt not (Check ikonu)
+- [ ] Hint text: italic, ortalı, grid altında
+- [ ] `prefers-reduced-motion` → animasyon devre dışı
+- [ ] `_tanitim-redesign.tsx`'e Pazaryeri'den sonra ekli
+- [ ] `npm run build` hatasız
+- [ ] Emoji YOK
+- [ ] Commit: `feat: MB-01~10 marka bilgileri bölümü`
+
+---
 
 ### Neden yzliste? Bölümü — Bölüm 06
 

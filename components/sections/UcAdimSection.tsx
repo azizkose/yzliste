@@ -1,4 +1,4 @@
-// UA-02~08 — 3 Adımda Hazır Section
+// UA-02~09 — 3 Adımda Hazır Section
 
 import {
   Clock,
@@ -26,7 +26,12 @@ function InputMockup() {
   ]
 
   return (
-    <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 min-h-[180px]">
+    // UA-09 a11y: role="img" + aria-label her mockup'ın kendi root div'inde
+    <div
+      className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 min-h-[180px]"
+      role="img"
+      aria-label="Ürün yükleme ekranı"
+    >
       {/* Input method selector */}
       <div className="flex gap-2 mb-4">
         {methods.map(({ icon: Icon, label, selected }) => (
@@ -46,16 +51,13 @@ function InputMockup() {
       </div>
 
       {/* Upload preview */}
-      <div className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-3">
-        <div className="w-10 h-10 rounded-lg bg-rd-primary-50 flex items-center justify-center shrink-0">
-          <ImagePlus size={16} strokeWidth={1.5} className="text-rd-primary" aria-hidden="true" />
+      <div className="flex items-center gap-3 rounded-lg border border-dashed border-slate-300 bg-white p-3">
+        <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
+          <ImagePlus size={16} strokeWidth={1.5} className="text-slate-400" aria-hidden="true" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium text-slate-700 truncate">fincan_01.jpg</p>
-          <p className="text-xs text-slate-400 mt-0.5">Yüklendi · 2.4 MB</p>
-        </div>
-        <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-          <Check size={10} strokeWidth={2.5} className="text-green-600" aria-hidden="true" />
+          <p className="text-[10px] text-slate-400 mt-0.5">2.4 MB</p>
         </div>
       </div>
     </div>
@@ -66,8 +68,8 @@ function InputMockup() {
 
 function SelectionMockup() {
   const platforms = [
-    { label: 'Trendyol', selected: true },
-    { label: 'Amazon', selected: true },
+    { label: 'Trendyol', selected: true, color: '#F27A1A' },
+    { label: 'Amazon', selected: true, color: '#FF9900' },
     { label: 'Hepsiburada', selected: false },
     { label: 'N11', selected: false },
   ]
@@ -80,48 +82,56 @@ function SelectionMockup() {
   ]
 
   return (
-    <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 min-h-[180px] space-y-3">
+    // UA-09 a11y: role="img" + aria-label
+    <div
+      className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 min-h-[180px] space-y-3"
+      role="img"
+      aria-label="Platform ve içerik seçimi"
+    >
       {/* Platform chips */}
       <div>
-        <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-slate-400 mb-2">
-          Pazaryeri
+        <p className="text-[10px] font-medium uppercase tracking-wider text-slate-400 mb-2">
+          Platformlar
         </p>
         <div className="flex flex-wrap gap-1.5">
-          {platforms.map(({ label, selected }) => (
-            <div
+          {platforms.map(({ label, selected, color }) => (
+            <span
               key={label}
               className={[
-                'rounded-full px-2.5 py-1 text-xs font-medium border',
+                'rounded-full px-2.5 py-1 text-[10px] font-medium',
                 selected
-                  ? 'border-rd-primary-200 bg-rd-primary-50 text-rd-primary-800'
-                  : 'border-slate-200 bg-white text-slate-500',
+                  ? 'border border-transparent text-white'
+                  : 'border border-slate-200 bg-white text-slate-500',
               ].join(' ')}
+              style={selected && color ? { backgroundColor: color } : undefined}
             >
               {label}
-            </div>
+            </span>
           ))}
         </div>
       </div>
 
       {/* Content type icons */}
       <div>
-        <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-slate-400 mb-2">
-          İçerik türü
+        <p className="text-[10px] font-medium uppercase tracking-wider text-slate-400 mb-2">
+          İçerik türleri
         </p>
         <div className="flex gap-2">
           {contentTypes.map(({ icon: Icon, label, selected, color, bg }) => (
             <div
               key={label}
               className={[
-                'flex flex-col items-center gap-1 rounded-lg p-2 border flex-1',
-                selected ? '' : 'border-slate-200 bg-white',
+                'flex flex-1 flex-col items-center gap-1 rounded-lg border px-2 py-2 text-[10px] font-medium',
+                selected ? 'border-transparent' : 'border-slate-200 bg-white text-slate-400',
               ].join(' ')}
-              style={selected ? { backgroundColor: bg, borderColor: 'transparent' } : {}}
+              style={
+                selected
+                  ? { backgroundColor: bg, color, borderColor: color + '30' }
+                  : undefined
+              }
             >
-              <Icon size={16} strokeWidth={1.5} style={{ color }} aria-hidden="true" />
-              <span className="text-[10px]" style={{ color }}>
-                {label}
-              </span>
+              <Icon size={14} strokeWidth={1.5} aria-hidden="true" />
+              {label}
             </div>
           ))}
         </div>
@@ -133,45 +143,34 @@ function SelectionMockup() {
 // ---- MiniMockup: Step 3 — Çıktılar ----
 
 function OutputMockup() {
+  const outputs = [
+    { icon: FileText, label: 'Trendyol listing metni', status: 'Hazır' },
+    { icon: ImageIcon, label: 'Amazon ürün görseli', status: 'Hazır' },
+  ]
+
   return (
-    <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 min-h-[180px] space-y-2">
-      {/* Output card 1 — Trendyol listing metni */}
-      <div className="rounded-lg border border-slate-200 bg-white p-3">
-        <div className="flex items-center gap-2 mb-2">
-          <span
-            className="text-[10px] font-medium px-2 py-0.5 rounded-full"
-            style={{ backgroundColor: '#FFF4ED', color: '#F27A1A' }}
+    // UA-09 a11y: role="img" + aria-label
+    <div
+      className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 min-h-[180px] space-y-2"
+      role="img"
+      aria-label="Üretilen içerikler"
+    >
+      <div className="space-y-2">
+        {outputs.map(({ icon: Icon, label, status }) => (
+          <div
+            key={label}
+            className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2.5"
           >
-            Trendyol
-          </span>
-          <span className="text-[10px] text-slate-400">Listing metni</span>
-        </div>
-        <p className="text-xs font-medium text-slate-700 truncate">
-          El Yapımı Porselen Kahve Fincanı
-        </p>
-        <p className="text-xs text-slate-400 mt-0.5 leading-relaxed line-clamp-2">
-          Özel fırın tekniğiyle üretilen, dayanıklı porselen fincan seti...
-        </p>
+            <Icon size={14} strokeWidth={1.5} className="shrink-0 text-rd-primary-700" aria-hidden="true" />
+            <span className="flex-1 truncate text-xs font-medium text-slate-700">{label}</span>
+            <span className="flex items-center gap-1 text-[10px] font-medium text-emerald-600">
+              <Check size={10} strokeWidth={2.5} aria-hidden="true" />
+              {status}
+            </span>
+          </div>
+        ))}
       </div>
-
-      {/* Output card 2 — Amazon ürün görseli */}
-      <div className="rounded-lg border border-slate-200 bg-white p-3">
-        <div className="flex items-center gap-2 mb-2">
-          <span
-            className="text-[10px] font-medium px-2 py-0.5 rounded-full"
-            style={{ backgroundColor: '#FFF8EB', color: '#FF9900' }}
-          >
-            Amazon
-          </span>
-          <span className="text-[10px] text-slate-400">Ürün görseli</span>
-        </div>
-        <div className="h-8 rounded-lg bg-rd-primary-50 flex items-center justify-center">
-          <ImageIcon size={14} strokeWidth={1.5} className="text-rd-primary-300" aria-hidden="true" />
-        </div>
-      </div>
-
-      {/* More items hint */}
-      <p className="text-center text-xs text-slate-400 pt-1">ve 2 tane daha...</p>
+      <p className="mt-2 text-center text-[10px] text-slate-400">ve 2 tane daha...</p>
     </div>
   )
 }
@@ -184,14 +183,27 @@ function MockupRenderer({ type }: { type: MockupType }) {
   return <OutputMockup />
 }
 
-// ---- StepCard (UA-03) ----
+// ---- StepCard (UA-03 + UA-09) ----
 
-function StepCard({ step }: { step: (typeof UC_ADIM_STEPS)[number] }) {
+function StepCard({
+  step,
+  index,
+}: {
+  step: (typeof UC_ADIM_STEPS)[number]
+  index: number
+}) {
+  // UA-09: stagger animasyon class (1-indexed)
+  const animClass = `animate-step-card-${index + 1}`
+
   return (
-    <div className="relative z-10 flex flex-col items-center text-center">
+    <div className={`relative z-10 flex flex-col items-center text-center ${animClass}`}>
       {/* NumberCircle — 80×80, outline, Manrope 800 */}
-      <div className="w-20 h-20 rounded-full border-2 border-slate-200 bg-white flex items-center justify-center shrink-0">
-        <span className="font-rd-display font-extrabold text-3xl text-slate-900 tabular-nums">
+      {/* UA-09 a11y: aria-hidden — sayı dekoratif, h3 başlık bilgiyi taşıyor */}
+      <div
+        className="w-20 h-20 rounded-full border-2 border-rd-primary-200 bg-white flex items-center justify-center shrink-0"
+        aria-hidden="true"
+      >
+        <span className="font-rd-display font-extrabold text-3xl text-rd-primary-700 tabular-nums">
           {step.number}
         </span>
       </div>
@@ -202,18 +214,20 @@ function StepCard({ step }: { step: (typeof UC_ADIM_STEPS)[number] }) {
       </h3>
 
       {/* Description */}
-      <p className="text-sm text-slate-500 leading-relaxed max-w-[280px]">
+      <p className="text-sm text-slate-600 leading-relaxed max-w-[280px]">
         {step.description}
       </p>
 
       {/* DurationLabel */}
       <div className="flex items-center gap-1.5 mt-3">
+        {/* UA-09 a11y: Clock aria-hidden */}
         <Clock size={13} strokeWidth={1.5} className="text-slate-400" aria-hidden="true" />
-        <span className="text-xs text-slate-400">{step.duration}</span>
+        <span className="text-xs text-slate-500">{step.duration}</span>
       </div>
 
-      {/* MiniMockup */}
-      <div className="w-full" role="img" aria-label={`${step.title} adımı önizlemesi`}>
+      {/* MiniMockup wrapper — UA-09: max-w-[280px] mx-auto mobilde taşmayı önler */}
+      {/* role="img" kaldırıldı — her mockup kendi role="img"'ini taşıyor */}
+      <div className="w-full max-w-[280px] mx-auto md:max-w-full">
         <MockupRenderer type={step.mockupType} />
       </div>
     </div>
@@ -224,7 +238,8 @@ function StepCard({ step }: { step: (typeof UC_ADIM_STEPS)[number] }) {
 
 export default function UcAdimSection() {
   return (
-    <section className="bg-white py-16 md:py-20 lg:py-28" aria-label="3 adımda hazır">
+    // UA-09 a11y: aria-label "Nasıl çalışır"
+    <section className="bg-white py-16 md:py-20 lg:py-28" aria-label="Nasıl çalışır">
       <div className="mx-auto max-w-[1200px] px-6">
         {/* UA-02: SectionHeader */}
         <SectionHeader
@@ -238,8 +253,9 @@ export default function UcAdimSection() {
         {/* UA-03 + UA-07: Grid + ConnectorLine wrapper */}
         <div className="relative mt-12 md:mt-16">
           {/* UA-07: ConnectorLine — dashed, desktop only */}
+          {/* UA-09: hidden md:block (lg: → md:) */}
           <div
-            className="absolute top-10 hidden lg:block pointer-events-none"
+            className="pointer-events-none absolute top-10 hidden md:block"
             style={{
               left: 'calc(100% / 6)',
               right: 'calc(100% / 6)',
@@ -248,19 +264,19 @@ export default function UcAdimSection() {
             aria-hidden="true"
           />
 
-          {/* Steps grid */}
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-8">
-            {UC_ADIM_STEPS.map((step) => (
-              <StepCard key={step.number} step={step} />
+          {/* Steps grid — UA-09: md:grid-cols-3 md:gap-8 (lg: → md:) */}
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
+            {UC_ADIM_STEPS.map((step, i) => (
+              <StepCard key={step.number} step={step} index={i} />
             ))}
           </div>
         </div>
 
         {/* UA-08: TotalTimeBar */}
         <div className="mt-12 md:mt-16 flex justify-center">
-          <div className="flex items-center gap-2.5 rounded-xl bg-rd-primary-50 border border-rd-primary-100 px-6 py-3.5 max-w-[420px]">
-            <Clock size={16} strokeWidth={1.5} className="text-rd-primary shrink-0" aria-hidden="true" />
-            <p className="text-sm text-rd-primary-800">
+          <div className="flex items-center gap-2.5 rounded-full bg-rd-primary-50 border border-rd-primary-100 px-6 py-3 max-w-[420px]">
+            <Clock size={16} strokeWidth={1.5} className="text-rd-primary-700 shrink-0" aria-hidden="true" />
+            <p className="text-sm text-slate-700">
               {TOTAL_TIME}
             </p>
           </div>
