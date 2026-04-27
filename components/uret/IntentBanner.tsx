@@ -3,7 +3,7 @@
 export default function IntentBanner() {
   return (
     <div
-      className="bg-white border border-rd-neutral-200 rounded-2xl p-6 mb-6"
+      className="bg-white border border-rd-neutral-200 rounded-2xl p-4 sm:p-6 mb-6"
       aria-labelledby="intent-banner-heading"
     >
       <p className="text-xs font-medium text-rd-primary-700 uppercase tracking-wider">

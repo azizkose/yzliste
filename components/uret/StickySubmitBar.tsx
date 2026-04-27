@@ -55,8 +55,8 @@ export default function StickySubmitBar({
             <div className="flex flex-col gap-2">
               <button
                 type="button"
-                disabled
                 aria-disabled="true"
+                onClick={e => e.preventDefault()}
                 className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-rd-neutral-300 px-5 py-2.5 text-sm font-medium text-rd-neutral-500 cursor-not-allowed sm:w-auto"
               >
                 {ctaLabel}

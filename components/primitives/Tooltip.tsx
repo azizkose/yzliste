@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, type ReactNode } from 'react'
+import { useState, useRef, useEffect, cloneElement, isValidElement, type ReactNode } from 'react'
 
 interface TooltipProps {
   content: string | null
@@ -35,6 +35,13 @@ export default function Tooltip({ content, children, side = 'top', visible }: To
 
   const show = visible ?? (isOpen && !!content)
 
+  // Pass aria-describedby directly to the child element when tooltip is visible
+  const child = isValidElement(children)
+    ? cloneElement(children as React.ReactElement<Record<string, unknown>>, {
+        'aria-describedby': show && content ? tooltipId.current : undefined,
+      })
+    : children
+
   return (
     <span className="relative inline-block">
       <span
@@ -43,16 +50,15 @@ export default function Tooltip({ content, children, side = 'top', visible }: To
         onFocus={open}
         onBlur={close}
         onTouchStart={handleTouchStart}
-        aria-describedby={show && content ? tooltipId.current : undefined}
       >
-        {children}
+        {child}
       </span>
       {show && content && (
         <span
           role="tooltip"
           id={tooltipId.current}
           className={[
-            'pointer-events-none absolute left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-lg bg-rd-neutral-900 px-3 py-1.5 text-[13px] font-medium text-white animate-fade-in',
+            'pointer-events-none absolute left-1/2 z-50 -translate-x-1/2 max-w-[calc(100vw-2rem)] whitespace-normal sm:whitespace-nowrap rounded-lg bg-rd-neutral-900 px-3 py-1.5 text-[13px] font-medium text-white animate-fade-in',
             side === 'top' ? 'bottom-full mb-2' : 'top-full mt-2',
           ].join(' ')}
         >

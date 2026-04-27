@@ -39,7 +39,7 @@ export default function BrandProfileBlock() {
           onClick={() => setShowDemo(v => !v)}
           aria-expanded={showDemo}
           aria-controls="brand-profile-demo"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-rd-neutral-300 px-3 py-1.5 text-xs font-medium text-rd-primary-700 hover:bg-rd-primary-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-500 focus-visible:ring-offset-2"
+          className="inline-flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-rd-neutral-300 px-3 py-1.5 text-xs font-medium text-rd-primary-700 hover:bg-rd-primary-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-500 focus-visible:ring-offset-2"
         >
           {showDemo ? 'Gizle' : 'Önce dene'}
           <ChevronDown
@@ -56,10 +56,10 @@ export default function BrandProfileBlock() {
             <ToneSelector activeTone={activeTone} onChange={setActiveTone} />
             <AIPreview activeTone={activeTone} />
           </div>
-          <div className="mt-5 pt-4 border-t border-rd-neutral-100 flex justify-end">
+          <div className="mt-5 pt-4 border-t border-rd-neutral-100 flex justify-start sm:justify-end">
             <Link
               href="/profil"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-rd-neutral-300 px-4 py-2 text-sm font-medium text-rd-primary-700 hover:bg-rd-primary-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-500 focus-visible:ring-offset-2"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg border border-rd-neutral-300 px-4 py-2 text-sm font-medium text-rd-primary-700 hover:bg-rd-primary-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-500 focus-visible:ring-offset-2"
             >
               Profili düzenle
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

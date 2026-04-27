@@ -99,6 +99,9 @@
   /* Redesign Font Family */
   --font-rd-display: var(--font-manrope), system-ui, sans-serif;
   --font-rd-body: var(--font-inter), system-ui, sans-serif;
+
+  /* Redesign Animations */
+  --animate-fade-in: fade-in 200ms ease-out;
 }
 
 /* Dark mode desteklenmiyor — tüm component'ler light-mode hardcoded */
@@ -250,6 +253,11 @@ body {
   height: 6px;
   border-radius: 3px;
   background: var(--color-rd-primary-500);
+}
+
+/* animate-fade-in — reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in { animation: none; }
 }
 
 /* SSS accordion — reduced motion (SS-05) */

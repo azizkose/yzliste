@@ -227,7 +227,7 @@ export default function Home() {
   return (
     <>
       <SiteHeader aktifSayfa="icerik" />
-      <main className="min-h-screen bg-rd-neutral-50 pb-24 px-4">
+      <main className="min-h-screen bg-rd-neutral-50 pb-40 px-4">
       <div className="max-w-5xl mx-auto pt-6">
 
         {/* Auth-bağımlı bannerlar — yüklenirken skeleton göster */}
