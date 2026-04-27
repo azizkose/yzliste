@@ -48,3 +48,6 @@ playwright-report/
 
 # strateji arşivi — sadece kişisel kayıt
 docs/redesign/yzliste-strateji-kararlari.md
+
+# local claude settings
+.claude/settings.local.json

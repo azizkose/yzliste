@@ -12,6 +12,8 @@ import BenefitsGrid from "@/components/tanitim/BenefitsGrid";
 import LandingFAQ from "@/components/tanitim/LandingFAQ";
 import TrustBand from "@/components/tanitim/TrustBand";
 import RefBanner from "@/components/RefBanner";
+import IcerikTurleriSection from "@/components/sections/IcerikTurleriSection";
+import PazaryeriSection from "@/components/sections/PazaryeriSection";
 
 export default function TanitimSayfasi() {
   const [modalAcik, setModalAcik] = useState(false);
@@ -51,6 +53,8 @@ export default function TanitimSayfasi() {
         <HowItWorks />
         <BrandProfile />
         <BenefitsGrid />
+        <IcerikTurleriSection />
+        <PazaryeriSection />
         <LandingFAQ />
         <TrustBand />
         <SiteFooter />

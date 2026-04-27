@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-04-27 — Redesign: FY-01~11 FiyatlarSection (landing fiyatlar bölümü)
+
+- FY-01: `lib/constants/fiyatlar-landing.ts` — PAKET_LISTESI re-export, SLIDER_CONFIG, TRUST_POINTS. Commit `28b221c`
+- FY-02: `FiyatlarSection.tsx` scaffold — `use client`, SectionHeader, _tanitim-redesign entegrasyonu. Commit `42e95de`
+- FY-03~05: CreditCalculator inline — slider range input, useMemo recommendation, handleSliderChange + fill CSS. Commit `ad2719f`
+- FY-06~07: PackageCard grid (3 kolon) — popular 2px border + md:-translate-y-2, "Senin için" yeşil badge slider reaktif. Commit `fec994f`
+- FY-08: Trust points footer — 4 madde, `·` ayraçlı, aria-hidden. Commit `29d4e61`
+- FY-09: CTA route `/fiyatlar` constants üzerinden. Commit `fd9a2aa`
+- FY-10: Mobile responsive — lg:grid-cols-2 calculator, md:grid-cols-3 packages, md:-translate-y-2. Commit `b9faf36`
+- FY-11: A11y — aria-live polite, role slider, aria-valuemin/max/now/text, focus-visible. Commit `464b40b`
+- globals.css: `.fiyatlar-slider` custom CSS (gradient fill, webkit/moz thumb, focus-visible ring)
+
+## 2026-04-27 — Redesign: MB-01~10 MarkaBilgileriSection + NY-01~07 NedenYzlisteSection
+
+- MB-01~10: Marka bilgileri bölümü — ton radiogroup (roving tabindex), key-driven fade-in, aria-live output. Commit `4ef11f5`
+- NY-01~07: Neden yzliste bölümü — semantic table (desktop) + kart layout (mobil), 6 karşılaştırma satırı, Lucide X/Check. Commit `ae19f42`
+- globals.css: output-fade-in keyframe + reduced-motion kuralı eklendi
+
 ## 2026-04-21 — KÜME 9 Faz 0: Error boundary, .env.example, branching, vercel.json, fiyatlar structured data fix (SC-06)
 
 ## 2026-04-20 — KF-05-FIX + KF-01 tamamla + görsel sıkıştırma
