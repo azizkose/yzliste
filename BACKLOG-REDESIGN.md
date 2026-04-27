@@ -1736,8 +1736,8 @@ Test (commit öncesi)
 Commit mesajı: feat(uret): U-04 BrandProfileBlock scaffold (collapsible)
 BACKLOG-REDESIGN.md'de U-04 [x] işaretle.
 ```
-| U-05 | ToneSelector (3 chip, radio group) | Bekliyor | U-04 | 3 chip: Samimi (Heart ikon) / Profesyonel (Briefcase) / Premium (Sparkles). `role="radiogroup"`, `aria-checked`. Arrow Left/Right. TONE_CHIPS reuse from lib/constants/marka-bilgileri.ts. |
-| U-06 | AIPreview (canlı değişen çıktı, fade) | Bekliyor | U-05 | Ton seçilince 300ms fade ile AI çıktı önizlemesi değişir. `aria-live="polite"`. Banner turuncu (rd-accent-600) → yeşil (rd-success-600) dönüşür. Not: "Bu sadece önizleme. Tonu kalıcı yapmak için profilini kaydet." TONE_CHIPS.output reuse. |
+| U-05 | ToneSelector (3 chip, radio group) | ✅ Tamam | U-04 | 3 chip: Samimi (Heart ikon) / Profesyonel (Briefcase) / Premium (Sparkles). `role="radiogroup"`, `aria-checked`. Arrow Left/Right. TONE_CHIPS reuse from lib/constants/marka-bilgileri.ts. |
+| U-06 | AIPreview (canlı değişen çıktı, fade) | ✅ Tamam | U-05 | Ton seçilince 300ms fade ile AI çıktı önizlemesi değişir. `aria-live="polite"`. Banner turuncu (rd-accent-600) → yeşil (rd-success-600) dönüşür. Not: "Bu sadece önizleme. Tonu kalıcı yapmak için profilini kaydet." TONE_CHIPS.output reuse. |
 
 #### U-05 + U-06 Birleşik Prompt
 
