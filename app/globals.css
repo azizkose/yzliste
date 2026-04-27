@@ -181,3 +181,55 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .animate-output-fade-in { animation: none; }
 }
+
+/* Fiyatlar — custom range slider (FY-04) */
+.fiyatlar-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--color-rd-primary-500) var(--slider-fill, 0%), var(--color-rd-neutral-200) var(--slider-fill, 0%));
+  outline: none;
+  cursor: pointer;
+}
+
+.fiyatlar-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--color-rd-primary-500);
+  cursor: pointer;
+  transition: box-shadow 150ms ease;
+}
+
+.fiyatlar-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-rd-primary-500) 15%, transparent);
+}
+
+.fiyatlar-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--color-rd-primary-200);
+}
+
+.fiyatlar-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--color-rd-primary-500);
+  cursor: pointer;
+}
+
+.fiyatlar-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-rd-neutral-200);
+}
+
+.fiyatlar-slider::-moz-range-progress {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-rd-primary-500);
+}
