@@ -1,5 +1,6 @@
 import { Camera, Pencil, ScanLine, ImageIcon, Zap, Check } from 'lucide-react'
-import { MOCKUP_STEPS, MOCKUP_INPUT_METHODS } from '@/lib/constants/hero'
+import { MOCKUP_STEPS, MOCKUP_INPUT_METHODS, HERO_BADGES } from '@/lib/constants/hero'
+import StickerBadge from '@/components/primitives/StickerBadge'
 
 const INPUT_ICONS: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>> = {
   Camera,
@@ -9,7 +10,21 @@ const INPUT_ICONS: Record<string, React.ComponentType<{ size?: number; strokeWid
 
 export default function AppScreenshotMockup() {
   return (
-    <div className="relative" role="img" aria-label="Uygulama önizlemesi">
+    <div className="relative animate-hero-float-in-right" role="img" aria-label="Uygulama önizlemesi">
+      <StickerBadge
+        icon={<Check size={14} strokeWidth={2} />}
+        label={HERO_BADGES.topRight.label}
+        color="#1E40AF"
+        borderColor="#DBEAFE"
+        className="absolute -top-3 right-5 z-10"
+      />
+      <StickerBadge
+        icon={<Zap size={14} strokeWidth={2} />}
+        label={HERO_BADGES.bottomLeft.label}
+        color="#EA580C"
+        borderColor="#FED7AA"
+        className="absolute -bottom-3 -left-3 z-10"
+      />
       {/* Browser chrome */}
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white [box-shadow:var(--shadow-rd-lg)]">
         {/* Browser top bar */}

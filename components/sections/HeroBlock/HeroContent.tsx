@@ -12,7 +12,7 @@ const TRUST_PILL_ICONS: Record<string, React.ComponentType<{ size?: number; stro
 
 export default function HeroContent() {
   return (
-    <div>
+    <div className="animate-hero-float-in-left">
       {/* Eyebrow pill */}
       <div className="inline-flex items-center gap-2 rounded-full border border-rd-primary-200 bg-rd-primary-50 px-3.5 py-1.5">
         <span
