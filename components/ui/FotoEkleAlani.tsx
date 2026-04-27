@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Camera } from 'lucide-react'
 
@@ -19,16 +19,16 @@ export default function FotoEkleAlani({
 }: FotoEkleAlaniProps) {
   // Tüm varyantlar aynı design system renklerini kullanır
   const sinirRenk: Record<string, string> = {
-    gray:   'border-[#D8D6CE] hover:border-[#1E4DD8] hover:bg-[#EBF1FB]',
-    purple: 'border-[#D8D6CE] hover:border-[#1E4DD8] hover:bg-[#EBF1FB]',
-    red:    'border-[#D8D6CE] hover:border-[#1E4DD8] hover:bg-[#EBF1FB]',
-    pink:   'border-[#D8D6CE] hover:border-[#1E4DD8] hover:bg-[#EBF1FB]',
+    gray:   'border-rd-neutral-200 hover:border-rd-primary-800 hover:bg-rd-primary-100',
+    purple: 'border-rd-neutral-200 hover:border-rd-primary-800 hover:bg-rd-primary-100',
+    red:    'border-rd-neutral-200 hover:border-rd-primary-800 hover:bg-rd-primary-100',
+    pink:   'border-rd-neutral-200 hover:border-rd-primary-800 hover:bg-rd-primary-100',
   }
   const metinRenk: Record<string, string> = {
-    gray: 'text-[#5A5852]', purple: 'text-[#5A5852]', red: 'text-[#5A5852]', pink: 'text-[#5A5852]',
+    gray: 'text-rd-neutral-600', purple: 'text-rd-neutral-600', red: 'text-rd-neutral-600', pink: 'text-rd-neutral-600',
   }
   const altRenk: Record<string, string> = {
-    gray: 'text-[#908E86]', purple: 'text-[#908E86]', red: 'text-[#908E86]', pink: 'text-[#908E86]',
+    gray: 'text-rd-neutral-400', purple: 'text-rd-neutral-400', red: 'text-rd-neutral-400', pink: 'text-rd-neutral-400',
   }
 
   return (
@@ -37,7 +37,7 @@ export default function FotoEkleAlani({
       className={`block border border-dashed ${sinirRenk[renk]} rounded-xl p-6 text-center cursor-pointer transition-all`}
     >
       <div className="flex justify-center mb-2">
-        <Camera size={28} strokeWidth={1.5} className="text-[#908E86]" />
+        <Camera size={28} strokeWidth={1.5} className="text-rd-neutral-400" />
       </div>
       <p className={`text-sm font-medium ${metinRenk[renk]}`}>{metin}</p>
       {altMetin && <p className={`text-xs ${altRenk[renk]} mt-1`}>{altMetin}</p>}

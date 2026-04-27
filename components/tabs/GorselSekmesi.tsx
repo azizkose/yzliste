@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { Link2, ImageIcon as ImageIconLucide, Download } from "lucide-react";
 import { GORSEL_STILLER, kategoriKoduHesapla } from "@/lib/constants";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
@@ -50,54 +50,54 @@ export default function GorselSekmesi({
   blobIndir, resizeFoto, invalidateCredits, setKullanici,
 }: GorselSekmesiProps) {
   return (
-    <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white border border-[#D8D6CE] rounded-xl p-6 space-y-4">
+    <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white border border-rd-neutral-200 rounded-xl p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-medium text-[#1A1A17]">Ürün görseli</h2>
+        <h2 className="text-base font-medium text-rd-neutral-900">Ürün görseli</h2>
       </div>
 
       {urunAdi && (
-        <div className="bg-[#EBF1FB] border border-[#1E4DD8]/20 rounded-lg px-3 py-2 flex items-center gap-2">
-          <Link2 size={14} strokeWidth={1.5} className="text-[#1E4DD8] flex-shrink-0" />
-          <p className="text-xs text-[#1E4DD8] flex-1 min-w-0 truncate">
+        <div className="bg-rd-primary-100 border border-rd-primary-800/20 rounded-lg px-3 py-2 flex items-center gap-2">
+          <Link2 size={14} strokeWidth={1.5} className="text-rd-primary-800 flex-shrink-0" />
+          <p className="text-xs text-rd-primary-800 flex-1 min-w-0 truncate">
             <span className="font-medium">{urunAdi}</span>
-            {kategori && <span className="text-[#7B9BD9]"> · {kategori}</span>}
+            {kategori && <span className="text-rd-primary-300"> · {kategori}</span>}
           </p>
-          <span className="text-xs text-[#7B9BD9] whitespace-nowrap">Metin sekmesinden</span>
+          <span className="text-xs text-rd-primary-300 whitespace-nowrap">Metin sekmesinden</span>
         </div>
       )}
 
       {kullanici && !kullanici.anonim && !kullanici.marka_adi && (
-        <div className="bg-[#FEF4E7] border border-[#8B4513]/20 rounded-lg p-3 flex items-center justify-between gap-3">
-          <p className="text-xs text-[#8B4513]"><span className="font-medium">Marka profili eksik</span> — Ton bilgisi girilince görsel stili markanla uyumlu hale getirilir.</p>
-          <a href="/hesap/profil" className="text-xs text-[#8B4513] font-medium underline whitespace-nowrap">Profili doldur</a>
+        <div className="bg-rd-warning-50 border border-rd-warning-700/20 rounded-lg p-3 flex items-center justify-between gap-3">
+          <p className="text-xs text-rd-warning-700"><span className="font-medium">Marka profili eksik</span> — Ton bilgisi girilince görsel stili markanla uyumlu hale getirilir.</p>
+          <a href="/hesap/profil" className="text-xs text-rd-warning-700 font-medium underline whitespace-nowrap">Profili doldur</a>
         </div>
       )}
 
-      <p className="text-xs text-[#5A5852]">
+      <p className="text-xs text-rd-neutral-600">
         Tek fotoğraftan 7 farklı stüdyo stili. Seçtiğin her stil için 1 görsel üretilir, kredi üretimde düşer.{" "}
-        <span className="text-xs text-[#908E86]">  <br /> Örnek: 1 stil seçersen → 1 görsel, 1 kredi <br />3 stil seçersen → 3 görsel, 3 kredi</span>
+        <span className="text-xs text-rd-neutral-400">  <br /> Örnek: 1 stil seçersen → 1 görsel, 1 kredi <br />3 stil seçersen → 3 görsel, 3 kredi</span>
       </p>
 
       {fotolar.length === 0 ? (
-        <div className="bg-[#F1F0EB] rounded-lg p-6 text-center">
-          <p className="text-sm text-[#5A5852]">Görsel üretmek için önce ürün fotoğrafı ekle</p>
+        <div className="bg-rd-neutral-100 rounded-lg p-6 text-center">
+          <p className="text-sm text-rd-neutral-600">Görsel üretmek için önce ürün fotoğrafı ekle</p>
           <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="text-sm text-[#1E4DD8] hover:text-[#163B9E] font-medium mt-2 block mx-auto transition-colors">
+            className="text-sm text-rd-primary-800 hover:text-rd-primary-900 font-medium mt-2 block mx-auto transition-colors">
             Fotoğraf ekle
           </button>
         </div>
       ) : (
         <FotoThumbnail src={fotolar[0]} onKaldir={() => fotoKaldir(0)} renk="green" />
       )}
-      <p className="text-xs text-[#908E86]">
+      <p className="text-xs text-rd-neutral-400">
         En iyi sonuç için nasıl fotoğraf çekilmeli?{" "}
-        <a href="/blog/e-ticaret-icin-ai-urun-fotografciligi" target="_blank" className="text-[#1E4DD8] hover:underline font-medium">
+        <a href="/blog/e-ticaret-icin-ai-urun-fotografciligi" target="_blank" className="text-rd-primary-800 hover:underline font-medium">
           Rehberi oku
         </a>
       </p>
 
       <div>
-        <p className="block text-xs font-medium text-[#5A5852] mb-2">Stil seç <span className="text-[#908E86] font-normal">(1 stil = 1 görsel = 1 kredi)</span></p>
+        <p className="block text-xs font-medium text-rd-neutral-600 mb-2">Stil seç <span className="text-rd-neutral-400 font-normal">(1 stil = 1 görsel = 1 kredi)</span></p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {(() => {
             const gorselKategoriKodu = kategoriKoduHesapla(kategori);
@@ -115,20 +115,20 @@ export default function GorselSekmesi({
               const secili = seciliStiller.has(s.id);
               return (
                 <button key={s.id} onClick={() => stilToggle(s.id)}
-                  className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${secili ? "border-[#1E4DD8]" : "border-[#D8D6CE] hover:border-[#1E4DD8]"}`}>
+                  className={`flex flex-col rounded-xl overflow-hidden border-2 transition-all text-left ${secili ? "border-rd-primary-800" : "border-rd-neutral-200 hover:border-rd-primary-800"}`}>
                   {s.img ? (
-                    <div className="aspect-square w-full overflow-hidden relative bg-[#F1F0EB]">
+                    <div className="aspect-square w-full overflow-hidden relative bg-rd-neutral-100">
                       <img src={s.img} alt={displayLabel} className="w-full h-full object-contain" />
-                      {secili && <div className="absolute inset-0 bg-[#1E4DD8]/15 flex items-center justify-center"><span className="bg-[#1E4DD8] text-white text-xs font-medium px-2 py-0.5 rounded-full">✓</span></div>}
+                      {secili && <div className="absolute inset-0 bg-rd-primary-800/15 flex items-center justify-center"><span className="bg-rd-primary-800 text-white text-xs font-medium px-2 py-0.5 rounded-full">✓</span></div>}
                     </div>
                   ) : (
-                    <div className={`aspect-square w-full flex items-center justify-center text-[#5A5852] ${secili ? "bg-[#EBF1FB]" : "bg-[#F1F0EB]"}`}>
+                    <div className={`aspect-square w-full flex items-center justify-center text-rd-neutral-600 ${secili ? "bg-rd-primary-100" : "bg-rd-neutral-100"}`}>
                       <span className="text-xs font-medium">{displayLabel}</span>
                     </div>
                   )}
                   <div className="p-2 bg-white w-full">
-                    <p className={`text-xs font-medium ${secili ? "text-[#1E4DD8]" : "text-[#1A1A17]"}`}>{displayLabel}</p>
-                    <p className="text-xs text-[#908E86]">{s.aciklama}</p>
+                    <p className={`text-xs font-medium ${secili ? "text-rd-primary-800" : "text-rd-neutral-900"}`}>{displayLabel}</p>
+                    <p className="text-xs text-rd-neutral-400">{s.aciklama}</p>
                   </div>
                 </button>
               );
@@ -138,21 +138,21 @@ export default function GorselSekmesi({
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-[#5A5852] mb-1">Görsel yönlendirmesi <span className="text-[#908E86] font-normal">(isteğe bağlı)</span></label>
-        <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="Sahneyi tanımla — örn: mermer masa üzerinde yumuşak pencere ışığı, yeşil bitkilerle / rustik ahşap raf, sıcak mum ışığı / pastel pembe gradyan arka plan, uçuşan balonlar" rows={2} className="w-full border border-[#D8D6CE] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4DD8]/20 focus:border-[#1E4DD8]" />
+        <label className="block text-xs font-medium text-rd-neutral-600 mb-1">Görsel yönlendirmesi <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
+        <textarea value={gorselEkPrompt} onChange={(e) => setGorselEkPrompt(e.target.value)} placeholder="Sahneyi tanımla — örn: mermer masa üzerinde yumuşak pencere ışığı, yeşil bitkilerle / rustik ahşap raf, sıcak mum ışığı / pastel pembe gradyan arka plan, uçuşan balonlar" rows={2} className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800" />
       </div>
 
       {seciliStiller.has("referans") && (
         <div>
-          <label className="block text-xs font-medium text-[#5A5852] mb-1">Arka plan fotoğrafı <span className="text-[#908E86] font-normal">(ürünü bu arka plana yerleştirelim)</span></label>
+          <label className="block text-xs font-medium text-rd-neutral-600 mb-1">Arka plan fotoğrafı <span className="text-rd-neutral-400 font-normal">(ürünü bu arka plana yerleştirelim)</span></label>
           {referansGorsel ? (
-            <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-[#D8D6CE]">
+            <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-rd-neutral-200">
               <img src={referansGorsel} alt="Referans" className="w-full h-full object-cover" />
-              <button onClick={() => setReferansGorsel(null)} aria-label="Referans görseli kaldır" className="absolute top-1 right-1 bg-[#7A1E1E] text-white w-5 h-5 rounded-lg text-xs flex items-center justify-center">×</button>
+              <button onClick={() => setReferansGorsel(null)} aria-label="Referans görseli kaldır" className="absolute top-1 right-1 bg-rd-danger-700 text-white w-5 h-5 rounded-lg text-xs flex items-center justify-center">×</button>
             </div>
           ) : (
-            <label className="flex items-center justify-center w-full h-24 border border-dashed border-[#D8D6CE] rounded-xl cursor-pointer hover:bg-[#EBF1FB] hover:border-[#1E4DD8] transition-colors">
-              <span className="text-sm text-[#908E86] flex items-center gap-1.5"><ImageIconLucide size={16} strokeWidth={1.5} /> Arka plan fotoğrafı yükle</span>
+            <label className="flex items-center justify-center w-full h-24 border border-dashed border-rd-neutral-200 rounded-xl cursor-pointer hover:bg-rd-primary-100 hover:border-rd-primary-800 transition-colors">
+              <span className="text-sm text-rd-neutral-400 flex items-center gap-1.5"><ImageIconLucide size={16} strokeWidth={1.5} /> Arka plan fotoğrafı yükle</span>
               <input type="file" accept="image/*" className="hidden" onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
@@ -184,15 +184,15 @@ export default function GorselSekmesi({
       />
 
       {gorselYukleniyor && (
-        <p className="text-xs text-[#1E4DD8] text-center">Sayfayı kapatmayın — görsel üretimi yaklaşık 1 dakika sürer</p>
+        <p className="text-xs text-rd-primary-800 text-center">Sayfayı kapatmayın — görsel üretimi yaklaşık 1 dakika sürer</p>
       )}
 
-      <p className="text-xs text-[#908E86] text-center">AI hata yapabilir — üretilen görselleri yayınlamadan önce kontrol edin</p>
+      <p className="text-xs text-rd-neutral-400 text-center">AI hata yapabilir — üretilen görselleri yayınlamadan önce kontrol edin</p>
 
       {gorselJoblar.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center justify-between px-1">
-            <p className="text-xs text-[#5A5852] font-medium">{gorselJoblar.length} görsel hazır</p>
+            <p className="text-xs text-rd-neutral-600 font-medium">{gorselJoblar.length} görsel hazır</p>
             {gorselJoblar.length > 1 && (
               <button onClick={async () => {
                 if (!kullanici) return;
@@ -203,7 +203,7 @@ export default function GorselSekmesi({
                 });
                 blobIndir(await res.blob(), "yzliste-gorseller.zip");
               }}
-                className="flex items-center gap-1.5 text-xs bg-[#1E4DD8] hover:bg-[#163B9E] text-white font-medium px-3 py-1.5 rounded-lg transition-colors">
+                className="flex items-center gap-1.5 text-xs bg-rd-primary-800 hover:bg-rd-primary-900 text-white font-medium px-3 py-1.5 rounded-lg transition-colors">
                 <Download size={12} strokeWidth={1.5} /> Tümünü indir (ZIP)
               </button>
             )}
@@ -211,7 +211,7 @@ export default function GorselSekmesi({
           <div className={`grid gap-3 ${gorselJoblar.length === 1 ? "grid-cols-1" : gorselJoblar.length === 2 ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-3"}`}>
             {gorselJoblar.map((job) => (
               <div key={job.requestId} className="space-y-1.5">
-                <div className="rounded-xl overflow-hidden border border-[#D8D6CE] bg-[#F1F0EB] relative group">
+                <div className="rounded-xl overflow-hidden border border-rd-neutral-200 bg-rd-neutral-100 relative group">
                   <img
                     src={`/api/gorsel/img?requestId=${job.requestId}&index=0`}
                     alt={job.label}
@@ -228,12 +228,12 @@ export default function GorselSekmesi({
                     });
                     blobIndir(await res.blob(), `yzliste-${job.stil}.jpg`);
                   }}
-                    className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 hover:bg-white text-[#1E4DD8] text-xs font-medium px-2 py-1 rounded-lg">
+                    className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 hover:bg-white text-rd-primary-800 text-xs font-medium px-2 py-1 rounded-lg">
                     İndir
                   </button>
                 </div>
                 <div className="flex items-center justify-between px-1">
-                  <p className="text-xs text-[#5A5852] font-medium">{job.label}</p>
+                  <p className="text-xs text-rd-neutral-600 font-medium">{job.label}</p>
                   <button onClick={async () => {
                     if (!kullanici) return;
                     if (!kullanici.is_admin && kullanici.kredi < 1) { paketModalAc(); return; }
@@ -264,7 +264,7 @@ export default function GorselSekmesi({
                       }
                     }
                   }}
-                    className="text-xs text-[#908E86] hover:text-[#1E4DD8] transition-colors">
+                    className="text-xs text-rd-neutral-400 hover:text-rd-primary-800 transition-colors">
                     Tekrar (1 kr)
                   </button>
                 </div>

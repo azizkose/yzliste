@@ -1385,7 +1385,85 @@ import FooterSection from '@/components/sections/FooterSection'
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| U-01 | Renk paleti: bej → slate dönüşümü | Bekliyor | — | `#F1F0EB`→`slate-100`, `#D8D6CE`→`slate-200`, `#FAFAF8`→`slate-50`, `#5A5852`→`slate-600`, `#1A1A17`→`slate-900`, `#908E86`→`slate-400`, `#1E4DD8`→`#1E40AF`. Tüm `/uret` sayfasında eski renk kodu kalmamış. |
+| U-01 | Renk paleti: bej → rd-* token dönüşümü | ✅ Tamam | TOKEN-FIX-01 | `#F1F0EB`→`rd-neutral-100`, `#D8D6CE`→`rd-neutral-200`, `#FAFAF8`→`rd-neutral-50`, `#5A5852`→`rd-neutral-600`, `#1A1A17`→`rd-neutral-900`, `#908E86`→`rd-neutral-400`, `#1E4DD8`→`rd-primary-800`. Tüm `/uret` sayfasında ve sadece `/uret`'in kullandığı bileşenlerde eski renk kodu kalmamış. |
+
+#### U-01 Detaylı Prompt
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
+UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
+Bunun yerine BACKLOG-REDESIGN.md başındaki "Redesign branch UI 
+kuralları" geçerli:
+- Font 400–800 serbest
+- Gölge (shadow-*) serbest
+- rounded-2xl, rounded-xl, rounded-lg serbest
+- Manrope (display 18px+) + Inter (body)
+- Yeni spec paleti (rd-* token'ları)
+- Tek istisna — emoji YASAK (Lucide ikon kullan)
+
+Branch: claude/redesign-modern-ui
+Görev: U-01 — /uret sayfası renk paleti dönüşümü
+
+Sorun: /uret sayfası ve onun bileşenleri eski bej palet (#F1F0EB, 
+#D8D6CE, #FAFAF8, #5A5852, #1A1A17, #908E86) ve eski primary 
+(#1E4DD8) kullanıyor. Redesign sistemine geçiş gerekiyor.
+
+Kapsam — SADECE şu dosyaları değiştir:
+- app/uret/page.tsx
+- components/tabs/MetinSekmesi.tsx
+- components/tabs/GorselSekmesi.tsx
+- components/tabs/VideoSekmesi.tsx
+- components/tabs/SosyalSekmesi.tsx
+- components/ui/FotoEkleAlani.tsx
+- components/ui/KopyalaButon.tsx
+- components/ui/KrediButon.tsx
+
+DOKUNMA: components/tanitim/*, components/SiteHeader, SiteFooter, 
+yzstudio, hesap, fiyatlar, blog, auth, hakkimizda, kosullar, 
+mesafeli-satis, teslimat-iade, gizlilik, kvkk, cerez, odeme, error, 
+admin gibi /uret dışındaki dosyalar (Faz 3-6'da ayrı ele alınacak).
+
+Renk eşlemeleri:
+
+| Eski hex | Yeni token (Tailwind class) | Kullanım |
+|---|---|---|
+| #F1F0EB | bg-rd-neutral-100 / text-rd-neutral-100 | Surface açık |
+| #D8D6CE | bg-rd-neutral-200 / border-rd-neutral-200 | Border, divider |
+| #FAFAF8 | bg-rd-neutral-50 | En açık zemin |
+| #5A5852 | text-rd-neutral-600 | Secondary text |
+| #1A1A17 | text-rd-neutral-900 | Primary text |
+| #908E86 | text-rd-neutral-400 | Muted text |
+| #1E4DD8 | bg-rd-primary-800 / text-rd-primary-800 | Primary brand |
+
+Yapacak iş:
+1. Yukarıdaki 8 dosyayı sırayla aç
+2. Her dosyada eski hex değerlerini find-replace yap (style="...", 
+   className="bg-[#...]", inline color: '#...' formlarında geçenleri)
+3. Tailwind class formuna çevir (bg-rd-neutral-100 gibi)
+4. Eğer arbitrary value şart ise (`bg-[#F1F0EB]`) onu da rd-neutral-100 
+   class'ına dönüştür
+5. Build hatası vermemesi için tip kontrolü yap
+
+Önemli notlar:
+- Layout, spacing, typography, ikon, davranış DEĞİŞMEYECEK — sadece 
+  renk dönüşümü
+- font-semibold, gölge, rounded-2xl varsa İPTAL ETMEDEN BIRAK 
+  (redesign kuralı: serbest)
+- Emoji görürsen Lucide karşılığına çevir (emoji-yasağı kural)
+- Eski renk değerleri başka semantik anlam taşıyorsa (örn. yeşil 
+  başarı, kırmızı hata) onları rd-success-600, rd-danger-600 gibi 
+  semantik token'lara çevir, rd-neutral-* yapma
+
+Test (commit öncesi):
+- Build temiz geçmeli (`npm run build` veya tsc check)
+- /uret sayfasını preview'da aç, sayfanın çökmediğinden emin ol
+- Görsel olarak: bej arka plan yerine soğuk slate gri görünmeli, eski 
+  primary mavi yerine rd-primary-800 (daha koyu mavi) görünmeli
+
+Commit mesajı: refactor(uret): U-01 bej → rd-* token paleti dönüşümü
+BACKLOG-REDESIGN.md'de U-01 satırını [x] işaretle.
+```
 
 ### Grup 2 — Niyet Hatırlatıcı (Intent Banner)
 
@@ -1501,10 +1579,13 @@ Canlı sitedeki örnek çıktıları (üretilmiş text/görsel/video/sosyal örn
 
 ### Grup 4 — Fiyatlar `/fiyatlar`
 
+**Aziz kararı (27 Nisan 2026):** Anasayfadaki Fiyatlar bölümü (FY-01~12, BACKLOG Bölüm 07) "anasayfayı bozuyor, sevmedim" — `/fiyatlar` sayfası yenilenirken anasayfadan **tamamen kaldırma veya minik özet bant'a indirgeme** kararı verilecek. 3 seçenek H-21A altında değerlendirilecek.
+
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
+| H-21A | Anasayfa FY bölümü kararı: kaldır vs. minik özet vs. mevcut hâl | Bekliyor | H-01 | 3 seçenek Aziz'e sunulur: (A) FiyatlarSection'ı _tanitim-redesign.tsx'ten tamamen çıkar (FC öncesi sadece SSS bırak); (B) FY yerine minik bant: "₺49'dan başlar · Aboneliksiz · `/fiyatlar` →" tek satır link; (C) FY mevcut hâlinde kalsın. Aziz seçer, Cowork uygular. |
 | H-22 | "Önerilen" -> "En popüler" güncelle | Bekliyor | H-01 | Terim değişikliği. |
-| H-23 | Kredi calculator entegrasyonu | Bekliyor | H-01, FY done | Landing page CreditCalculator reuse. |
+| H-23 | Kredi calculator entegrasyonu | Bekliyor | H-01, FY done | Landing page CreditCalculator reuse. **Eğer H-21A "tamamen kaldır" seçilirse** calculator sadece `/fiyatlar`'da kalır, anasayfada hiç olmaz. |
 | H-24 | SSS bölümü | Bekliyor | H-01 | 4-6 soru, kredi/fiyat odaklı. Landing SSS component reuse. |
 | H-25 | ~~Karşılaştırma tablosu~~ | Atlandı | — | Gerekli değil (Aziz kararı). |
 | H-26 | Trust strip alt bant | Bekliyor | H-01 | Landing page güven noktaları tekrarı. |
