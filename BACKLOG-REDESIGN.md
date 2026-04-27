@@ -1910,15 +1910,269 @@ Commit mesajları (mantıklı bölünebilir):
 
 BACKLOG-REDESIGN.md'de U-05 ve U-06 [x] işaretle.
 ```
-| U-07 | "Profili düzenle" CTA → `/profil` | Bekliyor | U-04 | Tıklayınca `/profil` sayfasına yönlendiriyor. Outline stil buton. |
+| U-07 | "Profili düzenle" CTA → `/profil` | ✅ Tamam | U-04 | BrandProfileBlock'un demo açık state'inde, AIPreview altına outline stil "Profili düzenle" Link'i. `/profil`'e yönlendirir. ExternalLink veya ArrowRight ikonu. |
+
+#### U-07 + Grup 4 (U-08+U-09+U-10) Birleşik Prompt
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
+UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
+Bunun yerine BACKLOG-REDESIGN.md başındaki redesign branch UI 
+kuralları geçerli (font 400-800 serbest, gölge serbest, rounded-2xl 
+serbest, Manrope+Inter, rd-* token'lar, sadece emoji yasak — Lucide 
+ikon kullan).
+
+Branch: claude/redesign-modern-ui
+Görev: U-07 (Profili düzenle CTA) + Grup 4 (Sticky kredi bar)
+
+────────────────────────────────────────────
+BÖLÜM 1 — U-07: BrandProfileBlock'a "Profili düzenle" CTA
+────────────────────────────────────────────
+
+components/uret/BrandProfileBlock.tsx içinde demo açık state 
+collapsible'ında (children render eden grid bölümü), AIPreview'in 
+ALTINA tek satır outline link ekle. Sadece demo açıkken ve şu an 
+zaten activeTone seçilmişse (yani kullanıcı tonlarla oynayıp etkisini 
+görmüş) görünmesi mantıklı, ama basit tut: demo açıldığında HER ZAMAN 
+görünsün.
+
+Yapısal değişiklik — render bloğunu güncelle:
+
+  {showDemo && (
+    <div id="brand-profile-demo" className="border-t border-rd-neutral-100 p-5">
+      <div className="grid gap-5 md:grid-cols-[1fr_1.2fr]">
+        <ToneSelector activeTone={activeTone} onChange={setActiveTone} />
+        <AIPreview activeTone={activeTone} />
+      </div>
+      <div className="mt-5 pt-4 border-t border-rd-neutral-100 flex justify-end">
+        <a
+          href="/profil"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-rd-neutral-300 px-4 py-2 text-sm font-medium text-rd-primary-700 hover:bg-rd-primary-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-500 focus-visible:ring-offset-2"
+        >
+          Profili düzenle
+          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  )}
+
+Üstte ArrowRight import et: `import { Sparkles, ChevronDown, ArrowRight } from 'lucide-react'`
+
+Next.js Link kullanmak istersen `next/link`'ten import et — `<a>` 
+yerine `<Link href="/profil">` daha doğru pratik (preload, client-side 
+navigation), o şekilde yaz.
+
+────────────────────────────────────────────
+BÖLÜM 2 — U-08: calculateCredits() hook
+────────────────────────────────────────────
+
+Yeni dosya: components/uret/useCalculateCredits.ts (veya hooks/ klasörü 
+varsa orada)
+
+```ts
+'use client'
+
+export type ActiveTab = 'metin' | 'gorsel' | 'video' | 'sosyal'
+
+interface CalculateCreditsArgs {
+  activeTab: ActiveTab
+  selectedStylesCount?: number   // gorsel için
+  videoLengthSec?: 5 | 10        // video için
+  selectedPlatformsCount?: number // sosyal için
+}
+
+export function calculateCredits(args: CalculateCreditsArgs): number {
+  const { activeTab, selectedStylesCount = 0, videoLengthSec = 5, selectedPlatformsCount = 0 } = args
+
+  if (activeTab === 'metin') return 1
+  if (activeTab === 'gorsel') return Math.max(1, selectedStylesCount)
+  if (activeTab === 'video') return videoLengthSec === 10 ? 20 : 10
+  if (activeTab === 'sosyal') return Math.max(1, selectedPlatformsCount)
+  return 1
+}
+```
+
+NOT: useMemo wrapper'ı opsiyonel — bu basit hesap pure function olarak 
+da çağrılabilir. /uret/page.tsx'te activeTab + ilgili state'ler 
+değişince yeniden hesaplansın yeter.
+
+────────────────────────────────────────────
+BÖLÜM 3 — U-09: StickySubmitBar component
+────────────────────────────────────────────
+
+Yeni dosya: components/uret/StickySubmitBar.tsx
+
+```tsx
+'use client'
+
+import Link from 'next/link'
+import { ArrowRight, AlertCircle } from 'lucide-react'
+
+interface StickySubmitBarProps {
+  cost: number
+  remainingCredits: number  // Kullanıcı bakiyesi
+  isInsufficientCredit: boolean
+  onSubmit: () => void
+  isSubmitting?: boolean
+  ctaLabel?: string  // default "İçerik üret"
+}
+
+export default function StickySubmitBar({
+  cost,
+  remainingCredits,
+  isInsufficientCredit,
+  onSubmit,
+  isSubmitting = false,
+  ctaLabel = 'İçerik üret',
+}: StickySubmitBarProps) {
+  return (
+    <div className="sticky bottom-5 z-40 mx-auto mt-8 w-full max-w-3xl px-4 sm:px-0">
+      <div className="rounded-2xl border border-rd-neutral-200 bg-white shadow-rd-lg p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
+        {/* Cost summary (sol) */}
+        <div className="flex-1">
+          <p className="text-xs font-medium text-rd-neutral-500 uppercase tracking-wider">
+            Bu üretimin maliyeti
+          </p>
+          <div className="mt-1 flex items-baseline gap-2">
+            <span
+              className="text-2xl font-bold text-rd-neutral-900 tabular-nums"
+              style={{ fontFamily: 'var(--font-rd-display)' }}
+            >
+              {cost} kredi
+            </span>
+            <span className={`text-xs ${isInsufficientCredit ? 'text-rd-danger-600 font-medium' : 'text-rd-neutral-500'}`}>
+              {isInsufficientCredit
+                ? `Bakiyenizde ${remainingCredits} kredi var`
+                : `Üretim sonrası: ${Math.max(0, remainingCredits - cost)} kredi kalır`}
+            </span>
+          </div>
+        </div>
+
+        {/* CTA (sağ) */}
+        <div className="w-full sm:w-auto">
+          {isInsufficientCredit ? (
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                disabled
+                aria-disabled="true"
+                className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-rd-neutral-300 px-5 py-2.5 text-sm font-medium text-rd-neutral-500 cursor-not-allowed sm:w-auto"
+              >
+                {ctaLabel}
+              </button>
+              <Link
+                href="/fiyatlar"
+                className="inline-flex items-center justify-center gap-1 text-xs font-medium text-rd-danger-700 hover:underline"
+              >
+                <AlertCircle className="h-3.5 w-3.5" aria-hidden="true" />
+                Yetersiz kredi · Paket al
+              </Link>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={onSubmit}
+              disabled={isSubmitting}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-rd-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-rd-primary-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-500 focus-visible:ring-offset-2 sm:w-auto"
+            >
+              {isSubmitting ? 'Üretiliyor…' : ctaLabel}
+              {!isSubmitting && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+────────────────────────────────────────────
+BÖLÜM 4 — U-10: page.tsx entegrasyonu (yetersiz kredi dahil)
+────────────────────────────────────────────
+
+app/uret/page.tsx içinde:
+
+1. Üstte import:
+   ```ts
+   import { calculateCredits, type ActiveTab } from '@/components/uret/useCalculateCredits'
+   import StickySubmitBar from '@/components/uret/StickySubmitBar'
+   ```
+
+2. Mevcut state'lerden (activeTab, selectedStyles, videoLength, 
+   selectedPlatforms) cost hesabını yap:
+   ```ts
+   const cost = calculateCredits({
+     activeTab,
+     selectedStylesCount: selectedStyles?.length,
+     videoLengthSec: videoLength,
+     selectedPlatformsCount: selectedPlatforms?.length,
+   })
+   const remainingCredits = kullanici?.kredi ?? 0
+   const isInsufficientCredit = !kullanici || remainingCredits < cost
+   ```
+   (Mevcut state isimleri farklıysa Claude Code page.tsx'i okuyup 
+   eşleştirsin.)
+
+3. Sayfanın en altına (form alanlarının kapanışından sonra, 
+   container div'in içinde) StickySubmitBar yerleştir:
+   ```tsx
+   <StickySubmitBar
+     cost={cost}
+     remainingCredits={remainingCredits}
+     isInsufficientCredit={isInsufficientCredit}
+     onSubmit={handleSubmit}  // mevcut submit handler
+     isSubmitting={isUreitiliyor}  // mevcut loading state
+   />
+   ```
+
+4. **Form içi mevcut "İçerik üret" butonları KALSIN** şimdilik 
+   (Grup 6'da U-14~17'de kredi yazıları temizlenecek). Sticky bar 
+   ek olarak çalışıyor — kullanıcı her iki butonu da kullanabilir.
+
+────────────────────────────────────────────
+Test (commit öncesi)
+────────────────────────────────────────────
+
+U-07:
+- BrandProfileBlock "Önce dene" tıkla → demo açılır
+- Sağ alt köşede outline buton "Profili düzenle →"
+- Tıklayınca /profil sayfasına gider
+
+Grup 4:
+- /uret sayfasının altında sticky bar görünür (scroll edince hâlâ 
+  ekranda kalır)
+- Sol: "BU ÜRETİMİN MALİYETİ" eyebrow + "X kredi" büyük
+- Aktif sekmeye göre rakam değişir:
+  - Metin: 1 kredi
+  - Görsel: seçili stil sayısı (yoksa 1)
+  - Video 5sn: 10, 10sn: 20
+  - Sosyal: seçili platform sayısı (yoksa 1)
+- Sağ: "İçerik üret" primary buton, ArrowRight ikon
+- Kullanıcı bakiyesi yetiyorsa: "Üretim sonrası: X kredi kalır"
+- Bakiyesi yetmiyorsa: buton disabled + altta kırmızı uyarı 
+  "Yetersiz kredi · Paket al" → /fiyatlar
+- Mobil 375px: dikey istif (cost üst, buton alt full width)
+- Klavye Tab → buton focus halkası mavi
+
+Commit mesajları (mantıklı bölünebilir):
+1. feat(uret): U-07 BrandProfileBlock profili düzenle CTA
+2. feat(uret): U-08 calculateCredits hook
+3. feat(uret): U-09 StickySubmitBar component
+4. feat(uret): U-10 sticky bar entegrasyonu + yetersiz kredi durumu
+
+Veya tek commit: feat(uret): U-07~10 sticky kredi bar + profil CTA
+
+BACKLOG-REDESIGN.md'de U-07, U-08, U-09, U-10 [x] işaretle.
+```
 
 ### Grup 4 — Canlı Kredi Maliyeti (Sticky Submit Bar)
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| U-08 | `calculateCredits()` hook | Bekliyor | — | Metin=1, Görsel=seçili stil sayısı, Video=5sn:10/10sn:20, Sosyal=platform sayısı×1. Sekme/seçim değişince reactive güncelleme. |
-| U-09 | StickySubmitBar component | Bekliyor | U-08 | Sticky bottom:20px, white bg, slate-200 border, 16px radius, shadow. Sol: "BU ÜRETİMİN MALİYETİ" eyebrow + büyük kredi rakamı + kalan kredi. Sağ: "İçerik üret" primary buton. Mobile: dikey istif (cost üst, buton alt). |
-| U-10 | Yetersiz kredi durumu | Bekliyor | U-09 | Bakiye < maliyet → buton disabled + tooltip "Yetersiz kredi. Paket al →" (tıklanabilir `/fiyatlar` link). Mobile: buton altında inline uyarı satırı. |
+| U-08 | `calculateCredits()` hook | ✅ Tamam | — | Metin=1, Görsel=seçili stil sayısı, Video=5sn:10/10sn:20, Sosyal=platform sayısı×1. Sekme/seçim değişince reactive güncelleme. |
+| U-09 | StickySubmitBar component | ✅ Tamam | U-08 | Sticky bottom:20px, white bg, slate-200 border, 16px radius, shadow. Sol: "BU ÜRETİMİN MALİYETİ" eyebrow + büyük kredi rakamı + kalan kredi. Sağ: "İçerik üret" primary buton. Mobile: dikey istif (cost üst, buton alt). |
+| U-10 | Yetersiz kredi durumu | ✅ Tamam | U-09 | Bakiye < maliyet → buton disabled + tooltip "Yetersiz kredi. Paket al →" (tıklanabilir `/fiyatlar` link). Mobile: buton altında inline uyarı satırı. |
 
 ### Grup 5 — Disabled Buton Tooltip
 
@@ -2183,3 +2437,36 @@ Mevcut Bölüm 12'de H-27/28/29 sadece blog liste için 3 ticket vardı. Burada 
 **Kapsam dışı (Aziz onayı):** `/admin`, `/hesap/admin/feedback`, `/(auth)/app` (eski), `/profil` (eski — `/hesap/profil` aktif), `/toplu` (zaten kaldırılıyor — UX-03'le `/uret` text sekmesine taşındı).
 
 **Detaylı prompt yazım kuralı:** Her ticket grubu için Cowork detaylı prompt'u BACKLOG'un ilgili bölümüne yazar, ondan sonra Aziz Claude Code'a verir. Prompt sırası gelmeden Claude Code ticket'a dokunmaz. (HR-FIX'te öğrendik: prompt olmadan 23 sapma çıkıyor.)
+
+---
+
+## Redesign Sonrası Kontrol Listesi
+
+Faz 6 (Yasal + Hata) bittiğinde, redesign main'e merge edilmeden önce yapılacaklar:
+
+### Scheduled Tasks Reaktivasyonu
+27 Nisan 2026'da Aziz isteğiyle 5 task pause edildi (memory: `project_scheduled_tasks_paused.md`). Redesign bittiğinde tek tek aç:
+
+- [ ] `yzliste-daily-health` — `enabled: true` (cron: `0 8 * * *`) — production health koruması, ÖNCE bunu aç
+- [ ] `yzliste-weekly-audit` — `enabled: true` (cron: `0 9 * * 1`)
+- [ ] `weekly-comprehensive-test` — `enabled: true` (cron: `0 9 * * 1`)
+- [ ] `ai-denetim-haftalik` — `enabled: true` (cron: `0 6 * * 0`)
+- [ ] `blog-seo-yazisi` — `enabled: true` (cron: `0 10 * * 1,4`) — EN SON aç, blog yazıları redesign'lı sayfalarda yapılmalı
+
+### Toplu Metin Kontrolü
+Memory: `project_metin_kontrol.md`. UA/MB/NY/FY/SS/FC/FT bölümlerinde Claude Code spec'ten farklı metinler uyguladıysa toplu doğrulama yap. Spec dosyaları (specs/ klasörü) vs canlı preview metni karşılaştır, sapmaları listele, Aziz'e sun.
+
+### CI Onayı
+CI-01 backlog'da hâlâ açıksa redesign main'e merge edilmeden önce çözülmeli (12 lint error). Branch protection "Lint & Type Check" + "Unit Tests" zorunlu.
+
+### Faz 1 Senaryosu — Aziz Acceptance
+- [ ] Anasayfa tüm bölümleri preview'da scroll edilerek kontrol
+- [ ] Tüm CTA route'ları test (kayıt, üretim, fiyatlar, blog, hakkımızda, sss)
+- [ ] Footer linkleri 6 yasal sayfa açılıyor mu (henüz redesign'lı olmayan ama erişilebilir)
+- [ ] Mobile 375 + 768 + 1024 breakpoints
+- [ ] Klavye navigation (Tab, Enter, Esc) tam landing'de
+
+### Production Hazırlık
+- [ ] Vercel preview → preview branch → main akışı temiz
+- [ ] iyzico, Paraşüt, Supabase production env değişkenleri kontrol
+- [ ] PostHog event'leri redesign'lı sayfalarda atılıyor mu
