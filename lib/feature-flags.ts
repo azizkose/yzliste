@@ -55,3 +55,7 @@ export function getFeatureFlag(flagName: string): boolean {
 export const FF = {
   YZSTUDIO: 'ff-yzstudio',
 } as const
+
+// Env-based flags (no PostHog — deterministic at build time)
+// FATURALAR_DEMO: dev + preview'da 4 durum mock data, prod'da gerçek Supabase
+export const FATURALAR_DEMO = process.env.NODE_ENV !== 'production'

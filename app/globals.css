@@ -85,14 +85,17 @@
 
   /* Redesign Colors — Semantic */
   --color-rd-success-50: #ECFDF5;
+  --color-rd-success-200: #A7F3D0;
   --color-rd-success-600: #059669;
   --color-rd-success-700: #047857;
 
   --color-rd-warning-50: #FFFBEB;
+  --color-rd-warning-200: #FDE68A;
   --color-rd-warning-600: #D97706;
   --color-rd-warning-700: #B45309;
 
   --color-rd-danger-50: #FEF2F2;
+  --color-rd-danger-200: #FECACA;
   --color-rd-danger-600: #DC2626;
   --color-rd-danger-700: #B91C1C;
 
