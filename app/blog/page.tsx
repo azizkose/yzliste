@@ -4,6 +4,7 @@ import { getYazilar, kategoriler } from "./icerikler";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import BlogListesi from "./BlogListesi";
+import { Eyebrow } from "@/components/primitives/Eyebrow";
 
 export const revalidate = 3600; // 1 saat ISR cache
 
@@ -29,24 +30,35 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: "Blog | yzliste",
-    description: "Listing yazma, AI görsel ve video üretimi, SEO, fiyatlandırma ve 7 pazaryeri için satış rehberleri.",
+    description:
+      "Listing yazma, AI görsel ve video üretimi, SEO, fiyatlandırma ve 7 pazaryeri için satış rehberleri.",
     url: "https://www.yzliste.com/blog",
     type: "website",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "yzliste blog" }],
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "yzliste blog",
+      },
+    ],
   },
   alternates: {
     canonical: "https://www.yzliste.com/blog",
-    languages: { 'tr': 'https://www.yzliste.com/blog', 'x-default': 'https://www.yzliste.com/blog' },
+    languages: {
+      tr: "https://www.yzliste.com/blog",
+      "x-default": "https://www.yzliste.com/blog",
+    },
   },
   robots: { index: true, follow: true },
   twitter: {
     card: "summary_large_image",
     title: "Blog | yzliste",
-    description: "Listing yazma, AI görsel ve video üretimi, SEO, fiyatlandırma ve 7 pazaryeri için satış rehberleri.",
+    description:
+      "Listing yazma, AI görsel ve video üretimi, SEO, fiyatlandırma ve 7 pazaryeri için satış rehberleri.",
   },
 };
 
-// JSON-LD: Blog listing sayfası
 async function BlogJsonLd() {
   const yazilar = await getYazilar();
   return (
@@ -57,7 +69,8 @@ async function BlogJsonLd() {
           "@context": "https://schema.org",
           "@type": "Blog",
           name: "yzliste Blog",
-          description: "Listing yazma, AI görsel ve video üretimi, SEO, fiyatlandırma ve 7 pazaryeri için satış rehberleri",
+          description:
+            "Listing yazma, AI görsel ve video üretimi, SEO, fiyatlandırma ve 7 pazaryeri için satış rehberleri",
           url: "https://www.yzliste.com/blog",
           publisher: { "@id": "https://www.yzliste.com/#organization" },
           blogPost: yazilar.map((y) => ({
@@ -80,37 +93,51 @@ export default async function BlogPage() {
   const cats = await kategoriler();
 
   return (
-    <main className="min-h-screen bg-[#FAFAF8] font-sans">
+    <main className="min-h-screen bg-rd-neutral-50 font-sans">
       <BlogJsonLd />
 
       <SiteHeader aktifSayfa="blog" />
 
       {/* HERO */}
       <section className="px-4 sm:px-6 pt-14 pb-8 max-w-3xl mx-auto text-center">
-        <h1 className="text-3xl sm:text-4xl font-medium text-[#1A1A17] mb-4">
-          E-ticaret satıcıları için<br />
-          <span className="text-[#1E4DD8]">pratik rehberler</span>
+        <Eyebrow color="primary" className="mb-3 justify-center">
+          BLOG
+        </Eyebrow>
+        <h1
+          className="text-3xl sm:text-5xl font-medium text-rd-neutral-900 mb-4"
+          style={{
+            fontFamily: "var(--font-rd-display)",
+            letterSpacing: "-0.01em",
+          }}
+        >
+          E-ticaret satıcıları için
+          <br />
+          <span className="text-rd-primary-700">pratik rehberler</span>
         </h1>
-        <p className="text-[#908E86] text-base">
-          Trendyol, Hepsiburada, Amazon ve Etsy&apos;de listing yazma, AI görsel kullanımı ve platform stratejileri.
+        <p className="text-rd-neutral-600 text-base">
+          Trendyol, Hepsiburada, Amazon ve Etsy&apos;de listing yazma, AI
+          görsel kullanımı ve platform stratejileri.
         </p>
       </section>
 
       <BlogListesi yazilar={yazilar} kategoriler={cats} />
 
       {/* CTA */}
-      <section className="px-4 sm:px-6 py-14 bg-[#F0F4FB] border-y border-[#BAC9EB] text-center">
-        <h2 className="text-xl font-medium text-[#1A1A17] mb-3">Okuduktan sonra dene</h2>
-        <p className="text-sm text-[#5A5852] mb-6">Ücretsiz hesap oluştur, 3 krediyle hemen listing ve görsel üret.</p>
+      <section className="px-4 sm:px-6 py-14 bg-rd-primary-50 border-y border-rd-primary-200 text-center">
+        <h2 className="text-xl font-medium text-rd-neutral-900 mb-3">
+          Okuduktan sonra dene
+        </h2>
+        <p className="text-sm text-rd-neutral-600 mb-6">
+          Ücretsiz hesap oluştur, 3 krediyle hemen listing ve görsel üret.
+        </p>
         <Link
           href="/kayit"
-          className="inline-block bg-[#1E4DD8] hover:bg-[#163B9E] text-white font-medium px-8 py-3.5 rounded-lg text-sm transition-colors"
+          className="inline-block bg-rd-primary-700 hover:bg-rd-primary-800 text-white font-medium px-8 py-3.5 rounded-lg text-sm transition-colors"
         >
           Ücretsiz hesap oluştur →
         </Link>
       </section>
 
-      {/* FOOTER */}
       <SiteFooter />
     </main>
   );

@@ -1638,9 +1638,13 @@ Bittikten sonra:
 
 **Faz 4 toplam:** 5 birleşik ticket (eski AU-01~09 + H-41 absorb).
 
-#### AU-01~AU-05 Birleşik Prompt (Auth sayfaları)
+**AU-01~AU-05 ✅ Tamam (28 Nis akşam).** AuthForm.tsx tam rd-* rewrite (Eye toggle + inline error + KVKK linkleri + 60s resend cooldown), 2-kolon layout /giris+/kayit, /sifre-sifirla 2 step + Suspense, Modal.tsx rd-* (mobile bottom-sheet), @modal/(.) parallel routes korundu, docs/auth-config.md eklendi (Aziz Supabase Redirect URLs config talimatı).
 
-```
+**Açık riskler:**
+- supabase.auth.resend SDK versiyon farkı: `{ type: 'signup', email }` vs `{ type: 'email', email }` — TS hata verirse alternatif
+- Supabase Redirect URLs config Aziz dönüşünde Cowork yapacak (MCP üzerinden veya talimat ile)
+
+<!-- AU prompt detay silindi — Code uyguladı, detay commit'lerde + docs/auth-config.md
 ÖNEMLİ — KURAL OVERRIDE:
 Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
 kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
@@ -1918,23 +1922,290 @@ Bittikten sonra rapor:
 - Açık riskler / Aziz preview test (Google OAuth Supabase config 
   manuel adımları)
 ```
+-->
 
 ---
 
 ## 16 — İçerik Sayfaları (Faz 5)
 
+**Mevcut sayfalar:** app/blog/page.tsx, app/blog/[slug]/page.tsx, app/sss/page.tsx, app/hakkimizda/page.tsx. Hepsi var, sadece UI redesign.
+
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| IC-01 | `/blog` liste | Bekliyor | Landing done | Hero + arama + kategori chip, kart grid, hover lift, pagination. |
-| IC-02 | `/blog/[slug]` tipografi | Bekliyor | IC-01 | Article max-w 720, prose, kod blok, line-height 1.75. |
-| IC-03 | `/blog/[slug]` meta + paylaş | Bekliyor | IC-02 | Yazar/tarih/okuma süresi, kategori, sosyal paylaş. |
-| IC-04 | `/blog/[slug]` ilgili + CTA | Bekliyor | IC-03 | Yazı sonu CTA + 3 ilgili. |
-| IC-05 | `/sss` redesign | Bekliyor | Landing done | SSSSection reuse + kategori filtre + arama. |
-| IC-06 | `/hakkimizda` redesign | Bekliyor | Landing done | DR-03 metni korunur, kurucu warm-earth accent. |
-| IC-07 | Mobile responsive | Bekliyor | IC-06 | Blog kart 1 kolon. |
-| IC-08 | A11y + acceptance | Bekliyor | IC-07 | Article semantic HTML. |
+| IC-01 | `/blog` liste komple | ✅ Tamamlandı | Auth done | rd-* swap. Manrope eyebrow "BLOG" + H1 "yzliste blog". Hero + arama input + kategori chip filter (ChipSelector reuse, "Tümü" + kategoriler). Kart grid (md:grid-cols-2 lg:grid-cols-3 gap-6): kapak + kategori badge + başlık (font-display) + özet + tarih + okuma süresi. Hover lift -translate-y-0.5. Pagination veya useInfiniteQuery (UR pattern reuse). |
+| IC-02 | `/blog/[slug]` komple (tipografi + meta + paylaş + ilgili + CTA) | ✅ Tamamlandı | IC-01 | rd-* swap. Article max-w-prose (~720px) mx-auto. font-display H1, prose-rd typography (line-height 1.75, p mb-4, h2/h3 spacing, code block bg-rd-neutral-100). Üstte meta: kategori badge + yazar + tarih + "X dk okuma". Sağda veya altta sosyal paylaş (X / LinkedIn / kopya link, Lucide ikonlar). Yazı sonu CTA kart (warm-earth bg + "yzliste'yi dene" + Link to /uret). 3 ilgili yazı kart (kategoriye göre). |
+| IC-03 | `/sss` redesign | ✅ Tamamlandı | IC-01 | rd-* swap. Manrope eyebrow "SSS" + H1 "Sıkça sorulanlar". components/landing/SSSSection veya FY-03'teki FiyatlarSSS pattern reuse. Kategori filter chip (ChipSelector reuse): Genel / Kredi / Üretim / Teknik / KVKK. Arama input (debounced live filter). Accordion her soru. |
+| IC-04 | `/hakkimizda` redesign | ✅ Tamamlandı | IC-01 | rd-* swap. Manrope eyebrow "HAKKIMIZDA" + H1 "yzliste neden var". Aziz kuralı: mevcut metinleri koru, yeni yazma (DR-03 metni mevcut sitede). Bölümler: Vizyon / Hikaye / Kurucu (warm-earth accent rozet) / İletişim. Kurucu kart: foto (varsa) + isim + rol + LinkedIn. |
+| IC-05 | Mobile + a11y polish | ✅ Tamamlandı | IC-04 | 375px: blog kart 1 kolon, /sss arama tek satır, /hakkımızda kurucu kart kompakt. Article semantic HTML (article > header > h1 + h2 hiyerarşi), aria-labelledby, ChipSelector ARIA reuse, blog kart role="article". |
 
-**Faz 5 toplam:** 8 ticket.
+**Faz 5 toplam:** 5 birleşik ticket (eski IC-01~08 sıkıştırıldı).
+
+#### IC-01~IC-05 Birleşik Prompt (İçerik sayfaları)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: IC-01~IC-05 — /blog liste + /blog/[slug] + /sss + /hakkimizda 
+refactor (Faz 5 İçerik).
+
+Mevcut sayfalar:
+- app/blog/page.tsx (liste)
+- app/blog/[slug]/page.tsx (post)
+- app/sss/page.tsx
+- app/hakkimizda/page.tsx
+
+Reuse: components/primitives/{ChipSelector, Toast}.tsx + 
+components/landing/SSSSection (varsa) + components/fiyatlar/FiyatlarSSS 
+pattern + UR pagination pattern (useInfiniteQuery).
+
+Aziz kuralı: Mevcut sitedeki metinleri koru, yeni metin yazma. Tüm 
+metin değişiklikleri Aziz preview'da kontrol eder.
+
+KAPSAM DIŞI:
+- Backend blog API değişikliği (mevcut MD/MDX veya headless CMS 
+  korunur)
+- Yeni içerik yazımı
+
+────────────────────────────────────────────
+BÖLÜM 1 — IC-01: /blog liste
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap.
+
+2. Hero bölümü:
+   - Eyebrow text-rd-primary-700 "BLOG"
+   - H1 (font-display): text-3xl md:text-5xl text-rd-neutral-900 
+     "yzliste blog"
+   - Subtitle: text-rd-neutral-600 — "Pazaryeri rehberleri, AI listing 
+     ipuçları, satış stratejileri."
+
+3. Filter satırı:
+   - Sol: Arama input (Lucide Search) — placeholder "Yazı ara...", 
+     debounced 300ms (UR pattern reuse)
+   - Sağ: Kategori ChipSelector (single mode + "Tümü" default — UR 
+     pattern reuse). Kategoriler MD frontmatter'dan veya headless 
+     CMS'ten dinamik çek
+
+4. Kart grid:
+   - grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6
+   - Her kart (Link href={`/blog/${slug}`}):
+     - rounded-xl border border-rd-neutral-200 bg-white overflow-hidden 
+       hover:border-rd-primary-300 hover:-translate-y-0.5 transition
+     - Üst: kapak image (varsa, aspect-[16/9] object-cover)
+     - İçerik p-5: kategori badge (rd-warm tonu eyebrow) + H3 başlık 
+       (font-display text-lg) + özet (text-rd-neutral-600 line-clamp-2) 
+       + alt satır flex (tarih + "X dk okuma")
+
+5. Pagination:
+   - 12 yazı/sayfa (UR pattern reuse useInfiniteQuery)
+   - "Daha fazla yükle" buton altta
+
+6. Boş state:
+   - Filtre/arama sonucu boş: "Sonuç bulunamadı" + "Tümünü göster" 
+     CTA (filtre temizle)
+
+Commit: feat(blog): IC-01 /blog liste refactor (kart grid + filter + 
+pagination)
+
+────────────────────────────────────────────
+BÖLÜM 2 — IC-02: /blog/[slug]
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap.
+
+2. Layout: max-w-prose (~720px) mx-auto px-4 py-12.
+
+3. Üst kısım (article header):
+   - Geri linki: Lucide ChevronLeft + "Tüm yazılar" → /blog
+   - Kategori badge: rd-warm-50 bg + text-rd-warm-700
+   - H1 (font-display): text-3xl md:text-5xl text-rd-neutral-900 
+     leading-tight
+   - Meta satırı: flex items-center gap-3 text-sm text-rd-neutral-500
+     - Yazar: Lucide User + isim (varsa avatar küçük)
+     - Tarih: Lucide Calendar + tarih
+     - Okuma süresi: Lucide Clock + "X dk okuma" (kelime sayısı / 200 
+       hesaplama)
+
+4. Kapak görseli (varsa): aspect-[16/9] rounded-xl overflow-hidden 
+   my-8.
+
+5. **Article body — prose typography:**
+   - .prose-rd custom CSS sınıfı veya Tailwind Typography (varsa)
+   - Tipografi:
+     - p: text-base md:text-lg text-rd-neutral-800 leading-relaxed mb-5
+     - h2: font-display text-2xl md:text-3xl mt-12 mb-4
+     - h3: font-display text-xl md:text-2xl mt-8 mb-3
+     - ul/ol: list-disc ml-6 mb-5, li mb-2
+     - blockquote: border-l-4 border-rd-warm-300 pl-4 italic 
+       text-rd-neutral-700
+     - code (inline): bg-rd-neutral-100 px-1.5 py-0.5 rounded 
+       text-sm font-mono
+     - pre: bg-rd-neutral-900 text-white p-4 rounded-xl overflow-x-auto 
+       font-mono text-sm
+     - a: text-rd-primary-700 hover:text-rd-primary-800 underline 
+       underline-offset-2
+     - img: rounded-xl my-6
+   - line-height: 1.75 (default leading-relaxed)
+
+6. **Sosyal paylaş (sticky sağ kenar veya altta):**
+   - Lucide Share2 + "Paylaş" başlığı
+   - 3 buton (size-9 rounded-full bg-rd-neutral-100 hover:bg-rd-primary-50):
+     - X (Twitter): Lucide Twitter
+     - LinkedIn: Lucide Linkedin
+     - Kopya link: Lucide Link2 (clipboard + Toast "Link kopyalandı")
+   - Desktop sticky sol kenar (lg:fixed lg:left-8 lg:top-32), mobile 
+     altta yatay
+
+7. **Yazı sonu CTA:**
+   - mt-16 rounded-xl border-2 border-rd-warm-300 bg-rd-warm-50 p-6 
+     md:p-8
+   - Eyebrow: "BU YAZIDAN İLHAM"
+   - H3 (font-display): "yzliste'yi ücretsiz dene"
+   - p: "Listing yazımı, görsel üretimi, video try-on — tek platformda."
+   - CTA: bg-rd-primary-700 text-white "Hemen başla" → /uret
+
+8. **3 ilgili yazı:**
+   - Aynı kategoriden, yazıya en yakın 3 (tarih veya tag bazlı)
+   - "Devamı" başlığı + 3 mini kart (IC-01 pattern, daha kompakt)
+
+Commit: feat(blog): IC-02 /blog/[slug] tipografi + meta + paylaş + 
+ilgili + CTA
+
+────────────────────────────────────────────
+BÖLÜM 3 — IC-03: /sss redesign
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap.
+
+2. Hero:
+   - Eyebrow "SSS"
+   - H1: "Sıkça sorulanlar"
+   - Subtitle: "Cevabını bulamazsan destek@yzliste.com'a yaz."
+
+3. Filter satırı:
+   - Arama input (debounced)
+   - Kategori ChipSelector (single + "Tümü"):
+     - Tümü
+     - Genel
+     - Kredi & Fiyatlama
+     - Üretim
+     - Teknik
+     - KVKK & Hesap
+   - Kategoriler: SSS data'sındaki tag/kategori field'ından dinamik
+
+4. Accordion liste:
+   - components/landing/SSSSection veya FY-03 FiyatlarSSS pattern 
+     reuse (uniformity için tek primitive'e taşımak ileride: 
+     components/primitives/Accordion.tsx)
+   - Filter sonucu boş: "Soru bulunamadı" + filtre temizle CTA
+   - Mevcut SSS data'sı korunur (Aziz kuralı: yeni metin yazma)
+
+5. Sayfa altı: "Cevabını bulamadın mı?" CTA → mailto:destek
+
+Commit: feat(sss): IC-03 /sss kategori filter + arama + accordion
+
+────────────────────────────────────────────
+BÖLÜM 4 — IC-04: /hakkımızda redesign
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap.
+
+2. Hero:
+   - Eyebrow "HAKKIMIZDA"
+   - H1 (font-display): "yzliste neden var" (mevcut metinden — Aziz 
+     kuralı koruma)
+   - Subtitle: mevcut DR-03 metni
+
+3. Bölümler (mevcut metinleri koru):
+   
+   **Vizyon:**
+   - text-lg leading-relaxed
+   - Lucide Sparkles ikon eyebrow
+   
+   **Hikaye:**
+   - text-base leading-relaxed
+   - Anekdot/timeline tarzında olabilir
+   
+   **Kurucu:**
+   - rounded-xl border-2 border-rd-warm-300 bg-rd-warm-50 p-6 md:p-8 
+     (warm-earth premium accent — Aziz spec)
+   - Avatar (varsa) + isim + rol + 1-2 cümle bio
+   - LinkedIn link (Lucide Linkedin)
+   
+   **İletişim:**
+   - mailto:destek@yzliste.com + KVKK/koşullar linkleri
+   - Footer reuse opsiyonel
+
+4. Mevcut metni AYNEN korumak için: Code önce sayfayı oku, mevcut 
+   string'leri al, sadece UI/layout değişimi yap. Yeni cümle yazma.
+
+Commit: feat(hakkimizda): IC-04 /hakkimizda refactor (warm-earth 
+kurucu accent, mevcut metin korundu)
+
+────────────────────────────────────────────
+BÖLÜM 5 — IC-05: Mobile + a11y polish
+────────────────────────────────────────────
+
+1. **Mobile (375px):**
+   - /blog: kart grid tek kolon, filter satırı dikey (arama üstte, 
+     kategori chip yatay scroll)
+   - /blog/[slug]: max-w-prose mobile px-4, sosyal paylaş altta yatay 
+     (sticky değil)
+   - /sss: arama tek satır, kategori chip yatay scroll, accordion 
+     full width
+   - /hakkımızda: kurucu kart kompakt (avatar üst + metin alt)
+
+2. **A11y:**
+   - article semantic HTML: <article> wrapper + <header> meta + 
+     <main> body + <footer> CTA
+   - aria-labelledby h1 id'sine bağlı
+   - Blog kart role="article" + aria-labelledby kart başlık id
+   - Sosyal paylaş buton aria-label net (örn "X'te paylaş")
+   - Lucide ikonlar aria-hidden
+   - Kategori filter ChipSelector ARIA (zaten var)
+   - Klavye Tab full tour
+   - Article heading hierarchy doğru (H1 sayfa başlığı, H2/H3 prose 
+     içinde)
+
+3. **Edge case'ler:**
+   - Blog kapak yok: placeholder rd-neutral-100 + Lucide FileText
+   - Yazar yok: "yzliste ekibi" fallback
+   - İlgili yazı 3'ten az: olduğu kadar göster (gizleme)
+   - SSS data fetch fail: "SSS yüklenemedi, destek@yzliste.com" 
+     fallback
+
+Commit: chore(icerik): IC-05 mobile + a11y polish
+
+────────────────────────────────────────────
+Test
+────────────────────────────────────────────
+
+- npm run build temiz
+- Localde:
+  - /blog: kart grid + arama + kategori filter
+  - /blog/[slug]: prose tipografi + meta + paylaş + ilgili
+  - /sss: kategori filter + arama + accordion
+  - /hakkımızda: warm-earth kurucu accent
+  - 375px mobile sıkıntısız
+  - Klavye Tab full tour
+
+Commit özeti (5 atomik) VEYA tek:
+feat(icerik): IC-01~IC-05 /blog + /blog/[slug] + /sss + /hakkımızda 
+refactor
+
+BACKLOG'da IC-01~IC-05 [x] işaretle.
+
+Bittikten sonra rapor:
+- Commit listesi
+- prose-rd CSS sınıfı veya Tailwind Typography reuse durumu
+- Accordion primitive'e taşındı mı (FY-03 + IC-03 ortak pattern)
+- Aziz kuralı korundu mu (mevcut metinler değişmedi)
+- Açık riskler / Aziz preview test
+```
 
 ---
 
@@ -1985,12 +2256,16 @@ Anasayfa 9 → 7 bölüm. Eski Bölüm 3 ("4 içerik türü") + 4 ("Aynı ürün
 | 1 | Landing (4-10) | 1 | ~64 | ✅ Tamam (HR-14/15 kalan) |
 | **1.5** | **Anasayfa reroll (18)** | **1** | **6** | **✅ Tamam (792e182)** |
 | 2 | Üretim akışı (11, 13) | 4 | 42 | ✅ Tamam (28 Nis). Açık: SR-04b (ZIP/PDF) + OD-02b (payment_failed analytics) + YS-11 (yol haritası) Faz 3'e ertelendi. TryonAyarlar.tsx orphan temizlik bekliyor. |
-| 3 | Hesap alanı (12, 14) | 10 | ~50 | Marka profili MP-01~07 birleşik prompt HAZIR (Bölüm 12 Grup 2). Sıra: Marka profili → Profil → Faturalar UI → Krediler → Üretimler |
-| 4 | Auth (15) | 3 | 9 | Bekliyor (+1: AU-09 Google OAuth preview URL fix — Supabase + Google Cloud Console whitelist) |
-| 5 | İçerik (16) | 4 | 8 | Bekliyor |
-| 6 | Yasal + hata (17) | 9 | 5 | Bekliyor |
+| 3 | Hesap alanı (12, 14) | 10 | 8 paket | ✅ Tamam (28 Nis): MP+PR+FT+HS+KR+UR+FY+HD |
+| 4 | Auth (15) | 4 | 5 paket | ✅ Tamam (28 Nis): AU-01~05. Aziz devam dediğinde Cowork Supabase Redirect URLs config yapacak |
+| 5 | İçerik (16) | 4 | 8 ticket | Bekliyor (Aziz "devam" diyene kadar) |
+| 6 | Yasal + hata + cleanup (17) | 9+ | ~10 ticket | Bekliyor — orphan temizlik + scheduled task reaktivasyon + metin taraması + Lighthouse |
 
-**Toplam kalan:** ~72 ticket (Faz 3 + 4 + 5 + 6). Faz 1, 1.5, 2 ✅ Tamam.
+**Toplam kalan:** Faz 5 + Faz 6 + Faz 6 cleanup. Faz 1, 1.5, 2, 3, 4 ✅ Tamam.
+
+**Cowork bekleyen iş (Aziz "devam" deyince):**
+1. Supabase Dashboard → Authentication → URL Configuration → Redirect URLs'e `https://*.vercel.app/**` + production URL ekle (docs/auth-config.md adımları)
+2. Faz 5 İçerik prompt'u (blog/sss/hakkımızda) yazımı + Code'a hand
 
 **Kapsam dışı (Aziz onayı):** `/admin`, `/hesap/admin/feedback`, `/(auth)/app` (eski), `/profil` (eski), `/toplu` (kaldırılıyor).
 

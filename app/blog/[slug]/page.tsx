@@ -1,9 +1,21 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getYazilar, yaziGetir, type BlogYazisi, type BlogBolum } from "../icerikler";
+import {
+  ChevronLeft,
+  User,
+  Calendar,
+  Clock,
+} from "lucide-react";
+import {
+  getYazilar,
+  yaziGetir,
+  type BlogYazisi,
+  type BlogBolum,
+} from "../icerikler";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import BlogPaylas from "./BlogPaylas";
 
 export const revalidate = 3600;
 
@@ -35,17 +47,32 @@ export async function generateMetadata({
       modifiedTime: yazi.guncellemeTarihi ?? yazi.yayinTarihi,
       authors: [yazi.yazarAdi],
       tags: yazi.etiketler,
-      images: [{ url: yazi.kapakGorsel ? `https://www.yzliste.com${yazi.kapakGorsel}` : `https://www.yzliste.com/api/og?title=${encodeURIComponent(yazi.baslik)}&kategori=${encodeURIComponent(yazi.kategori)}`, width: 1200, height: 630 }],
+      images: [
+        {
+          url: yazi.kapakGorsel
+            ? `https://www.yzliste.com${yazi.kapakGorsel}`
+            : `https://www.yzliste.com/api/og?title=${encodeURIComponent(yazi.baslik)}&kategori=${encodeURIComponent(yazi.kategori)}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: yazi.baslik,
       description: yazi.ozet,
-      images: [yazi.kapakGorsel ? `https://www.yzliste.com${yazi.kapakGorsel}` : `https://www.yzliste.com/api/og?title=${encodeURIComponent(yazi.baslik)}&kategori=${encodeURIComponent(yazi.kategori)}`],
+      images: [
+        yazi.kapakGorsel
+          ? `https://www.yzliste.com${yazi.kapakGorsel}`
+          : `https://www.yzliste.com/api/og?title=${encodeURIComponent(yazi.baslik)}&kategori=${encodeURIComponent(yazi.kategori)}`,
+      ],
     },
     alternates: {
       canonical: `https://www.yzliste.com/blog/${yazi.slug}`,
-      languages: { 'tr': `https://www.yzliste.com/blog/${yazi.slug}`, 'x-default': `https://www.yzliste.com/blog/${yazi.slug}` },
+      languages: {
+        tr: `https://www.yzliste.com/blog/${yazi.slug}`,
+        "x-default": `https://www.yzliste.com/blog/${yazi.slug}`,
+      },
     },
     robots: { index: true, follow: true },
   };
@@ -79,64 +106,92 @@ function ArticleJsonLd({ yazi }: { yazi: BlogYazisi }) {
 }
 
 function MetinLink({ text }: { text: string }) {
-  type Token = { type: 'link'; label: string; href: string } | { type: 'text'; value: string }
-  const tokens: Token[] = []
-  const regex = /\[([^\]]+)\]\(([^)]+)\)|(yzliste)/gi
-  let lastIndex = 0
-  let match: RegExpExecArray | null
+  type Token =
+    | { type: "link"; label: string; href: string }
+    | { type: "text"; value: string };
+  const tokens: Token[] = [];
+  const regex = /\[([^\]]+)\]\(([^)]+)\)|(yzliste)/gi;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
 
   while ((match = regex.exec(text)) !== null) {
-    if (match.index > lastIndex) tokens.push({ type: 'text', value: text.slice(lastIndex, match.index) })
-    if (match[1]) tokens.push({ type: 'link', label: match[1], href: match[2] })
-    else tokens.push({ type: 'link', label: 'yzliste', href: '/uret' })
-    lastIndex = regex.lastIndex
+    if (match.index > lastIndex)
+      tokens.push({ type: "text", value: text.slice(lastIndex, match.index) });
+    if (match[1])
+      tokens.push({ type: "link", label: match[1], href: match[2] });
+    else tokens.push({ type: "link", label: "yzliste", href: "/uret" });
+    lastIndex = regex.lastIndex;
   }
-  if (lastIndex < text.length) tokens.push({ type: 'text', value: text.slice(lastIndex) })
+  if (lastIndex < text.length)
+    tokens.push({ type: "text", value: text.slice(lastIndex) });
 
   return (
     <>
       {tokens.map((t, i) =>
-        t.type === 'link' ? (
-          t.href.startsWith('http') ? (
-            <a key={i} href={t.href} target="_blank" rel="noopener noreferrer" className="text-[#1E4DD8] hover:text-[#163B9E] underline">{t.label}</a>
+        t.type === "link" ? (
+          t.href.startsWith("http") ? (
+            <a
+              key={i}
+              href={t.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-rd-primary-600 hover:text-rd-primary-700 underline underline-offset-2"
+            >
+              {t.label}
+            </a>
           ) : (
-            <Link key={i} href={t.href} className="text-[#1E4DD8] hover:text-[#163B9E] underline">{t.label}</Link>
+            <Link
+              key={i}
+              href={t.href}
+              className="text-rd-primary-600 hover:text-rd-primary-700 underline underline-offset-2"
+            >
+              {t.label}
+            </Link>
           )
         ) : (
           t.value
         )
       )}
     </>
-  )
+  );
 }
 
 function Bolum({ bolum }: { bolum: BlogBolum }) {
   switch (bolum.tip) {
     case "giris":
       return (
-        <p className="text-base text-[#5A5852] leading-relaxed font-medium border-l-4 border-[#7B9BD9] pl-4 italic">
+        <p className="text-base text-rd-neutral-600 leading-relaxed font-medium border-l-4 border-rd-primary-300 pl-4 italic">
           <MetinLink text={bolum.metin ?? ""} />
         </p>
       );
     case "baslik":
       return (
-        <div className="mt-8 pt-4 border-t border-[#F1F0EB]">
-          <h2 className="text-xl font-medium text-[#1A1A17] mb-3">{bolum.baslik}</h2>
+        <div className="mt-8 pt-4 border-t border-rd-neutral-100">
+          <h2
+            className="text-xl font-medium text-rd-neutral-900 mb-3"
+            style={{ fontFamily: "var(--font-rd-display)" }}
+          >
+            {bolum.baslik}
+          </h2>
           {bolum.metin && (
-            <p className="text-sm text-[#5A5852] leading-relaxed"><MetinLink text={bolum.metin} /></p>
+            <p className="text-sm text-rd-neutral-600 leading-relaxed">
+              <MetinLink text={bolum.metin} />
+            </p>
           )}
         </div>
       );
     case "paragraf":
       return (
-        <p className="text-sm text-[#5A5852] leading-relaxed"><MetinLink text={bolum.metin ?? ""} /></p>
+        <p className="text-sm text-rd-neutral-600 leading-relaxed">
+          <MetinLink text={bolum.metin ?? ""} />
+        </p>
       );
     case "liste":
       return (
         <ul className="space-y-2 my-2">
           {(bolum.maddeler ?? []).map((madde, i) => (
-            <li key={i} className="flex items-start gap-3 text-sm text-[#5A5852]">
-              <span className="w-5 h-5 rounded-full bg-[#F0F4FB] text-[#1E4DD8] flex items-center justify-center text-[10px] font-medium flex-shrink-0 mt-0.5">
+            <li key={i} className="flex items-start gap-3 text-sm text-rd-neutral-600">
+              <span className="w-5 h-5 rounded-full bg-rd-primary-50 text-rd-primary-700 flex items-center justify-center text-[10px] font-medium flex-shrink-0 mt-0.5">
                 {i + 1}
               </span>
               <MetinLink text={madde} />
@@ -146,20 +201,29 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
       );
     case "bilgi-kutusu":
       return (
-        <div className="bg-[#F0F4FB] border border-[#BAC9EB] rounded-xl p-5 my-4">
-          <p className="text-sm text-[#1E4DD8] leading-relaxed"><MetinLink text={bolum.metin ?? ""} /></p>
+        <div className="bg-rd-primary-50 border border-rd-primary-200 rounded-xl p-5 my-4">
+          <p className="text-sm text-rd-primary-700 leading-relaxed">
+            <MetinLink text={bolum.metin ?? ""} />
+          </p>
         </div>
       );
     case "sonuc":
       return (
-        <div className="bg-[#F1F0EB] border border-[#D8D6CE] rounded-xl p-5 my-4">
-          <p className="text-xs font-medium text-[#908E86] uppercase tracking-wide mb-2">Sonuç</p>
-          <p className="text-sm text-[#5A5852] leading-relaxed"><MetinLink text={bolum.metin ?? ""} /></p>
+        <div className="bg-rd-neutral-100 border border-rd-neutral-200 rounded-xl p-5 my-4">
+          <p className="text-xs font-medium text-rd-neutral-500 uppercase tracking-wide mb-2">
+            Sonuç
+          </p>
+          <p className="text-sm text-rd-neutral-600 leading-relaxed">
+            <MetinLink text={bolum.metin ?? ""} />
+          </p>
         </div>
       );
     case "video-grid": {
       const maddeler = bolum.maddeler ?? [];
-      const gridClass = maddeler.length === 1 ? "grid grid-cols-1 gap-3 my-6 max-w-sm" : "grid grid-cols-2 gap-3 my-6";
+      const gridClass =
+        maddeler.length === 1
+          ? "grid grid-cols-1 gap-3 my-6 max-w-sm"
+          : "grid grid-cols-2 gap-3 my-6";
       return (
         <div className={gridClass}>
           {maddeler.map((madde, i) => {
@@ -167,7 +231,10 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
             const trimmedSrc = src?.trim();
             const isVideo = trimmedSrc?.match(/\.(mp4|webm|mov)$/i);
             return (
-              <div key={i} className="rounded-xl overflow-hidden border border-[#D8D6CE] bg-[#F1F0EB]">
+              <div
+                key={i}
+                className="rounded-xl overflow-hidden border border-rd-neutral-200 bg-rd-neutral-100"
+              >
                 {isVideo ? (
                   <video
                     src={trimmedSrc}
@@ -178,6 +245,7 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
                     className="w-full aspect-video object-cover"
                   />
                 ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={trimmedSrc}
                     alt={etiket?.trim() ?? ""}
@@ -185,7 +253,9 @@ function Bolum({ bolum }: { bolum: BlogBolum }) {
                   />
                 )}
                 {etiket && (
-                  <p className="text-xs text-center text-[#908E86] py-1.5">{etiket.trim()}</p>
+                  <p className="text-xs text-center text-rd-neutral-500 py-1.5">
+                    {etiket.trim()}
+                  </p>
                 )}
               </div>
             );
@@ -221,50 +291,71 @@ export default async function BlogYaziPage({
     .map((s) => s.yazi);
 
   return (
-    <main className="min-h-screen bg-[#FAFAF8] font-sans">
+    <main className="min-h-screen bg-rd-neutral-50 font-sans">
       <ArticleJsonLd yazi={yazi} />
 
       <SiteHeader aktifSayfa="blog" />
 
-      {/* BREADCRUMB */}
+      {/* GERİ LİNK */}
       <div className="px-4 sm:px-6 py-4 max-w-3xl mx-auto">
-        <nav aria-label="Breadcrumb" className="text-xs text-[#908E86] flex items-center gap-1.5">
-          <Link href="/" className="hover:text-[#1E4DD8]">Ana Sayfa</Link>
-          <span>›</span>
-          <Link href="/blog" className="hover:text-[#1E4DD8]">Blog</Link>
-          <span>›</span>
-          <span className="text-[#5A5852] truncate max-w-[200px]">{yazi.baslik}</span>
+        <nav aria-label="Geri">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-1 text-xs text-rd-neutral-500 hover:text-rd-primary-600 transition-colors"
+          >
+            <ChevronLeft size={14} strokeWidth={1.5} aria-hidden="true" />
+            Tüm yazılar
+          </Link>
         </nav>
       </div>
 
       {/* MAKALE */}
-      <article className="px-4 sm:px-6 pb-16 max-w-3xl mx-auto">
+      <article
+        aria-labelledby="blog-yazi-baslik"
+        className="px-4 sm:px-6 pb-16 max-w-3xl mx-auto"
+      >
         <header className="mb-8">
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            <span className="text-xs bg-[#F0F4FB] text-[#1E4DD8] border border-[#BAC9EB] px-3 py-1 rounded font-medium">
+            <span className="text-xs bg-rd-warm-50 text-rd-warm-700 border border-rd-warm-200 px-3 py-1 rounded font-medium">
               {yazi.kategori}
             </span>
-            <span className="text-xs text-[#908E86]">{yazi.okumaSuresi} dakika okuma</span>
+            <span className="text-xs text-rd-neutral-400">
+              {yazi.okumaSuresi} dakika okuma
+            </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-medium text-[#1A1A17] leading-snug mb-4">
+          <h1
+            id="blog-yazi-baslik"
+            className="text-2xl sm:text-3xl font-medium text-rd-neutral-900 leading-snug mb-4"
+            style={{
+              fontFamily: "var(--font-rd-display)",
+              letterSpacing: "-0.01em",
+            }}
+          >
             {yazi.baslik}
           </h1>
 
-          <p className="text-sm text-[#5A5852] leading-relaxed mb-5">{yazi.ozet}</p>
+          <p className="text-sm text-rd-neutral-600 leading-relaxed mb-5">
+            {yazi.ozet}
+          </p>
 
-          <div className="flex items-center gap-3 text-xs text-[#908E86] pb-6 border-b border-[#F1F0EB]">
-            <span>
+          <div className="flex flex-wrap items-center gap-3 text-xs text-rd-neutral-500 pb-5 border-b border-rd-neutral-100">
+            <span className="flex items-center gap-1.5">
+              <User size={12} strokeWidth={1.5} aria-hidden="true" />
+              {yazi.yazarAdi || "yzliste ekibi"}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Calendar size={12} strokeWidth={1.5} aria-hidden="true" />
               {new Date(yazi.yayinTarihi).toLocaleDateString("tr-TR", {
                 day: "numeric",
                 month: "long",
                 year: "numeric",
               })}
             </span>
-            {yazi.guncellemeTarihi && yazi.guncellemeTarihi !== yazi.yayinTarihi && (
-              <>
-                <span>·</span>
-                <span>
+            {yazi.guncellemeTarihi &&
+              yazi.guncellemeTarihi !== yazi.yayinTarihi && (
+                <span className="flex items-center gap-1.5">
+                  <Clock size={12} strokeWidth={1.5} aria-hidden="true" />
                   Güncellendi:{" "}
                   {new Date(yazi.guncellemeTarihi).toLocaleDateString("tr-TR", {
                     day: "numeric",
@@ -272,15 +363,17 @@ export default async function BlogYaziPage({
                     year: "numeric",
                   })}
                 </span>
-              </>
-            )}
-            <span>·</span>
-            <span>{yazi.yazarAdi}</span>
+              )}
+          </div>
+
+          <div className="mt-4">
+            <BlogPaylas url={`/blog/${yazi.slug}`} title={yazi.baslik} />
           </div>
         </header>
 
         {yazi.kapakGorsel && (
           <div className="mb-8 rounded-xl overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={yazi.kapakGorsel}
               alt={yazi.baslik}
@@ -296,10 +389,13 @@ export default async function BlogYaziPage({
         </div>
 
         {/* Etiketler */}
-        <div className="mt-10 pt-6 border-t border-[#F1F0EB]">
+        <div className="mt-10 pt-6 border-t border-rd-neutral-100">
           <div className="flex flex-wrap gap-2">
             {yazi.etiketler.map((e) => (
-              <span key={e} className="text-xs text-[#908E86] bg-[#F1F0EB] px-3 py-1 rounded-full">
+              <span
+                key={e}
+                className="text-xs text-rd-neutral-500 bg-rd-neutral-100 px-3 py-1 rounded-full"
+              >
                 #{e}
               </span>
             ))}
@@ -307,39 +403,65 @@ export default async function BlogYaziPage({
         </div>
       </article>
 
-      {/* CTA */}
-      <section className="px-4 sm:px-6 py-12 bg-[#F0F4FB] border-y border-[#BAC9EB] text-center">
-        <h2 className="text-xl font-medium text-[#1A1A17] mb-2">Okuduktan sonra dene</h2>
-        <p className="text-sm text-[#5A5852] mb-5">
-          3 ücretsiz kredi ile listing metni ve AI görsel üret. Kayıt olmadan misafir olarak başla.
-        </p>
-        <a
-          href="/kayit"
-          className="inline-block bg-[#1E4DD8] hover:bg-[#163B9E] text-white font-medium px-8 py-3.5 rounded-lg text-sm transition-colors"
-        >
-          Ücretsiz dene →
-        </a>
+      {/* CTA — warm-earth */}
+      <section className="px-4 sm:px-6 py-12">
+        <div className="max-w-3xl mx-auto rounded-xl border border-rd-warm-300 bg-rd-warm-50 p-6 md:p-8">
+          <p className="text-xs font-medium tracking-[0.1em] uppercase text-rd-warm-600 mb-3">
+            Bu yazıdan ilham
+          </p>
+          <h3
+            className="text-xl font-medium text-rd-neutral-900 mb-2"
+            style={{ fontFamily: "var(--font-rd-display)" }}
+          >
+            yzliste&apos;yi ücretsiz dene
+          </h3>
+          <p className="text-sm text-rd-neutral-600 mb-5">
+            Listing yazımı, görsel üretimi, video try-on — tek platformda.
+          </p>
+          <Link
+            href="/uret"
+            className="inline-block bg-rd-primary-700 hover:bg-rd-primary-800 text-white font-medium px-8 py-3.5 rounded-lg text-sm transition-colors"
+          >
+            Hemen başla →
+          </Link>
+        </div>
       </section>
 
       {/* İLGİLİ YAZILAR */}
       {digerYazilar.length > 0 && (
-        <section className="px-4 sm:px-6 py-12">
+        <section className="px-4 sm:px-6 py-12 border-t border-rd-neutral-100">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-lg font-medium text-[#1A1A17] mb-6">İlgili yazılar</h2>
+            <h2
+              className="text-lg font-medium text-rd-neutral-900 mb-6"
+              style={{ fontFamily: "var(--font-rd-display)" }}
+            >
+              Devamı
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {digerYazilar.map((y) => (
-                <Link
-                  key={y.slug}
-                  href={`/blog/${y.slug}`}
-                  className="group border border-[#D8D6CE] rounded-xl p-4 hover:border-[#1E4DD8]/40 transition-colors bg-white"
-                >
-                  <span className="text-xs text-[#1E4DD8] font-medium">{y.kategori}</span>
-                  <h3 className="text-sm font-medium text-[#1A1A17] mt-1 group-hover:text-[#1E4DD8] transition-colors line-clamp-3">
-                    {y.baslik}
-                  </h3>
-                  <p className="text-xs text-[#1E4DD8] mt-2">Oku →</p>
-                </Link>
-              ))}
+              {digerYazilar.map((y) => {
+                const titleId = `ilgili-kart-${y.slug}`;
+                return (
+                  <article key={y.slug} aria-labelledby={titleId}>
+                    <Link
+                      href={`/blog/${y.slug}`}
+                      className="group flex flex-col h-full border border-rd-neutral-200 rounded-xl p-4 hover:border-rd-primary-300 transition-colors bg-white"
+                    >
+                      <span className="text-xs text-rd-warm-700 bg-rd-warm-50 border border-rd-warm-200 px-2 py-0.5 rounded font-medium self-start mb-2">
+                        {y.kategori}
+                      </span>
+                      <h3
+                        id={titleId}
+                        className="text-sm font-medium text-rd-neutral-900 group-hover:text-rd-primary-700 transition-colors line-clamp-3 flex-1"
+                      >
+                        {y.baslik}
+                      </h3>
+                      <p className="text-xs text-rd-primary-600 mt-2">
+                        Oku →
+                      </p>
+                    </Link>
+                  </article>
+                );
+              })}
             </div>
           </div>
         </section>
