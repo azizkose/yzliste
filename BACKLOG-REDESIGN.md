@@ -476,432 +476,307 @@ Canlı sitedeki örnek çıktıları (text/görsel/video/sosyal) ve mevcut görs
 |---|---|---|---|---|
 | H-01 | Anasayfa paletini tüm sayfalara uygula | Bekliyor | Landing page done | `/hesap`, `/hesap/marka`, `/hesap/profil`, `/fiyatlar`, `/blog`, `/giris` rd-* token'larında. |
 
-### Grup 2 — Marka Profili `/hesap/marka` (öncelikli — Aziz 28 Nis upload)
+### Grup 2 — Marka Profili `/hesap/marka`
 
-**Spec:** `uploads/hesap-alti-sayfalar-ek-spec.md` (Sayfa 1 bölümü) — Aziz: "canlı önizleme şu an EKSİK, sayfanın kalbi"
-**Birleşim:** H-02~H-14 (mevcut) + EX.1~EX.5 (Aziz spec) → **MP-01~MP-07** (7 birleşik ticket)
-**Aziz kararı:** Yeni alanlar (kategori, fiyat bandı, hizmet vurguları) AI'a şu an bağlı değil — sessiz aktif (kullanıcıya alt-not yok). "Site bitince prompt+input kontrolü yapacağız" (28 Nis).
+**Done:** 28 Nis (commits fb264a4 → 46b41bc, 4 commit). Aziz preview test bekliyor.
+
+| ID | Başlık | Durum |
+|---|---|---|
+| MP-01 | Form scaffold + 8 alan + ProgressIndicator | ✅ |
+| MP-02 | ChipSelector primitive (single+multi) | ✅ |
+| MP-03 | BrandPreviewPanel canlı önizleme (sayfanın kalbi) | ✅ |
+| MP-04 | Bilgi banner kompakt + collapsible | ✅ |
+| MP-05 | StickySaveBar + dirty state + beforeunload | ✅ |
+| MP-06 | Save (Supabase .update) + Toast | ✅ |
+| MP-07 | Mobile (collapsibleOnMobile) + a11y | ✅ |
+
+**Yeni reusable primitive'ler (gelecek paketlerde reuse):** components/primitives/{ChipSelector, Toast}.tsx
+**Yeni komponentler:** components/marka/{BrandPreviewPanel, BrandedAIPreview, GenericAIPreview, StickySaveBar}.tsx + lib/markaPreviewTemplates.ts (3 ton × 2 içerik = 6 şablon)
+**Save kararı:** /api/marka-profili endpoint yok → Supabase direkt `.update()` (mevcut pattern).
+**Aziz preview kontrol:** Ton seçince sağ panel canlı update ediyor mu, 375px collapsible accordion düzgün mü, dirty save bar görünür mü.
+
+
+### Grup 2B — Profil `/hesap/profil` (Aziz 28 Nis spec, EX.6~EX.11)
+
+**Spec:** uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 2)
+**Aziz tespiti:** "∞" kredi bug yanlış bilgi gösteriyor (KRİTİK), adres tek satır textarea (e-Fatura için yapılandırılmalı), tamamlanma yüzdesi yok, üst CTA tekrarı.
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| MP-01 | Form scaffold + 8 alan + ProgressIndicator | ✅ Tamam | H-01 | Commit `6d0939e` |
-| MP-02 | ChipSelector primitive (aktif/pasif net) | ✅ Tamam | MP-01 | Commit `fb264a4` |
-| MP-03 | BrandPreviewPanel (canlı önizleme — KALBİ) | ✅ Tamam | MP-02 | Commit `1cbc5ca` |
-| MP-04 | Bilgi banner kompaktlaştır | ✅ Tamam | MP-01 | Commit `6d0939e` |
-| MP-05 | StickySaveBar + dirty state + beforeunload | ✅ Tamam | MP-01 | Commit `6d0939e` |
-| MP-06 | Save POST + Toast | ✅ Tamam | MP-05 | Commit `6d0939e` — Supabase direkt save (endpoint yok, direkt .update), Toast primitive oluşturuldu |
-| MP-07 | Mobile + a11y polish | ✅ Tamam | MP-03, MP-06 | Commit `6d0939e` — collapsibleOnMobile panel, ARIA roles, Tab nav |
+| PR-01 | Form scaffold + ProgressIndicator + rd-* swap | ✅ Tamam | MP done | Commit `65ed268` |
+| PR-02 | ∞ kredi bug fix + KPI rozeti tıklanabilir | ✅ Tamam | PR-01 | Commit `65ed268` — isLoading "—", admin ∞ intentional, KPI → Link /kredi-yukle, CTA kaldırıldı |
+| PR-03 | Adres yapılandırma (7 alan) | ✅ Tamam | PR-01 | Commit `65ed268` — mahalle/cadde/binaNo/daire/postaKodu/ilçe/il. JSON serialize adres kolonu. |
+| PR-04 | İl/İlçe veritabanı + Save flow | ✅ Tamam | PR-03 | Commit `bca1ce7` — statik lib/data/turkiye-il-ilce.ts (NPM yok). StickySaveBar + Toast reuse. |
+| PR-05 | Mobile + a11y polish | ✅ Tamam | PR-04 | Commit `65ed268` — native select, aria-invalid, aria-label, htmlFor/id, Tab tour. |
 
-#### MP-01~MP-07 Birleşik Prompt (Marka Profili)
+**Aziz açık karar (sonra cevaplanır, Cowork önerisi):**
+- TC kimlik no + Vergi no + Şirket adı alanları? Paraşüt geldiğinde e-Fatura için gerekli. **Önerim: bu pakete dahil etme**, Faturalar paketinde gündeme getir (Faturalar UI Aziz'e e-Fatura adres düzeltme linki gerektiriyor — orada tetiklenir).
+
+#### PR-01~PR-05 Birleşik Prompt (Profil)
 
 ```
 ÖNEMLİ — KURAL OVERRIDE:
-Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
-UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
-BACKLOG-REDESIGN.md başındaki redesign branch UI kuralları geçerli 
-(font 400-800, gölge serbest, rounded-2xl serbest, Manrope+Inter, 
-rd-* token, sadece emoji yasak — Lucide ikon).
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (font 400-800, gölge serbest, rounded-2xl serbest, 
+Manrope+Inter, rd-* token, sadece emoji yasak — Lucide ikon).
 
 Branch: claude/redesign-modern-ui
-Görev: MP-01~MP-07 — /hesap/marka sayfası komple refactor + canlı 
-önizleme paneli (Aziz spec'inde sayfanın KALBİ olarak işaretli).
+Görev: PR-01~PR-05 — /hesap/profil sayfası refactor + adres 
+yapılandırma + ∞ bug fix.
 
-Spec referansı: uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 1)
+Spec: uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 2)
+Mevcut sayfa: app/(auth)/hesap/profil/page.tsx — önce oku, mevcut 
+form alanlarını + state yönetimini anla.
 
-Mevcut sorun (Aziz tespit, 28 Nis): Sağda boş alan var, kullanıcı ton 
-seçince hiçbir şey değişmiyor. Form sıkıcı, kullanıcı yarıda bırakır → 
-AI çıktıları zayıf → retention düşer. Çözüm: sticky canlı önizleme 
-paneli (hazır şablon, AI çağrısı yok).
+Reuse'lanacak primitive'ler (MP'de oluşturuldu):
+- components/primitives/ChipSelector.tsx (gerek olursa, profilde 
+  muhtemelen kullanılmaz)
+- components/primitives/Toast.tsx (save success/error için)
+- components/marka/StickySaveBar.tsx pattern (gerekirse 
+  components/primitives/StickySaveBar.tsx'e taşı reusability için, 
+  veya profil'in kendi versiyonu)
+- ProgressIndicator MP'de inline yapılmıştı, oradan kopyala VEYA 
+  components/primitives/ProgressIndicator.tsx'e taşı (gelecek 
+  paketler için reuse)
 
 KAPSAM DIŞI:
-- Backend AI prompt değişikliği (Aziz "site bitince" dedi)
-- Yeni alanlar (kategori/fiyat bandı/hizmet) AI'a bağlanmıyor — formda 
-  görünür ama backend henüz kullanmıyor. Kullanıcıya "yakında AI'da 
-  kullanılacak" alt-notu YAZMA — sessiz aktif.
-- /api/marka-profili endpoint'i değişmez (mevcut çalışıyor varsayılır 
-  — yoksa MP-06'da BACKLOG'a not düş)
+- TC kimlik / Vergi no / Şirket adı alanları (Aziz Faturalar paketinde 
+  karar verecek, Paraşüt geldiğinde e-Fatura için)
+- Backend Supabase tablo değişikliği (kolon ekle/çıkar) — frontend 
+  tarafı yeni alanları gönderir, backend kabul ederse OK; etmezse 
+  PR-04'te BACKLOG'a not düş
 
 ────────────────────────────────────────────
-BÖLÜM 1 — MP-01: Form scaffold + 8 alan + ProgressIndicator
+BÖLÜM 1 — PR-01: Form scaffold + Progress + rd-* swap
 ────────────────────────────────────────────
-
-Mevcut /hesap/marka sayfası: app/hesap/marka/page.tsx (veya benzeri).
-Önce dosyayı oku, mevcut form alanlarını + state yönetimini anla.
 
 1. Sayfa düzeyi rd-* token swap (tüm hex'leri rd-* tokenlara).
 
 2. Sayfa başlığı:
    - Eyebrow: text-[10px] uppercase tracking-[0.15em] text-rd-primary-700 
-     "MARKA PROFİLİ"
-   - H1 (font-display Manrope): text-3xl md:text-4xl text-rd-neutral-900 
-     "Markanı tanıt, AI sana özel yazsın"
-   - Subtitle: text-rd-neutral-600 — "Doldurdukça sağdaki örnekte canlı 
-     görüyorsun. AI gerçek üretimde marka bilgilerini kullanır."
+     "PROFİL"
+   - H1 (font-display): text-3xl md:text-4xl text-rd-neutral-900 
+     "Kişisel ve fatura bilgilerin"
+   - Subtitle: text-rd-neutral-600 — "Bu bilgileri tutmamızın sebebi: 
+     fatura kesimi, KVKK uyumu, ve sana ulaşma. Doldurmazsan da çoğu 
+     üretim çalışır."
 
-3. Layout 2 kolon (lg:grid-cols-[1fr_400px] gap-8):
-   - Sol: form alanları
-   - Sağ: BrandPreviewPanel (sticky, MP-03'te yapılır)
+3. Layout tek kolon (max-w-3xl mx-auto px-4). Marka profilinden farklı 
+   olarak SAĞ PREVIEW PANELİ YOK — burası bilgi formu, görsel kanıt 
+   gerektirmiyor.
 
-4. Form 8 alan:
-   - **storeName** (input text): "Mağaza/marka adı"
-   - **tone** (single chip ChipSelector — MP-02): 3 seçenek samimi/
-     profesyonel/premium (Lucide ikonlar Heart/Briefcase/Crown)
-   - **audience** (textarea): "Hedef kitle" (örn. "Genç çiftler, ev 
-     kuran kadınlar")
-   - **features** (chip input — kullanıcı kendi ekler): "Öne çıkarmak 
-     istediğin özellikler" (örn. ["altın yaldız", "el yapımı", "porselen"])
-   - **kategori** (multi chip ChipSelector): Mağaza kategorileri 
-     (önceden tanımlı liste — Ev & Yaşam, Moda, Elektronik, Kozmetik, 
-     Yemek & İçecek, Bebek & Çocuk, Spor & Outdoor, Hobi & Sanat, Diğer)
-   - **fiyatBandı** (single chip ChipSelector): Ekonomik / Orta segment / 
-     Premium / Lüks
-   - **hizmetVurguları** (multi chip ChipSelector): Hızlı kargo / 
-     Ücretsiz iade / Kapıda ödeme / Hediye paketi / Garanti / Stüdyo 
-     fotoğraf
-   - **extraInfo** (textarea, opsiyonel): "Eklemek istediğin başka 
-     bilgi"
-
-5. ProgressIndicator (sayfa header'ında):
-   - "X / 8 alan dolu" + ilerleme bar
+4. ProgressIndicator (header altında):
+   - "X / N alan dolu" + ilerleme bar
    - <50% slate-300, 50-99% bg-rd-primary-500, 100% bg-rd-success-700
-   - aria-valuenow ile a11y
-   - "Doldurma" hesabı: text input non-empty + chip selection >= 1 = dolu
+   - aria-valuenow
+   - "Doldurma" hesabı: text input non-empty = dolu (tüm alanlar text 
+     veya select)
+   - N = toplam zorunlu alan sayısı (PR-03'te netleşir)
 
-6. Form state: useState veya zustand store (mevcut tercihe uy). Dirty 
-   state useRef ile takip — MP-05'te kullanılacak.
+5. Mevcut form alanlarını grupla:
+   - **Kişisel bilgiler:** ad, soyad, telefon, e-posta (read-only)
+   - **Adres bilgileri:** PR-03'te yapılandırılır
+   - **Hesap:** parola değiştir butonu (mevcut), şifre sıfırla, hesap 
+     sil (KVKK)
 
-Commit: feat(marka): MP-01 form scaffold + 8 alan + progress indicator
+6. Form state useState (mevcut tercihe uy). Dirty state useRef ile 
+   takip — PR-04 StickySaveBar için.
 
-────────────────────────────────────────────
-BÖLÜM 2 — MP-02: ChipSelector primitive
-────────────────────────────────────────────
-
-Yeni dosya: components/primitives/ChipSelector.tsx
-
-İki mod:
-- single: tek seçim (radio benzeri), ton + fiyat bandı için
-- multi: çoklu seçim (checkbox benzeri), kategori + hizmet vurguları
-
-Görsel:
-- Aktif: bg-rd-primary-50 border-2 border-rd-primary-700 text-rd-primary-700 
-  font-medium px-4 py-2 rounded-lg
-- Pasif: bg-white border border-rd-neutral-300 text-rd-neutral-700 
-  hover:border-rd-primary-400 hover:bg-rd-neutral-50 px-4 py-2 rounded-lg
-- Disabled (gerekirse): opacity-50 cursor-not-allowed
-- Lucide ikon yan: size-4 (opsiyonel prop)
-
-A11y:
-- single: container role="radiogroup" aria-label, her chip role="radio" 
-  aria-checked
-- multi: container role="group" aria-label, her chip role="checkbox" 
-  aria-checked
-- Klavye: Tab girer, Arrow Left/Right (single) veya Space (multi) ile 
-  toggle
-
-Ton seçici özel: 3 chip'in altında ufak açıklama (örn. samimi seçince 
-"Yakın, içten dil — sevgili/aile pazarı için"). Açıklama text-xs 
-text-rd-neutral-600.
-
-Commit: feat(marka): MP-02 ChipSelector primitive (single + multi mode)
+Commit: feat(profil): PR-01 form scaffold + ProgressIndicator + rd-* swap
 
 ────────────────────────────────────────────
-BÖLÜM 3 — MP-03: BrandPreviewPanel — KALBİ
+BÖLÜM 2 — PR-02: ∞ kredi bug fix + KPI tıklanabilir
 ────────────────────────────────────────────
 
-Bu sayfanın en önemli parçası. Aziz spec'i: "şu an sağda boş alan, 
-ton seçince hiçbir şey değişmiyor — sayfanın kalbi eksik".
+1. Üst rozet "Kalan kredi: ∞" bug:
+   - useCredits hook'u kontrol (lib/hooks/useCredits.ts)
+   - Default value muhtemelen frontend'de hardcoded "∞" — bu YANLIŞ
+   - Düzeltme: backend yüklenirken `data === undefined` veya 
+     `data === null` durumunda "—" placeholder göster (skeleton/dim 
+     state)
+   - Backend yüklenince gerçek number göster
+   - Eğer backend gerçekten ∞ döndürüyorsa (ki dönmemeli, kredi sayısaldır) 
+     → BACKLOG'a PR-02b ticket aç ("Backend: kredi default value bug")
 
-3 yeni dosya:
-- components/marka/BrandPreviewPanel.tsx
-- components/marka/BrandedAIPreview.tsx
-- components/marka/GenericAIPreview.tsx
-- lib/markaPreviewTemplates.ts (hazır şablon kütüphanesi)
+2. KPI rozetleri tıklanabilir:
+   - "Kalan kredi" rozeti → Link href="/kredi-yukle"
+   - Hover state: bg-rd-primary-50 → bg-rd-primary-100, cursor-pointer
+   - Lucide ChevronRight size-3 sağda (link olduğunu görsel olarak 
+     belli etmek için)
 
-**lib/markaPreviewTemplates.ts:**
+3. Üst sağ "+ Kredi al" CTA tekrarı KALDIR:
+   - Mevcut header'da/üst kısımda büyük "+ Kredi al" butonu var
+   - KPI rozeti tıklanabilir hale gelince bu CTA gereksiz tekrar
+   - Sadece KPI rozeti kalır, "+ Kredi al" button silinir
 
-Hazır şablon objesi. 3 ton × 2 içerik tipi (listing + sosyal) = 6 şablon. 
-Şablon function alır brand, urunOrnek, ozellikler, kategori — string 
-return eder.
+Commit: fix(profil): PR-02 ∞ kredi bug + KPI Link + üst CTA tekrarı 
+kaldırıldı
 
-Örnek yapı:
-```ts
-type Tone = 'samimi' | 'profesyonel' | 'premium';
+────────────────────────────────────────────
+BÖLÜM 3 — PR-03: Adres yapılandırma (7 alan)
+────────────────────────────────────────────
 
-export const PREVIEW_TEMPLATES = {
-  samimi: {
-    listing: ({ brand, ozellik, kategori }) => 
-      `Sevdiğin biriyle ${ozellik || 'özel'} anlar yaşa. ${brand}'dan 
-       ${kategori || 'bu ürün'} senin için bekliyor.`,
-    sosyal: ({ brand, urun }) => 
-      `${urun} ile günlerin bir başka güzel ☕ ${brand}'la sevince 
-       devam.`,
-  },
-  profesyonel: {
-    listing: ({ brand, ozellik, kategori }) => 
-      `${brand} — ${kategori}. ${ozellik} ile şıklığı ve dayanıklılığı 
-       bir arada sunar.`,
-    sosyal: ({ brand, urun }) => 
-      `${urun} | Premium kalite, akıllı tasarım. ${brand} ile fark 
-       yaratın.`,
-  },
-  premium: {
-    listing: ({ brand, ozellik, kategori }) => 
-      `${brand}. ${kategori}'nin yeniden tanımı. ${ozellik} ile zarif, 
-       özenli, kalıcı.`,
-    sosyal: ({ brand, urun }) => 
-      `${urun}. ${brand} — sıradan değil.`,
-  },
-};
+Mevcut: tek textarea adres alanı (e-Fatura için yapılandırılmamış).
 
-export function generatePreview(
-  tone: Tone, 
-  contentType: 'listing' | 'sosyal',
-  inputs: { brand?: string, urun?: string, ozellik?: string, kategori?: string }
-) {
-  const safeInputs = {
-    brand: inputs.brand || 'Markan',
-    urun: inputs.urun || 'ürünün',
-    ozellik: inputs.ozellik || '',
-    kategori: inputs.kategori || '',
-  };
-  return PREVIEW_TEMPLATES[tone][contentType](safeInputs);
-}
+Yeni: 7 input field, 2x3 grid layout (lg:grid-cols-2 gap-4):
+
+```
+[Mahalle (full width)         ]
+[Cadde / Sokak (full width)   ]
+[Bina No]   [Daire]
+[Posta kodu]                   [İlçe ▾]
+[İl ▾]
 ```
 
-NOT: Şablonları daha doğal yap — yukarıdaki örnekler placeholder. Aziz 
-canlı sitedeki tonu için kontrol eder. Çok şirin/cringe olmasın, 
-kurumsal-doğal aralıkta kalsın.
+1. Form alanları:
+   - **Mahalle** (text input, lg:col-span-2): max-length 100
+   - **Cadde / Sokak** (text input, lg:col-span-2): max-length 100
+   - **Bina No** (text input, w-32): max-length 10
+   - **Daire** (text input, w-32, opsiyonel): max-length 10
+   - **Posta kodu** (text input, w-32): pattern 5 hane numeric, 
+     validation
+   - **İlçe** (select dropdown): il seçilince filtrelenir (PR-04)
+   - **İl** (select dropdown): 81 Türkiye ili (PR-04)
 
-**components/marka/BrandedAIPreview.tsx:**
-- Container: rounded-xl border-2 border-rd-primary-200 bg-rd-primary-50 
-  p-5 md:p-6
-- Header: text-[10px] uppercase tracking-[0.15em] text-rd-primary-700 
-  "MARKA İLE" + Lucide Sparkles
-- İçerik: 2 örnek (listing + sosyal), aralarında ayraç. Her örnek 
-  font-display + leading-relaxed.
-- Form değiştikçe useMemo ile yeniden render, fade transition.
+2. Form group başlığı:
+   - text-sm uppercase tracking-wide text-rd-neutral-500 mb-3 
+     "ADRES BİLGİLERİ"
+   - Açıklama text-xs text-rd-neutral-600 — "Faturalandırma için 
+     gerekli. KVKK uyumlu olarak saklanır."
 
-**components/marka/GenericAIPreview.tsx:**
-- Container: rounded-xl border border-rd-neutral-300 bg-rd-neutral-50 
-  p-5 md:p-6 opacity-90
-- Header: text-[10px] uppercase tracking-[0.15em] text-rd-neutral-500 
-  "MARKA OLMADAN" + Lucide AlertCircle (hafif)
-- İçerik: 2 jenerik örnek (sabit metin) — örn. "Porselen kahve fincanı, 
-  6'lı set, beyaz" (markaadız, kategori sade)
-- Aziz'in spec'inde örnek var, oradan kullan veya benzer kalitede 
-  jenerik metin yaz.
+3. Backward compatibility:
+   - Mevcut user.address tek satır string olabilir (eski profil 
+     formatından)
+   - Yüklenirken parse etmeye çalış (basit split veya regex)
+   - Parse başarısızsa boş bırak (kullanıcı yeniden doldurur)
+   - Save sonrası backend'e structured data gönder (yeni schema)
+   - Schema değişimi: mevcut Supabase profiles tablosunda address 
+     kolonu varsa text → json olarak değiştirme. Yeni alanlar (il, 
+     ilçe, mahalle, vs) ayrı kolonlar olabilir VEYA address json 
+     olarak saklanır. Code karar versin, BACKLOG'a not düş.
 
-**components/marka/BrandPreviewPanel.tsx:**
-```tsx
-'use client';
-export function BrandPreviewPanel({ formData }: { formData: MarkaForm }) {
-  return (
-    <aside className="lg:sticky lg:top-24 space-y-4">
-      {/* WhyItMatters tooltip */}
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-rd-neutral-900">
-          Canlı önizleme
-        </p>
-        <Tooltip content="Form değiştikçe örnek metin canlı güncellenir. 
-                          AI gerçek üretimde marka bilgilerini kullanır.">
-          <Info size-4 className="text-rd-neutral-500 cursor-help" />
-        </Tooltip>
-      </div>
-      
-      <BrandedAIPreview formData={formData} />
-      <GenericAIPreview />
-      
-      <p className="text-xs text-rd-neutral-500 leading-relaxed">
-        Bu sadece şablon önizleme. Gerçek üretimde AI marka bilgini 
-        kullanarak özgün metin yazar.
-      </p>
-    </aside>
-  );
-}
-```
+4. Validation:
+   - Posta kodu: /^\d{5}$/ regex (5 hane numeric)
+   - Diğer alanlar: trim(), min 1 karakter (Mahalle hariç tümü 
+     opsiyonel olabilir, Aziz karar)
+   - Hata: text-rd-danger-700 + aria-invalid + aria-describedby
 
-Tooltip primitive zaten var (components/primitives/Tooltip.tsx — /uret 
-refactor'da yapıldı). Reuse.
-
-Form data değiştikçe BrandPreviewPanel re-render olur, useMemo ile 
-hesaplanan generatePreview() yeni metni gösterir. Fade transition için 
-key prop kullan: <p key={`${tone}-${storeName}-${kategori}`}> — ton 
-değişince key değişir, React fade animasyonunu tetikler.
-
-Commit: feat(marka): MP-03 BrandPreviewPanel canlı önizleme (hazır 
-şablon, AI çağrısı yok) — sayfanın KALBİ
+Commit: feat(profil): PR-03 adres yapılandırma (7 alan, posta kodu 
+validation)
 
 ────────────────────────────────────────────
-BÖLÜM 4 — MP-04: Bilgi banner kompaktlaştır
+BÖLÜM 4 — PR-04: İl/İlçe veritabanı + Save flow
 ────────────────────────────────────────────
 
-Mevcut sayfada üstte mavi info banner var (Aziz: "2 satır + örnek 
-cümle = çok yer kaplıyor").
+1. İl/İlçe data:
+   - NPM araştır: `il-ilce-tr`, `turkiye-iller`, `tr-cities`. Bundle 
+     <50KB ideal.
+   - Bulamazsan statik: lib/data/turkiye-il-ilce.ts (81 il, ~970 ilçe). 
+     JSON formatı:
+   ```ts
+   export const ILLER = [
+     { id: '01', ad: 'Adana' },
+     { id: '34', ad: 'İstanbul' },
+     // ...
+   ];
+   export const ILCELER: Record<string, { id: string, ad: string }[]> = {
+     '01': [{ id: '0101', ad: 'Aladağ' }, ...],
+     '34': [{ id: '3401', ad: 'Adalar' }, ...],
+     // ...
+   };
+   ```
+   - Internet'te freely available bir TR il-ilçe JSON var (örn. 
+     `tarekraafat/turkey-postal-codes` GitHub) — kopyala adapt et.
 
-Yeni:
-- Tek satır: bg-rd-primary-50 border border-rd-primary-200 rounded-lg 
-  px-4 py-2.5
-- Lucide Info size-4 text-rd-primary-700
-- Text: text-sm text-rd-primary-800 — "Marka profili AI metinlerini 
-  kişiselleştirir."
-- Sağda toggle: "Örnek göster ▾" (Lucide ChevronDown rotate-180 
-  açıkken)
-- Tıklayınca expand: kısa bir before/after örneği (BrandPreviewPanel 
-  içeriğinin minimal versiyonu olabilir, ya da statik bir kıyas)
+2. İl seçimi → İlçe dropdown filtreler:
+   - useState: selectedIl
+   - İlçe dropdown options: ILCELER[selectedIl] || []
+   - İl değişince ilçe reset
 
-Default kapalı.
+3. Native select VS custom dropdown:
+   - Mobile için native `<select>` daha iyi UX (native picker)
+   - Desktop için custom dropdown (combobox) opsiyonel — şimdilik 
+     native, gelecekte search'lü combobox eklenebilir
+   - Karar: native `<select>` her platformda (basit, accessible)
 
-Commit: feat(marka): MP-04 bilgi banner kompakt + collapsible
+4. StickySaveBar + Toast (MP'den reuse):
+   - Mevcut components/marka/StickySaveBar.tsx VEYA primitive'e 
+     taşındıysa components/primitives/StickySaveBar.tsx
+   - Profil için label: "Profilini kaydet"
+   - Dirty state takip
+   - beforeunload uyarısı
 
-────────────────────────────────────────────
-BÖLÜM 5 — MP-05: StickySaveBar + dirty state + beforeunload
-────────────────────────────────────────────
+5. Save flow (Supabase .update() pattern — MP'de yapılan):
+   - Supabase profiles tablosuna update
+   - Loading: butonda spinner
+   - Success: Toast (rd-success-700, "Profilin kaydedildi", 3sn)
+   - Error: Toast (rd-danger-700, hata mesajı, 5sn)
+   - Dirty reset
 
-components/marka/StickySaveBar.tsx (yeni — VEYA /uret 
-StickySubmitBar'ı reuse, parametre olarak kullan).
-
-- position: sticky bottom-0 (mobil) / sticky bottom-5 (desktop)
-- bg-white border-t border-rd-neutral-200
-- max-w-7xl mx-auto px-4 py-3
-- Sol: text-sm text-rd-neutral-600 — "X / 8 alan dolu" (canlı counter)
-- Sağ: 2 buton
-  - "İptal" ghost (text-rd-neutral-700 hover:bg-rd-neutral-100)
-  - "Marka profilini kaydet" primary (bg-rd-primary-700 hover:bg-rd-primary-800)
-  
-- Dirty state: useRef ile original form snapshot, current form ile 
-  karşılaştır. Değişiklik varsa save bar görünür ve "İptal" enabled.
-- Saf form (dirty değil): save bar gizli VEYA disabled
-
-beforeunload:
-```ts
-useEffect(() => {
-  const handler = (e: BeforeUnloadEvent) => {
-    if (isDirty) {
-      e.preventDefault();
-      e.returnValue = ''; // Chrome
-    }
-  };
-  window.addEventListener('beforeunload', handler);
-  return () => window.removeEventListener('beforeunload', handler);
-}, [isDirty]);
-```
-
-İptal butonu: kullanıcı onay popup'ı (Lucide AlertCircle), "Değişiklikler 
-kaybolacak. Devam?" — basitçe confirm() OK ya da custom modal (custom 
-modal redesign branch'te zaten standart, custom yap).
-
-Commit: feat(marka): MP-05 StickySaveBar + dirty state + beforeunload
+Commit: feat(profil): PR-04 il/ilçe veritabanı + StickySaveBar + Save 
+(Supabase .update)
 
 ────────────────────────────────────────────
-BÖLÜM 6 — MP-06: Save POST + Toast
-────────────────────────────────────────────
-
-1. /api/marka-profili endpoint kontrol et:
-   - Var ve PATCH/POST kabul ediyorsa: kullan
-   - Yoksa: BACKLOG'da MP-06b ticket'ı [ ] olarak aç ("Backend: marka 
-     profili save endpoint"). Frontend tarafı mock'la — saveStatus state 
-     'success' simulate, gerçek deploy'da düzeltilir.
-
-2. Save flow (StickySaveBar "Kaydet" tıklayınca):
-   - Loading state: butona spinner (Lucide Loader2 animate-spin), 
-     "Kaydediliyor..." text
-   - PATCH/POST request
-   - Success: toast (rd-success-700 bg, Lucide CheckCircle, "Marka 
-     profili kaydedildi", 3sn auto-dismiss)
-   - Error: toast (rd-danger-700 bg, Lucide AlertCircle, "Kaydedilemedi: 
-     [hata mesajı]", 5sn auto-dismiss)
-   - Dirty state reset (form snapshot güncelle)
-
-3. Toast component (components/primitives/Toast.tsx — varsa reuse, 
-   yoksa minimal yeni):
-   - position: fixed bottom-20 right-5 (StickySaveBar'ın üstünde)
-   - rounded-lg, shadow-lg, animate-fade-in
-   - aria-live="polite"
-   - Click veya auto-dismiss
-
-Commit: feat(marka): MP-06 save POST + toast (success/error)
-
-────────────────────────────────────────────
-BÖLÜM 7 — MP-07: Mobile + a11y polish
+BÖLÜM 5 — PR-05: Mobile + a11y polish
 ────────────────────────────────────────────
 
 1. **Mobile (375px):**
-   - Layout tek kolon. lg:grid-cols-[1fr_400px] → mobile flex-col.
-   - Sağ kolon (BrandPreviewPanel) altta yer alır, sticky kalkar.
-   - Mobile için BrandPreviewPanel'i collapsible yap (accordion):
-     - Tıklanır başlık: "Canlı önizleme ▾" (kompakt)
-     - Default: kapalı (mobile'da yer tasarrufu için). Tıklayınca açılır.
-     - Bu ayrı bir prop olabilir: <BrandPreviewPanel collapsibleOnMobile />
-   - Form alanları full width, padding mobile küçük (px-4 py-3)
-   - StickySaveBar mobile dikey: counter üstte, butonlar altta full width
-   - Bilgi banner mobile tek satıra sığar mı kontrol — uzunsa "Örnek 
-     göster" toggle'ını ayır
+   - max-w-3xl mobile'da full width (px-4)
+   - Adres grid 2x3 → tek kolon
+   - Bina No / Daire side-by-side mobile yarım yarım (grid-cols-2)
+   - Form gruplar opsiyonel collapsible (Kişisel / Adres / Hesap) — 
+     uzun forma karşı, tıklanabilir başlıklar. **Bu opsiyonel**, eğer 
+     sayfa zaten mobile'da uzun değilse atla.
+   - StickySaveBar mobile dikey
 
 2. **A11y:**
-   - Form ARIA: her label `htmlFor`, her input `id`
-   - ChipSelector role'ler MP-02'de yapıldı, doğrula
-   - ProgressIndicator aria-valuenow + aria-valuemin/max
-   - StickySaveBar Save butonu: dirty değilse aria-disabled + Tooltip 
-     "Değişiklik yok"
-   - Toast aria-live="polite"
-   - WhyItMatters tooltip aria-describedby BrandPreviewPanel'e bağlı
-   - Klavye full Tab tour: storeName → ton chip'leri (Arrow ile gez) → 
-     audience → features → kategori (Arrow + Space) → fiyat bandı → 
-     hizmet vurguları → extraInfo → save bar buton
+   - Form ARIA: her label htmlFor + her input id
+   - Posta kodu invalid: aria-invalid + aria-describedby="postakodu-error"
+   - İl dropdown: aria-label "İl seç"
+   - İlçe dropdown: aria-label "İlçe seç" + disabled (aria-disabled) 
+     il seçilmediyse
+   - Tab tour: ad → soyad → telefon → mahalle → sokak → bina → daire → 
+     posta → ilçe → il → save bar
+   - StickySaveBar dirty değilse aria-disabled
 
-3. **Kontrast (WCAG AA):**
-   - text-rd-primary-700 on bg-rd-primary-50: doğrula
-   - text-rd-neutral-600 on bg-white: doğrula
-   - Disabled buton text: en az 3:1
+3. **Edge cases:**
+   - Backend yükleniyor: skeleton state (rd-neutral-100 placeholder)
+   - useCredits null: "—" göster
+   - Adres parse fail: boş bırak, console warn (dev only)
+   - Save fail (network): Toast retry CTA
 
-4. **Edge case'ler:**
-   - storeName boş: BrandPreviewPanel "Markan" placeholder ile gösterir
-   - Tüm chip'ler boş: Generic preview ön plana çıkar (görsel hiyerarşi)
-   - Internet kesik save POST: error toast retry CTA'sı ile
-
-Commit: chore(marka): MP-07 mobile + a11y polish
+Commit: chore(profil): PR-05 mobile + a11y polish
 
 ────────────────────────────────────────────
-Test (commit öncesi)
+Test
 ────────────────────────────────────────────
 
-- npm run build temiz, TypeScript clean
-- Localde /hesap/marka:
-  - Eyebrow + Manrope H1 + subtitle görünür
-  - 8 alan render olur, ProgressIndicator canlı counter
-  - Ton seçince → BrandedAIPreview anlık güncellenir (fade)
-  - Kategori chip multi-select çalışır, ChipSelector aktif/pasif net
-  - Sağ kolon sticky (desktop), mobile collapsible
-  - Generic preview kıyası altta görünür
-  - WhyItMatters tooltip hover'da açılır
-  - Bilgi banner tek satır, "Örnek göster" toggle çalışır
-  - Form değişince StickySaveBar görünür
-  - Kaydet → toast başarı, dirty reset
+- npm run build temiz
+- Localde /hesap/profil:
+  - Eyebrow + Manrope H1 + ProgressIndicator
+  - "∞" yok, gerçek kredi sayısı
+  - KPI tıklanabilir (link to /kredi-yukle)
+  - Üst "+ Kredi al" CTA yok
+  - Adres 7 alan, posta kodu 5 hane validate
+  - İl seçince ilçe dropdown filtrelenir
+  - Save flow: Toast başarı + dirty reset
   - 375px mobile sıkıntısız
-  - Klavye Tab tüm alanlar gezilir
+  - Klavye Tab tüm alanlar
 
-Commit özeti (7 atomik commit):
-- feat(marka): MP-01 form scaffold + 8 alan + progress
-- feat(marka): MP-02 ChipSelector primitive
-- feat(marka): MP-03 BrandPreviewPanel canlı önizleme — KALBİ
-- feat(marka): MP-04 bilgi banner kompakt
-- feat(marka): MP-05 StickySaveBar + dirty state + beforeunload
-- feat(marka): MP-06 save POST + toast
-- chore(marka): MP-07 mobile + a11y polish
+Commit özeti (5 atomik commit) VEYA tek:
+feat(profil): PR-01~PR-05 /hesap/profil refactor + adres yapılandırma 
++ ∞ bug fix
 
-VEYA tek: feat(marka): MP-01~MP-07 /hesap/marka komple refactor + 
-canlı önizleme paneli
-
-BACKLOG-REDESIGN.md'de MP-01~MP-07 [x] işaretle. /api/marka-profili 
-yoksa MP-06b ticket'ı [ ] aç.
+BACKLOG-REDESIGN.md'de PR-01~PR-05 [x] işaretle. Açık ticket'lar 
+varsa (PR-02b backend kredi bug, schema değişikliği) BACKLOG'a not düş.
 
 Bittikten sonra rapor:
 - Commit listesi
-- Yeni dosyalar (components/primitives/ChipSelector, components/marka/
-  *, lib/markaPreviewTemplates)
-- /api/marka-profili kararı (var mı, mock'landı mı)
-- ChipSelector'un /uret'te de kullanılabilir bir primitive olmasının 
-  testi (gelecek refactor için reusability)
+- Yeni dosyalar (lib/data/turkiye-il-ilce.ts mı, NPM mı?)
+- ∞ bug kaynağı (frontend mi backend mi)
+- Schema kararı (Supabase profiles tablosunda yeni kolon mu, 
+  address json mu)
 - Açık riskler / Aziz preview test
 ```
 
