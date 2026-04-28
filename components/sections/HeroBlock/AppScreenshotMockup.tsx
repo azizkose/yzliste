@@ -1,12 +1,58 @@
-import { Camera, Pencil, ScanLine, ImageIcon, Zap, Check } from 'lucide-react'
-import { MOCKUP_STEPS, MOCKUP_INPUT_METHODS, HERO_BADGES } from '@/lib/constants/hero'
+import {
+  Check,
+  Zap,
+  ImagePlus,
+  FileText,
+  Image as ImageIcon,
+  PlayCircle,
+  MessageSquare,
+  Download,
+} from 'lucide-react'
 import StickerBadge from '@/components/primitives/StickerBadge'
+import { HERO_BADGES } from '@/lib/constants/hero'
 
-const INPUT_ICONS: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>> = {
-  Camera,
-  Pencil,
-  ScanLine,
-}
+const OUTPUT_CARDS = [
+  {
+    icon: FileText,
+    label: 'Listing',
+    color: 'text-rd-primary-700',
+    content: (
+      <p className="text-[10px] text-slate-700 leading-snug line-clamp-2">
+        Selin Porselen Çiçek Desenli Kahve Fincanı 6&apos;lı Set 80ml Altın Yaldızlı
+      </p>
+    ),
+  },
+  {
+    icon: ImageIcon,
+    label: 'Görsel',
+    color: 'text-violet-600',
+    content: (
+      <div className="h-8 w-full rounded bg-slate-100 flex items-center justify-center">
+        <ImageIcon size={14} strokeWidth={1.5} className="text-slate-400" aria-hidden="true" />
+      </div>
+    ),
+  },
+  {
+    icon: PlayCircle,
+    label: 'Video',
+    color: 'text-red-500',
+    content: (
+      <div className="h-8 w-full rounded bg-slate-800 flex items-center justify-center">
+        <PlayCircle size={14} strokeWidth={1.5} className="text-white/70" aria-hidden="true" />
+      </div>
+    ),
+  },
+  {
+    icon: MessageSquare,
+    label: 'Sosyal',
+    color: 'text-emerald-600',
+    content: (
+      <p className="text-[9px] text-slate-500 leading-snug line-clamp-2">
+        Sabah kahvenizi daha özel kılacak bir set var. Selin Porselen&apos;in çiçek desenli fincan seti...
+      </p>
+    ),
+  },
+]
 
 export default function AppScreenshotMockup() {
   return (
@@ -25,6 +71,7 @@ export default function AppScreenshotMockup() {
         borderColor="#FED7AA"
         className="hidden sm:flex sm:absolute sm:-bottom-3 sm:-left-3 z-10"
       />
+
       {/* Browser chrome */}
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white [box-shadow:var(--shadow-rd-lg)]">
         {/* Browser top bar */}
@@ -41,97 +88,59 @@ export default function AppScreenshotMockup() {
 
         {/* App content */}
         <div className="p-5">
-          {/* Step indicator */}
-          <div className="mb-5 flex items-center gap-1" aria-hidden="true">
-            {MOCKUP_STEPS.map((step, i) => (
-              <div key={step.number} className="flex items-center gap-1">
-                {i > 0 && <div className="h-px w-6 bg-slate-200" />}
-                <div className="flex items-center gap-1.5">
-                  <div
-                    className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
-                      step.active
-                        ? 'bg-rd-primary text-white'
-                        : 'bg-slate-100 text-slate-400'
-                    }`}
-                  >
-                    {step.number}
-                  </div>
-                  <span
-                    className={`text-xs ${
-                      step.active ? 'font-medium text-slate-700' : 'text-slate-400'
-                    }`}
-                  >
-                    {step.label}
-                  </span>
-                </div>
-              </div>
-            ))}
+          {/* INPUT: Compact input row */}
+          <div
+            className="mb-4 flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3"
+            aria-hidden="true"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-amber-100 bg-amber-50">
+              <ImagePlus size={18} strokeWidth={1.5} className="text-amber-600" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[11px] font-medium text-slate-700">
+                Selin Porselen Çiçek Desenli Kahve Fincanı
+              </p>
+              <p className="mt-0.5 text-[9px] text-slate-400">
+                Trendyol · Metin + Görsel + Video + Sosyal
+              </p>
+            </div>
+            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100">
+              <Check size={11} strokeWidth={2.5} className="text-emerald-600" />
+            </div>
           </div>
 
-          {/* Input method cards */}
-          <div className="mb-4 flex gap-2" aria-hidden="true">
-            {MOCKUP_INPUT_METHODS.map((method) => {
-              const Icon = INPUT_ICONS[method.icon]
+          {/* AI Transform arrow */}
+          <div className="mb-4 flex items-center gap-2" aria-hidden="true">
+            <div className="h-px flex-1 bg-slate-200" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-rd-primary">
+              <Zap size={13} strokeWidth={2} className="text-white" />
+            </div>
+            <div className="h-px flex-1 bg-slate-200" />
+          </div>
+
+          {/* OUTPUT: 4 kartı 2x2 grid */}
+          <div className="grid grid-cols-2 gap-2" aria-hidden="true">
+            {OUTPUT_CARDS.map((card) => {
+              const Icon = card.icon
               return (
-                <div
-                  key={method.label}
-                  className={`flex flex-1 flex-col items-center gap-1 rounded-lg border py-2 ${
-                    method.selected
-                      ? 'border-rd-primary bg-rd-primary-50'
-                      : 'border-slate-200 bg-slate-50'
-                  }`}
-                >
-                  {Icon && (
-                    <Icon
-                      size={16}
-                      strokeWidth={1.5}
-                      className={method.selected ? 'text-rd-primary' : 'text-slate-400'}
-                    />
-                  )}
-                  <span
-                    className={`text-[10px] ${
-                      method.selected ? 'font-medium text-rd-primary' : 'text-slate-400'
-                    }`}
-                  >
-                    {method.label}
-                  </span>
+                <div key={card.label} className="rounded-lg border border-slate-200 bg-white p-2.5">
+                  <div className="mb-1.5 flex items-center gap-1">
+                    <Icon size={11} strokeWidth={1.5} className={card.color} aria-hidden="true" />
+                    <span className={`text-[9px] font-medium ${card.color}`}>{card.label}</span>
+                  </div>
+                  {card.content}
                 </div>
               )
             })}
           </div>
 
-          {/* Upload area */}
+          {/* Download button */}
           <div
-            className="mb-4 flex items-center gap-3 rounded-xl border-[1.5px] border-dashed border-slate-300 bg-slate-50/50 px-4 py-3.5"
+            className="mt-3 flex items-center justify-center gap-1.5 rounded-[10px] bg-rd-primary py-2.5"
             aria-hidden="true"
           >
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-amber-50 to-amber-100">
-              <ImageIcon size={22} strokeWidth={1.5} className="text-amber-600" />
-            </div>
-            <div className="flex flex-col gap-0.5">
-              <span className="text-xs font-semibold text-slate-700">fincan_01.jpg</span>
-              <span className="flex items-center gap-1 text-[11px] text-emerald-600">
-                <Check size={11} strokeWidth={2.5} />
-                Yüklendi · 2.4 MB
-              </span>
-            </div>
-          </div>
-
-          {/* Brand input */}
-          <div
-            className="mb-4 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5"
-            aria-hidden="true"
-          >
-            <span className="text-xs text-slate-400">Marka: Selin Porselen</span>
-          </div>
-
-          {/* Generate button */}
-          <div
-            className="flex items-center justify-center gap-2 rounded-[10px] bg-rd-primary py-2.5"
-            aria-hidden="true"
-          >
-            <Zap size={14} strokeWidth={2} className="text-white" />
-            <span className="text-sm font-medium text-white">İçerik üret</span>
+            <Download size={13} strokeWidth={2} className="text-white" />
+            <span className="text-sm font-medium text-white">4 dosyayı indir</span>
           </div>
         </div>
       </div>

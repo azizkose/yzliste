@@ -255,7 +255,7 @@ export default function GorselSekmesi({
                     }
                   }}
                     className="text-xs text-rd-neutral-400 hover:text-rd-primary-800 transition-colors">
-                    Tekrar (1 kr)
+                    Tekrar (1 kredi)
                   </button>
                 </div>
               </div>

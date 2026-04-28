@@ -149,7 +149,7 @@ export default function MarkaBilgileriSection() {
 
   return (
     <section
-      className="bg-rd-neutral-50 py-16 md:py-20 lg:py-28"
+      className="bg-rd-neutral-50 py-16 md:py-20"
       aria-label="Marka bilgileri"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

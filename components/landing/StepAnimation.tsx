@@ -1,7 +1,11 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { RotateCcw, ChevronRight, Coffee, Sparkles, Download } from 'lucide-react'
+import {
+  RotateCcw, ChevronRight, Sparkles, Download,
+  ImagePlus, PenLine,
+  FileText, Image as ImageIcon, PlayCircle, MessageSquare,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const STEP_DURATION = 3000
@@ -14,9 +18,11 @@ function Step1Canvas({ reduced }: { reduced: boolean }) {
       aria-hidden="true"
       className="flex flex-col items-center justify-center gap-2.5 min-h-[140px] px-4 py-3"
     >
+      {/* Foto yükle kutusu */}
       <div className={cn('flex flex-col items-center gap-1', !reduced && 'animate-step-photo-in')}>
-        <div className="w-14 h-14 rounded-xl bg-rd-warm-50 border border-rd-warm-200 flex items-center justify-center">
-          <Coffee size={28} strokeWidth={1.5} className="text-rd-warm-700" />
+        <div className="flex items-center gap-2 rounded-xl bg-rd-warm-50 border border-rd-warm-200 px-3 py-2">
+          <ImagePlus size={18} strokeWidth={1.5} className="text-rd-warm-700 shrink-0" />
+          <span className="text-[10px] text-rd-warm-700 font-medium">Fotoğraf yükle</span>
         </div>
       </div>
       <span
@@ -27,8 +33,10 @@ function Step1Canvas({ reduced }: { reduced: boolean }) {
       >
         VEYA
       </span>
-      <div className={cn('w-full max-w-[180px]', !reduced && 'animate-step-text-in')}>
-        <div className="rounded-lg border border-rd-neutral-200 bg-rd-neutral-50 px-3 py-2">
+      {/* Metin gir kutusu */}
+      <div className={cn('w-full max-w-[200px]', !reduced && 'animate-step-text-in')}>
+        <div className="flex items-start gap-2 rounded-lg border border-rd-neutral-200 bg-rd-neutral-50 px-3 py-2">
+          <PenLine size={13} strokeWidth={1.5} className="text-rd-neutral-400 mt-0.5 shrink-0" />
           <p className="text-[10px] text-rd-neutral-400 leading-snug">
             Selin Porselen Çiçek Desenli Kahve Fincanı 6&apos;lı Set 80ml...
           </p>
@@ -42,10 +50,12 @@ function Step1Canvas({ reduced }: { reduced: boolean }) {
 
 const MARKET_CHIPS = [
   { label: 'Trendyol', active: true },
-  { label: 'Amazon TR', active: true },
   { label: 'Hepsiburada', active: true },
+  { label: 'Amazon TR', active: true },
+  { label: 'Amazon USA', active: false },
   { label: 'N11', active: false },
   { label: 'Etsy', active: false },
+  { label: 'Çiçeksepeti', active: false },
 ]
 
 const CONTENT_CHIPS = [
@@ -104,13 +114,41 @@ function Step2Canvas({ reduced }: { reduced: boolean }) {
   )
 }
 
-// ---- Step 3 canvas: AI hazırlasın ----
+// ---- Step 3 canvas: AI hazırlasın — 4 çıktı kartı ----
 
-const OUTPUT_LINES = [
-  { label: 'Listing Metni', colorClass: 'bg-rd-primary-600' },
-  { label: 'Ürün Görseli', colorClass: 'bg-rd-content-image' },
-  { label: 'Ürün Videosu', colorClass: 'bg-rd-content-video' },
-  { label: 'Sosyal Kit', colorClass: 'bg-rd-content-social' },
+const OUTPUT_CARDS_STEP3 = [
+  {
+    icon: FileText,
+    label: 'Listing',
+    colorClass: 'text-rd-primary-700',
+    animClass: 'animate-step-card-1',
+    content: 'Selin Porselen Çiçek Desenli Kahve Fincanı 6\'lı Set...',
+    isText: true,
+  },
+  {
+    icon: ImageIcon,
+    label: 'Görsel',
+    colorClass: 'text-violet-600',
+    animClass: 'animate-step-card-2',
+    content: null,
+    isText: false,
+  },
+  {
+    icon: PlayCircle,
+    label: 'Video',
+    colorClass: 'text-red-500',
+    animClass: 'animate-step-card-3',
+    content: null,
+    isText: false,
+  },
+  {
+    icon: MessageSquare,
+    label: 'Sosyal',
+    colorClass: 'text-emerald-600',
+    animClass: 'animate-step-card-4',
+    content: 'Sabah kahvenizi daha özel kılacak bir set var...',
+    isText: true,
+  },
 ]
 
 function Step3Canvas({ reduced }: { reduced: boolean }) {
@@ -120,28 +158,38 @@ function Step3Canvas({ reduced }: { reduced: boolean }) {
         <Sparkles size={13} strokeWidth={2} className="text-rd-primary-700" />
         <span className="text-[10px] text-rd-neutral-500 font-medium">AI üretiyor...</span>
       </div>
-      <div className="space-y-2">
-        {OUTPUT_LINES.map((line, i) => (
-          <div key={line.label} className="flex items-center gap-2">
-            <span className="text-[10px] text-rd-neutral-500 w-[76px] shrink-0 leading-tight">
-              {line.label}
-            </span>
-            <div className="flex-1 h-1 bg-rd-neutral-200 rounded-full overflow-hidden">
-              <div
-                className={cn(
-                  `h-full ${line.colorClass} rounded-full`,
-                  reduced ? 'w-full' : `animate-step-line-${i}`,
-                )}
-              />
+      {/* 4 çıktı kartı 2×2 grid */}
+      <div className="grid grid-cols-2 gap-1.5">
+        {OUTPUT_CARDS_STEP3.map((card) => {
+          const Icon = card.icon
+          return (
+            <div
+              key={card.label}
+              className={cn(
+                'rounded-lg border border-rd-neutral-200 bg-white p-2',
+                !reduced && card.animClass,
+              )}
+            >
+              <div className="flex items-center gap-1 mb-1">
+                <Icon size={10} strokeWidth={1.5} className={card.colorClass} />
+                <span className={cn('text-[9px] font-medium', card.colorClass)}>{card.label}</span>
+              </div>
+              {card.isText ? (
+                <p className="text-[9px] text-rd-neutral-500 leading-snug line-clamp-2">{card.content}</p>
+              ) : (
+                <div className="h-6 w-full rounded bg-rd-neutral-100 flex items-center justify-center">
+                  <Icon size={12} strokeWidth={1.5} className="text-rd-neutral-300" />
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
       <button
         tabIndex={-1}
         aria-hidden="true"
         className={cn(
-          'self-start mt-1 flex items-center gap-1.5 text-[10px] font-medium',
+          'self-start mt-0.5 flex items-center gap-1.5 text-[10px] font-medium',
           'text-rd-primary-700 border border-rd-primary-200 rounded-lg px-2.5 py-1.5',
           'bg-rd-primary-50',
           !reduced && 'animate-step-download-in',
@@ -161,8 +209,9 @@ function Step1Static() {
       aria-hidden="true"
       className="flex flex-col items-center justify-center gap-2 min-h-[140px] px-4 py-3 opacity-40"
     >
-      <div className="w-12 h-12 rounded-xl bg-rd-warm-50 border border-rd-warm-200 flex items-center justify-center">
-        <Coffee size={22} strokeWidth={1.5} className="text-rd-warm-700" />
+      <div className="flex items-center gap-2 rounded-xl bg-rd-warm-50 border border-rd-warm-200 px-3 py-2">
+        <ImagePlus size={16} strokeWidth={1.5} className="text-rd-warm-700 shrink-0" />
+        <span className="text-[10px] text-rd-warm-700">Fotoğraf yükle</span>
       </div>
       <div className="w-full max-w-[160px] rounded-lg border border-rd-neutral-200 bg-rd-neutral-50 px-3 py-2">
         <p className="text-[10px] text-rd-neutral-400 leading-snug">Selin Porselen...</p>
@@ -223,17 +272,19 @@ function Step3Static() {
         <Sparkles size={13} strokeWidth={2} className="text-rd-primary-700" />
         <span className="text-[10px] text-rd-neutral-500 font-medium">AI üretiyor...</span>
       </div>
-      <div className="space-y-2">
-        {OUTPUT_LINES.map((line) => (
-          <div key={line.label} className="flex items-center gap-2">
-            <span className="text-[10px] text-rd-neutral-500 w-[76px] shrink-0 leading-tight">
-              {line.label}
-            </span>
-            <div className="flex-1 h-1 bg-rd-neutral-200 rounded-full overflow-hidden">
-              <div className={`h-full ${line.colorClass} rounded-full w-full`} />
+      <div className="grid grid-cols-2 gap-1.5">
+        {OUTPUT_CARDS_STEP3.map((card) => {
+          const Icon = card.icon
+          return (
+            <div key={card.label} className="rounded-lg border border-rd-neutral-200 bg-white p-2">
+              <div className="flex items-center gap-1 mb-1">
+                <Icon size={10} strokeWidth={1.5} className={card.colorClass} />
+                <span className={cn('text-[9px] font-medium', card.colorClass)}>{card.label}</span>
+              </div>
+              <div className="h-5 w-full rounded bg-rd-neutral-100" />
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

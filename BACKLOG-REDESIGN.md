@@ -2224,9 +2224,16 @@ Bittikten sonra rapor:
 
 **Faz 6 toplam:** 5 ticket.
 
-#### LG-01~LG-05 Birleşik Prompt (Faz 6 SON paket — yasal + hata + cleanup)
+**LG-01~LG-05 ✅ Tamam (28 Nis gece — redesign Code-side BİTTİ).**
+- LG-01: 6 yasal sayfa rd-* swap, mevcut metinler korundu
+- LG-02: not-found.tsx (FileQuestion), error.tsx (rd-warning-600), loading.tsx
+- LG-03: Accordion primitive yaratıldı (FY + IC reuse), 5 orphan dosya silindi, _tanitim.tsx archive bağı kesildi
+- LG-04: BACKLOG.md'ye P2b backend ticket tablosu eklendi (8 ticket)
+- LG-05: docs/lighthouse-checklist.md + docs/metin-tarama.md, build + tsc temiz
 
-```
+**Aziz acceptance + main merge bekleniyor.**
+
+<!-- LG prompt detay silindi
 ÖNEMLİ — KURAL OVERRIDE:
 Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
 kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
@@ -2447,8 +2454,14 @@ Bittikten sonra rapor:
 - Lighthouse + metin taraması checklist eklendi mi
 - Aziz preview test'e hazır mı (CI temiz, build OK)
 ```
+-->
 
-**Redesign tamamlandığında:** Aziz toplu acceptance → main'e merge → Vercel auto-deploy → canlı yzliste.com yenilenir. Sonrası Faz 7+ Paraşüt entegrasyonu ve diğer backend bekleyen ticket'lar (canlı BACKLOG.md'de).
+**Redesign Code-side TAMAM (28 Nis gece).** Sıradaki adımlar Aziz tarafında:
+1. Preview URL'de toplu acceptance (docs/lighthouse-checklist.md + docs/metin-tarama.md rehberi)
+2. Supabase Redirect URLs config doğruluğu test (Google OAuth incognito + preview)
+3. main'e merge → Vercel auto-deploy → canlı yzliste.com yeni tasarım
+4. 5 PAUSED scheduled task → enabled:true (blog-seo-yazisi vs)
+5. Faz 7+ canlı BACKLOG.md (P2b backend ticket'lar — 8 adet)
 
 ---
 
@@ -2476,6 +2489,642 @@ Anasayfa 9 → 7 bölüm. Eski Bölüm 3 ("4 içerik türü") + 4 ("Aynı ürün
 - "Detaya bak" default kapalı OK mı (açık olsun derse `useState(true)` tek satır)
 - Lighthouse mobile (Code çalıştırmadı; Aziz preview'da skor verir)
 
+## 20 — /fiyatlar yerleşim + /uret 3 aşama akış (Faz 1.7 — Aziz acceptance 2. tur)
+
+**Aziz preview'da gördükleri (28 Nis gece, 2. tur acceptance):** İki sayfa yapısal iyileştirme. LP-01~10 (anasayfa polish) Code'da çalışıyor → bu paket sonra alınır.
+
+| ID | Başlık | Durum | Kabul Kriteri |
+|---|---|---|---|
+| LP-11 | /fiyatlar 2-kolon hibrit (Calculator + Paketler) | Bekliyor | Hero korunur. Yeni "PAKETLER + CALCULATOR" birleşik bölüm: desktop lg:grid-cols-2 gap-8, sol — KrediCalculator card (sticky lg:sticky top-24), sağ — 3 paket kart vertical grid. Mobile dikey istif: Calculator önce, paketler altta. Slider hareket edince önerilen paket border-2 border-rd-primary-700 highlight + smooth scroll-into-view. "Kredi nasıl çalışır" 4-mini bölümü KALDIRILABİLİR (paket bullet'lerinde zaten var) veya çok kompakt footer üstüne çekilir. SSS + CTA korunur. |
+| LP-12 | /uret 3 aşama yapısal akış + görsel rehber | Bekliyor | Mevcut karmaşık akış (IntentBanner+Sekmeler+Platform+Foto+Form+Sticky) yeniden düzenlenir. Yeni: 3 numbered aşama kartı (yzstudio pattern reuse — warm-earth daire numara + dikey çizgi), her aşama kartı sırayla doldurulur, aşama tamamlanınca next'e smooth scroll. Üstte horizontal ProgressIndicator (1-2-3, tamamlanan CheckCircle2, aktif pulse). Fonksiyonalite KORUNUR (tüm tab hooks, auth, kredi). |
+
+#### LP-11 + LP-12 Birleşik Prompt (Sayfa akış optimizasyonu)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: LP-11 + LP-12 — /fiyatlar yerleşim + /uret 3 aşama yapısal akış 
+(Aziz acceptance 2. tur).
+
+Bu paket LP-01~10 (anasayfa polish) bittikten sonra alınır. İki sayfa 
+ayrı dosya, paralel iş.
+
+KAPSAM DIŞI:
+- Backend değişikliği (auth, kredi, üretim hooks korunur)
+- /yzstudio dokunulmaz (pattern referans için kullanılır, kopyalanmaz)
+- Yeni primitive yaratma (mevcut yzstudio numbered daire pattern reuse)
+
+────────────────────────────────────────────
+LP-11: /fiyatlar 2-kolon hibrit yerleşim
+────────────────────────────────────────────
+
+Mevcut sayfa: app/fiyatlar/page.tsx
+Mevcut sıra: Hero → Paketler → Kredi nasıl çalışır → Calculator → SSS → CTA
+
+Yeni sıra:
+1. Hero (kompakt, korunur)
+2. **Paketler + Calculator birleşik bölüm** (yeni layout)
+3. Kredi nasıl çalışır (KOMPAKT veya KALDIRILDI — Aziz preview'da karar verir)
+4. SSS (korunur)
+5. CTA (korunur)
+
+**Birleşik bölüm yapısı:**
+
+```jsx
+<section className="px-4 sm:px-6 py-16">
+  <div className="max-w-6xl mx-auto">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 
+                    items-start">
+      {/* SOL — Calculator (desktop sticky) */}
+      <div className="lg:sticky lg:top-24 order-2 lg:order-1">
+        <KrediCalculator onPaketOner={setOnerilenPaket} />
+      </div>
+      
+      {/* SAĞ — 3 paket kart vertical */}
+      <div className="space-y-4 order-1 lg:order-2">
+        {PAKET_LISTESI.map((p) => (
+          <PaketKart 
+            paket={p} 
+            highlighted={onerilenPaket === p.id}
+            ref={highlighted ? scrollRef : null}
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+**Önemli:**
+- Mobile order: Calculator önce (order-2 lg:order-1), paketler sonra 
+  (order-1 lg:order-2 — desktop tersine çevrilir; kullanıcı mobile'da 
+  scroll ile önce calculator görür)
+- Calculator state'i `onerilenPaketId` döner, parent state'e push eder
+- Paket kart: `highlighted={paket.id === onerilenPaketId}` ile 
+  border-2 border-rd-primary-700 + scale-[1.02] + scroll-into-view 
+  (smooth)
+- "En popüler" rozet (mevcut, 129 TL paketinde) korunur — ayrı bir 
+  vurgu mekanizması (calculator önerisi geçici, popüler kalıcı)
+
+**Calculator komponentinde değişiklik:**
+- components/fiyatlar/KrediCalculator.tsx
+- Mevcut slider 1-100 ürün korunur
+- Yeni callback prop: onPaketOner(paketId: string) — slider değerine 
+  göre uygun paket id'si döner
+- Calculator card height kompakt (mobile için)
+
+**"Kredi nasıl çalışır" 4-mini bölümü:**
+- Mevcut: paketler altında, py-10
+- Karar: KALDIRILDI (paket bullet'lerinde zaten her tip kredi açıklı), 
+  veya çok kompakt — Aziz preview'da görür, gerekirse geri eklenir
+- Şimdilik KALDIR, footer öncesi gerekirse geri eklenir
+
+Commit: feat(fiyatlar): LP-11 2-kolon hibrit Calculator + Paketler
+
+────────────────────────────────────────────
+LP-12: /uret 3 aşama yapısal akış + görsel rehber
+────────────────────────────────────────────
+
+Mevcut sayfa: app/uret/page.tsx
+Mevcut karmaşa: IntentBanner + Sekmeler + Platform select + Foto + 
+Tab content + Sticky — kullanıcı "ne yapmam gerek?" anlamıyor.
+
+Yeni yapı: 3 numbered aşama kartı (yzstudio pattern reuse).
+
+**Sayfa düzeni:**
+
+```jsx
+<main>
+  <SiteHeader />
+  
+  {/* Hero + ProgressIndicator (üstte yatay) */}
+  <header className="max-w-5xl mx-auto pt-6 px-4">
+    <div className="text-center mb-6">
+      <p className="eyebrow">İÇERİK ÜRET</p>
+      <h1 className="font-display text-3xl md:text-4xl">
+        Ürününü tanıt, AI senin için yapsın
+      </h1>
+    </div>
+    <ProgressIndicator step={currentStep} />  {/* 1-2-3 horizontal */}
+  </header>
+
+  {/* Mevcut auth/hata banner'ları */}
+  {!kullanici && <AuthBanner />}
+  {hata && <ErrorBanner />}
+  
+  {/* 3 aşama kartı dikey */}
+  <div className="max-w-5xl mx-auto px-4 space-y-6">
+    
+    {/* AŞAMA 1 */}
+    <StepCard number={1} title="Ne üreteceksin?" 
+              completed={step1Done} active={currentStep === 1}>
+      {/* İçerik tipi 4 büyük kart */}
+      <ContentTypeGrid 
+        active={anaSekme} 
+        onChange={setAnaSekme} 
+      />
+      {/* Platform select */}
+      <PlatformSelect value={platform} onChange={setPlatform} />
+    </StepCard>
+    
+    {/* AŞAMA 2 */}
+    <StepCard number={2} title="Ürünü tanıt" 
+              completed={step2Done} active={currentStep === 2}>
+      {/* Foto upload paylaşılan */}
+      <FotoUpload fotolar={fotolar} setFotolar={setFotolar} />
+      {/* Aktif sekmenin form alanları */}
+      <TabContent activeTab={anaSekme} {...allHooks} />
+      {/* BrandProfileBlock yan-akış (collapsible) */}
+      <BrandProfileToggle />
+    </StepCard>
+    
+    {/* AŞAMA 3 */}
+    <StepCard number={3} title="Üret" 
+              completed={step3Done} active={currentStep === 3}>
+      {/* Maliyet özeti */}
+      <CostSummary cost={cost} remaining={remainingCredits} />
+      {/* Üret bilgisi (sticky bar zaten alttta) */}
+      <p>Aşağıdaki "Üret" butonuna bas.</p>
+    </StepCard>
+    
+  </div>
+  
+  {/* Sticky submit bar (mevcut, korunur) */}
+  <StickySubmitBar ... />
+  
+  <SiteFooter />
+</main>
+```
+
+**StepCard komponenti (yzstudio pattern reuse):**
+```jsx
+<section aria-labelledby={`step-${number}-title`}
+         className={`relative pl-16 md:pl-20 pb-8 last:pb-0 
+                     border-l-2 ${active ? 'border-rd-primary-200' : 'border-rd-neutral-200'}
+                     last:border-transparent ml-6`}>
+  {/* Sol başında dairesel numara */}
+  <div className={`absolute -left-6 top-0 size-12 rounded-full 
+                   ${completed ? 'bg-rd-success-700' : active ? 'bg-rd-warm-700' : 'bg-rd-neutral-300'}
+                   text-white font-display text-xl font-medium 
+                   flex items-center justify-center transition-all
+                   ${active ? 'animate-pulse-soft scale-110' : ''}`}>
+    {completed ? <CheckCircle2 size={24} /> : number}
+  </div>
+  
+  <div className="space-y-4">
+    <h2 id={`step-${number}-title`} 
+        className="font-display text-xl md:text-2xl 
+                   text-rd-neutral-900 font-medium">
+      {number} · {title}
+    </h2>
+    {children}
+  </div>
+</section>
+```
+
+Mobile (375px): numbered daire size-10, pl-12, ml-5.
+
+**ProgressIndicator (üstte yatay):**
+```jsx
+<div className="flex items-center justify-center gap-2 max-w-md mx-auto">
+  {[1, 2, 3].map((step, i) => (
+    <>
+      <button onClick={() => scrollToStep(step)}
+              className={`size-8 rounded-full flex items-center justify-center 
+                          ${step < currentStep ? 'bg-rd-success-700 text-white' : 
+                            step === currentStep ? 'bg-rd-primary-700 text-white' : 
+                            'bg-rd-neutral-200 text-rd-neutral-500'}`}>
+        {step < currentStep ? <Check size={14} /> : step}
+      </button>
+      {i < 2 && (
+        <div className={`flex-1 h-0.5 ${step < currentStep ? 'bg-rd-success-700' : 'bg-rd-neutral-200'}`} />
+      )}
+    </>
+  ))}
+</div>
+```
+
+**Aşama tamamlanma kriterleri:**
+- Step 1 done: anaSekme seçili + platform seçili (her ikisi default 
+  değerlerinden farklı veya kullanıcı tıklamış olmalı)
+- Step 2 done: foto VEYA form alanları min. doldurulmuş (sekmeye göre 
+  değişir — örn. metin için urunAdi var, görsel için seciliStiller > 0)
+- Step 3 done: cost <= remainingCredits + ctaState.canSubmit
+
+**currentStep hesaplama (useState veya useMemo):**
+```ts
+const currentStep = useMemo(() => {
+  if (!step1Done) return 1;
+  if (!step2Done) return 2;
+  return 3;
+}, [step1Done, step2Done, step3Done]);
+```
+
+**Aşama tamamlanınca next'e scroll:**
+```ts
+useEffect(() => {
+  if (step1Done && !prevStep1Done) {
+    document.getElementById('step-2')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  // ...
+}, [step1Done, step2Done]);
+```
+
+prefers-reduced-motion guard ile.
+
+**ContentTypeGrid (Aşama 1 — 4 büyük kart):**
+- IntentBanner + Sekmeler birleştirilir
+- 4 kart: grid grid-cols-2 lg:grid-cols-4 gap-3
+- Her kart: rounded-xl border, Lucide ikon size-8 + isim (font-medium) + 
+  1 satır açıklama + kredi maliyet ipucu (text-xs)
+- Aktif: border-2 border-rd-primary-700 + bg-rd-primary-50
+- 4 tipler: Metin / Görsel / Video / Sosyal medya
+- Tıklayınca anaSekme set + step1 progress check
+
+**PlatformSelect:**
+- Mevcut native select korunur (tek seçim, çok pratik) VEYA 
+- ChipSelector pattern (single mode + 7 pazaryeri chip)
+- Cowork önerisi: ChipSelector (görsel olarak daha güçlü, 7 pazaryeri 
+  net görünür, native select boring). Ama mobile yatay scroll gerekir.
+- Karar: ChipSelector single mode, mobile yatay scroll
+
+**FotoUpload (Aşama 2):**
+- Mevcut paylaşılan foto bloğu (satır 384-413) korunur ama büyütülür
+- Tek bir büyük drop zone (min-h 200) — fotolar.length > 0 ise küçük 
+  thumbnail + değiştir/kaldır
+
+**BrandProfileToggle (Aşama 2 yan-akış):**
+- Mevcut BrandProfileBlock collapsible şu an Aşama 2 üstünde
+- Yeni yer: Aşama 2 içinde, foto+form altında — opsiyonel link 
+  "Marka profilim ile özelleştir →" (Lucide Sparkles)
+- Tıklayınca BrandProfileBlock açılır
+- Kullanıcı bilinçli olarak isterse marka profili ekler
+
+**BrandProfileBlock korunur (sadece konumu değişir).**
+
+**Mevcut tab content (MetinSekmesi/GorselSekmesi/VideoSekmesi/
+SosyalSekmesi):** İçerikleri AYNEN korunur, sadece StepCard 
+wrapper'ının `<TabContent>` slot'una yerleştirilir. Tab hooks'ları 
+(useMetinUretim vs) dokunulmaz.
+
+**StickySubmitBar:** Korunur, alt sticky pozisyon.
+
+**Auth banner / kredi düşük banner / hata banner:** Korunur, sayfa 
+en üstünde.
+
+────────────────────────────────────────────
+Mobile + a11y polish
+────────────────────────────────────────────
+
+1. **Mobile (375px):**
+   - StepCard pl-12 ml-5 (size-10 daire)
+   - ProgressIndicator: 3 daire + 2 ince çizgi mobile'da uygun
+   - ContentTypeGrid 2 cols (grid-cols-2)
+   - PlatformSelect ChipSelector yatay scroll
+   - Foto upload mobile compact
+
+2. **A11y:**
+   - ProgressIndicator: aria-label "İlerleme: 1/3"
+   - Her StepCard: section role + aria-labelledby
+   - Numbered daire aria-hidden (decorative)
+   - Tamamlanan adım: aria-label "Adım 1 tamamlandı"
+   - Aktif adım: aria-current="step"
+   - ProgressIndicator buton: tıklanır + Tab focus + Enter/Space
+   - prefers-reduced-motion guard (smooth scroll + pulse animation)
+
+3. **Edge case'ler:**
+   - Tüm 3 aşama tamam + sticky bar disabled (yetersiz kredi): tooltip 
+     ile bilgi
+   - Aşama 1 değişince Aşama 2 form reset gerekiyor mu? Hayır — 
+     kullanıcı sekme değiştirince form'da kalan değer kaybolmasın 
+     (mevcut davranış korunur)
+   - Skeleton state: authYukleniyor sırasında ProgressIndicator gri
+
+Commit özeti (atomik 4-5):
+- feat(uret): LP-12 ProgressIndicator + StepCard primitive
+- feat(uret): LP-12 Aşama 1 (içerik tipi grid + platform chip)
+- feat(uret): LP-12 Aşama 2 (foto + form + brand toggle)
+- feat(uret): LP-12 Aşama 3 (maliyet + sticky bar bağlantı)
+- chore(uret): LP-12 mobile + a11y polish
+
+VEYA tek: feat(uret): LP-12 3 aşama yapısal akış + numbered görsel 
+rehber
+
+────────────────────────────────────────────
+Test
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde:
+  - /fiyatlar: 2-kolon Calculator + Paketler, slider değişince paket 
+    highlight + scroll
+  - /uret: 3 numbered aşama kartı, üstte ProgressIndicator
+  - Aşama 1 tamamlanınca Aşama 2'ye smooth scroll
+  - Aşama tamamlanma daire bg-success-700 + Check ikon
+  - 375px mobile sıkıntısız
+  - Klavye Tab full tour (ProgressIndicator + her aşama içeriği)
+  - prefers-reduced-motion: smooth scroll devre dışı, animasyon yok
+
+BACKLOG'da LP-11 + LP-12 [x] işaretle.
+
+Bittikten sonra rapor:
+- Commit listesi
+- /fiyatlar layout kararı (2-kolon, "kredi nasıl çalışır" bölümü 
+  kaldırıldı mı)
+- /uret aşama tamamlanma kriterleri (her aşama için doneCheck logic)
+- StepCard primitive'e taşıma kararı (yzstudio reuse mi, /uret kopyası mı)
+- ContentTypeGrid + PlatformSelect ChipSelector kararı
+- Açık riskler / Aziz preview test
+```
+
+**Aziz preview'da gördükleri (28 Nis gece, acceptance sırasında):** Anasayfada 10 ufak iyileştirme. Code-side redesign tamam ama bu polish maddeleri main'e merge'den ÖNCE halledilmeli.
+
+| ID | Başlık | Durum | Kabul Kriteri |
+|---|---|---|---|
+| LP-01 | TrustStrip "Türkiye'de geliştirildi" → "E-ticaret için yapay zeka stüdyosu" | ✅ Tamam | lib/constants/hero.ts satır 11. "Türkiye'de geliştirildi" yerine veya yanına "E-ticaret için yapay zeka stüdyosu" — daha net pozisyonlama. Cowork önerisi: tek label değiştir (Türkiye'de geliştirildi → E-ticaret için yapay zeka stüdyosu) çünkü trust strip 3 öğeli, dengeli. |
+| LP-02 | Hero subtitle "fotoğraf yükle" → "metin VEYA foto" | ✅ Tamam | components/sections/HeroBlock/HeroContent.tsx satır 47-51 + lib/constants/hero.ts HERO_COPY.sub. Yeni metin: "Ürününü anlat veya fotoğrafını yükle — listing metni, stüdyo görseli, tanıtım videosu ve sosyal medya içeriği dakikalar içinde hazır. Aylık abonelik yok." Vurgu: kullanıcı text de girebilir, sadece foto değil. |
+| LP-03 | AppScreenshotMockup görsel revize (input → output net) | ✅ Tamam | components/sections/HeroBlock/AppScreenshotMockup.tsx. Mevcut görsel kullanıcının NE BEKLEDİĞİNİ göstermiyor. Yeni: ya gerçek bir input (foto veya metin) → 4 output kart (listing/görsel/video/sosyal) animatif geçiş, ya da before/after shots. Code mevcut mockup'ı oku, gerçek beklenti yansıtacak revizeye karar ver. |
+| LP-04 | "Nasıl çalışır" video CTA pasife çek | ✅ Tamam | components/sections/HeroBlock/HeroContent.tsx satır 89-99 + VideoModal. Videomuz yok → secondary CTA buton GİZLE (yorum satırı veya display:none). VideoModal import'u ve setVideoOpen state'i de temizle. Sonradan video hazırlanınca açılır. |
+| LP-05 | StepAnimation 3 adım netleştir | ✅ Tamam | components/landing/StepAnimation.tsx. **Adım 1 "Ürünü tanıt":** mevcut foto VEYA "Selin Porselen..." text — ikisi de görünür (foto+VEYA+text). **Adım 2 "Pazaryeri ve içerik seç":** 5 değil 7 pazaryeri (Trendyol/Hepsiburada/Amazon TR/Amazon USA/N11/Etsy + 1 daha kontrol et) + 4 içerik tipi tam set net. **Adım 3 "AI senin için hazırlasın":** **Cowork önerisi:** mevcut sparkle+bar yerine 4 mini çıktı kartı (listing başlık + görsel placeholder + video play ikonu + sosyal caption snippet) sırayla pop animasyonu — kullanıcı somut çıktıyı görür. |
+| LP-06 | InfoStrip "4 içerik türü, 7 pazaryeri için" boş kutu içeriği | ✅ Tamam | components/landing/InfoStrip.tsx. Her sekme kartına (Metin/Görsel/Video/Sosyal) altına 1-2 satır mikro açıklama ekle: "Listing başlık + açıklama + arama etiketleri", "Stüdyo standardı 1200×1200, 6 görsel", "5 saniyelik dikey 9:16", "Instagram + TikTok + Pinterest caption". Boş kutu hissi gider. |
+| LP-07 | "kr" kısaltma → "kredi" tam yaz | ✅ Tamam | Tüm site grep "kr" → "kredi". Etkilenen dosyalar: InfoStrip kart pill'leri, KrediCalculator, fiyatlar paket kartları, /uret kredi etiketleri, /yzstudio sticky bar, vs. Code grep ile bul, "1 kr" → "1 kredi", "2 kr" → "2 kredi" şeklinde. |
+| LP-08 | MarkaBilgileriSection sağ şablon revize (gerçek çıktı) | ✅ Tamam | components/sections/MarkaBilgileriSection.tsx. Sağda "marka bilgilerini gir, sana özel içerik" örnek şablonu mevcut — Aziz: "gerçek şablon değil, revize". Yeni: gerçek bir AI üretim çıktısı (lib/data/exampleContent.ts'ten Selin Porselen veya benzeri gerçek metin) + şablon boyutları daha kompakt. |
+| LP-09 | "Genel araçlarla aynı şey değil" kıyas tablosu kompakt + marka ismi YOK | ✅ Tamam | MarkaBilgileriSection altındaki kıyas tablosu. Marka ismi (ChatGPT, Claude, vs) ASLA yazılmaz — etik+yasal. "Genel AI araçları" / "Pazaryeri-özel olmayan AI'lar" gibi nötr ifade. Tablo kompakt: 3-4 satır max, gereksiz bullet sil, derli toplu. |
+| LP-10 | MarkaBilgileri altı boşluk kontrolü | ✅ Tamam | Tablo bittikten sonra alt section ile arasında gereksiz padding/margin var mı kontrol. Layout sıkıştır gerekirse. py-16 → py-12 gibi. |
+
+**Cowork tahmin:** "Ege" = "AI" ses-yazım hatası varsayımı. Yanlışsa Aziz düzeltir, Hero H1 zaten "E-ticaret içeriğini AI ile üret".
+
+#### LP-01~LP-10 Birleşik Prompt (Anasayfa Polish — Faz 1.6)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: LP-01~LP-10 — Anasayfa polish iterasyonu (Aziz acceptance 
+bulguları). Main'e merge öncesi son tüning.
+
+Anasayfa: app/_tanitim-redesign.tsx → TrustStrip + Nav + HeroSection 
++ StepSection + MarkaBilgileriSection + NedenYzlisteSection + 
+SSSSection + FinalCTASection + FooterSection.
+
+KAPSAM DIŞI:
+- Yeni sayfa eklenmesi
+- Backend değişikliği
+- Faz 7 P2b backend ticket'ları (Paraşüt vs)
+
+────────────────────────────────────────────
+LP-01: TrustStrip metin güncelle
+────────────────────────────────────────────
+
+Dosya: lib/constants/hero.ts
+Satır 11: `{ icon: 'Flag', label: "Türkiye'de geliştirildi" }` 
+→ `{ icon: 'Sparkles', label: "E-ticaret için yapay zeka stüdyosu" }`
+
+Sebep: pozisyonlama net olsun. "Türkiye'de geliştirildi" jenerik, 
+yeni metin ne olduğumuzu söylüyor. Diğer 2 trust item (256-bit SSL + 
+Saniyeler içinde üretim) korunur.
+
+Commit: feat(landing): LP-01 trust strip pozisyonlama metni
+
+────────────────────────────────────────────
+LP-02: Hero subtitle metni güncelle
+────────────────────────────────────────────
+
+Dosya: lib/constants/hero.ts HERO_COPY.sub + HeroContent.tsx satır 
+47-51 (kullanılıyor mu kontrol et — ya constants'tan ya inline).
+
+Eski: "Ürün fotoğrafını yükle — listing metni, stüdyo görseli, 
+tanıtım videosu ve sosyal medya içeriği dakikalar içinde hazır. 
+Aylık abonelik yok."
+
+Yeni: "Ürününü anlat veya fotoğrafını yükle — listing metni, 
+stüdyo görseli, tanıtım videosu ve sosyal medya içeriği dakikalar 
+içinde hazır. Aylık abonelik yok."
+
+Vurgu: kullanıcı text de girebilir, sadece foto değil. /uret 
+sayfasında zaten her ikisi de mevcut.
+
+Commit: feat(landing): LP-02 hero subtitle metin/foto vurgusu
+
+────────────────────────────────────────────
+LP-03: AppScreenshotMockup görsel revize
+────────────────────────────────────────────
+
+Dosya: components/sections/HeroBlock/AppScreenshotMockup.tsx
+
+Mevcut mockup ne göstermiyor: kullanıcının NE BEKLEDİĞİ. Aziz: "ne 
+anlayacağını ne beklediğini gösterecek şekilde değiştirelim".
+
+Yeni yaklaşım (Cowork önerisi):
+- Sol: input bölümü (küçük foto thumbnail + "Selin Porselen Çiçek 
+  Desenli Kahve Fincanı" text input)
+- Ok ileri (Lucide ChevronRight)
+- Sağ: 4 output kartı 2x2 grid:
+  - Listing metni (kısa preview)
+  - Görsel (placeholder thumbnail)
+  - Video (Lucide PlayCircle)
+  - Sosyal (Instagram caption snippet)
+- Animatif geçiş: input → output kartlar sırayla pop
+
+VEYA before/after format:
+- Sol: "Önce" basit foto + minimal text
+- Sağ: "Sonra" 4 platform için 4 farklı zenginleştirilmiş çıktı
+
+Code mevcut mockup'ı oku, en uygun revizeye karar ver. lib/data/
+exampleContent.ts'teki Selin Porselen örneği reuse edilebilir.
+
+Commit: feat(landing): LP-03 hero mockup input→output net göster
+
+────────────────────────────────────────────
+LP-04: "Nasıl çalışır" video CTA pasife çek
+────────────────────────────────────────────
+
+Dosya: components/sections/HeroBlock/HeroContent.tsx satır 89-99 
+(secondary CTA buton + VideoModal). lib/constants/hero.ts 
+HERO_COPY.ctaSecondary.
+
+Yapılacak:
+- Secondary CTA buton (Play ikon + "Nasıl çalışır?") — JSX'i comment 
+  out VEYA `{false && (...)}` ile gizle
+- VideoModal import + dynamic import + setVideoOpen state — 
+  KALDIRILABİLİR ama sonradan açılması kolay olsun diye comment out 
+  daha iyi
+- Primary CTA tek başına kalır (full width mobile, w-auto desktop)
+
+Commit: chore(landing): LP-04 nasıl çalışır video CTA pasife çekildi 
+(video hazırlanınca aç)
+
+────────────────────────────────────────────
+LP-05: StepAnimation 3 adım netleştir
+────────────────────────────────────────────
+
+Dosya: components/landing/StepAnimation.tsx
+
+**Adım 1 "Ürünü tanıt":**
+- Mevcut: kahve fincanı emoji veya Coffee ikon → VEYA → text
+- Yeni doğrulama: foto thumbnail + "VEYA" + text input görsel olarak 
+  ikisi de net ayırt edilebilir olmalı. Foto kısmı: Lucide ImagePlus 
+  size-12 + "Fotoğraf yükle" altında. VEYA ayracı (text-rd-neutral-400 
+  ortada). Text kısmı: Lucide PenLine + "Ürününü anlat" + Selin 
+  Porselen örnek metin yazılır.
+
+**Adım 2 "Pazaryeri ve içerik seç":**
+- 5 pazaryeri chip → 7 pazaryeri (Trendyol / Hepsiburada / Amazon TR / 
+  Amazon USA / N11 / Etsy + Çiçeksepeti veya benzeri 7. — Aziz onayı 
+  veya mevcut listeyi koru)
+- Önemli: lib/constants/pazaryeri.ts'te tam liste var, oradan dinamik 
+  çek
+- 4 içerik tipi tam set: Metin / Görsel / Video / Sosyal
+- Animasyon: chip'ler stagger pop, ilk 3 pazaryeri + Metin+Görsel 
+  pulse aktif olur
+
+**Adım 3 "AI senin için hazırlasın":**
+- Mevcut: Sparkles + 4 renkli bar + Download
+- Yeni (Cowork önerisi): 4 mini çıktı kartı 2x2 grid sırayla pop:
+  - Sol üst: Listing kart — başlık + 2 satır açıklama snippet
+  - Sağ üst: Görsel kart — placeholder + Lucide ImageIcon
+  - Sol alt: Video kart — placeholder + Lucide PlayCircle
+  - Sağ alt: Sosyal kart — Instagram caption snippet
+- Stagger animation (0.3s gecikme her kart)
+- Sonunda Lucide Download + "İndir" buton pop
+
+Commit: feat(landing): LP-05 step animation 3 adım net (foto+text + 
+7 pazaryeri + 4 çıktı kart)
+
+────────────────────────────────────────────
+LP-06: InfoStrip kutu içerikleri
+────────────────────────────────────────────
+
+Dosya: components/landing/InfoStrip.tsx
+
+4 sekme kartı (Metin/Görsel/Video/Sosyal) — her birinin altında 
+mevcut: "1 kr · ~10sn" gibi minimum etiket. Aziz: "kutular çok boş, 
+kısa açıklama gerekli".
+
+Yeni — her kartın altında mikro açıklama satırı:
+- Metin: "Listing başlık + açıklama + arama etiketleri"
+- Görsel: "Stüdyo standardı 1200×1200, 6 görsel"
+- Video: "5 saniyelik dikey 9:16"
+- Sosyal: "Instagram + TikTok + Pinterest caption"
+
+text-xs text-rd-neutral-500 leading-relaxed mt-1.
+
+Commit: feat(landing): LP-06 InfoStrip kart açıklamaları
+
+────────────────────────────────────────────
+LP-07: "kr" → "kredi" tam yaz
+────────────────────────────────────────────
+
+Tüm site grep "kr" → "kredi". Etkilenen muhtemel dosyalar:
+- components/landing/InfoStrip.tsx (kredi pill'leri)
+- components/fiyatlar/KrediCalculator.tsx
+- app/fiyatlar/page.tsx (3 paket kart)
+- /uret kredi etiketleri (components/uret/* StickySubmitBar)
+- /yzstudio sticky bar (components/yzstudio/StudioStickyBar)
+- /hesap kredi sayıları
+- lib/constants/* — kredi metin sabitleri
+
+Pattern: "1 kr", "10 kr", "X kr" → "1 kredi", "10 kredi", "X kredi"
+Dikkat: "kredi kartı" gibi compound kelimeler etkilenmesin (regex 
+boundary).
+
+Commit: chore: LP-07 "kr" kısaltma → "kredi" tam yazım
+
+────────────────────────────────────────────
+LP-08: MarkaBilgileri sağ şablon revize
+────────────────────────────────────────────
+
+Dosya: components/sections/MarkaBilgileriSection.tsx
+
+Sağda "marka bilgilerini gir → sana özel içerik" şablonu var. Aziz: 
+"gerçek şablon değil, revize".
+
+Yeni:
+- Şablon kompaktlaştır (max 3-4 satır görsel kart)
+- İçerik: gerçek AI çıktısı kalitesinde — lib/data/exampleContent.ts 
+  EXAMPLE_CONTENT.metin.trendyol.title + ilk 1-2 madde features kullan
+- "Selin Porselen Çiçek Desenli Kahve Fincanı 6'lı Set" gibi gerçek 
+  başlık + 2 madde bullet
+- Görsel: warm-earth border + sticky kart hissi
+
+Commit: feat(landing): LP-08 marka şablon gerçek AI çıktısı
+
+────────────────────────────────────────────
+LP-09: Kıyas tablosu kompakt + marka ismi YOK
+────────────────────────────────────────────
+
+Dosya: MarkaBilgileriSection altındaki "Genel araçlarla aynı şey 
+değil" kıyas tablosu.
+
+KRİTİK kural: ChatGPT / Claude / Gemini gibi rakip MARKA İSİMLERİ 
+YAZMA. Etik + yasal risk. Nötr ifade kullan.
+
+Yeni:
+- Sol kolon: "Genel AI araçları" (veya "Pazaryeri-özel olmayan AI'lar")
+- Sağ kolon: "yzliste"
+- 3-4 satır max:
+  - Listing/SEO kuralları → "Manuel ayarla" / "Otomatik 7 pazaryeri"
+  - Görsel boyut/format → "Manuel ayarla" / "Pazaryeri standartı"
+  - Marka tonu → "Her seferinde anlat" / "Bir kez ayarla, hatırlar"
+  - Hız → "Saatler" / "Saniyeler"
+- Tablo kompakt: rounded-xl border, padding p-4 (p-6 yerine), 
+  satır arası space-y-2
+
+Commit: feat(landing): LP-09 kıyas tablosu kompakt + marka ismi 
+çıkarıldı
+
+────────────────────────────────────────────
+LP-10: MarkaBilgileri altı boşluk kontrolü
+────────────────────────────────────────────
+
+MarkaBilgileriSection ile bir sonraki section (NedenYzlisteSection) 
+arasındaki boşluk doğru mu kontrol et:
+- Section padding: py-16 md:py-20 standart
+- Eğer çift padding (alt+üst) varsa azalt
+- Görsel olarak Aziz preview'da kontrol eder
+
+Commit: chore(landing): LP-10 spacing kontrol
+
+────────────────────────────────────────────
+Test
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde:
+  - TrustStrip metin "E-ticaret için yapay zeka stüdyosu"
+  - Hero subtitle "Ürününü anlat veya fotoğrafını yükle"
+  - Hero mockup yeni input→output göstergesi
+  - Hero "Nasıl çalışır" buton GİZLİ
+  - StepAnimation: foto+text + 7 pazaryeri + 4 çıktı kart
+  - InfoStrip kartlarda mikro açıklama satırı
+  - "kr" yok, "kredi" tam yazım
+  - MarkaBilgileri sağ şablon gerçek içerik
+  - Kıyas tablo kompakt + marka ismi yok
+  - 375px mobile sıkıntısız
+
+Commit özeti (10 atomik) VEYA tek:
+chore(landing): LP-01~LP-10 anasayfa polish (Aziz acceptance bulguları)
+
+BACKLOG'da LP-01~LP-10 [x] işaretle.
+
+Bittikten sonra rapor:
+- Commit listesi
+- "kr" → "kredi" grep sonucu (kaç yerde değişti)
+- AppScreenshotMockup revize yaklaşımı (4 kart 2x2 mı, before/after 
+  mı, başka mı)
+- StepAnimation Adım 3 yeni 4 kart animasyon kararı
+- Açık riskler / Aziz preview test
+```
+
+---
+
 ## Faz Özeti — Roadmap
 
 | Faz | Bölüm | Sayfa | Ticket | Durum |
@@ -2485,14 +3134,17 @@ Anasayfa 9 → 7 bölüm. Eski Bölüm 3 ("4 içerik türü") + 4 ("Aynı ürün
 | 2 | Üretim akışı (11, 13) | 4 | 42 | ✅ Tamam (28 Nis). Açık: SR-04b (ZIP/PDF) + OD-02b (payment_failed analytics) + YS-11 (yol haritası) Faz 3'e ertelendi. TryonAyarlar.tsx orphan temizlik bekliyor. |
 | 3 | Hesap alanı (12, 14) | 10 | 8 paket | ✅ Tamam (28 Nis): MP+PR+FT+HS+KR+UR+FY+HD |
 | 4 | Auth (15) | 4 | 5 paket | ✅ Tamam (28 Nis): AU-01~05. Aziz devam dediğinde Cowork Supabase Redirect URLs config yapacak |
-| 5 | İçerik (16) | 4 | 8 ticket | Bekliyor (Aziz "devam" diyene kadar) |
-| 6 | Yasal + hata + cleanup (17) | 9+ | ~10 ticket | Bekliyor — orphan temizlik + scheduled task reaktivasyon + metin taraması + Lighthouse |
+| 5 | İçerik (16) | 4 | 5 paket | ✅ Tamam (28 Nis): IC-01~05 |
+| 6 | Yasal + hata + cleanup (17) | 9+ | 5 paket | ✅ Tamam (28 Nis): LG-01~05 |
 
-**Toplam kalan:** Faz 5 + Faz 6 + Faz 6 cleanup. Faz 1, 1.5, 2, 3, 4 ✅ Tamam.
+**🎯 REDESIGN Code-side TAMAM (28 Nis gece).** 7 faz, ~130 başlangıç ticket → ~40 birleşik paket. Aziz acceptance + main merge bekliyor.
 
-**Cowork bekleyen iş (Aziz "devam" deyince):**
-1. Supabase Dashboard → Authentication → URL Configuration → Redirect URLs'e `https://*.vercel.app/**` + production URL ekle (docs/auth-config.md adımları)
-2. Faz 5 İçerik prompt'u (blog/sss/hakkımızda) yazımı + Code'a hand
+**Aziz acceptance adımları:**
+1. Preview URL'de toplu test (docs/lighthouse-checklist.md + docs/metin-tarama.md rehber)
+2. Google OAuth incognito + preview test (Supabase config doğru)
+3. main'e merge (`git merge claude/redesign-modern-ui --no-ff`) → Vercel auto-deploy
+4. 5 PAUSED scheduled task enabled:true
+5. Faz 7+ canlı BACKLOG.md (P2b backend ticket'lar — 8 adet)
 
 **Kapsam dışı (Aziz onayı):** `/admin`, `/hesap/admin/feedback`, `/(auth)/app` (eski), `/profil` (eski), `/toplu` (kaldırılıyor).
 

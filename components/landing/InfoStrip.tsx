@@ -9,10 +9,38 @@ type TabId = 'metin' | 'gorsel' | 'video' | 'sosyal'
 type MarketId = 'trendyol' | 'amazon-tr' | 'etsy'
 
 const TABS = [
-  { id: 'metin' as TabId, label: 'Metin', icon: FileText, kredi: '1 kr', sure: '~10sn' },
-  { id: 'gorsel' as TabId, label: 'Görsel', icon: ImageIcon, kredi: '1 kr', sure: '~30sn' },
-  { id: 'video' as TabId, label: 'Video', icon: Video, kredi: '2 kr', sure: '~2dk' },
-  { id: 'sosyal' as TabId, label: 'Sosyal', icon: MessageSquare, kredi: '3 kr', sure: '~20sn' },
+  {
+    id: 'metin' as TabId,
+    label: 'Metin',
+    icon: FileText,
+    kredi: '1 kredi',
+    sure: '~10sn',
+    description: 'Listing başlık + açıklama + arama etiketleri',
+  },
+  {
+    id: 'gorsel' as TabId,
+    label: 'Görsel',
+    icon: ImageIcon,
+    kredi: '1 kredi',
+    sure: '~30sn',
+    description: 'Stüdyo standardı 1200×1200, 6 görsel',
+  },
+  {
+    id: 'video' as TabId,
+    label: 'Video',
+    icon: Video,
+    kredi: '2 kredi',
+    sure: '~2dk',
+    description: '5 saniyelik dikey 9:16',
+  },
+  {
+    id: 'sosyal' as TabId,
+    label: 'Sosyal',
+    icon: MessageSquare,
+    kredi: '3 kredi',
+    sure: '~20sn',
+    description: 'Instagram + TikTok + Pinterest caption',
+  },
 ]
 
 const MARKETS: { id: MarketId; label: string }[] = [
@@ -244,6 +272,9 @@ export function InfoStrip() {
               >
                 {tab.label}
               </span>
+              <p className="text-xs text-rd-neutral-500 leading-relaxed">
+                {tab.description}
+              </p>
               <div className="flex items-center gap-1.5">
                 <span
                   className={cn(

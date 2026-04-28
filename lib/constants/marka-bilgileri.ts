@@ -55,25 +55,25 @@ export const TONE_CHIPS: ToneChip[] = [
     key: "samimi",
     label: "Samimi",
     output:
-      "Bu tişört tam sana göre! Yumuşacık kumaşı ve şık kesimi ile her kombine uyum sağlar. Hemen sipariş ver, yarın kapında.",
+      "Bu fincan setini görünce aşık olacaksınız! Çiçek deseni ve altın yaldız detaylar hem sizi hem misafirlerinizi büyüler. Hediye kutusunda geliyor — doğum günü, düğün, her özel gün için hazır.",
   },
   {
     key: "profesyonel",
     label: "Profesyonel",
     output:
-      "Premium pamuk karışımı kumaştan üretilmiş, ergonomik kesim tişört. Boyut tablosu için ürün detaylarını inceleyebilirsiniz.",
+      "Selin Porselen Çiçek Desenli Kahve Fincanı 6'lı Set; 80 ml kapasite, el işçiliği 24 ayar altın yaldız ve bulaşık makinesine dayanıklı porselen yapısıyla günlük kullanım için tasarlanmıştır.",
   },
   {
     key: "premium",
     label: "Premium",
     output:
-      "Özenle seçilmiş Ege pamuğundan, sınırlı üretim koleksiyon parçası. Minimalist tasarımı ile gardırobunuzun vazgeçilmezi olacak.",
+      "Her fincan üzerindeki el işçiliği altın yaldız detay, Selin Porselen atölyesinde tek tek uygulanır. Çiçek deseni ve 80 ml zarif yapısıyla bu set, sofranıza sanatsal bir dokunuş katar.",
   },
 ];
 
 export const BRAND_FORM_FIELDS = {
-  storeName: { label: "Mağaza adı", value: "Ayşe Tekstil" },
-  targetAudience: { label: "Hedef kitle", value: "25-40 yaş kadınlar" },
+  storeName: { label: "Mağaza adı", value: "Selin Porselen" },
+  targetAudience: { label: "Hedef kitle", value: "25-45 yaş ev dekorasyonu ilgilenenler" },
 };
 
 export const MB_CTA = {
