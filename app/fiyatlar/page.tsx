@@ -4,6 +4,8 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { PAKET_LISTESI } from "@/lib/paketler";
 import FiyatlarCta from "@/components/ui/FiyatlarCta";
+import KrediCalculator from "@/components/fiyatlar/KrediCalculator";
+import FiyatlarSSS from "@/components/fiyatlar/FiyatlarSSS";
 
 export const metadata: Metadata = {
   title: "Fiyatlar — E-ticaret Listing Üretici",
@@ -36,54 +38,6 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-// Paketler lib/paketler.ts'den geliyor — fiyat değişikliği için orayı güncelle
-const paketler = PAKET_LISTESI;
-
-
-const sss = [
-  {
-    soru: "Satın aldığım krediler ne zaman sona erer?",
-    cevap:
-      "Kredilerin sona erme tarihi yoktur. Tüm kullandığın krediler bitene kadar hesabında kalır.",
-  },
-  {
-    soru: "Görsel üretimde kredi nasıl düşer?",
-    cevap:
-      "Seçtiğin her stil için 1 görsel üretilir ve kredi üretim anında düşer. Birden fazla stil seçersen her biri ayrı kredi harcar. İndirme bedavadır.",
-  },
-  {
-    soru: "Video üretimi kaç kredi tutar?",
-    cevap:
-      "5 saniyelik video 10 kredi, 10 saniyelik video 20 kredi tüketir. Dikey (9:16 · Reels/TikTok), kare (1:1 · Feed) veya yatay (16:9 · YouTube) format seçebilirsin. Video MP4 formatında indirilir.",
-  },
-  {
-    soru: "Sosyal medya içeriği hangi platformları kapsıyor?",
-    cevap:
-      "Instagram, TikTok, Facebook ve Twitter/X için ayrı caption + hashtag seti üretilir. Her platform için uygun ton ve karakter sayısı otomatik ayarlanır.",
-  },
-  {
-    soru: "Metin + görsel + video aynı anda üretebilir miyim?",
-    cevap:
-      "Her içerik türü ayrı üretilir ancak aynı ürün bilgisini kullanabilirsin. Önce listing metni, ardından görsel, video ve sosyal medya içeriğini sırayla üretebilirsin. Her biri kendi kredisini tüketir.",
-  },
-  {
-    soru: "Paket satın almak için ne gerekiyor?",
-    cevap:
-      "Hesap oluşturup fatura bilgilerini (ad soyad + TC kimlik veya vergi numarası) profil sayfandan girmen yeterli. Ödeme iyzico altyapısıyla güvenle yapılır.",
-  },
-  {
-    soru: "Hangi platformlar için listing üretebiliyorum?",
-    cevap:
-      "Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA. Her platform için ayrı format ve dil desteği (Türkçe/İngilizce) mevcuttur.",
-  },
-  {
-    soru: "İade politikası nedir?",
-    cevap:
-      "Kullanılmamış krediler için iade talebi oluşturabilirsiniz. Kullanılan krediler iade edilmez. Detaylar için destek@yzliste.com adresine yazabilirsiniz.",
-  },
-];
-
-// JSON-LD: Pricing schema — Product + Offer (Google rich result uyumlu)
 function PricingJsonLd() {
   const offers = PAKET_LISTESI.map((p) => ({
     "@type": "Offer",
@@ -103,32 +57,15 @@ function PricingJsonLd() {
     },
     shippingDetails: {
       "@type": "OfferShippingDetails",
-      shippingRate: {
-        "@type": "MonetaryAmount",
-        value: "0",
-        currency: "TRY",
-      },
-      shippingDestination: {
-        "@type": "DefinedRegion",
-        addressCountry: "TR",
-      },
+      shippingRate: { "@type": "MonetaryAmount", value: "0", currency: "TRY" },
+      shippingDestination: { "@type": "DefinedRegion", addressCountry: "TR" },
       deliveryTime: {
         "@type": "ShippingDeliveryTime",
-        handlingTime: {
-          "@type": "QuantitativeValue",
-          minValue: 0,
-          maxValue: 0,
-          unitCode: "d",
-        },
-        transitTime: {
-          "@type": "QuantitativeValue",
-          minValue: 0,
-          maxValue: 0,
-          unitCode: "d",
-        },
+        handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "d" },
+        transitTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "d" },
       },
     },
-  }))
+  }));
 
   return (
     <script
@@ -151,69 +88,130 @@ function PricingJsonLd() {
 
 export default function FiyatlarPage() {
   return (
-    <main className="min-h-screen bg-white font-sans">
+    <main className="min-h-screen bg-white">
       <PricingJsonLd />
       <SiteHeader aktifSayfa="fiyatlar" />
 
       {/* HERO */}
       <section className="px-4 sm:px-6 pt-14 pb-10 text-center max-w-2xl mx-auto">
-        <h1 className="text-3xl sm:text-4xl font-medium text-[#1A1A17] mb-4" style={{ letterSpacing: "-0.02em" }}>
-          Kullandığın kadar öde,<br />
-          <span className="text-[#1E4DD8]">abonelik yok</span>
-        </h1>
-        <p className="text-[#5A5852] text-base mb-6">
-          3 ücretsiz krediyle başla, beğenince istediğin paketi al. Krediler listing metni, görsel, video ve sosyal medya içeriği arasında serbestçe kullanılır.
+        <p
+          className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-primary-600 mb-4"
+          style={{ fontFamily: 'var(--font-rd-display)' }}
+        >
+          Fiyatlar
         </p>
-        <div className="inline-flex items-center gap-2 bg-[#E8F5EE] text-[#0F5132] text-sm font-medium px-4 py-2 rounded-full border border-[#0F5132]/20">
-          <Gift size={14} strokeWidth={1.5} />
+        <h1
+          className="text-3xl sm:text-4xl font-bold text-rd-neutral-900 mb-4"
+          style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.02em', lineHeight: '1.3' }}
+        >
+          Sade kredi paketleri
+        </h1>
+        <p className="text-rd-neutral-500 text-base mb-6 leading-relaxed">
+          3 ücretsiz krediyle başla, beğenince istediğin paketi al. Krediler listing metni, görsel,
+          video ve sosyal medya içeriği arasında serbestçe kullanılır.
+        </p>
+        <div className="inline-flex items-center gap-2 bg-rd-success-50 text-rd-success-700 text-sm font-medium px-4 py-2 rounded-full border border-rd-success-200">
+          <Gift size={14} strokeWidth={1.5} aria-hidden="true" />
           Yeni kayıtta 3 ücretsiz kredi · Kredi kartı gerekmez
         </div>
       </section>
 
       {/* PAKETLER */}
-      <section className="px-4 sm:px-6 py-16">
+      <section
+        className="px-4 sm:px-6 py-16"
+        aria-labelledby="paketler-heading"
+      >
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-medium text-[#1A1A17] text-center mb-3" style={{ letterSpacing: "-0.01em" }}>Paketler</h2>
-          <p className="text-center text-sm text-[#908E86] mb-10">
+          <h2
+            id="paketler-heading"
+            className="text-2xl font-bold text-rd-neutral-900 text-center mb-3"
+            style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em' }}
+          >
+            Paketler
+          </h2>
+          <p className="text-center text-sm text-rd-neutral-400 mb-10">
             Bir kez al, sona erene kadar kullan. Süre sınırı yok.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {paketler.map((p) => (
-              <div key={p.id} className={`border-2 ${p.renk} rounded-xl p-6 relative flex flex-col`}>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 items-stretch">
+            {PAKET_LISTESI.map((p) => (
+              <div
+                key={p.id}
+                className={[
+                  'relative flex flex-col rounded-xl border bg-white p-6',
+                  p.rozet
+                    ? 'border-2 border-rd-primary-500'
+                    : 'border border-rd-neutral-200',
+                ].join(' ')}
+              >
                 {p.rozet && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1E4DD8] text-white text-xs font-medium px-4 py-1 rounded-full">
-                    Önerilen
-                  </span>
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className="inline-flex items-center rounded-full bg-rd-primary-600 px-3 py-1 text-xs font-medium text-white tracking-wide">
+                      En popüler
+                    </span>
+                  </div>
                 )}
+
                 <div className="mb-4">
-                  <p className="font-medium text-[#1A1A17] text-lg">{p.isim}</p>
-                  <p className="text-3xl font-medium text-[#1A1A17] mt-1">{p.fiyatStr}</p>
-                  <p className="text-sm text-[#5A5852] mt-1">{p.kredi} kredi · <span className="text-[#908E86]">{(p.fiyat / p.kredi).toFixed(2).replace('.', ',')}₺/kredi</span></p>
-                  <p className="text-xs text-[#908E86] mt-2 leading-relaxed">{p.aciklama}</p>
+                  <p
+                    className="font-bold text-rd-neutral-900 text-lg"
+                    style={{ fontFamily: 'var(--font-rd-display)' }}
+                  >
+                    {p.isim}
+                  </p>
+                  <p
+                    className="text-3xl font-bold text-rd-neutral-900 mt-1 tabular-nums"
+                    style={{ fontFamily: 'var(--font-rd-display)' }}
+                  >
+                    {p.fiyatStr}
+                  </p>
+                  <p className="text-sm text-rd-neutral-500 mt-1">
+                    {p.kredi} kredi ·{' '}
+                    <span className="text-rd-neutral-400">
+                      {(p.fiyat / p.kredi).toFixed(2).replace('.', ',')}₺/kredi
+                    </span>
+                  </p>
+                  <p className="text-xs text-rd-neutral-400 mt-2 leading-relaxed">{p.aciklama}</p>
                 </div>
-                <ul className="space-y-2 flex-1 mb-6">
+
+                <ul className="space-y-2 flex-1 mb-6" role="list">
                   {p.ozellikler.map((o, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-[#5A5852]">
-                      <Check size={12} strokeWidth={2} className="text-[#0F5132] flex-shrink-0 mt-0.5" />
+                    <li key={i} className="flex items-start gap-2 text-xs text-rd-neutral-600">
+                      <Check size={12} strokeWidth={2} className="text-rd-success-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
                       {o}
                     </li>
                   ))}
                 </ul>
-                <FiyatlarCta variant="paket" paketButonRenk={p.butonRenk} paketFiyatStr={p.fiyatStr} />
+
+                <FiyatlarCta
+                  variant="paket"
+                  paketButonRenk={p.rozet ? 'bg-rd-primary-600 hover:bg-rd-primary-700' : 'bg-rd-neutral-900 hover:bg-rd-neutral-800'}
+                  paketFiyatStr={p.fiyatStr}
+                />
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-[#908E86] mt-8 flex items-center justify-center gap-1.5">
-            <Lock size={11} strokeWidth={1.5} />
+
+          <p className="text-center text-xs text-rd-neutral-400 mt-8 flex items-center justify-center gap-1.5">
+            <Lock size={11} strokeWidth={1.5} aria-hidden="true" />
             Güvenli ödeme — iyzico altyapısı · Fatura her alışverişte e-postayla gönderilir
           </p>
         </div>
       </section>
 
       {/* KREDİ NASIL ÇALIŞIR */}
-      <section className="px-4 sm:px-6 py-10 border-b border-[#D8D6CE] bg-[#F1F0EB]">
+      <section
+        className="px-4 sm:px-6 py-10 border-b border-rd-neutral-200 bg-rd-neutral-50"
+        aria-labelledby="kredi-nasil-heading"
+      >
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-base font-medium text-[#1A1A17] mb-5">Kredi nasıl çalışır?</h2>
+          <h2
+            id="kredi-nasil-heading"
+            className="text-base font-bold text-rd-neutral-900 mb-5"
+            style={{ fontFamily: 'var(--font-rd-display)' }}
+          >
+            Kredi nasıl çalışır?
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
               { Ikon: FileText, baslik: "Listing metni", detay: "1 kredi" },
@@ -221,80 +219,50 @@ export default function FiyatlarPage() {
               { Ikon: Clapperboard, baslik: "Ürün videosu", detay: "5sn = 10 kredi · 10sn = 20 kredi" },
               { Ikon: Share2, baslik: "Sosyal medya", detay: "1 kredi · Kit (4 platform) = 3 kredi" },
             ].map((item) => (
-              <div key={item.baslik} className="flex items-start gap-3 rounded-xl border border-[#D8D6CE] bg-white px-4 py-3">
-                <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-[#F0F4FB] flex-shrink-0 mt-0.5">
-                  <item.Ikon size={14} strokeWidth={1.5} className="text-[#1E4DD8]" />
+              <div
+                key={item.baslik}
+                className="flex items-start gap-3 rounded-xl border border-rd-neutral-200 bg-white px-4 py-3"
+              >
+                <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-rd-primary-50 flex-shrink-0 mt-0.5">
+                  <item.Ikon size={14} strokeWidth={1.5} className="text-rd-primary-600" aria-hidden="true" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-[#1A1A17]">{item.baslik}</p>
-                  <p className="text-xs text-[#908E86] mt-0.5">{item.detay}</p>
+                  <p className="text-sm font-medium text-rd-neutral-900">{item.baslik}</p>
+                  <p className="text-xs text-rd-neutral-400 mt-0.5">{item.detay}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div className="flex items-center gap-2 mt-4 text-xs text-[#5A5852]">
-            <InfinityIcon size={13} strokeWidth={1.5} className="text-[#908E86] flex-shrink-0" />
+          <div className="flex items-center gap-2 mt-4 text-xs text-rd-neutral-500">
+            <InfinityIcon size={13} strokeWidth={1.5} className="text-rd-neutral-400 flex-shrink-0" aria-hidden="true" />
             Krediler süresiz geçerlidir — sona erme tarihi yoktur. Paketler tek seferlik ödeme.
           </div>
         </div>
       </section>
 
-      {/* KREDİ HESAPLAYICI — basit örnek tablo */}
-      <section className="px-4 sm:px-6 py-14 bg-[#F0F4FB] border-y border-[#BAC9EB]">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-xl font-medium text-[#1A1A17] text-center mb-2">Örnek kullanım senaryoları</h2>
-          <p className="text-center text-sm text-[#908E86] mb-8">Kredileri metin ve görsel arasında dilediğin gibi bölebilirsin</p>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-[#BAC9EB]">
-                  <th className="text-left py-3 px-4 text-[#5A5852] font-medium">Senaryo</th>
-                  <th className="text-center py-3 px-4 text-[#5A5852] font-medium">Kullanılan kredi</th>
-                  <th className="text-center py-3 px-4 text-[#5A5852] font-medium">Önerilen paket</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#BAC9EB]">
-                {[
-                  { senaryo: "10 ürün için listing metni", kredi: "10 kredi", paket: "Başlangıç (₺49)" },
-                  { senaryo: "5 ürün metin + 5 stil görsel", kredi: "10 kredi", paket: "Başlangıç (₺49)" },
-                  { senaryo: "2 adet 5sn ürün videosu", kredi: "20 kredi", paket: "Popüler (₺129)" },
-                  { senaryo: "20 ürün metin + 10 stil görsel", kredi: "30 kredi", paket: "Popüler (₺129)" },
-                  { senaryo: "30 ürün listing metni + 30 sosyal medya seti", kredi: "60 kredi", paket: "Büyük (₺299)" },
-                  { senaryo: "100 ürün listing metni (toplu)", kredi: "100 kredi", paket: "Büyük (₺299)" },
-                ].map((row, i) => (
-                  <tr key={i} className="bg-white/60">
-                    <td className="py-3 px-4 text-[#5A5852]">{row.senaryo}</td>
-                    <td className="py-3 px-4 text-center font-medium text-[#1E4DD8]">{row.kredi}</td>
-                    <td className="py-3 px-4 text-center text-[#908E86]">{row.paket}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+      {/* KREDİ HESAPLAYICI */}
+      <KrediCalculator />
 
       {/* SSS */}
-      <section className="px-4 sm:px-6 py-16">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-2xl font-medium text-[#1A1A17] text-center mb-10" style={{ letterSpacing: "-0.01em" }}>Sık sorulan sorular</h2>
-          <div className="space-y-5">
-            {sss.map((s, i) => (
-              <div key={i} className="border border-[#D8D6CE] rounded-xl p-5 bg-white">
-                <p className="font-medium text-[#1A1A17] text-sm mb-2">{s.soru}</p>
-                <p className="text-xs text-[#5A5852] leading-relaxed">{s.cevap}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <FiyatlarSSS />
 
       {/* CTA */}
-      <section className="px-4 sm:px-6 py-14 bg-[#F1F0EB] border-t border-[#D8D6CE] text-center">
-        <h2 className="text-2xl font-medium text-[#1A1A17] mb-3" style={{ letterSpacing: "-0.01em" }}>Hemen ücretsiz dene</h2>
-        <p className="text-[#5A5852] text-sm mb-6">3 kredi, kredi kartı yok. Hesap oluştur, hemen başla.</p>
+      <section className="px-4 sm:px-6 py-14 bg-rd-neutral-50 border-t border-rd-neutral-200 text-center">
+        <p
+          className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-primary-600 mb-3"
+          style={{ fontFamily: 'var(--font-rd-display)' }}
+        >
+          Hemen başla
+        </p>
+        <h2
+          className="text-2xl font-bold text-rd-neutral-900 mb-3"
+          style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em' }}
+        >
+          Ücretsiz dene
+        </h2>
+        <p className="text-rd-neutral-500 text-sm mb-6">3 kredi, kredi kartı yok. Hesap oluştur, hemen başla.</p>
         <FiyatlarCta
-          className="inline-block bg-[#1E4DD8] hover:bg-[#163B9E] text-white font-medium px-10 py-4 rounded-xl text-base transition-colors"
+          className="inline-block bg-rd-primary-600 hover:bg-rd-primary-700 text-white font-medium px-10 py-4 rounded-xl text-base transition-colors"
         />
       </section>
 
