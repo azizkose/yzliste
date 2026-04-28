@@ -272,6 +272,91 @@ body {
   .animate-fade-in { animation: none; }
 }
 
+/* === StepAnimation keyframes (AS-02/AS-06) === */
+
+@keyframes step-photo-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes step-or-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes step-text-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes step-chip-in {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes step-sparkle-in {
+  from { opacity: 0; transform: scale(0); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes step-line-grow {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+@keyframes step-download-in {
+  from { opacity: 0; transform: scale(0.8) translateY(4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Applied classes */
+.animate-step-photo-in  { animation: step-photo-in  400ms ease-out both; }
+.animate-step-or-fade   { animation: step-or-fade   300ms ease-out 350ms both; }
+.animate-step-text-in   { animation: step-text-in   300ms ease-out 650ms both; }
+
+/* Market chip stagger (0–4) */
+.animate-step-chip-0 { animation: step-chip-in 220ms ease-out 0ms   both; }
+.animate-step-chip-1 { animation: step-chip-in 220ms ease-out 150ms both; }
+.animate-step-chip-2 { animation: step-chip-in 220ms ease-out 300ms both; }
+.animate-step-chip-3 { animation: step-chip-in 220ms ease-out 450ms both; }
+.animate-step-chip-4 { animation: step-chip-in 220ms ease-out 600ms both; }
+
+/* Content chip stagger (5–8, offset after market chips) */
+.animate-step-chip-5 { animation: step-chip-in 220ms ease-out 800ms  both; }
+.animate-step-chip-6 { animation: step-chip-in 220ms ease-out 950ms  both; }
+.animate-step-chip-7 { animation: step-chip-in 220ms ease-out 1100ms both; }
+.animate-step-chip-8 { animation: step-chip-in 220ms ease-out 1250ms both; }
+
+.animate-step-sparkle-in { animation: step-sparkle-in 280ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+/* Output line grow stagger */
+.animate-step-line-0 { animation: step-line-grow 550ms ease-out 250ms  both; }
+.animate-step-line-1 { animation: step-line-grow 550ms ease-out 550ms  both; }
+.animate-step-line-2 { animation: step-line-grow 550ms ease-out 850ms  both; }
+.animate-step-line-3 { animation: step-line-grow 550ms ease-out 1150ms both; }
+
+.animate-step-download-in { animation: step-download-in 280ms ease-out 1500ms both; }
+
+/* Reduced motion — disable all step animations */
+@media (prefers-reduced-motion: reduce) {
+  .animate-step-photo-in,
+  .animate-step-or-fade,
+  .animate-step-text-in,
+  .animate-step-chip-0,
+  .animate-step-chip-1,
+  .animate-step-chip-2,
+  .animate-step-chip-3,
+  .animate-step-chip-4,
+  .animate-step-chip-5,
+  .animate-step-chip-6,
+  .animate-step-chip-7,
+  .animate-step-chip-8,
+  .animate-step-sparkle-in,
+  .animate-step-line-0,
+  .animate-step-line-1,
+  .animate-step-line-2,
+  .animate-step-line-3,
+  .animate-step-download-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* SSS accordion — reduced motion (SS-05) */
 @media (prefers-reduced-motion: reduce) {
   [id^="faq-"][role="region"] {
