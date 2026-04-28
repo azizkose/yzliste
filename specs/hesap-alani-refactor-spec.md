@@ -1,0 +1,531 @@
+# Hesap Alanı + Diğer Sayfalar UX Refactor — Spec
+
+**Kapsam:** 5 sayfa
+**Mockup'lar:** `marka-profili-mockup.jsx`, `hesabim-mockup.jsx`
+**Design system:** `00-design-system.md` (anasayfa paketi) — palet ve tipografi
+**Yaklaşım:** Sayfa bazlı dokunuş düzeyi farklı — kritik olanlara mockup, basit olanlara liste
+
+---
+
+## Sayfaların öncelik ve dokunuş matrisi
+
+| # | Sayfa | Dokunuş | Mockup | Backlog |
+|---|---|---|---|---|
+| 1 | `/hesap/marka` (Marka Profili) | **Büyük UX iyileştirme** — yeni özellikler | Var | Detaylı |
+| 2 | `/hesap` (Hesabım) | **Orta UX iyileştirme** — yeniden düzenleme | Var | Detaylı |
+| 3 | `/fiyatlar` | **Küçük dokunuş** — palet + terim uyumu | Yok | Liste |
+| 4 | `/blog` | **Sadece palet** — yapısal değişiklik yok | Yok | Liste |
+| 5 | `/giris` (Login) | **Sadece palet** — yapısal değişiklik yok | Yok | Liste |
+
+> **Önemli karar:** Marka Profili'ne en çok yatırım yapıyoruz çünkü bu özellik anasayfanın kalbinde. Anasayfada "marka profili tonu seçince çıktı değişir" diye söz veriyoruz; mevcut sayfa bu sözü tutmuyor (önizleme yok, sadece form var).
+
+---
+
+# Sayfa 1 — `/hesap/marka` (Marka Profili)
+
+**Mockup referans:** `marka-profili-mockup.jsx`
+
+## A. Niyet
+
+Mevcut sayfa **ölü bir form**: kullanıcı bilgileri yazıyor, ne kazandığını göremeden kaydediyor. Yarım dolduruyor, geri dönmüyor. **Anasayfada vaat ettiğimiz "marka tonu seçince AI çıktısı kişiselleşir" sözü burada çalışmıyor.**
+
+Yeni sayfa: form + canlı AI önizleme (yan yana). Kullanıcı her alanı doldurdukça sağdaki AI çıktısı güncellenir. Altta "Profilsiz AI bunu yazardı" kıyas paneli — fark açıkça görünür.
+
+## B. Component anatomisi
+
+```
+<MarkaProfiliPage>
+  ├── <Nav />                              ← anasayfa nav'ı
+  ├── <Breadcrumb>← Hesabım</Breadcrumb>
+  ├── <Header>
+  │     ├── Title + subtitle
+  │     └── ProgressIndicator             ← "2 / 4 alan dolu" + bar
+  ├── <Grid 2 kolon>
+  │     ├── <FormColumn>                  ← sol
+  │     │     ├── StoreNameField
+  │     │     ├── ToneSelector (3 chip)
+  │     │     ├── AudienceField
+  │     │     ├── FeaturesField
+  │     │     └── ExtraInfoField (opsiyonel)
+  │     └── <PreviewColumn sticky>        ← sağ, sticky top
+  │           ├── BrandedAIPreview        ← 2px mavi border, vurgulu
+  │           ├── GenericAIPreview        ← gri kutu, "profilsiz hali"
+  │           └── WhyItMattersTooltip     ← amber, "Neden önemli?"
+  └── <StickySaveBar>                     ← alt, sticky
+        ├── Status ("X alan daha doldur")
+        ├── Cancel button
+        └── Save button (vurgulu)
+```
+
+## C. State
+
+```ts
+interface MarkaProfiliState {
+  storeName: string
+  tone: 'samimi' | 'profesyonel' | 'premium'   // default: 'samimi'
+  audience: string
+  features: string
+  extraInfo: string                              // opsiyonel
+  isDirty: boolean                               // değişiklik yapıldı mı (sticky bar mantığı)
+  isSaving: boolean
+}
+```
+
+Türetilen değerler (`useMemo`):
+```ts
+const filledCount = [storeName, tone, audience, features].filter(Boolean).length
+const totalFields = 4   // extraInfo opsiyonel, sayılmıyor
+const progress = (filledCount / totalFields) * 100
+const preview = generatePreview(state)   // canlı önizleme
+```
+
+## D. Canlı önizleme mantığı
+
+`generatePreview()` — form alanlarına göre tonun ve markanın sesini taklit eden örnek bir AI çıktısı döndürür. Backend'e gerçek istek atmaz (token tasarrufu için). Mockup'taki gibi şablon-tabanlı.
+
+3 senaryo:
+1. **Hiçbir alan dolu değil** → "Form alanlarını doldurdukça örnek metin burada güncellenecek." (italic gri)
+2. **Bazı alanlar dolu** → şablona göre canlı metin (mockup'ta `generatePreview()` örneği var)
+3. **Tüm alanlar dolu** → tam metin
+
+> Eğer backend canlı çıktı üretebiliyorsa Cowork değerlendirsin. Token maliyeti ve latency düşünülürse şablon-tabanlı mantık yeterli — sadece "format'ın nasıl olacağı" hissini vermek için.
+
+## E. Davranışlar
+
+### E.1 — Form alanı dolduğunda
+
+- `setState` ile alan güncellenir
+- ProgressIndicator anında güncellenir
+- Sağdaki BrandedAIPreview 300ms fade animasyonu ile yenilenir (mockup'taki `outputFade` keyframe)
+- Form label'inde `Check` ikonu görünür (alan dolu ise yeşil tik)
+- Alan boşaltılırsa tik kaybolur, progress düşer
+
+### E.2 — Ton chip'i tıklanınca
+
+- `tone` state güncellenir, chip görseli değişir
+- BrandedAIPreview canlı yenilenir (yeni tonun şablonu)
+- ARIA: chip'ler `role="radio"`, container `role="radiogroup"`
+
+### E.3 — Sticky save bar
+
+- Sayfa scroll edilse bile bar her zaman alt 20px'de
+- Profil tamamlandıysa: yeşil "✓ Profilin tamamlandı" mesajı
+- Tamamlanmadıysa: "X alan daha doldur" mesajı
+- Save butonu hep aktif (kullanıcı yarım da kaydedebilir)
+- Save → `POST /api/marka-profili` (Cowork mevcut endpoint'i kullansın)
+- Save sonrası: toast "Profilin kaydedildi" + isDirty = false
+
+### E.4 — Sayfa terk etme uyarısı (önemli)
+
+`isDirty === true` ve kullanıcı sayfadan ayrılmaya çalışırsa:
+- `beforeunload` event ile uyarı: "Kaydedilmemiş değişiklikler var. Çıkmak istiyor musun?"
+- Veya in-app toast + iki seçenek (Kaydet / Atla)
+
+## F. Görsel detaylar
+
+### Header
+- Title: `Manrope 800`, `28px`, slate-900
+- Subtitle: `Inter 400`, `14px`, slate-500
+- Sağda ProgressIndicator: "X / Y" sayı + progress bar (6px height)
+- Progress bar rengi: dolulukla değişir → 0-50% slate-400, 50-99% primary-700, 100% success-500
+
+### Form alanları
+- Container: bg white, border slate-200, radius 12px, padding 24px
+- Label: `13px`, `font-semibold`, slate-900, ikon + metin + (dolu ise tik)
+- Input/textarea: padding 10px 12px, border slate-200, radius 8px, font 14px
+- Helper text altında: `12px`, slate-400
+
+### Ton chip'leri
+- 3 sütun grid, gap 8px
+- Her chip: 12px 8px padding, ikon (16px) + label + sub
+- Aktif: 1.5px primary-700 border, primary-50 bg, primary-700 text
+- İnaktif: 1px slate-200 border, white bg, slate-600 text
+
+### Önizleme kolonu (sticky)
+- Position: sticky, top: 88px (nav height + 16px)
+- Branded preview:
+  - 2px primary-700 border, primary'nin sıcak gölgesi (`0 4px 16px rgba(30,64,175,0.08)`)
+  - Header: Sparkles ikon + "SEN YAZINCA AI BÖYLE YAZIYOR" (uppercase, primary-700)
+  - Body: 14px metin, slate-900, line-height 1.6, min-height 70px
+  - Empty state: italic slate-400
+- Generic preview:
+  - bg slate-100 (light gri), border slate-200
+  - Header: 📝 emoji + "PROFİL OLMADAN AI BÖYLE YAZARDI" (uppercase, slate-500)
+  - Body: 14px metin, slate-500
+- WhyItMatters:
+  - bg amber-50, border amber-200, padding 14px
+  - "💡 Neden bu önemli?" başlık + açıklama (3-4 satır)
+
+### Sticky save bar
+- Bg white, border slate-200, radius 16px, padding 14px 20px
+- Box-shadow: `0 8px 24px rgba(15,23,42,0.08)`
+- Sol: status mesajı + alt açıklama
+- Sağ: İptal (outline) + Profili kaydet (primary mavi, Save ikonlu)
+
+## G. Responsive
+
+- Mobile (< 768px): tek kolon, form üstte, önizleme altta (sticky değil)
+- Tablet: 2 kolon ama daraltılmış
+- Desktop: tam mockup'taki davranış
+
+## H. Acceptance criteria
+
+- [ ] Sayfa açıldığında 4 form alanı boş, ton "Samimi" varsayılan seçili
+- [ ] Mağaza adı yazıldıkça label'da yeşil tik, sağdaki preview canlı değişiyor
+- [ ] Ton chip'i tıklandığında preview metni yeniden üretiliyor (300ms fade)
+- [ ] Hedef kitle ve özellikler dolduruldukça preview kişiselleşiyor
+- [ ] Generic preview kutusu hep aynı (kıyas için sabit)
+- [ ] Progress bar dolulukla genişliyor, %100'de yeşil
+- [ ] Sticky save bar sayfa scroll'unda hep görünür
+- [ ] Save tıklayınca backend'e POST gidiyor, başarılı ise toast + isDirty=false
+- [ ] Kullanıcı dirty iken sayfadan çıkmaya çalışırsa uyarı
+- [ ] "İptal" tıklayınca: dirty değilse direkt /hesap'a, dirty ise onay isteyip /hesap'a
+- [ ] Mobile: tek kolon, preview form altında
+- [ ] Klavye: Tab ile alanları geç, Enter ile save
+
+## I. Out of scope
+
+- ❌ Birden fazla marka profili (kullanıcı tek profile sahip)
+- ❌ Backend'e canlı AI istek (şablon-tabanlı yeterli)
+- ❌ Profilin "tamamlanma %"'sine bağlı feature unlock (4/4 olunca yeni özellik açma vb)
+- ❌ Marka profili import (Excel/CSV)
+
+## J. Aziz'e açık sorular
+
+1. **Canlı önizleme — şablon mı, gerçek AI mı?** Şablon yeterli mi yoksa backend'e debounced istek mi gitsin? (Önerim: şablon — token maliyeti + latency)
+2. **Sayfayı yarım bırakma:** `beforeunload` uyarısı koysak mı?
+3. **Kayıttan sonra:** Toast yeter mi, yoksa /hesap'a otomatik dönüş mü?
+4. **"Profilim eksik" durumu /hesap'ta nasıl gösterilir?** (Hesabım mockup'ında turuncu border-left rozetli kart önerdim)
+
+---
+
+# Sayfa 2 — `/hesap` (Hesabım)
+
+**Mockup referans:** `hesabim-mockup.jsx`
+
+## A. Niyet
+
+Mevcut sayfa **bilgi yığını**: 4 KPI + içerik türleri kutusu + chart + dağılım + son üretimler + davet kutusu + 6 menü kartı + footer. Hepsi eşit ağırlıkta. Kullanıcı hangisi önemli ayırt edemiyor.
+
+Yeni yapı: **hiyerarşi + aksiyon odaklı.**
+1. Tasarruf rozeti (en güçlü mesaj, üstte vurgulu)
+2. 3 KPI (kalan kredi vurgulu, anlamsız "favori platform" kaldırıldı)
+3. Henüz denemediği özellikler (keşif fırsatı — yeni)
+4. 6 menü kartı (uyarılı olanlar ön planda, eksik durum görünür)
+5. Davet kutusu (depresif boş istatistikler kaldırıldı, sadece CTA)
+
+## B. Bölüm bölüm değişiklikler
+
+### B.1 — Tasarruf rozeti (KORUNUYOR + vurgulu)
+
+Mevcut: Açık mavi soft banner, "Bu ay 17 içerik ürettin — freelancer'a verseydin tahminen ₺5.100 öderdin"
+
+**Yeni:** Aynı cümle, **mavi gradient banner**, Trophy ikonu, sayfanın en üstünde 2. blok (header'dan sonra). Bu cümle altın değerinde — sayfanın en güçlü mesajı.
+
+```
+linear-gradient(135deg, #1E40AF, #2563EB)
+white text
+Trophy ikon (52x52 box, rgba(255,255,255,0.15))
+20px font, "X içerik ürettin" ve "₺Y" bold
+```
+
+### B.2 — KPI (4'ten 3'e)
+
+**Mevcut:** Bu ay üretim / Kalan kredi / Favori platform / Toplam üretim
+
+**Yeni:** Kalan kredi (vurgulu, 2px mavi border, "Kredi al →" CTA) / Bu ay üretim / Toplam üretim
+
+**Kaldırılan:** "Trendyol — favori platform" — bu bilgi tek başına anlamsız (kullanıcı zaten biliyor, aksiyon yok)
+
+### B.3 — Henüz denemediği özellikler (YENİ blok)
+
+Eski "İçerik türleri" listesi pasif istatistikti. Yeni versiyonu: **kullanıcının kullanmadığı türleri "hemen dene" CTA'sıyla gösteren keşif bloku.**
+
+```
+Container: bg white, padding 20px
+Header: "Henüz denemediğin özellikler" + "Keşfet" amber rozeti
+Grid: kullanılmayan içerik türü sayısına göre (1-3 arası)
+Her kart: ikon + label + "Hemen dene →" link
+```
+
+Eğer kullanıcı tüm türleri denediyse bu blok görünmez.
+
+### B.4 — 6 menü kartı (yapısal düzenleme)
+
+**Mevcut:** 6 eşit kart, hepsi aynı görsel ağırlık
+
+**Yeni:**
+- Marka profili eksik ise: Marka kartında **turuncu border-left + "EKSİK" rozeti**
+- Krediler azalıyorsa (örn < 10 kredi): Krediler kartında **kırmızı border-left + "AZALIYOR" rozeti**
+- Diğerleri sade
+- Sıralama: Marka (eksikse en başta) → Profil → Üretimler → Krediler → Faturalar → Ayarlar
+
+> Cowork backend'den marka_profili_dolu (bool) ve kalan_kredi (number) bilgilerini alıp bu mantığı kursun.
+
+### B.5 — Davet kutusu (basitleştirme)
+
+**Mevcut:** "Arkadaşını davet et" + 3 boş istatistik kutusu (0 kayıt olan, 0 satın alan, 0 kazanılan kredi) + WhatsApp/Twitter butonları
+
+**Yeni:** Tek banner: amber gradient, Gift ikonu, "Arkadaşını davet et, ikiniz de +10 kredi kazanın" + "Davet linkini kopyala" CTA. **3 boş istatistik kutusu kaldırıldı** (depresif görünüyor) — istatistikler ilk davete kadar gizli.
+
+> Kullanıcının ilk daveti olunca istatistik kutuları görünebilir. Cowork koşullu render etsin.
+
+### B.6 — Renk paleti
+
+`#1E4DD8` → `#1E40AF`
+Bej tonlar → slate scale (50/100/200/500/900)
+Mavi gradient: `linear-gradient(135deg, #1E40AF, #2563EB)`
+
+## C. Korunan parçalar
+
+- "₺5,100 freelancer tasarrufu" cümlesi (vurgulu hâlde)
+- Haftalık üretim trendi grafiği (palet uyumlu)
+- Platform dağılımı (palet uyumlu)
+- Son üretimler listesi (palet uyumlu)
+
+## D. Acceptance criteria
+
+- [ ] Mavi gradient tasarruf rozeti üstte, Trophy ikonlu
+- [ ] 3 KPI grid'i (kalan kredi vurgulu, "Kredi al" CTA'sı görünür)
+- [ ] Henüz denemediği içerik türleri varsa keşif bloku
+- [ ] Marka eksikse Marka kartında turuncu border-left + "EKSİK" rozeti
+- [ ] Krediler az ise (< 10) Krediler kartında kırmızı border-left + "AZALIYOR" rozeti
+- [ ] Davet kutusu sade, 3 boş istatistik kaldırıldı
+- [ ] Tüm renkler anasayfa paletiyle uyumlu
+
+## E. Aziz'e açık sorular
+
+1. **"Krediler azalıyor" eşiği:** Kaç krediden aşağıda uyarı çıksın? (10 mu, 20 mi?)
+2. **Davet istatistikleri:** İlk davetten sonra gösterelim mi yoksa hep gizli mi kalsın?
+3. **"Henüz denemediği özellikler" bloku:** Sayfaya yeni gelen kullanıcı zaten hiçbir şey denememiş — ona "tüm türleri keşfet" diyor mu yoksa farklı mesaj mı? (Önerim: aynı mesaj çalışır)
+
+---
+
+# Sayfa 3 — `/fiyatlar`
+
+**Mockup yok** — anasayfada fiyat bölümü zaten var, bu sayfa onun uzun versiyonu.
+
+## A. Niyet
+
+Anasayfaya fiyat bölümü eklemiştik (07-fiyatlar). Bu sayfa **anasayfanın aynısı + ek detaylar** olmalı, terim ve renk uyumu kritik.
+
+## B. Yapılacak değişiklikler
+
+### B.1 — Renk + tipografi uyumu
+- `#1E4DD8` → `#1E40AF`
+- "₺49 / ₺129 / ₺299" sayıları kahverengi → slate-900, Manrope 800, 36px
+- "/kredi" suffix slate-400, 13px
+- Card border slate-200, popüler kart 2px primary-700
+- Bej arkaplan kalkıyor — sayfa bg slate-50
+
+### B.2 — Terim uyumu
+- "Önerilen" → **"En popüler"** (anasayfa ile aynı)
+- "30 kredi · 4,30₺/kredi" formatı korunsun, sadece renk değişsin
+- "Kullandığın kadar öde, abonelik yok" cümlesi → "Aboneliksiz, kullandığın kadar" (anasayfa ile aynı)
+
+### B.3 — Anasayfa kredi calculator'ı bu sayfada da olsun
+
+Mevcut sayfada calculator yok. Anasayfa Fiyatlar bölümünde eklediğimiz **interaktif kredi hesaplayıcı** bu sayfaya da entegre edilmeli — paketlerin **üstünde**.
+
+```
+[Kredi calculator: slider 1-100 ürün, recommended paket]
+[3 paket grid (En popüler vurgulu)]
+[Trust strip: aboneliksiz · iyzico · faturalandırma]
+```
+
+### B.4 — SSS bölümü (yeni)
+
+Sayfanın altında 4-6 fiyatlandırma sorusu (anasayfa SSS'sinden farklı):
+- "Krediler ne kadar süreyle geçerli?"
+- "Şirket faturası kesiliyor mu?"
+- "Kullanmadığım krediler iade edilir mi?"
+- "Plan değiştirebilir miyim?"
+- "Fatura ne zaman çıkar?"
+- "İptal / iade nasıl olur?"
+
+### B.5 — Ek detay tablosu (mevcut yok)
+
+Paketlerin altında karşılaştırma tablosu eklenebilir:
+- Listing metni / kredi
+- Stüdyo görseli / kredi
+- Video 5sn / kredi
+- Video 10sn / kredi
+- Sosyal medya caption / kredi
+- API erişim
+- Öncelikli destek
+
+## C. Acceptance criteria
+
+- [ ] Tüm renkler anasayfa paletiyle uyumlu
+- [ ] "En popüler" terim doğru
+- [ ] Kredi calculator paketlerin üstünde
+- [ ] SSS bölümü altta (4-6 soru)
+- [ ] Fatura/iade detay tablosu (opsiyonel)
+- [ ] Trust strip altta
+
+## D. Aziz'e açık sorular
+
+1. SSS soruları net mi yoksa farklı sorular mı eklenmeli?
+2. Karşılaştırma tablosu zorunlu mu yoksa opsiyonel mi?
+
+---
+
+# Sayfa 4 — `/blog`
+
+**Mockup yok** — yapısal değişiklik yok, sadece palet.
+
+## A. Yapılacak değişiklikler
+
+### A.1 — Renk paleti
+- `#1E4DD8` → `#1E40AF`
+- Kategori chip rengi → primary-50 bg / primary-700 text (aktif), white bg / slate-500 text (pasif)
+- "Pratik rehberler" başlık → mavi `#1E40AF`
+- Card border slate-200, hover'da hafif lift
+
+### A.2 — Kategori filtreleri (UX iyileştirme)
+- Aktif filtre: 1.5px primary-700 border, primary-50 bg
+- Pasif: 1px slate-200 border, white bg, slate-500 text
+- Hover: slate-300 border, slate-50 bg
+
+### A.3 — Kart hover state'i (yeni)
+- Hover'da: `translateY(-2px)` lift + shadow artışı
+- "Oku →" link primary-700 olur, hover underline
+
+### A.4 — Arama input'u
+- Border slate-200, focus'ta primary-700
+- Placeholder slate-400
+
+## B. Acceptance criteria
+
+- [ ] Renk paleti anasayfa standardına uyumlu
+- [ ] Kategori filtreleri görsel olarak net (aktif/pasif ayrımı)
+- [ ] Kart hover state'i çalışıyor
+- [ ] Arama input'u responsive
+
+---
+
+# Sayfa 5 — `/giris` (Login)
+
+**Mockup yok** — yapısal değişiklik yok, sadece palet.
+
+## A. Yapılacak değişiklikler
+
+### A.1 — Renk paleti
+- `#1E4DD8` → `#1E40AF`
+- Bej tonlar → slate scale
+- Bg `#FAFAF8` → `#F8FAFC` (slate-50)
+- Card border `#D8D6CE` → `#E2E8F0` (slate-200)
+- Input focus ring `#1E4DD8/20` → `#1E40AF/20`
+- "Giriş yap" buton: `#1E4DD8` → `#1E40AF`, hover `#1E3A8A`
+
+### A.2 — Tipografi
+- "Hesabınıza giriş yapın" başlık: `Manrope 700`, slate-900
+- Form text: Inter 400/500/600
+- "Şifremi unuttum" link: slate-500, hover slate-700
+
+### A.3 — Google butonu (korunuyor, sadece renk)
+- Border slate-200
+- Bg white
+- Hover bg slate-50
+
+### A.4 — Tab ("Kayıt ol" / "Giriş yap")
+- Aktif tab: 2px primary-700 border-bottom, slate-900 text
+- Pasif: transparent border, slate-500 text, hover slate-700
+
+## B. Acceptance criteria
+
+- [ ] Renk paleti anasayfa standardına uyumlu
+- [ ] Form input focus ring doğru
+- [ ] Tab aktif/pasif görsel ayrımı net
+- [ ] Yapısal değişiklik yok (form akışı korunuyor)
+
+---
+
+# Genel Out of Scope
+
+- ❌ Bu paketin **dışındaki** sayfalar: `/uret` (ayrı paket), `/araclar`, `/sss`, blog post detay sayfası, üretim sonucu sayfası
+- ❌ Backend / API değişikliği
+- ❌ Yeni feature ekleme (sadece var olan yapıyı iyileştirme)
+- ❌ Mobile detaylı responsive geçişi (pilot olarak desktop bitirilsin, mobile sonraki turda)
+
+---
+
+# Genel Aziz'e Açık Sorular
+
+1. **Marka profili şablon önizleme:** Şablon-tabanlı mı, gerçek AI istek mi? (Önerim: şablon)
+2. **Hesabım kredi azalıyor eşiği:** 10 mu, 20 mi?
+3. **Hesabım davet istatistikleri:** İlk davetten sonra mı gösterilsin?
+4. **Fiyatlar SSS soruları:** 6 soru yeterli mi, başka eklenmeli mi?
+5. **Fiyatlar karşılaştırma tablosu:** Zorunlu mu opsiyonel mi?
+6. **Üretim sonucu sayfası:** Bu pakete dahil edelim mi (mockup yapmadım — kullanıcı içerik üretip butona basınca çıkan ekran)?
+
+---
+
+# Backlog Hint
+
+**Epic:** Hesap Alanı + Diğer Sayfalar Refactor
+
+## Ticket grubu 1 — Renk paleti uyumu (önce, bağımlılık)
+
+- TICKET-H.1: Anasayfa renk paletini `/hesap`, `/hesap/marka`, `/hesap/profil`, `/fiyatlar`, `/blog`, `/giris` sayfalarına uygula
+
+## Ticket grubu 2 — Marka Profili (en büyük iş)
+
+- TICKET-H.2: ProgressIndicator component (header'da)
+- TICKET-H.3: Form alanları (5 alan, label + input + helper + tik)
+- TICKET-H.4: Ton chip selector (3 chip, radio group)
+- TICKET-H.5: `generatePreview()` şablon fonksiyonu + state hook
+- TICKET-H.6: BrandedAIPreview (sticky kolon, fade animasyonu)
+- TICKET-H.7: GenericAIPreview (kıyas paneli, statik)
+- TICKET-H.8: WhyItMatters tooltip
+- TICKET-H.9: StickySaveBar
+- TICKET-H.10: `beforeunload` dirty state warning
+- TICKET-H.11: Save → POST `/api/marka-profili` entegrasyonu
+- TICKET-H.12: Toast başarı bildirimi
+- TICKET-H.13: Mobile responsive (tek kolon)
+- TICKET-H.14: A11y (radio group, focus, ARIA live)
+
+## Ticket grubu 3 — Hesabım
+
+- TICKET-H.15: Mavi gradient tasarruf rozeti (Trophy)
+- TICKET-H.16: 3 KPI (kalan kredi vurgulu, "Kredi al" CTA)
+- TICKET-H.17: "Henüz denemediği özellikler" keşif bloku
+- TICKET-H.18: 6 menü kartı + uyarılı durumlar (Marka eksik / Kredi az)
+- TICKET-H.19: Davet kutusu (basitleştirme — depresif istatistikleri kaldırma)
+- TICKET-H.20: Eski 4 KPI'nin "favori platform" kısmı kaldırılması
+- TICKET-H.21: Mobile responsive
+
+## Ticket grubu 4 — Fiyatlar
+
+- TICKET-H.22: "Önerilen" → "En popüler" terim değişikliği
+- TICKET-H.23: Anasayfa kredi calculator'ını bu sayfaya entegre et
+- TICKET-H.24: SSS bölümü (4-6 soru)
+- TICKET-H.25: Karşılaştırma tablosu (opsiyonel)
+- TICKET-H.26: Trust strip alt bant
+
+## Ticket grubu 5 — Blog
+
+- TICKET-H.27: Kategori filtre aktif/pasif state'leri
+- TICKET-H.28: Kart hover state'i (lift + shadow)
+- TICKET-H.29: Arama input focus state
+
+## Ticket grubu 6 — Giriş
+
+- TICKET-H.30: Form input focus ring rengi
+- TICKET-H.31: Tab aktif/pasif border-bottom
+
+## Ticket grubu 7 — Polish & PR
+
+- TICKET-H.32: Cross-page navigation kontrolü (Hesabım'dan Marka'ya, Fiyatlar'dan Hesabım'a)
+- TICKET-H.33: Lighthouse pass
+- TICKET-H.34: A11y audit
+- TICKET-H.35: PR + Aziz onay
+
+**Bağımlılıklar:**
+- TICKET-H.1 hepsinden önce
+- Grup 2-6 birbirinden bağımsız (paralel yapılabilir)
+- Grup 7 son
+
+---
+
+**Bu spec, ekteki 2 mockup ve denetim raporları ile birlikte ele alınmalı.**

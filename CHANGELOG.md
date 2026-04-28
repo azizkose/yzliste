@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-04-28 — Redesign LG-01~LG-05: 6 yasal sayfa rd-* swap + not-found/error/loading + Accordion primitive + orphan cleanup + backend tickets + QA docs
+
+## 2026-04-28 — Redesign IC-01~IC-05: /blog + /blog/[slug] + /sss + /hakkimizda (rd-* tokens, ChipSelector filter, accordion, warm-earth kurucu, BlogPaylas share)
+
 ## 2026-04-27 — Redesign: FY-01~11 FiyatlarSection (landing fiyatlar bölümü)
 
 - FY-01: `lib/constants/fiyatlar-landing.ts` — PAKET_LISTESI re-export, SLIDER_CONFIG, TRUST_POINTS. Commit `28b221c`

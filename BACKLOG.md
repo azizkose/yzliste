@@ -56,6 +56,21 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | AI-19 | GORSEL_STILLER emoji kaldır + PLATFORM_BILGI Tailwind default → proje paleti hex | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P2-6 |
 | OPS-14~19 | KÜME 11 — operasyonel olgunluk faz 2 | OPS-14/15/16/17/18/19 OK | [specs/kume-11.md](specs/kume-11.md) |
 
+### P2b — Redesign sonrası açılan backend işleri
+
+> Redesign branch'i main'e merge edilince bu ticket'lar aktif olur.
+
+| ID | Başlık | Durum | Not |
+|---|---|---|---|
+| HD-01b | Hesap ayarları — profil fotoğrafı yükleme (Storage + avatar URL) | Bekliyor | /hesap/ayarlar sayfası hazır |
+| HD-02b | profiles tablosuna TC kimlik / vergi numarası kolonları — iyzico fatura için zorunlu | Bekliyor | Migration gerekli |
+| KR-02b | Kredi yükleme — iyzico ödeme tamamlama webhook idempotency | Bekliyor | /kredi-yukle sayfası hazır |
+| OD-02b | Sipariş geçmişi — iyzico ödeme kayıtlarını listele | Bekliyor | UI placeholder var |
+| UR-03b | /uret'te kalan kullanılmış kredi geçmişi tablosu | Bekliyor | DB log var, UI yok |
+| SR-04b | Scheduled task reaktivasyon — `blog-seo-yazisi` cron'u production'da kapat, redesign merge sonrası aç | Bekliyor | Supabase scheduled task |
+| FT-01 | Paraşüt e-Arşiv entegrasyonu — kredi satın alımında otomatik fatura | Bekliyor | Redesign ile bağımsız |
+| YS-11 | yzstudio Faz 5 — production test + stok fotoğraf yükleme | Bekliyor | specs/nf-02-yzstudio.md |
+
 ### P3 — Gelecek / Ertelenmiş
 
 | ID | Başlık | Durum | Spec |

@@ -49,121 +49,47 @@ Amaç: Mevcut canlı siteyi koruyarak, ayrı branch'te modern UI redesign çalı
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
 | DS-01 | Design token'ları kur | ✅ Tamam | RD-00 | Commit `447c2a6` — Tailwind v4 `@theme` bloğu, 55 renk + 4 shadow + 4 radius + 2 font token. Manrope eklendi. |
-| DS-02 | Button primitive | ✅ Tamam | DS-01 | Commit `b537444` — 4 varyant, 3 boyut, loading spinner, ikon desteği. |
-| DS-03 | Card primitive | ✅ Tamam | DS-01 | Commit `b537444` — 3 varyant, 4 padding seçeneği. |
-| DS-04 | Badge primitive | ✅ Tamam | DS-01 | Commit `b537444` — 6 renk, 2 boyut, pill shape. |
-| DS-05 | Eyebrow primitive | ✅ Tamam | DS-01 | Commit `56f4c51` — 3 renk, opsiyonel ikon, uppercase + tracking. |
+| DS-02 | Button primitive | ✅ Tamam | DS-01 | Commit `b537444` |
+| DS-03 | Card primitive | ✅ Tamam | DS-01 | Commit `b537444` |
+| DS-04 | Badge primitive | ✅ Tamam | DS-01 | Commit `b537444` |
+| DS-05 | Eyebrow primitive | ✅ Tamam | DS-01 | Commit `56f4c51` |
 | DS-06 | Tab primitive | ✅ Tamam | DS-01 | Commit `56f4c51` — TabList + TabItem (pill) + TabItemUnderline, tam a11y. |
-| DS-07 | SectionHeader primitive | ✅ Tamam | DS-05 | Commit `56f4c51` — Eyebrow kullanıyor, Manrope display, responsive, pill eyebrow. |
-| DS-08 | CopyButton primitive | ✅ Tamam | DS-01 | Commit `56f4c51` — clipboard + fallback, timeout reset, aria-live. |
+| DS-07 | SectionHeader primitive | ✅ Tamam | DS-05 | Commit `56f4c51` |
+| DS-08 | CopyButton primitive | ✅ Tamam | DS-01 | Commit `56f4c51` |
 
 ### Pazaryeri Bölümü — Pilot 1
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| PZ-01 | Constants & data layer | ✅ Tamam | DS-01 | Commit `69dc14e` — CONTENT_TYPES, PLATFORMS, PAZARYERI_DEMO_DATA (12 kombinasyon), INPUT_METHODS, SAMPLE_PRODUCT. Tüm emoji→Lucide dönüşüm yapıldı. |
-| PZ-02 | Component scaffold + SectionHeader | ✅ Tamam | DS-07, PZ-01 | Commit `18eefc3` — PazaryeriSection.tsx iskelet. 3 state, SectionHeader entegre, placeholder'lar state değerlerini gösteriyor. |
-| PZ-03 | ContentTypeStep (üst tab'lar) + FlowConnector | ✅ Tamam | DS-06, PZ-02 | Commit `dc1cd33` — 4 pill tab (inline color), ARIA tablist, Arrow key nav, FlowConnector subtle-bounce, color transition 300ms. |
-| PZ-04 | DynamicTitleBar + OutputCard frame | ✅ Tamam | PZ-03 | Commit `992a628` — Ikon+eyebrow+başlık, kredi badge, OutputCard 2 kolon layout, border-color geçişli, ArrowRight pulse. |
-| PZ-05 | ProductInputCard (sol kart, sticky) | ✅ Tamam | DS-03, PZ-02 | Commit `50c45f0` — ImageIcon placeholder, specs grid 2x2, 3 input kartı (Camera seçili), md:sticky, ScanLine icon mapping. |
-| PZ-06 | PlatformTabs + PlatformRulesBar | ✅ Tamam | DS-06, PZ-04 | Commit `88d7ad5` — 3 platform tab (letter circle + platform rengi, inline style), PlatformRulesBar (platform soft bg, PAZARYERI_DEMO_DATA rules, sm:grid-cols-2, RULE_ICONS map). |
-| PZ-07 | ContentRenderer: Text type | ✅ Tamam | DS-08, PZ-06 | Commit `77ac639` — 4 OutputField (Başlık/Özellikler/Açıklama/Etiketler), CopyButton her alanda, platform renkli bullet dot (inline style), pill chip etiketler, fade-in animasyonu (key-driven remount), copiedField state kaldırıldı. |
-| PZ-08 | ContentRenderer: Image type | ✅ Tamam | PZ-06 | Commit `08f3a16` — 6 gallery item (2×3 grid), Lucide ikon placeholder, ana görsel vurgulu (border-2 primary), StyleNote kutusu (platform soft bg + sol border), "Tümünü indir" butonu, fade-in animasyon. |
-| PZ-09 | ContentRenderer: Video type | ✅ Tamam | PZ-06 | Video player mockup (slate-900 bg, Play/HD/0:30 overlay), aspect ratio platforma göre (Trendyol 1:1, Amazon 16:9, Etsy 4:5), video spec etiketi (Monitor ikon), sahne planı 6 sahne (zaman w-10 tabular-nums + ikon platform rengi), RotateCw/Tag/Play/Monitor import, fade-in. |
-| PZ-10 | ContentRenderer: Social type | ✅ Tamam | DS-08, PZ-06 | Instagram + TikTok/Pinterest kartları (Trendyol→TikTok, Amazon/Etsy→Pinterest), caption whitespace-pre-line, CopyButton header + hashtag bölümünde ayrı, hashtag chip'leri platform rengi inline style, Music/MapPin import, fade-in. Tüm 4 renderer tamamlandı, placeholder div'ler kaldırıldı. |
-| PZ-11 | Mobile responsive pass | ✅ Tamam | PZ-07~PZ-10 | Commit `cb406ce` — Section padding responsive (py-12/16/20), FlowConnector spacing (mt/mb-4/6), OutputCard padding (p-4/5/6) + min-h (300/400), mobile ArrowRight (flex md:hidden), h3 font-size responsive (sm/base/lg, truncate kaldırıldı), platform tab gap (1.5/2). |
-| PZ-12 | A11y pass | ✅ Tamam | PZ-11 | Commit `cb406ce` — Platform tablist Arrow Left/Right nav (platformTablistRef + handler), aria-controls + tabpanel, FlowConnector + ArrowRight aria-hidden, section aria-label, text-slate-400→slate-500 kontrast düzeltme (10 label, dekoratif korundu). |
-| PZ-13 | Acceptance review | ✅ Tamam | PZ-12 | 12 kombinasyon ✅, ARIA/keyboard ✅ (1 düzeltme: dış div'e role="tabpanel"), responsive ✅, kural uyumu ✅, build ✅. **Pazaryeri bölümü (PZ-01~13) tamamen kapalı.** |
+PZ-01~PZ-13 hepsi ✅ Tamam. **Pazaryeri bölümü tamamen kapalı.**
+
+> Detay tablo + prompt arşivlendi → git history
 
 ### İçerik Türleri Bölümü — Pilot 2
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| IT-01 | Constants & data layer | ✅ Tamam | DS-01 | Commit `69dc14e` — ICERIK_TURLERI (4 kart + sample), BOTTOM_NOTE, IcerikTuruId type. |
-| IT-02 | Component scaffold + SectionHeader + section bg | ✅ Tamam | DS-07, IT-01 | Commit `18eefc3` — IcerikTurleriSection.tsx iskelet. openModal state, SectionHeader entegre, 4 kart placeholder grid (lg:grid-cols-4). |
-| IT-03 | ContentTypeCard component | ✅ Tamam | DS-03, IT-02 | Commit `dc1cd33` — 4 kart, flex eşit yükseklik, IconBox renkli, hover translateY+renkli gölge, focus-visible ring kart rengi, Tab/Enter/Space aktive. |
-| IT-04 | Hover state'leri + transitions | ✅ Tamam | IT-03 | Commit `dc1cd33` — IT-03 ile birlikte yapıldı. Hover translateY(-2px), renkli border+gölge, focus-visible ring, role="button" tabIndex="0". |
-| IT-05 | SampleModal component | ✅ Tamam | IT-03 | Commit `992a628` — Focus trap, Escape/backdrop/X kapanma, body scroll lock, prevFocusRef restore, ARIA dialog, slideUp+scale animasyon, 4 kart renk+içerik. |
-| IT-06 | BottomNote | ✅ Tamam | IT-02 | Commit `50c45f0` — Sparkles ikon + metin + ArrowRight link, flex-wrap mobil uyumlu. |
-| IT-07 | Mobile responsive pass | ✅ Tamam | IT-05, IT-06 | Commit `88d7ad5` — Section py-16 md:py-20 lg:py-28, modal p-6 md:p-8. Grid 1→2→4 kolon zaten sağlıklı. |
-| IT-08 | A11y pass | ✅ Tamam | IT-07 | Commit `77ac639` — Kart id eklendi, kontrast düzeltme (slate-400→500: "İçerir", "Kredi", "Süre"), Sparkles aria-hidden, font-semibold→font-medium (kural uyumu), rounded-2xl→rounded-xl. |
-| IT-09 | Acceptance review | ✅ Tamam | IT-08 | Commit `08f3a16` — 4 kart hover ✅, 4 modal ✅, CLS ✅, console error yok ✅. Değişiklik gerekmedi, doğrulandı. |
+IT-01~IT-09 hepsi ✅ Tamam. **İçerik türleri bölümü tamamen kapalı.**
+
+> Detay tablo + prompt arşivlendi → git history
 
 ### Hero Bölümü (Trust Strip + Nav + Hero)
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| HR-01 | Constants & data layer | ✅ Tamam | DS-01 | Commit `48bd4b6` — lib/constants/hero.ts: TRUST_STRIP_ITEMS (Flag/Lock/Zap), NAV_LINKS (/uret/fiyatlar/blog), NAV_BRAND, NAV_CTAS (/giris+/kayit), HERO_COPY (h1 3 parça), HERO_TRUST_PILLS (4), HERO_BADGES, MOCKUP_STEPS, MOCKUP_INPUT_METHODS. Emoji→Lucide, "28sn"→"Saniyeler içinde". |
-| HR-02 | TrustStrip component | ✅ Tamam | HR-01 | Commit `48bd4b6` — components/sections/HeroBlock/TrustStrip.tsx: bg-rd-neutral-50, border-b slate-200, 3 öğe ortalı (Flag/Lock/Zap 13px + text-xs), flex-wrap mobil, max-w-[1200px], aria-hidden ikonlar. |
-| HR-03 | Nav component (sticky + blur) | ✅ Tamam | DS-02, HR-01 | Commit `b51a9c7` + fix `877ada2` — Nav.tsx: sticky top-0 z-50, bg-white/85 backdrop-blur-md, -webkit prefix, logo Manrope 800 22px + Beta badge, 3 nav link, "Giriş yap" outline + "İçerik üret" primary ArrowRight CTA. |
-| HR-04 | Mobile hamburger menü | ✅ Tamam | HR-03 | Commit `b51a9c7` — Slide-out panel + backdrop, focus trap (closeRef focus + hamburgerRef restore), Escape kapanma, body scroll lock, aria-expanded/controls/modal. Spec'ten daha iyi a11y. |
-| HR-05 | HeroSection scaffold + grid + soft bg | ✅ Tamam | HR-01 | Commit `a9dcbd2` + fix `877ada2` — HeroSection.tsx: 2 kolon grid (1.05fr 1fr), radial mavi glow (rgba 59,130,246 0.08, 900x600 top-200), responsive padding (pt-10/14/16 pb-16/20/24), max-w-[1200px]. |
-| HR-06 | HeroContent (sol kolon) | ✅ Tamam | DS-02, DS-04, DS-05, HR-05 | Commit `a9dcbd2` + fix `877ada2` — Eyebrow pill (bg-primary-50, border-primary-200, pulse-soft mavi dot), H1 Manrope 800 clamp(40-64px) "AI ile" primary-700, subtitle "dakikalar içinde" bold, 4 TrustPill (rounded-lg 13px nötr hover 150ms), primary CTA ArrowRight /kayit, ghost Play daire, reassurance Check emerald. |
-| HR-07 | AppScreenshotMockup (sağ kolon) | ✅ Tamam | HR-05 | Commit `a9dcbd2` + fix `877ada2` — Browser chrome (3 dot + URL bar yzliste.com/uret), step indicator (3 adım constants'tan), 3 input metodu kartı (Fotoğraf seçili), upload preview (fincan_01.jpg + Yüklendi 2.4MB), marka input, generate Zap butonu, role="img" aria-label. |
-| HR-08 | StickerBadge primitive | ✅ Tamam | DS-01 | StickerBadge.tsx primitive: pill (rounded-full), bg-white, shadow-rd-md, 11px font-semibold Inter, ikon renk+border inline style, position dışarıdan className. AppScreenshotMockup'a 2 badge: sağ üst Check mavi (#1E40AF / #DBEAFE), sol alt Zap turuncu (#EA580C / #FED7AA). |
-| HR-09 | Float-in animasyonları | ✅ Tamam | HR-06, HR-07 | globals.css: hero-float-in keyframe (opacity 0→1, translateY 8→0) + pulse-soft keyframe. HeroContent: animate-hero-float-in-left (600ms, delay 0). AppScreenshotMockup: animate-hero-float-in-right (600ms, delay 150ms). prefers-reduced-motion → animation: none. |
-| HR-10 | "Nasıl çalışır?" video modal | ✅ Tamam | HR-06 | VideoModal.tsx: fixed z-50 ortalı dialog (max-w-800 aspect-video rounded-xl bg-black), backdrop bg-black/60 blur tıkla-kapat, X butonu bg-black/40, Escape + body scroll lock + focus management (triggerRef restore). HeroContent 'use client' + useState + onClick bağlı. Mevcut modal-backdrop-in/panel-in keyframe'leri. Placeholder: Play + "Video yakında eklenecek". HeroContent truncated bug da düzeltildi (git restore). |
-| HR-11 | Mobile responsive pass | ✅ Tamam | HR-04~HR-10 | Commit `aa55a4d` — CTA flex-col/sm:flex-row, primary CTA w-full sm:w-auto, ghost CTA justify-center, StickerBadge hidden sm:flex sm:absolute. |
-| HR-12 | A11y pass | ✅ Tamam | HR-11 | Commit `aa55a4d` — Ghost buton focus-visible ring eklendi, VideoModal text-white/80 kontrast düzeltildi. |
-| HR-13 | Performance pass | ✅ Tamam | HR-12 | Commit `aa55a4d` — VideoModal dynamic import (next/dynamic, ssr:false). |
-| HR-14 | Gerçek screenshot entegrasyonu | Bekliyor | HR-07 | Aziz onayı sonrası: gerçek `/uret` sayfası screenshot'ı mockup'a yerleştirilir. |
-| HR-15 | Acceptance review | Bekliyor | HR-13 | Aziz preview'da kontrol. Nav sticky çalışıyor, H1 doğru, CTA'lar fonksiyonel, responsive tam. |
+HR-01~HR-13 ✅ Tamam. HR-14 (gerçek screenshot) + HR-15 (acceptance) bekliyor.
 
 > Prompt arşivlendi → `BACKLOG-REDESIGN-ARCHIVE.md`
-
----
 
 ### 3 Adımda Hazır Bölümü — Bölüm 04
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| UA-01 | Constants (`lib/constants/uc-adim.ts`) | ✅ Tamam | DS-01 | UC_ADIM_STEPS + TOTAL_TIME. Süreler muğlak ("Birkaç saniyede"). |
-| UA-02 | Section scaffold + SectionHeader + bg | ✅ Tamam | DS-07, UA-01 | bg-white. Eyebrow "KOLAY KULLANIM", h2 "3 adımda hazır". |
-| UA-03 | StepCard + NumberCircle | ✅ Tamam | UA-02 | 80×80 outline circle (border-2 slate-200), Manrope 800, h3, desc, DurationLabel. |
-| UA-04 | MiniMockup — Step1: InputMockup | ✅ Tamam | UA-03 | 3 input metodu kartı (Fotoğraf seçili) + upload preview (fincan_01.jpg). |
-| UA-05 | MiniMockup — Step2: SelectionMockup | ✅ Tamam | UA-03 | 4 platform chip (Trendyol+Amazon seçili) + 4 içerik tipi (Metin+Görsel seçili). |
-| UA-06 | MiniMockup — Step3: OutputMockup | ✅ Tamam | UA-03 | 2 çıktı kartı (Trendyol listing + Amazon görsel) + "ve 2 tane daha...". |
-| UA-07 | ConnectorLine (dashed, desktop-only) | ✅ Tamam | UA-03 | 2px dashed #CBD5E1, absolute top-10, calc(100%/6), hidden lg:block, aria-hidden. |
-| UA-08 | TotalTimeBar + stagger animasyon | ✅ Tamam | UA-02 | rd-primary-50 bg, Clock ikon + "Saniyeler içinde tamamlanır". Max-w 420px. |
-| UA-09 | Mobile responsive + a11y pass | ✅ Tamam | UA-07, UA-08 | md: breakpoint (lg→md), NumberCircle aria-hidden+rd-primary-200 border, mockup role="img" taşındı, max-w-[280px] mx-auto, stagger fade-in (globals.css), prefers-reduced-motion. |
-| UA-10 | Acceptance review | ✅ Tamam | UA-09 ✅ | Aziz onayladı (27 Nisan 2026). md breakpoint, a11y, responsive, build OK. |
+UA-01~UA-10 hepsi ✅ Tamam (Aziz onayladı 27 Nis 2026).
 
 > Prompt arşivlendi → `BACKLOG-REDESIGN-ARCHIVE.md`
-
----
 
 ### Marka Bilgileri Bölümü — Bölüm 05
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| MB-01 | Constants (`lib/constants/marka-bilgileri.ts`) | ✅ Tamam | DS-01 | BRAND_FEATURES (4 item), TONE_CHIPS (samimi/profesyonel/premium + çıktı metinleri), BRAND_FORM_FIELDS. |
-| MB-02 | Section scaffold + grid + bg | ✅ Tamam | DS-07, MB-01 | `components/sections/MarkaBilgileriSection.tsx`. bg-neutral-50. 2 kolon grid. |
-| MB-03 | LeftColumn (eyebrow + heading + features + CTA) | ✅ Tamam | MB-02 | Accent Sparkles eyebrow "Yeni özellik". Heading. 4 feature item (icon box + title + desc). CTA link. |
-| MB-04 | BrandFormPreview card scaffold | ✅ Tamam | MB-02 | BrandFormPreview aynı dosyada. white bg, border. Header "Marka Profili" + yeşil "Aktif" badge. |
-| MB-05 | Static fields (Mağaza adı, Hedef kitle) | ✅ Tamam | MB-04 | 2 read-only field: primary-50 + neutral-50. |
-| MB-06 | Marka tonu radio group (3 chip) | ✅ Tamam | MB-04 | 3 chip (samimi/profesyonel/premium). `role="radiogroup"`, `aria-checked`. Arrow Left/Right. Default: samimi. |
-| MB-07 | OutputPreview + fade animation | ✅ Tamam | MB-06 | neutral-50 bg. Accent eyebrow "AI çıktısı — {tone} tonda". 300ms fade+slide-up on tone change. `aria-live="polite"`. |
-| MB-08 | Hint text | ✅ Tamam | MB-07 | "Tonu değiştir, AI çıktısının nasıl değiştiğini gör" — italic, gri, ortalı. |
-| MB-09 | Mobile responsive pass | ✅ Tamam | MB-08 | Mobile: tek kolon (sol önce sağ sonra). Desktop: 2 kolon. flex-wrap tone chips. |
-| MB-10 | A11y pass | ✅ Tamam | MB-09 | radiogroup ARIA + roving tabindex. focus-visible. `prefers-reduced-motion`. WCAG AA. |
-| MB-11 | Acceptance review | ✅ Tamam | MB-10 | Aziz onayladı (27 Nisan 2026). Build OK, rd-* token, emoji yok, responsive OK. Commit 4ef11f5. |
+MB-01~MB-11 hepsi ✅ Tamam (Aziz onayladı 27 Nis 2026, commit `4ef11f5`).
 
 > Prompt arşivlendi → `BACKLOG-REDESIGN-ARCHIVE.md`
 
----
-
 ### Neden yzliste? Bölümü — Bölüm 06
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| NY-01 | Constants (`lib/constants/neden-yzliste.ts`) | ✅ Tamam | DS-01 | NEDEN_HEADER, COMPARISONS (6 satır), FOOTNOTE. |
-| NY-02 | Section scaffold + SectionHeader | ✅ Tamam | DS-07, NY-01 | `components/sections/NedenYzlisteSection.tsx`. bg-white. max-w 900px. |
-| NY-03 | ComparisonTable (semantic `<table>`) | ✅ Tamam | NY-02 | Semantic table, border, rounded-xl, overflow hidden. |
-| NY-04 | Table headers (Generic + yzliste) | ✅ Tamam | NY-03 | 2 kolon header: neutral-100 vs primary-50. |
-| NY-05 | ComparisonRow (6 satır) | ✅ Tamam | NY-03 | X (kirmizi) vs Check (yesil) Lucide ikon. |
-| NY-06 | Footnote | ✅ Tamam | NY-02 | italic, gri, ortalı. |
-| NY-07 | Mobile responsive + a11y | ✅ Tamam | NY-05, NY-06 | Mobilde kart layout, semantic table, scope, aria-hidden, WCAG AA. |
-| NY-08 | Acceptance review | ✅ Tamam | NY-07 | Aziz onayladı (27 Nisan 2026). Semantic table, mobil kartlar, Lucide ikon, build OK. Commit ae19f42. |
+NY-01~NY-08 hepsi ✅ Tamam (Aziz onayladı 27 Nis 2026, commit `ae19f42`).
 
 > Prompt arşivlendi → `BACKLOG-REDESIGN-ARCHIVE.md`
 
@@ -171,1269 +97,352 @@ Amaç: Mevcut canlı siteyi koruyarak, ayrı branch'te modern UI redesign çalı
 
 ### Fiyatlar Bölümü — Bölüm 07
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| FY-01 | Gerçek paket verilerini `/fiyatlar`'dan oku + constants | ✅ Tamam | DS-01 | `lib/constants/fiyatlar.ts` — PACKAGES (isim, fiyat, kredi, features), CREDIT_PER_PRODUCT, SLIDER config. **Gerçek fiyatlar Aziz'den onay sonrası.** |
-| FY-02 | Section scaffold + SectionHeader + bg | ✅ Tamam | DS-07, FY-01 | `components/sections/FiyatlarSection.tsx`. bg-slate-50. Eyebrow "FİYATLANDIRMA". H2, subtitle. |
-| FY-03 | CreditCalculator scaffold | ✅ Tamam | FY-02 | `components/sections/FiyatlarSection/CreditCalculator.tsx`. white card, shadow, border. Header + 2 kolon grid (slider sol, recommendation sağ). |
-| FY-04 | Slider component (custom CSS) | ✅ Tamam | FY-03 | Range input 1-100. Mavi gradient dolu kısım. Beyaz thumb mavi border. Klavye Arrow key kontrolü. `role="slider"`, `aria-valuemin/max/now`. |
-| FY-05 | RecommendationCard + hesaplama | ✅ Tamam | FY-04 | primary-50 bg. "SANA UYGUN PAKET" eyebrow. `useMemo` ile recommendedPackage. Tahmini ihtiyaç = productCount × CREDIT_PER_PRODUCT. |
-| FY-06 | PackageCard component | ✅ Tamam | FY-01 | `components/sections/FiyatlarSection/PackageCard.tsx`. Default + popular (2px primary border, translateY -8px, "★ EN POPÜLER" rozet) varyantları. Fiyat Manrope 800 36px. Features ✓ listesi. CTA solid/outline. |
-| FY-07 | "SENİN İÇİN" badge logic | ✅ Tamam | FY-05, FY-06 | Slider'a göre recommended package'a yeşil badge. Badge slider değiştikçe hareket eder. |
-| FY-08 | FooterNote (trust points) | ✅ Tamam | FY-02 | 4 trust point yatay: Aboneliksiz, Krediler süresiz, iyzico, Faturalandırma. Ayraçlar `·`. |
-| FY-09 | CTA route entegrasyonu | ✅ Tamam | FY-06 | Paket "Seç" butonu doğru route'a yönlendirir. Route Aziz'den gelecek. |
-| FY-10 | Mobile responsive pass | ✅ Tamam | FY-08 | Mobile: calculator tek kolon, paketler tek kolon (popular en üstte, translateY kaldırılır). Slider touch friendly. |
-| FY-11 | A11y pass | ✅ Tamam | FY-10 | Slider ARIA. `aria-live="polite"` recommendation güncelleme. Focus-visible. WCAG AA. |
-| FY-12 | Acceptance review | Bekliyor | FY-11 | Aziz preview kontrolü. Slider test, 3 paket görsel kontrol. |
-| FY-FIX-01 | Mavi border slider'la dinamik geçsin + CTA pozisyonu | ✅ Tamam | FY-11 | (1) Mavi border + 2px + md:-translate-y-2 + filled CTA → `isRecommended` ile bağla (slider'a göre dinamik). (2) "Senin için" yeşil badge'i KALDIR. (3) "En popüler" rozeti orta pakette statik kalır ama küçük (üstte rozet, border etkilemez). (4) "Paketi seç" CTA özelliklerin **altına** taşı (Header → Fiyat → Özellikler → CTA). (5) Mobil + desktop'ta her 3 paket için CTA görünür ve tıklanabilir. |
-
-**Durum:** Prompt hazır — Claude Code'a verilebilir.
-
-#### FY-01~11 Birleşik Prompt
-
-> **ÖNEMLİ — İÇERİK KURALI:** Canlı sitedeki örnek çıktıları (üretilmiş text örnekleri, görsel örnekler, video örnekler, sosyal medya çıktı örnekleri) olduğu gibi koru — yeniden görsel/video üretmeye gerek olmasın. Diğer metinler (başlık, açıklama, CTA, feature listesi) tasarıma uygun şekilde değiştirilebilir.
-
-> **Hedef:** Landing page'e "Fiyatlar" bölümü ekle. Kullanıcı ürün sayısını slider ile seçer, ona uygun paket önerilir, 3 paket kartı yan yana görünür. Altta güven noktaları.
-
----
-
-##### FY-01: Constants — `lib/constants/fiyatlar-landing.ts`
-
-**Gerçek fiyat verileri `lib/paketler.ts`'den gelecek.** Bu constants dosyası sadece landing page'e özel UI metinlerini ve slider config'ini tutar.
-
-```ts
-// lib/constants/fiyatlar-landing.ts
-
-import { PAKET_LISTESI, type Paket } from '@/lib/paketler'
-
-// Re-export — section component sadece bu dosyayı import etsin
-export { PAKET_LISTESI }
-export type { Paket }
-
-export const FIYATLAR_HEADER = {
-  eyebrow: 'Fiyatlandırma',
-  title: 'Kullandıkça öde, abonelik yok',
-  subtitle: 'Kredi paketini al, istediğin içerik türünde kullan. Süre sınırı yok.',
-}
-
-export const SLIDER_CONFIG = {
-  min: 1,
-  max: 100,
-  defaultValue: 15,
-  label: 'Aylık ürün sayısı',
-}
-
-// Kredi maliyetleri (landing page gösterimi için)
-export const CREDIT_PER_PRODUCT = 1 // listing metni = 1 kredi
-// Not: Video (10-20 kr) ve try-on (3 kr) farklı ama slider sadece listing bazlı hesap yapar
-
-export const RECOMMENDATION_EYEBROW = 'Sana uygun paket'
-
-export const TRUST_POINTS = [
-  'Abonelik yok',
-  'Krediler süresiz',
-  'iyzico güvencesi',
-  'e-Arşiv fatura',
-] as const
-
-export const FIYATLAR_CTA_ROUTE = '/fiyatlar'
-```
-
----
-
-##### FY-02: Section scaffold — `components/sections/FiyatlarSection.tsx`
-
-`'use client'` — slider state gerektirir.
-
-```tsx
-// components/sections/FiyatlarSection.tsx
-'use client'
-
-import { useState, useMemo } from 'react'
-import SectionHeader from '@/components/primitives/SectionHeader'
-import {
-  FIYATLAR_HEADER,
-  SLIDER_CONFIG,
-  PAKET_LISTESI,
-  CREDIT_PER_PRODUCT,
-  RECOMMENDATION_EYEBROW,
-  TRUST_POINTS,
-  FIYATLAR_CTA_ROUTE,
-} from '@/lib/constants/fiyatlar-landing'
-
-export default function FiyatlarSection() {
-  const [productCount, setProductCount] = useState(SLIDER_CONFIG.defaultValue)
-
-  const recommendedPackage = useMemo(() => {
-    const needed = productCount * CREDIT_PER_PRODUCT
-    // İlk yeten paketi bul, yoksa son paketi döndür
-    return PAKET_LISTESI.find(p => p.kredi >= needed) ?? PAKET_LISTESI[PAKET_LISTESI.length - 1]
-  }, [productCount])
-
-  return (
-    <section className="py-20 md:py-28 bg-rd-neutral-50" aria-labelledby="fiyatlar-heading">
-      <div className="mx-auto max-w-6xl px-5">
-        <SectionHeader
-          eyebrow={FIYATLAR_HEADER.eyebrow}
-          eyebrowColor="primary"
-          title={FIYATLAR_HEADER.title}
-          subtitle={FIYATLAR_HEADER.subtitle}
-          id="fiyatlar-heading"
-        />
-
-        {/* CreditCalculator */}
-        {/* PackageCards grid */}
-        {/* TrustFooter */}
-      </div>
-    </section>
-  )
-}
-```
-
-Section bg: `bg-rd-neutral-50`. `_tanitim-redesign.tsx`'de NedenYzlisteSection'dan **sonra** ekle.
-
----
-
-##### FY-03 + FY-04 + FY-05: CreditCalculator (slider + recommendation)
-
-Section içinde, SectionHeader'dan sonra. Ayrı component dosyası **gerekmez** — section içinde inline yeterli.
-
-**Layout:** Tek white kart, içinde 2 kolon (lg grid). Sol: slider. Sağ: recommendation.
-
-```tsx
-{/* CreditCalculator — SectionHeader'dan sonra, mt-12 */}
-<div className="mt-12 rounded-xl border border-rd-neutral-200 bg-white p-6 md:p-8">
-  <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
-
-    {/* Sol: Slider */}
-    <div>
-      <label htmlFor="product-slider" className="block text-sm font-medium text-rd-neutral-600 mb-6">
-        {SLIDER_CONFIG.label}
-      </label>
-
-      <div className="flex items-center gap-4">
-        <span className="text-sm text-rd-neutral-400 tabular-nums w-8 text-right">{SLIDER_CONFIG.min}</span>
-        <input
-          id="product-slider"
-          type="range"
-          min={SLIDER_CONFIG.min}
-          max={SLIDER_CONFIG.max}
-          value={productCount}
-          onChange={e => setProductCount(Number(e.target.value))}
-          className="fiyatlar-slider flex-1"
-          role="slider"
-          aria-valuemin={SLIDER_CONFIG.min}
-          aria-valuemax={SLIDER_CONFIG.max}
-          aria-valuenow={productCount}
-          aria-valuetext={`${productCount} ürün`}
-        />
-        <span className="text-sm text-rd-neutral-400 tabular-nums w-8">{SLIDER_CONFIG.max}</span>
-      </div>
-
-      {/* Seçilen değer */}
-      <p className="mt-4 text-center">
-        <span className="text-3xl font-bold text-rd-primary-700 tabular-nums" style={{ fontFamily: 'var(--font-rd-display)' }}>
-          {productCount}
-        </span>
-        <span className="ml-2 text-sm text-rd-neutral-500">ürün / ay</span>
-      </p>
-    </div>
-
-    {/* Sağ: Recommendation */}
-    <div className="rounded-lg bg-rd-primary-50 p-5 border border-rd-primary-100" aria-live="polite">
-      <p className="text-xs font-medium text-rd-primary-600 uppercase tracking-wider mb-2">
-        {RECOMMENDATION_EYEBROW}
-      </p>
-      <p className="text-xl font-bold text-rd-neutral-900" style={{ fontFamily: 'var(--font-rd-display)' }}>
-        {recommendedPackage.isim}
-      </p>
-      <p className="mt-1 text-sm text-rd-neutral-500">
-        {recommendedPackage.kredi} kredi · {recommendedPackage.fiyatStr}
-      </p>
-      <p className="mt-2 text-xs text-rd-neutral-400">
-        {productCount} ürün × {CREDIT_PER_PRODUCT} kredi = {productCount * CREDIT_PER_PRODUCT} kredi ihtiyacı
-      </p>
-    </div>
-
-  </div>
-</div>
-```
-
-**Slider custom CSS** — `globals.css`'e ekle:
-
-```css
-/* Fiyatlar slider */
-.fiyatlar-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 6px;
-  border-radius: 3px;
-  background: linear-gradient(to right, var(--color-rd-primary-500) var(--slider-fill, 0%), var(--color-rd-neutral-200) var(--slider-fill, 0%));
-  outline: none;
-  cursor: pointer;
-}
-
-.fiyatlar-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: white;
-  border: 2px solid var(--color-rd-primary-500);
-  cursor: pointer;
-  transition: box-shadow 150ms ease;
-}
-
-.fiyatlar-slider::-webkit-slider-thumb:hover {
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-rd-primary-500) 15%, transparent);
-}
-
-.fiyatlar-slider:focus-visible::-webkit-slider-thumb {
-  box-shadow: 0 0 0 3px var(--color-rd-primary-200);
-}
-
-.fiyatlar-slider::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: white;
-  border: 2px solid var(--color-rd-primary-500);
-  cursor: pointer;
-}
-
-.fiyatlar-slider::-moz-range-track {
-  height: 6px;
-  border-radius: 3px;
-  background: var(--color-rd-neutral-200);
-}
-
-.fiyatlar-slider::-moz-range-progress {
-  height: 6px;
-  border-radius: 3px;
-  background: var(--color-rd-primary-500);
-}
-```
-
-**Slider fill JS** — gradient background'u slider değerine göre güncelle. `onChange` handler'a ekle:
-
-```ts
-const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const val = Number(e.target.value)
-  setProductCount(val)
-  const pct = ((val - SLIDER_CONFIG.min) / (SLIDER_CONFIG.max - SLIDER_CONFIG.min)) * 100
-  e.target.style.setProperty('--slider-fill', `${pct}%`)
-}
-```
-
-Slider'ın `onChange`'ini bu fonksiyonla değiştir. Ayrıca `useEffect` ile ilk render'da da `--slider-fill`'i set et (defaultValue'ya göre).
-
----
-
-##### FY-06 + FY-07: PackageCard grid + "SENİN İÇİN" badge
-
-CreditCalculator'dan sonra, `mt-12`.
-
-```tsx
-{/* PackageCards — 3 kolon grid */}
-<div className="mt-12 grid gap-6 md:grid-cols-3 items-start">
-  {PAKET_LISTESI.map(paket => {
-    const isPopular = paket.rozet === true
-    const isRecommended = paket.id === recommendedPackage.id
-
-    return (
-      <div
-        key={paket.id}
-        className={`
-          relative rounded-xl border bg-white p-6 transition-transform duration-200
-          ${isPopular
-            ? 'border-rd-primary-500 border-2 md:-translate-y-2'
-            : 'border-rd-neutral-200'
-          }
-        `}
-      >
-        {/* EN POPÜLER rozet — sadece popular pakette */}
-        {isPopular && (
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-            <span className="inline-flex items-center rounded-full bg-rd-primary-600 px-3 py-1 text-xs font-medium text-white tracking-wide">
-              En popüler
-            </span>
-          </div>
-        )}
-
-        {/* SENİN İÇİN badge — slider'a göre recommended pakette */}
-        {isRecommended && (
-          <div className={`absolute -top-3 ${isPopular ? 'right-4' : 'left-1/2 -translate-x-1/2'}`}>
-            <span className="inline-flex items-center rounded-full bg-emerald-600 px-3 py-1 text-xs font-medium text-white tracking-wide">
-              Senin için
-            </span>
-          </div>
-        )}
-
-        {/* Paket adı */}
-        <h3 className="text-lg font-medium text-rd-neutral-900">{paket.isim}</h3>
-        <p className="mt-1 text-sm text-rd-neutral-500">{paket.aciklama}</p>
-
-        {/* Fiyat */}
-        <p className="mt-5">
-          <span className="text-4xl font-extrabold text-rd-neutral-900 tabular-nums" style={{ fontFamily: 'var(--font-rd-display)' }}>
-            {paket.fiyatStr}
-          </span>
-          <span className="ml-1 text-sm text-rd-neutral-400">/ {paket.krediStr}</span>
-        </p>
-
-        {/* CTA */}
-        <a
-          href={FIYATLAR_CTA_ROUTE}
-          className={`
-            mt-5 block w-full rounded-lg py-2.5 text-center text-sm font-medium transition-colors
-            ${isPopular
-              ? 'bg-rd-primary-600 text-white hover:bg-rd-primary-700'
-              : 'border border-rd-neutral-300 text-rd-neutral-700 hover:bg-rd-neutral-50'
-            }
-          `}
-        >
-          Paketi seç
-        </a>
-
-        {/* Özellikler — Lucide Check ikonu ile */}
-        <ul className="mt-5 space-y-2.5" role="list">
-          {paket.ozellikler.map((ozellik, i) => (
-            <li key={i} className="flex items-start gap-2.5 text-sm text-rd-neutral-600">
-              <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-rd-primary-500" aria-hidden="true" />
-              <span>{ozellik}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )
-  })}
-</div>
-```
-
-Import'a `Check` from `lucide-react` ekle.
-
-**"SENİN İÇİN" badge davranışı:**
-- Slider değiştikçe `recommendedPackage` useMemo ile güncellenir
-- Badge ilgili karttan kaybolur, yeni karta geçer
-- `isPopular && isRecommended` durumunda: popular rozet sol-üstte (veya üst-orta), senin için sağ-üstte — çakışmasın
-- Badge position: popular pakette `right-4`, diğerlerinde `left-1/2 -translate-x-1/2`
-
----
-
-##### FY-08: FooterNote (trust points)
-
-PackageCards'dan sonra, `mt-10`.
-
-```tsx
-{/* Trust points */}
-<p className="mt-10 text-center text-sm text-rd-neutral-400">
-  {TRUST_POINTS.map((point, i) => (
-    <span key={i}>
-      {i > 0 && <span className="mx-2" aria-hidden="true">·</span>}
-      {point}
-    </span>
-  ))}
-</p>
-```
-
----
-
-##### FY-09: CTA route
-
-Paket "Seç" butonu: `href={FIYATLAR_CTA_ROUTE}` → `/fiyatlar`.
-
-Tüm 3 paket kartında aynı route. `/fiyatlar` sayfasında kullanıcı detaylı karşılaştırma + satın alma yapacak.
-
----
-
-##### FY-10: Mobile responsive
-
-- CreditCalculator: `lg:grid-cols-2` → mobilde tek kolon (default `grid-cols-1`)
-- PackageCards: `md:grid-cols-3` → mobilde tek kolon
-- Mobilde popular paket `md:-translate-y-2` → mobilde translateY yok (class zaten `md:` prefix ile)
-- Mobilde popular paketi **ilk sıraya** almak önerilir ama `PAKET_LISTESI` sırası Başlangıç → Popüler → Büyük. Sıralama değiştirmeyeceğiz, mobilde de bu sıra kalır. (İstenmezse mobile'da `order-first` eklenebilir.)
-- Slider: thumb boyutu 22px, touch-friendly (minimum 44px hit area — padding ile sağla)
-- Slider min/max label'ları mobilde de görünsün
-
----
-
-##### FY-11: A11y
-
-- Slider: `role="slider"`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext`
-- Recommendation: `aria-live="polite"` — slider değiştikçe screen reader yeni paketi okur
-- Section: `aria-labelledby="fiyatlar-heading"`
-- Trust points ayraçları: `aria-hidden="true"`
-- Check ikonları: `aria-hidden="true"`
-- PackageCard: semantic `h3`
-- Focus-visible: slider thumb'da ring
-- Keyboard: Arrow keys ile slider kontrolü (native `<input type="range">` zaten destekler)
-
----
-
-##### Kabul kontrol listesi (FY-12)
-
-- [ ] `lib/constants/fiyatlar-landing.ts` oluştu, `lib/paketler.ts`'den import ediyor
-- [ ] `components/sections/FiyatlarSection.tsx` oluştu, `'use client'`
-- [ ] Slider 1-100 arası çalışıyor, mavi gradient fill
-- [ ] Recommendation değişiyor (slider değerine göre)
-- [ ] `aria-live="polite"` recommendation div'inde
-- [ ] 3 paket kartı görünüyor, popular olanın 2px primary border + translateY
-- [ ] "Senin için" yeşil badge slider'a göre doğru pakete geçiyor
-- [ ] "En popüler" ve "Senin için" badge'leri çakışmıyor
-- [ ] Trust points 4 madde, `·` ayraçlı
-- [ ] CTA route: `/fiyatlar`
-- [ ] `_tanitim-redesign.tsx`'e NedenYzlisteSection sonrası eklendi
-- [ ] `globals.css`'e slider CSS eklendi
-- [ ] Mobile: tek kolon, slider touch-friendly
-- [ ] `npm run build` hatasız
-- [ ] Emoji YOK
-- [ ] Commit: `feat: FY-01~11 fiyatlar landing bölümü`
+| ID | Başlık | Durum | Notlar |
+|---|---|---|---|
+| FY-01~11 | Constants + section + slider + paket kartları + responsive + a11y | ✅ Tamam | Commit'ler `28b221c`, `42e95de`, `ad2719f`, `fec994f`, `29d4e61`, `fd9a2aa`, `b9faf36`, `464b40b`, `6a0c641` |
+| FY-12 | Acceptance review | ✅ Tamam | Aziz onayladı 27 Nis 2026 |
+| FY-FIX-01 | Mavi border slider'la dinamik geçsin + CTA pozisyonu | ✅ Tamam | isRecommended ile bağlandı, "Senin için" badge kaldırıldı, CTA özelliklerin altına alındı |
+| FY-FIX-02 | (kontrol) Popüler rozeti hâlâ render oluyor mu | Bekliyor | Aziz scroll ile doğrulayacak, yoksa rozet bloğu geri eklenir |
+
+> Prompt arşivlendi → git history
 
 ---
 
 ### SSS Bölümü — Bölüm 08
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| SS-01 | Constants (`lib/constants/sss.ts`) | ✅ Tamam | DS-01 | FAQ_ITEMS (6 soru-cevap), SSS_COPY (header metinleri). |
-| SS-02 | Section scaffold + SectionHeader + grid | ✅ Tamam | DS-07, SS-01 | `components/sections/SSSSection.tsx`. bg-white. 2 kolon grid (mobilde 1). |
-| SS-03 | FAQItem (collapsible + animation) | ✅ Tamam | SS-02 | `grid-template-rows: 0fr→1fr` trick. +/− ikon dönüşümü. Açık: primary-50/30 bg, primary-200 border. 200ms geçiş. İlk item default açık. |
-| SS-04 | ContactNote | ✅ Tamam | SS-02 | Mail ikon + "Daha fazla soru?" + email mailto link + "Tüm sorular →" link. slate-50 bg. |
-| SS-05 | A11y + responsive pass | ✅ Tamam | SS-03, SS-04 | `aria-expanded`. Klavye aç/kapat. Mobile: 1 kolon. WCAG AA. |
-| SS-06 | Acceptance review | Bekliyor | SS-05 | Aziz preview kontrolü. 6 item test. |
+| ID | Başlık | Durum | Notlar |
+|---|---|---|---|
+| SS-01~05 | Constants + accordion + ContactNote + reduced-motion + a11y | ✅ Tamam | Commit'ler `f7fc05d`, `379c723`, `6a444c0` |
+| SS-06 | Acceptance review | ✅ Tamam | Aziz onayladı 27 Nis 2026 |
 
-**Durum:** Prompt hazır — Claude Code'a verilebilir.
-
-#### SS-01~05 Birleşik Prompt
-
-> **ÖNEMLİ — İÇERİK KURALI:** Canlı sitedeki örnek çıktıları (üretilmiş text/görsel/video/sosyal örnekleri) olduğu gibi koru. Diğer metinler (başlık, açıklama, SSS cevapları, CTA) tasarıma uygun şekilde değiştirilebilir.
-
-> **Hedef:** Landing page'e "Sık sorulan sorular" bölümü ekle. Mevcut `/sss` sayfasından en kritik 6 soruyu seç, collapsible accordion UI, iletişim notu.
-
----
-
-##### SS-01: Constants — `lib/constants/sss-landing.ts`
-
-Mevcut `app/sss/page.tsx`'deki `SORULAR` dizisinden landing page için en önemli 6 soru seçildi. Fiyat güncellendi (49₺).
-
-```ts
-// lib/constants/sss-landing.ts
-
-export const SSS_HEADER = {
-  eyebrow: 'Sık sorulan sorular',
-  title: 'Merak ettiklerin',
-  subtitle: 'Cevabını bulamazsan destek@yzliste.com adresine yaz.',
-}
-
-export const FAQ_ITEMS = [
-  {
-    question: 'Kredi nedir, nasıl çalışır?',
-    answer: 'Her içerik üretimi kredi tüketir. Listing metni 1 kredi, görsel 1 kredi (stil başına), sosyal medya 1 kredi, video 10-20 kredi. Kayıt olunca 3 ücretsiz kredi hediye edilir.',
-  },
-  {
-    question: 'Kredilerim süresiz mi?',
-    answer: 'Evet. Satın alınan kredilerin son kullanma tarihi yoktur. Hesabınızda kaldığı sürece geçerlidir.',
-  },
-  {
-    question: 'Abonelik var mı?',
-    answer: 'Hayır. yzliste tamamen kullandığın kadar öde modeli ile çalışır. Aylık abonelik yoktur. 49₺\'den başlayan kredi paketleri mevcuttur.',
-  },
-  {
-    question: 'Hangi pazaryerlerini destekliyorsunuz?',
-    answer: 'Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA. Her platform için başlık uzunlukları, özellik sayısı ve dil kuralları ayrı ayrı optimize edilmiştir.',
-  },
-  {
-    question: 'Fotoğraf olmadan kullanabilir miyim?',
-    answer: 'Evet. Ürün adı ve birkaç özellik yazarak metin üretebilirsiniz. Fotoğraf yüklerseniz AI ürünü otomatik analiz eder ve daha doğru içerik üretir.',
-  },
-  {
-    question: 'İade nasıl yapılır?',
-    answer: 'Kullanılmamış krediler için satın alma tarihinden itibaren 14 gün içinde destek@yzliste.com adresine yazarak iade talep edebilirsiniz.',
-  },
-] as const
-
-export const CONTACT_NOTE = {
-  text: 'Daha fazla soru mu var?',
-  email: 'destek@yzliste.com',
-  allQuestionsLink: '/sss',
-  allQuestionsText: 'Tüm sorular',
-}
-```
-
----
-
-##### SS-02: Section scaffold — `components/sections/SSSSection.tsx`
-
-`'use client'` — accordion state gerektirir.
-
-```tsx
-// components/sections/SSSSection.tsx
-'use client'
-
-import { useState } from 'react'
-import SectionHeader from '@/components/primitives/SectionHeader'
-import { ChevronDown, Mail, ArrowRight } from 'lucide-react'
-import {
-  SSS_HEADER,
-  FAQ_ITEMS,
-  CONTACT_NOTE,
-} from '@/lib/constants/sss-landing'
-
-export default function SSSSection() {
-  // İlk item default açık
-  const [openIndex, setOpenIndex] = useState<number | null>(0)
-
-  const toggle = (i: number) => {
-    setOpenIndex(prev => (prev === i ? null : i))
-  }
-
-  return (
-    <section className="py-20 md:py-28 bg-white" aria-labelledby="sss-heading">
-      <div className="mx-auto max-w-3xl px-5">
-        <SectionHeader
-          eyebrow={SSS_HEADER.eyebrow}
-          eyebrowColor="primary"
-          title={SSS_HEADER.title}
-          subtitle={SSS_HEADER.subtitle}
-          id="sss-heading"
-        />
-
-        {/* FAQ list */}
-        <div className="mt-12 divide-y divide-rd-neutral-200" role="list">
-          {FAQ_ITEMS.map((item, i) => (
-            <FAQItem
-              key={i}
-              question={item.question}
-              answer={item.answer}
-              isOpen={openIndex === i}
-              onToggle={() => toggle(i)}
-              index={i}
-            />
-          ))}
-        </div>
-
-        {/* ContactNote */}
-        {/* ... */}
-      </div>
-    </section>
-  )
-}
-```
-
-**Not:** `max-w-3xl` (768px) — FAQ tek kolon, geniş ekranda bile dar tutulur (okunabilirlik). 2 kolon grid ticket'ta vardı ama 6 soru için tek kolon daha okunur. Claude Code bunu `max-w-3xl` ile yapsın; **2 kolon gerekmez.**
-
----
-
-##### SS-03: FAQItem (collapsible + animation)
-
-Section dosyası içinde inline component (ayrı dosya gerekmez).
-
-```tsx
-function FAQItem({
-  question,
-  answer,
-  isOpen,
-  onToggle,
-  index,
-}: {
-  question: string
-  answer: string
-  isOpen: boolean
-  onToggle: () => void
-  index: number
-}) {
-  const id = `faq-${index}`
-
-  return (
-    <div role="listitem">
-      <button
-        id={`${id}-trigger`}
-        aria-expanded={isOpen}
-        aria-controls={`${id}-panel`}
-        onClick={onToggle}
-        className="flex w-full items-center justify-between gap-4 py-5 text-left transition-colors hover:text-rd-primary-600"
-      >
-        <span className="text-sm font-medium text-rd-neutral-900">{question}</span>
-        <ChevronDown
-          className={`h-4 w-4 flex-shrink-0 text-rd-neutral-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-          aria-hidden="true"
-        />
-      </button>
-
-      <div
-        id={`${id}-panel`}
-        role="region"
-        aria-labelledby={`${id}-trigger`}
-        className="grid transition-[grid-template-rows] duration-200 ease-out"
-        style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
-      >
-        <div className="overflow-hidden">
-          <p className="pb-5 text-sm leading-relaxed text-rd-neutral-500">
-            {answer}
-          </p>
-        </div>
-      </div>
-    </div>
-  )
-}
-```
-
-**Animasyon detayları:**
-- `grid-template-rows: 0fr → 1fr` trick — smooth height animation
-- `overflow-hidden` on inner div
-- `duration-200 ease-out`
-- ChevronDown `rotate-180` when open
-- İlk item (`index === 0`) default açık (`openIndex` state = 0)
-- Aynı anda sadece 1 item açık (accordion behavior)
-
-**Açık item'da ek stil yok** — ticket'ta "primary-50 bg, primary-200 border" vardı ama 6 item'lık düz accordion'da gereksiz. Sadece hover + ChevronDown dönüşü yeterli. Claude Code bu basit versiyonu implemente etsin.
-
----
-
-##### SS-04: ContactNote
-
-FAQ listesinden sonra, `mt-10`.
-
-```tsx
-{/* ContactNote */}
-<div className="mt-10 flex flex-col items-center gap-3 rounded-lg bg-rd-neutral-50 p-6 text-center sm:flex-row sm:justify-between sm:text-left">
-  <div className="flex items-center gap-3">
-    <Mail className="h-5 w-5 text-rd-neutral-400" aria-hidden="true" />
-    <div>
-      <p className="text-sm font-medium text-rd-neutral-700">{CONTACT_NOTE.text}</p>
-      <a
-        href={`mailto:${CONTACT_NOTE.email}`}
-        className="text-sm text-rd-primary-600 hover:text-rd-primary-700 transition-colors"
-      >
-        {CONTACT_NOTE.email}
-      </a>
-    </div>
-  </div>
-  <a
-    href={CONTACT_NOTE.allQuestionsLink}
-    className="inline-flex items-center gap-1 text-sm text-rd-primary-600 hover:text-rd-primary-700 transition-colors"
-  >
-    {CONTACT_NOTE.allQuestionsText}
-    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-  </a>
-</div>
-```
-
----
-
-##### SS-05: A11y + responsive
-
-**A11y:**
-- `role="list"` on container, `role="listitem"` on each FAQItem
-- `aria-expanded` on trigger button
-- `aria-controls` pointing to panel id
-- `role="region"` on panel with `aria-labelledby`
-- ChevronDown `aria-hidden="true"`
-- Mail + ArrowRight icons `aria-hidden="true"`
-- Keyboard: Enter/Space toggle (native `<button>` handles this)
-
-**Responsive:**
-- `max-w-3xl` → mobilde de full width (padding handles it)
-- ContactNote: `flex-col` → `sm:flex-row`
-- No 2-column → single column throughout
-- Touch targets: button `py-5` = 40px+ height, adequate
-
-**Reduced motion:**
-- `grid-template-rows` transition + ChevronDown rotation: Add `@media (prefers-reduced-motion: reduce)` to disable both → `globals.css`'e ekle:
-```css
-@media (prefers-reduced-motion: reduce) {
-  [id^="faq-"][role="region"] {
-    transition: none;
-  }
-}
-```
-
----
-
-##### SS-02~SS-05 entegrasyon notu
-
-`_tanitim-redesign.tsx`'de FiyatlarSection'dan **sonra** ekle:
-
-```tsx
-import SSSSection from '@/components/sections/SSSSection'
-
-// ... inside <main>
-<FiyatlarSection />
-<SSSSection />
-```
-
----
-
-##### Kabul kontrol listesi (SS-06)
-
-- [ ] `lib/constants/sss-landing.ts` oluştu, 6 soru-cevap doğru
-- [ ] Fiyat "49₺" doğru (eski "29₺"/"39₺" yok)
-- [ ] `components/sections/SSSSection.tsx` oluştu, `'use client'`
-- [ ] Accordion çalışıyor: tıklayınca aç/kapat, aynı anda sadece 1 açık
-- [ ] İlk item default açık
-- [ ] `grid-template-rows` animasyonu smooth
-- [ ] ChevronDown 180° dönüyor
-- [ ] `aria-expanded` doğru toggle oluyor
-- [ ] ContactNote: email mailto link, "Tüm sorular" → `/sss`
-- [ ] `_tanitim-redesign.tsx`'e FiyatlarSection sonrası eklendi
-- [ ] Mobile: tek kolon, touch-friendly
-- [ ] `npm run build` hatasız
-- [ ] Emoji YOK
-- [ ] Commit: `feat: SS-01~05 sss landing bölümü`
+> Prompt arşivlendi → git history
 
 ---
 
 ### Final CTA Bölümü — Bölüm 09
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| FC-01 | Constants (`lib/constants/final-cta.ts`) | ✅ Tamam | DS-01 | FINAL_CTA_COPY (eyebrow, heading, subheading, ctaText, reassurance). |
-| FC-02 | Section + gradient bg | ✅ Tamam | DS-02, FC-01 | `components/sections/FinalCTASection.tsx`. `linear-gradient(135deg, primary-600, primary-700)`. |
-| FC-03 | Container + content | ✅ Tamam | FC-02 | Max-w 720px. EyebrowBadge (beyaz transparan). H2 white. Sub white/80. CTA (white bg, primary-700 text, shadow, hover lift). ReassuranceLine white/70. |
-| FC-04 | (Opsiyonel) Background pattern | ✅ Tamam | FC-02 | Subtle dot pattern veya radial glow. |
-| FC-05 | Mobile responsive + a11y | ✅ Tamam | FC-03 | Mobile: CTA full width. Focus-visible. Semantic h2. |
-| FC-06 | Acceptance review | Bekliyor | FC-05 | Aziz preview kontrolü. |
-| FC-FIX-01 | `--color-rd-primary-600` token eksikliği + FC render | ✅ Tamam | FC-05 | globals.css'te `--color-rd-primary-600: #2563EB;` (Tailwind blue-600) tanımı eklenecek. Sıra: 500 → **600** → 700. FinalCTASection gradient'i bu sayede render olacak. Preview'da SSS sonrası mavi gradient bg + büyük H1 "İlk 3 kredi hediye" + beyaz CTA görünür. |
-| FY-FIX-02 | (kontrol) Popüler rozeti hâlâ render oluyor mu | Bekliyor | FY-FIX-01 | Aziz screenshot'ında orta paket üstünde "En popüler" rozeti görünmüyor olabilir. Önce Aziz scroll ile doğrulayacak; gerçekten yoksa Claude Code rozet bloğunun (FiyatlarSection.tsx satır 135-141) hâlâ render olduğunu doğrulasın. |
+| ID | Başlık | Durum | Notlar |
+|---|---|---|---|
+| FC-01~05 | Constants + section + gradient + CTA + a11y | ✅ Tamam | Commit'ler `c44c2df`, `25c4436`, `faaa45b` |
+| FC-06 | Acceptance review | ✅ Tamam | Aziz onayladı 27 Nis 2026 (FC-FIX-02 sonrası) |
+| FC-FIX-01 | `--color-rd-primary-600` token eksikliği | ✅ Tamam | globals.css satır 24'e `#2563EB` eklendi |
+| FC-FIX-02 | Gradient stacking context bug | ✅ Tamam | Gradient `<section style>` üzerine taşındı, `-z-10` kaldırıldı |
+| TOKEN-FIX-01 | Faz 2 öncesi eksik token'ları tamamla (success/warning/danger + Hepsiburada/N11) | ✅ Tamam | globals.css'e eklendi |
 
-**Durum:** Prompt hazır — Claude Code'a verilebilir.
-
-#### FC-01~05 Birleşik Prompt
-
-> **ÖNEMLİ — İÇERİK KURALI:** Canlı sitedeki örnek çıktıları (üretilmiş text/görsel/video/sosyal örnekleri) olduğu gibi koru. Diğer metinler (başlık, açıklama, CTA) tasarıma uygun şekilde değiştirilebilir.
-
-> **Hedef:** Landing page'in son bölümü olarak güçlü bir CTA bandı ekle. Gradient bg, kısa mesaj, tek buton. Kullanıcıyı kayıt sayfasına yönlendir.
-
----
-
-##### FC-01: Constants — `lib/constants/final-cta.ts`
-
-```ts
-// lib/constants/final-cta.ts
-
-export const FINAL_CTA = {
-  eyebrow: 'Hemen başla',
-  title: 'İlk 3 kredi hediye',
-  subtitle: 'Kayıt ol, ürün fotoğrafını yükle, saniyeler içinde listing metni hazır.',
-  ctaText: 'Ücretsiz başla',
-  ctaRoute: '/kayit',
-  reassurance: 'Kredi kartı gerekmez · 3 ücretsiz kredi · Abonelik yok',
-}
-```
-
----
-
-##### FC-02 + FC-03: Section — `components/sections/FinalCTASection.tsx`
-
-Server component yeterli (state yok).
-
-```tsx
-// components/sections/FinalCTASection.tsx
-import { ArrowRight } from 'lucide-react'
-import { FINAL_CTA } from '@/lib/constants/final-cta'
-
-export default function FinalCTASection() {
-  return (
-    <section className="relative overflow-hidden py-20 md:py-28" aria-labelledby="final-cta-heading">
-      {/* Gradient background */}
-      <div
-        className="absolute inset-0 -z-10"
-        style={{
-          background: 'linear-gradient(135deg, var(--color-rd-primary-600), var(--color-rd-primary-700))',
-        }}
-        aria-hidden="true"
-      />
-
-      {/* Optional: subtle radial glow */}
-      <div
-        className="absolute inset-0 -z-10 opacity-30"
-        style={{
-          background: 'radial-gradient(ellipse at 30% 50%, var(--color-rd-primary-400), transparent 70%)',
-        }}
-        aria-hidden="true"
-      />
-
-      <div className="mx-auto max-w-2xl px-5 text-center">
-        {/* Eyebrow */}
-        <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white/90 tracking-wide backdrop-blur-sm">
-          {FINAL_CTA.eyebrow}
-        </span>
-
-        {/* Title */}
-        <h2
-          id="final-cta-heading"
-          className="mt-5 text-3xl font-bold text-white md:text-4xl"
-          style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.02em', lineHeight: '1.3' }}
-        >
-          {FINAL_CTA.title}
-        </h2>
-
-        {/* Subtitle */}
-        <p className="mt-4 text-base text-white/80 leading-relaxed md:text-lg">
-          {FINAL_CTA.subtitle}
-        </p>
-
-        {/* CTA Button — white bg, primary text */}
-        <div className="mt-8">
-          <a
-            href={FINAL_CTA.ctaRoute}
-            className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-medium text-rd-primary-700 transition-all hover:bg-white/90 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-rd-primary-700"
-          >
-            {FINAL_CTA.ctaText}
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </a>
-        </div>
-
-        {/* Reassurance */}
-        <p className="mt-5 text-sm text-white/60">
-          {FINAL_CTA.reassurance}
-        </p>
-      </div>
-    </section>
-  )
-}
-```
-
-**Tasarım notları:**
-- Gradient: `primary-600 → primary-700` (135°) — derin mavi
-- Radial glow: `primary-400` opacity 30% — opsiyonel subtle ışık efekti (FC-04)
-- Eyebrow: white/15 bg + backdrop-blur — transparan rozet
-- CTA: beyaz bg, primary-700 text, hover lift (`-translate-y-0.5`)
-- `max-w-2xl` (672px) — dar ve odaklı
-- `font-bold` kullanıldı (redesign branch'te 400-800 serbest)
-
----
-
-##### FC-04: Background pattern (opsiyonel)
-
-Yukarıdaki radial glow yeterli. Dot pattern eklemek istenirse:
-
-```css
-/* globals.css — opsiyonel */
-.final-cta-dots {
-  background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-```
-
-Kullanım: `<div className="absolute inset-0 -z-10 final-cta-dots" aria-hidden="true" />` — gradient'in üstüne. Claude Code bunu atlayabilir, radial glow yeterli.
-
----
-
-##### FC-05: Responsive + a11y
-
-**Responsive:**
-- `py-20 md:py-28` — mobilde daha sıkı
-- `text-3xl md:text-4xl` — mobilde biraz küçük
-- CTA buton: mobilde de inline, full width gerekmez (kısa metin)
-- `max-w-2xl px-5` — mobilde side padding yeterli
-
-**A11y:**
-- `aria-labelledby="final-cta-heading"`
-- Gradient + glow divler `aria-hidden="true"`
-- ArrowRight `aria-hidden="true"`
-- Focus-visible: white ring with offset (gradient bg'da görünsün)
-- Kontrast: white text on primary-600/700 → AA geçer (4.5:1+)
-
----
-
-##### Entegrasyon
-
-`_tanitim-redesign.tsx`'de SSSSection'dan **sonra**, Footer'dan **önce** ekle:
-
-```tsx
-import FinalCTASection from '@/components/sections/FinalCTASection'
-
-// ... inside <main>
-<SSSSection />
-<FinalCTASection />
-```
-
----
-
-##### Kabul kontrol listesi (FC-06)
-
-- [ ] `lib/constants/final-cta.ts` oluştu
-- [ ] `components/sections/FinalCTASection.tsx` oluştu, server component
-- [ ] Gradient bg mavi (primary-600 → primary-700)
-- [ ] Eyebrow transparan rozet (white/15)
-- [ ] CTA beyaz buton, hover lift
-- [ ] Reassurance text white/60
-- [ ] `_tanitim-redesign.tsx`'e SSSSection sonrası eklendi
-- [ ] Mobile: düzgün padding, text responsive
-- [ ] Kontrast: beyaz metin okunuyor
-- [ ] `npm run build` hatasız
-- [ ] Emoji YOK
-- [ ] Commit: `feat: FC-01~05 final cta bölümü`
+> Prompt arşivlendi → git history
 
 ---
 
 ### Footer Bölümü — Bölüm 10
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| FT-01 | Constants (`lib/constants/footer.ts`) | Prompt hazır | DS-01 | FOOTER_BRAND, FOOTER_COLUMNS (3 sütun: Ürün/Şirket/Yasal), FOOTER_DISCLAIMER, COMPANY_INFO. |
-| FT-02 | Footer scaffold + grid | Prompt hazır | FT-01 | `components/sections/Footer.tsx`. bg-slate-50, border-top. 4 kolon grid. |
-| FT-03 | BrandColumn | Prompt hazır | FT-02 | Logo (Manrope 800) + tagline + lokasyon (Lucide MapPin, bayrak emojisi yerine). |
-| FT-04 | Link columns (3 sütun) | Prompt hazır | FT-02 | Ürün, Şirket, Yasal. Title uppercase. Links hover primary-700. Email mailto. |
-| FT-05 | FooterMid (copyright + badges) | Prompt hazır | FT-02 | Copyright sol, iyzico + SSL badge sağ. |
-| FT-06 | FooterDisclaimer | Prompt hazır | FT-02 | 12px italic slate-500, max-w 800px. Pazaryeri isimleri hakkında yasal not. |
-| FT-07 | iyzico + SSL badge asset | Prompt hazır | FT-05 | PNG/SVG asset public/ altına. Aziz'den asset gelecek. |
-| FT-08 | Mobile responsive | Prompt hazır | FT-06 | Mobile: 1 kolon. FooterMid dikey. |
-| FT-09 | A11y (semantic `<footer>`) | Prompt hazır | FT-08 | `<footer>` tag. Link labels. WCAG AA. |
-| FT-10 | Acceptance review | Bekliyor | FT-09 | Aziz preview kontrolü. |
+| ID | Başlık | Durum | Notlar |
+|---|---|---|---|
+| FT-01~09 | Constants + scaffold + brand + linkler + iyzico + disclaimer + responsive + a11y | ✅ Tamam | iyzico logo public/iyzico_footer_logo.png mevcut |
+| FT-10 | Acceptance review | ✅ Tamam | Aziz onayladı 27 Nis 2026 |
 
-**Durum:** Prompt hazır — Claude Code'a verilebilir.
-
-#### FT-01~09 Birleşik Prompt
-
-> **ÖNEMLİ — İÇERİK KURALI:** Canlı sitedeki örnek çıktıları (üretilmiş text/görsel/video/sosyal örnekleri) ve mevcut görsel öğeleri (toplar vb.) olduğu gibi koru. Diğer metinler (footer linkleri, copyright, disclaimer) tasarıma uygun şekilde değiştirilebilir.
-
-> **Hedef:** Landing page footer'ı. 4 kolon grid (brand + 3 link grubu), altında copyright + iyzico badge, en altta yasal disclaimer. Mevcut `SiteFooter.tsx` referans, redesign token'larına taşınacak.
-
----
-
-##### FT-01: Constants — `lib/constants/footer-landing.ts`
-
-```ts
-// lib/constants/footer-landing.ts
-
-export const FOOTER_BRAND = {
-  name: 'yzliste',
-  tagline: 'Pazaryeri içeriklerini AI ile üret',
-  location: 'Türkiye',
-}
-
-export const FOOTER_COLUMNS = [
-  {
-    title: 'Ürün',
-    links: [
-      { label: 'Fiyatlar', href: '/fiyatlar' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Sık sorulan sorular', href: '/sss' },
-    ],
-  },
-  {
-    title: 'Şirket',
-    links: [
-      { label: 'Hakkımızda', href: '/hakkimizda' },
-      { label: 'İletişim', href: 'mailto:destek@yzliste.com' },
-    ],
-  },
-  {
-    title: 'Yasal',
-    links: [
-      { label: 'Kullanım koşulları', href: '/kosullar' },
-      { label: 'Gizlilik politikası', href: '/gizlilik' },
-      { label: 'Mesafeli satış', href: '/mesafeli-satis' },
-      { label: 'Teslimat ve iade', href: '/teslimat-iade' },
-      { label: 'KVKK aydınlatma', href: '/kvkk-aydinlatma' },
-      { label: 'Çerez politikası', href: '/cerez-politikasi' },
-    ],
-  },
-] as const
-
-export const FOOTER_COPYRIGHT = '© 2026 yzliste · SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI'
-
-export const FOOTER_DISCLAIMER = 'yzliste; Trendyol, Hepsiburada, Amazon, N11 ve Etsy ile resmi bir iş birliği içinde değildir. Belirtilen marka adları yalnızca desteklenen pazaryerlerini tanımlamak için kullanılmaktadır. Tüm markalar kendi sahiplerine aittir.'
-
-export const FOOTER_IYZICO_LOGO = '/iyzico_footer_logo.png'
-```
-
----
-
-##### FT-02 + FT-03 + FT-04: Footer scaffold + grid
-
-Server component (state yok).
-
-```tsx
-// components/sections/FooterSection.tsx
-import Link from 'next/link'
-import { MapPin } from 'lucide-react'
-import {
-  FOOTER_BRAND,
-  FOOTER_COLUMNS,
-  FOOTER_COPYRIGHT,
-  FOOTER_DISCLAIMER,
-  FOOTER_IYZICO_LOGO,
-} from '@/lib/constants/footer-landing'
-
-export default function FooterSection() {
-  return (
-    <footer className="border-t border-rd-neutral-200 bg-rd-neutral-50 pt-12 pb-8" role="contentinfo">
-      <div className="mx-auto max-w-6xl px-5">
-
-        {/* Top grid: brand + 3 link columns */}
-        <div className="grid gap-8 md:grid-cols-4">
-
-          {/* Brand column */}
-          <div>
-            <p
-              className="text-lg font-bold text-rd-neutral-900"
-              style={{ fontFamily: 'var(--font-rd-display)' }}
-            >
-              {FOOTER_BRAND.name}
-            </p>
-            <p className="mt-2 text-sm text-rd-neutral-500">{FOOTER_BRAND.tagline}</p>
-            <p className="mt-3 flex items-center gap-1.5 text-xs text-rd-neutral-400">
-              <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
-              {FOOTER_BRAND.location}
-            </p>
-          </div>
-
-          {/* Link columns */}
-          {FOOTER_COLUMNS.map(col => (
-            <div key={col.title}>
-              <p className="text-xs font-medium text-rd-neutral-400 uppercase tracking-wider">
-                {col.title}
-              </p>
-              <ul className="mt-3 space-y-2" role="list">
-                {col.links.map(link => (
-                  <li key={link.href}>
-                    {link.href.startsWith('mailto:') ? (
-                      <a
-                        href={link.href}
-                        className="text-sm text-rd-neutral-600 transition-colors hover:text-rd-primary-600"
-                      >
-                        {link.label}
-                      </a>
-                    ) : (
-                      <Link
-                        href={link.href}
-                        className="text-sm text-rd-neutral-600 transition-colors hover:text-rd-primary-600"
-                      >
-                        {link.label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        {/* Divider */}
-        <div className="mt-10 border-t border-rd-neutral-200" aria-hidden="true" />
-
-        {/* FooterMid: copyright + iyzico */}
-        <div className="mt-6 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-          <p className="text-xs text-rd-neutral-400">{FOOTER_COPYRIGHT}</p>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={FOOTER_IYZICO_LOGO}
-            alt="iyzico ile güvenli ödeme"
-            className="h-6 w-auto"
-          />
-        </div>
-
-        {/* Disclaimer */}
-        <p className="mt-6 mx-auto max-w-3xl text-center text-xs italic text-rd-neutral-400 leading-relaxed">
-          {FOOTER_DISCLAIMER}
-        </p>
-
-      </div>
-    </footer>
-  )
-}
-```
-
-**Tasarım notları:**
-- `bg-rd-neutral-50` + `border-t border-rd-neutral-200` — soft separator
-- Brand name: Manrope 800 (`font-bold` + display font)
-- Location: Lucide MapPin (bayrak emojisi yasak)
-- Link columns: uppercase title, text links hover primary-600
-- `<Link>` for internal, `<a>` for mailto
-- iyzico logo: mevcut `public/iyzico_footer_logo.png` kullanılır
-
----
-
-##### FT-05: FooterMid (copyright + badges)
-
-Yukarıdaki kodda zaten var. `sm:flex-row sm:justify-between` — mobilde dikey, masaüstünde yatay.
-
-**FT-07 (iyzico asset):** Mevcut `public/iyzico_footer_logo.png` dosyası kullanılacak. Yeni asset gerekmez. SSL badge şimdilik yok — Aziz'den gelirse eklenebilir.
-
----
-
-##### FT-08: Mobile responsive
-
-- Grid: `md:grid-cols-4` → mobilde `grid-cols-1` (default)
-- Mobilde brand column üstte, link columns alta sıralanır
-- FooterMid: `flex-col` → `sm:flex-row`
-- Disclaimer: `max-w-3xl mx-auto text-center` — mobilde de okunur
-
----
-
-##### FT-09: A11y
-
-- `<footer>` semantic tag + `role="contentinfo"`
-- Link listleri `role="list"` + `<li>` items
-- MapPin + divider `aria-hidden="true"`
-- iyzico logo: `alt="iyzico ile güvenli ödeme"`
-- Focus-visible: links default browser outline yeterli (veya `focus-visible:text-rd-primary-600`)
-
----
-
-##### Entegrasyon
-
-`_tanitim-redesign.tsx`'de FinalCTASection'dan **sonra**, `</main>`'den sonra ekle (footer main dışında):
-
-```tsx
-import FooterSection from '@/components/sections/FooterSection'
-
-// ... layout
-<main>
-  ...
-  <FinalCTASection />
-</main>
-<FooterSection />
-```
-
----
-
-##### Kabul kontrol listesi (FT-10)
-
-- [ ] `lib/constants/footer-landing.ts` oluştu
-- [ ] `components/sections/FooterSection.tsx` oluştu, server component
-- [ ] 4 kolon grid: brand + Ürün + Şirket + Yasal
-- [ ] Brand: Manrope, MapPin lokasyon (emoji yok)
-- [ ] Linkler doğru route'lara gidiyor
-- [ ] iyzico logo görünüyor
-- [ ] Copyright doğru
-- [ ] Disclaimer italic, küçük
-- [ ] `_tanitim-redesign.tsx`'e main dışında, en sonda eklendi
-- [ ] Mobile: tek kolon, FooterMid dikey
-- [ ] `npm run build` hatasız
-- [ ] Emoji YOK
-- [ ] Commit: `feat: FT-01~09 footer bölümü`
+> Prompt arşivlendi → git history
 
 ---
 
 ### Açık Sorular (Aziz kararı bekliyor)
 
-**Grup A — Route'lar (tek seferde cevaplanabilir)**
-
-| # | Kaynak | Soru | Varsayılan |
-|---|---|---|---|
-| Q1 | Hero | "Giriş yap" buton route | ✅ Mevcut auth route | Cowork bulacak |
-| Q2 | IT-02 | "Hemen üret" CTA | ✅ `/uret` | — |
-| Q3 | Marka | "Marka profilimi oluştur →" CTA | ✅ `/uret` | — |
-| Q4 | Fiyatlar | Paket "Seç" butonu | ✅ `/fiyatlar` | — |
-| Q5 | Final CTA | "Ücretsiz başla" CTA | ✅ `/kayit` | — |
-
-**Grup B — Rakam doğrulamaları**
-
-| # | Kaynak | Soru | Varsayılan |
-|---|---|---|---|
-| Q6 | Hero | "28 saniyede üretildi" | ✅ Muğlak yap | "Saniyeler içinde üretildi" kullanılacak |
-| Q7 | 3 Adım | "5sn / 10sn / 15sn → 30 saniye toplam" | ✅ Muğlak yap | Kesin rakam yerine "birkaç saniye" / "kısa sürede" |
-| Q8 | IT | Süre rakamları (10sn, 30sn, 2dk, 20sn) | ✅ Muğlak yap | "~saniyeler", "~1 dakika" gibi yumuşak ifadeler |
-| Q9 | IT | Kredi rakamları (1, 1/stil, 2-3, 3/kit) | ✅ Muğlak yap | Kesin rakam verilmez, "düşük kredi" gibi ifadeler |
-| Q10 | Fiyatlar | Gerçek paket isimleri ve fiyatları? | ⏳ Cevap bekliyor | Cowork `/fiyatlar`'dan okuyacak, Aziz onaylayacak |
-| Q11 | Fiyatlar | CREDIT_PER_PRODUCT = 4 varsayımı | ⏳ Cevap bekliyor | Fiyatlar bölümüne gelince netleşecek |
-| Q12 | Fiyatlar | "Faturalandırma desteği" doğru mu? | ⏳ Cevap bekliyor | Fiyatlar bölümüne gelince netleşecek |
-
-**Grup C — İçerik/metin kararları**
-
-| # | Kaynak | Soru | Varsayılan |
-|---|---|---|---|
-| Q13 | Pazaryeri | Görsel placeholder: gerçek ürün görseli mi, Lucide ikon mi? | Pilot: Lucide |
-| Q14 | Pazaryeri | Demo metinler: mockup "Selin Porselen" mi, gerçek ürün mü? | Pilot: mockup metni |
-| Q15 | Pazaryeri | Sosyal medya: Trendyol→Instagram+TikTok, Amazon/Etsy→Instagram+Pinterest? | Evet |
-| Q16 | Neden | "Türkçe karakterler ve gramer zayıf" satırı | ✅ Jargon versiyonu | "Türk e-ticaret jargonunu bilmez" olacak |
-| Q17 | Neden | Provokatif başlık — rakip isimleri | ✅ Marka isimleri YOK | "Neden genel AI araçları değil?" gibi, ChatGPT/Claude ismen anılmayacak |
-| Q18 | Neden | Footnote | ✅ Güncellenmeli | Marka isimleri yerine "Genel AI araçları harika asistanlardır..." |
-| Q19 | Marka | Ton metinleri mockup'tan mı, gerçek AI çıktısı mı? | Pilot: mockup |
-| Q20 | Marka | Hedef kitle örneği "25-45 yaş kadın · Çeyiz, hediye" ok mu? | Evet |
-| Q21 | 3 Adım | Mini mockup içerikleri (fincan, Trendyol+Amazon) ok mu? | Evet |
-| Q22 | SSS | Pazaryeri listesi: PttAVM dahil mi? | Mevcut siteyi kontrol |
-| Q23 | SSS | `destek@yzliste.com` doğru email mi? | Evet varsayıldı |
-
-**Grup D — Teknik/asset soruları**
-
-| # | Kaynak | Soru | Varsayılan |
-|---|---|---|---|
-| Q24 | Hero | `/uret` sayfası screenshot için kaliteli mi, yoksa redesign bekliyor mu? | Placeholder kullan |
-| Q25 | Hero | "Nasıl çalışır?" video mevcut mu? (YouTube/Vimeo/mp4) | Pilot: placeholder |
-| Q26 | Hero | Logo yanında "Beta" badge olsun mu? | Olsun |
-| Q27 | Footer | /hakkimizda, /iletisim, /blog sayfaları mevcut mu? | Cowork kontrol eder |
-| Q28 | Footer | iyzico logo asset (PNG/SVG) mevcut mu? | Aziz sağlar |
-| Q29 | Footer | Yasal sayfalar (KVKK, gizlilik vb.) güncel ve dolu mu? | Cowork kontrol eder |
+**Grup A — Route'lar:** Q1-Q5 hepsi ✅ kararlaştı.
+**Grup B — Rakam doğrulamaları:** Q6-Q12 hepsi ✅ kararlaştı (Q10 fiyatlar `lib/paketler.ts`'den, Q11 CREDIT_PER_PRODUCT=1, Q12 "e-Arşiv fatura").
+**Grup C — İçerik:** Q13-Q23 hepsi kararlaştı ve uygulandı.
+**Grup D — Teknik:** Q24-Q29 hepsi çözüldü.
 
 ---
 
-## /uret Sayfası UX Refactor
+## /uret Sayfası UX Refactor — Bölüm 11
 
-**Yaklaşım:** Hafif refaktör (Yaklaşım A) — mevcut iskelet korunur, 5 UX iyileştirmesi.
+**Yaklaşım:** Hafif refaktör — mevcut iskelet korunur, 5 UX iyileştirmesi.
 **Spec:** `uret-ux-redesign-spec.md` | **Mockup:** `uret-redesign-mockup.jsx` | **Kararlar:** `uret-redesign-kararlar.md`
-**Branch:** `claude/redesign-modern-ui` (anasayfa redesign ile aynı branch)
-**Korunacaklar:** 4 sekme yapısı, 7 stüdyo stil grid, 5 video hareket preset, karakter limit eyebrow, üst fotoğraf yükleme alanı.
+**Branch:** `claude/redesign-modern-ui` (anasayfa redesign ile aynı)
 
 **Karar özeti (27 Nisan 2026):**
-- "ADIM 1/3" kalıyor (3 adım akışıyla uyumlu)
-- Yetersiz kredi → disabled buton + tooltip "Yetersiz kredi. Paket al →" + `/fiyatlar` link
-- Marka profili kayıt → `/profil` sayfasına yönlendirme
-- Demo tonu → sadece önizleme, gerçek üretimde kullanılmaz
-- "Sosyal medya kiti" konsepti → kaldırıldı, tek akış yeterli
-- Tooltip metinleri → kısa versiyonlar ("Önce ürün adını yaz")
-- Emoji → mockup'taki emojiler Lucide ikonlarla değiştirilecek (Coffee, Heart, Briefcase, Sparkles)
+- "ADIM 1/3" kalıyor
+- Yetersiz kredi → disabled buton + tooltip "Yetersiz kredi. Paket al →" + `/fiyatlar`
+- Marka profili kayıt → `/profil`
+- Demo tonu → sadece önizleme
+- "Sosyal medya kiti" konsepti → kaldırıldı
+- Emoji → Lucide
 
-### Grup 1 — Renk Paleti Uyumu (bağımlılık: hepsinden önce)
+### Grup 1 — Renk Paleti Uyumu
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| U-01 | Renk paleti: bej → slate dönüşümü | Bekliyor | — | `#F1F0EB`→`slate-100`, `#D8D6CE`→`slate-200`, `#FAFAF8`→`slate-50`, `#5A5852`→`slate-600`, `#1A1A17`→`slate-900`, `#908E86`→`slate-400`, `#1E4DD8`→`#1E40AF`. Tüm `/uret` sayfasında eski renk kodu kalmamış. |
+| ID | Başlık | Durum | Notlar |
+|---|---|---|---|
+| U-01 | Renk paleti: bej → rd-* token dönüşümü | ✅ Tamam | 8 dosyada eski hex → rd-neutral/rd-primary token'ları. Premium amber (#A87847, #7D5630) korundu (Yzstudio için). |
+
+> Prompt arşivlendi → git history
 
 ### Grup 2 — Niyet Hatırlatıcı (Intent Banner)
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| U-02 | Sarı marka uyarısı banner'ını kaldır | Bekliyor | U-01 | Mevcut sarı "Marka profilinizi doldurun" banner'ı kaldırılmış veya taşınmış. |
-| U-03 | IntentBanner component ekle | Bekliyor | U-02 | Sayfanın en üstünde: Eyebrow "ADIM 1 / 3 — NE ÜRETMEK İSTİYORSUN?" + H1 "İçerik türünü seç" + subtitle. White bg, slate-200 border, 16px radius, 24px padding. |
+| ID | Başlık | Durum | Notlar |
+|---|---|---|---|
+| U-02 | Sarı marka uyarısı banner'ını kaldır | ✅ Tamam | app/uret/page.tsx eski sarı conditional kaldırıldı |
+| U-03 | IntentBanner component | ✅ Tamam | components/uret/IntentBanner.tsx — "ADIM 1/3" eyebrow + "İçerik türünü seç" H1 + subtitle |
+
+> Prompt arşivlendi → git history
 
 ### Grup 3 — Marka Profili Interaktif Demo
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| U-04 | BrandProfileBlock scaffold (collapsible) | Bekliyor | U-02 | Kapalıyken: turuncu border-left, "Marka profili eksik" + "Önce dene" buton. Açıkken: demo alanı görünür. Collapsible animasyon. |
-| U-05 | ToneSelector (3 chip, radio group) | Bekliyor | U-04 | 3 chip: Samimi (Heart ikon) / Profesyonel (Briefcase) / Premium (Sparkles). `role="radiogroup"`, `aria-checked`. Arrow Left/Right. Sadece biri aktif. |
-| U-06 | AIPreview (canlı değişen çıktı, fade) | Bekliyor | U-05 | Ton seçilince 300ms fade ile AI çıktı önizlemesi değişir. `aria-live="polite"`. Banner turuncu→yeşil dönüşür. Not: "Bu sadece önizleme. Tonu kalıcı yapmak için profilini kaydet." |
-| U-07 | "Profili düzenle" CTA → `/profil` | Bekliyor | U-04 | Tıklayınca `/profil` sayfasına yönlendiriyor. Outline stil buton. |
+| ID | Başlık | Durum | Notlar |
+|---|---|---|---|
+| U-04 | BrandProfileBlock scaffold (collapsible) | ✅ Tamam | components/uret/BrandProfileBlock.tsx — accent border-left, "Önce dene" buton |
+| U-05 | ToneSelector (3 chip, radio group) | ✅ Tamam | components/uret/ToneSelector.tsx — Heart/Briefcase/Sparkles, ARIA radio, Arrow Left/Right |
+| U-06 | AIPreview (canlı değişen çıktı, fade) | ✅ Tamam | components/uret/AIPreview.tsx — TONE_CHIPS.output reuse, fade animasyon, banner turuncu→yeşil |
+| U-07 | "Profili düzenle" CTA → `/profil` | ✅ Tamam | BrandProfileBlock demo açıkken AIPreview altında outline link |
+
+> Prompt arşivlendi → git history
 
 ### Grup 4 — Canlı Kredi Maliyeti (Sticky Submit Bar)
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| U-08 | `calculateCredits()` hook | Bekliyor | — | Metin=1, Görsel=seçili stil sayısı, Video=5sn:10/10sn:20, Sosyal=platform sayısı×1. Sekme/seçim değişince reactive güncelleme. |
-| U-09 | StickySubmitBar component | Bekliyor | U-08 | Sticky bottom:20px, white bg, slate-200 border, 16px radius, shadow. Sol: "BU ÜRETİMİN MALİYETİ" eyebrow + büyük kredi rakamı + kalan kredi. Sağ: "İçerik üret" primary buton. Mobile: dikey istif (cost üst, buton alt). |
-| U-10 | Yetersiz kredi durumu | Bekliyor | U-09 | Bakiye < maliyet → buton disabled + tooltip "Yetersiz kredi. Paket al →" (tıklanabilir `/fiyatlar` link). Mobile: buton altında inline uyarı satırı. |
+| ID | Başlık | Durum | Notlar |
+|---|---|---|---|
+| U-08 | `calculateCredits()` hook | ✅ Tamam | components/uret/useCalculateCredits.ts — sekme bazlı reactive |
+| U-09 | StickySubmitBar component | ✅ Tamam | components/uret/StickySubmitBar.tsx — sticky bottom, cost summary + CTA |
+| U-10 | Yetersiz kredi durumu | ✅ Tamam | Bakiye < maliyet → buton disabled + "Yetersiz kredi · Paket al" → `/fiyatlar` |
+
+> Prompt arşivlendi → git history
 
 ### Grup 5 — Disabled Buton Tooltip
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| U-11 | `getCTAState()` hook | Bekliyor | — | Sekme bazlı validation: Metin→ürün adı, Görsel→fotoğraf+stil, Video→fotoğraf, Sosyal→ürün adı+platform. `{ disabled, reason }` döner. |
-| U-12 | Tooltip primitive | Bekliyor | — | Üstte 8px offset, slate-900 bg, white text, 8px radius, 13px font, pointer üçgen, 200ms fade-in. `role="tooltip"`. Mobile: tap/focus'ta görünür, 2sn auto-dismiss. |
-| U-13 | Disabled buton + tooltip entegrasyonu | Bekliyor | U-11, U-12 | Form eksikken buton disabled (slate-300 bg) + hover/focus'ta neden tooltip. Form tamamlanınca buton aktif, tooltip kayboluyor. `aria-disabled="true"` + `aria-describedby`. |
+| ID | Başlık | Durum | Notlar |
+|---|---|---|---|
+| U-11 | `getCTAState()` hook | ✅ Tamam | components/uret/useCTAState.ts — sekme bazlı validation, `{ disabled, reason }` |
+| U-12 | Tooltip primitive | ✅ Tamam | components/primitives/Tooltip.tsx — fade-in, mobile tap auto-dismiss, ARIA |
+| U-13 | Disabled buton + tooltip entegrasyonu | ✅ Tamam | StickySubmitBar Tooltip ile sarmalandı, ctaState prop, aria-disabled |
+
+> Prompt arşivlendi → git history
 
 ### Grup 6 — Şeffaf Kredi Etiketleri
 
+| ID | Başlık | Durum | Notlar |
+|---|---|---|---|
+| U-14 | Form içi kredi yazılarını kaldır | ✅ Tamam | Tüm sekmelerdeki inline "X kredi" yazıları kaldırıldı, kredi sadece sticky bar'da |
+| U-15 | "∞ kredi" / "0 kredi" yazılarını kaldır | ✅ Tamam | Anlamsız etiketler temizlendi |
+| U-16 | "Sosyal medya kiti" CTA'sını kaldır | ✅ Tamam | Sosyal sekmede tek "İçerik üret" CTA, "kit" konsepti kaldırıldı |
+| U-17 | Login gerektiren tooltip + redirect | ✅ Tamam | "Önce giriş yap" tooltip + `/giris` redirect |
+
+> Prompt arşivlendi → git history (U-11~U-17 7 ticket tek paket olarak gitti)
+
+### Grup 7 — Polish & PR (sıradaki)
+
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| U-14 | Form içi kredi yazılarını kaldır | Bekliyor | U-09 | Tüm sekmelerdeki inline "X kredi" yazıları kaldırılmış. Kredi bilgisi sadece sticky bar'da. |
-| U-15 | "∞ kredi" ve "0 kredi" yazılarını kaldır | Bekliyor | U-14 | Anlamsız etiketler temizlenmiş. |
-| U-16 | "Sosyal medya kiti" CTA'sını kaldır | Bekliyor | U-14 | Sosyal sekmesinde tek "İçerik üret" CTA'sı var. "Kit" konsepti kaldırılmış. Platform seç → kredi hesaplanır → tek butonla üret. |
-| U-17 | Login gerektiren tooltip + redirect | Bekliyor | U-12 | Login gerekirken tooltip: "Önce giriş yap". Tıklayınca `/giris`'e redirect. |
+| U-18 | Mobile responsive sweep | ✅ Tamam | U-01~U-17 | Commit `6c7447f` — IntentBanner p-4 sm:p-6, BrandProfileBlock flex-shrink-0 + justify-start sm:justify-end, Tooltip max-w mobile, page.tsx pb-40. |
+| U-19 | A11y audit | ✅ Tamam | U-18 | Commit `6c7447f` — Tooltip aria-describedby cloneElement (gerçek child'a), StickySubmitBar disabled→aria-disabled (focus-accessible), prefers-reduced-motion animate-fade-in. |
+| U-20 | Lighthouse optimizasyonları | ✅ Tamam | U-19 | Commit `6c7447f` — animate-fade-in @theme'e eklendi (Tailwind v4), prefers-reduced-motion guard. font-display:swap ✓, img boyutları ✓, lucide named imports ✓. |
+| U-21 | Aziz kabul | ✅ Tamam | U-20 | 28 Nis Aziz "Faz 2'yi kapat" dedi. Preview test email+şifre ile mümkündü; Google OAuth Faz 4 AU-09'a ertelendi. |
 
-### Grup 7 — Polish & PR
+#### U-18 + U-19 + U-20 Birleşik Prompt (Polish paket)
 
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| U-18 | Mobile responsive sweep | Bekliyor | U-01~U-17 | Sticky bar, formlar, collapsible, tooltip — hepsi mobile'da sorunsuz. 375px'te overflow yok. |
-| U-19 | A11y audit | Bekliyor | U-18 | Radio group ARIA, tooltip ARIA, focus management, WCAG AA kontrast. |
-| U-20 | Lighthouse pass | Bekliyor | U-19 | Performance >90, CLS <0.05, a11y >90. |
-| U-21 | Aziz kabul | Bekliyor | U-20 | Preview URL'de test, onay. |
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
+UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
+Bunun yerine BACKLOG-REDESIGN.md başındaki redesign branch UI 
+kuralları geçerli (font 400-800 serbest, gölge serbest, rounded-2xl 
+serbest, Manrope+Inter, rd-* token'lar, sadece emoji yasak — Lucide 
+ikon kullan).
+
+Branch: claude/redesign-modern-ui
+Görev: U-18~U-20 — /uret refactor polish (Mobile + A11y + Lighthouse opt)
+
+Kapsam: Bölüm 11'de yaptığımız /uret refactor'unun tüm yeni component'leri 
++ entegrasyonları. Mevcut açık bug yok ama büyük bir refactor 17 ticket 
+bitti, sapma riski var. Bu paket tarama + düzeltme.
+
+Kapsam dışı: U-21 Aziz acceptance — kullanıcı testi, kod değil.
+
+────────────────────────────────────────────
+BÖLÜM 1 — U-18: Mobile responsive sweep
+────────────────────────────────────────────
+
+375px (iPhone SE) viewport'ta tüm /uret bileşenleri test edilecek. 
+Chrome DevTools mobile emulation veya gerçek cihaz.
+
+Kontrol listesi (her bileşen için):
+
+1. **IntentBanner** (components/uret/IntentBanner.tsx)
+   - H1 "İçerik türünü seç" 375px'te taşmıyor mu? (md:text-3xl mobil text-2xl)
+   - Padding p-6 dar değil mi? Mobil için p-5 veya p-4 daha uygun olabilir.
+
+2. **BrandProfileBlock** (components/uret/BrandProfileBlock.tsx)
+   - Header'daki Sparkles + title + "Önce dene" butonu 375px'te tek satırda 
+     bozulmuyor mu? Çok dar geliyorsa flex-wrap koru.
+   - Demo açıkken md:grid-cols-[1fr_1.2fr] zaten mobilde tek kolon olur. 
+     Doğrula.
+   - "Profili düzenle" butonu mobil tek kolona düşünce justify-end yerine 
+     justify-start veya full width (w-full sm:w-auto) daha iyi olabilir.
+
+3. **ToneSelector** (components/uret/ToneSelector.tsx)
+   - 3 chip flex-wrap zaten var. 375px'te 3 chip yan yana sığar mı? 
+     Sığmıyorsa flex-wrap yapacak, OK.
+   - Focus ring ekrandan taşmıyor mu (ring-offset-2 düzgün mü)?
+
+4. **AIPreview** (components/uret/AIPreview.tsx)
+   - Mock AI çıktısı (samimi/profesyonel/premium TONE_CHIPS.output) uzun 
+     metin — taşma yok mu? leading-relaxed ile satır kaydırmalı.
+   - "Bu sadece önizleme..." italic gri satırı taşmıyor mu?
+
+5. **StickySubmitBar** (components/uret/StickySubmitBar.tsx)
+   - sticky bottom-5 mobilde gerçekten sticky kalıyor mu (Android Chrome 
+     iOS Safari)?
+   - Mobil flex-col düzeni: cost summary üst, CTA alt, full width
+   - "Bakiyenizde X kredi var" ve "Yetersiz kredi · Paket al" satırları 
+     uzun mobilde overflow olmasın
+   - Klavye odakta çakışma var mı (input focus + sticky bar)?
+   - Aksiyon: max-w-3xl mobilde dar geliyorsa max-w-full + px-3 yap
+
+6. **Tooltip** (components/primitives/Tooltip.tsx)
+   - Mobil tap → 2sn auto-dismiss çalışıyor mu?
+   - whitespace-nowrap uzun reason metni için ekran kenarına taşıyor mu? 
+     Eğer "En az bir platform seç" gibi uzun metin viewport'tan taşıyorsa 
+     responsive class ekle: max-w-[calc(100vw-2rem)] whitespace-normal sm:whitespace-nowrap
+
+7. **/uret form alanları** (components/tabs/MetinSekmesi/GorselSekmesi/
+   VideoSekmesi/SosyalSekmesi.tsx)
+   - U-01 sonrası palet OK ama form input padding/font mobilde çok küçük mü?
+   - Karakter limit eyebrow'lar mobilde okunabilir mi?
+
+8. **Genel /uret/page.tsx**
+   - IntentBanner + BrandProfileBlock + sekmeler + form + sticky bar — bu 
+     dikey istif mobilde yeterli boşluklu mu (gap-4/gap-6)?
+   - Sticky bar form içeriğini örtüyor mu? Footer padding ekle (mb-32 gibi).
+
+Her sorunu Edit ile düzelt, küçük commit'ler at:
+- fix(uret): U-18 [bileşen] mobile responsive
+
+────────────────────────────────────────────
+BÖLÜM 2 — U-19: A11y audit
+────────────────────────────────────────────
+
+Kontrol listesi:
+
+1. **Radio group ARIA** (ToneSelector)
+   - role="radiogroup" var ✓
+   - Her chip role="radio", aria-checked
+   - Roving tabindex (sadece active veya ilk chip 0, diğerleri -1)
+   - Doğrula: Tab girince tek bir chip focus olur, Arrow Left/Right ile 
+     diğerlerine geçer
+
+2. **Tooltip ARIA** (Tooltip primitive)
+   - role="tooltip" + id var ✓
+   - Children'a aria-describedby={tooltipId} eklenmiş mi? — şu an wrapper 
+     span'a ekledim ama gerçek button'a geçmiyor olabilir. React.Children 
+     mapping ile gerçek child'a propla yansıt. Veya en basit: button bileşeni 
+     tooltip'in dışında ama ID'yi açıkça aria-describedby ile bağla.
+
+3. **Disabled buton** (StickySubmitBar)
+   - aria-disabled="true" tooltip'le birlikte
+   - Disabled durumda focus alabilir mi? (HTML disabled focus alamaz; 
+     aria-disabled görsel disabled ama focus alabilir — bu daha iyi a11y)
+   - Eğer button HTML disabled ise tooltip görünmez (mouse event'ler 
+     disabled buton üzerinde tetiklenmez). Bu sorunlu — aria-disabled'a geç, 
+     onClick'i preventDefault yap.
+
+4. **BrandProfileBlock**
+   - aria-expanded butonda var ✓
+   - aria-controls collapsible div'in id'si ile eşleşiyor ✓
+
+5. **IntentBanner**
+   - aria-labelledby h1 id'sine bağlı ✓
+
+6. **Kontrast (WCAG AA)**
+   - text-rd-neutral-500 (#64748B) on bg-rd-neutral-50 (#F8FAFC): 4.5:1 
+     üstünde mi kontrol et
+   - text-rd-primary-700 (#1D4ED8) on white: kesin üstünde, OK
+   - Tooltip text white on bg-rd-neutral-900 (#0F172A): kesin üstünde
+   - Disabled text-rd-neutral-500 on bg-rd-neutral-300: bu KRİTİK, dikkat
+     et. WCAG AA disabled için zorunlu değil ama UX için en az 3:1 olsun.
+
+7. **Klavye navigation full /uret tour**
+   - Tab → IntentBanner → BrandProfileBlock buton → ToneSelector chip'ler 
+     (Arrow ile gez) → "Profili düzenle" → form alanları → sticky bar buton 
+   - Hiçbir focus tuzağı yok mu (tooltip focus'u tutmuyor)?
+   - Escape ile collapsible kapanmıyor (gerek yok ama dene)
+
+8. **prefers-reduced-motion**
+   - Tooltip animate-fade-in, AIPreview fade — globals.css'te zaten 
+     prefers-reduced-motion kuralı var, doğrula
+
+Düzeltmeler için commit:
+- fix(uret): U-19 a11y audit (radio roving tabindex, aria-describedby, 
+  aria-disabled, kontrast)
+
+────────────────────────────────────────────
+BÖLÜM 3 — U-20: Lighthouse optimizasyon önerileri
+────────────────────────────────────────────
+
+Lighthouse'u Code çalıştıramaz (preview URL gerekir). Aziz çalıştıracak. 
+Code'un yapacağı: bilinen pattern'lerle önden iyileştirme.
+
+Yapılacak optimizasyonlar:
+
+1. **Image optimization** — /uret sayfasında <img> kullanılıyorsa next/image'a 
+   geçir (varsa). Mevcut FotoEkleAlani.tsx kontrol et.
+
+2. **Dynamic import (Code splitting)**
+   - Tooltip primitive küçük, dynamic gerek yok
+   - StickySubmitBar SSR'da gereksiz mi? — sticky için JS gerekli, client 
+     component zaten 'use client' ile. Dynamic'e gerek yok.
+   - BrandProfileBlock collapsible — küçük, dynamic'e gerek yok
+   - YANİ: dynamic import için /uret'te belirgin bir aday yok. Atla.
+
+3. **Font-display swap** (font yükleme)
+   - app/layout.tsx'te next/font ile Manrope + Inter düzgün yüklü mü?
+   - display: 'swap' ile FOIT engelleniyor mu? Kontrol et, gerekirse ekle.
+
+4. **CLS (Cumulative Layout Shift) kontrolü**
+   - StickySubmitBar mount oldu mu olmadı mı diye sayfa sıçrıyor mu? 
+     Eğer sıçrıyorsa: parent'a min-height ekle veya bar her zaman render 
+     olsun (loading state'te de görünsün).
+   - BrandProfileBlock collapsible açıldığında sayfa içeriğini itiyor mu? 
+     Bu doğal davranış, CLS değil — ama smooth animation eklenebilir.
+   - Image placeholder'lar (FotoEkleAlani) aspect-ratio ile boyut ayrılmış mı?
+
+5. **Hover-only interactions mobile'a uyarlandı mı?**
+   - U-18'de Tooltip mobile tap çözüldü ✓
+
+6. **Bundle size**
+   - lucide-react import'larını tek tek yapıyoruz (full library import yok). 
+     Doğrula.
+   - Gereksiz client component yok mu? Form input'lar 'use client' gerektirir 
+     ama sticky bar ile aynı sayfada olduklarından zaten client.
+
+Düzeltmeler için commit:
+- perf(uret): U-20 Lighthouse optimization (image, font-display, CLS guard)
+
+NOT: Eğer hiçbir değişiklik yapmazsan — yapısal olarak iyiyiz — sadece 
+"U-20: kontrol edildi, optimizasyon ihtiyacı yok" notu commit mesajına 
+ekle, BACKLOG'da [x] işaretle.
+
+────────────────────────────────────────────
+Test (commit öncesi)
+────────────────────────────────────────────
+
+- npm run build temiz
+- TypeScript clean
+- /uret preview'da:
+  - 375px viewport: hiçbir bileşen taşmıyor, sticky bar düzgün
+  - Klavye Tab/Arrow ile tüm interaktif öğeleri ulaş
+  - Tooltip'ler hem mouse hem klavye focus'ta görünüyor
+  - aria-disabled durumunda tooltip görünüyor (HTML disabled değil)
+  - prefers-reduced-motion aç → fade animasyonlar duruyor
+
+Commit özeti:
+- fix(uret): U-18 mobile responsive sweep (X dosya)
+- fix(uret): U-19 a11y audit (radio + tooltip + kontrast)
+- perf(uret): U-20 lighthouse optimizasyonları
+
+Veya tek commit: chore(uret): U-18~U-20 polish pass
+
+BACKLOG-REDESIGN.md'de U-18, U-19, U-20 [x] işaretle. U-21 Aziz'e kalır.
+
+Bittikten sonra commit listesi + değişen dosyalar + 
+yapılan düzeltmeler özetini ver.
+```
 
 ---
 
@@ -1441,231 +450,2085 @@ import FooterSection from '@/components/sections/FooterSection'
 
 **Spec:** `specs/hesap-alani-refactor-spec.md`
 **Mockup'lar:** `specs/marka-profili-mockup.jsx`, `specs/hesabim-mockup.jsx`
-**Durum:** Landing page tamamlandıktan sonra başlayacak.
+**Durum:** Faz 2 (/uret + diğerleri) tamamlandıktan sonra başlayacak.
 
 ### Aziz Kararları (2026-04-27)
 
-1. **Canlı önizleme:** Hazır şablon (template-based). Ton seçimine göre önceden yazılmış metin şablonları. AI çağrısı yok, maliyetsiz, anlık.
-2. **Düşük kredi eşiği:** 5 kredi. Uyarı (kırmızı border, "Kredi al" vurgusu) 5 ve altında tetiklenir.
-3. **Referans istatistikleri:** İlk davetten sonra göster. 0 davet = sadece CTA, 1+ davet = istatistikler görünür.
-4. **Fiyatlar SSS:** Kredi ve fiyat odaklı. Landing page SSS'den kredi/fiyat olanları seç + fiyatlara özel 1-2 soru ekle.
-5. **Karşılaştırma tablosu:** Şimdilik gerekli değil, atlıyoruz.
-6. **Üretim sonuç sayfası:** Kapsama dahil ama ayrı iş — `/uret` spec'inde ele alınacak.
+1. **Canlı önizleme:** Hazır şablon (template-based). AI çağrısı yok.
+2. **Düşük kredi eşiği:** 5 kredi.
+3. **Referans istatistikleri:** İlk davetten sonra göster.
+4. **Fiyatlar SSS:** Kredi ve fiyat odaklı.
+5. **Karşılaştırma tablosu:** Atlandı.
+6. **Üretim sonuç sayfası:** `/uret` spec'inde ele alınacak.
 
 ### Genel İçerik Kuralı
 
-Canlı sitedeki örnek çıktıları (üretilmiş text/görsel/video/sosyal örnekleri) ve mevcut görsel öğeleri (toplar vb.) olduğu gibi koru — yeniden üretim gerektirmesin. Diğer metinler (başlık, açıklama, CTA, UI copy) tasarıma uygun şekilde değiştirilebilir.
+Canlı sitedeki örnek çıktıları (text/görsel/video/sosyal) ve mevcut görsel öğeleri olduğu gibi koru.
 
 ### Mockup Uyarıları
 
-- Mockup'larda emoji var (ton chip'leri, "Neden bu önemli?" vb.) — CLAUDE.md kuralı gereği Lucide ikonlarıyla değiştirilecek.
-- Mockup paleti (slate scale + #1E40AF) landing page redesign token'larıyla uyumlu.
+- Mockup emoji'leri Lucide ile değiştirilecek
+- Mockup paleti landing redesign token'larıyla uyumlu
 
-### Grup 1 — Renk Paleti Uyumu (bağımlılık, önce yapılacak)
-
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| H-01 | Anasayfa paletini tüm sayfalara uygula | Bekliyor | Landing page done | `/hesap`, `/hesap/marka`, `/hesap/profil`, `/fiyatlar`, `/blog`, `/giris` sayfalarında redesign token'ları (`rd-` prefix) kullanılıyor. Eski `#D8D6CE`, `#908E86`, `#1E4DD8` renkleri kalmamış. |
-
-### Grup 2 — Marka Profili `/hesap/marka` (en büyük iş)
+### Grup 1 — Renk Paleti Uyumu (önce)
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| H-02 | ProgressIndicator component | Bekliyor | H-01 | Header'da ilerleme çubuğu. 6px yükseklik. Renk: <50% slate, 50-99% primary, 100% success. |
-| H-03 | Form alanları (5 alan) | Bekliyor | H-01 | storeName, tone, audience, features, extraInfo. Label + input + helper + tamamlandı tik. |
-| H-04 | Ton chip selector | Bekliyor | H-03 | 3 chip (samimi/profesyonel/premium), radio group. Lucide ikonları (emoji yok). |
-| H-05 | `generatePreview()` şablon fonksiyonu | Bekliyor | H-04 | Ton seçimine göre hazır metin şablonları. AI yok. 3 varyasyon. `useMemo`. |
-| H-06 | BrandedAIPreview (sticky kolon) | Bekliyor | H-05 | Sağ kolon sticky. Form değişince fade animasyonuyla güncellenir. |
-| H-07 | GenericAIPreview (kıyas paneli) | Bekliyor | H-06 | Statik "marka bilgisi olmadan" örneği. Branded ile yan yana. |
-| H-08 | WhyItMatters tooltip | Bekliyor | H-01 | Lucide Info ikonu + tooltip. Hover/focus ile açılır. |
-| H-09 | StickySaveBar | Bekliyor | H-03 | Yapışkan bar. Dirty state'te görünür. "Kaydet" + durum mesajı. |
-| H-10 | `beforeunload` dirty state warning | Bekliyor | H-09 | Kaydedilmemişse sayfa kapatmada tarayıcı uyarısı. |
-| H-11 | Save POST `/api/marka-profili` | Bekliyor | H-09 | API'ye POST. Loading, error handling, success toast. |
-| H-12 | Toast başarı bildirimi | Bekliyor | H-11 | Yeşil toast. 3sn auto-dismiss. |
-| H-13 | Mobile responsive | Bekliyor | H-06 | Tek kolon (form üst, preview alt). 375px overflow yok. |
-| H-14 | A11y pass | Bekliyor | H-13 | Radio group ARIA, focus, `aria-live`, WCAG AA. |
+| H-01 | Anasayfa paletini tüm sayfalara uygula | Bekliyor | Landing page done | `/hesap`, `/hesap/marka`, `/hesap/profil`, `/fiyatlar`, `/blog`, `/giris` rd-* token'larında. |
 
-### Grup 3 — Hesabım `/hesap`
+### Grup 2 — Marka Profili `/hesap/marka`
+
+**Done:** 28 Nis (commits fb264a4 → 46b41bc, 4 commit). Aziz preview test bekliyor.
+
+| ID | Başlık | Durum |
+|---|---|---|
+| MP-01 | Form scaffold + 8 alan + ProgressIndicator | ✅ |
+| MP-02 | ChipSelector primitive (single+multi) | ✅ |
+| MP-03 | BrandPreviewPanel canlı önizleme (sayfanın kalbi) | ✅ |
+| MP-04 | Bilgi banner kompakt + collapsible | ✅ |
+| MP-05 | StickySaveBar + dirty state + beforeunload | ✅ |
+| MP-06 | Save (Supabase .update) + Toast | ✅ |
+| MP-07 | Mobile (collapsibleOnMobile) + a11y | ✅ |
+
+**Yeni reusable primitive'ler (gelecek paketlerde reuse):** components/primitives/{ChipSelector, Toast}.tsx
+**Yeni komponentler:** components/marka/{BrandPreviewPanel, BrandedAIPreview, GenericAIPreview, StickySaveBar}.tsx + lib/markaPreviewTemplates.ts (3 ton × 2 içerik = 6 şablon)
+**Save kararı:** /api/marka-profili endpoint yok → Supabase direkt `.update()` (mevcut pattern).
+**Aziz preview kontrol:** Ton seçince sağ panel canlı update ediyor mu, 375px collapsible accordion düzgün mü, dirty save bar görünür mü.
+
+
+### Grup 2B — Profil `/hesap/profil` (Aziz 28 Nis spec, EX.6~EX.11)
+
+**Spec:** uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 2)
+**Aziz tespiti:** "∞" kredi bug yanlış bilgi gösteriyor (KRİTİK), adres tek satır textarea (e-Fatura için yapılandırılmalı), tamamlanma yüzdesi yok, üst CTA tekrarı.
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| H-15 | Tasarruf rozeti | Bekliyor | H-01 | Mavi gradient badge, Trophy ikonu. "X içerik — Y TL tasarruf". |
-| H-16 | 3 KPI grid | Bekliyor | H-01 | Kalan kredi (<=5'te kırmızı + "Kredi al" CTA), bu ay üretim, toplam üretim. |
-| H-17 | Denenmemiş özellikler keşif bloğu | Bekliyor | H-01 | Dinamik grid. Her kart ilgili sayfaya yönlendirir. |
-| H-18 | 6 menü kartı + uyarı durumları | Bekliyor | H-01 | Marka (eksikse turuncu), Profil, Üretimler, Krediler (<=5'te kırmızı), Faturalar, Ayarlar. |
-| H-19 | Davet kutusu basitleştirme | Bekliyor | H-01 | Amber gradient, Gift ikonu. 0 davet=CTA only; 1+=istatistik. |
-| H-20 | "Favori platform" KPI kaldırma | Bekliyor | H-16 | 4 KPI -> 3 KPI. |
-| H-21 | Mobile responsive | Bekliyor | H-19 | 375px overflow yok. |
+| PR-01 | Form scaffold + ProgressIndicator + rd-* swap | ✅ Tamam | MP done | Commit `65ed268` |
+| PR-02 | ∞ kredi bug fix + KPI rozeti tıklanabilir | ✅ Tamam | PR-01 | Commit `65ed268` — isLoading "—", admin ∞ intentional, KPI → Link /kredi-yukle, CTA kaldırıldı |
+| PR-03 | Adres yapılandırma (7 alan) | ✅ Tamam | PR-01 | Commit `65ed268` — mahalle/cadde/binaNo/daire/postaKodu/ilçe/il. JSON serialize adres kolonu. |
+| PR-04 | İl/İlçe veritabanı + Save flow | ✅ Tamam | PR-03 | Commit `bca1ce7` — statik lib/data/turkiye-il-ilce.ts (NPM yok). StickySaveBar + Toast reuse. |
+| PR-05 | Mobile + a11y polish | ✅ Tamam | PR-04 | Commit `65ed268` — native select, aria-invalid, aria-label, htmlFor/id, Tab tour. |
 
-### Grup 4 — Fiyatlar `/fiyatlar`
+**Aziz açık karar (sonra cevaplanır, Cowork önerisi):**
+- TC kimlik no + Vergi no + Şirket adı alanları? Paraşüt geldiğinde e-Fatura için gerekli. **Önerim: bu pakete dahil etme**, Faturalar paketinde gündeme getir (Faturalar UI Aziz'e e-Fatura adres düzeltme linki gerektiriyor — orada tetiklenir).
+
+
+### Grup 2C — Faturalar `/hesap/faturalar` (Aziz 28 Nis spec, EX.21~EX.27)
+
+**Spec:** uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 5)
+**Mockup:** uploads/faturalar-mockup.jsx
+**Aziz kararı:** "Paraşüt henüz yok, sonra bırakalım ama sayfa hazır olsa iyi olur" (28 Nis). UI mock data ile çalışır, Paraşüt entegrasyonu geldiğinde gerçek data otomatik akar.
+**Mevcut sorun:** Tüm faturalar "Fatura oluşturuluyor" durumda, PDF indirme yok, durum sistemi yok, filtre yok.
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| H-22 | "Önerilen" -> "En popüler" güncelle | Bekliyor | H-01 | Terim değişikliği. |
-| H-23 | Kredi calculator entegrasyonu | Bekliyor | H-01, FY done | Landing page CreditCalculator reuse. |
-| H-24 | SSS bölümü | Bekliyor | H-01 | 4-6 soru, kredi/fiyat odaklı. Landing SSS component reuse. |
-| H-25 | ~~Karşılaştırma tablosu~~ | Atlandı | — | Gerekli değil (Aziz kararı). |
-| H-26 | Trust strip alt bant | Bekliyor | H-01 | Landing page güven noktaları tekrarı. |
+| FT-01 | Sayfa scaffold + bilgi banner + yıllık toplam + filtre | ✅ Tamam | PR done | faa14be + e4fb33b + 4ec6bfe |
+| FT-02 | StatusBadge primitive (4 durum) | ✅ Tamam | FT-01 | faa14be — components/primitives/StatusBadge.tsx |
+| FT-03 | Liste + İndir + Gönder + boş state | ✅ Tamam | FT-02 | 4ec6bfe — FATURALAR_DEMO mock data, 5 entry |
+| FT-04 | Hatalı fatura "profili düzenle" link | ✅ Tamam | FT-03 | 4ec6bfe — bg-rd-danger-50 footer + /hesap/profil link |
+| FT-05 | Mobile + a11y polish | ✅ Tamam | FT-04 | 4ec6bfe — role=list/listitem, aria-label filter, dikey mobile |
+
+**Mock data kararı (FT-01'de Code karar verir):**
+- Mevcut faturalar tablosu Supabase'de: status field var mı kontrol et
+- Yoksa: tüm faturalar status='preparing' kabul (default), schema değişikliği bu paketin DIŞINDA
+- VE Aziz sayfa demo'sunda 4 durumu birden görmek isteyebilir → opsiyonel "demo mode" prop ile mock veriler gösterilebilir, Aziz preview'da görür, prod'da gerçek data akar
+- Code önerebilir: feature flag (FF.FATURALAR_DEMO) ile statik 5 örnek (mockup'taki gibi) göster, prod'da kapat
+
+**Açık ticket'lar (FT bittikten sonra Faz 7+ Paraşüt paketinde):**
+- Paraşüt API entegrasyonu (status field'ı backend güncelleme)
+- PDF blob URL generation (Paraşüt e-Arşiv)
+- "E-postama gönder" backend endpoint
+- profiles tablosuna TC kimlik + Vergi no + Şirket adı kolonu (PR'da ertelenmişti)
+
+
+### Grup 3 — Hesabım `/hesap` (HS-01~HS-04, eski H-15~21 birleştirildi)
+
+**Mevcut sayfa:** app/(auth)/hesap/page.tsx (kullanıcı login sonrası ilk burayı görür — retention için kritik)
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| HS-01 | Scaffold + Manrope + tasarruf rozeti + 3 KPI grid | ✅ Tamam | FT done | fa48477 — eyebrow+H1, warm-earth rozet, 3 KPI |
+| HS-02 | 6 menü kartı + uyarı durumları | ✅ Tamam | HS-01 | fa48477 — marka eksik→warm, kredi düşük→danger, StatusBadge reuse |
+| HS-03 | Denenmemiş özellikler keşif + davet kutusu | ✅ Tamam | HS-01 | 7a0f839+fa48477 — InviteBox + content_type keşif; HS-03b: davet backend mevcut (/api/referral/stats) |
+| HS-04 | Mobile + a11y polish | ✅ Tamam | HS-03 | fa48477 — grid-cols-1 mobile, aria-label KPI, aria-hidden ikonlar |
+
+**Açık karar (Cowork önerisi):**
+- Tasarruf hesabı pre-traffic'te 0 — placeholder göster ("yzliste ile birlikte tasarruf etmeye başla") VEYA gizle, gerçek metrik geldiğinde aç. **Önerim: placeholder göster** (boş kalmasın), value = `Math.max(0, krediKullanim * 5)` gibi yaklaşık hesap (1 kredi ≈ ₺5 işçi tasarrufu).
+- "Henüz denemediklerin" — kullanıcının üretim geçmişine bağlı. generations tablosundan content_type'lar çekilir, eksik olanlar listelenir. Veri yoksa: tüm 4 içerik tipi gösterilir (yeni kullanıcı için onboarding).
+
+### Grup 3B — Krediler `/hesap/krediler` (Aziz 28 Nis spec, EX.12~EX.14)
+
+**Spec:** uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 3)
+**Mevcut sorun:** "Bu ay tüketim" istatistiği yok, ödeme geçmişinde işlem türü etiketi yok (satın alım vs hediye vs iade belirsiz), satıra tıklayınca detay açılmıyor.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| KR-01 | Sayfa scaffold + 3 mini stat (mevcut + bu ay + geçen ay) | ✅ Tamam | HS done | 6e67de2+12f6852 — uretimler count ile bu/geçen ay |
+| KR-02 | İşlem geçmişi + işlem türü etiketi | ✅ Tamam | KR-01 | 6e67de2 — TransactionBadge ayrı primitive; KR-02b: kredi_log tablosu yok, payments heuristic (tümü satin_alim), KREDILER_DEMO ile 4 tür görünür |
+| KR-03 | Detay accordion + Mobile + a11y | ✅ Tamam | KR-02 | 12f6852 — aria-expanded/controls/region, ChevronDown rotate, mobile dikey |
+
+**Mock data kararı:** Mevcut kredi log tablosunda işlem_turu (transaction_type) kolonu var mı kontrol et. Yoksa: tüm geçmiş "Satın alım" varsayılır + KR-02b ticket aç ("Backend: kredi_log işlem_turu kolonu"). Demo flag kullanılabilir (FT-01'deki gibi env-based) preview'da 4 türü görmek için.
+
+**KR-02b (Backend ticket):** `kredi_log` tablosu yok — krediler `payments` tablosundan çekiliyor, tüm kayıtlar `satin_alim` varsayılan. Çözüm: `kredi_log` tablosu oluştur (id, user_id, islem_turu, miktar, created_at, detay JSONB). `KREDILER_DEMO=true` ile dev'de 4 tür görünür.
+
+### Grup 3C — Üretimler `/hesap/uretimler` (Aziz 28 Nis spec, EX.15~EX.20)
+
+**Spec:** uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 4)
+**Aziz tespiti:** Sayfa "zaten çok iyi" — sadece kullanıcı 50+ üretim olunca lazım olacak özellikler eksik.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| UR-01 | Sayfa scaffold + filtre chip bar | ✅ Tamam | KR done | rd-* swap. Manrope eyebrow "ÜRETİMLER" + H1 "Tüm üretimlerin". 3 filtre satırı: Platform (Trendyol/Amazon TR/Amazon USA/Hepsiburada/N11/Etsy + Tümü), İçerik tipi (Metin/Görsel/Video/Sosyal + Tümü), Tarih (Bu ay/Geçen ay/Bu yıl/Tümü). ChipSelector primitive reuse (multi mode + "Tümü" seçenek). |
+| UR-02 | Arama input + sıralama dropdown | ✅ Tamam | UR-01 | Arama input (Lucide Search): debounced 300ms live filter, "Ürün adı veya başlık ara". Sıralama dropdown (native select): Yeniden eskiye / Eskiden yeniye / Platform / Kredi. |
+| UR-03 | Üretim kart + Kopyala + Yeniden üret + boş içerik placeholder | ✅ Tamam | UR-02 | Mevcut accordion yapısı korunur (Aziz: "çok iyi"). Her kart altına 3 buton: "Kopyala" (mevcut), "Yeniden üret" (Lucide RefreshCw — /uret'e query params ile yönlendirir, kullanıcı parametreleri görür sonra üretir, kredi otomatik düşmez), "Excel'e indir" (sadece toplu üretim için, opsiyonel). Boş içerik tipi (kullanıcı sadece metin üretmiş): "Bu üretimde görsel yok. Eklemek için yeniden üret" alt-not + CTA. |
+| UR-03b | /uret pre-fill (query params okuma) | Bekliyor | UR-03 | app/uret/page.tsx URL searchParams oku: onceki/platform/tip varsa form'u pre-fill et. "Yeniden üret" butonu sadece yönlendiriyor; /uret tarafı bu params'ı henüz okumuyor. |
+| UR-04 | Pagination veya lazy load | ✅ Tamam | UR-03 | TanStack Query useInfiniteQuery (proje default). 20 üretim/sayfa. "Daha fazla yükle" buton (infinite scroll yerine — daha kontrollü, batch size belli). Pre-traffic 5-10 üretim için zaten görünmez. |
+| UR-05 | Mobile + a11y polish | ✅ Tamam | UR-04 | 375px: filtre chip'leri yatay scroll (overflow-x-auto), sıralama dropdown ve arama input dikey. Kart kompakt (ChevronDown sağa hizalı). ARIA list semantics. |
+
+**"Yeniden üret" karar (Cowork önerisi):** Frontend approach — `/uret?onceki=[id]&platform=X&tip=Y...` query params ile yönlendir. Kullanıcı parametreleri görür, onaylar, kredi düşer. Bu daha güvenli (kullanıcı kontrolü, kredi otomatik kaybolmaz). Backend yeni endpoint gerekmez.
+
+
+### Grup 4 — Fiyatlar `/fiyatlar` + Anasayfa fiyatlar revize (FY-01~FY-05)
+
+**Aziz kararı (28 Nis akşam):** Anasayfada fiyat bölümü TAMAMEN KALDIRILIYOR (A seçeneği). Header'da "Fiyatlar" linki zaten var, kullanıcı oraya gider. Anasayfa sade kalır.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| FY-01 | /fiyatlar scaffold + 3 paket kart + "En popüler" terim | ✅ Tamam | UR done | Commit `44e9b92` — rd-* swap, Manrope eyebrow, "En popüler" badge, PackageCard rd-* tokens. |
+| FY-02 | Kredi calculator entegrasyonu | ✅ Tamam | FY-01 | Commit `44e9b92` — components/fiyatlar/KrediCalculator.tsx (slider + öneri kutusu). |
+| FY-03 | SSS bölümü (kredi/fiyat 7 soru) | ✅ Tamam | FY-01 | Commit `44e9b92` — components/fiyatlar/FiyatlarSSS.tsx accordion, mevcut SSS metinleri korundu. |
+| FY-04 | Anasayfa fiyat bölümü KALDIR | ✅ Tamam | FY-03 | Commit `5857aef` — FiyatlarSection kaldırıldı. Yeni sıra: Hero → 3 Adım → Marka → Neden → SSS → Final CTA. |
+| FY-05 | Mobile + a11y polish | ✅ Tamam | FY-04 | Commit `44e9b92` — 375px 1-col grid, aria-live, aria-expanded, role="list", role="listitem" tüm accordion'da. |
+
 
 ### Grup 5 — Blog `/blog`
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| H-27 | Kategori filtre state'leri | Bekliyor | H-01 | Aktif primary bg, pasif neutral. |
-| H-28 | Kart hover state | Bekliyor | H-01 | Lift + shadow (redesign branch'te OK). |
+| H-27 | Kategori filtre state'leri | Bekliyor | H-01 | Aktif primary, pasif neutral. |
+| H-28 | Kart hover state | Bekliyor | H-01 | Lift + shadow. |
 | H-29 | Arama input focus | Bekliyor | H-01 | Primary ring. |
 
 ### Grup 6 — Giriş `/giris`
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| H-30 | Form input focus ring | Bekliyor | H-01 | Primary ring. |
-| H-31 | Tab aktif/pasif border | Bekliyor | H-01 | Primary 2px aktif, neutral pasif. |
+| H-30 | Form input focus ring | Bekliyor | H-01 | Primary ring. (AU-01'e absorb edilecek) |
+| H-31 | Tab aktif/pasif border | Bekliyor | H-01 | Primary 2px aktif. (AU-01'e absorb) |
 
 ### Grup 7 — Polish & QA
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
 | H-32 | Cross-page navigation | Bekliyor | H-01~H-31 | Tüm geçişler sorunsuz. |
-| H-33 | Lighthouse pass | Bekliyor | H-32 | 5 sayfada Performance >90, a11y >90. |
-| H-34 | A11y audit | Bekliyor | H-33 | WCAG AA tüm sayfalarda. |
-| H-35 | Aziz kabul | Bekliyor | H-34 | Preview'da 5 sayfa test + onay. |
+| H-33 | Lighthouse pass | Bekliyor | H-32 | Performance >90, a11y >90. |
+| H-34 | A11y audit | Bekliyor | H-33 | WCAG AA. |
+| H-35 | Aziz kabul | Bekliyor | H-34 | 5 sayfa test. |
 
 **Bağımlılıklar:** H-01 hepsinden önce. Grup 2-6 paralel. Grup 7 en son.
 
 ---
 
-## 13 — Üretim ve Premium Sayfaları (Faz 2)
+## 13 — Üretim ve Premium Sayfaları (Faz 2 devamı)
 
-**Branch:** `claude/redesign-modern-ui` (aynı branch).
-**Yaklaşım:** Landing page'den öğrenilen pattern (rd-* token, Manrope display + Inter body, eyebrow + H2 + subtitle, 2-kolon grid, Lucide ikonlar, fade animasyonlar, mobile-first, a11y-first). Ticket başına detaylı prompt sayfa sırası gelince eklenecek.
-**Bağımlılık:** Landing page (Faz 1) tamamlanmadan başlama — pattern olgunlaşıyor.
-**Öncelik gerekçesi:** Kullanıcı kayıttan ödemeye giderken bu 4 sayfayı sırayla görüyor. Landing modern → /uret eski → sonuç sayfası eski → ödeme eski geçişi dönüşüm öldürür.
-
-### Grup 1 — /uret refaktörü (Bölüm 11 ile paralel)
-
-Mevcut Bölüm 11 (U-01~U-21) zaten 21 ticket detaylı tanımlı — burada tekrarlanmıyor. Faz 2 sırası gelince **U-01 öncesi her grup için** detaylı prompt yazılacak (U-01, U-02-03, U-04-07, U-08-10, U-11-13, U-14-17, U-18-21 grupları).
+**Branch:** `claude/redesign-modern-ui`
+**Yaklaşım:** Landing pattern (rd-* token, Manrope+Inter, eyebrow + H2, Lucide ikonlar, fade animasyonlar). Detaylı prompt sayfa sırası gelince eklenecek.
+**Bağımlılık:** /uret refactor (Bölüm 11) bittikten sonra.
 
 ### Grup 2 — /yzstudio premium araçlar sayfası
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| YS-01 | Sayfa scaffold + redesign token swap | Bekliyor | Landing done | rd-* token'lar, Manrope display, eski palet temizlendi. |
-| YS-02 | Hero block (premium pozisyonlama) | Bekliyor | YS-01 | Eyebrow "PREMIUM ARAÇLAR" warm-earth accent, H1, subtitle, 1 CTA. |
-| YS-03 | Mankene Giydirme (FASHN) tab/kart | Bekliyor | YS-01 | Tab-pattern (DS-06 reuse), 2 kolon (input sol, demo sağ), 3 kredi rozet. |
-| YS-04 | Video Try-On tab/kart | Bekliyor | YS-03 | FASHN→Kling pipeline açıklaması, 13/23 kredi rozeti, demo video placeholder. |
-| YS-05 | Kullanım kuralları + örnek galeri | Bekliyor | YS-04 | "Düz çekim ürün fotosu", "model fotosu" rehberi, 4-6 örnek görsel mevcut. |
-| YS-06 | Mobile responsive | Bekliyor | YS-05 | Tab dikey istif veya scroll, demo görseller tek kolon. |
-| YS-07 | A11y + acceptance | Bekliyor | YS-06 | Tab ARIA, focus, kontrast. Aziz preview onayı. |
+**ESKİ PLAN İPTAL (27 Nis akşam):** Aziz "studio sayfası taslak, ciddi UX/tasarım sorunu var, baştan ele al" dedi. Mevcut yapı incelendi (StudioHeader, StudioSekmeler 3-tab 2-disabled, TryonSekmesi 2-kolon, GarmentUpload, ModelPicker 3-alt-tab, TryonAyarlar, TryonSonuc + Video toggle). 12 ana sorun tespit edildi: yarım hizmet hissi (2 disabled tab), karar yorgunluğu (15+ ön plan seçim), step/progress yok, AI manken yan ürün gibi gizli, Video Try-On gizli toggle, premium kimlik tutarsız, çok dolu mavi buton yarışıyor, sticky CTA yok, beta uyarısı altta küçük, empty state zayıf, hex hardcoded, Manrope yok.
+
+**Aziz kararları (27 Nis akşam — Cowork önerisini kabul etti):**
+1. Disabled tab'ları KALDIR — tek araca odaklan ("Mankene giydirme" sayfanın kendisi). "Stüdyo çekimi" ve "Arka plan değiştirme" /yzstudio'dan tamamen çıkar; gelecekte gelirse ayrı sayfa veya footer roadmap olur.
+2. Step-by-step DEĞİL, **görsel hibrit** — tek sayfa form ama büyük adım numarası ("1", "2", "3") + dikey bağlantı çizgisi ile akış netliği.
+3. Video Try-On gizli toggle DEĞİL, **görünür kart** — sonuç ekranında "Şimdi videoyu da üret · 13-23 kredi" + örnek video preview thumbnail.
+
+**Vizyon:** yzstudio = tek araca odaklı, rehberli, premium ürün. Workflow: kıyafet yükle → manken seç → giydir → (görünür CTA) videoya çevir. Premium kimlik tüm sayfada tutarlı warm-earth aksanı + Manrope display + Lucide ikon + rd-* primary CTA.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| YS-01 | StudioHeader redesign + premium kimlik | ✅ Tamam | Landing done | rd-* token swap. Manrope text-2xl md:text-3xl "yzstudio". Eyebrow `warm-earth-300` "PREMIUM ARAÇ" üstte. Beta rozet kalır. Kredi + "Kredi yükle" CTA sticky kalır. |
+| YS-02 | StudioSekmeler tab UI'sı kaldırılır | ✅ Tamam | YS-01 | StudioSekmeler.tsx silinir veya minimal hale gelir. /yzstudio sayfası direkt TryonSekmesi içeriğini render eder. Sayfa state'inden `aktifSekme` kaldırılır. |
+| YS-03 | Step numbered layout (1-2-3 görsel akış) | ✅ Tamam | YS-02 | Sol kolonda 3 büyük adım kartı. Her kart sol başında büyük dairesel numara (1, 2, 3 — warm-earth-700 bg + white text 28px). Adımlar arasında dikey bağlantı çizgisi (border-l rd-neutral-200). Adımların başlığı font-display text-lg md:text-xl. |
+| YS-04 | Beta uyarısı üst banner'a taşı | ✅ Tamam | YS-01 | Mevcut alt banner kaldırılır, üst kısma (StudioHeader altına) tek satır banner: warm-earth-50 bg + warm-earth-700 text + Lucide Info ikon + "yzstudio beta — sonuçlar değişkenlik gösterebilir, yeniden üretebilirsin". Kullanıcı kredi harcamadan önce görür. |
+| YS-05 | GarmentUpload (Adım 1) refactor | ✅ Tamam | YS-03 | rd-* token swap. "Kıyafet fotoğrafı" → font-display text-lg "1 · Kıyafet fotoğrafı". Drop zone büyütülür (min-h-[260px] mobil, daha çağrılı görünüm). Foto tipi + Kategori chip'leri "DOLU MAVI"DEN ghost outline'a (sadece seçili = bg-rd-primary-700, diğer = border + text). Lucide ikon yerleri korunur. |
+| YS-06 | ModelPicker (Adım 2) refactor | ✅ Tamam | YS-03 | rd-* token swap. Başlık font-display text-lg "2 · Manken seç". 3 alt-tab (Hazır/Oluştur/Yükle) korunur AMA `bg-rd-neutral-100` segmented control'e dönüşür. "Oluştur" tab'ı içinde AI manken formu sadeleşir — etiketler text-sm font-medium (text-xs değil), inputlar büyür. Stok manken grid (kalır) + üretilen manken küçük preview kalır. |
+| YS-07 | TryonAyarlar → Sticky bottom bar | ✅ Tamam | YS-03 | TryonAyarlar inline form yerine /uret StickySubmitBar pattern'i reuse: sayfa altında sticky bar, sol kısımda kalite modu chip'leri + varyasyon stepper + maliyet özeti, sağ kısımda büyük "Mankene giydir" CTA (bg-rd-primary-700). Yetersiz kredi durumu Tooltip primitive ile (mevcut /uret altyapısı). Onay modalı (`onayAktif` flow) korunur. |
+| YS-08 | TryonSonuc redesign + Video kart | ✅ Tamam | YS-07 | rd-* token swap. Üst başlık font-display "Giydirme sonucu". Sonuç görselleri korunur (grid). Sonuç altına BÜYÜK görünür video kart: warm-earth-50 bg + warm-earth-200 border, "Şimdi videoyu da üret" + Lucide PlayCircle (warm-earth-700) + alt text "5sn · 13 kredi  •  10sn · 23 kredi" + "Video üret" CTA. ChevronDown toggle KALDIRILIR. Tıklayınca TryonVideoAyarlar açılır (mevcut). Video sonucu yine TryonVideoSonuc'da. |
+| YS-09 | Empty state premium showcase | ✅ Tamam | YS-03 | TryonSonuc render edilmiyorken sağ kolon (mevcut OrnekCiktilar) yeniden tasarlanır. "Nasıl çalışıyor?" başlığı altında 3 mini kart (kıyafet → manken → sonuç ikonları) + 1 küçük "AI ile saniyeler içinde" mikrocopy + 2 örnek before/after kartı. Placeholder gri kareler kalkar — gerçek FASHN örneği varsa public/'te kullanılır, yoksa kalitatif placeholder (rd-neutral-100 bg + Lucide ImageIcon). |
+| YS-10 | Mobile + a11y + acceptance | ✅ Tamam | YS-09 | 375px sweep: numbered step kartları tek kolon, her adım tam genişlik, sticky bar dikey. ARIA: step kartları `<section aria-labelledby>`, video kart aria-describedby. Klavye Tab: foto upload → foto tipi → kategori → manken alt-tab → manken seçim → kalite mod → varyasyon → üret. Kontrast (warm-earth-700 on warm-earth-50 doğrula). |
+| YS-11 | "Yakında" araçlar için yol haritası | Bekliyor | YS-02 | Footer veya `/yzstudio/yol-haritasi` ayrı sayfada "Stüdyo çekimi (Q3 2026)" + "Arka plan değiştirme (Q4 2026)" mini liste. /yzstudio sayfasının kendisi temiz kalır, roadmap ayrı yerde. **OPSİYONEL** — Aziz "şimdi gerek yok, sonra" derse [İptal] olarak kapatılır. |
+
+**Karar verilecek (YS prompt yazılırken):**
+- YS-11 dahil mi, dışarıda mı? (Aziz redesign sonrası değerlendirir)
+- "Adım 3" sticky bar mı yoksa adım 3 kartı + üret butonu kart içi mi? Vizyonda sticky bar — kullanıcı scroll ederken CTA görünür. Ama numbered step görsel akışı bozar mı? Code'a "her ikisini de değerlendir, sticky bar default" yazılır.
+- AI manken oluşturma (ModelPicker "Oluştur" alt-tab) ileride kendi sayfasına çıkacak mı? Şu an alt-tab kalır, Faz 3 sonrası karar.
+
+#### YS-01~YS-10 Birleşik Prompt (yzstudio sıfırdan rehberli premium pasaj)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
+UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
+Bunun yerine BACKLOG-REDESIGN.md başındaki redesign branch UI 
+kuralları geçerli (font 400-800 serbest, gölge serbest, rounded-2xl 
+serbest, Manrope+Inter, rd-* token'lar, sadece emoji yasak — Lucide 
+ikon kullan).
+
+Branch: claude/redesign-modern-ui
+Görev: YS-01~YS-10 — /yzstudio sayfasını "tek araca odaklı, rehberli, 
+premium" hale getir. Mevcut yapı taslak, ciddi UX/tasarım sorunu var, 
+baştan ele alınıyor. YS-11 (yol haritası sayfası) bu prompt'a DAHİL 
+DEĞİL, opsiyonel, ayrı yapılır.
+
+Mevcut yapı:
+- app/yzstudio/page.tsx (StudioHeader + StudioSekmeler + TryonSekmesi 
+  + alt beta uyarı bandı)
+- app/yzstudio/components/StudioHeader.tsx
+- app/yzstudio/components/StudioSekmeler.tsx (3 tab: 1 aktif + 2 disabled)
+- app/yzstudio/components/tryon/TryonSekmesi.tsx (2 kolon grid)
+- app/yzstudio/components/tryon/GarmentUpload.tsx
+- app/yzstudio/components/tryon/ModelPicker.tsx (3 alt-tab: Hazır / 
+  Oluştur (5 kr) / Yükle)
+- app/yzstudio/components/tryon/TryonAyarlar.tsx (kalite mod + 
+  varyasyon + onay flow + Üret)
+- app/yzstudio/components/tryon/TryonSonuc.tsx (sonuç görseller + 
+  "Bu görseli videoya dönüştür" gizli toggle)
+- app/yzstudio/components/tryon/TryonVideoAyarlar.tsx
+- app/yzstudio/components/tryon/TryonVideoSonuc.tsx
+
+İşlevsellik KORUNUR:
+- Tüm API call'ları (FASHN tryon, AI manken /api/studio/manken, Kling 
+  video) aynı kalır
+- useTryonUretim hook, useCredits, useCurrentUser, useFeatureFlag 
+  (FF.YZSTUDIO) aynı kalır
+- Stok mankenler, manken üretim parametreleri, kredi mantığı aynı kalır
+- yzstudio kapalı state'i (yzstudioEnabled === false) korunur
+
+Kapsam DIŞI:
+- YS-11 yol haritası ayrı sayfa (Aziz redesign sonrası karar verecek)
+- AI manken oluşturmayı kendi sayfasına çıkarma (Faz 3 sonrası)
+- Backend / API değişiklikleri (sadece UI/UX)
+
+────────────────────────────────────────────
+BÖLÜM 1 — YS-01: StudioHeader redesign + premium kimlik
+────────────────────────────────────────────
+
+Mevcut StudioHeader: kompakt, h1 "yzstudio" + Premium·Beta rozet + 
+kredi + "Kredi yükle" CTA.
+
+Değişiklikler:
+
+1. Renk paleti rd-* token'a geçir (tüm hardcoded hex):
+   - bg-[#FAFAF8] → bg-rd-neutral-50
+   - bg-white → bg-white (kalır)
+   - border-[#D8D6CE] → border-rd-neutral-200
+   - text-[#1A1A17] → text-rd-neutral-900
+   - text-[#908E86] → text-rd-neutral-500
+   - text-[#5A5852] → text-rd-neutral-700
+   - bg-[#FAF4ED] → bg-rd-warm-50 (premium accent — yeni token gerekli mi 
+     kontrol et, yoksa hex bırak ve tailwind config'e ekle)
+   - text-[#3D2710] → text-rd-warm-900
+   - bg-[#1E4DD8] → bg-rd-primary-700
+   - hover:bg-[#163B9E] → hover:bg-rd-primary-800
+
+2. Premium pozisyonlama:
+   - Header'ın TAM ÜSTÜNDE küçük eyebrow strip (yeni element):
+     - text-[10px] uppercase tracking-[0.15em] text-rd-warm-700 
+       font-medium
+     - "PREMIUM ARAÇ" (sağa veya ortaya hizalı)
+     - Üstüne ufak `<Sparkles size-3 strokeWidth=1.5>` ikon
+   - H1 "yzstudio" font-display (Manrope) text-2xl md:text-3xl 
+     font-medium tracking-[-0.01em]
+   - "Premium · Beta" rozet warm-earth tonunda kalır (zaten doğru)
+
+3. StudioHeader'ı yeni dosya olarak çıkar (mevcut JSX page.tsx içine 
+   gömülü) — components/yzstudio/StudioHeader.tsx (varsa kullan, yoksa 
+   page.tsx'ten ayır).
+
+────────────────────────────────────────────
+BÖLÜM 2 — YS-02: Tab UI'sını kaldır
+────────────────────────────────────────────
+
+1. app/yzstudio/components/StudioSekmeler.tsx tamamen sil VEYA içini 
+   boş export yap (silmek tercih edilir).
+
+2. app/yzstudio/page.tsx:
+   - `useState("tryon")` ve `aktifSekme` state'ini kaldır
+   - `<StudioSekmeler aktif={aktifSekme} onChange={setAktifSekme} />` 
+     satırını kaldır
+   - `{aktifSekme === "tryon" && <TryonSekmesi />}` → `<TryonSekmesi />` 
+     direkt
+   - Import temizle
+
+3. Bu adım sonrası sayfa yapısı: StudioHeader → BetaBanner → TryonSekmesi 
+   → SiteFooter.
+
+────────────────────────────────────────────
+BÖLÜM 3 — YS-04: Beta uyarısını üst banner'a taşı (önce, akışta yerini 
+                 bulsun)
+────────────────────────────────────────────
+
+1. Mevcut alt banner (page.tsx ~satır 75): `<div className="bg-[#FAF4ED] 
+   border border-[#EED8BD]...>yzstudio beta sürümünde</div>` — kaldır.
+
+2. StudioHeader'ın HEMEN ALTINA yeni component: 
+   components/yzstudio/BetaBanner.tsx (yeni)
+   - Tek satır banner: bg-rd-warm-50 border-b border-rd-warm-200 
+     px-4 py-2.5
+   - Flex items-center justify-center gap-2 max-w-5xl mx-auto
+   - Lucide Info size-4 strokeWidth=1.5 text-rd-warm-700
+   - Text: text-xs md:text-sm text-rd-warm-800 — "yzstudio beta — 
+     sonuçlar değişkenlik gösterebilir, beğenmediğin sonucu yeniden 
+     üretebilirsin"
+   - aria-live yok (statik bilgi), role="status" opsiyonel
+
+────────────────────────────────────────────
+BÖLÜM 4 — YS-03: Step numbered layout
+────────────────────────────────────────────
+
+TryonSekmesi'ni yeniden yapılandır. Sol kolon = 3 ADIM kartı dikey 
+istif. Her adım kartı:
+
+```jsx
+<section aria-labelledby="adim-1-baslik" 
+  className="relative pl-16 md:pl-20 pb-8 last:pb-0 
+             border-l-2 border-rd-neutral-200 last:border-transparent 
+             ml-6">
+  {/* Sol başında dairesel numara */}
+  <div className="absolute -left-6 top-0 size-12 rounded-full 
+                  bg-rd-warm-700 text-white font-display 
+                  text-xl font-medium flex items-center 
+                  justify-center">
+    1
+  </div>
+  
+  <div className="space-y-4">
+    <h2 id="adim-1-baslik" 
+        className="font-display text-lg md:text-xl 
+                   text-rd-neutral-900 font-medium">
+      1 · Kıyafet fotoğrafı
+    </h2>
+    
+    {/* Adım içeriği */}
+    <GarmentUpload ... />
+  </div>
+</section>
+```
+
+3 adım:
+- 1 · Kıyafet fotoğrafı → GarmentUpload bileşeni
+- 2 · Manken seç → ModelPicker bileşeni
+- 3 · Üret → TryonAyarlar (sticky barda — aşağıda YS-07)
+
+ÖNEMLİ: 3. adım kartının İÇİ mini bilgi metni ("3 mod, varyasyon sayısı 
+sticky barda — aşağıda hazır olunca üret") olabilir. ASIL submit 
+sticky bottom barda. Adım 3 kartı bu yönlendirici bilgi + maliyet özeti 
+göstersin (toplam X kredi). Veya adım 3 kartı tamamen kalksın, sticky 
+bar tek başına yeterli — tercihini commit notunda söyle.
+
+Bağlantı çizgisi: her adımın sol border'ı bir sonrakine bağlı (border-l-2 
+border-rd-neutral-200). Son adımda border yok (last:border-transparent).
+
+Mobile (375px): 
+- Numbered circle size-10 (büyük olma 12), text-base
+- pl-12 (mobil daha az ofset)
+- ml-5 (numara konumu ayarla)
+
+────────────────────────────────────────────
+BÖLÜM 5 — YS-05: GarmentUpload (Adım 1) refactor
+────────────────────────────────────────────
+
+1. Renk paleti rd-* swap (tüm hex'leri sözleşmeli token'lara).
+
+2. Drop zone büyütülür:
+   - Mevcut min-height: 160 → 260 (daha çağrılı)
+   - paddingBottom: 133% kalır (foto var durumu)
+   - Empty state'te orta text-base "Fotoğraf yükle veya sürükle bırak" 
+     kalır
+   - Empty state ikon: ImageUp size-8 (24'ten büyüt)
+
+3. Foto tipi + Kategori chip'leri "DOLU MAVI"DEN ghost outline'a:
+   - Seçili: `border-2 border-rd-primary-700 bg-rd-primary-50 
+     text-rd-primary-700` (dolu beyaz değil — açık-fon vurgu)
+   - Seçili değil: `border border-rd-neutral-300 text-rd-neutral-700 
+     hover:border-rd-primary-400 hover:bg-rd-neutral-50`
+   - Daha az "yarışan" mavi blok, hierarchy temizlenir
+
+4. Bölüm başlığı KALDIRILIR (mevcut "Kıyafet fotoğrafı" h3) — adım 
+   kartı zaten "1 · Kıyafet fotoğrafı" diyor. Çift başlık olmasın.
+
+5. Foto tipi + Kategori altbölüm başlıkları kalır ama text-xs uppercase 
+   tracking-wide text-rd-neutral-500 olarak (eyebrow stili).
+
+────────────────────────────────────────────
+BÖLÜM 6 — YS-06: ModelPicker (Adım 2) refactor
+────────────────────────────────────────────
+
+1. Renk paleti rd-* swap.
+
+2. Bölüm başlığı KALDIRILIR (adım kartı zaten "2 · Manken seç" diyor).
+
+3. 3 alt-tab segmented control:
+   - Mevcut yapı korunur (bg-rd-neutral-100 border'lı container)
+   - Aktif tab: bg-white shadow-sm (redesign'da serbest) 
+     text-rd-neutral-900
+   - Pasif tab: text-rd-neutral-600 hover:text-rd-neutral-900
+   - Tab label'ları: "Hazır mankenler" / "Oluştur (5 kr)" / "Fotoğraf 
+     yükle". Mobile kısa: "Hazır" / "Oluştur 5kr" / "Fotoğraf"
+
+4. "Oluştur" alt-tab içindeki AI manken formu sadeleşir:
+   - Etiketler text-sm font-medium text-rd-neutral-700 (text-xs 
+     text-[#908E86] DEĞİL — okunabilirlik düşük)
+   - Input padding büyür: px-3 py-2 → px-4 py-2.5
+   - Chip butonları aynı outline pattern (Bölüm 5'teki gibi)
+   - Manken oluştur CTA: bg-rd-primary-700 hover:bg-rd-primary-800, 
+     yetersiz kredi durumunda Tooltip primitive (mevcut /uret 
+     altyapısı) kullan
+
+5. "Hazır mankenler" grid: kart hover lift (-translate-y-0.5 
+   transition), seçili kart border-2 border-rd-primary-700.
+
+6. "Fotoğraf yükle" alt-tab: drop zone min-h 200, ikon büyür.
+
+────────────────────────────────────────────
+BÖLÜM 7 — YS-07: TryonAyarlar → Sticky bottom bar
+────────────────────────────────────────────
+
+Mevcut TryonAyarlar inline form. Yeni: /uret StickySubmitBar pattern'i 
+reuse — sayfa altında sticky.
+
+1. components/yzstudio/StudioStickyBar.tsx (yeni — /uret StickySubmitBar 
+   primitive'i göz at, benzer yapı kur):
+   - position fixed bottom-0 left-0 right-0 (mobil) / sticky bottom-5 
+     (desktop)
+   - bg-white border-t border-rd-neutral-200
+   - max-w-5xl mx-auto px-4 py-3
+   - Flex layout:
+     - Sol: kalite mod chip'leri (3 mod — ghost outline pattern, 
+       seçili = bg-rd-primary-50 border-rd-primary-700) + varyasyon 
+       stepper (Minus/Plus + sayı, kompakt)
+     - Sağ: maliyet özeti ("X varyasyon · Y kredi") + "Mankene giydir" 
+       CTA (bg-rd-primary-700)
+   - Yetersiz kredi durumu Tooltip ("Yetersiz kredi · Paket al" → 
+     /kredi-yukle) — /uret'teki getCTAState pattern'i benzeri
+
+2. Onay modalı (mevcut `onayAktif` flow) korunur — sticky bar'da CTA 
+   tıklayınca modal/inline onay açılır, aynı UX.
+
+3. TryonAyarlar.tsx içeriği ya StudioStickyBar'a taşınır ya da 
+   TryonAyarlar yeniden kullanılır (kolay yol: TryonAyarlar'ı sticky 
+   container içine sar).
+
+4. Sayfa içeriğinin altına pb-32 (mobil) / pb-24 (desktop) ekle ki 
+   sticky bar form'u örtmesin.
+
+────────────────────────────────────────────
+BÖLÜM 8 — YS-08: TryonSonuc redesign + Video kart
+────────────────────────────────────────────
+
+1. Renk paleti rd-* swap.
+
+2. Sonuç başlığı: font-display text-lg md:text-xl text-rd-neutral-900 
+   "Giydirme sonucu" + sağında "Tekrar üret" link (mevcut RefreshCw + 
+   text-rd-neutral-500 hover).
+
+3. Sonuç görseller grid: korunur (1 veya 2 kolon).
+
+4. **Video kart redesign — ÖNEMLİ:**
+   Mevcut: `<button>Bu görseli videoya dönüştür <ChevronDown></button>` — 
+   gizli toggle. KALDIR.
+   
+   Yeni: BÜYÜK görünür kart (sonuç görsellerin ALTINDA, otomatik açık):
+   ```jsx
+   <div className="rounded-xl border-2 border-rd-warm-200 
+                   bg-rd-warm-50 p-5 md:p-6">
+     <div className="flex items-start gap-4">
+       <div className="size-12 rounded-lg bg-white 
+                       border border-rd-warm-200 
+                       flex items-center justify-center flex-shrink-0">
+         <PlayCircle size-7 strokeWidth={1.5} 
+                     className="text-rd-warm-700" />
+       </div>
+       <div className="flex-1">
+         <p className="text-[10px] uppercase tracking-[0.15em] 
+                       text-rd-warm-700 font-medium mb-1">
+           PREMIUM
+         </p>
+         <h3 className="font-display text-base md:text-lg 
+                        text-rd-neutral-900 font-medium mb-1">
+           Şimdi videoyu da üret
+         </h3>
+         <p className="text-sm text-rd-neutral-600 mb-3">
+           Görseli kısa videoya dönüştür — sosyal medyaya direkt yükle
+         </p>
+         <div className="flex items-center gap-3 text-xs 
+                         text-rd-neutral-500 mb-4">
+           <span>5sn · 13 kredi</span>
+           <span className="text-rd-neutral-300">·</span>
+           <span>10sn · 23 kredi</span>
+         </div>
+         <button onClick={() => onVideoAktifToggle(true)} 
+                 className="bg-rd-primary-700 hover:bg-rd-primary-800 
+                            text-white text-sm font-medium 
+                            px-4 py-2 rounded-lg">
+           Video üret
+         </button>
+       </div>
+     </div>
+   </div>
+   ```
+
+5. Tıklayınca videoAktif=true → TryonVideoAyarlar açılır (mevcut, 
+   sadeleştirme isteniyorsa minimum rd-* swap). Video kart kendisi 
+   gizlenir, yerine TryonVideoAyarlar render olur.
+
+6. videoSonuc varsa TryonVideoSonuc altta render olur (mevcut).
+
+────────────────────────────────────────────
+BÖLÜM 9 — YS-09: Empty state premium showcase
+────────────────────────────────────────────
+
+Mevcut OrnekCiktilar (TryonSekmesi içinde) — 2 boş gri kare + etiket. 
+Refactor:
+
+1. Sağ kolon empty state (`sonuclar.length === 0 && !yukleniyor`):
+   - Üstte küçük eyebrow: "NASIL ÇALIŞIYOR" text-[10px] uppercase 
+     tracking-[0.15em] text-rd-warm-700
+   - H3 font-display: "AI saniyeler içinde giydirir"
+   - 3 mini step görsel (yatay flex):
+     - Lucide Shirt + "Kıyafet" + arrow Lucide ChevronRight
+     - Lucide UserSquare + "Manken" + arrow
+     - Lucide Sparkles + "Sonuç"
+   - Altında 2 örnek before/after kartı (gerçek FASHN örnek varsa 
+     `public/yzstudio-orn ek-1.jpg` gibi, yoksa gri bg + Lucide 
+     ImageIcon placeholder + "Örnek yakında")
+   - Önce kontrol et: `public/yzstudio*` veya `public/ornek*` klasörü 
+     var mı? Glob ile ara.
+
+2. Yukarı kayan animasyon yok (statik), prefers-reduced-motion uyumlu.
+
+────────────────────────────────────────────
+BÖLÜM 10 — YS-10: Mobile + a11y + acceptance
+────────────────────────────────────────────
+
+1. **Mobile (375px):**
+   - Step numbered kartlar: numara size-10 (12 yerine), pl-12, ml-5
+   - GarmentUpload + ModelPicker + TryonSonuc tek kolon (zaten lg: 
+     breakpoint'te grid)
+   - Sticky bottom bar mobil dikey: kalite mod alt satıra düşer, 
+     varyasyon + CTA aynı satırda
+   - Video kart mobil: ikon üstte ortalanmış, başlık + içerik altında
+   - 3 alt-tab segmented control mobile'da label kısaltılmış kalır
+
+2. **A11y:**
+   - Her adım `<section aria-labelledby="adim-N-baslik">`
+   - Numbered daire `aria-hidden="true"` (sadece dekoratif)
+   - Lucide ikonlar `aria-hidden="true"`
+   - 3 alt-tab `role="tablist"` + tab'lar `role="tab" aria-selected`
+   - Stok manken grid: kartlar `role="radio"`, `aria-checked`, parent 
+     `role="radiogroup" aria-label="Hazır manken seç"`
+   - Sticky bar Üret butonu: yetersiz kredi durumda aria-disabled + 
+     Tooltip aria-describedby
+   - Video kart `<article aria-labelledby>`
+
+3. **Kontrast (WCAG AA):**
+   - text-rd-warm-700 on bg-rd-warm-50 — hesapla, AA değilse rd-warm-800
+   - text-rd-warm-800 on bg-rd-warm-50 — kontrol
+   - Numbered daire white on rd-warm-700 — AA üstünde olmalı
+   - Sticky bar text contrast tüm CTA durumları
+
+4. **Edge case'ler:**
+   - yzstudioEnabled === false → mevcut "yzstudio şu an erişime kapalı" 
+     ekran rd-* token'a swap (page.tsx içinde mevcut)
+   - kredi yok / 0 → sticky bar disabled, tooltip "Kredi yükle" 
+     /kredi-yukle'ye yönlendir
+   - Stok manken seçili değil + foto yok + giydir CTA: hangi adım 
+     eksik diye kullanıcıya anlatan mikro mesaj sticky bar üstünde 
+     görünsün ("Önce kıyafet fotoğrafı + manken seç")
+
+────────────────────────────────────────────
+Test (commit öncesi)
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde /yzstudio:
+  - Eyebrow "PREMIUM ARAÇ" + Manrope H1 görünür
+  - Beta banner üstte (kredi harcamadan önce)
+  - 3 numbered step kartı dikey istif, dairesel numara warm-earth
+  - Foto upload büyük drop zone + outline chip'ler
+  - Manken segmented control 3 alt-tab, "Oluştur" alt-tab'da AI form 
+    sadeleşmiş
+  - Sticky bottom bar: kalite mod + varyasyon + maliyet + Üret CTA
+  - Sonuç gelince video kart BÜYÜK görünür, "Video üret" CTA tıklanır
+  - Empty state "Nasıl çalışıyor" 3 ikon akışı + örnek kartlar
+  - 375px mobile: tek kolon, sticky bar dikey, hiçbir taşma yok
+  - Klavye Tab: foto upload → foto tipi → kategori → manken alt-tab → 
+    manken seçim → sticky bar (mod/varyasyon/üret)
+  - "yzstudio kapalı" durumda eyebrow/banner render olmuyor (kapalı 
+    state korundu)
+
+Commit özeti (bölünmüş öneri — büyük refactor, atomik commit kolaylığı):
+- feat(yzstudio): YS-01 StudioHeader rd-* + Manrope + premium eyebrow
+- feat(yzstudio): YS-02 tab UI kaldırıldı (StudioSekmeler silindi)
+- feat(yzstudio): YS-04 BetaBanner üst banner'a taşındı
+- feat(yzstudio): YS-03 step numbered layout (1-2-3 görsel akış)
+- feat(yzstudio): YS-05 GarmentUpload outline chip + büyük drop zone
+- feat(yzstudio): YS-06 ModelPicker segmented control + AI form sade
+- feat(yzstudio): YS-07 StudioStickyBar (kalite+varyasyon+üret sticky)
+- feat(yzstudio): YS-08 TryonSonuc redesign + video premium kart
+- feat(yzstudio): YS-09 empty state showcase (nasıl çalışıyor + örnekler)
+- chore(yzstudio): YS-10 mobile + a11y + acceptance polish
+
+VEYA tek commit: feat(yzstudio): YS-01~YS-10 sıfırdan rehberli premium 
+redesign
+
+BACKLOG-REDESIGN.md'de YS-01~YS-10 [x] işaretle. YS-11 (yol haritası 
+sayfası) BACKLOG'da kalır, Aziz redesign sonrası karar verir.
+
+Bittikten sonra rapor:
+- Commit listesi
+- Değişen dosyalar (yeni: components/yzstudio/StudioHeader.tsx, 
+  components/yzstudio/BetaBanner.tsx, components/yzstudio/StudioStickyBar.tsx, 
+  silinen: app/yzstudio/components/StudioSekmeler.tsx)
+- Adım 3 kartı kararı (kart kalktı mı, mini bilgi kartı oldu mu?)
+- Empty state örnek görsel kararı (gerçek public/ varsa kullanıldı mı, 
+  placeholder mı)
+- rd-warm-* token Tailwind config'e eklendi mi (yoksa hex bırakıldı mı)
+- Açık riskler / Faz 2 toplu acceptance'ta dikkat edilmesi gereken
+- (Opsiyonel) Aziz preview'da test ederken nelere bakmalı kısa liste
+```
 
 ### Grup 3 — Üretim sonuç sayfası `/(auth)/app/sonuc/[id]`
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| SR-01 | Sayfa scaffold + token swap | Bekliyor | Landing done | rd-* paleti aktif. |
-| SR-02 | Sonuç başlığı + üretim metadata | Bekliyor | SR-01 | "Üretim hazır" eyebrow + Sparkles, ürün adı, platform, içerik tipi, kredi düşüm bilgisi. |
-| SR-03 | İçerik tipine göre output renderer | Bekliyor | SR-02 | PZ-07~10'daki ContentRenderer pattern reuse: text/image/video/social. |
-| SR-04 | Kopyala/indir aksiyonları | Bekliyor | SR-03 | CopyButton (DS-08 reuse), ZIP indir, PDF indir butonları. |
-| SR-05 | "Yeni üretim" + "Geçmiş üretimler" CTA | Bekliyor | SR-04 | İki CTA — primary `/uret`, ghost `/hesap/uretimler`. |
-| SR-06 | Mobile + a11y + acceptance | Bekliyor | SR-05 | Aziz preview onayı. |
+| SR-01 | Sayfa scaffold + token swap | ✅ Tamam | Landing done | Commit `f9af79b` — bg-rd-neutral-50, rd-* tüm renkler. |
+| SR-02 | Sonuç başlığı + üretim metadata | ✅ Tamam | SR-01 | Commit `f9af79b` — CheckCircle2 eyebrow, Manrope H1, platform·tip·tarih subtitle. |
+| SR-03 | İçerik tipine göre output renderer | ✅ Tamam | SR-02 | Commit `f9af79b` — A branch (text-only). generations tablosu sadece output/sonuc. Boş durum kutusu + CTA. |
+| SR-04 | Kopyala/indir aksiyonları | ✅ Tamam | SR-03 | Commit `f9af79b` — CopyButton Lucide+aria-live, DownloadButton .txt blob. ZIP/PDF → SR-04b (bekliyor). |
+| SR-05 | "Yeni üretim" + "Geçmiş" CTA | ✅ Tamam | SR-04 | Commit `f9af79b` — iki kart, /uret + /hesap/uretimler (mevcut). |
+| SR-06 | Mobile + a11y + acceptance | ✅ Tamam | SR-05 | Commit `f9af79b` — flex-col mobile, aria-labelledby, sr-only H2, aria-hidden ikonlar. Aziz preview onayı bekliyor. |
+| SR-04b | ZIP/PDF indir (multimedia üretimler için) | Bekliyor | SR-04 | Kapsam dışı bırakıldı, gelecek ticket. |
+
+#### SR-01~SR-06 Birleşik Prompt (Üretim sonuç sayfası)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
+UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
+Bunun yerine BACKLOG-REDESIGN.md başındaki redesign branch UI 
+kuralları geçerli (font 400-800 serbest, gölge serbest, rounded-2xl 
+serbest, Manrope+Inter, rd-* token'lar, sadece emoji yasak — Lucide 
+ikon kullan).
+
+Branch: claude/redesign-modern-ui
+Görev: SR-01~SR-06 — `/(auth)/app/sonuc/[id]` sayfası redesign
+
+Mevcut durum: app/(auth)/app/sonuc/[id]/page.tsx — eski paletli 
+(bg-indigo-*, gri-tonlu), tek text output gösteren basit sayfa 
+(~80 satır). Faz 2'nin geri kalanı için redesign pattern'ine geçecek.
+
+Kapsam DIŞI:
+- /hesap/uretimler liste sayfası (Faz 3 — H-37'de)
+- ZIP / PDF indir (gelecek ticket — bu sürümde sadece kopyala + .txt indir)
+- Yeni ContentRenderer primitive yazımı (aşağıda koşullu)
+
+────────────────────────────────────────────
+BÖLÜM 1 — SR-01 + SR-02: Scaffold + sayfa başlığı + metadata
+────────────────────────────────────────────
+
+1. Sayfa düzeyinde rd-* paletine geçiş:
+   - bg-gray-50 → bg-rd-neutral-50
+   - text-gray-* → text-rd-neutral-*
+   - bg-indigo-100/700 (eyebrow rozet) ve bg-indigo-500/600 (CTA) → 
+     rd-primary-* veya rd-success-* (aşağıda nerede ne kullanılacak yazılı)
+   - rounded-2xl + shadow-sm korunur (redesign'da serbest)
+   - Manrope display başlık, Inter body — globals.css'te yüklü, sadece 
+     font-display class'ı uygula
+
+2. Yeni sayfa başlık bloğu (eski rozet+başlık yapısının üstünde):
+   - Eyebrow: `text-xs uppercase tracking-wider text-rd-success-700 
+     flex items-center gap-1.5` — Lucide CheckCircle2 (size-3.5) + 
+     "ÜRETİM HAZIR"
+   - H1 (font-display): text-3xl md:text-4xl text-rd-neutral-900 
+     "İçerik üretildi"
+   - Subtitle: text-rd-neutral-600 text-sm md:text-base — pazaryeri + 
+     içerik tipi + tarih birleşik. Örn: "Trendyol · Listing metni · 
+     27 Nisan 2026". Ayraç ortasında: <span className="text-rd-neutral-300 
+     mx-2">·</span>
+   - Geri linki: header'ın sol üstünde küçük `text-rd-neutral-500 
+     hover:text-rd-neutral-700` Lucide ChevronLeft (size-4) + "Üretime dön". 
+     Hedef href="/uret".
+
+3. Metadata: title aynı, description'a "İçerik kopyalanabilir, indirilebilir, 
+   yeniden üretilebilir." ek cümle.
+
+────────────────────────────────────────────
+BÖLÜM 2 — SR-03: İçerik tipine göre output renderer
+────────────────────────────────────────────
+
+ÖNCE: lib/database.types.ts (veya supabase migration'ları) generations 
+tablosunda hangi alanlar olduğunu söyler. Olası alanlar:
+- output / sonuc (text)
+- image_url / images (görsel)
+- video_url (video)
+- social_pack (JSON — sosyal medya paketi)
+- content_type ("metin" | "gorsel" | "video" | "sosyal")
+
+Karar ağacı:
+
+A) Eğer sadece text alanı varsa (output/sonuc): bu ticket'ta SADECE 
+   text renderer yap. <pre> bloğunu rd-* palette ile sarmala:
+   - Wrapper: bg-rd-neutral-100 border border-rd-neutral-200 rounded-xl 
+     p-5 md:p-6
+   - Text: text-rd-neutral-800 text-sm md:text-base leading-relaxed 
+     whitespace-pre-wrap font-sans
+   - Üst başlık (eyebrow): text-xs uppercase tracking-wider 
+     text-rd-neutral-500 mb-3 — "ÜRETİLEN İÇERİK"
+
+B) Eğer image_url/video_url/social_pack alanları VARSA: components/landing/ 
+   altında PZ-07~10'dan kalan ContentRenderer benzeri bir primitive var mı 
+   kontrol et (Grep "ContentRenderer" veya "ListingPreview"). 
+   - Varsa import et ve content_type'a göre branşla
+   - Yoksa: bu ticket'ta YENİ ContentRenderer YAZMA. SADECE text branch'ini 
+     yap, BACKLOG-REDESIGN.md'de "SR-03b — multimedia renderer" yeni 
+     ticket'ı oluştur ve [ ] olarak bırak. Diğer alanlar için fallback: 
+     image_url varsa <Image> ile göster, video_url varsa <video controls>, 
+     social_pack varsa <pre>JSON</pre> (geçici, etiketle "Ham veri").
+
+ÖNEMLİ: Bu bölümde sürpriz bir "ContentRenderer primitive sıfırdan yaz" 
+işine girme — sayfa renderı 30 dakikadan uzun sürerse opsiyon B-fallback'e 
+geç ve ticket aç.
+
+────────────────────────────────────────────
+BÖLÜM 3 — SR-04: Kopyala + indir aksiyonları
+────────────────────────────────────────────
+
+1. CopyButton (components/ui/CopyButton.tsx) rd-* palette uyumlu mu 
+   kontrol et. Değilse:
+   - bg-rd-neutral-900 hover:bg-rd-neutral-800 text-white
+   - Kopyalandı state: bg-rd-success-700 text-white + Lucide Check
+   - Default: Lucide Copy (size-4) + "Kopyala"
+   - Transition + 2sn sonra default'a dön (mevcut davranış)
+   - aria-live="polite" status mesajı
+
+2. Yeni İndir butonu (.txt only — bu sürümde):
+   - Outline ghost: border border-rd-neutral-300 text-rd-neutral-700 
+     hover:bg-rd-neutral-100
+   - Lucide Download (size-4) + "İndir (.txt)"
+   - 'use client' küçük component (DownloadButton.tsx — components/sonuc/ 
+     altında). onClick:
+     ```ts
+     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
+     const url = URL.createObjectURL(blob)
+     const a = document.createElement('a')
+     a.href = url
+     a.download = `yzliste-uretim-${id.slice(0, 8)}.txt`
+     a.click()
+     URL.revokeObjectURL(url)
+     ```
+   - Boş içerikse buton disabled + tooltip "İçerik bulunamadı"
+
+3. Layout: aksiyon barı flex gap-3 mt-6
+   - Mobile: flex-col, butonlar w-full
+   - Desktop (sm:): flex-row sm:w-auto
+
+ZIP/PDF: bu sürüme dahil değil — BACKLOG-REDESIGN.md'de "SR-04b — 
+ZIP/PDF indir (multimedia üretimler için)" yeni ticket aç [ ].
+
+────────────────────────────────────────────
+BÖLÜM 4 — SR-05: "Sıradaki adım" CTA bloğu
+────────────────────────────────────────────
+
+Sayfa altı bölümü (border-t border-rd-neutral-200 pt-8 mt-12):
+
+- Heading: text-rd-neutral-700 text-sm font-medium "Sıradaki adım"
+
+- İki kart (grid grid-cols-1 md:grid-cols-2 gap-4):
+
+  Sol kart — Yeni üretim (primary):
+  - bg-rd-primary-50 border border-rd-primary-200 rounded-xl p-5
+  - Lucide Sparkles (size-5 text-rd-primary-700)
+  - H3 (font-display): text-rd-neutral-900 "Yeni üretim yap"
+  - p: text-rd-neutral-600 text-sm "Aynı veya farklı pazaryeri için 
+    tekrar üret"
+  - CTA: Link href="/uret" — bg-rd-primary-700 hover:bg-rd-primary-800 
+    text-white px-4 py-2 rounded-lg
+
+  Sağ kart — Geçmiş (ghost):
+  - bg-rd-neutral-50 border border-rd-neutral-200 rounded-xl p-5
+  - Lucide History (size-5 text-rd-neutral-600)
+  - H3: "Tüm üretimlerin"
+  - p: text-rd-neutral-600 text-sm "Geçmiş üretimleri filtrele, 
+    tekrar üret veya indir"
+  - CTA: Link href="/hesap/uretimler" — border border-rd-neutral-300 
+    hover:bg-rd-neutral-100 text-rd-neutral-700 px-4 py-2 rounded-lg
+
+- Hover: kartlar -translate-y-0.5 transition
+
+NOT: /hesap/uretimler şu an mock veya yok olabilir — ticket H-37'de 
+yazılacak. Link verirken sayfanın varlığını teyit et:
+- Eğer app/(auth)/hesap/uretimler/page.tsx varsa link ver
+- Yoksa kart CTA'sını disabled yap + altına "Yakında" küçük etiket 
+  (text-rd-neutral-400 text-xs)
+
+────────────────────────────────────────────
+BÖLÜM 5 — SR-06: Mobile + a11y + acceptance
+────────────────────────────────────────────
+
+1. Mobile (375px):
+   - H1 text-3xl mobil okunaklı, taşma yok
+   - Subtitle pazaryeri+tip+tarih satırı flex-wrap, text-sm
+   - Text output box p-4 mobil
+   - Buton grupu flex-col w-full mobil
+   - "Sıradaki adım" iki kart üst üste tek kolon
+
+2. A11y:
+   - main aria-labelledby="sonuc-h1", h1'e id="sonuc-h1"
+   - Eyebrow span aria-hidden="true"
+   - Lucide ikonlar aria-hidden="true" (decorative)
+   - CopyButton aria-label="İçeriği kopyala", İndir butonu aria-label=
+     "İçeriği .txt olarak indir"
+   - Kopyalandı feedback aria-live="polite"
+   - H1 → H2 ("Üretilen içerik" — text output başlığı görünür mü 
+     görünmez mi tartışmalı; sr-only H2 ekle minimum) → H3 (sıradaki 
+     adım kartları)
+   - Focus ring rd-primary-700/30 ile, klavye Tab sırası: Geri → 
+     Kopyala → İndir → Yeni üretim → Geçmiş
+
+3. Kontrast (WCAG AA — 4.5:1 normal, 3:1 büyük metin):
+   - text-rd-success-700 on bg-rd-neutral-50 doğrula
+   - text-rd-neutral-600 on bg-rd-neutral-50 doğrula
+   - text-rd-primary-700 on bg-rd-primary-50 doğrula
+
+4. Edge case'ler:
+   - uretim.output ve uretim.sonuc ikisi de null → "İçerik bulunamadı" 
+     boş durum kutusu + Yeni üretim CTA. <pre> render etme.
+   - uretim.platform null → "—" yer tutucu
+   - uretim.created_at parse hatası → fallback "Tarih bilinmiyor"
+
+────────────────────────────────────────────
+Test (commit öncesi)
+────────────────────────────────────────────
+
+- npm run build temiz
+- TypeScript clean
+- Localde /sonuc/[gerçek-id] preview'da:
+  - rd-* renkleri uygulanmış (eski indigo yok)
+  - Manrope display başlık + Inter body
+  - Lucide ikonlar (CheckCircle2, Copy, Download, Sparkles, History, 
+    ChevronLeft, Check)
+  - Kopyala çalışıyor + "Kopyalandı" feedback 2sn
+  - İndir .txt blob download (dosya adı yzliste-uretim-XXXXXXXX.txt)
+  - Yeni üretim → /uret, Geçmiş → /hesap/uretimler (varsa)
+  - 375px mobile sıkıntısız
+  - Klavye Tab sırası doğru, focus visible
+
+Commit özeti (tek commit OK):
+- feat(sonuc): SR-01~SR-06 üretim sonuç sayfası redesign 
+  (rd-* palette, Manrope, kopyala+indir, sıradaki adım CTA)
+
+VEYA bölünmüş:
+- feat(sonuc): SR-01~02 scaffold + sayfa başlığı (rd-* palette)
+- feat(sonuc): SR-03 text-only renderer
+- feat(sonuc): SR-04 kopyala + .txt indir
+- feat(sonuc): SR-05 sıradaki adım CTA'ları
+- chore(sonuc): SR-06 mobile + a11y polish
+
+BACKLOG-REDESIGN.md'de SR-01~SR-06 [x] işaretle. Eğer Bölüm 2'de 
+B-fallback aldıysan SR-03b ticket'ı [ ] olarak ekle. Eğer Bölüm 3'te 
+ZIP/PDF kapsam dışı bıraktıysan SR-04b ticket'ı [ ] olarak ekle.
+
+Bittikten sonra:
+- Commit listesi
+- Değişen dosyalar (yeni: components/sonuc/DownloadButton.tsx? 
+  Değişen: app/(auth)/app/sonuc/[id]/page.tsx, components/ui/CopyButton.tsx?)
+- ContentRenderer kararı (A: text-only mi, B: mevcut primitive mi, 
+  B-fallback: yeni ticket mı?)
+- Açık riskler / Aziz'in test etmesi gereken yerler
+```
 
 ### Grup 4 — Ödeme sonuç sayfaları
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| OD-01 | `/odeme/basarili` redesign | Bekliyor | Landing done | CheckCircle2 büyük ikon (success-700), eyebrow + H2 "Ödemen alındı", kredi yüklendiği rozet, "Üretime başla" primary + "Hesabım" ghost CTA. |
-| OD-02 | `/odeme/hata` redesign | Bekliyor | Landing done | XCircle danger ikon, hata sebebi metni (Aziz onayı sonrası), "Tekrar dene" primary + "Destek" link, calm ton. |
-| OD-03 | E-Arşiv fatura + iyzico güvence rozeti | Bekliyor | OD-01 | Footer alt: iyzico logo, e-Arşiv açıklaması. |
-| OD-04 | A11y + acceptance | Bekliyor | OD-03 | aria-live başarı/hata mesajı, focus management, Aziz preview onayı. |
+| OD-01 | `/odeme/basarili` redesign | ✅ Tamam | Landing done | Commit `d0c97c4` — CheckCircle2, rd-* token swap, Manrope H1, kredi rozet (Coins), href /uret. |
+| OD-02 | `/odeme/hata` redesign | ✅ Tamam | Landing done | Commit `d0c97c4` — XCircle danger, Manrope H1, hata kodu kutu (monospace), Mail CTA, Suspense+client, layout.tsx robots. |
+| OD-03 | E-Arşiv + iyzico rozeti | ✅ Tamam | OD-01 | Commit `d0c97c4` — TrustStrip.tsx: iyzico_footer_logo.png + e-Arşiv FileText; her iki sayfada. |
+| OD-04 | A11y + acceptance | ✅ Tamam | OD-03 | Commit `d0c97c4` — aria-hidden ikonlar, focus-visible ring, role="status" hata kutusu, klavye sırası doğru. Aziz preview onayı bekliyor. |
+| OD-02b | `payment_failed` analytics event | Bekliyor | OD-02 | lib/analytics.ts'e paymentFailed method ekle, /odeme/hata'da fire et. |
 
-**Faz 2 toplam:** ~21 (U) + 7 (YS) + 6 (SR) + 4 (OD) = 38 ticket.
+#### OD-01~OD-04 Birleşik Prompt (Ödeme sonuç sayfaları)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
+UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
+Bunun yerine BACKLOG-REDESIGN.md başındaki redesign branch UI 
+kuralları geçerli (font 400-800 serbest, gölge serbest, rounded-2xl 
+serbest, Manrope+Inter, rd-* token'lar, sadece emoji yasak — Lucide 
+ikon kullan).
+
+Branch: claude/redesign-modern-ui
+Görev: OD-01~OD-04 — `/odeme/basarili` ve `/odeme/hata` sayfaları redesign
+
+Mevcut durum:
+- app/odeme/basarili/page.tsx — zaten canlı paletteyle (#1E4DD8, 
+  #FAFAF8, #D8D6CE, #0F5132); analytics.creditPurchaseCompleted ve 
+  invalidateCredits davranışları KORUNACAK. rd-* token'a swap + 
+  Manrope display + ufak detaylar.
+- app/odeme/hata/page.tsx — tamamen eski (bg-gray-50, bg-red-100, 
+  "✗" karakter, font-bold, rounded-3xl, bg-indigo-500, "→" ok). 
+  Sıfırdan redesign gerekiyor, başarılı sayfasının simetriği olacak.
+
+Kapsam DIŞI: Faz 2 toplu acceptance Aziz tarafından yapılacak — bu 
+ticket'ta sadece kod, klavye+ekran okuyucu test'i kendin yap.
+
+────────────────────────────────────────────
+BÖLÜM 1 — OD-01: /odeme/basarili redesign
+────────────────────────────────────────────
+
+Mevcut sayfanın işlevselliğini KORU:
+- 'use client' + Suspense
+- searchParams'tan paket okuma
+- analytics.creditPurchaseCompleted call
+- useInvalidateCredits call
+- Layout merkezi card + 2 CTA
+
+Değişiklikler:
+
+1. Renk paleti: hardcoded hex'leri rd-* token'a çevir
+   - bg-[#FAFAF8] → bg-rd-neutral-50
+   - bg-white → bg-white (kalır)
+   - border-[#D8D6CE] → border-rd-neutral-200
+   - bg-[#E8F5EE] (success bg) → bg-rd-success-50
+   - text-[#0F5132] (success text) → text-rd-success-700
+   - text-[#1A1A17] (heading) → text-rd-neutral-900
+   - text-[#908E86] (muted) → text-rd-neutral-500
+   - bg-[#1E4DD8] hover:bg-[#163B9E] → bg-rd-primary-700 hover:bg-rd-primary-800
+   - text-[#5A5852] → text-rd-neutral-700
+
+2. İkon: `Check` → `CheckCircle2` (Lucide). Boyut size-7 (~28px), 
+   strokeWidth=2. Renk text-rd-success-700.
+
+3. Tipografi:
+   - H1: font-display (Manrope) text-2xl md:text-3xl font-medium 
+     "Ödeme başarılı" (ünlem yok — sade, kurumsal)
+   - p: text-rd-neutral-600 text-sm md:text-base leading-relaxed
+
+4. Yeni: Kredi miktarı rozet (paket biliniyorsa)
+   - p mesajının altında, CTA'ların üstünde
+   - Card içi ufak vurgu: bg-rd-primary-50 border border-rd-primary-200 
+     rounded-lg px-4 py-2 inline-flex items-center gap-2
+   - Lucide Coins (size-4 text-rd-primary-700)
+   - Text: text-rd-primary-700 font-medium "X kredi yüklendi"
+   - Eğer paket bilinmiyorsa rozeti gösterme
+
+5. CTA'lar (mevcut iki link):
+   - Primary "İçerik üret" → bg-rd-primary-700 hover:bg-rd-primary-800 
+     text-white font-medium py-3 rounded-lg text-sm. href="/uret" 
+     (ana sayfa "/" yerine — kullanıcı kredi yükledikten sonra direkt 
+     üretime gitsin)
+   - Ghost "Kredi geçmişini gör" → text-rd-neutral-500 
+     hover:text-rd-neutral-700 py-2 (mevcut href="/hesap/krediler" kalır 
+     — H-36'da gelecek; yoksa /hesap'a redirect veya disabled fallback)
+
+6. Card stil: bg-white border border-rd-neutral-200 rounded-xl p-8 md:p-10 
+   (rounded-2xl serbest ama rounded-xl daha sakin; Aziz'in canlı tarzına 
+   yakın)
+
+────────────────────────────────────────────
+BÖLÜM 2 — OD-02: /odeme/hata redesign
+────────────────────────────────────────────
+
+Tamamen yeniden yaz. Başarılı sayfasının simetriği ama danger ton.
+
+1. Server component kalabilir (mevcut Metadata, robots no-index korunur) 
+   AMA URL searchParams'tan ?reason= veya ?errorCode= okumak için 
+   client'a çevirmek faydalı olabilir. Karar: 'use client' + Suspense 
+   wrapper (başarılı sayfasıyla simetrik). Metadata için ayrı 
+   layout.tsx veya `export const metadata` kalır.
+
+2. Layout: başarılı ile aynı (merkezi card, max-w-md).
+
+3. İçerik:
+   - İkon: Lucide XCircle (size-7, strokeWidth=2 text-rd-danger-700)
+   - İkon arkaplan: bg-rd-danger-50 rounded-full size-16 (mevcut yapı)
+   - H1 (font-display): "Ödeme tamamlanamadı" (ünlem yok, "Başarısız" 
+     yerine daha nötr — kullanıcıyı ürkütmesin)
+   - p: text-rd-neutral-600 text-sm md:text-base leading-relaxed
+     "Ödeme işlemi tamamlanamadı. Krediniz çekilmedi. Tekrar deneyebilir 
+     veya farklı bir kart kullanabilirsin."
+   
+4. Hata sebebi (varsa):
+   - URL searchParams'tan ?reason= veya ?errorCode= oku (iyzico tipik 
+     parametreleri)
+   - Varsa: ufak gri kutu, ana mesajın altında — bg-rd-neutral-100 
+     border border-rd-neutral-200 rounded-lg p-3 text-xs 
+     text-rd-neutral-600 monospace
+     "Hata kodu: <reason>" formatında
+   - Yoksa: bu kutuyu gösterme
+
+5. CTA'lar:
+   - Primary "Tekrar dene" → href="/kredi-yukle" — 
+     bg-rd-primary-700 hover:bg-rd-primary-800 text-white font-medium 
+     py-3 rounded-lg text-sm. (Ok karakteri "→" KULLANMA — sade label)
+   - Ghost "Destek al" → mailto:destek@yzliste.com — 
+     text-rd-neutral-500 hover:text-rd-neutral-700 py-2 
+     (text-sm + Lucide Mail size-3.5 yanında)
+
+6. EMOJİ YASAK — mevcut sayfadaki "✗" karakteri (text-2xl span) Lucide 
+   XCircle ile değiştir. Mevcut "→" karakteri sade label ile değiştir.
+
+7. Eski class'ları sil:
+   - rounded-3xl → rounded-xl
+   - shadow-sm → kaldır (redesign'da serbest ama bu sayfada gerek yok)
+   - font-bold → font-medium (Manrope display zaten ağırlık veriyor)
+   - bg-indigo-500/600 → bg-rd-primary-700/800
+   - bg-red-100 → bg-rd-danger-50
+
+8. Analytics: hata sayfasında payment_failed event firle (varsa). 
+   lib/analytics.ts'te paymentFailed gibi bir method var mı kontrol 
+   et — yoksa eklemeyi atla, BACKLOG'a "OD-02b — payment_failed 
+   analytics event" ticket'ı [ ] olarak düş.
+
+────────────────────────────────────────────
+BÖLÜM 3 — OD-03: E-Arşiv + iyzico rozeti
+────────────────────────────────────────────
+
+Her iki sayfada (basarili + hata) card'ın ALTINA, sayfa footer'ının 
+hemen üstüne küçük bir trust strip:
+
+- mt-6 mx-auto max-w-md
+- flex flex-row items-center justify-center gap-4
+- text-xs text-rd-neutral-400
+
+İçerik (sıralı):
+1. iyzico rozeti
+   - public/iyzico-logo.* var mı kontrol et (Glob: public/**/iyzico*)
+   - Varsa: <Image> ile (height ~20px, width auto)
+   - Yoksa: text "Güvenli ödeme · iyzico" + Lucide Lock (size-3)
+2. Ayraç: <span className="text-rd-neutral-300">·</span>
+3. E-Arşiv: text "e-Arşiv fatura" + Lucide FileText (size-3)
+   - Tıklanabilir değil, sadece bilgi etiketi (KVKK / şeffaflık)
+
+Bu trip her iki sayfada DA gösterilir (başarılı = "ödemen güvenli + 
+faturan e-Arşiv"; hata = "kart bilgilerin iyzico'da güvende, 
+çekim yapılmadı" güvencesi).
+
+────────────────────────────────────────────
+BÖLÜM 4 — OD-04: A11y + bitirme kontrol
+────────────────────────────────────────────
+
+1. ARIA:
+   - main role="main" implicit — gerek yok ek attribute
+   - h1 sayfa başlığı tek (her iki sayfa)
+   - İkonlar (CheckCircle2, XCircle, Coins, Mail, Lock, FileText) 
+     aria-hidden="true"
+   - Hata sayfası: hata sebebi kutusu role="status" (passive) — 
+     navigasyondan sonra okunması yeterli, aria-live yok
+   - Başarılı sayfası: ana içerik render olduğunda screen reader 
+     başlığı okur, aria-live yok (sayfa zaten yenilendi)
+
+2. Klavye:
+   - Tab sırası: H1 (focus alamaz, ok) → Primary CTA → Ghost CTA → 
+     trust strip linkleri (yoksa skip)
+   - Focus visible: ring-2 ring-rd-primary-700/30 ring-offset-2
+
+3. Kontrast (WCAG AA):
+   - text-rd-success-700 (#0F5132) on bg-rd-success-50: 4.5:1+ ✓
+   - text-rd-danger-700 (#7A1E1E) on bg-rd-danger-50 (#FCECEC): 
+     hesapla, AA değilse rd-danger-800'e geç
+   - text-rd-neutral-500 (#908E86) on bg-rd-neutral-50: ufak metin 
+     için sınırda — text-rd-neutral-600'a yükselt eğer body p ise
+   - text-rd-primary-700 on bg-rd-primary-50: ✓
+
+4. Mobile (375px):
+   - Card max-w-md mobil otomatik viewport - 2rem padding
+   - CTA'lar full width zaten
+   - Trust strip uzun düşerse flex-wrap koru (gap-4 → gap-2)
+
+5. Edge case'ler:
+   - /odeme/basarili?paket=undefined → kredi rozeti gizle, 
+     analytics call yine fire (mevcut davranış)
+   - /odeme/hata reason yok → hata kodu kutusu gizle
+   - Suspense fallback={null} mevcut — bırak
+
+────────────────────────────────────────────
+Test (commit öncesi)
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde:
+  - /odeme/basarili?paket=populer → CheckCircle2, "30 kredi yüklendi" 
+    rozet, "İçerik üret" → /uret, trust strip görünür
+  - /odeme/basarili (paket yok) → rozet gizli, sayfa hatasız
+  - /odeme/hata?reason=card_declined → XCircle, "Hata kodu: 
+    card_declined" kutusu, "Tekrar dene" → /kredi-yukle, "Destek 
+    al" mailto, trust strip görünür
+  - /odeme/hata (param yok) → kod kutusu gizli
+  - 375px her iki sayfa: card düzgün, taşma yok
+  - Klavye: Tab → Primary → Ghost → (trust links yoksa son)
+
+Commit özeti (tek commit OK):
+- feat(odeme): OD-01~OD-04 ödeme sonuç sayfaları redesign 
+  (rd-* palette, Manrope, kredi rozet, hata kodu, iyzico+e-Arşiv 
+  trust strip)
+
+VEYA bölünmüş:
+- feat(odeme): OD-01 /odeme/basarili rd-* token swap + Manrope
+- feat(odeme): OD-02 /odeme/hata redesign (XCircle, hata kodu)
+- feat(odeme): OD-03 iyzico + e-Arşiv trust strip
+- chore(odeme): OD-04 a11y + acceptance polish
+
+BACKLOG-REDESIGN.md'de OD-01~OD-04 [x] işaretle. Eğer OD-02'de 
+analytics event eksikse OD-02b yeni ticket [ ] aç.
+
+Bittikten sonra:
+- Commit listesi
+- Değişen dosyalar (app/odeme/basarili/page.tsx, app/odeme/hata/page.tsx, 
+  varsa public/iyzico-logo, components/odeme/TrustStrip.tsx?)
+- iyzico logo durumu (public'te var mıydı, text fallback mi kullandın)
+- Açık riskler / Faz 2 toplu acceptance'ta dikkat edilmesi gereken
+```
+
+**Faz 2 toplam:** 21 (U) + 11 (YS) + 6 (SR) + 4 (OD) = 42 ticket. **U-01~20 + SR-01~06 + OD-01~04 done (30), kalan 12 (U-21 + YS-01~11). Aziz toplu acceptance Faz 2 sonu.**
 
 ---
 
 ## 14 — Hesap Detay Sayfaları Genişletme (Faz 3 eklentisi)
 
-Bölüm 12'deki H-01~H-35 5 ana sayfayı kapsıyordu. Burada eksik 5 hesap sayfası ekleniyor — H ID serisi devam ediyor.
+| ID | Başlık | Durum |
+|---|---|---|
+| H-36 → KR | /hesap/krediler | ✅ Tamam (Grup 3B) |
+| H-37 → UR | /hesap/uretimler | ✅ Tamam (Grup 3C) |
+| H-39 → FT | /hesap/faturalar | ✅ Tamam (Grup 2C) |
+| H-38 → HD-01 | /hesap/ayarlar | Bekliyor (HD paketi) |
+| H-40 → HD-02 | /kredi-yukle | Bekliyor (HD paketi) |
+| H-41 → MD | Modal versiyonları (.)giris/(.)kayit/(.)kredi-yukle | Faz 4 (Auth) |
+
+### HD-01~HD-03 (Faz 3 son paketi — /hesap/ayarlar + /kredi-yukle)
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| H-36 | `/hesap/krediler` sayfası | Bekliyor | H-01 | Mevcut bakiye kartı, kredi geçmişi tablosu (DataTable pattern), "Kredi yükle" primary CTA → `/kredi-yukle`, düşük kredi uyarısı (≤5). |
-| H-37 | `/hesap/uretimler` sayfası | Bekliyor | H-01, SR-03 | Geçmiş üretim listesi, içerik tipine göre filtre chip'leri, kart başına thumbnail + metadata, "tekrar üret" + "indir" aksiyonları, infinite scroll veya pagination. |
-| H-38 | `/hesap/ayarlar` sayfası | Bekliyor | H-01 | Hesap bilgileri, parola değiştir, e-posta tercihleri (toggle'lar), KVKK veri indirme/silme talepleri, hesap silme (red destructive). |
-| H-39 | `/hesap/faturalar` sayfası | Bekliyor | H-01 | Paraşüt e-Arşiv fatura listesi, indir butonları, fatura no + tarih + tutar tablosu. |
-| H-40 | `/kredi-yukle` sayfası | Bekliyor | H-01, FY-09 | FiyatlarSection'daki PackageCard reuse, paket seç → iyzico checkout flow'a yönlendir. Sticky paket özet kartı (mobile). |
-| H-41 | Modal versiyonları (`@modal/(.)` rotaları) | Bekliyor | H-40, H-30, H-31 | `(.)giris`, `(.)kayit`, `(.)kredi-yukle` — backdrop blur + modal panel, ana sayfayla aynı stil, focus trap, Escape kapatma. |
+| HD-01 | `/hesap/ayarlar` refactor | ✅ Tamam | FY done | Commit `HD-commit` — rd-* swap, Manrope eyebrow, 3 bölüm (Hesap/Bildirimler/KVKK), Toggle bileşeni, StickySaveBar + Toast reuse. KVKK API'leri mevcut. |
+| HD-01b | Bildirim tercihleri backend | Bekliyor | HD-01 | Supabase `profiles` tablosuna `bildirim_tercihleri` JSONB kolonu ekle. /api/profil/bildirimler PUT endpoint. Şu an UI local state. |
+| HD-02 | `/kredi-yukle` refactor | ✅ Tamam | FY done | Commit `HD-commit` — rd-* swap, Manrope eyebrow, PackageCard FY pattern reuse, ?paket= pre-select, radiogroup ARIA, Suspense wrapper, Trust strip. |
+| HD-03 | Mobile + a11y polish | ✅ Tamam | HD-02 | Commit `HD-commit` — 375px 1-col grid, role="radiogroup"/radio, role="switch", aria-checked, aria-modal, aria-busy tüm butonlarda. |
 
-**Faz 3 toplam:** Bölüm 12'deki 35 + Bölüm 14'teki 6 = 41 ticket.
+**Faz 3 ✅ TAMAM (28 Nis akşam).** 8/8 paket done: MP+PR+FT+HS+KR+UR+FY+HD. KVKK endpoint'leri /api/hesap/export + /api/hesap-sil mevcut çıktı. HD-01b backend ticket: bildirim_tercihleri persist (UI hazır, simulate). iyzico popup CSS global korundu.
 
 ---
 
 ## 15 — Auth Sayfaları (Faz 4)
 
-Mevcut Bölüm 12'de H-30/H-31 sadece /giris için 2 ticket vardı. Burada `/giris` genişletiliyor + `/kayit`, `/sifre-sifirla` ekleniyor.
+**Mevcut sayfalar:** app/giris/page.tsx, app/kayit/page.tsx, app/@modal/(.)giris/page.tsx, app/@modal/(.)kayit/page.tsx + components/auth/AuthForm.tsx (zaten mevcut). Mevcut auth flow CHALIŞIYOR (Aziz email+şifre ile preview test edebildi). Sadece UI redesign + Google OAuth preview URL fix.
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| AU-01 | `/giris` form layout (H-30/31'i kapsayacak) | Bekliyor | Landing done | 2 kolon (form sol, marka pitch sağ — gradient + 1-2 trust point), input ring primary, password toggle göz ikonu, "Beni hatırla" checkbox, "Şifremi unuttum" link. H-30/H-31 burada birleşiyor. |
-| AU-02 | `/giris` Google ile giriş + ayraç | Bekliyor | AU-01 | "veya" ayracı, Google logosu + "Google ile devam et" outline buton (mevcut OAuth korunur). |
-| AU-03 | `/giris` hata durumları | Bekliyor | AU-01 | Inline error mesajları (kırmızı eyebrow), Cloudflare Turnstile entegrasyonu görsel uyumlu. |
-| AU-04 | `/kayit` form layout | Bekliyor | AU-01 | AU-01 ile simetrik, "Şifre tekrar" alanı, KVKK + kullanım koşulları onay checkbox'ları (link'ler tıklanabilir). |
-| AU-05 | `/kayit` e-posta doğrulama akışı UI | Bekliyor | AU-04 | Kayıt sonrası "E-posta gönderildi" empty state, MailCheck ikon, "Tekrar gönder" link, ipucu metni. |
-| AU-06 | `/sifre-sifirla` form | Bekliyor | AU-01 | Tek input (e-posta), KeyRound ikon, success state ("Link gönderildi"), 2 step (e-posta gir → yeni şifre). |
-| AU-07 | Mobile responsive (3 sayfa) | Bekliyor | AU-06 | Tek kolon, sağ marka pitch mobilde gizli veya altta küçük. |
-| AU-08 | A11y + acceptance | Bekliyor | AU-07 | Form label/aria, error aria-live, autocomplete attr, Aziz preview onayı. |
+| AU-01 | `/giris` komple (form + Google OAuth + hata + Turnstile) | ✅ Tamam | Landing done | Commit `AU-commit` — rd-* swap, 2-kolon layout (sağ: değer önermesi rd-primary kart), Eye toggle, "Beni hatırla" + "Şifremi unuttum", AlertCircle inline hata, Turnstile korundu. |
+| AU-02 | `/kayit` komple (form + e-posta doğrulama UI + KVKK) | ✅ Tamam | AU-01 | Commit `AU-commit` — AuthForm içinde kayitBasarili state, MailCheck success UI, 60s resend cooldown (supabase.auth.resend), KVKK /kvkk-aydinlatma + /kosullar link. |
+| AU-03 | `/sifre-sifirla` komple (2 step) | ✅ Tamam | AU-01 | Commit `AU-commit` — Step1 (email form + KeyRound + MailCheck success), Step2 (code exchange + yeni şifre + Eye toggle). Suspense wrapper. |
+| AU-04 | Modal versiyonları (.)giris/(.)kayit/(.)kredi-yukle | ✅ Tamam | AU-01, AU-02 | Commit `AU-commit` — Modal.tsx rd-* swap + X Lucide ikon + role=dialog aria-modal. (.)giris korundu, (.)kayit rd-* güncellendi, (.)kredi-yukle rd-* + "En popüler" badge. |
+| AU-05 | Mobile + a11y + Google OAuth preview URL fix | ✅ Tamam | AU-04 | Commit `AU-commit` — min-h-[44px] tüm inputlar, aria-hidden ikonlar, label htmlFor + autocomplete, aria-busy submit, docs/auth-config.md oluşturuldu (Aziz Supabase config talimatı). |
 
-**Faz 4 toplam:** 8 ticket (H-30/31 burada absorb edildi, Bölüm 12'den çıkarılacak).
+**Faz 4 toplam:** 5 birleşik ticket (eski AU-01~09 + H-41 absorb).
+
+**AU-01~AU-05 ✅ Tamam (28 Nis akşam).** AuthForm.tsx tam rd-* rewrite (Eye toggle + inline error + KVKK linkleri + 60s resend cooldown), 2-kolon layout /giris+/kayit, /sifre-sifirla 2 step + Suspense, Modal.tsx rd-* (mobile bottom-sheet), @modal/(.) parallel routes korundu, docs/auth-config.md eklendi (Aziz Supabase Redirect URLs config talimatı).
+
+**Açık riskler:**
+- supabase.auth.resend SDK versiyon farkı: `{ type: 'signup', email }` vs `{ type: 'email', email }` — TS hata verirse alternatif
+- Supabase Redirect URLs config Aziz dönüşünde Cowork yapacak (MCP üzerinden veya talimat ile)
+
+<!-- AU prompt detay silindi — Code uyguladı, detay commit'lerde + docs/auth-config.md
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: AU-01~AU-05 — /giris + /kayit + /sifre-sifirla + Modal 
+versiyonları + Google OAuth preview URL fix (Faz 4 Auth).
+
+Mevcut sayfalar:
+- app/giris/page.tsx
+- app/kayit/page.tsx
+- app/sifre-sifirla/page.tsx (varsa, yoksa yeni)
+- app/@modal/(.)giris/page.tsx (varsa)
+- app/@modal/(.)kayit/page.tsx (varsa)
+- components/auth/AuthForm.tsx (paylaşılan form — önce oku)
+
+Mevcut auth flow ÇALIŞIYOR (Aziz email+şifre ile preview test etti). 
+Sadece UI redesign + Google OAuth Supabase config talimatı.
+
+Reuse: components/primitives/{Toast}.tsx (form success/error için).
+
+KAPSAM DIŞI:
+- Backend Supabase auth değişikliği (mevcut çalışan flow korunur)
+- Cloudflare Turnstile yapılandırma (varsa korunur)
+- Google Cloud Console / Supabase config işlemleri (Aziz manuel 
+  yapacak, Code sadece talimat verir)
+
+────────────────────────────────────────────
+BÖLÜM 1 — AU-01: /giris komple
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap.
+
+2. Layout: 2 kolon (lg:grid-cols-2 gap-12) max-w-6xl mx-auto:
+   - Sol kolon: form (max-w-md)
+   - Sağ kolon: değer önermesi (Lucide Sparkles ikon + 3-4 bullet 
+     "yzliste ile ne yapabilirsin"). Mobile gizlenir (hidden lg:block).
+
+3. Sol kolon başlık:
+   - Eyebrow text-rd-primary-700 "GİRİŞ"
+   - H1 (font-display): text-3xl md:text-4xl text-rd-neutral-900 
+     "Tekrar hoş geldin"
+   - Subtitle: text-rd-neutral-600 — "Hesabına giriş yap, üretmeye 
+     devam et."
+
+4. Form:
+   - **E-posta input:** type="email", autocomplete="email", aria-label, 
+     Lucide Mail size-4 sol başında, focus:ring-rd-primary-500
+   - **Şifre input:** type="password" (toggleable), 
+     autocomplete="current-password", Lucide Lock + Eye/EyeOff toggle 
+     buton sağında
+   - **"Beni hatırla" checkbox:** flex items-center, Lucide Square/
+     CheckSquare ikon
+   - **"Şifremi unuttum" link:** text-sm text-rd-primary-700 hover, 
+     sağa hizalı (justify-between with checkbox)
+   - **Submit buton:** bg-rd-primary-700 text-white py-3 rounded-lg 
+     "Giriş yap"
+
+5. **Google OAuth bölümü:**
+   - Form'un altında "veya" ayracı (line + text)
+   - Google buton: outline border-rd-neutral-300 hover:bg-rd-neutral-50 
+     + Google logo (mevcut SVG veya Lucide alternatif) + "Google ile 
+     devam et"
+   - Tıklayınca AuthForm.tsx'teki signInWithOAuth flow korunur
+
+6. **Inline error:**
+   - Form altında: bg-rd-danger-50 border border-rd-danger-200 
+     text-rd-danger-700 rounded-lg p-3
+   - Lucide AlertCircle + hata mesajı (Türkçe)
+   - aria-live="polite"
+
+7. **Turnstile:** mevcut entegrasyon korunur (görünür widget veya 
+   invisible challenge — kod tarafında var, dokunma).
+
+8. Sayfa sonu: "Hesabın yok mu? Kayıt ol →" link to /kayit
+
+Commit: feat(auth): AU-01 /giris komple refactor
+
+────────────────────────────────────────────
+BÖLÜM 2 — AU-02: /kayit komple
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap. AU-01 ile aynı 2 kolon layout.
+
+2. Sol kolon başlık:
+   - Eyebrow "KAYIT"
+   - H1: "Hesabını oluştur"
+   - Subtitle: "Ücretsiz başla, kullandıkça öde."
+
+3. Form:
+   - E-posta input
+   - Şifre input + autocomplete="new-password"
+   - Şifre tekrar input + eşleşme kontrol (inline hata "Şifreler 
+     uyuşmuyor" eşleşmiyorsa)
+   - **KVKK + koşullar checkbox:** "[KVKK Aydınlatma Metni](/kvkk-aydinlatma) 
+     ve [Kullanım Koşulları](/kosullar)nı okudum, onaylıyorum"
+   - Submit buton: "Hesap oluştur"
+
+4. **E-posta doğrulama UI** (submit sonrası — aynı sayfa veya 
+   /kayit/dogrula):
+   - Form gizlenir, success state render olur
+   - Lucide MailCheck size-12 text-rd-success-700
+   - H2 "E-postanı kontrol et"
+   - p: "[email] adresine doğrulama linki gönderdik. Linkin gelmemesi 
+     halinde spam klasörünü kontrol et."
+   - "Yanlış e-posta? Düzelt" link → form'a geri dön
+   - "Tekrar gönder" buton (60sn cooldown timer)
+
+5. Google OAuth bölümü AU-01 ile aynı.
+
+6. Sayfa sonu: "Zaten hesabın var mı? Giriş yap →" link to /giris
+
+Commit: feat(auth): AU-02 /kayit komple refactor + e-posta 
+doğrulama UI
+
+────────────────────────────────────────────
+BÖLÜM 3 — AU-03: /sifre-sifirla komple
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap. Layout tek kolon max-w-md mx-auto.
+
+2. Başlık:
+   - Eyebrow "ŞİFRE SIFIRLA"
+   - H1: "Şifreni sıfırla"
+   - Lucide KeyRound size-8 text-rd-primary-700 (başlık üstünde)
+
+3. **Step 1: E-posta input + sıfırlama linki gönder:**
+   - E-posta input + autocomplete
+   - Submit "Sıfırlama linki gönder"
+   - Mevcut Supabase resetPasswordForEmail flow korunur
+
+4. **Step 1 sonrası success state:**
+   - Lucide MailCheck + "Sıfırlama linki gönderildi"
+   - p: "[email] adresine link geldi, üzerine tıkla."
+
+5. **Step 2 (link tıklanınca, ayrı sayfa veya query param ile aynı):**
+   - Yeni şifre input + autocomplete="new-password"
+   - Şifre tekrar input
+   - Submit "Şifreyi güncelle"
+   - Mevcut Supabase updateUser flow korunur
+
+6. Sayfa sonu: "Giriş yap →" link to /giris
+
+Commit: feat(auth): AU-03 /sifre-sifirla 2 step
+
+────────────────────────────────────────────
+BÖLÜM 4 — AU-04: Modal versiyonları
+────────────────────────────────────────────
+
+Next.js parallel routes intercepting. Mevcut yapı: app/@modal/
+(.)giris, (.)kayit. Eğer (.)kredi-yukle yoksa ekle.
+
+1. Modal layout (components/auth/AuthModal.tsx — yeni veya mevcut):
+   - Backdrop: fixed inset-0 bg-black/50 backdrop-blur-sm
+   - Modal kart: max-w-md mx-auto bg-white rounded-2xl p-6 md:p-8 
+     shadow-2xl
+   - Close buton: sağ üst Lucide X size-5
+   - Escape klavye + backdrop click → modal kapanır (router.back())
+   - aria-modal="true" + aria-labelledby
+
+2. İçerik: AU-01/AU-02 form'larını reuse (AuthForm.tsx zaten 
+   ortak). Modal layout sadece wrapper.
+
+3. URL behavior:
+   - /giris veya /kayit normal navigasyonla full sayfa
+   - In-page tıklama (örn header "Giriş" buton) → intercepting route 
+     ile modal açılır
+   - Modal'dan close → router.back() URL'i geri döner
+
+4. (.)kredi-yukle modal:
+   - app/@modal/(.)kredi-yukle/page.tsx (yoksa oluştur)
+   - HD-02'deki /kredi-yukle içeriğini reuse, modal wrapper içinde
+
+Commit: feat(auth): AU-04 modal versiyonları (giris/kayit/kredi-yukle)
+
+────────────────────────────────────────────
+BÖLÜM 5 — AU-05: Mobile + a11y + Google OAuth preview fix
+────────────────────────────────────────────
+
+1. **Mobile (375px):**
+   - Layout 2 kolon → tek kolon (sağ kolon hidden lg:block, mobile'da 
+     gösterilmez)
+   - Form input min-h 44px (tap-friendly)
+   - Submit buton full width
+   - Modal mobile: full screen (max-w-full + h-full)
+
+2. **A11y:**
+   - Form: her input id + label htmlFor
+   - autocomplete attribute: email / current-password / new-password
+   - Inline error aria-live="polite" + aria-describedby
+   - Şifre göz toggle aria-label "Şifreyi göster/gizle"
+   - Modal: aria-modal + focus trap (focus close butona) + Escape 
+     kapatır
+   - Klavye Tab full tour
+   - Lucide ikonlar aria-hidden
+
+3. **Google OAuth preview URL fix (Aziz 28 Nis bulgusu):**
+   
+   **Kod tarafı:** AuthForm.tsx'teki `signInWithOAuth` çağrısını 
+   review et:
+   ```ts
+   await supabase.auth.signInWithOAuth({
+     provider: 'google',
+     options: {
+       redirectTo: `${window.location.origin}/auth/callback`,
+     },
+   });
+   ```
+   - `window.location.origin` doğru: preview URL'inde preview origin, 
+     prod'da yzliste.com
+   - Eğer kodda hardcoded URL varsa → düzelt
+   - Yoksa kod tarafı temiz
+
+   **Config tarafı (Aziz manuel yapacak — Code sadece README'ye 
+   talimat ekler):**
+   - README.md veya docs/auth-config.md'ye ekle:
+     ```
+     ## Google OAuth Preview URL Configuration
+     
+     Preview deployment'larda Google ile girişin canlı siteye 
+     yönlendirme bug'ı için:
+     
+     1. **Supabase Dashboard → Authentication → URL Configuration:**
+        - Site URL: https://yzliste.com
+        - Redirect URLs (her birini ayrı satıra ekle):
+          - https://yzliste.com/**
+          - https://*.vercel.app/**
+          - http://localhost:3000/**
+     
+     2. **Google Cloud Console:** Authorized redirect URIs zaten 
+        Supabase callback URL ile çalışıyor, ek değişiklik gereksiz:
+        - https://<supabase-project>.supabase.co/auth/v1/callback
+     
+     3. **Test:** Preview deployment URL'inde "Google ile devam et" 
+        → Google sayfası → preview URL'e geri dönmeli (canlı yzliste 
+        DEĞİL).
+     ```
+
+4. **Edge case'ler:**
+   - Yanlış şifre: error toast + form korunur (input clear yok)
+   - Network fail: "Bağlantı hatası, tekrar dene" toast
+   - Modal escape: dirty form varsa onay sor
+   - Şifre sıfırlama linki süresi dolmuş: "Link süresi dolmuş, tekrar 
+     iste" + sıfırlama ekranına geri
+
+Commit: chore(auth): AU-05 mobile + a11y + Google OAuth preview 
+talimatı (README)
+
+────────────────────────────────────────────
+Test
+────────────────────────────────────────────
+
+- npm run build temiz
+- Localde:
+  - /giris: 2 kolon, form çalışır, Google buton, hata durumları
+  - /kayit: e-posta doğrulama UI submit sonrası
+  - /sifre-sifirla: 2 step flow
+  - Modal versiyonları: header'dan tıklayınca modal açılır
+  - 375px mobile sıkıntısız, tek kolon
+  - Klavye Tab full tour
+  - Şifre göz toggle çalışır
+
+Commit özeti (5 atomik) VEYA tek:
+feat(auth): AU-01~AU-05 /giris + /kayit + /sifre-sifirla + modal 
+versiyonları + Google OAuth README talimatı
+
+BACKLOG'da AU-01~AU-05 [x] işaretle.
+
+Bittikten sonra rapor:
+- Commit listesi
+- AuthForm.tsx redirectTo durumu (kod temiz mi, hardcoded var mı)
+- Modal versiyonları mevcut yapı korundu mu yoksa yeni mi
+- README/docs auth-config.md eklendi mi
+- Açık riskler / Aziz preview test (Google OAuth Supabase config 
+  manuel adımları)
+```
+-->
 
 ---
 
 ## 16 — İçerik Sayfaları (Faz 5)
 
-Mevcut Bölüm 12'de H-27/28/29 sadece blog liste için 3 ticket vardı. Burada blog detay + sss + hakkımızda ekleniyor. SEO + okunabilirlik öncelikli.
+**Mevcut sayfalar:** app/blog/page.tsx, app/blog/[slug]/page.tsx, app/sss/page.tsx, app/hakkimizda/page.tsx. Hepsi var, sadece UI redesign.
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| IC-01 | `/blog` liste sayfası (H-27~29 dahil) | Bekliyor | Landing done | Hero başlık + arama + kategori chip filtresi (TabList primitive reuse), blog kartları grid (3 kolon desktop, 1 kolon mobile), kart hover lift, "Daha fazla yükle" pagination. |
-| IC-02 | `/blog/[slug]` detay sayfası tipografi | Bekliyor | IC-01 | Article max-w 720px, prose tipografi (h2/h3/p/ul/ol/blockquote), kod blok rd-neutral-900 bg, görsel rounded-xl + caption italic, line-height 1.75. |
-| IC-03 | `/blog/[slug]` meta + paylaş | Bekliyor | IC-02 | Yazar + tarih + okuma süresi eyebrow, kategori badge'leri, sosyal paylaş (Twitter/LinkedIn/WhatsApp), "Daha önce yazılanlar" bölümü 3 kart. |
-| IC-04 | `/blog/[slug]` İlgili yazılar + CTA | Bekliyor | IC-03 | Yazı sonu CTA bandı (rd-primary-50 bg, "Hemen üret" → /uret), 3 ilgili yazı kartı. |
-| IC-05 | `/sss` sayfa redesign | Bekliyor | Landing done | Landing'deki SSSSection (Bölüm 08) component reuse, ek olarak kategoriye göre filtreleme (Genel/Krediler/Faturalandırma/Teknik), arama. |
-| IC-06 | `/hakkimizda` sayfa redesign | Bekliyor | Landing done | Mevcut metin korunur (DR-03 elden geçirilmişti), tipografi + spacing redesign'a uyarlanır, kurucu fotoğraf bloğu warm-earth accent (premium ton). |
-| IC-07 | Mobile responsive (4 sayfa) | Bekliyor | IC-06 | Blog kart 1 kolon, article tipografi mobile-friendly, SSS accordion. |
-| IC-08 | A11y + acceptance | Bekliyor | IC-07 | Article semantic HTML, blog listesi tablist ARIA, Aziz preview onayı. |
+| IC-01 | `/blog` liste komple | ✅ Tamamlandı | Auth done | rd-* swap. Manrope eyebrow "BLOG" + H1 "yzliste blog". Hero + arama input + kategori chip filter (ChipSelector reuse, "Tümü" + kategoriler). Kart grid (md:grid-cols-2 lg:grid-cols-3 gap-6): kapak + kategori badge + başlık (font-display) + özet + tarih + okuma süresi. Hover lift -translate-y-0.5. Pagination veya useInfiniteQuery (UR pattern reuse). |
+| IC-02 | `/blog/[slug]` komple (tipografi + meta + paylaş + ilgili + CTA) | ✅ Tamamlandı | IC-01 | rd-* swap. Article max-w-prose (~720px) mx-auto. font-display H1, prose-rd typography (line-height 1.75, p mb-4, h2/h3 spacing, code block bg-rd-neutral-100). Üstte meta: kategori badge + yazar + tarih + "X dk okuma". Sağda veya altta sosyal paylaş (X / LinkedIn / kopya link, Lucide ikonlar). Yazı sonu CTA kart (warm-earth bg + "yzliste'yi dene" + Link to /uret). 3 ilgili yazı kart (kategoriye göre). |
+| IC-03 | `/sss` redesign | ✅ Tamamlandı | IC-01 | rd-* swap. Manrope eyebrow "SSS" + H1 "Sıkça sorulanlar". components/landing/SSSSection veya FY-03'teki FiyatlarSSS pattern reuse. Kategori filter chip (ChipSelector reuse): Genel / Kredi / Üretim / Teknik / KVKK. Arama input (debounced live filter). Accordion her soru. |
+| IC-04 | `/hakkimizda` redesign | ✅ Tamamlandı | IC-01 | rd-* swap. Manrope eyebrow "HAKKIMIZDA" + H1 "yzliste neden var". Aziz kuralı: mevcut metinleri koru, yeni yazma (DR-03 metni mevcut sitede). Bölümler: Vizyon / Hikaye / Kurucu (warm-earth accent rozet) / İletişim. Kurucu kart: foto (varsa) + isim + rol + LinkedIn. |
+| IC-05 | Mobile + a11y polish | ✅ Tamamlandı | IC-04 | 375px: blog kart 1 kolon, /sss arama tek satır, /hakkımızda kurucu kart kompakt. Article semantic HTML (article > header > h1 + h2 hiyerarşi), aria-labelledby, ChipSelector ARIA reuse, blog kart role="article". |
 
-**Faz 5 toplam:** 8 ticket.
+**Faz 5 toplam:** 5 birleşik ticket (eski IC-01~08 sıkıştırıldı).
+
+**IC-01~IC-05 ✅ Tamam (28 Nis gece).** /blog liste + post + /sss + /hakkımızda refactor. Yeni: components/blog/{BlogListesi, BlogPaylas, SSSListesi}.tsx. Kararlar: prose-rd custom kurulmadı (mevcut Bolum bileşen sistemi yeterli), Accordion primitive'e taşıma "ileride" (Faz 6 cleanup'a alınabilir), Aziz metin kuralı korundu (sadece kategori field eklendi SSS'e).
+
+<!-- IC prompt detay silindi — Code uyguladı, detay commit'lerde
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: IC-01~IC-05 — /blog liste + /blog/[slug] + /sss + /hakkimizda 
+refactor (Faz 5 İçerik).
+
+Mevcut sayfalar:
+- app/blog/page.tsx (liste)
+- app/blog/[slug]/page.tsx (post)
+- app/sss/page.tsx
+- app/hakkimizda/page.tsx
+
+Reuse: components/primitives/{ChipSelector, Toast}.tsx + 
+components/landing/SSSSection (varsa) + components/fiyatlar/FiyatlarSSS 
+pattern + UR pagination pattern (useInfiniteQuery).
+
+Aziz kuralı: Mevcut sitedeki metinleri koru, yeni metin yazma. Tüm 
+metin değişiklikleri Aziz preview'da kontrol eder.
+
+KAPSAM DIŞI:
+- Backend blog API değişikliği (mevcut MD/MDX veya headless CMS 
+  korunur)
+- Yeni içerik yazımı
+
+────────────────────────────────────────────
+BÖLÜM 1 — IC-01: /blog liste
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap.
+
+2. Hero bölümü:
+   - Eyebrow text-rd-primary-700 "BLOG"
+   - H1 (font-display): text-3xl md:text-5xl text-rd-neutral-900 
+     "yzliste blog"
+   - Subtitle: text-rd-neutral-600 — "Pazaryeri rehberleri, AI listing 
+     ipuçları, satış stratejileri."
+
+3. Filter satırı:
+   - Sol: Arama input (Lucide Search) — placeholder "Yazı ara...", 
+     debounced 300ms (UR pattern reuse)
+   - Sağ: Kategori ChipSelector (single mode + "Tümü" default — UR 
+     pattern reuse). Kategoriler MD frontmatter'dan veya headless 
+     CMS'ten dinamik çek
+
+4. Kart grid:
+   - grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6
+   - Her kart (Link href={`/blog/${slug}`}):
+     - rounded-xl border border-rd-neutral-200 bg-white overflow-hidden 
+       hover:border-rd-primary-300 hover:-translate-y-0.5 transition
+     - Üst: kapak image (varsa, aspect-[16/9] object-cover)
+     - İçerik p-5: kategori badge (rd-warm tonu eyebrow) + H3 başlık 
+       (font-display text-lg) + özet (text-rd-neutral-600 line-clamp-2) 
+       + alt satır flex (tarih + "X dk okuma")
+
+5. Pagination:
+   - 12 yazı/sayfa (UR pattern reuse useInfiniteQuery)
+   - "Daha fazla yükle" buton altta
+
+6. Boş state:
+   - Filtre/arama sonucu boş: "Sonuç bulunamadı" + "Tümünü göster" 
+     CTA (filtre temizle)
+
+Commit: feat(blog): IC-01 /blog liste refactor (kart grid + filter + 
+pagination)
+
+────────────────────────────────────────────
+BÖLÜM 2 — IC-02: /blog/[slug]
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap.
+
+2. Layout: max-w-prose (~720px) mx-auto px-4 py-12.
+
+3. Üst kısım (article header):
+   - Geri linki: Lucide ChevronLeft + "Tüm yazılar" → /blog
+   - Kategori badge: rd-warm-50 bg + text-rd-warm-700
+   - H1 (font-display): text-3xl md:text-5xl text-rd-neutral-900 
+     leading-tight
+   - Meta satırı: flex items-center gap-3 text-sm text-rd-neutral-500
+     - Yazar: Lucide User + isim (varsa avatar küçük)
+     - Tarih: Lucide Calendar + tarih
+     - Okuma süresi: Lucide Clock + "X dk okuma" (kelime sayısı / 200 
+       hesaplama)
+
+4. Kapak görseli (varsa): aspect-[16/9] rounded-xl overflow-hidden 
+   my-8.
+
+5. **Article body — prose typography:**
+   - .prose-rd custom CSS sınıfı veya Tailwind Typography (varsa)
+   - Tipografi:
+     - p: text-base md:text-lg text-rd-neutral-800 leading-relaxed mb-5
+     - h2: font-display text-2xl md:text-3xl mt-12 mb-4
+     - h3: font-display text-xl md:text-2xl mt-8 mb-3
+     - ul/ol: list-disc ml-6 mb-5, li mb-2
+     - blockquote: border-l-4 border-rd-warm-300 pl-4 italic 
+       text-rd-neutral-700
+     - code (inline): bg-rd-neutral-100 px-1.5 py-0.5 rounded 
+       text-sm font-mono
+     - pre: bg-rd-neutral-900 text-white p-4 rounded-xl overflow-x-auto 
+       font-mono text-sm
+     - a: text-rd-primary-700 hover:text-rd-primary-800 underline 
+       underline-offset-2
+     - img: rounded-xl my-6
+   - line-height: 1.75 (default leading-relaxed)
+
+6. **Sosyal paylaş (sticky sağ kenar veya altta):**
+   - Lucide Share2 + "Paylaş" başlığı
+   - 3 buton (size-9 rounded-full bg-rd-neutral-100 hover:bg-rd-primary-50):
+     - X (Twitter): Lucide Twitter
+     - LinkedIn: Lucide Linkedin
+     - Kopya link: Lucide Link2 (clipboard + Toast "Link kopyalandı")
+   - Desktop sticky sol kenar (lg:fixed lg:left-8 lg:top-32), mobile 
+     altta yatay
+
+7. **Yazı sonu CTA:**
+   - mt-16 rounded-xl border-2 border-rd-warm-300 bg-rd-warm-50 p-6 
+     md:p-8
+   - Eyebrow: "BU YAZIDAN İLHAM"
+   - H3 (font-display): "yzliste'yi ücretsiz dene"
+   - p: "Listing yazımı, görsel üretimi, video try-on — tek platformda."
+   - CTA: bg-rd-primary-700 text-white "Hemen başla" → /uret
+
+8. **3 ilgili yazı:**
+   - Aynı kategoriden, yazıya en yakın 3 (tarih veya tag bazlı)
+   - "Devamı" başlığı + 3 mini kart (IC-01 pattern, daha kompakt)
+
+Commit: feat(blog): IC-02 /blog/[slug] tipografi + meta + paylaş + 
+ilgili + CTA
+
+────────────────────────────────────────────
+BÖLÜM 3 — IC-03: /sss redesign
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap.
+
+2. Hero:
+   - Eyebrow "SSS"
+   - H1: "Sıkça sorulanlar"
+   - Subtitle: "Cevabını bulamazsan destek@yzliste.com'a yaz."
+
+3. Filter satırı:
+   - Arama input (debounced)
+   - Kategori ChipSelector (single + "Tümü"):
+     - Tümü
+     - Genel
+     - Kredi & Fiyatlama
+     - Üretim
+     - Teknik
+     - KVKK & Hesap
+   - Kategoriler: SSS data'sındaki tag/kategori field'ından dinamik
+
+4. Accordion liste:
+   - components/landing/SSSSection veya FY-03 FiyatlarSSS pattern 
+     reuse (uniformity için tek primitive'e taşımak ileride: 
+     components/primitives/Accordion.tsx)
+   - Filter sonucu boş: "Soru bulunamadı" + filtre temizle CTA
+   - Mevcut SSS data'sı korunur (Aziz kuralı: yeni metin yazma)
+
+5. Sayfa altı: "Cevabını bulamadın mı?" CTA → mailto:destek
+
+Commit: feat(sss): IC-03 /sss kategori filter + arama + accordion
+
+────────────────────────────────────────────
+BÖLÜM 4 — IC-04: /hakkımızda redesign
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap.
+
+2. Hero:
+   - Eyebrow "HAKKIMIZDA"
+   - H1 (font-display): "yzliste neden var" (mevcut metinden — Aziz 
+     kuralı koruma)
+   - Subtitle: mevcut DR-03 metni
+
+3. Bölümler (mevcut metinleri koru):
+   
+   **Vizyon:**
+   - text-lg leading-relaxed
+   - Lucide Sparkles ikon eyebrow
+   
+   **Hikaye:**
+   - text-base leading-relaxed
+   - Anekdot/timeline tarzında olabilir
+   
+   **Kurucu:**
+   - rounded-xl border-2 border-rd-warm-300 bg-rd-warm-50 p-6 md:p-8 
+     (warm-earth premium accent — Aziz spec)
+   - Avatar (varsa) + isim + rol + 1-2 cümle bio
+   - LinkedIn link (Lucide Linkedin)
+   
+   **İletişim:**
+   - mailto:destek@yzliste.com + KVKK/koşullar linkleri
+   - Footer reuse opsiyonel
+
+4. Mevcut metni AYNEN korumak için: Code önce sayfayı oku, mevcut 
+   string'leri al, sadece UI/layout değişimi yap. Yeni cümle yazma.
+
+Commit: feat(hakkimizda): IC-04 /hakkimizda refactor (warm-earth 
+kurucu accent, mevcut metin korundu)
+
+────────────────────────────────────────────
+BÖLÜM 5 — IC-05: Mobile + a11y polish
+────────────────────────────────────────────
+
+1. **Mobile (375px):**
+   - /blog: kart grid tek kolon, filter satırı dikey (arama üstte, 
+     kategori chip yatay scroll)
+   - /blog/[slug]: max-w-prose mobile px-4, sosyal paylaş altta yatay 
+     (sticky değil)
+   - /sss: arama tek satır, kategori chip yatay scroll, accordion 
+     full width
+   - /hakkımızda: kurucu kart kompakt (avatar üst + metin alt)
+
+2. **A11y:**
+   - article semantic HTML: <article> wrapper + <header> meta + 
+     <main> body + <footer> CTA
+   - aria-labelledby h1 id'sine bağlı
+   - Blog kart role="article" + aria-labelledby kart başlık id
+   - Sosyal paylaş buton aria-label net (örn "X'te paylaş")
+   - Lucide ikonlar aria-hidden
+   - Kategori filter ChipSelector ARIA (zaten var)
+   - Klavye Tab full tour
+   - Article heading hierarchy doğru (H1 sayfa başlığı, H2/H3 prose 
+     içinde)
+
+3. **Edge case'ler:**
+   - Blog kapak yok: placeholder rd-neutral-100 + Lucide FileText
+   - Yazar yok: "yzliste ekibi" fallback
+   - İlgili yazı 3'ten az: olduğu kadar göster (gizleme)
+   - SSS data fetch fail: "SSS yüklenemedi, destek@yzliste.com" 
+     fallback
+
+Commit: chore(icerik): IC-05 mobile + a11y polish
+
+────────────────────────────────────────────
+Test
+────────────────────────────────────────────
+
+- npm run build temiz
+- Localde:
+  - /blog: kart grid + arama + kategori filter
+  - /blog/[slug]: prose tipografi + meta + paylaş + ilgili
+  - /sss: kategori filter + arama + accordion
+  - /hakkımızda: warm-earth kurucu accent
+  - 375px mobile sıkıntısız
+  - Klavye Tab full tour
+
+Commit özeti (5 atomik) VEYA tek:
+feat(icerik): IC-01~IC-05 /blog + /blog/[slug] + /sss + /hakkımızda 
+refactor
+
+BACKLOG'da IC-01~IC-05 [x] işaretle.
+
+Bittikten sonra rapor:
+- Commit listesi
+- prose-rd CSS sınıfı veya Tailwind Typography reuse durumu
+- Accordion primitive'e taşındı mı (FY-03 + IC-03 ortak pattern)
+- Aziz kuralı korundu mu (mevcut metinler değişmedi)
+- Açık riskler / Aziz preview test
+```
+-->
 
 ---
 
-## 17 — Yasal + Hata Sayfaları (Faz 6 — Toplu Pas)
+## 17 — Yasal + Hata Sayfaları + Post-redesign Cleanup (Faz 6 SON PAKET)
 
-**Yaklaşım:** Bu sayfalar düz metin içeriği. Ticket başına ayrı redesign verimli değil — tek toplu pasta global token swap, header/footer redesign component reuse, link rengi tutarlılığı sağlanacak.
+**Yaklaşım:** Faz 6 = redesign'ın SON paketi. 3 ana iş: (1) yasal/hata sayfaları toplu pas, (2) post-redesign code cleanup (orphan dosyalar), (3) final QA (metin taraması + Lighthouse + scheduled task reaktivasyon).
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| LG-01 | 6 yasal sayfa global token swap | Bekliyor | Landing done | `/kvkk-aydinlatma`, `/gizlilik`, `/kosullar`, `/cerez-politikasi`, `/mesafeli-satis`, `/teslimat-iade` — rd-* paleti, Manrope h1/h2/h3, prose body, max-w 720px, redesign Header + Footer aktif. |
-| LG-02 | 404 not-found sayfası | Bekliyor | LG-01 | "Sayfa bulunamadı" H1, kısa mesaj, anasayfa primary CTA + popüler linkler ghost CTA, illustrasyon (Lucide MapOff veya benzeri büyük). |
-| LG-03 | error.tsx genel hata sayfası | Bekliyor | LG-01 | "Bir şeyler ters gitti" H1, AlertTriangle danger ikon, "Tekrar dene" primary buton (reset() çağrısı), destek e-postası link. |
-| LG-04 | loading.tsx tutarlı loader | Bekliyor | LG-01 | Skeleton veya spinner — site genelinde tek pattern. Lucide Loader2 + animate-spin. |
-| LG-05 | Acceptance | Bekliyor | LG-04 | Aziz preview'da 6 yasal + 3 utility = 9 sayfa hızlı pas. |
+| LG-01 | 6 yasal sayfa global token swap | ✅ Tamamlandı | IC done | /kvkk-aydinlatma, /gizlilik, /kosullar, /cerez-politikasi, /mesafeli-satis, /teslimat-iade — rd-* paleti, Manrope eyebrow + H1, prose body (IC-02 Bolum sistem reuse). Tek mekanik pas. |
+| LG-02 | 404 not-found + error.tsx + loading.tsx | ✅ Tamamlandı | LG-01 | app/not-found.tsx: Lucide MapOff size-16 + "Sayfa bulunamadı" + "Anasayfaya dön" CTA. app/error.tsx: Lucide AlertTriangle + "Bir şeyler ters gitti" + "Tekrar dene" + sentry log (varsa). app/loading.tsx: Lucide Loader2 animate-spin tutarlı global loader. Tüm route segment'lerde global. |
+| LG-03 | Post-redesign code cleanup | ✅ Tamamlandı | LG-02 | **Orphan dosya silme:** app/yzstudio/components/tryon/TryonAyarlar.tsx (yzstudio refactor sonrası import edilmiyor), components/RefDavetBolumu.tsx veya benzeri (HS InviteBox sonrası eski). components/sections/_archive/ klasörü Aziz onayında silinir veya kalır (git history ile geri alınabilir). **Accordion primitive'e taşıma:** FY-03 + IC-03 inline accordion → components/primitives/Accordion.tsx (FiyatlarSSS + SSSListesi reuse'a geçer). |
+| LG-04 | Scheduled tasks reaktivasyon + backend ticket listesi | ✅ Tamamlandı | LG-03 | 5 PAUSED scheduled task (blog-seo-yazisi dahil) → enabled:true. Backend bekleyen ticket'lar net listele (HD-01b bildirim_tercihleri, KR-02b kredi_log işlem_turu, OD-02b payment_failed analytics, UR-03b /uret pre-fill, SR-04b ZIP/PDF, FT için Paraşüt entegrasyonu, profiles TC kimlik/Vergi no kolonları) → BACKLOG.md'ye taşı (canlı site backlog'u). |
+| LG-05 | Final QA + acceptance | ✅ Tamamlandı | LG-04 | (1) Post-redesign metin taraması: spec dosyaları vs canlı sitedeki metin tutarlılığı (Aziz kuralı: mevcut metinler korundu varsayım — fark bulunursa rapor). (2) Lighthouse mobil + desktop tüm sayfalarda (≥85 perf, ≥90 a11y, <0.1 CLS hedef). (3) Aziz toplu acceptance: 9+ sayfa preview testi. (4) main'e merge hazırlığı (CI temiz, Vercel build OK). |
 
 **Faz 6 toplam:** 5 ticket.
 
+#### LG-01~LG-05 Birleşik Prompt (Faz 6 SON paket — yasal + hata + cleanup)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: LG-01~LG-05 — Faz 6 SON paket. Yasal sayfalar + hata sayfaları 
++ post-redesign code cleanup + final QA. Bu paket bittiğinde redesign 
+tamam, main'e merge hazır.
+
+Mevcut sayfalar:
+- app/kvkk-aydinlatma/page.tsx
+- app/gizlilik/page.tsx
+- app/kosullar/page.tsx
+- app/cerez-politikasi/page.tsx
+- app/mesafeli-satis/page.tsx
+- app/teslimat-iade/page.tsx
+- app/not-found.tsx (varsa, yoksa yeni)
+- app/error.tsx (varsa, yoksa yeni)
+- app/loading.tsx (varsa, yoksa yeni)
+
+Reuse: components/blog/[slug]'daki Bolum bileşen sistemi (giris/baslik/
+paragraf/liste — yasal sayfalar için ideal), components/primitives/* 
+(StatusBadge, Toast, vs — hata sayfasında).
+
+Aziz kuralı: Mevcut metinler korunur, sadece UI/layout değişimi.
+
+────────────────────────────────────────────
+BÖLÜM 1 — LG-01: 6 yasal sayfa global swap
+────────────────────────────────────────────
+
+Her sayfa için:
+
+1. Sayfa rd-* swap.
+
+2. Yapı:
+   - SiteHeader (mevcut, dokunma)
+   - Container: max-w-prose mx-auto px-4 py-12
+   - Eyebrow + H1 (font-display, sayfaya göre):
+     - /kvkk-aydinlatma: "KVKK" / "KVKK Aydınlatma Metni"
+     - /gizlilik: "GİZLİLİK" / "Gizlilik politikası"
+     - /kosullar: "KULLANIM KOŞULLARI" / "Kullanım koşulları"
+     - /cerez-politikasi: "ÇEREZ POLİTİKASI" / "Çerez politikası"
+     - /mesafeli-satis: "MESAFELİ SATIŞ" / "Mesafeli satış sözleşmesi"
+     - /teslimat-iade: "TESLİMAT VE İADE" / "Teslimat ve iade koşulları"
+   - Subtitle/sürüm bilgisi: "Son güncelleme: [tarih]" text-sm 
+     text-rd-neutral-500
+   - Article body: IC-02'deki Bolum bileşen sistemi reuse
+     (giris/baslik/paragraf/liste/bilgi-kutusu) — mevcut metinler 
+     KORUNUR
+   - SiteFooter (mevcut)
+
+3. Mevcut metinler korunur (KVKK uyumu için doğru metin önemli — 
+   Aziz onaylanan içerik). Sadece layout/token değişimi.
+
+Commit: feat(yasal): LG-01 6 yasal sayfa rd-* swap (mevcut metin 
+korundu)
+
+────────────────────────────────────────────
+BÖLÜM 2 — LG-02: 404 + error.tsx + loading.tsx
+────────────────────────────────────────────
+
+1. **app/not-found.tsx:**
+   - SiteHeader (varsa) + center container
+   - Lucide MapOff size-16 text-rd-neutral-300
+   - H1 (font-display): "Sayfa bulunamadı"
+   - p: "Aradığın sayfa taşınmış veya hiç var olmamış olabilir."
+   - 2 CTA:
+     - Primary: "Anasayfaya dön" → / (bg-rd-primary-700)
+     - Ghost: "Üretmeye başla" → /uret (border)
+   - SiteFooter
+
+2. **app/error.tsx:**
+   - 'use client'
+   - Center container
+   - Lucide AlertTriangle size-16 text-rd-warning-700
+   - H1 (font-display): "Bir şeyler ters gitti"
+   - p: "Hatamız için özür dileriz. Tekrar denersen düzelir, ya da 
+     destek@yzliste.com'a yaz."
+   - 2 CTA:
+     - "Tekrar dene" → reset() prop (bg-rd-primary-700)
+     - "Anasayfa" → / (ghost)
+   - Sentry log: error nesnesini Sentry'ye gönder (sentry/nextjs 
+     varsa, lib/sentry.ts veya benzeri kontrol et)
+
+3. **app/loading.tsx:**
+   - Tutarlı global loader
+   - Center container
+   - Lucide Loader2 size-8 text-rd-primary-700 animate-spin
+   - text-sm text-rd-neutral-500 "Yükleniyor..."
+
+4. Tüm route segment'lerde otomatik geçerli (Next.js convention).
+
+Commit: feat(hata): LG-02 not-found + error + loading global
+
+────────────────────────────────────────────
+BÖLÜM 3 — LG-03: Post-redesign code cleanup
+────────────────────────────────────────────
+
+1. **Orphan dosya tespit + sil:**
+   - app/yzstudio/components/tryon/TryonAyarlar.tsx — yzstudio 
+     refactor sonrası import edilmiyor, sil
+   - components/RefDavetBolumu.tsx (veya benzeri) — HS InviteBox 
+     sonrası eski, sil
+   - Grep ile orphan import kalıntısı: tüm dosyalardan referans yok 
+     mu kontrol et
+   - components/sections/_archive/ klasörü: git history korur, 
+     klasörü sil (Aziz onayında)
+
+2. **Accordion primitive'e taşıma:**
+   - components/fiyatlar/FiyatlarSSS.tsx + components/blog/SSSListesi.tsx
+     içinde inline accordion var (her ikisi de)
+   - Yeni: components/primitives/Accordion.tsx (single + multiple mode)
+     - role="region" + aria-expanded + aria-controls
+     - ChevronDown rotate-180 transition
+     - Dışarıdan items prop alır
+   - FiyatlarSSS + SSSListesi → primitive Accordion'u reuse eder
+
+3. **Build temiz:**
+   - npm run build sonrası uyarı yok
+   - TypeScript clean
+   - Unused import yok (eslint --no-unused-vars)
+
+Commit: chore(cleanup): LG-03 post-redesign cleanup (orphan dosyalar 
+sil + Accordion primitive)
+
+────────────────────────────────────────────
+BÖLÜM 4 — LG-04: Scheduled tasks + backend ticket listesi
+────────────────────────────────────────────
+
+1. **Scheduled tasks reaktivasyon:**
+   - 5 PAUSED scheduled task'ın enabled:true yapılması (blog-seo-yazisi 
+     dahil)
+   - Bu Cowork'ün veya Aziz'in scheduled task UI'ından yapacağı iş 
+     (Code dokunmaz, sadece talimat verir)
+   - Code: docs/post-redesign-checklist.md veya BACKLOG.md'ye yaz: 
+     "Redesign main'e merge sonrası 5 scheduled task enabled:true 
+     yapılacak"
+
+2. **Backend bekleyen ticket'lar BACKLOG.md'ye taşı (canlı site 
+   backlog'u):**
+   - HD-01b: profiles.bildirim_tercihleri JSONB + /api/profil/bildirimler
+   - KR-02b: kredi_log tablosu + işlem_turu kolonu
+   - OD-02b: payment_failed analytics event lib/analytics.ts
+   - UR-03b: /uret pre-fill query params okuma (yeniden üret tamamlama)
+   - SR-04b: ZIP/PDF indir multimedia üretimler
+   - Paraşüt entegrasyonu (FT için: status field, PDF, email send)
+   - profiles TC kimlik / Vergi no / Şirket adı kolonları (e-Fatura)
+   - YS-11: /yzstudio/yol-haritasi sayfası (opsiyonel)
+   
+   BACKLOG-REDESIGN.md'den BACKLOG.md'ye taşı (priority Aziz seçer).
+
+Commit: docs(cleanup): LG-04 scheduled task reaktivasyon talimatı + 
+backend ticket'lar BACKLOG'a taşındı
+
+────────────────────────────────────────────
+BÖLÜM 5 — LG-05: Final QA + acceptance
+────────────────────────────────────────────
+
+1. **Post-redesign metin taraması:**
+   - Aziz kuralı: "Canlı sitedeki mevcut metinleri koru, yeni metin 
+     yazma" — bu kontrolü yap
+   - Tüm spec dosyalarındaki metin örneklerini canlı/preview siteyle 
+     karşılaştır
+   - Fark bulursan: spec mi eski mı, canlı mi yanlış mı karar ver
+   - Rapor: docs/metin-tarama.md veya BACKLOG'da yeni bölüm
+
+2. **Lighthouse pass (mobil + desktop):**
+   - Tüm ana sayfalar: /, /uret, /yzstudio, /fiyatlar, /sss, /hakkımızda, 
+     /blog, /hesap, /hesap/marka, /hesap/profil, /hesap/krediler, 
+     /hesap/uretimler, /hesap/faturalar, /hesap/ayarlar, /kredi-yukle, 
+     /giris, /kayit
+   - Hedef: Perf ≥85 (animasyonlu sayfalar 80), A11y ≥90, CLS <0.1
+   - Code çalıştıramaz (Aziz preview'da yapacak); Code: docs/
+     lighthouse-checklist.md'ye sayfa listesi + hedefler ekle
+
+3. **Aziz toplu acceptance:**
+   - Her ana sayfa için preview test
+   - Mobile (375px) + desktop
+   - Klavye Tab tour
+   - Aziz onaylayınca redesign tamam → main'e merge
+
+4. **main'e merge hazırlığı:**
+   - CI temiz (npm run build + npm run lint exit 0)
+   - Tüm Faz 1-6 ticket [x]
+   - Conflict yok (claude/redesign-modern-ui ↔ main rebase OK)
+   - Aziz onayı sonrası `git checkout main && git merge 
+     claude/redesign-modern-ui --no-ff` veya PR açılır
+
+Commit: chore(redesign): LG-05 final QA + acceptance hazırlığı
+
+────────────────────────────────────────────
+Test
+────────────────────────────────────────────
+
+- npm run build temiz
+- TypeScript clean
+- Localde:
+  - 6 yasal sayfa: rd-* + Manrope + mevcut metinler korundu
+  - /not-found-test gibi var olmayan URL → 404 sayfası
+  - error.tsx test (geçici hata throw)
+  - loading.tsx route geçişlerinde
+  - Build sonrası unused import yok
+  - Accordion primitive test (FiyatlarSSS + SSSListesi reuse)
+
+Commit özeti (5 atomik) VEYA tek:
+chore(redesign): LG-01~LG-05 Faz 6 son paket — yasal + hata + cleanup 
++ final QA
+
+BACKLOG'da LG-01~LG-05 [x] işaretle.
+
+Bittikten sonra rapor:
+- Commit listesi
+- Orphan dosya silme listesi (kaç dosya silindi)
+- Accordion primitive entegrasyonu (FiyatlarSSS + SSSListesi reuse 
+  başarılı mı)
+- Scheduled task + backend ticket'lar BACKLOG.md'ye taşındı mı
+- Lighthouse + metin taraması checklist eklendi mi
+- Aziz preview test'e hazır mı (CI temiz, build OK)
+```
+
+**Redesign tamamlandığında:** Aziz toplu acceptance → main'e merge → Vercel auto-deploy → canlı yzliste.com yenilenir. Sonrası Faz 7+ Paraşüt entegrasyonu ve diğer backend bekleyen ticket'lar (canlı BACKLOG.md'de).
+
 ---
+
+## 18 — Anasayfa Reroll (Faz 1.5)
+
+**Spec:** uploads/anasayfa-kisaltma-spec.md | **Mockup:** uploads/3-adim-animasyonlu-mockup-v2.html
+**Branch:** claude/redesign-modern-ui | **Done:** 28 Nis 2026 (7ba9071 → a409341, 7 commit)
+
+Anasayfa 9 → 7 bölüm. Eski Bölüm 3 ("4 içerik türü") + 4 ("Aynı üründen") `components/sections/_archive/`'a taşındı. Yeni "3 Adım Animasyonlu + InfoStrip" tek section'da gömülü.
+
+**Yeni dosyalar:** components/landing/{StepAnimation, InfoStrip, StepSection}.tsx + lib/data/exampleContent.ts. globals.css'e 7 keyframe + 14 animasyon class + reduced-motion block. Sosyal caption: lib/constants/pazaryeri.ts'teki gerçek AI üretim metinleri (uydurma değil — Code tespit etti).
+
+| ID | Başlık | Durum |
+|---|---|---|
+| AS-01 | Eski Bölüm 3-4 → _archive/ | ✅ |
+| AS-02 | StepAnimation (3 adım, 9sn döngü, replay, progress) | ✅ |
+| AS-03 | InfoStrip (4 sekme + detay accordion) | ✅ |
+| AS-04 | lib/data/exampleContent.ts tek kaynak | ✅ |
+| AS-05 | StepSection wrapper (StepAnimation + InfoStrip) | ✅ |
+| AS-06 | Mobile + a11y + reduced-motion (useReducedMotion hook) | ✅ |
+
+**Aziz preview kontrol noktaları (Faz 2 toplu acceptance'a katılır):**
+- 9sn döngü timing OK mı (A/B test ileride)
+- 375px step canvas yüksekliği (3 card desktop'ta farklı render olabilir)
+- "Detaya bak" default kapalı OK mı (açık olsun derse `useState(true)` tek satır)
+- Lighthouse mobile (Code çalıştırmadı; Aziz preview'da skor verir)
 
 ## Faz Özeti — Roadmap
 
-| Faz | Bölüm | Sayfa sayısı | Ticket sayısı | Durum |
+| Faz | Bölüm | Sayfa | Ticket | Durum |
 |---|---|---|---|---|
-| 1 | Landing (4-10) | 1 (anasayfa) | ~30 kalan | FY done, SSS sırada |
-| 2 | Üretim akışı (11, 13) | 4 (/uret, /yzstudio, /sonuc, /odeme) | 38 | Bekliyor (Landing done sonrası) |
-| 3 | Hesap alanı (12, 14) | 10 (5 ana + 5 detay) | 41 | Bekliyor (Faz 2 sonrası) |
-| 4 | Auth (15) | 3 (/giris, /kayit, /sifre-sifirla) | 8 | Bekliyor |
-| 5 | İçerik (16) | 4 (blog liste/detay, sss, hakkımızda) | 8 | Bekliyor |
-| 6 | Yasal + hata (17) | 9 (6 yasal + 3 utility) | 5 | Bekliyor |
+| 1 | Landing (4-10) | 1 | ~64 | ✅ Tamam (HR-14/15 kalan) |
+| **1.5** | **Anasayfa reroll (18)** | **1** | **6** | **✅ Tamam (792e182)** |
+| 2 | Üretim akışı (11, 13) | 4 | 42 | ✅ Tamam (28 Nis). Açık: SR-04b (ZIP/PDF) + OD-02b (payment_failed analytics) + YS-11 (yol haritası) Faz 3'e ertelendi. TryonAyarlar.tsx orphan temizlik bekliyor. |
+| 3 | Hesap alanı (12, 14) | 10 | 8 paket | ✅ Tamam (28 Nis): MP+PR+FT+HS+KR+UR+FY+HD |
+| 4 | Auth (15) | 4 | 5 paket | ✅ Tamam (28 Nis): AU-01~05. Aziz devam dediğinde Cowork Supabase Redirect URLs config yapacak |
+| 5 | İçerik (16) | 4 | 8 ticket | Bekliyor (Aziz "devam" diyene kadar) |
+| 6 | Yasal + hata + cleanup (17) | 9+ | ~10 ticket | Bekliyor — orphan temizlik + scheduled task reaktivasyon + metin taraması + Lighthouse |
 
-**Toplam kalan:** ~130 ticket. Tahmini süre 3-4 ay (UA+MB+NY+FY tempo: ~10-15 ticket/hafta).
+**Toplam kalan:** Faz 5 + Faz 6 + Faz 6 cleanup. Faz 1, 1.5, 2, 3, 4 ✅ Tamam.
 
-**Kapsam dışı (Aziz onayı):** `/admin`, `/hesap/admin/feedback`, `/(auth)/app` (eski), `/profil` (eski — `/hesap/profil` aktif), `/toplu` (zaten kaldırılıyor — UX-03'le `/uret` text sekmesine taşındı).
+**Cowork bekleyen iş (Aziz "devam" deyince):**
+1. Supabase Dashboard → Authentication → URL Configuration → Redirect URLs'e `https://*.vercel.app/**` + production URL ekle (docs/auth-config.md adımları)
+2. Faz 5 İçerik prompt'u (blog/sss/hakkımızda) yazımı + Code'a hand
 
-**Detaylı prompt yazım kuralı:** Her ticket grubu için Cowork detaylı prompt'u BACKLOG'un ilgili bölümüne yazar, ondan sonra Aziz Claude Code'a verir. Prompt sırası gelmeden Claude Code ticket'a dokunmaz. (HR-FIX'te öğrendik: prompt olmadan 23 sapma çıkıyor.)
+**Kapsam dışı (Aziz onayı):** `/admin`, `/hesap/admin/feedback`, `/(auth)/app` (eski), `/profil` (eski), `/toplu` (kaldırılıyor).
+
+**Detaylı prompt yazım kuralı:** Her ticket grubu için Cowork detaylı prompt'u BACKLOG'un ilgili bölümüne yazar, Aziz Claude Code'a verir. Prompt sırası gelmeden Claude Code dokunmaz.
+
+**Override kuralı:** Her redesign prompt başında CLAUDE.md UI kuralları override edilir (memory: feedback_redesign_overrides_claudemd.md).
+
+---
+
+## Redesign Sonrası Kontrol Listesi
+
+Faz 6 (Yasal + Hata) bittiğinde, redesign main'e merge edilmeden önce:
+
+### Scheduled Tasks Reaktivasyonu
+27 Nis 2026'da 5 task pause edildi (memory: `project_scheduled_tasks_paused.md`). Açma sırası:
+
+- [ ] `yzliste-daily-health` — `enabled: true` (cron: `0 8 * * *`) — production health, ÖNCE
+- [ ] `yzliste-weekly-audit` — `enabled: true` (cron: `0 9 * * 1`)
+- [ ] `weekly-comprehensive-test` — `enabled: true` (cron: `0 9 * * 1`)
+- [ ] `ai-denetim-haftalik` — `enabled: true` (cron: `0 6 * * 0`)
+- [ ] `blog-seo-yazisi` — `enabled: true` (cron: `0 10 * * 1,4`) — EN SON
+
+### Toplu Metin Kontrolü
+Memory: `project_metin_kontrol.md`. UA/MB/NY/FY/SS/FC/FT bölümlerinde Claude Code spec'ten farklı metinler uyguladıysa toplu doğrulama.
+
+### CI Onayı
+CI-01 hâlâ açıksa redesign main'e merge öncesi çözülmeli (12 lint error).
+
+### Faz 1 Senaryosu — Aziz Acceptance
+- [ ] Anasayfa tüm bölümler scroll
+- [ ] Tüm CTA route'ları test
+- [ ] Footer linkleri 6 yasal sayfa
+- [ ] Mobile 375 + 768 + 1024
+- [ ] Klavye nav tam landing'de
+
+### Production Hazırlık
+- [ ] Vercel preview → preview branch → main akışı
+- [ ] iyzico, Paraşüt, Supabase env değişkenleri
+- [ ] PostHog event'leri redesign sayfalarda
