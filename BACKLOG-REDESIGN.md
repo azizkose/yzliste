@@ -233,7 +233,7 @@ NY-01~NY-08 hepsi ✅ Tamam (Aziz onayladı 27 Nis 2026, commit `ae19f42`).
 | U-18 | Mobile responsive sweep | ✅ Tamam | U-01~U-17 | Commit `6c7447f` — IntentBanner p-4 sm:p-6, BrandProfileBlock flex-shrink-0 + justify-start sm:justify-end, Tooltip max-w mobile, page.tsx pb-40. |
 | U-19 | A11y audit | ✅ Tamam | U-18 | Commit `6c7447f` — Tooltip aria-describedby cloneElement (gerçek child'a), StickySubmitBar disabled→aria-disabled (focus-accessible), prefers-reduced-motion animate-fade-in. |
 | U-20 | Lighthouse optimizasyonları | ✅ Tamam | U-19 | Commit `6c7447f` — animate-fade-in @theme'e eklendi (Tailwind v4), prefers-reduced-motion guard. font-display:swap ✓, img boyutları ✓, lucide named imports ✓. |
-| U-21 | Aziz kabul | Bekliyor | U-20 | Preview URL'de test, onay. |
+| U-21 | Aziz kabul | ✅ Tamam | U-20 | 28 Nis Aziz "Faz 2'yi kapat" dedi. Preview test email+şifre ile mümkündü; Google OAuth Faz 4 AU-09'a ertelendi. |
 
 #### U-18 + U-19 + U-20 Birleşik Prompt (Polish paket)
 
@@ -484,13 +484,13 @@ Canlı sitedeki örnek çıktıları (text/görsel/video/sosyal) ve mevcut görs
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| MP-01 | Form scaffold + 8 alan + ProgressIndicator | Bekliyor | H-01 | rd-* token swap. Manrope eyebrow "MARKA PROFİLİ" + H1. 8 alan (storeName, tone, audience, features, kategori, fiyat bandı, hizmet vurguları, extraInfo). Header'da ilerleme bar (<50% slate, 50-99% primary, 100% success). |
-| MP-02 | ChipSelector primitive (aktif/pasif net) | Bekliyor | MP-01 | components/primitives/ChipSelector.tsx (single + multi mode). Aktif: bg-rd-primary-50 + border-2 + font-medium. Pasif: border + hover:border-rd-primary-400. Ton (single), kategori/hizmet/fiyat bandı (multi), features (chip input). |
-| MP-03 | BrandPreviewPanel (canlı önizleme — KALBİ) | Bekliyor | MP-02 | components/marka/BrandPreviewPanel.tsx + lib/markaPreviewTemplates.ts. Sticky sağ kolon (lg:sticky top-24). BrandedAIPreview üst (rd-primary-200 border, fade transition), GenericAIPreview alt (rd-neutral-300, opacity-70). WhyItMatters tooltip (Lucide Info hover). 3 ton (samimi/profesyonel/premium) hazır şablon, kullanıcı girdileriyle anlık doldurulur. **AI çağrısı YOK** — frontend useMemo ile değişimde update. |
-| MP-04 | Bilgi banner kompaktlaştır | Bekliyor | MP-01 | Mevcut 2 satırlı banner → tek satır + collapsible "Örnek göster" (Lucide ChevronDown). bg-rd-primary-50 + Lucide Info. |
-| MP-05 | StickySaveBar + dirty state + beforeunload | Bekliyor | MP-01 | /uret StickySubmitBar pattern reuse. Sol: "X / 8 alan dolu" + Sağ: "İptal" ghost + "Marka profilini kaydet" primary. Dirty state useRef ile takip. Kaydedilmemiş değişiklikte beforeunload uyarısı. |
-| MP-06 | Save POST + Toast | Bekliyor | MP-05 | /api/marka-profili (mevcut endpoint kontrol et, yoksa not düş). Loading state, error handling, success toast (rd-success-700, Lucide CheckCircle, 3sn auto-dismiss). Save sonrası dirty reset. |
-| MP-07 | Mobile + a11y polish | Bekliyor | MP-03, MP-06 | 375px tek kolon — sağ kolon altta kompakt preview kart (sticky kalkar). BrandPreviewPanel mobile collapsible. Chip ARIA (role="radio"/role="checkbox" + aria-checked). Klavye Tab + Arrow nav (chip group içinde). Save bar mobile dikey. |
+| MP-01 | Form scaffold + 8 alan + ProgressIndicator | ✅ Tamam | H-01 | Commit `6d0939e` |
+| MP-02 | ChipSelector primitive (aktif/pasif net) | ✅ Tamam | MP-01 | Commit `fb264a4` |
+| MP-03 | BrandPreviewPanel (canlı önizleme — KALBİ) | ✅ Tamam | MP-02 | Commit `1cbc5ca` |
+| MP-04 | Bilgi banner kompaktlaştır | ✅ Tamam | MP-01 | Commit `6d0939e` |
+| MP-05 | StickySaveBar + dirty state + beforeunload | ✅ Tamam | MP-01 | Commit `6d0939e` |
+| MP-06 | Save POST + Toast | ✅ Tamam | MP-05 | Commit `6d0939e` — Supabase direkt save (endpoint yok, direkt .update), Toast primitive oluşturuldu |
+| MP-07 | Mobile + a11y polish | ✅ Tamam | MP-03, MP-06 | Commit `6d0939e` — collapsibleOnMobile panel, ARIA roles, Tab nav |
 
 #### MP-01~MP-07 Birleşik Prompt (Marka Profili)
 
@@ -2025,13 +2025,13 @@ Anasayfa 9 → 7 bölüm. Eski Bölüm 3 ("4 içerik türü") + 4 ("Aynı ürün
 |---|---|---|---|---|
 | 1 | Landing (4-10) | 1 | ~64 | ✅ Tamam (HR-14/15 kalan) |
 | **1.5** | **Anasayfa reroll (18)** | **1** | **6** | **✅ Tamam (792e182)** |
-| 2 | Üretim akışı (11, 13) | 4 | 42 | 🔄 Kod tamam, U-21 acceptance bekliyor (Aziz email+şifre ile preview'da test edebilir; Google OAuth Faz 4'e ertelendi) |
+| 2 | Üretim akışı (11, 13) | 4 | 42 | ✅ Tamam (28 Nis). Açık: SR-04b (ZIP/PDF) + OD-02b (payment_failed analytics) + YS-11 (yol haritası) Faz 3'e ertelendi. TryonAyarlar.tsx orphan temizlik bekliyor. |
 | 3 | Hesap alanı (12, 14) | 10 | ~50 | Marka profili MP-01~07 birleşik prompt HAZIR (Bölüm 12 Grup 2). Sıra: Marka profili → Profil → Faturalar UI → Krediler → Üretimler |
 | 4 | Auth (15) | 3 | 9 | Bekliyor (+1: AU-09 Google OAuth preview URL fix — Supabase + Google Cloud Console whitelist) |
 | 5 | İçerik (16) | 4 | 8 | Bekliyor |
 | 6 | Yasal + hata (17) | 9 | 5 | Bekliyor |
 
-**Toplam kalan:** ~78 ticket. Faz 2 kod-wise tamam (30 done, 1 acceptance kaldı). Faz 1.5 yeni eklendi.
+**Toplam kalan:** ~72 ticket (Faz 3 + 4 + 5 + 6). Faz 1, 1.5, 2 ✅ Tamam.
 
 **Kapsam dışı (Aziz onayı):** `/admin`, `/hesap/admin/feedback`, `/(auth)/app` (eski), `/profil` (eski), `/toplu` (kaldırılıyor).
 
