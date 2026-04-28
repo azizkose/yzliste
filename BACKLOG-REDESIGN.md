@@ -600,229 +600,6 @@ Canlı sitedeki örnek çıktıları (text/görsel/video/sosyal) ve mevcut görs
 | FY-04 | Anasayfa fiyat bölümü KALDIR | ✅ Tamam | FY-03 | Commit `5857aef` — FiyatlarSection kaldırıldı. Yeni sıra: Hero → 3 Adım → Marka → Neden → SSS → Final CTA. |
 | FY-05 | Mobile + a11y polish | ✅ Tamam | FY-04 | Commit `44e9b92` — 375px 1-col grid, aria-live, aria-expanded, role="list", role="listitem" tüm accordion'da. |
 
-#### FY-01~FY-05 Birleşik Prompt (Fiyatlar + anasayfa revize)
-
-```
-ÖNEMLİ — KURAL OVERRIDE:
-Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
-kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
-kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
-
-Branch: claude/redesign-modern-ui
-Görev: FY-01~FY-05 — /fiyatlar refactor + anasayfa fiyatlar bölümü 
-revize (büyük 3 kart → minik bant — Cowork B önerisi, Aziz onayı 
-preview'da).
-
-Mevcut sayfalar:
-- app/fiyatlar/page.tsx (veya benzeri) — önce oku
-- components/landing/FiyatlarSection.tsx (anasayfa fiyatlar bölümü) — 
-  önce oku, hangi import'lar kullanılıyor
-
-Reuse: components/landing/{KrediCalculator, SSSSection, TrustStrip 
-veya benzer trust öğeleri, PackageCard}.tsx — Faz 1'de Landing 
-yapılırken oluşturulanlar.
-
-KAPSAM DIŞI:
-- Yeni paket konsepti (yıllık abonelik vs) — sadece mevcut 49/129/299 
-  TL kredi paketleri
-- Backend fiyat değişikliği (FY-01 done)
-
-────────────────────────────────────────────
-BÖLÜM 1 — FY-01: /fiyatlar scaffold + 3 paket + "En popüler"
-────────────────────────────────────────────
-
-1. Sayfa rd-* swap (mevcut sayfa indigo veya eski palette ise).
-
-2. Sayfa başlığı:
-   - Eyebrow text-rd-primary-700 "FİYATLAR"
-   - H1 (font-display): text-3xl md:text-5xl text-rd-neutral-900 
-     "Sade kredi paketleri"
-   - Subtitle: text-rd-neutral-600 max-w-2xl mx-auto — "Abonelik yok, 
-     krediler süresiz. İhtiyacın kadar al, istediğin zaman kullan."
-   - Center aligned
-
-3. 3 paket kart grid (md:grid-cols-3 gap-6):
-   
-   **Başlangıç:**
-   - rounded-xl border border-rd-neutral-200 bg-white p-6 md:p-8
-   - Eyebrow: "BAŞLANGIÇ"
-   - Fiyat: font-display text-4xl text-rd-neutral-900 "₺49"
-   - "10 kredi" alt yazı
-   - Bullet liste (Lucide Check + text):
-     - 10 listing metni (1 kredi/listing)
-     - 10 görsel veya 5 video (5 kredi)
-     - Krediler süresiz
-   - CTA: bg-rd-neutral-900 text-white "Satın al" → /kredi-yukle?paket=baslangic
-
-   **Popüler (öne çıkan):**
-   - rounded-xl border-2 border-rd-warm-700 bg-rd-warm-50 p-6 md:p-8
-   - Üst rozet: "EN POPÜLER" warm-earth bg + Lucide Star
-   - Eyebrow: "POPÜLER"
-   - Fiyat: font-display text-5xl text-rd-warm-900 "₺129"
-   - "30 kredi" alt yazı
-   - Bullet:
-     - 30 üretim (her tip karışık)
-     - Best value · ₺/kredi en düşük
-     - Krediler süresiz
-   - CTA: bg-rd-primary-700 text-white "Satın al" 
-     → /kredi-yukle?paket=populer
-
-   **Büyük:**
-   - rounded-xl border border-rd-neutral-200 bg-white p-6 md:p-8
-   - Eyebrow: "BÜYÜK"
-   - Fiyat: "₺299"
-   - "100 kredi"
-   - Bullet:
-     - 100 üretim
-     - Volüm avantajı
-     - Krediler süresiz
-   - CTA: bg-rd-neutral-900 text-white → /kredi-yukle?paket=buyuk
-
-4. "Önerilen" → "En popüler" terim değişikliği:
-   - Tüm site genelinde grep "Önerilen" + "Önerilen Paket" vs ifadeleri
-   - "En popüler" ile değiştir. Mevcut PackageCard veya benzeri 
-     primitive'de "highlighted" prop ismi etkilenmiyor, sadece 
-     görünür text.
-
-5. PackageCard primitive (varsa Landing'de) reuse. Yoksa inline yaz, 
-   gelecek paketlerde primitive'e taşı.
-
-Commit: feat(fiyatlar): FY-01 scaffold + 3 paket kart + "En popüler"
-
-────────────────────────────────────────────
-BÖLÜM 2 — FY-02: Kredi calculator entegrasyonu
-────────────────────────────────────────────
-
-1. Landing'deki KrediCalculator komponentini bul (components/landing/ 
-   altında muhtemelen). Yoksa minimal yeni:
-
-2. /fiyatlar sayfasında 3 paket altında bölüm:
-   - Eyebrow: "KAÇ KREDİ YETER"
-   - H2 (font-display): "İhtiyacını hesapla"
-   - Subtitle: "Üretim sayısını seç, sana uygun paketi öner."
-
-3. Calculator UI:
-   - Stepper input'lar (Lucide Plus/Minus): 
-     - Listing metni: 1 kredi/adet
-     - Görsel: 1 kredi/adet
-     - Video 5sn: 10 kredi/adet (eğer 13'tü, doğru değeri kontrol et)
-     - Sosyal kit: 2 kredi/adet
-   - Toplam: "Toplam: X kredi"
-   - Önerilen paket: "Bu kullanım için Y paketi yeterli"
-   - CTA: "Y paketini al" → /kredi-yukle?paket=...
-
-4. Calculator state local useState. Backend yok.
-
-Commit: feat(fiyatlar): FY-02 kredi calculator entegrasyonu
-
-────────────────────────────────────────────
-BÖLÜM 3 — FY-03: SSS bölümü
-────────────────────────────────────────────
-
-1. components/landing/SSSSection.tsx primitive var mı kontrol et. 
-   Yoksa minimal accordion komponenti:
-
-2. /fiyatlar sayfasında calculator altında bölüm:
-   - Eyebrow: "SSS"
-   - H2: "Sıkça sorulanlar"
-   - 4-6 soru accordion (mevcut canlı sitedeki SSS kullan veya genişlet):
-     - "Kredi nasıl çalışır?"
-     - "Krediler süreli mi?" — "Hayır, süresiz."
-     - "İade var mı?" — "Kullanılmamış kredi 14 gün içinde iade."
-     - "KDV dahil mi?" — "Evet, ₺49/₺129/₺299 KDV dahil."
-     - "Fatura nasıl gelir?" — "e-Arşiv, ödeme sonrası 1-3 iş günü."
-     - "Toplu indirim?" — "Kurumsal için destek@yzliste.com"
-
-3. Accordion: Lucide ChevronDown rotate-180 + aria-expanded.
-
-4. Aziz kuralı: "Canlı sitedeki mevcut metinleri koru, yeni metin 
-   yazma" — mevcut SSS metinleri varsa ondan al, yoksa yukarıdaki 
-   placeholder kullan. Aziz preview'da kontrol eder.
-
-Commit: feat(fiyatlar): FY-03 SSS bölümü (4-6 soru)
-
-────────────────────────────────────────────
-BÖLÜM 4 — FY-04: Anasayfa fiyatlar revize + Trust strip
-────────────────────────────────────────────
-
-**Aziz A kararı uygulanıyor (28 Nis akşam):**
-
-1. **Anasayfa fiyat bölümü TAMAMEN KALDIRILIYOR:**
-   - components/landing/FiyatlarSection.tsx (veya benzeri büyük 3 kart 
-     bölümü) → app/page.tsx import temizle, dosyayı 
-     components/sections/_archive/'a taşı (Faz 1.5 archive pattern)
-   - Anasayfada minik bant DA YOK — fiyat hakkında hiçbir referans 
-     anasayfada olmayacak
-   - Header'da "Fiyatlar" linki zaten var, kullanıcı oraya gider
-   - Yeni anasayfa sırası: Hero → 3 Adım → Marka → Neden → SSS → 
-     Final CTA (6 bölüm — Faz 1.5'te 7'ydi, şimdi 6)
-
-2. **Trust strip /fiyatlar sayfası altında:**
-   - components/landing/TrustStrip primitive (varsa) reuse. Yoksa 
-     minimal:
-     - flex items-center justify-center gap-6 py-6 border-t 
-       border-rd-neutral-200
-     - iyzico logo + "Güvenli ödeme" 
-     - Lucide ShieldCheck + "KVKK uyumlu"
-     - Lucide FileText + "e-Arşiv fatura"
-     - text-xs text-rd-neutral-500
-
-Commit: feat(fiyatlar): FY-04 anasayfa minik bant + trust strip
-
-────────────────────────────────────────────
-BÖLÜM 5 — FY-05: Mobile + a11y polish
-────────────────────────────────────────────
-
-1. **Mobile (375px):**
-   - 3 paket kart dikey istif. "Popüler" üst rozet kompakt 
-     (text-[10px]).
-   - Fiyat font boyutu mobile text-3xl (text-5xl yerine)
-   - Calculator stepper button'lar tap-friendly (min 44px)
-   - SSS accordion mobile padding p-4
-   - Anasayfa minik bant: flex-col + alt-alta öğeler, link altına alır
-
-2. **A11y:**
-   - Paket kartları role="article" + aria-labelledby başlık
-   - "En popüler" rozet aria-label "En popüler paket"
-   - CTA buton aria-label net (örn "Popüler paketi satın al — ₺129")
-   - Calculator stepper aria-valuemin/max/now
-   - SSS accordion aria-expanded + aria-controls
-   - Anasayfa minik bant Link aria-label "Tüm fiyatları gör"
-
-3. **Edge case'ler:**
-   - Calculator 0 kullanım: "Yine de paketi gör" CTA
-   - SSS metinleri çevirilemez varsa fallback
-
-Commit: chore(fiyatlar): FY-05 mobile + a11y polish
-
-────────────────────────────────────────────
-Test
-────────────────────────────────────────────
-
-- npm run build temiz
-- Localde:
-  - /fiyatlar: eyebrow + H1 + 3 paket kart, "Popüler" warm-earth 
-    border + üst rozet
-  - "En popüler" terim her yerde tutarlı
-  - Calculator çalışır, doğru paket öneriyor
-  - SSS accordion açılıp kapanır
-  - Trust strip alt bantta
-  - Anasayfa: büyük fiyat kartları YOK, minik bant var
-  - 375px mobile sıkıntısız
-
-Commit özeti (5 atomik) VEYA tek:
-feat(fiyatlar): FY-01~FY-05 /fiyatlar refactor + anasayfa minik bant
-
-BACKLOG'da FY-01~FY-05 [x] işaretle. Eski H-21A/H-22/H-23/H-24/H-26 
-tickets bu pakette absorbed.
-
-Bittikten sonra rapor:
-- Commit listesi
-- PackageCard / KrediCalculator / SSSSection primitive reuse durumu
-- Anasayfa eski FiyatlarSection nereye taşındı (_archive)
-- "En popüler" terim grep sonucu — kaç yerde değiştirildi
-- Açık riskler / Aziz preview test
-```
 
 ### Grup 5 — Blog `/blog`
 
@@ -1825,16 +1602,180 @@ Bittikten sonra:
 
 ## 14 — Hesap Detay Sayfaları Genişletme (Faz 3 eklentisi)
 
+| ID | Başlık | Durum |
+|---|---|---|
+| H-36 → KR | /hesap/krediler | ✅ Tamam (Grup 3B) |
+| H-37 → UR | /hesap/uretimler | ✅ Tamam (Grup 3C) |
+| H-39 → FT | /hesap/faturalar | ✅ Tamam (Grup 2C) |
+| H-38 → HD-01 | /hesap/ayarlar | Bekliyor (HD paketi) |
+| H-40 → HD-02 | /kredi-yukle | Bekliyor (HD paketi) |
+| H-41 → MD | Modal versiyonları (.)giris/(.)kayit/(.)kredi-yukle | Faz 4 (Auth) |
+
+### HD-01~HD-03 (Faz 3 son paketi — /hesap/ayarlar + /kredi-yukle)
+
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| H-36 | `/hesap/krediler` sayfası | Bekliyor | H-01 | Bakiye, kredi geçmişi, "Kredi yükle" CTA, ≤5 uyarı. |
-| H-37 | `/hesap/uretimler` sayfası | Bekliyor | H-01, SR-03 | Geçmiş liste, filtre, kart, tekrar üret/indir, pagination. |
-| H-38 | `/hesap/ayarlar` sayfası | Bekliyor | H-01 | Hesap, parola, e-posta tercihleri, KVKK, hesap silme. |
-| H-39 | `/hesap/faturalar` sayfası | Bekliyor | H-01 | Paraşüt e-Arşiv liste. |
-| H-40 | `/kredi-yukle` sayfası | Bekliyor | H-01, FY-09 | PackageCard reuse, iyzico checkout. |
-| H-41 | Modal versiyonları | Bekliyor | H-40, H-30, H-31 | (.)giris, (.)kayit, (.)kredi-yukle. |
+| HD-01 | `/hesap/ayarlar` refactor | ✅ Tamam | FY done | Commit `HD-commit` — rd-* swap, Manrope eyebrow, 3 bölüm (Hesap/Bildirimler/KVKK), Toggle bileşeni, StickySaveBar + Toast reuse. KVKK API'leri mevcut. |
+| HD-01b | Bildirim tercihleri backend | Bekliyor | HD-01 | Supabase `profiles` tablosuna `bildirim_tercihleri` JSONB kolonu ekle. /api/profil/bildirimler PUT endpoint. Şu an UI local state. |
+| HD-02 | `/kredi-yukle` refactor | ✅ Tamam | FY done | Commit `HD-commit` — rd-* swap, Manrope eyebrow, PackageCard FY pattern reuse, ?paket= pre-select, radiogroup ARIA, Suspense wrapper, Trust strip. |
+| HD-03 | Mobile + a11y polish | ✅ Tamam | HD-02 | Commit `HD-commit` — 375px 1-col grid, role="radiogroup"/radio, role="switch", aria-checked, aria-modal, aria-busy tüm butonlarda. |
 
-**Faz 3 toplam:** 35 + 6 = 41 ticket.
+#### HD-01~HD-03 Birleşik Prompt (Hesap detay sayfaları)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: HD-01~HD-03 — /hesap/ayarlar + /kredi-yukle refactor (Faz 3 
+son paketi).
+
+Mevcut sayfalar:
+- app/(auth)/hesap/ayarlar/page.tsx
+- app/kredi-yukle/page.tsx (veya benzeri)
+
+Reuse: components/primitives/{Toast, StickySaveBar}.tsx + FY-01'de 
+yapılan paket kart yapısı + components/landing/TrustStrip primitive.
+
+KAPSAM DIŞI:
+- Modal versiyonları (.)kredi-yukle / (.)giris / (.)kayit — Faz 4'te
+- iyzico backend entegrasyonu (mevcut çalışan flow korunur)
+- Backend KVKK veri indir / hesap silme endpoint'leri (varsa kullan, 
+  yoksa mock + ayrı backend ticket)
+
+────────────────────────────────────────────
+BÖLÜM 1 — HD-01: /hesap/ayarlar refactor
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap.
+
+2. Sayfa başlığı:
+   - Eyebrow text-rd-primary-700 "AYARLAR"
+   - H1 (font-display): "Hesap ayarların"
+   - Subtitle: "Hesap, parola, bildirim tercihleri ve KVKK haklarının."
+
+3. Layout: tek kolon max-w-2xl. Bölümler kart layout.
+
+4. **Hesap bölümü:**
+   - "HESAP" eyebrow
+   - E-posta read-only input (background rd-neutral-50)
+   - "Parola değiştir" buton → /sifre-sifirla veya inline modal 
+     (Faz 4'te modal yapılır, şimdi link yeter)
+   - Mevcut auth durumu (Google ile giriş yapıldıysa "Google ile bağlı" 
+     rozet)
+
+5. **Bildirim tercihleri bölümü:**
+   - "BİLDİRİMLER" eyebrow
+   - Toggle switch'ler (basit checkbox veya toggle):
+     - Pazarlama e-postaları (yeni özellik, ipuçları)
+     - Üretim tamamlandı bildirimi
+     - Fatura hazır bildirimi
+   - Backend yoksa: state local, save Supabase profiles tablosuna 
+     (yeni JSON field veya ayrı kolonlar). Yoksa HD-01b ticket aç.
+
+6. **KVKK / tehlike zone:**
+   - "KVKK HAKLARIN" eyebrow
+   - "Verilerimi indir" buton (Lucide Download): JSON export. Backend 
+     /api/kvkk/data-export var mı kontrol. Yoksa toast "Yakında, 
+     destek@yzliste.com'dan iste" + ayrı backend ticket
+   - "Hesabımı sil" buton (Lucide Trash2): tehlike zone içinde, 
+     border-rd-danger-300 + bg-rd-danger-50 + onay modalı 
+     (typed confirm "SİL" yazsın). Backend /api/hesap/sil var mı.
+   - Açıklama: text-xs text-rd-neutral-600 — "Hesap silme geri 
+     alınamaz. Tüm üretimlerin ve verilerin silinir."
+
+7. StickySaveBar (bildirim tercihleri değişince): MP/PR pattern reuse.
+
+Commit: feat(ayarlar): HD-01 /hesap/ayarlar refactor
+
+────────────────────────────────────────────
+BÖLÜM 2 — HD-02: /kredi-yukle refactor
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap.
+
+2. Sayfa başlığı:
+   - Eyebrow text-rd-primary-700 "KREDİ YÜKLE"
+   - H1 (font-display): "Paket seç"
+   - Subtitle: "Krediler süresiz, abonelik yok."
+
+3. 3 paket kart (FY-01 PackageCard pattern reuse):
+   - Aynı yapı /fiyatlar sayfasındaki gibi: Başlangıç/Popüler/Büyük
+   - "EN POPÜLER" rozet 129 TL paketinde (warm-earth)
+   - URL `?paket=populer` (veya baslangic/buyuk) query param: o paket 
+     pre-select edilir (border highlight + scroll into view)
+   - Tıklayınca seçim → "Devam et" buton aktif olur
+
+4. iyzico checkout flow:
+   - Mevcut backend flow korunur (POST /api/odeme veya benzeri)
+   - "Devam et" tıklayınca: loading → iyzico iframe veya redirect
+   - Mevcut çalışan flow ne ise dokunulmaz, sadece UI rd-* swap
+
+5. Trust strip alt bantta (FY-04'te yapılan TrustStrip reuse):
+   - iyzico + KVKK + e-Arşiv
+
+6. Yeni kullanıcı için "İlk paketin" rozetleri (opsiyonel):
+   - Davet bonusu varsa: "Hoş geldin: +5 kredi" badge
+   - Bunu /api/referral/stats veya benzeri endpoint'ten çek
+
+Commit: feat(kredi-yukle): HD-02 /kredi-yukle refactor
+
+────────────────────────────────────────────
+BÖLÜM 3 — HD-03: Mobile + a11y polish
+────────────────────────────────────────────
+
+1. **Mobile (375px):**
+   - Ayarlar bölümleri tek kolon, kart padding p-4
+   - "Hesabımı sil" tehlike zone net (kırmızı border)
+   - Onay modalı mobile full-screen
+   - Kredi-yükle 3 paket kart dikey istif (FY-05 pattern)
+   - Trust strip mobile flex-wrap
+
+2. **A11y:**
+   - Form ARIA: label htmlFor + input id
+   - Toggle switch'ler role="switch" + aria-checked
+   - Tehlike zone aria-label "Tehlikeli işlemler"
+   - Hesap silme onay typed confirm (input aria-required + 
+     pattern="SİL")
+   - Kredi-yükle paket kartları role="radio" + aria-checked
+   - Trust strip aria-label "Güvenlik ve uyum"
+
+3. **Edge case'ler:**
+   - Bildirim save fail: error toast + dirty state korunur
+   - Hesap sil onay yanlış: confirm disabled
+   - Kredi yükle paket seçilmeden devam: disabled buton + tooltip
+   - iyzico checkout fail: "Ödeme başlatılamadı, tekrar dene" toast
+
+Commit: chore(hesap-detay): HD-03 mobile + a11y polish
+
+────────────────────────────────────────────
+Test
+────────────────────────────────────────────
+
+- npm run build temiz
+- Localde:
+  - /hesap/ayarlar: 3 bölüm (hesap/bildirim/KVKK), tehlike zone 
+    görünür
+  - /kredi-yukle?paket=populer: popüler kart pre-selected
+  - iyzico checkout flow çalışır
+  - 375px mobile sıkıntısız
+
+Commit özeti (3 atomik) VEYA tek:
+feat(hesap-detay): HD-01~HD-03 /hesap/ayarlar + /kredi-yukle refactor
+
+BACKLOG'da HD-01~HD-03 [x] işaretle. Backend bağımlı varsa 
+HD-01b ticket aç (KVKK data-export, hesap sil endpoint).
+
+Bittikten sonra rapor:
+- Commit listesi
+- KVKK endpoint kararı (var mı, mock mu)
+- iyzico flow korundu mu
+- Açık riskler
+```
+
+**Faz 3 toplam:** ~50 ticket. **Done:** MP+PR+FT+HS+KR+UR+FY = 7/8 paket. **Sıradaki son paket:** HD-01~HD-03.
 
 ---
 
