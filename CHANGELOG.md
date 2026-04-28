@@ -1,5 +1,7 @@
 # Changelog
 
+## 2026-04-28 — Redesign LP-11~LP-12: /fiyatlar 2-kolon hibrit + /uret 3 aşama akış (FiyatlarHybridSection, KrediCalculator embedded+onPaketOner, StepCard vertical flow, ContentTypeGrid, PlatformChips, ProgressIndicator)
+
 ## 2026-04-28 — Redesign LP-01~LP-10: Anasayfa polish (trust strip, hero subtitle/mockup, video CTA off, step animation 7 pazar+4 kart, InfoStrip açıklamaları, kr→kredi, marka şablonu Selin Porselen, kıyas tablosu marka ismi yok, spacing)
 
 ## 2026-04-28 — Redesign LG-01~LG-05: 6 yasal sayfa rd-* swap + not-found/error/loading + Accordion primitive + orphan cleanup + backend tickets + QA docs
