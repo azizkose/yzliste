@@ -476,23 +476,434 @@ Canlı sitedeki örnek çıktıları (text/görsel/video/sosyal) ve mevcut görs
 |---|---|---|---|---|
 | H-01 | Anasayfa paletini tüm sayfalara uygula | Bekliyor | Landing page done | `/hesap`, `/hesap/marka`, `/hesap/profil`, `/fiyatlar`, `/blog`, `/giris` rd-* token'larında. |
 
-### Grup 2 — Marka Profili `/hesap/marka`
+### Grup 2 — Marka Profili `/hesap/marka` (öncelikli — Aziz 28 Nis upload)
+
+**Spec:** `uploads/hesap-alti-sayfalar-ek-spec.md` (Sayfa 1 bölümü) — Aziz: "canlı önizleme şu an EKSİK, sayfanın kalbi"
+**Birleşim:** H-02~H-14 (mevcut) + EX.1~EX.5 (Aziz spec) → **MP-01~MP-07** (7 birleşik ticket)
+**Aziz kararı:** Yeni alanlar (kategori, fiyat bandı, hizmet vurguları) AI'a şu an bağlı değil — sessiz aktif (kullanıcıya alt-not yok). "Site bitince prompt+input kontrolü yapacağız" (28 Nis).
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| H-02 | ProgressIndicator | Bekliyor | H-01 | Header'da ilerleme çubuğu. <50% slate, 50-99% primary, 100% success. |
-| H-03 | Form alanları (5 alan) | Bekliyor | H-01 | storeName, tone, audience, features, extraInfo. |
-| H-04 | Ton chip selector | Bekliyor | H-03 | 3 chip radio, Lucide ikonları. |
-| H-05 | `generatePreview()` şablon | Bekliyor | H-04 | Hazır metin şablonları, AI yok. |
-| H-06 | BrandedAIPreview (sticky) | Bekliyor | H-05 | Sağ kolon sticky, fade. |
-| H-07 | GenericAIPreview (kıyas) | Bekliyor | H-06 | "Marka bilgisi olmadan" örneği. |
-| H-08 | WhyItMatters tooltip | Bekliyor | H-01 | Lucide Info + tooltip. |
-| H-09 | StickySaveBar | Bekliyor | H-03 | Dirty state'te görünür. |
-| H-10 | `beforeunload` warning | Bekliyor | H-09 | Kaydedilmemişse uyarı. |
-| H-11 | Save POST `/api/marka-profili` | Bekliyor | H-09 | Loading, error, toast. |
-| H-12 | Toast başarı | Bekliyor | H-11 | Yeşil, 3sn auto-dismiss. |
-| H-13 | Mobile responsive | Bekliyor | H-06 | Tek kolon. |
-| H-14 | A11y pass | Bekliyor | H-13 | Radio ARIA, focus. |
+| MP-01 | Form scaffold + 8 alan + ProgressIndicator | Bekliyor | H-01 | rd-* token swap. Manrope eyebrow "MARKA PROFİLİ" + H1. 8 alan (storeName, tone, audience, features, kategori, fiyat bandı, hizmet vurguları, extraInfo). Header'da ilerleme bar (<50% slate, 50-99% primary, 100% success). |
+| MP-02 | ChipSelector primitive (aktif/pasif net) | Bekliyor | MP-01 | components/primitives/ChipSelector.tsx (single + multi mode). Aktif: bg-rd-primary-50 + border-2 + font-medium. Pasif: border + hover:border-rd-primary-400. Ton (single), kategori/hizmet/fiyat bandı (multi), features (chip input). |
+| MP-03 | BrandPreviewPanel (canlı önizleme — KALBİ) | Bekliyor | MP-02 | components/marka/BrandPreviewPanel.tsx + lib/markaPreviewTemplates.ts. Sticky sağ kolon (lg:sticky top-24). BrandedAIPreview üst (rd-primary-200 border, fade transition), GenericAIPreview alt (rd-neutral-300, opacity-70). WhyItMatters tooltip (Lucide Info hover). 3 ton (samimi/profesyonel/premium) hazır şablon, kullanıcı girdileriyle anlık doldurulur. **AI çağrısı YOK** — frontend useMemo ile değişimde update. |
+| MP-04 | Bilgi banner kompaktlaştır | Bekliyor | MP-01 | Mevcut 2 satırlı banner → tek satır + collapsible "Örnek göster" (Lucide ChevronDown). bg-rd-primary-50 + Lucide Info. |
+| MP-05 | StickySaveBar + dirty state + beforeunload | Bekliyor | MP-01 | /uret StickySubmitBar pattern reuse. Sol: "X / 8 alan dolu" + Sağ: "İptal" ghost + "Marka profilini kaydet" primary. Dirty state useRef ile takip. Kaydedilmemiş değişiklikte beforeunload uyarısı. |
+| MP-06 | Save POST + Toast | Bekliyor | MP-05 | /api/marka-profili (mevcut endpoint kontrol et, yoksa not düş). Loading state, error handling, success toast (rd-success-700, Lucide CheckCircle, 3sn auto-dismiss). Save sonrası dirty reset. |
+| MP-07 | Mobile + a11y polish | Bekliyor | MP-03, MP-06 | 375px tek kolon — sağ kolon altta kompakt preview kart (sticky kalkar). BrandPreviewPanel mobile collapsible. Chip ARIA (role="radio"/role="checkbox" + aria-checked). Klavye Tab + Arrow nav (chip group içinde). Save bar mobile dikey. |
+
+#### MP-01~MP-07 Birleşik Prompt (Marka Profili)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
+UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
+BACKLOG-REDESIGN.md başındaki redesign branch UI kuralları geçerli 
+(font 400-800, gölge serbest, rounded-2xl serbest, Manrope+Inter, 
+rd-* token, sadece emoji yasak — Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: MP-01~MP-07 — /hesap/marka sayfası komple refactor + canlı 
+önizleme paneli (Aziz spec'inde sayfanın KALBİ olarak işaretli).
+
+Spec referansı: uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 1)
+
+Mevcut sorun (Aziz tespit, 28 Nis): Sağda boş alan var, kullanıcı ton 
+seçince hiçbir şey değişmiyor. Form sıkıcı, kullanıcı yarıda bırakır → 
+AI çıktıları zayıf → retention düşer. Çözüm: sticky canlı önizleme 
+paneli (hazır şablon, AI çağrısı yok).
+
+KAPSAM DIŞI:
+- Backend AI prompt değişikliği (Aziz "site bitince" dedi)
+- Yeni alanlar (kategori/fiyat bandı/hizmet) AI'a bağlanmıyor — formda 
+  görünür ama backend henüz kullanmıyor. Kullanıcıya "yakında AI'da 
+  kullanılacak" alt-notu YAZMA — sessiz aktif.
+- /api/marka-profili endpoint'i değişmez (mevcut çalışıyor varsayılır 
+  — yoksa MP-06'da BACKLOG'a not düş)
+
+────────────────────────────────────────────
+BÖLÜM 1 — MP-01: Form scaffold + 8 alan + ProgressIndicator
+────────────────────────────────────────────
+
+Mevcut /hesap/marka sayfası: app/hesap/marka/page.tsx (veya benzeri).
+Önce dosyayı oku, mevcut form alanlarını + state yönetimini anla.
+
+1. Sayfa düzeyi rd-* token swap (tüm hex'leri rd-* tokenlara).
+
+2. Sayfa başlığı:
+   - Eyebrow: text-[10px] uppercase tracking-[0.15em] text-rd-primary-700 
+     "MARKA PROFİLİ"
+   - H1 (font-display Manrope): text-3xl md:text-4xl text-rd-neutral-900 
+     "Markanı tanıt, AI sana özel yazsın"
+   - Subtitle: text-rd-neutral-600 — "Doldurdukça sağdaki örnekte canlı 
+     görüyorsun. AI gerçek üretimde marka bilgilerini kullanır."
+
+3. Layout 2 kolon (lg:grid-cols-[1fr_400px] gap-8):
+   - Sol: form alanları
+   - Sağ: BrandPreviewPanel (sticky, MP-03'te yapılır)
+
+4. Form 8 alan:
+   - **storeName** (input text): "Mağaza/marka adı"
+   - **tone** (single chip ChipSelector — MP-02): 3 seçenek samimi/
+     profesyonel/premium (Lucide ikonlar Heart/Briefcase/Crown)
+   - **audience** (textarea): "Hedef kitle" (örn. "Genç çiftler, ev 
+     kuran kadınlar")
+   - **features** (chip input — kullanıcı kendi ekler): "Öne çıkarmak 
+     istediğin özellikler" (örn. ["altın yaldız", "el yapımı", "porselen"])
+   - **kategori** (multi chip ChipSelector): Mağaza kategorileri 
+     (önceden tanımlı liste — Ev & Yaşam, Moda, Elektronik, Kozmetik, 
+     Yemek & İçecek, Bebek & Çocuk, Spor & Outdoor, Hobi & Sanat, Diğer)
+   - **fiyatBandı** (single chip ChipSelector): Ekonomik / Orta segment / 
+     Premium / Lüks
+   - **hizmetVurguları** (multi chip ChipSelector): Hızlı kargo / 
+     Ücretsiz iade / Kapıda ödeme / Hediye paketi / Garanti / Stüdyo 
+     fotoğraf
+   - **extraInfo** (textarea, opsiyonel): "Eklemek istediğin başka 
+     bilgi"
+
+5. ProgressIndicator (sayfa header'ında):
+   - "X / 8 alan dolu" + ilerleme bar
+   - <50% slate-300, 50-99% bg-rd-primary-500, 100% bg-rd-success-700
+   - aria-valuenow ile a11y
+   - "Doldurma" hesabı: text input non-empty + chip selection >= 1 = dolu
+
+6. Form state: useState veya zustand store (mevcut tercihe uy). Dirty 
+   state useRef ile takip — MP-05'te kullanılacak.
+
+Commit: feat(marka): MP-01 form scaffold + 8 alan + progress indicator
+
+────────────────────────────────────────────
+BÖLÜM 2 — MP-02: ChipSelector primitive
+────────────────────────────────────────────
+
+Yeni dosya: components/primitives/ChipSelector.tsx
+
+İki mod:
+- single: tek seçim (radio benzeri), ton + fiyat bandı için
+- multi: çoklu seçim (checkbox benzeri), kategori + hizmet vurguları
+
+Görsel:
+- Aktif: bg-rd-primary-50 border-2 border-rd-primary-700 text-rd-primary-700 
+  font-medium px-4 py-2 rounded-lg
+- Pasif: bg-white border border-rd-neutral-300 text-rd-neutral-700 
+  hover:border-rd-primary-400 hover:bg-rd-neutral-50 px-4 py-2 rounded-lg
+- Disabled (gerekirse): opacity-50 cursor-not-allowed
+- Lucide ikon yan: size-4 (opsiyonel prop)
+
+A11y:
+- single: container role="radiogroup" aria-label, her chip role="radio" 
+  aria-checked
+- multi: container role="group" aria-label, her chip role="checkbox" 
+  aria-checked
+- Klavye: Tab girer, Arrow Left/Right (single) veya Space (multi) ile 
+  toggle
+
+Ton seçici özel: 3 chip'in altında ufak açıklama (örn. samimi seçince 
+"Yakın, içten dil — sevgili/aile pazarı için"). Açıklama text-xs 
+text-rd-neutral-600.
+
+Commit: feat(marka): MP-02 ChipSelector primitive (single + multi mode)
+
+────────────────────────────────────────────
+BÖLÜM 3 — MP-03: BrandPreviewPanel — KALBİ
+────────────────────────────────────────────
+
+Bu sayfanın en önemli parçası. Aziz spec'i: "şu an sağda boş alan, 
+ton seçince hiçbir şey değişmiyor — sayfanın kalbi eksik".
+
+3 yeni dosya:
+- components/marka/BrandPreviewPanel.tsx
+- components/marka/BrandedAIPreview.tsx
+- components/marka/GenericAIPreview.tsx
+- lib/markaPreviewTemplates.ts (hazır şablon kütüphanesi)
+
+**lib/markaPreviewTemplates.ts:**
+
+Hazır şablon objesi. 3 ton × 2 içerik tipi (listing + sosyal) = 6 şablon. 
+Şablon function alır brand, urunOrnek, ozellikler, kategori — string 
+return eder.
+
+Örnek yapı:
+```ts
+type Tone = 'samimi' | 'profesyonel' | 'premium';
+
+export const PREVIEW_TEMPLATES = {
+  samimi: {
+    listing: ({ brand, ozellik, kategori }) => 
+      `Sevdiğin biriyle ${ozellik || 'özel'} anlar yaşa. ${brand}'dan 
+       ${kategori || 'bu ürün'} senin için bekliyor.`,
+    sosyal: ({ brand, urun }) => 
+      `${urun} ile günlerin bir başka güzel ☕ ${brand}'la sevince 
+       devam.`,
+  },
+  profesyonel: {
+    listing: ({ brand, ozellik, kategori }) => 
+      `${brand} — ${kategori}. ${ozellik} ile şıklığı ve dayanıklılığı 
+       bir arada sunar.`,
+    sosyal: ({ brand, urun }) => 
+      `${urun} | Premium kalite, akıllı tasarım. ${brand} ile fark 
+       yaratın.`,
+  },
+  premium: {
+    listing: ({ brand, ozellik, kategori }) => 
+      `${brand}. ${kategori}'nin yeniden tanımı. ${ozellik} ile zarif, 
+       özenli, kalıcı.`,
+    sosyal: ({ brand, urun }) => 
+      `${urun}. ${brand} — sıradan değil.`,
+  },
+};
+
+export function generatePreview(
+  tone: Tone, 
+  contentType: 'listing' | 'sosyal',
+  inputs: { brand?: string, urun?: string, ozellik?: string, kategori?: string }
+) {
+  const safeInputs = {
+    brand: inputs.brand || 'Markan',
+    urun: inputs.urun || 'ürünün',
+    ozellik: inputs.ozellik || '',
+    kategori: inputs.kategori || '',
+  };
+  return PREVIEW_TEMPLATES[tone][contentType](safeInputs);
+}
+```
+
+NOT: Şablonları daha doğal yap — yukarıdaki örnekler placeholder. Aziz 
+canlı sitedeki tonu için kontrol eder. Çok şirin/cringe olmasın, 
+kurumsal-doğal aralıkta kalsın.
+
+**components/marka/BrandedAIPreview.tsx:**
+- Container: rounded-xl border-2 border-rd-primary-200 bg-rd-primary-50 
+  p-5 md:p-6
+- Header: text-[10px] uppercase tracking-[0.15em] text-rd-primary-700 
+  "MARKA İLE" + Lucide Sparkles
+- İçerik: 2 örnek (listing + sosyal), aralarında ayraç. Her örnek 
+  font-display + leading-relaxed.
+- Form değiştikçe useMemo ile yeniden render, fade transition.
+
+**components/marka/GenericAIPreview.tsx:**
+- Container: rounded-xl border border-rd-neutral-300 bg-rd-neutral-50 
+  p-5 md:p-6 opacity-90
+- Header: text-[10px] uppercase tracking-[0.15em] text-rd-neutral-500 
+  "MARKA OLMADAN" + Lucide AlertCircle (hafif)
+- İçerik: 2 jenerik örnek (sabit metin) — örn. "Porselen kahve fincanı, 
+  6'lı set, beyaz" (markaadız, kategori sade)
+- Aziz'in spec'inde örnek var, oradan kullan veya benzer kalitede 
+  jenerik metin yaz.
+
+**components/marka/BrandPreviewPanel.tsx:**
+```tsx
+'use client';
+export function BrandPreviewPanel({ formData }: { formData: MarkaForm }) {
+  return (
+    <aside className="lg:sticky lg:top-24 space-y-4">
+      {/* WhyItMatters tooltip */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm font-medium text-rd-neutral-900">
+          Canlı önizleme
+        </p>
+        <Tooltip content="Form değiştikçe örnek metin canlı güncellenir. 
+                          AI gerçek üretimde marka bilgilerini kullanır.">
+          <Info size-4 className="text-rd-neutral-500 cursor-help" />
+        </Tooltip>
+      </div>
+      
+      <BrandedAIPreview formData={formData} />
+      <GenericAIPreview />
+      
+      <p className="text-xs text-rd-neutral-500 leading-relaxed">
+        Bu sadece şablon önizleme. Gerçek üretimde AI marka bilgini 
+        kullanarak özgün metin yazar.
+      </p>
+    </aside>
+  );
+}
+```
+
+Tooltip primitive zaten var (components/primitives/Tooltip.tsx — /uret 
+refactor'da yapıldı). Reuse.
+
+Form data değiştikçe BrandPreviewPanel re-render olur, useMemo ile 
+hesaplanan generatePreview() yeni metni gösterir. Fade transition için 
+key prop kullan: <p key={`${tone}-${storeName}-${kategori}`}> — ton 
+değişince key değişir, React fade animasyonunu tetikler.
+
+Commit: feat(marka): MP-03 BrandPreviewPanel canlı önizleme (hazır 
+şablon, AI çağrısı yok) — sayfanın KALBİ
+
+────────────────────────────────────────────
+BÖLÜM 4 — MP-04: Bilgi banner kompaktlaştır
+────────────────────────────────────────────
+
+Mevcut sayfada üstte mavi info banner var (Aziz: "2 satır + örnek 
+cümle = çok yer kaplıyor").
+
+Yeni:
+- Tek satır: bg-rd-primary-50 border border-rd-primary-200 rounded-lg 
+  px-4 py-2.5
+- Lucide Info size-4 text-rd-primary-700
+- Text: text-sm text-rd-primary-800 — "Marka profili AI metinlerini 
+  kişiselleştirir."
+- Sağda toggle: "Örnek göster ▾" (Lucide ChevronDown rotate-180 
+  açıkken)
+- Tıklayınca expand: kısa bir before/after örneği (BrandPreviewPanel 
+  içeriğinin minimal versiyonu olabilir, ya da statik bir kıyas)
+
+Default kapalı.
+
+Commit: feat(marka): MP-04 bilgi banner kompakt + collapsible
+
+────────────────────────────────────────────
+BÖLÜM 5 — MP-05: StickySaveBar + dirty state + beforeunload
+────────────────────────────────────────────
+
+components/marka/StickySaveBar.tsx (yeni — VEYA /uret 
+StickySubmitBar'ı reuse, parametre olarak kullan).
+
+- position: sticky bottom-0 (mobil) / sticky bottom-5 (desktop)
+- bg-white border-t border-rd-neutral-200
+- max-w-7xl mx-auto px-4 py-3
+- Sol: text-sm text-rd-neutral-600 — "X / 8 alan dolu" (canlı counter)
+- Sağ: 2 buton
+  - "İptal" ghost (text-rd-neutral-700 hover:bg-rd-neutral-100)
+  - "Marka profilini kaydet" primary (bg-rd-primary-700 hover:bg-rd-primary-800)
+  
+- Dirty state: useRef ile original form snapshot, current form ile 
+  karşılaştır. Değişiklik varsa save bar görünür ve "İptal" enabled.
+- Saf form (dirty değil): save bar gizli VEYA disabled
+
+beforeunload:
+```ts
+useEffect(() => {
+  const handler = (e: BeforeUnloadEvent) => {
+    if (isDirty) {
+      e.preventDefault();
+      e.returnValue = ''; // Chrome
+    }
+  };
+  window.addEventListener('beforeunload', handler);
+  return () => window.removeEventListener('beforeunload', handler);
+}, [isDirty]);
+```
+
+İptal butonu: kullanıcı onay popup'ı (Lucide AlertCircle), "Değişiklikler 
+kaybolacak. Devam?" — basitçe confirm() OK ya da custom modal (custom 
+modal redesign branch'te zaten standart, custom yap).
+
+Commit: feat(marka): MP-05 StickySaveBar + dirty state + beforeunload
+
+────────────────────────────────────────────
+BÖLÜM 6 — MP-06: Save POST + Toast
+────────────────────────────────────────────
+
+1. /api/marka-profili endpoint kontrol et:
+   - Var ve PATCH/POST kabul ediyorsa: kullan
+   - Yoksa: BACKLOG'da MP-06b ticket'ı [ ] olarak aç ("Backend: marka 
+     profili save endpoint"). Frontend tarafı mock'la — saveStatus state 
+     'success' simulate, gerçek deploy'da düzeltilir.
+
+2. Save flow (StickySaveBar "Kaydet" tıklayınca):
+   - Loading state: butona spinner (Lucide Loader2 animate-spin), 
+     "Kaydediliyor..." text
+   - PATCH/POST request
+   - Success: toast (rd-success-700 bg, Lucide CheckCircle, "Marka 
+     profili kaydedildi", 3sn auto-dismiss)
+   - Error: toast (rd-danger-700 bg, Lucide AlertCircle, "Kaydedilemedi: 
+     [hata mesajı]", 5sn auto-dismiss)
+   - Dirty state reset (form snapshot güncelle)
+
+3. Toast component (components/primitives/Toast.tsx — varsa reuse, 
+   yoksa minimal yeni):
+   - position: fixed bottom-20 right-5 (StickySaveBar'ın üstünde)
+   - rounded-lg, shadow-lg, animate-fade-in
+   - aria-live="polite"
+   - Click veya auto-dismiss
+
+Commit: feat(marka): MP-06 save POST + toast (success/error)
+
+────────────────────────────────────────────
+BÖLÜM 7 — MP-07: Mobile + a11y polish
+────────────────────────────────────────────
+
+1. **Mobile (375px):**
+   - Layout tek kolon. lg:grid-cols-[1fr_400px] → mobile flex-col.
+   - Sağ kolon (BrandPreviewPanel) altta yer alır, sticky kalkar.
+   - Mobile için BrandPreviewPanel'i collapsible yap (accordion):
+     - Tıklanır başlık: "Canlı önizleme ▾" (kompakt)
+     - Default: kapalı (mobile'da yer tasarrufu için). Tıklayınca açılır.
+     - Bu ayrı bir prop olabilir: <BrandPreviewPanel collapsibleOnMobile />
+   - Form alanları full width, padding mobile küçük (px-4 py-3)
+   - StickySaveBar mobile dikey: counter üstte, butonlar altta full width
+   - Bilgi banner mobile tek satıra sığar mı kontrol — uzunsa "Örnek 
+     göster" toggle'ını ayır
+
+2. **A11y:**
+   - Form ARIA: her label `htmlFor`, her input `id`
+   - ChipSelector role'ler MP-02'de yapıldı, doğrula
+   - ProgressIndicator aria-valuenow + aria-valuemin/max
+   - StickySaveBar Save butonu: dirty değilse aria-disabled + Tooltip 
+     "Değişiklik yok"
+   - Toast aria-live="polite"
+   - WhyItMatters tooltip aria-describedby BrandPreviewPanel'e bağlı
+   - Klavye full Tab tour: storeName → ton chip'leri (Arrow ile gez) → 
+     audience → features → kategori (Arrow + Space) → fiyat bandı → 
+     hizmet vurguları → extraInfo → save bar buton
+
+3. **Kontrast (WCAG AA):**
+   - text-rd-primary-700 on bg-rd-primary-50: doğrula
+   - text-rd-neutral-600 on bg-white: doğrula
+   - Disabled buton text: en az 3:1
+
+4. **Edge case'ler:**
+   - storeName boş: BrandPreviewPanel "Markan" placeholder ile gösterir
+   - Tüm chip'ler boş: Generic preview ön plana çıkar (görsel hiyerarşi)
+   - Internet kesik save POST: error toast retry CTA'sı ile
+
+Commit: chore(marka): MP-07 mobile + a11y polish
+
+────────────────────────────────────────────
+Test (commit öncesi)
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde /hesap/marka:
+  - Eyebrow + Manrope H1 + subtitle görünür
+  - 8 alan render olur, ProgressIndicator canlı counter
+  - Ton seçince → BrandedAIPreview anlık güncellenir (fade)
+  - Kategori chip multi-select çalışır, ChipSelector aktif/pasif net
+  - Sağ kolon sticky (desktop), mobile collapsible
+  - Generic preview kıyası altta görünür
+  - WhyItMatters tooltip hover'da açılır
+  - Bilgi banner tek satır, "Örnek göster" toggle çalışır
+  - Form değişince StickySaveBar görünür
+  - Kaydet → toast başarı, dirty reset
+  - 375px mobile sıkıntısız
+  - Klavye Tab tüm alanlar gezilir
+
+Commit özeti (7 atomik commit):
+- feat(marka): MP-01 form scaffold + 8 alan + progress
+- feat(marka): MP-02 ChipSelector primitive
+- feat(marka): MP-03 BrandPreviewPanel canlı önizleme — KALBİ
+- feat(marka): MP-04 bilgi banner kompakt
+- feat(marka): MP-05 StickySaveBar + dirty state + beforeunload
+- feat(marka): MP-06 save POST + toast
+- chore(marka): MP-07 mobile + a11y polish
+
+VEYA tek: feat(marka): MP-01~MP-07 /hesap/marka komple refactor + 
+canlı önizleme paneli
+
+BACKLOG-REDESIGN.md'de MP-01~MP-07 [x] işaretle. /api/marka-profili 
+yoksa MP-06b ticket'ı [ ] aç.
+
+Bittikten sonra rapor:
+- Commit listesi
+- Yeni dosyalar (components/primitives/ChipSelector, components/marka/
+  *, lib/markaPreviewTemplates)
+- /api/marka-profili kararı (var mı, mock'landı mı)
+- ChipSelector'un /uret'te de kullanılabilir bir primitive olmasının 
+  testi (gelecek refactor için reusability)
+- Açık riskler / Aziz preview test
+```
 
 ### Grup 3 — Hesabım `/hesap`
 
@@ -1586,440 +1997,36 @@ Bittikten sonra:
 
 ## 18 — Anasayfa Reroll (Faz 1.5)
 
-**Spec:** `uploads/anasayfa-kisaltma-spec.md` (Aziz 28 Nis upload)
-**Mockup:** `uploads/3-adim-animasyonlu-mockup-v2.html`
-**Branch:** `claude/redesign-modern-ui`
-**Aziz önceliği (28 Nis):** "1 en önemli anasayfa ve üretim sayfası. Gerisini sen seç."
-
-**Hedef:** Anasayfayı 9 bölümden 7 bölüme indir. "4 içerik türü" mesajı şu an 3 farklı bölümde tekrar ediliyor (Bölüm 2 + 3 + 4) — kullanıcı "tamam, anladım" der + scroll'a devam eder. Yeni "3 Adım Animasyonlu" bölümü 9 sn'lik döngüyle "ne yapıyoruz" sorusunu cevaplar, altındaki birleşik bilgi şeridi 4 içerik tipini kompakt gösterir.
-
-**Önemli yapı kararı:** Aziz spec'inde 24 ticket vardı. Cowork bunu **6 birleşik ticket'a** sıkıştırdı (Code'un /uret 17-ticket başarısı + SR 6-ticket başarısı kanıtladığı kapasiteye uygun granularite).
-
-**Kapsam DIŞI:**
-- Hero, Marka profili, Neden yzliste, Fiyatlar, SSS, Final CTA bölümleri DEĞİŞMİYOR
-- Backend / API değişikliği yok
-- Lottie / Rive yok — sadece CSS keyframes (mockup'tan kopya)
-- Sosyal medya örnek caption'ı uydurma değil — gerçek bir AI üretim çıktısıyla doldurulacak (AS-05'te). Yoksa "Yakında" gösterilir.
-
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| AS-01 | Eski bölümler kaldır + sıralama | ✅ Tamam | — | Anasayfada "Tek platformda 4 içerik türü" (Bölüm 3) ve "Aynı üründen, her pazaryeri için ayrı içerik" (Bölüm 4) komponentleri kaldırılır. app/page.tsx (veya layout'un router) sıralama güncellenir. Silinen komponent dosyaları silinir veya `_archive/` klasörüne taşınır. Mevcut "Aynı üründen" bölümünün hard-coded data'sı kaybolmasın — `lib/data/exampleContent.ts`'ye taşı (AS-05'te kullanılacak). |
-| AS-02 | StepAnimation komponenti (3 adım canvas + döngü + replay + progress) | ✅ Tamam | AS-01 | components/landing/StepAnimation.tsx (yeni). 3 adım yan yana, ok connector. Otomatik 9 sn döngü, her adım 3 sn. Mockup'tan CSS keyframes kopyala (photoIn, orFade, textIn, chipIn, chipPulse, sparkleIn, lineGrow, downloadIn). Sağ üstte "↺ Tekrar oynat" Lucide RotateCcw butonu. Altta progress bar (33% → 66% → 100%). Aktif adım rd-primary border + soft shadow + step number scale 1.1, inaktif gri ton. Mockup'taki JS interval mantığı useEffect + setInterval ile React'a aktarılır. |
-| AS-03 | InfoStrip komponenti (4 sekme + detay accordion + pazaryeri chips + 4 panel) | ✅ Tamam | AS-01 | components/landing/InfoStrip.tsx (yeni). Üst header: "İÇERİK TÜRLERİ" eyebrow + "4 içerik türü, 7 pazaryeri için" başlık + "Detaya bak ▾" butonu (Lucide ChevronDown). 4 içerik tipi sekmesi her zaman görünür (Metin / Görsel / Video / Sosyal — her biri Lucide ikon + ad + kredi pill + süre). Default sekme: Metin. Detay alanı default kapalı, max-height transition ile expand. Pazaryeri mini chip row (Trendyol / Amazon TR / Etsy). Her sekmenin paneli farklı içerik renderı (text panel / görsel grid / video preview / sosyal caption). Sekme tıklayınca aktif değişir + detay otomatik açılır. |
-| AS-04 | exampleContent.ts veri kaynağı tek noktadan | ✅ Tamam | AS-01, AS-03 | lib/data/exampleContent.ts (yeni). Selin Porselen örnek datası: brand, name, listing (3 pazaryeri için title/features/description/tags), gorsel (6 placeholder etiketi), video (sahne açıklaması), sosyal (caption örnekleri). InfoStrip 4 paneli bu data'dan beslensin — hard-coded string YOK. Hem mevcut "Aynı üründen" eski içeriği (zaten AS-01'de silindi ama veri taşındı) hem de yeni InfoStrip aynı kaynaktan çekiyor olur. Sosyal caption: gerçek AI üretim çıktısı varsa kullan, yoksa mockup'ta uydurmaları temizle ve "Yakında" placeholder göster — Aziz onayı sonrası gerçek üretim eklenir. |
-| AS-05 | StepAnimation + InfoStrip aynı section container içinde birleştirme | ✅ Tamam | AS-02, AS-03, AS-04 | components/landing/StepSection.tsx (yeni — wrapper). Tek section içinde üst parça StepAnimation, alt parça InfoStrip. Aralarında ince ayraç (border-b border-rd-neutral-200). Section'ın eyebrow + H2 başlığı: "3 ADIMDA HAZIR" eyebrow + "Ürünü tanıt, AI senin için yapsın" H2 (font-display Manrope). app/page.tsx'te eski 3 Adım bölümü yerine bu yeni bileşen yerleştirilir, eski Bölüm 3-4 zaten silinmiştir. |
-| AS-06 | Mobile + a11y + reduced-motion + acceptance | ✅ Tamam | AS-05 | 375px: 3 adım dikey istif (yan yana değil), animasyon devam. InfoStrip sekmeler 2x2 grid mobile. Detay paneli mobile readable. A11y: replay butonu klavye erişilebilir + Tab focus, sekmeler `role="tab" aria-selected`, detay aç/kapat `aria-expanded`, animate öğeler `aria-hidden="true"`. `prefers-reduced-motion: reduce` → tüm keyframes durur, son hâli statik göster (mockup'taki @media query'i kopyala). Lighthouse mobile: Perf >85 (animasyon var, 90 zor olabilir), A11y >90, CLS <0.1. Aziz preview onayı. |
-
-**Aziz açık soruları (spec H bölümü, varsayılan cevaplar Cowork önerisi):**
-1. **Sosyal medya örneği** canlı sitede yok → AS-05'te gerçek AI üretim çıktısı kullan, yoksa "Yakında" placeholder.
-2. **9 saniyelik döngü** — varsayılan 9sn, A/B test ileride.
-3. **"Detaya bak" başlangıçta kapalı** — kompakt görünüm, kullanıcı isterse açar.
-4. **exampleContent.ts CMS mi static mi** — şimdilik static, Faz 7+ admin paneli geldiğinde Sanity/Notion'a taşınabilir.
-
-#### AS-01~AS-06 Birleşik Prompt (Anasayfa Reroll)
-
-```
-ÖNEMLİ — KURAL OVERRIDE:
-Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
-UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
-Bunun yerine BACKLOG-REDESIGN.md başındaki redesign branch UI 
-kuralları geçerli (font 400-800 serbest, gölge serbest, rounded-2xl 
-serbest, Manrope+Inter, rd-* token'lar, sadece emoji yasak — Lucide 
-ikon kullan).
-
-Branch: claude/redesign-modern-ui
-Görev: AS-01~AS-06 — Anasayfa kısaltma + 3 adım animasyonlu bölüm
-
-Spec referansı: uploads/anasayfa-kisaltma-spec.md (Aziz 28 Nis upload)
-Mockup referansı: uploads/3-adim-animasyonlu-mockup-v2.html — TÜM CSS 
-keyframes + JS döngü mantığı + state örnekleri burada. KOPYA ile başla, 
-React'a aktar.
-
-Hedef: Anasayfayı 9 bölümden 7 bölüme indir. Bölüm 3 + Bölüm 4 silinir, 
-içerikleri yeni "3 Adım Animasyonlu + Birleşik Bilgi Şeridi" bölümüne 
-gömülür. Tek section içinde üst parça animasyon, alt parça info strip.
-
-Kapsam DIŞI: Hero, Marka profili, Neden yzliste, Fiyatlar, SSS, Final 
-CTA bölümleri DEĞİŞMİYOR. Backend/API yok. Lottie/Rive yok — sadece 
-CSS keyframes. /yzstudio, /uret, /hesap, vs sayfalar dokunulmuyor.
-
-────────────────────────────────────────────
-BÖLÜM 1 — AS-01: Eski bölümler kaldır + sıralama
-────────────────────────────────────────────
-
-Mevcut anasayfa bölüm sırası (app/page.tsx veya bağlı section import'ları):
-1. Hero
-2. 3 Adımda Hazır (statik 3 kart + mini preview)
-3. Tek platformda 4 içerik türü ← SİLİNECEK
-4. Aynı üründen, her pazaryeri için ayrı içerik (sekmeli demo) ← SİLİNECEK
-5. Marka profili
-6. Neden yzliste
-7. Fiyatlar
-8. SSS
-9. Final CTA
-
-Yapılacak:
-
-1. Bölüm 3 ve Bölüm 4 komponentlerini bul. components/landing/ altında 
-   muhtemelen "IcerikTurleri.tsx" / "PazaryeriBolumu.tsx" gibi isimlerde. 
-   Glob "components/landing/*.tsx" + import zincirini takip et.
-
-2. Bu komponentler app/page.tsx'ten (veya hangi dosyada section'lar 
-   compose ediliyorsa) KALDIR. Import'ları temizle.
-
-3. Komponent dosyalarını _archive/ klasörüne taşı VEYA sil. Tercih: 
-   archive (geri ihtiyaç olursa diff kolay). Klasör yoksa oluştur.
-
-4. **KRİTİK — Veri taşıma:** Bölüm 4 ("Aynı üründen, her pazaryeri için 
-   ayrı içerik") içinde hard-coded olan Selin Porselen örnek metinleri/
-   görsel etiketleri/video açıklaması KAYBOLMASIN. AS-04'te 
-   lib/data/exampleContent.ts'ye taşıyacağız. Şimdi bu adımda örnek 
-   datayı bir not dosyasına çıkar veya komponentten oku, AS-04'te 
-   kullanılacak şekilde sakla. (En kolay yol: archive dosyalarını AS-04'te 
-   tekrar aç, datayı al.)
-
-5. Sıralama yeni hâli: Hero → 3 Adımda Hazır (yeni, AS-05'te kuracağız) 
-   → Marka profili → Neden yzliste → Fiyatlar → SSS → Final CTA. 
-
-6. Build temiz olmalı (kaldırılan import'lardan tek bir referans kalmasın).
-
-Commit: chore(landing): AS-01 eski Bölüm 3-4 kaldırıldı (4 içerik türü 
-+ aynı üründen) — yeni 3 adım bölümü için yer açıldı
-
-────────────────────────────────────────────
-BÖLÜM 2 — AS-02: StepAnimation komponenti
-────────────────────────────────────────────
-
-Yeni dosya: components/landing/StepAnimation.tsx
-
-Mockup'taki yapı (uploads/3-adim-animasyonlu-mockup-v2.html):
-- 3 adım yan yana
-- Her adım: numara dairesi (1/2/3) + canvas alanı + altta etiket
-- Adımlar arasında ok connector (Lucide ChevronRight veya CSS arrow)
-- Otomatik 9 sn döngü, her adım 3 sn aktif
-- Aktif adım: rd-primary-700 border + soft shadow + step number scale 1.1
-- Inaktif adımlar: rd-neutral-300 border + gri ton
-- Sağ üstte "↺ Tekrar oynat" Lucide RotateCcw butonu (size-4 + text-sm 
-  text-rd-neutral-500 hover:text-rd-neutral-700)
-- Altta ince progress bar (h-0.5 bg-rd-neutral-200, içinde aktif kısım 
-  bg-rd-primary-700, width animasyonla 33% → 66% → 100%)
-
-Adım canvasleri:
-
-**Adım 1 — "Ürünü tanıt"**
-- @keyframes photoIn — fotoğraf yukarı kayar (translate-y dönüşü)
-- @keyframes orFade — "VEYA" fade in
-- @keyframes textIn — açıklama metni belirme (opacity + translate-y)
-- İçerik: kahve fincanı emoji yerine Lucide Coffee ikon (size-12 
-  text-rd-warm-700) → "VEYA" → "Selin Porselen Çiçek Desenli Kahve 
-  Fincanı 6'lı Set 80ml..." text fade in
-
-**Adım 2 — "Pazaryeri ve içerik seç"**
-- @keyframes chipIn — pazaryeri chip'leri stagger (0.2s, 0.4s, 0.6s, 
-  0.8s, 1.0s gecikmeli)
-- @keyframes chipPulse — ilk 3 pazaryeri chip'i aktif rengine döner 
-  (border-rd-primary-700 + bg-rd-primary-50)
-- 5 pazaryeri chip'i (Trendyol/Amazon TR/Hepsiburada/N11/Etsy) sırayla 
-  belirir, ilk 3'ü pulse → 4 içerik chip'i (Metin/Görsel/Video/Sosyal) 
-  belirir, Metin + Görsel pulse
-
-**Adım 3 — "AI senin için hazırlasın"**
-- @keyframes sparkleIn — Lucide Sparkles size-3 pop (scale 0 → 1)
-- @keyframes lineGrow — 4 farklı renkte içerik çubuğu büyüme (width 
-  0 → 100%, stagger). Renkler: rd-primary-500, rd-success-500, 
-  rd-warning-500, rd-danger-500 — VEYA tüm 4 çubuk rd-primary tonları 
-  (ön söz değişiklik isteği değilse rd-* palettine sadık kal)
-- @keyframes downloadIn — Lucide Download butonu pop (scale + opacity)
-
-State + döngü:
-```tsx
-const [currentStep, setCurrentStep] = useState(0); // 0 | 1 | 2
-
-useEffect(() => {
-  const interval = setInterval(() => {
-    setCurrentStep((s) => (s + 1) % 3);
-  }, 3000); // her 3 sn'de adım değişir
-  return () => clearInterval(interval);
-}, []);
-
-const handleReplay = () => setCurrentStep(0);
-```
-
-Tüm keyframes'i app/globals.css'in @theme bloğuna ekle (--animate-* 
-şeklinde Tailwind v4 patternine uygun). Mockup'tan kopya, isimler 
-photoIn → animate-photo-in vs.
-
-A11y: animate öğeler aria-hidden="true". Replay butonu aria-label 
-"Animasyonu baştan oynat". role="region" aria-label "3 adım üretim 
-animasyonu".
-
-Commit: feat(landing): AS-02 StepAnimation 3 adım otomatik döngü
-
-────────────────────────────────────────────
-BÖLÜM 3 — AS-03: InfoStrip komponenti
-────────────────────────────────────────────
-
-Yeni dosya: components/landing/InfoStrip.tsx
-
-Yapı (mockup D bölümü):
-
-1. **Header strip:**
-   - text-[10px] uppercase tracking-[0.15em] text-rd-warm-700 eyebrow 
-     "İÇERİK TÜRLERİ"
-   - font-display text-xl md:text-2xl text-rd-neutral-900 başlık 
-     "4 içerik türü, 7 pazaryeri için"
-   - Sağında "Detaya bak" toggle button (Lucide ChevronDown size-4, 
-     açıkken rotate-180). text-sm text-rd-neutral-600 hover
-
-2. **Açıklama satırı:**
-   - text-sm text-rd-neutral-600
-   - "Her tür ayrı kredi · birini, birkaçını veya hepsini birden 
-     seçebilirsin. Pazaryeri kuralı otomatik uygulanır."
-
-3. **4 içerik tipi sekmesi (her zaman görünür):**
-   - grid grid-cols-2 md:grid-cols-4 gap-3
-   - Her sekme button: Lucide ikon (size-5) + ad + kredi pill + süre
-     - Metin: Lucide FileText, "1 kr", "~10sn"
-     - Görsel: Lucide Image, "1 kr", "~30sn"
-     - Video: Lucide Video, "2 kr", "~2dk"
-     - Sosyal: Lucide MessageSquare, "3 kr", "~20sn"
-   - Aktif sekme: bg-rd-primary-50 border-2 border-rd-primary-700 
-     text-rd-primary-700
-   - Pasif: border border-rd-neutral-200 text-rd-neutral-700 
-     hover:border-rd-primary-400
-   - role="tab" aria-selected
-   - Default aktif: Metin
-
-4. **Detay alanı (default kapalı, max-height transition):**
-   - aria-expanded
-   - Pazaryeri mini chip row: Trendyol / Amazon TR / Etsy (3 chip, 
-     ilki aktif)
-   - Aktif sekmenin paneli (4 panel ayrı komponent veya inline):
-     - **Metin paneli:** title + features ul + description + tags chip row
-     - **Görsel paneli:** 6 placeholder grid (3x2), her cell aspect-square 
-       bg-rd-neutral-100 + Lucide ImageIcon + etiket altta
-     - **Video paneli:** dikey 9:16 placeholder + Lucide Play size-12 + 
-       sahne açıklama
-     - **Sosyal paneli:** 2-3 caption örneği card layout (Instagram, 
-       TikTok, Pinterest etiketli)
-
-5. **Etkileşim:**
-   - Sekme tıklayınca: aktif sekme değişir + detay otomatik açılır 
-     (eğer kapalıysa)
-   - "Detaya bak" toggle: detay aç/kapat
-   - Pazaryeri chip tıklayınca: aktif chip değişir (görsel only — 
-     gelecekte backend bağlanırsa platforma özel içerik)
-
-State:
-```tsx
-const [activeTab, setActiveTab] = useState<'metin'|'gorsel'|'video'|'sosyal'>('metin');
-const [detailOpen, setDetailOpen] = useState(false);
-const [activeMarket, setActiveMarket] = useState('trendyol');
-
-const handleTabClick = (tab) => {
-  setActiveTab(tab);
-  if (!detailOpen) setDetailOpen(true);
-};
-```
-
-Commit: feat(landing): AS-03 InfoStrip 4 sekme + detay accordion
-
-────────────────────────────────────────────
-BÖLÜM 4 — AS-04: exampleContent.ts veri kaynağı
-────────────────────────────────────────────
-
-Yeni dosya: lib/data/exampleContent.ts
-
-```ts
-export const EXAMPLE_PRODUCT = {
-  brand: 'Selin Porselen',
-  name: 'Selin Porselen Çiçek Desenli Kahve Fincanı 6\'lı Set',
-  shortDescription: '6\'lı set · 80 ml · altın yaldızlı',
-} as const;
-
-export const EXAMPLE_CONTENT = {
-  metin: {
-    trendyol: {
-      title: '...',  // AS-01'de archive'lanan eski "Aynı üründen" 
-                     // Trendyol başlığı buraya
-      features: [/* eski 5 madde */],
-      description: '...',
-      tags: [/* eski 10 etiket */],
-    },
-    'amazon-tr': { /* eski Amazon TR datası */ },
-    etsy: { /* eski Etsy datası */ },
-  },
-  gorsel: {
-    placeholders: [
-      'Ana görsel',
-      'Set görünümü',
-      'Ölçek referansı',
-      'Paket içeriği',
-      'Kullanım detayı',
-      'Lifestyle sahne',
-    ],
-    standard: 'Trendyol stüdyo standardı: 1200×1200, beyaz zemin',
-  },
-  video: {
-    duration: '5 saniye',
-    aspect: '9:16 dikey',
-    sceneDescription: '...',  // mockup'tan kopya
-  },
-  sosyal: {
-    instagram: '...',
-    tiktok: '...',
-    pinterest: '...',
-    // VEYA: status: 'coming-soon' (Aziz onayına göre)
-  },
-} as const;
-```
-
-InfoStrip ve gelecekte gerekirse başka anasayfa komponentleri bu 
-data'dan beslensin. Hard-coded string YOK.
-
-Sosyal caption kararı: AS-01'de archive'lanan eski Bölüm 4 datasında 
-sosyal içerik var mı kontrol et. Yoksa mockup'taki uydurma metinleri 
-KULLANMA — bunun yerine status: 'coming-soon' bırak, InfoStrip sosyal 
-panel "Yakında" göstersin (Aziz onayı sonra eklenir).
-
-Commit: feat(landing): AS-04 exampleContent.ts tek kaynak veri 
-(Selin Porselen örneği)
-
-────────────────────────────────────────────
-BÖLÜM 5 — AS-05: StepSection wrapper birleştirme
-────────────────────────────────────────────
-
-Yeni dosya: components/landing/StepSection.tsx
-
-Yapı:
-```tsx
-export function StepSection() {
-  return (
-    <section aria-labelledby="step-section-baslik" 
-             className="py-16 md:py-20 bg-white">
-      <div className="max-w-6xl mx-auto px-4">
-        {/* Üst — Başlık */}
-        <div className="text-center mb-10 md:mb-12">
-          <p className="text-[10px] uppercase tracking-[0.15em] 
-                        text-rd-warm-700 font-medium mb-2">
-            3 ADIMDA HAZIR
-          </p>
-          <h2 id="step-section-baslik" 
-              className="font-display text-3xl md:text-4xl 
-                         text-rd-neutral-900 font-medium">
-            Ürünü tanıt, AI senin için yapsın
-          </h2>
-        </div>
-        
-        {/* Üst — Animasyon */}
-        <StepAnimation />
-        
-        {/* Ayraç */}
-        <div className="my-12 border-t border-rd-neutral-200" />
-        
-        {/* Alt — Bilgi şeridi */}
-        <InfoStrip />
-      </div>
-    </section>
-  );
-}
-```
-
-app/page.tsx'te eski 3 Adım bölümü (mevcut Bölüm 2, statik kart 
-versiyonu) yerine bu StepSection import edilir. Eski statik 3-kart 
-bölümü kaldırılır.
-
-Commit: feat(landing): AS-05 StepSection wrapper (StepAnimation + 
-InfoStrip birleşik)
-
-────────────────────────────────────────────
-BÖLÜM 6 — AS-06: Mobile + a11y + reduced-motion + acceptance
-────────────────────────────────────────────
-
-1. **Mobile (375px):**
-   - StepAnimation: 3 adım dikey istif (flex-col), her adım tam genişlik. 
-     Ok connector dikey rotate-90.
-   - Replay butonu mobil de görünür (sağ üstte, küçük)
-   - Progress bar yatay tam genişlik
-   - InfoStrip: 4 sekme grid 2x2 (mobile 4 kolon yerine 2 kolon)
-   - Detay alanı tek kolon
-   - Görsel panel placeholder grid: 3x2 → 2x3 mobile
-
-2. **A11y:**
-   - StepAnimation region: role="region" aria-label "3 adım üretim 
-     animasyonu". Her adım canvas aria-hidden (decorative).
-   - Replay buton: aria-label "Animasyonu baştan oynat", Tab focus, 
-     focus-visible ring
-   - InfoStrip sekmeler: role="tab" aria-selected aria-controls="detay-X". 
-     Detay container role="tabpanel" id="detay-X".
-   - Detay aç/kapat butonu: aria-expanded
-   - Pazaryeri chip'leri: role="radio" aria-checked, parent 
-     role="radiogroup" aria-label "Pazaryeri seç"
-   - Klavye: Tab → Replay → ilk sekme (Arrow Left/Right ile diğer 
-     sekmeler) → Detaya bak → Pazaryeri chip'leri (Arrow ile gez)
-
-3. **Reduced motion (`@media (prefers-reduced-motion: reduce)`):**
-   - app/globals.css'e ekle:
-   ```css
-   @media (prefers-reduced-motion: reduce) {
-     /* Tüm step animasyonları durdur, son hâli statik göster */
-     .step-anim-1 .photo-anim,
-     .step-anim-1 .or-anim,
-     .step-anim-1 .text-anim { 
-       animation: none; 
-       opacity: 1; 
-       transform: none; 
-     }
-     /* ... diğer adım keyframes için aynı */
-   }
-   ```
-   - Otomatik döngü interval'ı: prefers-reduced-motion uygulanıyorsa 
-     useEffect'te detect et, döngü çalıştırma. Kullanıcı sadece replay 
-     butonu ile manuel ilerletsin (veya 3 adım hep aktif görünsün).
-
-4. **Lighthouse:**
-   - Animation overhead var, mobile Perf >90 zor olabilir. Hedef Perf >85, 
-     A11y >90, CLS <0.1
-   - Eğer Perf <85 ise: animasyonu intersection observer ile sadece 
-     viewport'ta görününce başlat, viewport'tan çıkınca durdur (bundle 
-     büyütmeden CPU tasarrufu)
-
-5. **Build + commit:**
-   - npm run build temiz
-   - TypeScript clean
-   - localhost:3000/ → 3 adım bölümü görünür, animasyon çalışıyor, 
-     bilgi şeridi 4 sekme tıklanır, detay açılıp kapanır
-   - 375px DevTools mobile: dikey istif, sekme 2x2 grid
-
-Commit: chore(landing): AS-06 mobile + a11y + reduced-motion polish
-
-────────────────────────────────────────────
-Test ve teslim
-────────────────────────────────────────────
-
-- 6 atomik commit (yukarıdaki gibi) VEYA tek commit:
-  feat(landing): AS-01~AS-06 anasayfa kısaltma + 3 adım animasyon
-
-- BACKLOG-REDESIGN.md'de AS-01~AS-06 [x] işaretle
-
-- Bittikten sonra rapor:
-  - Commit listesi
-  - Değişen / yeni / silinen dosyalar
-  - Eski Bölüm 3-4 nereye taşındı (archive klasörü mü, silindi mi)
-  - Sosyal caption kararı (gerçek üretim mi, "Yakında" placeholder mı)
-  - Lighthouse skorları (Aziz preview'da çalıştıracaksa "ben çalıştırmadım" 
-    de, ama kendi optimizasyonlarını listele)
-  - Açık riskler / Aziz preview'da test ederken nelere bakmalı
-```
-
----
+**Spec:** uploads/anasayfa-kisaltma-spec.md | **Mockup:** uploads/3-adim-animasyonlu-mockup-v2.html
+**Branch:** claude/redesign-modern-ui | **Done:** 28 Nis 2026 (7ba9071 → a409341, 7 commit)
+
+Anasayfa 9 → 7 bölüm. Eski Bölüm 3 ("4 içerik türü") + 4 ("Aynı üründen") `components/sections/_archive/`'a taşındı. Yeni "3 Adım Animasyonlu + InfoStrip" tek section'da gömülü.
+
+**Yeni dosyalar:** components/landing/{StepAnimation, InfoStrip, StepSection}.tsx + lib/data/exampleContent.ts. globals.css'e 7 keyframe + 14 animasyon class + reduced-motion block. Sosyal caption: lib/constants/pazaryeri.ts'teki gerçek AI üretim metinleri (uydurma değil — Code tespit etti).
+
+| ID | Başlık | Durum |
+|---|---|---|
+| AS-01 | Eski Bölüm 3-4 → _archive/ | ✅ |
+| AS-02 | StepAnimation (3 adım, 9sn döngü, replay, progress) | ✅ |
+| AS-03 | InfoStrip (4 sekme + detay accordion) | ✅ |
+| AS-04 | lib/data/exampleContent.ts tek kaynak | ✅ |
+| AS-05 | StepSection wrapper (StepAnimation + InfoStrip) | ✅ |
+| AS-06 | Mobile + a11y + reduced-motion (useReducedMotion hook) | ✅ |
+
+**Aziz preview kontrol noktaları (Faz 2 toplu acceptance'a katılır):**
+- 9sn döngü timing OK mı (A/B test ileride)
+- 375px step canvas yüksekliği (3 card desktop'ta farklı render olabilir)
+- "Detaya bak" default kapalı OK mı (açık olsun derse `useState(true)` tek satır)
+- Lighthouse mobile (Code çalıştırmadı; Aziz preview'da skor verir)
+
+## Faz Özeti — Roadmap
 
 | Faz | Bölüm | Sayfa | Ticket | Durum |
 |---|---|---|---|---|
 | 1 | Landing (4-10) | 1 | ~64 | ✅ Tamam (HR-14/15 kalan) |
 | **1.5** | **Anasayfa reroll (18)** | **1** | **6** | **✅ Tamam (792e182)** |
 | 2 | Üretim akışı (11, 13) | 4 | 42 | 🔄 Kod tamam, U-21 acceptance bekliyor (Aziz email+şifre ile preview'da test edebilir; Google OAuth Faz 4'e ertelendi) |
-| 3 | Hesap alanı (12, 14) | 10 | ~50 | Bekliyor — Aziz yeni spec eklendi (canlı önizleme + profil + faturalar UI), önceliği marka profili |
+| 3 | Hesap alanı (12, 14) | 10 | ~50 | Marka profili MP-01~07 birleşik prompt HAZIR (Bölüm 12 Grup 2). Sıra: Marka profili → Profil → Faturalar UI → Krediler → Üretimler |
 | 4 | Auth (15) | 3 | 9 | Bekliyor (+1: AU-09 Google OAuth preview URL fix — Supabase + Google Cloud Console whitelist) |
 | 5 | İçerik (16) | 4 | 8 | Bekliyor |
 | 6 | Yasal + hata (17) | 9 | 5 | Bekliyor |
