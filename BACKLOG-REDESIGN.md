@@ -512,7 +512,35 @@ Canlı sitedeki örnek çıktıları (text/görsel/video/sosyal) ve mevcut görs
 **Aziz açık karar (sonra cevaplanır, Cowork önerisi):**
 - TC kimlik no + Vergi no + Şirket adı alanları? Paraşüt geldiğinde e-Fatura için gerekli. **Önerim: bu pakete dahil etme**, Faturalar paketinde gündeme getir (Faturalar UI Aziz'e e-Fatura adres düzeltme linki gerektiriyor — orada tetiklenir).
 
-#### PR-01~PR-05 Birleşik Prompt (Profil)
+
+### Grup 2C — Faturalar `/hesap/faturalar` (Aziz 28 Nis spec, EX.21~EX.27)
+
+**Spec:** uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 5)
+**Mockup:** uploads/faturalar-mockup.jsx
+**Aziz kararı:** "Paraşüt henüz yok, sonra bırakalım ama sayfa hazır olsa iyi olur" (28 Nis). UI mock data ile çalışır, Paraşüt entegrasyonu geldiğinde gerçek data otomatik akar.
+**Mevcut sorun:** Tüm faturalar "Fatura oluşturuluyor" durumda, PDF indirme yok, durum sistemi yok, filtre yok.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| FT-01 | Sayfa scaffold + bilgi banner + yıllık toplam + filtre | ✅ Tamam | PR done | faa14be + e4fb33b + 4ec6bfe |
+| FT-02 | StatusBadge primitive (4 durum) | ✅ Tamam | FT-01 | faa14be — components/primitives/StatusBadge.tsx |
+| FT-03 | Liste + İndir + Gönder + boş state | ✅ Tamam | FT-02 | 4ec6bfe — FATURALAR_DEMO mock data, 5 entry |
+| FT-04 | Hatalı fatura "profili düzenle" link | ✅ Tamam | FT-03 | 4ec6bfe — bg-rd-danger-50 footer + /hesap/profil link |
+| FT-05 | Mobile + a11y polish | ✅ Tamam | FT-04 | 4ec6bfe — role=list/listitem, aria-label filter, dikey mobile |
+
+**Mock data kararı (FT-01'de Code karar verir):**
+- Mevcut faturalar tablosu Supabase'de: status field var mı kontrol et
+- Yoksa: tüm faturalar status='preparing' kabul (default), schema değişikliği bu paketin DIŞINDA
+- VE Aziz sayfa demo'sunda 4 durumu birden görmek isteyebilir → opsiyonel "demo mode" prop ile mock veriler gösterilebilir, Aziz preview'da görür, prod'da gerçek data akar
+- Code önerebilir: feature flag (FF.FATURALAR_DEMO) ile statik 5 örnek (mockup'taki gibi) göster, prod'da kapat
+
+**Açık ticket'lar (FT bittikten sonra Faz 7+ Paraşüt paketinde):**
+- Paraşüt API entegrasyonu (status field'ı backend güncelleme)
+- PDF blob URL generation (Paraşüt e-Arşiv)
+- "E-postama gönder" backend endpoint
+- profiles tablosuna TC kimlik + Vergi no + Şirket adı kolonu (PR'da ertelenmişti)
+
+#### FT-01~FT-05 Birleşik Prompt (Faturalar UI)
 
 ```
 ÖNEMLİ — KURAL OVERRIDE:
@@ -522,261 +550,258 @@ kuralları geçerli (font 400-800, gölge serbest, rounded-2xl serbest,
 Manrope+Inter, rd-* token, sadece emoji yasak — Lucide ikon).
 
 Branch: claude/redesign-modern-ui
-Görev: PR-01~PR-05 — /hesap/profil sayfası refactor + adres 
-yapılandırma + ∞ bug fix.
+Görev: FT-01~FT-05 — /hesap/faturalar sayfası refactor + 4 durum 
+sistemi + UI hazırlığı (Paraşüt henüz yok, mock data ile demo).
 
-Spec: uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 2)
-Mevcut sayfa: app/(auth)/hesap/profil/page.tsx — önce oku, mevcut 
-form alanlarını + state yönetimini anla.
+Spec: uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 5)
+Mockup: uploads/faturalar-mockup.jsx (referans için, kopyala/adapt et)
+Mevcut sayfa: app/(auth)/hesap/faturalar/page.tsx — önce oku.
 
-Reuse'lanacak primitive'ler (MP'de oluşturuldu):
-- components/primitives/ChipSelector.tsx (gerek olursa, profilde 
-  muhtemelen kullanılmaz)
-- components/primitives/Toast.tsx (save success/error için)
-- components/marka/StickySaveBar.tsx pattern (gerekirse 
-  components/primitives/StickySaveBar.tsx'e taşı reusability için, 
-  veya profil'in kendi versiyonu)
-- ProgressIndicator MP'de inline yapılmıştı, oradan kopyala VEYA 
-  components/primitives/ProgressIndicator.tsx'e taşı (gelecek 
-  paketler için reuse)
+Aziz kararı: "Paraşüt henüz yok, sonra bırakalım ama sayfa hazır 
+olsa iyi olur." UI hazır olur, Paraşüt geldiğinde gerçek status field 
+akar.
+
+Reuse: components/primitives/{Toast, StickySaveBar (gerekmiyor), 
+ChipSelector (gerekmiyor)}.tsx + ProgressIndicator (gerekmiyor).
 
 KAPSAM DIŞI:
-- TC kimlik / Vergi no / Şirket adı alanları (Aziz Faturalar paketinde 
-  karar verecek, Paraşüt geldiğinde e-Fatura için)
-- Backend Supabase tablo değişikliği (kolon ekle/çıkar) — frontend 
-  tarafı yeni alanları gönderir, backend kabul ederse OK; etmezse 
-  PR-04'te BACKLOG'a not düş
+- Paraşüt API entegrasyonu
+- PDF blob generation (sahte blob URL veya disabled)
+- Email send backend endpoint
+- profiles tablosu yeni kolonlar (TC kimlik vs)
 
 ────────────────────────────────────────────
-BÖLÜM 1 — PR-01: Form scaffold + Progress + rd-* swap
+BÖLÜM 1 — FT-01: Scaffold + bilgi banner + yıllık toplam + filtre
 ────────────────────────────────────────────
 
-1. Sayfa düzeyi rd-* token swap (tüm hex'leri rd-* tokenlara).
+1. Sayfa rd-* token swap.
 
 2. Sayfa başlığı:
    - Eyebrow: text-[10px] uppercase tracking-[0.15em] text-rd-primary-700 
-     "PROFİL"
+     "FATURALAR"
    - H1 (font-display): text-3xl md:text-4xl text-rd-neutral-900 
-     "Kişisel ve fatura bilgilerin"
-   - Subtitle: text-rd-neutral-600 — "Bu bilgileri tutmamızın sebebi: 
-     fatura kesimi, KVKK uyumu, ve sana ulaşma. Doldurmazsan da çoğu 
-     üretim çalışır."
+     "Fatura ve ödemelerin"
+   - Subtitle: text-rd-neutral-600 — "e-Arşiv faturaların burada 
+     görünür ve indirebilirsin."
 
-3. Layout tek kolon (max-w-3xl mx-auto px-4). Marka profilinden farklı 
-   olarak SAĞ PREVIEW PANELİ YOK — burası bilgi formu, görsel kanıt 
-   gerektirmiyor.
+3. Bilgi banner (header altında):
+   - bg-rd-primary-50 border border-rd-primary-200 rounded-lg px-4 py-3
+   - Lucide Info size-4 text-rd-primary-700
+   - Text: "Faturalar ödeme sonrası 1-3 iş günü içinde otomatik 
+     oluşturulur ve e-postanıza gönderilir. Hazır olanları aşağıdan 
+     indirebilirsin."
 
-4. ProgressIndicator (header altında):
-   - "X / N alan dolu" + ilerleme bar
-   - <50% slate-300, 50-99% bg-rd-primary-500, 100% bg-rd-success-700
-   - aria-valuenow
-   - "Doldurma" hesabı: text input non-empty = dolu (tüm alanlar text 
-     veya select)
-   - N = toplam zorunlu alan sayısı (PR-03'te netleşir)
+4. Yıllık toplam rozeti (banner ile filtre arası):
+   - bg-rd-neutral-50 border border-rd-neutral-200 rounded-lg p-4
+   - Sol: "2026 yılı toplam" eyebrow + büyük "6 fatura · ₺198" 
+     (font-display)
+   - Sağ: küçük "KDV dahil" + Lucide Receipt
+   - Yıl filtresi değişince bu rakam güncellenir (filtered list'e göre)
 
-5. Mevcut form alanlarını grupla:
-   - **Kişisel bilgiler:** ad, soyad, telefon, e-posta (read-only)
-   - **Adres bilgileri:** PR-03'te yapılandırılır
-   - **Hesap:** parola değiştir butonu (mevcut), şifre sıfırla, hesap 
-     sil (KVKK)
+5. Filtre satırı:
+   - flex gap-3
+   - Yıl: native `<select>` — options: ["2026", "2025", "Tümü"]
+   - Durum: native `<select>` — options: ["Tümü", "Hazır", "Hazırlanıyor", 
+     "Gönderildi", "Hata"]
+   - Sağda toplam fatura sayısı: "X fatura"
 
-6. Form state useState (mevcut tercihe uy). Dirty state useRef ile 
-   takip — PR-04 StickySaveBar için.
+6. Mock data karar (Aziz preview demo'su için):
+   - Mevcut Supabase faturalar tablosunda status field VAR mı kontrol 
+     et. Yoksa: feature flag FF.FATURALAR_DEMO (lib/feature-flags.ts'e 
+     ekle) — true ise mockup'taki 5 örnek statik render, false ise 
+     gerçek Supabase fetch + tüm status='preparing'
+   - Demo flag'i development + preview'da true, prod'da false
+   - Aziz prod'da gerçek faturaları görür (preparing), preview'da 
+     4 durumu test edebilir
 
-Commit: feat(profil): PR-01 form scaffold + ProgressIndicator + rd-* swap
-
-────────────────────────────────────────────
-BÖLÜM 2 — PR-02: ∞ kredi bug fix + KPI tıklanabilir
-────────────────────────────────────────────
-
-1. Üst rozet "Kalan kredi: ∞" bug:
-   - useCredits hook'u kontrol (lib/hooks/useCredits.ts)
-   - Default value muhtemelen frontend'de hardcoded "∞" — bu YANLIŞ
-   - Düzeltme: backend yüklenirken `data === undefined` veya 
-     `data === null` durumunda "—" placeholder göster (skeleton/dim 
-     state)
-   - Backend yüklenince gerçek number göster
-   - Eğer backend gerçekten ∞ döndürüyorsa (ki dönmemeli, kredi sayısaldır) 
-     → BACKLOG'a PR-02b ticket aç ("Backend: kredi default value bug")
-
-2. KPI rozetleri tıklanabilir:
-   - "Kalan kredi" rozeti → Link href="/kredi-yukle"
-   - Hover state: bg-rd-primary-50 → bg-rd-primary-100, cursor-pointer
-   - Lucide ChevronRight size-3 sağda (link olduğunu görsel olarak 
-     belli etmek için)
-
-3. Üst sağ "+ Kredi al" CTA tekrarı KALDIR:
-   - Mevcut header'da/üst kısımda büyük "+ Kredi al" butonu var
-   - KPI rozeti tıklanabilir hale gelince bu CTA gereksiz tekrar
-   - Sadece KPI rozeti kalır, "+ Kredi al" button silinir
-
-Commit: fix(profil): PR-02 ∞ kredi bug + KPI Link + üst CTA tekrarı 
-kaldırıldı
+Commit: feat(faturalar): FT-01 scaffold + banner + yıllık toplam + 
+filtre
 
 ────────────────────────────────────────────
-BÖLÜM 3 — PR-03: Adres yapılandırma (7 alan)
+BÖLÜM 2 — FT-02: StatusBadge primitive
 ────────────────────────────────────────────
 
-Mevcut: tek textarea adres alanı (e-Fatura için yapılandırılmamış).
+Yeni dosya: components/primitives/StatusBadge.tsx (reusable — 
+üretimler/krediler listelerinde de kullanılabilir).
 
-Yeni: 7 input field, 2x3 grid layout (lg:grid-cols-2 gap-4):
+```tsx
+type StatusType = 'preparing' | 'ready' | 'sent' | 'error';
 
+const STATUS_CONFIG = {
+  preparing: { 
+    label: 'Hazırlanıyor', 
+    icon: Clock, 
+    bg: 'bg-rd-warning-50', 
+    text: 'text-rd-warning-700', 
+    border: 'border-rd-warning-200' 
+  },
+  ready: { 
+    label: 'Hazır', 
+    icon: Check, 
+    bg: 'bg-rd-success-50', 
+    text: 'text-rd-success-700', 
+    border: 'border-rd-success-200' 
+  },
+  sent: { 
+    label: 'Gönderildi', 
+    icon: Mail, 
+    bg: 'bg-rd-primary-50', 
+    text: 'text-rd-primary-700', 
+    border: 'border-rd-primary-200' 
+  },
+  error: { 
+    label: 'Hata', 
+    icon: AlertCircle, 
+    bg: 'bg-rd-danger-50', 
+    text: 'text-rd-danger-700', 
+    border: 'border-rd-danger-200' 
+  },
+};
+
+export function StatusBadge({ status, label }: Props) {
+  const config = STATUS_CONFIG[status];
+  const Icon = config.icon;
+  return (
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 
+                       rounded-md text-xs font-medium border 
+                       ${config.bg} ${config.text} ${config.border}`}
+          aria-label={`Durum: ${label || config.label}`}>
+      <Icon size={12} strokeWidth={2} aria-hidden="true" />
+      {label || config.label}
+    </span>
+  );
+}
 ```
-[Mahalle (full width)         ]
-[Cadde / Sokak (full width)   ]
-[Bina No]   [Daire]
-[Posta kodu]                   [İlçe ▾]
-[İl ▾]
+
+rd-warning palette gerekirse globals.css @theme'e ekle (yoksa). 
+Mockup'ta amber (#FEF3C7 / #92400E) kullanılmış — bunu rd-warning-50 
+/ rd-warning-700 olarak ekle (rd-warm-* ile karıştırma).
+
+Commit: feat(primitives): FT-02 StatusBadge primitive (4 durum)
+
+────────────────────────────────────────────
+BÖLÜM 3 — FT-03: Liste + İndir + Gönder + boş state
+────────────────────────────────────────────
+
+1. Her fatura satırı (kart layout):
+   - rounded-xl border border-rd-neutral-200 p-5
+   - Üst satır: paket adı (font-medium) + ₺ (font-display, sağa hizalı)
+   - Orta satır: tarih (text-sm text-rd-neutral-600) + StatusBadge 
+     (sağa hizalı)
+   - Alt satır (durum bağımlı):
+     - **ready/sent:** "İndir" buton (bg-rd-neutral-900 text-white + 
+       Lucide Download) + "E-postama gönder" (ghost border + Lucide 
+       Mail)
+     - **preparing:** italic text-xs text-rd-neutral-500 — "Tahmini 
+       hazır: 02 Nisan"
+     - **error:** FT-04'te detayı
+
+2. Liste container:
+   - space-y-3 (kartlar arası boşluk)
+   - role="list"
+   - Filtre değişince filtered listeyi render et
+
+3. İndir buton tıklayınca:
+   - Mevcut PDF blob URL varsa: download attribute ile direkt indir
+   - YOKSA (Paraşüt yok): toast (rd-warning-700) — "Fatura PDF'i 
+     Paraşüt entegrasyonu ile gelecek. Şimdilik destek@yzliste.com'a 
+     yazabilirsin."
+   - VEYA disabled buton + tooltip "Yakında"
+
+4. Gönder buton tıklayınca:
+   - Backend endpoint yok → toast — "E-posta gönderme yakında, 
+     destek@yzliste.com'a yazabilirsin"
+   - VEYA disabled buton
+
+5. Boş state:
+   - Lucide Receipt size-12 text-rd-neutral-300
+   - H3: "Henüz faturanız yok"
+   - p: "İlk paket aldığınızda burada görünecek."
+   - Primary CTA: Link href="/fiyatlar" — "Paketleri görüntüle"
+
+Commit: feat(faturalar): FT-03 liste + indir/gönder + boş state
+
+────────────────────────────────────────────
+BÖLÜM 4 — FT-04: Hatalı fatura "profili düzenle" link
+────────────────────────────────────────────
+
+error status'lü fatura satırının altında ek info bloğu:
+
+```jsx
+<div className="mt-3 pt-3 border-t border-rd-danger-200 
+                bg-rd-danger-50 -mx-5 -mb-5 px-5 py-3 rounded-b-xl">
+  <p className="text-sm text-rd-danger-700 mb-2">
+    <AlertCircle size-4 inline /> Bu faturada bilgi sorunu var: 
+    {invoice.errorReason || 'detay yok'}
+  </p>
+  <Link href="/hesap/profil" 
+        className="text-sm font-medium text-rd-primary-700 
+                   hover:text-rd-primary-800 inline-flex items-center 
+                   gap-1">
+    Profili düzenle <ChevronRight size-3 />
+  </Link>
+</div>
 ```
 
-1. Form alanları:
-   - **Mahalle** (text input, lg:col-span-2): max-length 100
-   - **Cadde / Sokak** (text input, lg:col-span-2): max-length 100
-   - **Bina No** (text input, w-32): max-length 10
-   - **Daire** (text input, w-32, opsiyonel): max-length 10
-   - **Posta kodu** (text input, w-32): pattern 5 hane numeric, 
-     validation
-   - **İlçe** (select dropdown): il seçilince filtrelenir (PR-04)
-   - **İl** (select dropdown): 81 Türkiye ili (PR-04)
+errorReason field'ı backend'de yoksa "Bilgi eksik" generic mesaj.
 
-2. Form group başlığı:
-   - text-sm uppercase tracking-wide text-rd-neutral-500 mb-3 
-     "ADRES BİLGİLERİ"
-   - Açıklama text-xs text-rd-neutral-600 — "Faturalandırma için 
-     gerekli. KVKK uyumlu olarak saklanır."
-
-3. Backward compatibility:
-   - Mevcut user.address tek satır string olabilir (eski profil 
-     formatından)
-   - Yüklenirken parse etmeye çalış (basit split veya regex)
-   - Parse başarısızsa boş bırak (kullanıcı yeniden doldurur)
-   - Save sonrası backend'e structured data gönder (yeni schema)
-   - Schema değişimi: mevcut Supabase profiles tablosunda address 
-     kolonu varsa text → json olarak değiştirme. Yeni alanlar (il, 
-     ilçe, mahalle, vs) ayrı kolonlar olabilir VEYA address json 
-     olarak saklanır. Code karar versin, BACKLOG'a not düş.
-
-4. Validation:
-   - Posta kodu: /^\d{5}$/ regex (5 hane numeric)
-   - Diğer alanlar: trim(), min 1 karakter (Mahalle hariç tümü 
-     opsiyonel olabilir, Aziz karar)
-   - Hata: text-rd-danger-700 + aria-invalid + aria-describedby
-
-Commit: feat(profil): PR-03 adres yapılandırma (7 alan, posta kodu 
-validation)
+Commit: feat(faturalar): FT-04 hatalı fatura için profil düzenle linki
 
 ────────────────────────────────────────────
-BÖLÜM 4 — PR-04: İl/İlçe veritabanı + Save flow
-────────────────────────────────────────────
-
-1. İl/İlçe data:
-   - NPM araştır: `il-ilce-tr`, `turkiye-iller`, `tr-cities`. Bundle 
-     <50KB ideal.
-   - Bulamazsan statik: lib/data/turkiye-il-ilce.ts (81 il, ~970 ilçe). 
-     JSON formatı:
-   ```ts
-   export const ILLER = [
-     { id: '01', ad: 'Adana' },
-     { id: '34', ad: 'İstanbul' },
-     // ...
-   ];
-   export const ILCELER: Record<string, { id: string, ad: string }[]> = {
-     '01': [{ id: '0101', ad: 'Aladağ' }, ...],
-     '34': [{ id: '3401', ad: 'Adalar' }, ...],
-     // ...
-   };
-   ```
-   - Internet'te freely available bir TR il-ilçe JSON var (örn. 
-     `tarekraafat/turkey-postal-codes` GitHub) — kopyala adapt et.
-
-2. İl seçimi → İlçe dropdown filtreler:
-   - useState: selectedIl
-   - İlçe dropdown options: ILCELER[selectedIl] || []
-   - İl değişince ilçe reset
-
-3. Native select VS custom dropdown:
-   - Mobile için native `<select>` daha iyi UX (native picker)
-   - Desktop için custom dropdown (combobox) opsiyonel — şimdilik 
-     native, gelecekte search'lü combobox eklenebilir
-   - Karar: native `<select>` her platformda (basit, accessible)
-
-4. StickySaveBar + Toast (MP'den reuse):
-   - Mevcut components/marka/StickySaveBar.tsx VEYA primitive'e 
-     taşındıysa components/primitives/StickySaveBar.tsx
-   - Profil için label: "Profilini kaydet"
-   - Dirty state takip
-   - beforeunload uyarısı
-
-5. Save flow (Supabase .update() pattern — MP'de yapılan):
-   - Supabase profiles tablosuna update
-   - Loading: butonda spinner
-   - Success: Toast (rd-success-700, "Profilin kaydedildi", 3sn)
-   - Error: Toast (rd-danger-700, hata mesajı, 5sn)
-   - Dirty reset
-
-Commit: feat(profil): PR-04 il/ilçe veritabanı + StickySaveBar + Save 
-(Supabase .update)
-
-────────────────────────────────────────────
-BÖLÜM 5 — PR-05: Mobile + a11y polish
+BÖLÜM 5 — FT-05: Mobile + a11y polish
 ────────────────────────────────────────────
 
 1. **Mobile (375px):**
-   - max-w-3xl mobile'da full width (px-4)
-   - Adres grid 2x3 → tek kolon
-   - Bina No / Daire side-by-side mobile yarım yarım (grid-cols-2)
-   - Form gruplar opsiyonel collapsible (Kişisel / Adres / Hesap) — 
-     uzun forma karşı, tıklanabilir başlıklar. **Bu opsiyonel**, eğer 
-     sayfa zaten mobile'da uzun değilse atla.
-   - StickySaveBar mobile dikey
+   - Filtre satırı dikey: yıl + durum üst üste, full width selectler
+   - Yıllık toplam rozeti: tek satır responsive, ikon mobile gizlenebilir
+   - Fatura satır kartı: paket adı + ₺ aynı satır (justify-between), 
+     tarih + StatusBadge alt satır, butonlar full width dikey
+   - Boş state center, max-w-sm
 
 2. **A11y:**
-   - Form ARIA: her label htmlFor + her input id
-   - Posta kodu invalid: aria-invalid + aria-describedby="postakodu-error"
-   - İl dropdown: aria-label "İl seç"
-   - İlçe dropdown: aria-label "İlçe seç" + disabled (aria-disabled) 
-     il seçilmediyse
-   - Tab tour: ad → soyad → telefon → mahalle → sokak → bina → daire → 
-     posta → ilçe → il → save bar
-   - StickySaveBar dirty değilse aria-disabled
+   - main aria-labelledby h1
+   - Filtre selectler aria-label
+   - Liste role="list", her satır role="listitem"
+   - StatusBadge aria-label dahil (FT-02'de)
+   - İndir/Gönder buton aria-label net (örn "Faturayı indir: [paket] - 
+     [tarih]")
+   - Boş state CTA Tab erişilebilir
 
-3. **Edge cases:**
-   - Backend yükleniyor: skeleton state (rd-neutral-100 placeholder)
-   - useCredits null: "—" göster
-   - Adres parse fail: boş bırak, console warn (dev only)
-   - Save fail (network): Toast retry CTA
+3. **Edge case'ler:**
+   - Faturalar fetching: skeleton state (3 satırlık placeholder)
+   - Filtre sonucu boş: "Filtrelere uyan fatura yok" + filtre temizle 
+     CTA
+   - Fetch error: "Faturalar yüklenemedi" + retry buton
 
-Commit: chore(profil): PR-05 mobile + a11y polish
+Commit: chore(faturalar): FT-05 mobile + a11y polish
 
 ────────────────────────────────────────────
 Test
 ────────────────────────────────────────────
 
 - npm run build temiz
-- Localde /hesap/profil:
-  - Eyebrow + Manrope H1 + ProgressIndicator
-  - "∞" yok, gerçek kredi sayısı
-  - KPI tıklanabilir (link to /kredi-yukle)
-  - Üst "+ Kredi al" CTA yok
-  - Adres 7 alan, posta kodu 5 hane validate
-  - İl seçince ilçe dropdown filtrelenir
-  - Save flow: Toast başarı + dirty reset
+- Localde /hesap/faturalar (FF.FATURALAR_DEMO=true ile):
+  - Eyebrow + Manrope H1 + bilgi banner görünür
+  - Yıllık toplam rozeti gerçek toplamla
+  - Filtre çalışır (yıl + durum)
+  - 4 status renkli badge'ler doğru render
+  - ready/sent satırlarında İndir + Gönder butonları
+  - preparing satırında "Tahmini hazır" italic
+  - error satırında "Profili düzenle" linki
+  - Boş state CTA → /fiyatlar
   - 375px mobile sıkıntısız
-  - Klavye Tab tüm alanlar
 
-Commit özeti (5 atomik commit) VEYA tek:
-feat(profil): PR-01~PR-05 /hesap/profil refactor + adres yapılandırma 
-+ ∞ bug fix
+Commit özeti (5 atomik) VEYA tek:
+feat(faturalar): FT-01~FT-05 /hesap/faturalar refactor + 4 durum 
+sistemi + UI hazırlığı (mock data, Paraşüt entegrasyonu sonra)
 
-BACKLOG-REDESIGN.md'de PR-01~PR-05 [x] işaretle. Açık ticket'lar 
-varsa (PR-02b backend kredi bug, schema değişikliği) BACKLOG'a not düş.
+BACKLOG-REDESIGN.md'de FT-01~FT-05 [x] işaretle.
 
 Bittikten sonra rapor:
 - Commit listesi
-- Yeni dosyalar (lib/data/turkiye-il-ilce.ts mı, NPM mı?)
-- ∞ bug kaynağı (frontend mi backend mi)
-- Schema kararı (Supabase profiles tablosunda yeni kolon mu, 
-  address json mu)
+- Yeni dosyalar (StatusBadge primitive, feature flag varsa)
+- Mock data kararı (FF flag mi, statik 5 örnek mi, gerçek Supabase mi)
+- rd-warning palette eklendi mi globals.css @theme'e
 - Açık riskler / Aziz preview test
 ```
 
