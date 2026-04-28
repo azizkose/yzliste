@@ -1620,7 +1620,25 @@ Bittikten sonra:
 | HD-02 | `/kredi-yukle` refactor | ✅ Tamam | FY done | Commit `HD-commit` — rd-* swap, Manrope eyebrow, PackageCard FY pattern reuse, ?paket= pre-select, radiogroup ARIA, Suspense wrapper, Trust strip. |
 | HD-03 | Mobile + a11y polish | ✅ Tamam | HD-02 | Commit `HD-commit` — 375px 1-col grid, role="radiogroup"/radio, role="switch", aria-checked, aria-modal, aria-busy tüm butonlarda. |
 
-#### HD-01~HD-03 Birleşik Prompt (Hesap detay sayfaları)
+**Faz 3 ✅ TAMAM (28 Nis akşam).** 8/8 paket done: MP+PR+FT+HS+KR+UR+FY+HD. KVKK endpoint'leri /api/hesap/export + /api/hesap-sil mevcut çıktı. HD-01b backend ticket: bildirim_tercihleri persist (UI hazır, simulate). iyzico popup CSS global korundu.
+
+---
+
+## 15 — Auth Sayfaları (Faz 4)
+
+**Mevcut sayfalar:** app/giris/page.tsx, app/kayit/page.tsx, app/@modal/(.)giris/page.tsx, app/@modal/(.)kayit/page.tsx + components/auth/AuthForm.tsx (zaten mevcut). Mevcut auth flow CHALIŞIYOR (Aziz email+şifre ile preview test edebildi). Sadece UI redesign + Google OAuth preview URL fix.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| AU-01 | `/giris` komple (form + Google OAuth + hata + Turnstile) | ✅ Tamam | Landing done | Commit `AU-commit` — rd-* swap, 2-kolon layout (sağ: değer önermesi rd-primary kart), Eye toggle, "Beni hatırla" + "Şifremi unuttum", AlertCircle inline hata, Turnstile korundu. |
+| AU-02 | `/kayit` komple (form + e-posta doğrulama UI + KVKK) | ✅ Tamam | AU-01 | Commit `AU-commit` — AuthForm içinde kayitBasarili state, MailCheck success UI, 60s resend cooldown (supabase.auth.resend), KVKK /kvkk-aydinlatma + /kosullar link. |
+| AU-03 | `/sifre-sifirla` komple (2 step) | ✅ Tamam | AU-01 | Commit `AU-commit` — Step1 (email form + KeyRound + MailCheck success), Step2 (code exchange + yeni şifre + Eye toggle). Suspense wrapper. |
+| AU-04 | Modal versiyonları (.)giris/(.)kayit/(.)kredi-yukle | ✅ Tamam | AU-01, AU-02 | Commit `AU-commit` — Modal.tsx rd-* swap + X Lucide ikon + role=dialog aria-modal. (.)giris korundu, (.)kayit rd-* güncellendi, (.)kredi-yukle rd-* + "En popüler" badge. |
+| AU-05 | Mobile + a11y + Google OAuth preview URL fix | ✅ Tamam | AU-04 | Commit `AU-commit` — min-h-[44px] tüm inputlar, aria-hidden ikonlar, label htmlFor + autocomplete, aria-busy submit, docs/auth-config.md oluşturuldu (Aziz Supabase config talimatı). |
+
+**Faz 4 toplam:** 5 birleşik ticket (eski AU-01~09 + H-41 absorb).
+
+#### AU-01~AU-05 Birleşik Prompt (Auth sayfaları)
 
 ```
 ÖNEMLİ — KURAL OVERRIDE:
@@ -1629,126 +1647,248 @@ kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch
 kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
 
 Branch: claude/redesign-modern-ui
-Görev: HD-01~HD-03 — /hesap/ayarlar + /kredi-yukle refactor (Faz 3 
-son paketi).
+Görev: AU-01~AU-05 — /giris + /kayit + /sifre-sifirla + Modal 
+versiyonları + Google OAuth preview URL fix (Faz 4 Auth).
 
 Mevcut sayfalar:
-- app/(auth)/hesap/ayarlar/page.tsx
-- app/kredi-yukle/page.tsx (veya benzeri)
+- app/giris/page.tsx
+- app/kayit/page.tsx
+- app/sifre-sifirla/page.tsx (varsa, yoksa yeni)
+- app/@modal/(.)giris/page.tsx (varsa)
+- app/@modal/(.)kayit/page.tsx (varsa)
+- components/auth/AuthForm.tsx (paylaşılan form — önce oku)
 
-Reuse: components/primitives/{Toast, StickySaveBar}.tsx + FY-01'de 
-yapılan paket kart yapısı + components/landing/TrustStrip primitive.
+Mevcut auth flow ÇALIŞIYOR (Aziz email+şifre ile preview test etti). 
+Sadece UI redesign + Google OAuth Supabase config talimatı.
+
+Reuse: components/primitives/{Toast}.tsx (form success/error için).
 
 KAPSAM DIŞI:
-- Modal versiyonları (.)kredi-yukle / (.)giris / (.)kayit — Faz 4'te
-- iyzico backend entegrasyonu (mevcut çalışan flow korunur)
-- Backend KVKK veri indir / hesap silme endpoint'leri (varsa kullan, 
-  yoksa mock + ayrı backend ticket)
+- Backend Supabase auth değişikliği (mevcut çalışan flow korunur)
+- Cloudflare Turnstile yapılandırma (varsa korunur)
+- Google Cloud Console / Supabase config işlemleri (Aziz manuel 
+  yapacak, Code sadece talimat verir)
 
 ────────────────────────────────────────────
-BÖLÜM 1 — HD-01: /hesap/ayarlar refactor
-────────────────────────────────────────────
-
-1. Sayfa rd-* swap.
-
-2. Sayfa başlığı:
-   - Eyebrow text-rd-primary-700 "AYARLAR"
-   - H1 (font-display): "Hesap ayarların"
-   - Subtitle: "Hesap, parola, bildirim tercihleri ve KVKK haklarının."
-
-3. Layout: tek kolon max-w-2xl. Bölümler kart layout.
-
-4. **Hesap bölümü:**
-   - "HESAP" eyebrow
-   - E-posta read-only input (background rd-neutral-50)
-   - "Parola değiştir" buton → /sifre-sifirla veya inline modal 
-     (Faz 4'te modal yapılır, şimdi link yeter)
-   - Mevcut auth durumu (Google ile giriş yapıldıysa "Google ile bağlı" 
-     rozet)
-
-5. **Bildirim tercihleri bölümü:**
-   - "BİLDİRİMLER" eyebrow
-   - Toggle switch'ler (basit checkbox veya toggle):
-     - Pazarlama e-postaları (yeni özellik, ipuçları)
-     - Üretim tamamlandı bildirimi
-     - Fatura hazır bildirimi
-   - Backend yoksa: state local, save Supabase profiles tablosuna 
-     (yeni JSON field veya ayrı kolonlar). Yoksa HD-01b ticket aç.
-
-6. **KVKK / tehlike zone:**
-   - "KVKK HAKLARIN" eyebrow
-   - "Verilerimi indir" buton (Lucide Download): JSON export. Backend 
-     /api/kvkk/data-export var mı kontrol. Yoksa toast "Yakında, 
-     destek@yzliste.com'dan iste" + ayrı backend ticket
-   - "Hesabımı sil" buton (Lucide Trash2): tehlike zone içinde, 
-     border-rd-danger-300 + bg-rd-danger-50 + onay modalı 
-     (typed confirm "SİL" yazsın). Backend /api/hesap/sil var mı.
-   - Açıklama: text-xs text-rd-neutral-600 — "Hesap silme geri 
-     alınamaz. Tüm üretimlerin ve verilerin silinir."
-
-7. StickySaveBar (bildirim tercihleri değişince): MP/PR pattern reuse.
-
-Commit: feat(ayarlar): HD-01 /hesap/ayarlar refactor
-
-────────────────────────────────────────────
-BÖLÜM 2 — HD-02: /kredi-yukle refactor
+BÖLÜM 1 — AU-01: /giris komple
 ────────────────────────────────────────────
 
 1. Sayfa rd-* swap.
 
-2. Sayfa başlığı:
-   - Eyebrow text-rd-primary-700 "KREDİ YÜKLE"
-   - H1 (font-display): "Paket seç"
-   - Subtitle: "Krediler süresiz, abonelik yok."
+2. Layout: 2 kolon (lg:grid-cols-2 gap-12) max-w-6xl mx-auto:
+   - Sol kolon: form (max-w-md)
+   - Sağ kolon: değer önermesi (Lucide Sparkles ikon + 3-4 bullet 
+     "yzliste ile ne yapabilirsin"). Mobile gizlenir (hidden lg:block).
 
-3. 3 paket kart (FY-01 PackageCard pattern reuse):
-   - Aynı yapı /fiyatlar sayfasındaki gibi: Başlangıç/Popüler/Büyük
-   - "EN POPÜLER" rozet 129 TL paketinde (warm-earth)
-   - URL `?paket=populer` (veya baslangic/buyuk) query param: o paket 
-     pre-select edilir (border highlight + scroll into view)
-   - Tıklayınca seçim → "Devam et" buton aktif olur
+3. Sol kolon başlık:
+   - Eyebrow text-rd-primary-700 "GİRİŞ"
+   - H1 (font-display): text-3xl md:text-4xl text-rd-neutral-900 
+     "Tekrar hoş geldin"
+   - Subtitle: text-rd-neutral-600 — "Hesabına giriş yap, üretmeye 
+     devam et."
 
-4. iyzico checkout flow:
-   - Mevcut backend flow korunur (POST /api/odeme veya benzeri)
-   - "Devam et" tıklayınca: loading → iyzico iframe veya redirect
-   - Mevcut çalışan flow ne ise dokunulmaz, sadece UI rd-* swap
+4. Form:
+   - **E-posta input:** type="email", autocomplete="email", aria-label, 
+     Lucide Mail size-4 sol başında, focus:ring-rd-primary-500
+   - **Şifre input:** type="password" (toggleable), 
+     autocomplete="current-password", Lucide Lock + Eye/EyeOff toggle 
+     buton sağında
+   - **"Beni hatırla" checkbox:** flex items-center, Lucide Square/
+     CheckSquare ikon
+   - **"Şifremi unuttum" link:** text-sm text-rd-primary-700 hover, 
+     sağa hizalı (justify-between with checkbox)
+   - **Submit buton:** bg-rd-primary-700 text-white py-3 rounded-lg 
+     "Giriş yap"
 
-5. Trust strip alt bantta (FY-04'te yapılan TrustStrip reuse):
-   - iyzico + KVKK + e-Arşiv
+5. **Google OAuth bölümü:**
+   - Form'un altında "veya" ayracı (line + text)
+   - Google buton: outline border-rd-neutral-300 hover:bg-rd-neutral-50 
+     + Google logo (mevcut SVG veya Lucide alternatif) + "Google ile 
+     devam et"
+   - Tıklayınca AuthForm.tsx'teki signInWithOAuth flow korunur
 
-6. Yeni kullanıcı için "İlk paketin" rozetleri (opsiyonel):
-   - Davet bonusu varsa: "Hoş geldin: +5 kredi" badge
-   - Bunu /api/referral/stats veya benzeri endpoint'ten çek
+6. **Inline error:**
+   - Form altında: bg-rd-danger-50 border border-rd-danger-200 
+     text-rd-danger-700 rounded-lg p-3
+   - Lucide AlertCircle + hata mesajı (Türkçe)
+   - aria-live="polite"
 
-Commit: feat(kredi-yukle): HD-02 /kredi-yukle refactor
+7. **Turnstile:** mevcut entegrasyon korunur (görünür widget veya 
+   invisible challenge — kod tarafında var, dokunma).
+
+8. Sayfa sonu: "Hesabın yok mu? Kayıt ol →" link to /kayit
+
+Commit: feat(auth): AU-01 /giris komple refactor
 
 ────────────────────────────────────────────
-BÖLÜM 3 — HD-03: Mobile + a11y polish
+BÖLÜM 2 — AU-02: /kayit komple
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap. AU-01 ile aynı 2 kolon layout.
+
+2. Sol kolon başlık:
+   - Eyebrow "KAYIT"
+   - H1: "Hesabını oluştur"
+   - Subtitle: "Ücretsiz başla, kullandıkça öde."
+
+3. Form:
+   - E-posta input
+   - Şifre input + autocomplete="new-password"
+   - Şifre tekrar input + eşleşme kontrol (inline hata "Şifreler 
+     uyuşmuyor" eşleşmiyorsa)
+   - **KVKK + koşullar checkbox:** "[KVKK Aydınlatma Metni](/kvkk-aydinlatma) 
+     ve [Kullanım Koşulları](/kosullar)nı okudum, onaylıyorum"
+   - Submit buton: "Hesap oluştur"
+
+4. **E-posta doğrulama UI** (submit sonrası — aynı sayfa veya 
+   /kayit/dogrula):
+   - Form gizlenir, success state render olur
+   - Lucide MailCheck size-12 text-rd-success-700
+   - H2 "E-postanı kontrol et"
+   - p: "[email] adresine doğrulama linki gönderdik. Linkin gelmemesi 
+     halinde spam klasörünü kontrol et."
+   - "Yanlış e-posta? Düzelt" link → form'a geri dön
+   - "Tekrar gönder" buton (60sn cooldown timer)
+
+5. Google OAuth bölümü AU-01 ile aynı.
+
+6. Sayfa sonu: "Zaten hesabın var mı? Giriş yap →" link to /giris
+
+Commit: feat(auth): AU-02 /kayit komple refactor + e-posta 
+doğrulama UI
+
+────────────────────────────────────────────
+BÖLÜM 3 — AU-03: /sifre-sifirla komple
+────────────────────────────────────────────
+
+1. Sayfa rd-* swap. Layout tek kolon max-w-md mx-auto.
+
+2. Başlık:
+   - Eyebrow "ŞİFRE SIFIRLA"
+   - H1: "Şifreni sıfırla"
+   - Lucide KeyRound size-8 text-rd-primary-700 (başlık üstünde)
+
+3. **Step 1: E-posta input + sıfırlama linki gönder:**
+   - E-posta input + autocomplete
+   - Submit "Sıfırlama linki gönder"
+   - Mevcut Supabase resetPasswordForEmail flow korunur
+
+4. **Step 1 sonrası success state:**
+   - Lucide MailCheck + "Sıfırlama linki gönderildi"
+   - p: "[email] adresine link geldi, üzerine tıkla."
+
+5. **Step 2 (link tıklanınca, ayrı sayfa veya query param ile aynı):**
+   - Yeni şifre input + autocomplete="new-password"
+   - Şifre tekrar input
+   - Submit "Şifreyi güncelle"
+   - Mevcut Supabase updateUser flow korunur
+
+6. Sayfa sonu: "Giriş yap →" link to /giris
+
+Commit: feat(auth): AU-03 /sifre-sifirla 2 step
+
+────────────────────────────────────────────
+BÖLÜM 4 — AU-04: Modal versiyonları
+────────────────────────────────────────────
+
+Next.js parallel routes intercepting. Mevcut yapı: app/@modal/
+(.)giris, (.)kayit. Eğer (.)kredi-yukle yoksa ekle.
+
+1. Modal layout (components/auth/AuthModal.tsx — yeni veya mevcut):
+   - Backdrop: fixed inset-0 bg-black/50 backdrop-blur-sm
+   - Modal kart: max-w-md mx-auto bg-white rounded-2xl p-6 md:p-8 
+     shadow-2xl
+   - Close buton: sağ üst Lucide X size-5
+   - Escape klavye + backdrop click → modal kapanır (router.back())
+   - aria-modal="true" + aria-labelledby
+
+2. İçerik: AU-01/AU-02 form'larını reuse (AuthForm.tsx zaten 
+   ortak). Modal layout sadece wrapper.
+
+3. URL behavior:
+   - /giris veya /kayit normal navigasyonla full sayfa
+   - In-page tıklama (örn header "Giriş" buton) → intercepting route 
+     ile modal açılır
+   - Modal'dan close → router.back() URL'i geri döner
+
+4. (.)kredi-yukle modal:
+   - app/@modal/(.)kredi-yukle/page.tsx (yoksa oluştur)
+   - HD-02'deki /kredi-yukle içeriğini reuse, modal wrapper içinde
+
+Commit: feat(auth): AU-04 modal versiyonları (giris/kayit/kredi-yukle)
+
+────────────────────────────────────────────
+BÖLÜM 5 — AU-05: Mobile + a11y + Google OAuth preview fix
 ────────────────────────────────────────────
 
 1. **Mobile (375px):**
-   - Ayarlar bölümleri tek kolon, kart padding p-4
-   - "Hesabımı sil" tehlike zone net (kırmızı border)
-   - Onay modalı mobile full-screen
-   - Kredi-yükle 3 paket kart dikey istif (FY-05 pattern)
-   - Trust strip mobile flex-wrap
+   - Layout 2 kolon → tek kolon (sağ kolon hidden lg:block, mobile'da 
+     gösterilmez)
+   - Form input min-h 44px (tap-friendly)
+   - Submit buton full width
+   - Modal mobile: full screen (max-w-full + h-full)
 
 2. **A11y:**
-   - Form ARIA: label htmlFor + input id
-   - Toggle switch'ler role="switch" + aria-checked
-   - Tehlike zone aria-label "Tehlikeli işlemler"
-   - Hesap silme onay typed confirm (input aria-required + 
-     pattern="SİL")
-   - Kredi-yükle paket kartları role="radio" + aria-checked
-   - Trust strip aria-label "Güvenlik ve uyum"
+   - Form: her input id + label htmlFor
+   - autocomplete attribute: email / current-password / new-password
+   - Inline error aria-live="polite" + aria-describedby
+   - Şifre göz toggle aria-label "Şifreyi göster/gizle"
+   - Modal: aria-modal + focus trap (focus close butona) + Escape 
+     kapatır
+   - Klavye Tab full tour
+   - Lucide ikonlar aria-hidden
 
-3. **Edge case'ler:**
-   - Bildirim save fail: error toast + dirty state korunur
-   - Hesap sil onay yanlış: confirm disabled
-   - Kredi yükle paket seçilmeden devam: disabled buton + tooltip
-   - iyzico checkout fail: "Ödeme başlatılamadı, tekrar dene" toast
+3. **Google OAuth preview URL fix (Aziz 28 Nis bulgusu):**
+   
+   **Kod tarafı:** AuthForm.tsx'teki `signInWithOAuth` çağrısını 
+   review et:
+   ```ts
+   await supabase.auth.signInWithOAuth({
+     provider: 'google',
+     options: {
+       redirectTo: `${window.location.origin}/auth/callback`,
+     },
+   });
+   ```
+   - `window.location.origin` doğru: preview URL'inde preview origin, 
+     prod'da yzliste.com
+   - Eğer kodda hardcoded URL varsa → düzelt
+   - Yoksa kod tarafı temiz
 
-Commit: chore(hesap-detay): HD-03 mobile + a11y polish
+   **Config tarafı (Aziz manuel yapacak — Code sadece README'ye 
+   talimat ekler):**
+   - README.md veya docs/auth-config.md'ye ekle:
+     ```
+     ## Google OAuth Preview URL Configuration
+     
+     Preview deployment'larda Google ile girişin canlı siteye 
+     yönlendirme bug'ı için:
+     
+     1. **Supabase Dashboard → Authentication → URL Configuration:**
+        - Site URL: https://yzliste.com
+        - Redirect URLs (her birini ayrı satıra ekle):
+          - https://yzliste.com/**
+          - https://*.vercel.app/**
+          - http://localhost:3000/**
+     
+     2. **Google Cloud Console:** Authorized redirect URIs zaten 
+        Supabase callback URL ile çalışıyor, ek değişiklik gereksiz:
+        - https://<supabase-project>.supabase.co/auth/v1/callback
+     
+     3. **Test:** Preview deployment URL'inde "Google ile devam et" 
+        → Google sayfası → preview URL'e geri dönmeli (canlı yzliste 
+        DEĞİL).
+     ```
+
+4. **Edge case'ler:**
+   - Yanlış şifre: error toast + form korunur (input clear yok)
+   - Network fail: "Bağlantı hatası, tekrar dene" toast
+   - Modal escape: dirty form varsa onay sor
+   - Şifre sıfırlama linki süresi dolmuş: "Link süresi dolmuş, tekrar 
+     iste" + sıfırlama ekranına geri
+
+Commit: chore(auth): AU-05 mobile + a11y + Google OAuth preview 
+talimatı (README)
 
 ────────────────────────────────────────────
 Test
@@ -1756,44 +1896,28 @@ Test
 
 - npm run build temiz
 - Localde:
-  - /hesap/ayarlar: 3 bölüm (hesap/bildirim/KVKK), tehlike zone 
-    görünür
-  - /kredi-yukle?paket=populer: popüler kart pre-selected
-  - iyzico checkout flow çalışır
-  - 375px mobile sıkıntısız
+  - /giris: 2 kolon, form çalışır, Google buton, hata durumları
+  - /kayit: e-posta doğrulama UI submit sonrası
+  - /sifre-sifirla: 2 step flow
+  - Modal versiyonları: header'dan tıklayınca modal açılır
+  - 375px mobile sıkıntısız, tek kolon
+  - Klavye Tab full tour
+  - Şifre göz toggle çalışır
 
-Commit özeti (3 atomik) VEYA tek:
-feat(hesap-detay): HD-01~HD-03 /hesap/ayarlar + /kredi-yukle refactor
+Commit özeti (5 atomik) VEYA tek:
+feat(auth): AU-01~AU-05 /giris + /kayit + /sifre-sifirla + modal 
+versiyonları + Google OAuth README talimatı
 
-BACKLOG'da HD-01~HD-03 [x] işaretle. Backend bağımlı varsa 
-HD-01b ticket aç (KVKK data-export, hesap sil endpoint).
+BACKLOG'da AU-01~AU-05 [x] işaretle.
 
 Bittikten sonra rapor:
 - Commit listesi
-- KVKK endpoint kararı (var mı, mock mu)
-- iyzico flow korundu mu
-- Açık riskler
+- AuthForm.tsx redirectTo durumu (kod temiz mi, hardcoded var mı)
+- Modal versiyonları mevcut yapı korundu mu yoksa yeni mi
+- README/docs auth-config.md eklendi mi
+- Açık riskler / Aziz preview test (Google OAuth Supabase config 
+  manuel adımları)
 ```
-
-**Faz 3 toplam:** ~50 ticket. **Done:** MP+PR+FT+HS+KR+UR+FY = 7/8 paket. **Sıradaki son paket:** HD-01~HD-03.
-
----
-
-## 15 — Auth Sayfaları (Faz 4)
-
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| AU-01 | `/giris` form layout | Bekliyor | Landing done | 2 kolon, input ring, password göz, "Beni hatırla", "Şifremi unuttum". H-30/31 absorb. |
-| AU-02 | `/giris` Google OAuth | Bekliyor | AU-01 | "veya" ayracı, Google logosu + outline. |
-| AU-03 | `/giris` hata durumları | Bekliyor | AU-01 | Inline error, Turnstile uyumlu. |
-| AU-04 | `/kayit` form layout | Bekliyor | AU-01 | "Şifre tekrar", KVKK + koşullar checkbox. |
-| AU-05 | `/kayit` e-posta doğrulama UI | Bekliyor | AU-04 | "E-posta gönderildi", MailCheck. |
-| AU-06 | `/sifre-sifirla` form | Bekliyor | AU-01 | KeyRound, 2 step. |
-| AU-07 | Mobile responsive | Bekliyor | AU-06 | Tek kolon. |
-| AU-08 | A11y + acceptance | Bekliyor | AU-07 | Form aria, autocomplete. |
-| AU-09 | Google OAuth preview URL fix | Bekliyor | AU-02 | Aziz 28 Nis bulgusu: Google ile giriş preview deployment'ında canlı yzliste.com'a yönlendiriyor. Email+şifre OK. Çözüm 2 adımda: (1) Supabase dashboard → Authentication → URL Configuration → Redirect URLs listesine `https://*.vercel.app/**` pattern ekle. (2) Google Cloud Console → APIs → Credentials → OAuth 2.0 Client → Authorized redirect URIs listesine Vercel preview URL pattern eklenmiyor (Google wildcard kabul etmiyor) — onaylı redirect URI'ları olarak Supabase callback URL (`https://<project>.supabase.co/auth/v1/callback`) tek başına yeterli olmalı, çünkü Google Supabase'e geri döner, Supabase de Site URL/Redirect URL listesindeki en yakın eşleşmeye gönderir. Kontrol: Supabase config doğruysa Google whitelist sorun değildir. Kod tarafı temiz (AuthForm.tsx `window.location.origin` kullanıyor, hardcoded yok). |
-
-**Faz 4 toplam:** 9 ticket.
 
 ---
 
