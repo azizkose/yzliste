@@ -71,6 +71,18 @@
   --color-rd-platform-n11: #F8B62D;
   --color-rd-platform-n11-bg: #FEF6E0;
 
+  /* Redesign Colors — Warm Earth (Premium / Studio) */
+  --color-rd-warm-50: #FAF4ED;
+  --color-rd-warm-100: #F5E9D6;
+  --color-rd-warm-200: #EED8BD;
+  --color-rd-warm-300: #DDBF98;
+  --color-rd-warm-400: #C9A070;
+  --color-rd-warm-500: #A87847;
+  --color-rd-warm-600: #8B6035;
+  --color-rd-warm-700: #7D5630;
+  --color-rd-warm-800: #5A3A1A;
+  --color-rd-warm-900: #3D2710;
+
   /* Redesign Colors — Semantic */
   --color-rd-success-50: #ECFDF5;
   --color-rd-success-600: #059669;

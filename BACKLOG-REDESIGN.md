@@ -557,13 +557,468 @@ Canlı sitedeki örnek çıktıları (text/görsel/video/sosyal) ve mevcut görs
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| YS-01 | Sayfa scaffold + redesign token swap | Bekliyor | Landing done | rd-* token'lar, Manrope display. |
-| YS-02 | Hero block (premium pozisyonlama) | Bekliyor | YS-01 | "PREMIUM ARAÇLAR" warm-earth eyebrow, H1, 1 CTA. |
-| YS-03 | Mankene Giydirme (FASHN) tab | Bekliyor | YS-01 | Tab-pattern, 2 kolon, 3 kredi rozet. |
-| YS-04 | Video Try-On tab | Bekliyor | YS-03 | FASHN→Kling pipeline, 13/23 kredi rozet. |
-| YS-05 | Kullanım kuralları + galeri | Bekliyor | YS-04 | Rehber + 4-6 örnek görsel. |
-| YS-06 | Mobile responsive | Bekliyor | YS-05 | Tab dikey istif. |
-| YS-07 | A11y + acceptance | Bekliyor | YS-06 | Tab ARIA, focus. |
+**ESKİ PLAN İPTAL (27 Nis akşam):** Aziz "studio sayfası taslak, ciddi UX/tasarım sorunu var, baştan ele al" dedi. Mevcut yapı incelendi (StudioHeader, StudioSekmeler 3-tab 2-disabled, TryonSekmesi 2-kolon, GarmentUpload, ModelPicker 3-alt-tab, TryonAyarlar, TryonSonuc + Video toggle). 12 ana sorun tespit edildi: yarım hizmet hissi (2 disabled tab), karar yorgunluğu (15+ ön plan seçim), step/progress yok, AI manken yan ürün gibi gizli, Video Try-On gizli toggle, premium kimlik tutarsız, çok dolu mavi buton yarışıyor, sticky CTA yok, beta uyarısı altta küçük, empty state zayıf, hex hardcoded, Manrope yok.
+
+**Aziz kararları (27 Nis akşam — Cowork önerisini kabul etti):**
+1. Disabled tab'ları KALDIR — tek araca odaklan ("Mankene giydirme" sayfanın kendisi). "Stüdyo çekimi" ve "Arka plan değiştirme" /yzstudio'dan tamamen çıkar; gelecekte gelirse ayrı sayfa veya footer roadmap olur.
+2. Step-by-step DEĞİL, **görsel hibrit** — tek sayfa form ama büyük adım numarası ("1", "2", "3") + dikey bağlantı çizgisi ile akış netliği.
+3. Video Try-On gizli toggle DEĞİL, **görünür kart** — sonuç ekranında "Şimdi videoyu da üret · 13-23 kredi" + örnek video preview thumbnail.
+
+**Vizyon:** yzstudio = tek araca odaklı, rehberli, premium ürün. Workflow: kıyafet yükle → manken seç → giydir → (görünür CTA) videoya çevir. Premium kimlik tüm sayfada tutarlı warm-earth aksanı + Manrope display + Lucide ikon + rd-* primary CTA.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| YS-01 | StudioHeader redesign + premium kimlik | ✅ Tamam | Landing done | rd-* token swap. Manrope text-2xl md:text-3xl "yzstudio". Eyebrow `warm-earth-300` "PREMIUM ARAÇ" üstte. Beta rozet kalır. Kredi + "Kredi yükle" CTA sticky kalır. |
+| YS-02 | StudioSekmeler tab UI'sı kaldırılır | ✅ Tamam | YS-01 | StudioSekmeler.tsx silinir veya minimal hale gelir. /yzstudio sayfası direkt TryonSekmesi içeriğini render eder. Sayfa state'inden `aktifSekme` kaldırılır. |
+| YS-03 | Step numbered layout (1-2-3 görsel akış) | ✅ Tamam | YS-02 | Sol kolonda 3 büyük adım kartı. Her kart sol başında büyük dairesel numara (1, 2, 3 — warm-earth-700 bg + white text 28px). Adımlar arasında dikey bağlantı çizgisi (border-l rd-neutral-200). Adımların başlığı font-display text-lg md:text-xl. |
+| YS-04 | Beta uyarısı üst banner'a taşı | ✅ Tamam | YS-01 | Mevcut alt banner kaldırılır, üst kısma (StudioHeader altına) tek satır banner: warm-earth-50 bg + warm-earth-700 text + Lucide Info ikon + "yzstudio beta — sonuçlar değişkenlik gösterebilir, yeniden üretebilirsin". Kullanıcı kredi harcamadan önce görür. |
+| YS-05 | GarmentUpload (Adım 1) refactor | ✅ Tamam | YS-03 | rd-* token swap. "Kıyafet fotoğrafı" → font-display text-lg "1 · Kıyafet fotoğrafı". Drop zone büyütülür (min-h-[260px] mobil, daha çağrılı görünüm). Foto tipi + Kategori chip'leri "DOLU MAVI"DEN ghost outline'a (sadece seçili = bg-rd-primary-700, diğer = border + text). Lucide ikon yerleri korunur. |
+| YS-06 | ModelPicker (Adım 2) refactor | ✅ Tamam | YS-03 | rd-* token swap. Başlık font-display text-lg "2 · Manken seç". 3 alt-tab (Hazır/Oluştur/Yükle) korunur AMA `bg-rd-neutral-100` segmented control'e dönüşür. "Oluştur" tab'ı içinde AI manken formu sadeleşir — etiketler text-sm font-medium (text-xs değil), inputlar büyür. Stok manken grid (kalır) + üretilen manken küçük preview kalır. |
+| YS-07 | TryonAyarlar → Sticky bottom bar | ✅ Tamam | YS-03 | TryonAyarlar inline form yerine /uret StickySubmitBar pattern'i reuse: sayfa altında sticky bar, sol kısımda kalite modu chip'leri + varyasyon stepper + maliyet özeti, sağ kısımda büyük "Mankene giydir" CTA (bg-rd-primary-700). Yetersiz kredi durumu Tooltip primitive ile (mevcut /uret altyapısı). Onay modalı (`onayAktif` flow) korunur. |
+| YS-08 | TryonSonuc redesign + Video kart | ✅ Tamam | YS-07 | rd-* token swap. Üst başlık font-display "Giydirme sonucu". Sonuç görselleri korunur (grid). Sonuç altına BÜYÜK görünür video kart: warm-earth-50 bg + warm-earth-200 border, "Şimdi videoyu da üret" + Lucide PlayCircle (warm-earth-700) + alt text "5sn · 13 kredi  •  10sn · 23 kredi" + "Video üret" CTA. ChevronDown toggle KALDIRILIR. Tıklayınca TryonVideoAyarlar açılır (mevcut). Video sonucu yine TryonVideoSonuc'da. |
+| YS-09 | Empty state premium showcase | ✅ Tamam | YS-03 | TryonSonuc render edilmiyorken sağ kolon (mevcut OrnekCiktilar) yeniden tasarlanır. "Nasıl çalışıyor?" başlığı altında 3 mini kart (kıyafet → manken → sonuç ikonları) + 1 küçük "AI ile saniyeler içinde" mikrocopy + 2 örnek before/after kartı. Placeholder gri kareler kalkar — gerçek FASHN örneği varsa public/'te kullanılır, yoksa kalitatif placeholder (rd-neutral-100 bg + Lucide ImageIcon). |
+| YS-10 | Mobile + a11y + acceptance | ✅ Tamam | YS-09 | 375px sweep: numbered step kartları tek kolon, her adım tam genişlik, sticky bar dikey. ARIA: step kartları `<section aria-labelledby>`, video kart aria-describedby. Klavye Tab: foto upload → foto tipi → kategori → manken alt-tab → manken seçim → kalite mod → varyasyon → üret. Kontrast (warm-earth-700 on warm-earth-50 doğrula). |
+| YS-11 | "Yakında" araçlar için yol haritası | Bekliyor | YS-02 | Footer veya `/yzstudio/yol-haritasi` ayrı sayfada "Stüdyo çekimi (Q3 2026)" + "Arka plan değiştirme (Q4 2026)" mini liste. /yzstudio sayfasının kendisi temiz kalır, roadmap ayrı yerde. **OPSİYONEL** — Aziz "şimdi gerek yok, sonra" derse [İptal] olarak kapatılır. |
+
+**Karar verilecek (YS prompt yazılırken):**
+- YS-11 dahil mi, dışarıda mı? (Aziz redesign sonrası değerlendirir)
+- "Adım 3" sticky bar mı yoksa adım 3 kartı + üret butonu kart içi mi? Vizyonda sticky bar — kullanıcı scroll ederken CTA görünür. Ama numbered step görsel akışı bozar mı? Code'a "her ikisini de değerlendir, sticky bar default" yazılır.
+- AI manken oluşturma (ModelPicker "Oluştur" alt-tab) ileride kendi sayfasına çıkacak mı? Şu an alt-tab kalır, Faz 3 sonrası karar.
+
+#### YS-01~YS-10 Birleşik Prompt (yzstudio sıfırdan rehberli premium pasaj)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
+UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
+Bunun yerine BACKLOG-REDESIGN.md başındaki redesign branch UI 
+kuralları geçerli (font 400-800 serbest, gölge serbest, rounded-2xl 
+serbest, Manrope+Inter, rd-* token'lar, sadece emoji yasak — Lucide 
+ikon kullan).
+
+Branch: claude/redesign-modern-ui
+Görev: YS-01~YS-10 — /yzstudio sayfasını "tek araca odaklı, rehberli, 
+premium" hale getir. Mevcut yapı taslak, ciddi UX/tasarım sorunu var, 
+baştan ele alınıyor. YS-11 (yol haritası sayfası) bu prompt'a DAHİL 
+DEĞİL, opsiyonel, ayrı yapılır.
+
+Mevcut yapı:
+- app/yzstudio/page.tsx (StudioHeader + StudioSekmeler + TryonSekmesi 
+  + alt beta uyarı bandı)
+- app/yzstudio/components/StudioHeader.tsx
+- app/yzstudio/components/StudioSekmeler.tsx (3 tab: 1 aktif + 2 disabled)
+- app/yzstudio/components/tryon/TryonSekmesi.tsx (2 kolon grid)
+- app/yzstudio/components/tryon/GarmentUpload.tsx
+- app/yzstudio/components/tryon/ModelPicker.tsx (3 alt-tab: Hazır / 
+  Oluştur (5 kr) / Yükle)
+- app/yzstudio/components/tryon/TryonAyarlar.tsx (kalite mod + 
+  varyasyon + onay flow + Üret)
+- app/yzstudio/components/tryon/TryonSonuc.tsx (sonuç görseller + 
+  "Bu görseli videoya dönüştür" gizli toggle)
+- app/yzstudio/components/tryon/TryonVideoAyarlar.tsx
+- app/yzstudio/components/tryon/TryonVideoSonuc.tsx
+
+İşlevsellik KORUNUR:
+- Tüm API call'ları (FASHN tryon, AI manken /api/studio/manken, Kling 
+  video) aynı kalır
+- useTryonUretim hook, useCredits, useCurrentUser, useFeatureFlag 
+  (FF.YZSTUDIO) aynı kalır
+- Stok mankenler, manken üretim parametreleri, kredi mantığı aynı kalır
+- yzstudio kapalı state'i (yzstudioEnabled === false) korunur
+
+Kapsam DIŞI:
+- YS-11 yol haritası ayrı sayfa (Aziz redesign sonrası karar verecek)
+- AI manken oluşturmayı kendi sayfasına çıkarma (Faz 3 sonrası)
+- Backend / API değişiklikleri (sadece UI/UX)
+
+────────────────────────────────────────────
+BÖLÜM 1 — YS-01: StudioHeader redesign + premium kimlik
+────────────────────────────────────────────
+
+Mevcut StudioHeader: kompakt, h1 "yzstudio" + Premium·Beta rozet + 
+kredi + "Kredi yükle" CTA.
+
+Değişiklikler:
+
+1. Renk paleti rd-* token'a geçir (tüm hardcoded hex):
+   - bg-[#FAFAF8] → bg-rd-neutral-50
+   - bg-white → bg-white (kalır)
+   - border-[#D8D6CE] → border-rd-neutral-200
+   - text-[#1A1A17] → text-rd-neutral-900
+   - text-[#908E86] → text-rd-neutral-500
+   - text-[#5A5852] → text-rd-neutral-700
+   - bg-[#FAF4ED] → bg-rd-warm-50 (premium accent — yeni token gerekli mi 
+     kontrol et, yoksa hex bırak ve tailwind config'e ekle)
+   - text-[#3D2710] → text-rd-warm-900
+   - bg-[#1E4DD8] → bg-rd-primary-700
+   - hover:bg-[#163B9E] → hover:bg-rd-primary-800
+
+2. Premium pozisyonlama:
+   - Header'ın TAM ÜSTÜNDE küçük eyebrow strip (yeni element):
+     - text-[10px] uppercase tracking-[0.15em] text-rd-warm-700 
+       font-medium
+     - "PREMIUM ARAÇ" (sağa veya ortaya hizalı)
+     - Üstüne ufak `<Sparkles size-3 strokeWidth=1.5>` ikon
+   - H1 "yzstudio" font-display (Manrope) text-2xl md:text-3xl 
+     font-medium tracking-[-0.01em]
+   - "Premium · Beta" rozet warm-earth tonunda kalır (zaten doğru)
+
+3. StudioHeader'ı yeni dosya olarak çıkar (mevcut JSX page.tsx içine 
+   gömülü) — components/yzstudio/StudioHeader.tsx (varsa kullan, yoksa 
+   page.tsx'ten ayır).
+
+────────────────────────────────────────────
+BÖLÜM 2 — YS-02: Tab UI'sını kaldır
+────────────────────────────────────────────
+
+1. app/yzstudio/components/StudioSekmeler.tsx tamamen sil VEYA içini 
+   boş export yap (silmek tercih edilir).
+
+2. app/yzstudio/page.tsx:
+   - `useState("tryon")` ve `aktifSekme` state'ini kaldır
+   - `<StudioSekmeler aktif={aktifSekme} onChange={setAktifSekme} />` 
+     satırını kaldır
+   - `{aktifSekme === "tryon" && <TryonSekmesi />}` → `<TryonSekmesi />` 
+     direkt
+   - Import temizle
+
+3. Bu adım sonrası sayfa yapısı: StudioHeader → BetaBanner → TryonSekmesi 
+   → SiteFooter.
+
+────────────────────────────────────────────
+BÖLÜM 3 — YS-04: Beta uyarısını üst banner'a taşı (önce, akışta yerini 
+                 bulsun)
+────────────────────────────────────────────
+
+1. Mevcut alt banner (page.tsx ~satır 75): `<div className="bg-[#FAF4ED] 
+   border border-[#EED8BD]...>yzstudio beta sürümünde</div>` — kaldır.
+
+2. StudioHeader'ın HEMEN ALTINA yeni component: 
+   components/yzstudio/BetaBanner.tsx (yeni)
+   - Tek satır banner: bg-rd-warm-50 border-b border-rd-warm-200 
+     px-4 py-2.5
+   - Flex items-center justify-center gap-2 max-w-5xl mx-auto
+   - Lucide Info size-4 strokeWidth=1.5 text-rd-warm-700
+   - Text: text-xs md:text-sm text-rd-warm-800 — "yzstudio beta — 
+     sonuçlar değişkenlik gösterebilir, beğenmediğin sonucu yeniden 
+     üretebilirsin"
+   - aria-live yok (statik bilgi), role="status" opsiyonel
+
+────────────────────────────────────────────
+BÖLÜM 4 — YS-03: Step numbered layout
+────────────────────────────────────────────
+
+TryonSekmesi'ni yeniden yapılandır. Sol kolon = 3 ADIM kartı dikey 
+istif. Her adım kartı:
+
+```jsx
+<section aria-labelledby="adim-1-baslik" 
+  className="relative pl-16 md:pl-20 pb-8 last:pb-0 
+             border-l-2 border-rd-neutral-200 last:border-transparent 
+             ml-6">
+  {/* Sol başında dairesel numara */}
+  <div className="absolute -left-6 top-0 size-12 rounded-full 
+                  bg-rd-warm-700 text-white font-display 
+                  text-xl font-medium flex items-center 
+                  justify-center">
+    1
+  </div>
+  
+  <div className="space-y-4">
+    <h2 id="adim-1-baslik" 
+        className="font-display text-lg md:text-xl 
+                   text-rd-neutral-900 font-medium">
+      1 · Kıyafet fotoğrafı
+    </h2>
+    
+    {/* Adım içeriği */}
+    <GarmentUpload ... />
+  </div>
+</section>
+```
+
+3 adım:
+- 1 · Kıyafet fotoğrafı → GarmentUpload bileşeni
+- 2 · Manken seç → ModelPicker bileşeni
+- 3 · Üret → TryonAyarlar (sticky barda — aşağıda YS-07)
+
+ÖNEMLİ: 3. adım kartının İÇİ mini bilgi metni ("3 mod, varyasyon sayısı 
+sticky barda — aşağıda hazır olunca üret") olabilir. ASIL submit 
+sticky bottom barda. Adım 3 kartı bu yönlendirici bilgi + maliyet özeti 
+göstersin (toplam X kredi). Veya adım 3 kartı tamamen kalksın, sticky 
+bar tek başına yeterli — tercihini commit notunda söyle.
+
+Bağlantı çizgisi: her adımın sol border'ı bir sonrakine bağlı (border-l-2 
+border-rd-neutral-200). Son adımda border yok (last:border-transparent).
+
+Mobile (375px): 
+- Numbered circle size-10 (büyük olma 12), text-base
+- pl-12 (mobil daha az ofset)
+- ml-5 (numara konumu ayarla)
+
+────────────────────────────────────────────
+BÖLÜM 5 — YS-05: GarmentUpload (Adım 1) refactor
+────────────────────────────────────────────
+
+1. Renk paleti rd-* swap (tüm hex'leri sözleşmeli token'lara).
+
+2. Drop zone büyütülür:
+   - Mevcut min-height: 160 → 260 (daha çağrılı)
+   - paddingBottom: 133% kalır (foto var durumu)
+   - Empty state'te orta text-base "Fotoğraf yükle veya sürükle bırak" 
+     kalır
+   - Empty state ikon: ImageUp size-8 (24'ten büyüt)
+
+3. Foto tipi + Kategori chip'leri "DOLU MAVI"DEN ghost outline'a:
+   - Seçili: `border-2 border-rd-primary-700 bg-rd-primary-50 
+     text-rd-primary-700` (dolu beyaz değil — açık-fon vurgu)
+   - Seçili değil: `border border-rd-neutral-300 text-rd-neutral-700 
+     hover:border-rd-primary-400 hover:bg-rd-neutral-50`
+   - Daha az "yarışan" mavi blok, hierarchy temizlenir
+
+4. Bölüm başlığı KALDIRILIR (mevcut "Kıyafet fotoğrafı" h3) — adım 
+   kartı zaten "1 · Kıyafet fotoğrafı" diyor. Çift başlık olmasın.
+
+5. Foto tipi + Kategori altbölüm başlıkları kalır ama text-xs uppercase 
+   tracking-wide text-rd-neutral-500 olarak (eyebrow stili).
+
+────────────────────────────────────────────
+BÖLÜM 6 — YS-06: ModelPicker (Adım 2) refactor
+────────────────────────────────────────────
+
+1. Renk paleti rd-* swap.
+
+2. Bölüm başlığı KALDIRILIR (adım kartı zaten "2 · Manken seç" diyor).
+
+3. 3 alt-tab segmented control:
+   - Mevcut yapı korunur (bg-rd-neutral-100 border'lı container)
+   - Aktif tab: bg-white shadow-sm (redesign'da serbest) 
+     text-rd-neutral-900
+   - Pasif tab: text-rd-neutral-600 hover:text-rd-neutral-900
+   - Tab label'ları: "Hazır mankenler" / "Oluştur (5 kr)" / "Fotoğraf 
+     yükle". Mobile kısa: "Hazır" / "Oluştur 5kr" / "Fotoğraf"
+
+4. "Oluştur" alt-tab içindeki AI manken formu sadeleşir:
+   - Etiketler text-sm font-medium text-rd-neutral-700 (text-xs 
+     text-[#908E86] DEĞİL — okunabilirlik düşük)
+   - Input padding büyür: px-3 py-2 → px-4 py-2.5
+   - Chip butonları aynı outline pattern (Bölüm 5'teki gibi)
+   - Manken oluştur CTA: bg-rd-primary-700 hover:bg-rd-primary-800, 
+     yetersiz kredi durumunda Tooltip primitive (mevcut /uret 
+     altyapısı) kullan
+
+5. "Hazır mankenler" grid: kart hover lift (-translate-y-0.5 
+   transition), seçili kart border-2 border-rd-primary-700.
+
+6. "Fotoğraf yükle" alt-tab: drop zone min-h 200, ikon büyür.
+
+────────────────────────────────────────────
+BÖLÜM 7 — YS-07: TryonAyarlar → Sticky bottom bar
+────────────────────────────────────────────
+
+Mevcut TryonAyarlar inline form. Yeni: /uret StickySubmitBar pattern'i 
+reuse — sayfa altında sticky.
+
+1. components/yzstudio/StudioStickyBar.tsx (yeni — /uret StickySubmitBar 
+   primitive'i göz at, benzer yapı kur):
+   - position fixed bottom-0 left-0 right-0 (mobil) / sticky bottom-5 
+     (desktop)
+   - bg-white border-t border-rd-neutral-200
+   - max-w-5xl mx-auto px-4 py-3
+   - Flex layout:
+     - Sol: kalite mod chip'leri (3 mod — ghost outline pattern, 
+       seçili = bg-rd-primary-50 border-rd-primary-700) + varyasyon 
+       stepper (Minus/Plus + sayı, kompakt)
+     - Sağ: maliyet özeti ("X varyasyon · Y kredi") + "Mankene giydir" 
+       CTA (bg-rd-primary-700)
+   - Yetersiz kredi durumu Tooltip ("Yetersiz kredi · Paket al" → 
+     /kredi-yukle) — /uret'teki getCTAState pattern'i benzeri
+
+2. Onay modalı (mevcut `onayAktif` flow) korunur — sticky bar'da CTA 
+   tıklayınca modal/inline onay açılır, aynı UX.
+
+3. TryonAyarlar.tsx içeriği ya StudioStickyBar'a taşınır ya da 
+   TryonAyarlar yeniden kullanılır (kolay yol: TryonAyarlar'ı sticky 
+   container içine sar).
+
+4. Sayfa içeriğinin altına pb-32 (mobil) / pb-24 (desktop) ekle ki 
+   sticky bar form'u örtmesin.
+
+────────────────────────────────────────────
+BÖLÜM 8 — YS-08: TryonSonuc redesign + Video kart
+────────────────────────────────────────────
+
+1. Renk paleti rd-* swap.
+
+2. Sonuç başlığı: font-display text-lg md:text-xl text-rd-neutral-900 
+   "Giydirme sonucu" + sağında "Tekrar üret" link (mevcut RefreshCw + 
+   text-rd-neutral-500 hover).
+
+3. Sonuç görseller grid: korunur (1 veya 2 kolon).
+
+4. **Video kart redesign — ÖNEMLİ:**
+   Mevcut: `<button>Bu görseli videoya dönüştür <ChevronDown></button>` — 
+   gizli toggle. KALDIR.
+   
+   Yeni: BÜYÜK görünür kart (sonuç görsellerin ALTINDA, otomatik açık):
+   ```jsx
+   <div className="rounded-xl border-2 border-rd-warm-200 
+                   bg-rd-warm-50 p-5 md:p-6">
+     <div className="flex items-start gap-4">
+       <div className="size-12 rounded-lg bg-white 
+                       border border-rd-warm-200 
+                       flex items-center justify-center flex-shrink-0">
+         <PlayCircle size-7 strokeWidth={1.5} 
+                     className="text-rd-warm-700" />
+       </div>
+       <div className="flex-1">
+         <p className="text-[10px] uppercase tracking-[0.15em] 
+                       text-rd-warm-700 font-medium mb-1">
+           PREMIUM
+         </p>
+         <h3 className="font-display text-base md:text-lg 
+                        text-rd-neutral-900 font-medium mb-1">
+           Şimdi videoyu da üret
+         </h3>
+         <p className="text-sm text-rd-neutral-600 mb-3">
+           Görseli kısa videoya dönüştür — sosyal medyaya direkt yükle
+         </p>
+         <div className="flex items-center gap-3 text-xs 
+                         text-rd-neutral-500 mb-4">
+           <span>5sn · 13 kredi</span>
+           <span className="text-rd-neutral-300">·</span>
+           <span>10sn · 23 kredi</span>
+         </div>
+         <button onClick={() => onVideoAktifToggle(true)} 
+                 className="bg-rd-primary-700 hover:bg-rd-primary-800 
+                            text-white text-sm font-medium 
+                            px-4 py-2 rounded-lg">
+           Video üret
+         </button>
+       </div>
+     </div>
+   </div>
+   ```
+
+5. Tıklayınca videoAktif=true → TryonVideoAyarlar açılır (mevcut, 
+   sadeleştirme isteniyorsa minimum rd-* swap). Video kart kendisi 
+   gizlenir, yerine TryonVideoAyarlar render olur.
+
+6. videoSonuc varsa TryonVideoSonuc altta render olur (mevcut).
+
+────────────────────────────────────────────
+BÖLÜM 9 — YS-09: Empty state premium showcase
+────────────────────────────────────────────
+
+Mevcut OrnekCiktilar (TryonSekmesi içinde) — 2 boş gri kare + etiket. 
+Refactor:
+
+1. Sağ kolon empty state (`sonuclar.length === 0 && !yukleniyor`):
+   - Üstte küçük eyebrow: "NASIL ÇALIŞIYOR" text-[10px] uppercase 
+     tracking-[0.15em] text-rd-warm-700
+   - H3 font-display: "AI saniyeler içinde giydirir"
+   - 3 mini step görsel (yatay flex):
+     - Lucide Shirt + "Kıyafet" + arrow Lucide ChevronRight
+     - Lucide UserSquare + "Manken" + arrow
+     - Lucide Sparkles + "Sonuç"
+   - Altında 2 örnek before/after kartı (gerçek FASHN örnek varsa 
+     `public/yzstudio-orn ek-1.jpg` gibi, yoksa gri bg + Lucide 
+     ImageIcon placeholder + "Örnek yakında")
+   - Önce kontrol et: `public/yzstudio*` veya `public/ornek*` klasörü 
+     var mı? Glob ile ara.
+
+2. Yukarı kayan animasyon yok (statik), prefers-reduced-motion uyumlu.
+
+────────────────────────────────────────────
+BÖLÜM 10 — YS-10: Mobile + a11y + acceptance
+────────────────────────────────────────────
+
+1. **Mobile (375px):**
+   - Step numbered kartlar: numara size-10 (12 yerine), pl-12, ml-5
+   - GarmentUpload + ModelPicker + TryonSonuc tek kolon (zaten lg: 
+     breakpoint'te grid)
+   - Sticky bottom bar mobil dikey: kalite mod alt satıra düşer, 
+     varyasyon + CTA aynı satırda
+   - Video kart mobil: ikon üstte ortalanmış, başlık + içerik altında
+   - 3 alt-tab segmented control mobile'da label kısaltılmış kalır
+
+2. **A11y:**
+   - Her adım `<section aria-labelledby="adim-N-baslik">`
+   - Numbered daire `aria-hidden="true"` (sadece dekoratif)
+   - Lucide ikonlar `aria-hidden="true"`
+   - 3 alt-tab `role="tablist"` + tab'lar `role="tab" aria-selected`
+   - Stok manken grid: kartlar `role="radio"`, `aria-checked`, parent 
+     `role="radiogroup" aria-label="Hazır manken seç"`
+   - Sticky bar Üret butonu: yetersiz kredi durumda aria-disabled + 
+     Tooltip aria-describedby
+   - Video kart `<article aria-labelledby>`
+
+3. **Kontrast (WCAG AA):**
+   - text-rd-warm-700 on bg-rd-warm-50 — hesapla, AA değilse rd-warm-800
+   - text-rd-warm-800 on bg-rd-warm-50 — kontrol
+   - Numbered daire white on rd-warm-700 — AA üstünde olmalı
+   - Sticky bar text contrast tüm CTA durumları
+
+4. **Edge case'ler:**
+   - yzstudioEnabled === false → mevcut "yzstudio şu an erişime kapalı" 
+     ekran rd-* token'a swap (page.tsx içinde mevcut)
+   - kredi yok / 0 → sticky bar disabled, tooltip "Kredi yükle" 
+     /kredi-yukle'ye yönlendir
+   - Stok manken seçili değil + foto yok + giydir CTA: hangi adım 
+     eksik diye kullanıcıya anlatan mikro mesaj sticky bar üstünde 
+     görünsün ("Önce kıyafet fotoğrafı + manken seç")
+
+────────────────────────────────────────────
+Test (commit öncesi)
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde /yzstudio:
+  - Eyebrow "PREMIUM ARAÇ" + Manrope H1 görünür
+  - Beta banner üstte (kredi harcamadan önce)
+  - 3 numbered step kartı dikey istif, dairesel numara warm-earth
+  - Foto upload büyük drop zone + outline chip'ler
+  - Manken segmented control 3 alt-tab, "Oluştur" alt-tab'da AI form 
+    sadeleşmiş
+  - Sticky bottom bar: kalite mod + varyasyon + maliyet + Üret CTA
+  - Sonuç gelince video kart BÜYÜK görünür, "Video üret" CTA tıklanır
+  - Empty state "Nasıl çalışıyor" 3 ikon akışı + örnek kartlar
+  - 375px mobile: tek kolon, sticky bar dikey, hiçbir taşma yok
+  - Klavye Tab: foto upload → foto tipi → kategori → manken alt-tab → 
+    manken seçim → sticky bar (mod/varyasyon/üret)
+  - "yzstudio kapalı" durumda eyebrow/banner render olmuyor (kapalı 
+    state korundu)
+
+Commit özeti (bölünmüş öneri — büyük refactor, atomik commit kolaylığı):
+- feat(yzstudio): YS-01 StudioHeader rd-* + Manrope + premium eyebrow
+- feat(yzstudio): YS-02 tab UI kaldırıldı (StudioSekmeler silindi)
+- feat(yzstudio): YS-04 BetaBanner üst banner'a taşındı
+- feat(yzstudio): YS-03 step numbered layout (1-2-3 görsel akış)
+- feat(yzstudio): YS-05 GarmentUpload outline chip + büyük drop zone
+- feat(yzstudio): YS-06 ModelPicker segmented control + AI form sade
+- feat(yzstudio): YS-07 StudioStickyBar (kalite+varyasyon+üret sticky)
+- feat(yzstudio): YS-08 TryonSonuc redesign + video premium kart
+- feat(yzstudio): YS-09 empty state showcase (nasıl çalışıyor + örnekler)
+- chore(yzstudio): YS-10 mobile + a11y + acceptance polish
+
+VEYA tek commit: feat(yzstudio): YS-01~YS-10 sıfırdan rehberli premium 
+redesign
+
+BACKLOG-REDESIGN.md'de YS-01~YS-10 [x] işaretle. YS-11 (yol haritası 
+sayfası) BACKLOG'da kalır, Aziz redesign sonrası karar verir.
+
+Bittikten sonra rapor:
+- Commit listesi
+- Değişen dosyalar (yeni: components/yzstudio/StudioHeader.tsx, 
+  components/yzstudio/BetaBanner.tsx, components/yzstudio/StudioStickyBar.tsx, 
+  silinen: app/yzstudio/components/StudioSekmeler.tsx)
+- Adım 3 kartı kararı (kart kalktı mı, mini bilgi kartı oldu mu?)
+- Empty state örnek görsel kararı (gerçek public/ varsa kullanıldı mı, 
+  placeholder mı)
+- rd-warm-* token Tailwind config'e eklendi mi (yoksa hex bırakıldı mı)
+- Açık riskler / Faz 2 toplu acceptance'ta dikkat edilmesi gereken
+- (Opsiyonel) Aziz preview'da test ederken nelere bakmalı kısa liste
+```
 
 ### Grup 3 — Üretim sonuç sayfası `/(auth)/app/sonuc/[id]`
 
@@ -1059,7 +1514,7 @@ Bittikten sonra:
 - Açık riskler / Faz 2 toplu acceptance'ta dikkat edilmesi gereken
 ```
 
-**Faz 2 toplam:** 21 (U) + 7 (YS) + 6 (SR) + 4 (OD) = 38 ticket. **U-01~17 done (17), kalan 21.**
+**Faz 2 toplam:** 21 (U) + 11 (YS) + 6 (SR) + 4 (OD) = 42 ticket. **U-01~20 + SR-01~06 + OD-01~04 done (30), kalan 12 (U-21 + YS-01~11). Aziz toplu acceptance Faz 2 sonu.**
 
 ---
 
