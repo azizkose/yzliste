@@ -571,7 +571,23 @@ Canlı sitedeki örnek çıktıları (text/görsel/video/sosyal) ve mevcut görs
 
 **KR-02b (Backend ticket):** `kredi_log` tablosu yok — krediler `payments` tablosundan çekiliyor, tüm kayıtlar `satin_alim` varsayılan. Çözüm: `kredi_log` tablosu oluştur (id, user_id, islem_turu, miktar, created_at, detay JSONB). `KREDILER_DEMO=true` ile dev'de 4 tür görünür.
 
-#### KR-01~KR-03 Birleşik Prompt (Krediler)
+### Grup 3C — Üretimler `/hesap/uretimler` (Aziz 28 Nis spec, EX.15~EX.20)
+
+**Spec:** uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 4)
+**Aziz tespiti:** Sayfa "zaten çok iyi" — sadece kullanıcı 50+ üretim olunca lazım olacak özellikler eksik.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| UR-01 | Sayfa scaffold + filtre chip bar | ✅ Tamam | KR done | rd-* swap. Manrope eyebrow "ÜRETİMLER" + H1 "Tüm üretimlerin". 3 filtre satırı: Platform (Trendyol/Amazon TR/Amazon USA/Hepsiburada/N11/Etsy + Tümü), İçerik tipi (Metin/Görsel/Video/Sosyal + Tümü), Tarih (Bu ay/Geçen ay/Bu yıl/Tümü). ChipSelector primitive reuse (multi mode + "Tümü" seçenek). |
+| UR-02 | Arama input + sıralama dropdown | ✅ Tamam | UR-01 | Arama input (Lucide Search): debounced 300ms live filter, "Ürün adı veya başlık ara". Sıralama dropdown (native select): Yeniden eskiye / Eskiden yeniye / Platform / Kredi. |
+| UR-03 | Üretim kart + Kopyala + Yeniden üret + boş içerik placeholder | ✅ Tamam | UR-02 | Mevcut accordion yapısı korunur (Aziz: "çok iyi"). Her kart altına 3 buton: "Kopyala" (mevcut), "Yeniden üret" (Lucide RefreshCw — /uret'e query params ile yönlendirir, kullanıcı parametreleri görür sonra üretir, kredi otomatik düşmez), "Excel'e indir" (sadece toplu üretim için, opsiyonel). Boş içerik tipi (kullanıcı sadece metin üretmiş): "Bu üretimde görsel yok. Eklemek için yeniden üret" alt-not + CTA. |
+| UR-03b | /uret pre-fill (query params okuma) | Bekliyor | UR-03 | app/uret/page.tsx URL searchParams oku: onceki/platform/tip varsa form'u pre-fill et. "Yeniden üret" butonu sadece yönlendiriyor; /uret tarafı bu params'ı henüz okumuyor. |
+| UR-04 | Pagination veya lazy load | ✅ Tamam | UR-03 | TanStack Query useInfiniteQuery (proje default). 20 üretim/sayfa. "Daha fazla yükle" buton (infinite scroll yerine — daha kontrollü, batch size belli). Pre-traffic 5-10 üretim için zaten görünmez. |
+| UR-05 | Mobile + a11y polish | ✅ Tamam | UR-04 | 375px: filtre chip'leri yatay scroll (overflow-x-auto), sıralama dropdown ve arama input dikey. Kart kompakt (ChevronDown sağa hizalı). ARIA list semantics. |
+
+**"Yeniden üret" karar (Cowork önerisi):** Frontend approach — `/uret?onceki=[id]&platform=X&tip=Y...` query params ile yönlendir. Kullanıcı parametreleri görür, onaylar, kredi düşer. Bu daha güvenli (kullanıcı kontrolü, kredi otomatik kaybolmaz). Backend yeni endpoint gerekmez.
+
+#### UR-01~UR-05 Birleşik Prompt (Üretimler)
 
 ```
 ÖNEMLİ — KURAL OVERRIDE:
@@ -580,152 +596,199 @@ kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch
 kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
 
 Branch: claude/redesign-modern-ui
-Görev: KR-01~KR-03 — /hesap/krediler refactor (3 mini stat + işlem 
-türü etiketi + detay accordion).
+Görev: UR-01~UR-05 — /hesap/uretimler refactor (filtre + arama + 
+sıralama + yeniden üret + lazy load).
 
-Spec: uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 3)
-Mevcut sayfa: app/(auth)/hesap/krediler/page.tsx — önce oku.
+Spec: uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 4)
+Mevcut sayfa: app/(auth)/hesap/uretimler/page.tsx — önce oku, mevcut 
+accordion yapısı KORUNUR (Aziz spec'i: "sayfa çok iyi tasarlanmış").
 
-Reuse: components/primitives/{StatusBadge}.tsx (4 durum tanımlı, 
-işlem türleri için extend gerekirse Code karar versin — yeni 
-TransactionBadge primitive de yapılabilir).
+Reuse: components/primitives/ChipSelector.tsx (multi mode, "Tümü" 
+seçenek). 
 
 KAPSAM DIŞI:
-- Backend: kredi_log işlem_turu kolonu yoksa eklenmesi (ayrı ticket)
-- Paraşüt fatura linki (FT'de hazır, burada link verir sadece)
+- Backend "yeniden üret" endpoint (frontend yönlendirme yeter)
+- Tam metin search (server-side full-text search) — basit substring 
+  match yeter
 
 ────────────────────────────────────────────
-BÖLÜM 1 — KR-01: Scaffold + 3 mini stat
+BÖLÜM 1 — UR-01: Scaffold + filtre chip bar
 ────────────────────────────────────────────
 
 1. Sayfa rd-* swap.
 
 2. Sayfa başlığı:
-   - Eyebrow text-rd-primary-700 "KREDİLER"
-   - H1 (font-display): "Kredi geçmişin"
-   - Subtitle: "Mevcut bakiye, tüketim ve satın alma geçmişi."
+   - Eyebrow text-rd-primary-700 "ÜRETİMLER"
+   - H1 (font-display): "Tüm üretimlerin"
+   - Subtitle: "Geçmiş üretimleri filtrele, kopyala veya yeniden üret."
+   - Toplam sayı badge: "X üretim" (sağ üstte küçük)
 
-3. 3 mini stat (yan yana, mobile dikey):
-   - grid grid-cols-1 md:grid-cols-3 gap-4
-   - Her stat: rounded-xl border border-rd-neutral-200 p-5
-   - **Mevcut:** Lucide Coins + label "Mevcut" + sayı (font-display 
-     text-3xl)
-   - **Bu ay tüketim:** Lucide TrendingDown + "Bu ay" + sayı (kullanım 
-     toplamı)
-   - **Geçen ay tüketim:** Lucide Calendar + "Geçen ay" + sayı
+3. Filtre chip bar (3 satır):
+   - Platform: 7 chip (Trendyol/Hepsiburada/Amazon TR/Amazon USA/N11/
+     Etsy + Tümü) — ChipSelector multi mode VEYA single mode + "Tümü"
+   - İçerik tipi: 5 chip (Metin/Görsel/Video/Sosyal + Tümü)
+   - Tarih: 4 chip (Bu ay/Geçen ay/Bu yıl/Tümü) — single mode
+   - Her satır başlangıcında küçük label: "Platform:", "İçerik:", 
+     "Tarih:" (text-xs uppercase text-rd-neutral-500)
 
-4. Hesaplama:
-   - Bu ay: kredi_log.created_at >= startOfMonth(now) AND 
-     islem_turu = 'kullanim' (negatif kredi miktarı toplam)
-   - Geçen ay: startOfMonth(prevMonth) <= created_at < startOfMonth(now)
-   - Mutlak değer al (kullanım kayıtları negatif olabilir)
+4. Filtre state: useState ile filtreler, useMemo ile filtered list 
+   hesapla. Mevcut data fetch korunur.
 
-5. Üstte "Kredi yükle" CTA buton: bg-rd-primary-700 → /kredi-yukle
-   (sayfa header sağında, sticky değil)
-
-Commit: feat(krediler): KR-01 scaffold + 3 mini stat
+Commit: feat(uretimler): UR-01 scaffold + filtre chip bar
 
 ────────────────────────────────────────────
-BÖLÜM 2 — KR-02: İşlem geçmişi + işlem türü etiketi
+BÖLÜM 2 — UR-02: Arama input + sıralama dropdown
 ────────────────────────────────────────────
 
-1. Bölüm başlığı: "İşlem geçmişin" (font-display text-xl)
+1. Filtre chip bar altına arama + sıralama satırı:
+   - flex justify-between
+   - Sol: Arama input (max-w-md)
+     - rounded-lg border border-rd-neutral-300 px-4 py-2 + Lucide 
+       Search size-4 sol başında
+     - placeholder: "Ürün adı veya başlık ara..."
+     - debounced 300ms (lodash debounce veya useDeferredValue)
+     - useState query, filtered list query'ye göre filtrelenir 
+       (ürün adı veya başlık içerir)
+   - Sağ: Sıralama native `<select>`
+     - Options: Yeniden eskiye (default) / Eskiden yeniye / Platform 
+       (alfabetik) / Kredi (yüksekten düşüğe)
+     - aria-label "Sıralama"
 
-2. Liste container: space-y-2, role="list"
+2. Filtre + arama + sıralama kombine: useMemo ile pipeline:
+   filtered = data
+     .filter(platformMatch)
+     .filter(tipMatch)
+     .filter(tarihMatch)
+     .filter(searchMatch)
+     .sort(sortFn)
 
-3. Her satır (kompakt kart):
-   - rounded-lg border border-rd-neutral-200 p-4 bg-white
-   - flex items-center justify-between
-   - Sol: işlem türü badge + miktar + tarih
-   - Sağ: tutar (varsa) + ChevronDown (KR-03'te accordion için)
-
-4. İşlem türü badge — 4 tip (StatusBadge extend VEYA yeni 
-   TransactionBadge primitive):
-   - **Satın alım:** bg-rd-primary-50 + text-rd-primary-700 + Lucide 
-     ShoppingCart size-3
-   - **Hediye:** bg-rd-success-50 + text-rd-success-700 + Lucide Gift size-3
-   - **İade:** bg-rd-warning-50 + text-rd-warning-700 + Lucide Undo2 size-3
-   - **Kullanım:** bg-rd-neutral-50 + text-rd-neutral-600 + Lucide Minus size-3
-
-5. Backend kontrol: kredi_log tablosunda işlem_turu (transaction_type) 
-   kolonu var mı?
-   - VAR: gerçek değer kullan
-   - YOK: satın alım için heuristic (kredi miktarı > 0 = satın alım, 
-     < 0 = kullanım). Hediye/İade ayırt edilemez → varsayılan 
-     "Satın alım" veya "Kullanım"
-   - YOKSA: BACKLOG'a KR-02b ticket aç ("Backend: kredi_log 
-     işlem_turu kolonu"). Demo için env-based flag (FATURALAR_DEMO 
-     pattern) opsiyonel.
-
-6. Miktar formatı:
-   - Satın alım/Hediye/İade: "+10 kredi" (yeşil text)
-   - Kullanım: "−1 kredi" (gri text)
-   - font-medium
-
-7. Tarih: "16.04.2026" formatı (kısa Türk tarih)
-
-Commit: feat(krediler): KR-02 işlem geçmişi + işlem türü etiketi
+Commit: feat(uretimler): UR-02 arama + sıralama
 
 ────────────────────────────────────────────
-BÖLÜM 3 — KR-03: Detay accordion + Mobile + a11y
+BÖLÜM 3 — UR-03: Kart + Kopyala + Yeniden üret + placeholder
 ────────────────────────────────────────────
 
-1. Detay accordion:
-   - Satıra tıklayınca aşağıda detay panel açılır
-   - aria-expanded + ChevronDown rotate-180 transition
-   - Detay içeriği (işlem türüne göre):
-     - **Satın alım:** Paket adı, ödeme yöntemi (varsa), fatura 
-       linki (varsa, /hesap/faturalar/[id])
-     - **Hediye:** Sebep ("Hoş geldin bonusu", "Davet bonusu" vs)
-     - **İade:** Sebep ("Hatalı çekim", manuel iade)
-     - **Kullanım:** Üretim ID (link to /sonuc/[id])
-   - Backend'de detay field'ları yoksa: "Detay yok" placeholder + 
-     console warn
+Mevcut accordion yapısı korunur (Aziz spec: "çok iyi"). Her kart 
+sonuna 3 buton:
 
-2. **Mobile (375px):**
-   - 3 mini stat dikey
-   - İşlem satırları kompakt: badge + miktar üst, tarih + tutar alt
-   - Detay accordion full width
+1. Buton grupu (kart altı):
+   - flex gap-2 mt-3
+   - **Kopyala** (mevcut, korunur): bg-rd-neutral-900 text-white + 
+     Lucide Copy. Tıklayınca clipboard + Toast "Kopyalandı"
+   - **Yeniden üret** (yeni): bg-white border border-rd-neutral-300 
+     hover:border-rd-primary-400 + Lucide RefreshCw. Tıklayınca 
+     `/uret?onceki={id}&platform={p}&tip={t}` query params ile 
+     yönlendirir. /uret sayfası query params'ı okur ve form'u 
+     pre-fill eder (UR-03 sonrası /uret tarafı dokunulabilir veya 
+     not düş).
+   - **İndir** (opsiyonel — sadece toplu Excel üretimleri için): 
+     Lucide Download. Mevcut data download URL varsa göster, 
+     yoksa gizle.
 
-3. **A11y:**
+2. Boş içerik tipi placeholder:
+   - Eğer kullanıcı sadece text üretmiş (görsel/video/sosyal yok), 
+     accordion içinde alt-not: 
+     - "Bu üretimde görsel yok. Eklemek için yeniden üret" 
+     - text-xs text-rd-neutral-500 italic
+     - Yanında küçük "Yeniden üret →" link CTA
+   - Tüm 4 tip varsa placeholder gizlenir.
+
+3. /uret tarafı pre-fill (BACKLOG'a not düş — UR-03b ticket):
+   - app/uret/page.tsx (veya client component) URL searchParams oku
+   - "onceki" varsa: önceki üretim datasını fetch et + form'a yerleştir
+   - Bu UR-03'ün dışında kalabilir; sadece "Yeniden üret" button URL 
+     yönlendirme yeter, /uret tarafı sonra zenginleşir
+   - **Önerim:** UR-03'te yeniden üret butonu sadece /uret'e (query 
+     param ile) yönlendirir. /uret tarafı pre-fill UR-03b ticket 
+     olarak BACKLOG'da bekler. Aziz onayıyla sonra yapılır.
+
+Commit: feat(uretimler): UR-03 kart aksiyonları (kopyala+yeniden+ 
+boş tip placeholder)
+
+────────────────────────────────────────────
+BÖLÜM 4 — UR-04: Pagination / lazy load
+────────────────────────────────────────────
+
+1. TanStack Query useInfiniteQuery (proje default):
+   ```ts
+   useInfiniteQuery({
+     queryKey: ['uretimler', filtreler],
+     queryFn: ({ pageParam = 0 }) => fetchUretimler({ 
+       offset: pageParam, limit: 20 
+     }),
+     getNextPageParam: (lastPage, allPages) => 
+       lastPage.length === 20 ? allPages.length * 20 : undefined,
+   })
+   ```
+
+2. Liste sonunda: "Daha fazla yükle" buton
+   - bg-white border border-rd-neutral-300 hover:bg-rd-neutral-50
+   - Lucide ChevronDown
+   - hasNextPage false ise gizlenir, fetchNextPage isLoading'de 
+     spinner
+
+3. Infinite scroll YOK (kontrolsüz scroll user kaybolur). Buton 
+   tercih edilir.
+
+4. Pre-traffic için: 5-10 üretim → buton zaten gizli. Test 
+   hesabında veya gerçek kullanıcıda 20+ olunca tetiklenir.
+
+Commit: feat(uretimler): UR-04 useInfiniteQuery + "Daha fazla yükle"
+
+────────────────────────────────────────────
+BÖLÜM 5 — UR-05: Mobile + a11y polish
+────────────────────────────────────────────
+
+1. **Mobile (375px):**
+   - Filtre chip bar: yatay scroll (overflow-x-auto + scroll-snap)
+   - Arama input full width, sıralama dropdown alt satır
+   - Kart accordion korunur
+   - "Daha fazla" buton full width
+
+2. **A11y:**
    - main aria-labelledby h1
-   - Liste role="list", her satır role="listitem"
-   - Accordion buton aria-expanded + aria-controls
-   - Detay panel role="region" + id eşleşmeli
-   - Klavye: Tab → satır → Space/Enter aç/kapa
+   - Filtre ChipSelector ARIA (zaten var)
+   - Arama input aria-label "Üretim ara"
+   - Sıralama select aria-label "Sıralama"
+   - Liste role="list", her kart role="listitem"
+   - Accordion aria-expanded + aria-controls
+   - "Yeniden üret" buton aria-label net (örn "Yeniden üret: [ürün adı]")
 
-4. **Edge case'ler:**
-   - Boş liste: "Henüz işlem yok" + Lucide Coins + "İlk paketini al" 
-     CTA → /kredi-yukle
-   - Fetch hata: "İşlemler yüklenemedi" + retry buton
-   - Mevcut kredi 0 + yeni kullanıcı: "Hoş geldin! Bu sayfada kredi 
-     hareketlerin görünür."
+3. **Edge case'ler:**
+   - Filtre sonucu boş: "Filtrelere uyan üretim yok" + filtre temizle 
+     CTA
+   - Boş liste (hiç üretim yok): "Henüz üretim yapmadın" + Lucide 
+     FileText + "İlk üretim" CTA → /uret
+   - Fetch hata: retry buton
 
-Commit: feat(krediler): KR-03 detay accordion + mobile + a11y
+Commit: chore(uretimler): UR-05 mobile + a11y polish
 
 ────────────────────────────────────────────
 Test
 ────────────────────────────────────────────
 
 - npm run build temiz
-- Localde /hesap/krediler:
-  - Eyebrow + Manrope H1
-  - 3 mini stat doğru hesaplama
-  - İşlem listesi 4 türü ayırt eder (badge renkleri)
-  - Satıra tık → accordion açılır
+- Localde /hesap/uretimler:
+  - Eyebrow + Manrope H1 + üretim sayısı
+  - 3 satır filtre chip bar + arama + sıralama
+  - Kart accordion korunur, 3 buton (Kopyala/Yeniden üret/İndir)
+  - "Yeniden üret" → /uret?onceki=...
+  - 20+ üretim varsa "Daha fazla yükle"
+  - Boş içerik tipi placeholder
   - 375px mobile sıkıntısız
 
-Commit özeti (3 atomik) VEYA tek:
-feat(krediler): KR-01~KR-03 /hesap/krediler refactor
+Commit özeti (5 atomik) VEYA tek:
+feat(uretimler): UR-01~UR-05 /hesap/uretimler refactor
 
-BACKLOG'da KR-01~KR-03 [x] işaretle. Backend bağımlı varsa 
-KR-02b not düş.
+BACKLOG'da UR-01~UR-05 [x] işaretle. UR-03b (/uret pre-fill) 
+ticket aç.
 
 Bittikten sonra rapor:
 - Commit listesi
-- TransactionBadge yeni primitive mi yoksa StatusBadge extend mi
-- kredi_log işlem_turu kolonu var mı
-- Demo data kararı (env-based flag mi, gerçek heuristic mi)
+- ChipSelector "Tümü" seçenek implementation
+- "Yeniden üret" yönlendirme (query params doğru mu, /uret 
+  tarafı pre-fill için ticket açıldı mı)
+- useInfiniteQuery vs basit pagination kararı
 - Açık riskler
 ```
 
