@@ -587,7 +587,20 @@ Canlı sitedeki örnek çıktıları (text/görsel/video/sosyal) ve mevcut görs
 
 **"Yeniden üret" karar (Cowork önerisi):** Frontend approach — `/uret?onceki=[id]&platform=X&tip=Y...` query params ile yönlendir. Kullanıcı parametreleri görür, onaylar, kredi düşer. Bu daha güvenli (kullanıcı kontrolü, kredi otomatik kaybolmaz). Backend yeni endpoint gerekmez.
 
-#### UR-01~UR-05 Birleşik Prompt (Üretimler)
+
+### Grup 4 — Fiyatlar `/fiyatlar` + Anasayfa fiyatlar revize (FY-01~FY-05)
+
+**Aziz kararı (28 Nis akşam):** Anasayfada fiyat bölümü TAMAMEN KALDIRILIYOR (A seçeneği). Header'da "Fiyatlar" linki zaten var, kullanıcı oraya gider. Anasayfa sade kalır.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| FY-01 | /fiyatlar scaffold + 3 paket kart + "En popüler" terim | ✅ Tamam | UR done | Commit `44e9b92` — rd-* swap, Manrope eyebrow, "En popüler" badge, PackageCard rd-* tokens. |
+| FY-02 | Kredi calculator entegrasyonu | ✅ Tamam | FY-01 | Commit `44e9b92` — components/fiyatlar/KrediCalculator.tsx (slider + öneri kutusu). |
+| FY-03 | SSS bölümü (kredi/fiyat 7 soru) | ✅ Tamam | FY-01 | Commit `44e9b92` — components/fiyatlar/FiyatlarSSS.tsx accordion, mevcut SSS metinleri korundu. |
+| FY-04 | Anasayfa fiyat bölümü KALDIR | ✅ Tamam | FY-03 | Commit `5857aef` — FiyatlarSection kaldırıldı. Yeni sıra: Hero → 3 Adım → Marka → Neden → SSS → Final CTA. |
+| FY-05 | Mobile + a11y polish | ✅ Tamam | FY-04 | Commit `44e9b92` — 375px 1-col grid, aria-live, aria-expanded, role="list", role="listitem" tüm accordion'da. |
+
+#### FY-01~FY-05 Birleşik Prompt (Fiyatlar + anasayfa revize)
 
 ```
 ÖNEMLİ — KURAL OVERRIDE:
@@ -596,214 +609,220 @@ kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch
 kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
 
 Branch: claude/redesign-modern-ui
-Görev: UR-01~UR-05 — /hesap/uretimler refactor (filtre + arama + 
-sıralama + yeniden üret + lazy load).
+Görev: FY-01~FY-05 — /fiyatlar refactor + anasayfa fiyatlar bölümü 
+revize (büyük 3 kart → minik bant — Cowork B önerisi, Aziz onayı 
+preview'da).
 
-Spec: uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 4)
-Mevcut sayfa: app/(auth)/hesap/uretimler/page.tsx — önce oku, mevcut 
-accordion yapısı KORUNUR (Aziz spec'i: "sayfa çok iyi tasarlanmış").
+Mevcut sayfalar:
+- app/fiyatlar/page.tsx (veya benzeri) — önce oku
+- components/landing/FiyatlarSection.tsx (anasayfa fiyatlar bölümü) — 
+  önce oku, hangi import'lar kullanılıyor
 
-Reuse: components/primitives/ChipSelector.tsx (multi mode, "Tümü" 
-seçenek). 
+Reuse: components/landing/{KrediCalculator, SSSSection, TrustStrip 
+veya benzer trust öğeleri, PackageCard}.tsx — Faz 1'de Landing 
+yapılırken oluşturulanlar.
 
 KAPSAM DIŞI:
-- Backend "yeniden üret" endpoint (frontend yönlendirme yeter)
-- Tam metin search (server-side full-text search) — basit substring 
-  match yeter
+- Yeni paket konsepti (yıllık abonelik vs) — sadece mevcut 49/129/299 
+  TL kredi paketleri
+- Backend fiyat değişikliği (FY-01 done)
 
 ────────────────────────────────────────────
-BÖLÜM 1 — UR-01: Scaffold + filtre chip bar
+BÖLÜM 1 — FY-01: /fiyatlar scaffold + 3 paket + "En popüler"
 ────────────────────────────────────────────
 
-1. Sayfa rd-* swap.
+1. Sayfa rd-* swap (mevcut sayfa indigo veya eski palette ise).
 
 2. Sayfa başlığı:
-   - Eyebrow text-rd-primary-700 "ÜRETİMLER"
-   - H1 (font-display): "Tüm üretimlerin"
-   - Subtitle: "Geçmiş üretimleri filtrele, kopyala veya yeniden üret."
-   - Toplam sayı badge: "X üretim" (sağ üstte küçük)
+   - Eyebrow text-rd-primary-700 "FİYATLAR"
+   - H1 (font-display): text-3xl md:text-5xl text-rd-neutral-900 
+     "Sade kredi paketleri"
+   - Subtitle: text-rd-neutral-600 max-w-2xl mx-auto — "Abonelik yok, 
+     krediler süresiz. İhtiyacın kadar al, istediğin zaman kullan."
+   - Center aligned
 
-3. Filtre chip bar (3 satır):
-   - Platform: 7 chip (Trendyol/Hepsiburada/Amazon TR/Amazon USA/N11/
-     Etsy + Tümü) — ChipSelector multi mode VEYA single mode + "Tümü"
-   - İçerik tipi: 5 chip (Metin/Görsel/Video/Sosyal + Tümü)
-   - Tarih: 4 chip (Bu ay/Geçen ay/Bu yıl/Tümü) — single mode
-   - Her satır başlangıcında küçük label: "Platform:", "İçerik:", 
-     "Tarih:" (text-xs uppercase text-rd-neutral-500)
+3. 3 paket kart grid (md:grid-cols-3 gap-6):
+   
+   **Başlangıç:**
+   - rounded-xl border border-rd-neutral-200 bg-white p-6 md:p-8
+   - Eyebrow: "BAŞLANGIÇ"
+   - Fiyat: font-display text-4xl text-rd-neutral-900 "₺49"
+   - "10 kredi" alt yazı
+   - Bullet liste (Lucide Check + text):
+     - 10 listing metni (1 kredi/listing)
+     - 10 görsel veya 5 video (5 kredi)
+     - Krediler süresiz
+   - CTA: bg-rd-neutral-900 text-white "Satın al" → /kredi-yukle?paket=baslangic
 
-4. Filtre state: useState ile filtreler, useMemo ile filtered list 
-   hesapla. Mevcut data fetch korunur.
+   **Popüler (öne çıkan):**
+   - rounded-xl border-2 border-rd-warm-700 bg-rd-warm-50 p-6 md:p-8
+   - Üst rozet: "EN POPÜLER" warm-earth bg + Lucide Star
+   - Eyebrow: "POPÜLER"
+   - Fiyat: font-display text-5xl text-rd-warm-900 "₺129"
+   - "30 kredi" alt yazı
+   - Bullet:
+     - 30 üretim (her tip karışık)
+     - Best value · ₺/kredi en düşük
+     - Krediler süresiz
+   - CTA: bg-rd-primary-700 text-white "Satın al" 
+     → /kredi-yukle?paket=populer
 
-Commit: feat(uretimler): UR-01 scaffold + filtre chip bar
+   **Büyük:**
+   - rounded-xl border border-rd-neutral-200 bg-white p-6 md:p-8
+   - Eyebrow: "BÜYÜK"
+   - Fiyat: "₺299"
+   - "100 kredi"
+   - Bullet:
+     - 100 üretim
+     - Volüm avantajı
+     - Krediler süresiz
+   - CTA: bg-rd-neutral-900 text-white → /kredi-yukle?paket=buyuk
 
-────────────────────────────────────────────
-BÖLÜM 2 — UR-02: Arama input + sıralama dropdown
-────────────────────────────────────────────
+4. "Önerilen" → "En popüler" terim değişikliği:
+   - Tüm site genelinde grep "Önerilen" + "Önerilen Paket" vs ifadeleri
+   - "En popüler" ile değiştir. Mevcut PackageCard veya benzeri 
+     primitive'de "highlighted" prop ismi etkilenmiyor, sadece 
+     görünür text.
 
-1. Filtre chip bar altına arama + sıralama satırı:
-   - flex justify-between
-   - Sol: Arama input (max-w-md)
-     - rounded-lg border border-rd-neutral-300 px-4 py-2 + Lucide 
-       Search size-4 sol başında
-     - placeholder: "Ürün adı veya başlık ara..."
-     - debounced 300ms (lodash debounce veya useDeferredValue)
-     - useState query, filtered list query'ye göre filtrelenir 
-       (ürün adı veya başlık içerir)
-   - Sağ: Sıralama native `<select>`
-     - Options: Yeniden eskiye (default) / Eskiden yeniye / Platform 
-       (alfabetik) / Kredi (yüksekten düşüğe)
-     - aria-label "Sıralama"
+5. PackageCard primitive (varsa Landing'de) reuse. Yoksa inline yaz, 
+   gelecek paketlerde primitive'e taşı.
 
-2. Filtre + arama + sıralama kombine: useMemo ile pipeline:
-   filtered = data
-     .filter(platformMatch)
-     .filter(tipMatch)
-     .filter(tarihMatch)
-     .filter(searchMatch)
-     .sort(sortFn)
-
-Commit: feat(uretimler): UR-02 arama + sıralama
-
-────────────────────────────────────────────
-BÖLÜM 3 — UR-03: Kart + Kopyala + Yeniden üret + placeholder
-────────────────────────────────────────────
-
-Mevcut accordion yapısı korunur (Aziz spec: "çok iyi"). Her kart 
-sonuna 3 buton:
-
-1. Buton grupu (kart altı):
-   - flex gap-2 mt-3
-   - **Kopyala** (mevcut, korunur): bg-rd-neutral-900 text-white + 
-     Lucide Copy. Tıklayınca clipboard + Toast "Kopyalandı"
-   - **Yeniden üret** (yeni): bg-white border border-rd-neutral-300 
-     hover:border-rd-primary-400 + Lucide RefreshCw. Tıklayınca 
-     `/uret?onceki={id}&platform={p}&tip={t}` query params ile 
-     yönlendirir. /uret sayfası query params'ı okur ve form'u 
-     pre-fill eder (UR-03 sonrası /uret tarafı dokunulabilir veya 
-     not düş).
-   - **İndir** (opsiyonel — sadece toplu Excel üretimleri için): 
-     Lucide Download. Mevcut data download URL varsa göster, 
-     yoksa gizle.
-
-2. Boş içerik tipi placeholder:
-   - Eğer kullanıcı sadece text üretmiş (görsel/video/sosyal yok), 
-     accordion içinde alt-not: 
-     - "Bu üretimde görsel yok. Eklemek için yeniden üret" 
-     - text-xs text-rd-neutral-500 italic
-     - Yanında küçük "Yeniden üret →" link CTA
-   - Tüm 4 tip varsa placeholder gizlenir.
-
-3. /uret tarafı pre-fill (BACKLOG'a not düş — UR-03b ticket):
-   - app/uret/page.tsx (veya client component) URL searchParams oku
-   - "onceki" varsa: önceki üretim datasını fetch et + form'a yerleştir
-   - Bu UR-03'ün dışında kalabilir; sadece "Yeniden üret" button URL 
-     yönlendirme yeter, /uret tarafı sonra zenginleşir
-   - **Önerim:** UR-03'te yeniden üret butonu sadece /uret'e (query 
-     param ile) yönlendirir. /uret tarafı pre-fill UR-03b ticket 
-     olarak BACKLOG'da bekler. Aziz onayıyla sonra yapılır.
-
-Commit: feat(uretimler): UR-03 kart aksiyonları (kopyala+yeniden+ 
-boş tip placeholder)
+Commit: feat(fiyatlar): FY-01 scaffold + 3 paket kart + "En popüler"
 
 ────────────────────────────────────────────
-BÖLÜM 4 — UR-04: Pagination / lazy load
+BÖLÜM 2 — FY-02: Kredi calculator entegrasyonu
 ────────────────────────────────────────────
 
-1. TanStack Query useInfiniteQuery (proje default):
-   ```ts
-   useInfiniteQuery({
-     queryKey: ['uretimler', filtreler],
-     queryFn: ({ pageParam = 0 }) => fetchUretimler({ 
-       offset: pageParam, limit: 20 
-     }),
-     getNextPageParam: (lastPage, allPages) => 
-       lastPage.length === 20 ? allPages.length * 20 : undefined,
-   })
-   ```
+1. Landing'deki KrediCalculator komponentini bul (components/landing/ 
+   altında muhtemelen). Yoksa minimal yeni:
 
-2. Liste sonunda: "Daha fazla yükle" buton
-   - bg-white border border-rd-neutral-300 hover:bg-rd-neutral-50
-   - Lucide ChevronDown
-   - hasNextPage false ise gizlenir, fetchNextPage isLoading'de 
-     spinner
+2. /fiyatlar sayfasında 3 paket altında bölüm:
+   - Eyebrow: "KAÇ KREDİ YETER"
+   - H2 (font-display): "İhtiyacını hesapla"
+   - Subtitle: "Üretim sayısını seç, sana uygun paketi öner."
 
-3. Infinite scroll YOK (kontrolsüz scroll user kaybolur). Buton 
-   tercih edilir.
+3. Calculator UI:
+   - Stepper input'lar (Lucide Plus/Minus): 
+     - Listing metni: 1 kredi/adet
+     - Görsel: 1 kredi/adet
+     - Video 5sn: 10 kredi/adet (eğer 13'tü, doğru değeri kontrol et)
+     - Sosyal kit: 2 kredi/adet
+   - Toplam: "Toplam: X kredi"
+   - Önerilen paket: "Bu kullanım için Y paketi yeterli"
+   - CTA: "Y paketini al" → /kredi-yukle?paket=...
 
-4. Pre-traffic için: 5-10 üretim → buton zaten gizli. Test 
-   hesabında veya gerçek kullanıcıda 20+ olunca tetiklenir.
+4. Calculator state local useState. Backend yok.
 
-Commit: feat(uretimler): UR-04 useInfiniteQuery + "Daha fazla yükle"
+Commit: feat(fiyatlar): FY-02 kredi calculator entegrasyonu
 
 ────────────────────────────────────────────
-BÖLÜM 5 — UR-05: Mobile + a11y polish
+BÖLÜM 3 — FY-03: SSS bölümü
+────────────────────────────────────────────
+
+1. components/landing/SSSSection.tsx primitive var mı kontrol et. 
+   Yoksa minimal accordion komponenti:
+
+2. /fiyatlar sayfasında calculator altında bölüm:
+   - Eyebrow: "SSS"
+   - H2: "Sıkça sorulanlar"
+   - 4-6 soru accordion (mevcut canlı sitedeki SSS kullan veya genişlet):
+     - "Kredi nasıl çalışır?"
+     - "Krediler süreli mi?" — "Hayır, süresiz."
+     - "İade var mı?" — "Kullanılmamış kredi 14 gün içinde iade."
+     - "KDV dahil mi?" — "Evet, ₺49/₺129/₺299 KDV dahil."
+     - "Fatura nasıl gelir?" — "e-Arşiv, ödeme sonrası 1-3 iş günü."
+     - "Toplu indirim?" — "Kurumsal için destek@yzliste.com"
+
+3. Accordion: Lucide ChevronDown rotate-180 + aria-expanded.
+
+4. Aziz kuralı: "Canlı sitedeki mevcut metinleri koru, yeni metin 
+   yazma" — mevcut SSS metinleri varsa ondan al, yoksa yukarıdaki 
+   placeholder kullan. Aziz preview'da kontrol eder.
+
+Commit: feat(fiyatlar): FY-03 SSS bölümü (4-6 soru)
+
+────────────────────────────────────────────
+BÖLÜM 4 — FY-04: Anasayfa fiyatlar revize + Trust strip
+────────────────────────────────────────────
+
+**Aziz A kararı uygulanıyor (28 Nis akşam):**
+
+1. **Anasayfa fiyat bölümü TAMAMEN KALDIRILIYOR:**
+   - components/landing/FiyatlarSection.tsx (veya benzeri büyük 3 kart 
+     bölümü) → app/page.tsx import temizle, dosyayı 
+     components/sections/_archive/'a taşı (Faz 1.5 archive pattern)
+   - Anasayfada minik bant DA YOK — fiyat hakkında hiçbir referans 
+     anasayfada olmayacak
+   - Header'da "Fiyatlar" linki zaten var, kullanıcı oraya gider
+   - Yeni anasayfa sırası: Hero → 3 Adım → Marka → Neden → SSS → 
+     Final CTA (6 bölüm — Faz 1.5'te 7'ydi, şimdi 6)
+
+2. **Trust strip /fiyatlar sayfası altında:**
+   - components/landing/TrustStrip primitive (varsa) reuse. Yoksa 
+     minimal:
+     - flex items-center justify-center gap-6 py-6 border-t 
+       border-rd-neutral-200
+     - iyzico logo + "Güvenli ödeme" 
+     - Lucide ShieldCheck + "KVKK uyumlu"
+     - Lucide FileText + "e-Arşiv fatura"
+     - text-xs text-rd-neutral-500
+
+Commit: feat(fiyatlar): FY-04 anasayfa minik bant + trust strip
+
+────────────────────────────────────────────
+BÖLÜM 5 — FY-05: Mobile + a11y polish
 ────────────────────────────────────────────
 
 1. **Mobile (375px):**
-   - Filtre chip bar: yatay scroll (overflow-x-auto + scroll-snap)
-   - Arama input full width, sıralama dropdown alt satır
-   - Kart accordion korunur
-   - "Daha fazla" buton full width
+   - 3 paket kart dikey istif. "Popüler" üst rozet kompakt 
+     (text-[10px]).
+   - Fiyat font boyutu mobile text-3xl (text-5xl yerine)
+   - Calculator stepper button'lar tap-friendly (min 44px)
+   - SSS accordion mobile padding p-4
+   - Anasayfa minik bant: flex-col + alt-alta öğeler, link altına alır
 
 2. **A11y:**
-   - main aria-labelledby h1
-   - Filtre ChipSelector ARIA (zaten var)
-   - Arama input aria-label "Üretim ara"
-   - Sıralama select aria-label "Sıralama"
-   - Liste role="list", her kart role="listitem"
-   - Accordion aria-expanded + aria-controls
-   - "Yeniden üret" buton aria-label net (örn "Yeniden üret: [ürün adı]")
+   - Paket kartları role="article" + aria-labelledby başlık
+   - "En popüler" rozet aria-label "En popüler paket"
+   - CTA buton aria-label net (örn "Popüler paketi satın al — ₺129")
+   - Calculator stepper aria-valuemin/max/now
+   - SSS accordion aria-expanded + aria-controls
+   - Anasayfa minik bant Link aria-label "Tüm fiyatları gör"
 
 3. **Edge case'ler:**
-   - Filtre sonucu boş: "Filtrelere uyan üretim yok" + filtre temizle 
-     CTA
-   - Boş liste (hiç üretim yok): "Henüz üretim yapmadın" + Lucide 
-     FileText + "İlk üretim" CTA → /uret
-   - Fetch hata: retry buton
+   - Calculator 0 kullanım: "Yine de paketi gör" CTA
+   - SSS metinleri çevirilemez varsa fallback
 
-Commit: chore(uretimler): UR-05 mobile + a11y polish
+Commit: chore(fiyatlar): FY-05 mobile + a11y polish
 
 ────────────────────────────────────────────
 Test
 ────────────────────────────────────────────
 
 - npm run build temiz
-- Localde /hesap/uretimler:
-  - Eyebrow + Manrope H1 + üretim sayısı
-  - 3 satır filtre chip bar + arama + sıralama
-  - Kart accordion korunur, 3 buton (Kopyala/Yeniden üret/İndir)
-  - "Yeniden üret" → /uret?onceki=...
-  - 20+ üretim varsa "Daha fazla yükle"
-  - Boş içerik tipi placeholder
+- Localde:
+  - /fiyatlar: eyebrow + H1 + 3 paket kart, "Popüler" warm-earth 
+    border + üst rozet
+  - "En popüler" terim her yerde tutarlı
+  - Calculator çalışır, doğru paket öneriyor
+  - SSS accordion açılıp kapanır
+  - Trust strip alt bantta
+  - Anasayfa: büyük fiyat kartları YOK, minik bant var
   - 375px mobile sıkıntısız
 
 Commit özeti (5 atomik) VEYA tek:
-feat(uretimler): UR-01~UR-05 /hesap/uretimler refactor
+feat(fiyatlar): FY-01~FY-05 /fiyatlar refactor + anasayfa minik bant
 
-BACKLOG'da UR-01~UR-05 [x] işaretle. UR-03b (/uret pre-fill) 
-ticket aç.
+BACKLOG'da FY-01~FY-05 [x] işaretle. Eski H-21A/H-22/H-23/H-24/H-26 
+tickets bu pakette absorbed.
 
 Bittikten sonra rapor:
 - Commit listesi
-- ChipSelector "Tümü" seçenek implementation
-- "Yeniden üret" yönlendirme (query params doğru mu, /uret 
-  tarafı pre-fill için ticket açıldı mı)
-- useInfiniteQuery vs basit pagination kararı
-- Açık riskler
+- PackageCard / KrediCalculator / SSSSection primitive reuse durumu
+- Anasayfa eski FiyatlarSection nereye taşındı (_archive)
+- "En popüler" terim grep sonucu — kaç yerde değiştirildi
+- Açık riskler / Aziz preview test
 ```
-
-### Grup 4 — Fiyatlar `/fiyatlar`
-
-**Aziz kararı:** Anasayfadaki Fiyatlar bölümü "anasayfayı bozuyor" — H-21A'da kaldırma vs. minik bant kararı verilecek.
-
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| H-21A | Anasayfa FY bölümü kararı | Bekliyor | H-01 | A=kaldır, B=minik bant, C=mevcut. Cowork önerisi: B. |
-| H-22 | "Önerilen" → "En popüler" | Bekliyor | H-01 | Terim değişikliği. |
-| H-23 | Kredi calculator entegrasyonu | Bekliyor | H-01, FY done | Landing reuse. |
-| H-24 | SSS bölümü | Bekliyor | H-01 | 4-6 soru kredi/fiyat. |
-| H-25 | ~~Karşılaştırma tablosu~~ | Atlandı | — | Aziz kararı. |
-| H-26 | Trust strip alt bant | Bekliyor | H-01 | Landing reuse. |
 
 ### Grup 5 — Blog `/blog`
 
