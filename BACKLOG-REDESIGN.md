@@ -1940,9 +1940,9 @@ Bittikten sonra rapor:
 
 **Faz 5 toplam:** 5 birleşik ticket (eski IC-01~08 sıkıştırıldı).
 
-#### IC-01~IC-05 Birleşik Prompt (İçerik sayfaları)
+**IC-01~IC-05 ✅ Tamam (28 Nis gece).** /blog liste + post + /sss + /hakkımızda refactor. Yeni: components/blog/{BlogListesi, BlogPaylas, SSSListesi}.tsx. Kararlar: prose-rd custom kurulmadı (mevcut Bolum bileşen sistemi yeterli), Accordion primitive'e taşıma "ileride" (Faz 6 cleanup'a alınabilir), Aziz metin kuralı korundu (sadece kategori field eklendi SSS'e).
 
-```
+<!-- IC prompt detay silindi — Code uyguladı, detay commit'lerde
 ÖNEMLİ — KURAL OVERRIDE:
 Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
 kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
@@ -2206,22 +2206,249 @@ Bittikten sonra rapor:
 - Aziz kuralı korundu mu (mevcut metinler değişmedi)
 - Açık riskler / Aziz preview test
 ```
+-->
 
 ---
 
-## 17 — Yasal + Hata Sayfaları (Faz 6 — Toplu Pas)
+## 17 — Yasal + Hata Sayfaları + Post-redesign Cleanup (Faz 6 SON PAKET)
 
-**Yaklaşım:** Düz metin sayfaları. Tek toplu pasta global token swap, header/footer reuse.
+**Yaklaşım:** Faz 6 = redesign'ın SON paketi. 3 ana iş: (1) yasal/hata sayfaları toplu pas, (2) post-redesign code cleanup (orphan dosyalar), (3) final QA (metin taraması + Lighthouse + scheduled task reaktivasyon).
 
 | ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
 |---|---|---|---|---|
-| LG-01 | 6 yasal sayfa global token swap | Bekliyor | Landing done | `/kvkk-aydinlatma`, `/gizlilik`, `/kosullar`, `/cerez-politikasi`, `/mesafeli-satis`, `/teslimat-iade` — rd-* paleti, Manrope, prose body. |
-| LG-02 | 404 not-found | Bekliyor | LG-01 | "Sayfa bulunamadı" H1, anasayfa CTA, MapOff illustrasyon. |
-| LG-03 | error.tsx | Bekliyor | LG-01 | "Bir şeyler ters gitti", AlertTriangle, "Tekrar dene". |
-| LG-04 | loading.tsx tutarlı loader | Bekliyor | LG-01 | Loader2 + animate-spin. |
-| LG-05 | Acceptance | Bekliyor | LG-04 | 9 sayfa hızlı pas. |
+| LG-01 | 6 yasal sayfa global token swap | ✅ Tamamlandı | IC done | /kvkk-aydinlatma, /gizlilik, /kosullar, /cerez-politikasi, /mesafeli-satis, /teslimat-iade — rd-* paleti, Manrope eyebrow + H1, prose body (IC-02 Bolum sistem reuse). Tek mekanik pas. |
+| LG-02 | 404 not-found + error.tsx + loading.tsx | ✅ Tamamlandı | LG-01 | app/not-found.tsx: Lucide MapOff size-16 + "Sayfa bulunamadı" + "Anasayfaya dön" CTA. app/error.tsx: Lucide AlertTriangle + "Bir şeyler ters gitti" + "Tekrar dene" + sentry log (varsa). app/loading.tsx: Lucide Loader2 animate-spin tutarlı global loader. Tüm route segment'lerde global. |
+| LG-03 | Post-redesign code cleanup | ✅ Tamamlandı | LG-02 | **Orphan dosya silme:** app/yzstudio/components/tryon/TryonAyarlar.tsx (yzstudio refactor sonrası import edilmiyor), components/RefDavetBolumu.tsx veya benzeri (HS InviteBox sonrası eski). components/sections/_archive/ klasörü Aziz onayında silinir veya kalır (git history ile geri alınabilir). **Accordion primitive'e taşıma:** FY-03 + IC-03 inline accordion → components/primitives/Accordion.tsx (FiyatlarSSS + SSSListesi reuse'a geçer). |
+| LG-04 | Scheduled tasks reaktivasyon + backend ticket listesi | ✅ Tamamlandı | LG-03 | 5 PAUSED scheduled task (blog-seo-yazisi dahil) → enabled:true. Backend bekleyen ticket'lar net listele (HD-01b bildirim_tercihleri, KR-02b kredi_log işlem_turu, OD-02b payment_failed analytics, UR-03b /uret pre-fill, SR-04b ZIP/PDF, FT için Paraşüt entegrasyonu, profiles TC kimlik/Vergi no kolonları) → BACKLOG.md'ye taşı (canlı site backlog'u). |
+| LG-05 | Final QA + acceptance | ✅ Tamamlandı | LG-04 | (1) Post-redesign metin taraması: spec dosyaları vs canlı sitedeki metin tutarlılığı (Aziz kuralı: mevcut metinler korundu varsayım — fark bulunursa rapor). (2) Lighthouse mobil + desktop tüm sayfalarda (≥85 perf, ≥90 a11y, <0.1 CLS hedef). (3) Aziz toplu acceptance: 9+ sayfa preview testi. (4) main'e merge hazırlığı (CI temiz, Vercel build OK). |
 
 **Faz 6 toplam:** 5 ticket.
+
+#### LG-01~LG-05 Birleşik Prompt (Faz 6 SON paket — yasal + hata + cleanup)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: LG-01~LG-05 — Faz 6 SON paket. Yasal sayfalar + hata sayfaları 
++ post-redesign code cleanup + final QA. Bu paket bittiğinde redesign 
+tamam, main'e merge hazır.
+
+Mevcut sayfalar:
+- app/kvkk-aydinlatma/page.tsx
+- app/gizlilik/page.tsx
+- app/kosullar/page.tsx
+- app/cerez-politikasi/page.tsx
+- app/mesafeli-satis/page.tsx
+- app/teslimat-iade/page.tsx
+- app/not-found.tsx (varsa, yoksa yeni)
+- app/error.tsx (varsa, yoksa yeni)
+- app/loading.tsx (varsa, yoksa yeni)
+
+Reuse: components/blog/[slug]'daki Bolum bileşen sistemi (giris/baslik/
+paragraf/liste — yasal sayfalar için ideal), components/primitives/* 
+(StatusBadge, Toast, vs — hata sayfasında).
+
+Aziz kuralı: Mevcut metinler korunur, sadece UI/layout değişimi.
+
+────────────────────────────────────────────
+BÖLÜM 1 — LG-01: 6 yasal sayfa global swap
+────────────────────────────────────────────
+
+Her sayfa için:
+
+1. Sayfa rd-* swap.
+
+2. Yapı:
+   - SiteHeader (mevcut, dokunma)
+   - Container: max-w-prose mx-auto px-4 py-12
+   - Eyebrow + H1 (font-display, sayfaya göre):
+     - /kvkk-aydinlatma: "KVKK" / "KVKK Aydınlatma Metni"
+     - /gizlilik: "GİZLİLİK" / "Gizlilik politikası"
+     - /kosullar: "KULLANIM KOŞULLARI" / "Kullanım koşulları"
+     - /cerez-politikasi: "ÇEREZ POLİTİKASI" / "Çerez politikası"
+     - /mesafeli-satis: "MESAFELİ SATIŞ" / "Mesafeli satış sözleşmesi"
+     - /teslimat-iade: "TESLİMAT VE İADE" / "Teslimat ve iade koşulları"
+   - Subtitle/sürüm bilgisi: "Son güncelleme: [tarih]" text-sm 
+     text-rd-neutral-500
+   - Article body: IC-02'deki Bolum bileşen sistemi reuse
+     (giris/baslik/paragraf/liste/bilgi-kutusu) — mevcut metinler 
+     KORUNUR
+   - SiteFooter (mevcut)
+
+3. Mevcut metinler korunur (KVKK uyumu için doğru metin önemli — 
+   Aziz onaylanan içerik). Sadece layout/token değişimi.
+
+Commit: feat(yasal): LG-01 6 yasal sayfa rd-* swap (mevcut metin 
+korundu)
+
+────────────────────────────────────────────
+BÖLÜM 2 — LG-02: 404 + error.tsx + loading.tsx
+────────────────────────────────────────────
+
+1. **app/not-found.tsx:**
+   - SiteHeader (varsa) + center container
+   - Lucide MapOff size-16 text-rd-neutral-300
+   - H1 (font-display): "Sayfa bulunamadı"
+   - p: "Aradığın sayfa taşınmış veya hiç var olmamış olabilir."
+   - 2 CTA:
+     - Primary: "Anasayfaya dön" → / (bg-rd-primary-700)
+     - Ghost: "Üretmeye başla" → /uret (border)
+   - SiteFooter
+
+2. **app/error.tsx:**
+   - 'use client'
+   - Center container
+   - Lucide AlertTriangle size-16 text-rd-warning-700
+   - H1 (font-display): "Bir şeyler ters gitti"
+   - p: "Hatamız için özür dileriz. Tekrar denersen düzelir, ya da 
+     destek@yzliste.com'a yaz."
+   - 2 CTA:
+     - "Tekrar dene" → reset() prop (bg-rd-primary-700)
+     - "Anasayfa" → / (ghost)
+   - Sentry log: error nesnesini Sentry'ye gönder (sentry/nextjs 
+     varsa, lib/sentry.ts veya benzeri kontrol et)
+
+3. **app/loading.tsx:**
+   - Tutarlı global loader
+   - Center container
+   - Lucide Loader2 size-8 text-rd-primary-700 animate-spin
+   - text-sm text-rd-neutral-500 "Yükleniyor..."
+
+4. Tüm route segment'lerde otomatik geçerli (Next.js convention).
+
+Commit: feat(hata): LG-02 not-found + error + loading global
+
+────────────────────────────────────────────
+BÖLÜM 3 — LG-03: Post-redesign code cleanup
+────────────────────────────────────────────
+
+1. **Orphan dosya tespit + sil:**
+   - app/yzstudio/components/tryon/TryonAyarlar.tsx — yzstudio 
+     refactor sonrası import edilmiyor, sil
+   - components/RefDavetBolumu.tsx (veya benzeri) — HS InviteBox 
+     sonrası eski, sil
+   - Grep ile orphan import kalıntısı: tüm dosyalardan referans yok 
+     mu kontrol et
+   - components/sections/_archive/ klasörü: git history korur, 
+     klasörü sil (Aziz onayında)
+
+2. **Accordion primitive'e taşıma:**
+   - components/fiyatlar/FiyatlarSSS.tsx + components/blog/SSSListesi.tsx
+     içinde inline accordion var (her ikisi de)
+   - Yeni: components/primitives/Accordion.tsx (single + multiple mode)
+     - role="region" + aria-expanded + aria-controls
+     - ChevronDown rotate-180 transition
+     - Dışarıdan items prop alır
+   - FiyatlarSSS + SSSListesi → primitive Accordion'u reuse eder
+
+3. **Build temiz:**
+   - npm run build sonrası uyarı yok
+   - TypeScript clean
+   - Unused import yok (eslint --no-unused-vars)
+
+Commit: chore(cleanup): LG-03 post-redesign cleanup (orphan dosyalar 
+sil + Accordion primitive)
+
+────────────────────────────────────────────
+BÖLÜM 4 — LG-04: Scheduled tasks + backend ticket listesi
+────────────────────────────────────────────
+
+1. **Scheduled tasks reaktivasyon:**
+   - 5 PAUSED scheduled task'ın enabled:true yapılması (blog-seo-yazisi 
+     dahil)
+   - Bu Cowork'ün veya Aziz'in scheduled task UI'ından yapacağı iş 
+     (Code dokunmaz, sadece talimat verir)
+   - Code: docs/post-redesign-checklist.md veya BACKLOG.md'ye yaz: 
+     "Redesign main'e merge sonrası 5 scheduled task enabled:true 
+     yapılacak"
+
+2. **Backend bekleyen ticket'lar BACKLOG.md'ye taşı (canlı site 
+   backlog'u):**
+   - HD-01b: profiles.bildirim_tercihleri JSONB + /api/profil/bildirimler
+   - KR-02b: kredi_log tablosu + işlem_turu kolonu
+   - OD-02b: payment_failed analytics event lib/analytics.ts
+   - UR-03b: /uret pre-fill query params okuma (yeniden üret tamamlama)
+   - SR-04b: ZIP/PDF indir multimedia üretimler
+   - Paraşüt entegrasyonu (FT için: status field, PDF, email send)
+   - profiles TC kimlik / Vergi no / Şirket adı kolonları (e-Fatura)
+   - YS-11: /yzstudio/yol-haritasi sayfası (opsiyonel)
+   
+   BACKLOG-REDESIGN.md'den BACKLOG.md'ye taşı (priority Aziz seçer).
+
+Commit: docs(cleanup): LG-04 scheduled task reaktivasyon talimatı + 
+backend ticket'lar BACKLOG'a taşındı
+
+────────────────────────────────────────────
+BÖLÜM 5 — LG-05: Final QA + acceptance
+────────────────────────────────────────────
+
+1. **Post-redesign metin taraması:**
+   - Aziz kuralı: "Canlı sitedeki mevcut metinleri koru, yeni metin 
+     yazma" — bu kontrolü yap
+   - Tüm spec dosyalarındaki metin örneklerini canlı/preview siteyle 
+     karşılaştır
+   - Fark bulursan: spec mi eski mı, canlı mi yanlış mı karar ver
+   - Rapor: docs/metin-tarama.md veya BACKLOG'da yeni bölüm
+
+2. **Lighthouse pass (mobil + desktop):**
+   - Tüm ana sayfalar: /, /uret, /yzstudio, /fiyatlar, /sss, /hakkımızda, 
+     /blog, /hesap, /hesap/marka, /hesap/profil, /hesap/krediler, 
+     /hesap/uretimler, /hesap/faturalar, /hesap/ayarlar, /kredi-yukle, 
+     /giris, /kayit
+   - Hedef: Perf ≥85 (animasyonlu sayfalar 80), A11y ≥90, CLS <0.1
+   - Code çalıştıramaz (Aziz preview'da yapacak); Code: docs/
+     lighthouse-checklist.md'ye sayfa listesi + hedefler ekle
+
+3. **Aziz toplu acceptance:**
+   - Her ana sayfa için preview test
+   - Mobile (375px) + desktop
+   - Klavye Tab tour
+   - Aziz onaylayınca redesign tamam → main'e merge
+
+4. **main'e merge hazırlığı:**
+   - CI temiz (npm run build + npm run lint exit 0)
+   - Tüm Faz 1-6 ticket [x]
+   - Conflict yok (claude/redesign-modern-ui ↔ main rebase OK)
+   - Aziz onayı sonrası `git checkout main && git merge 
+     claude/redesign-modern-ui --no-ff` veya PR açılır
+
+Commit: chore(redesign): LG-05 final QA + acceptance hazırlığı
+
+────────────────────────────────────────────
+Test
+────────────────────────────────────────────
+
+- npm run build temiz
+- TypeScript clean
+- Localde:
+  - 6 yasal sayfa: rd-* + Manrope + mevcut metinler korundu
+  - /not-found-test gibi var olmayan URL → 404 sayfası
+  - error.tsx test (geçici hata throw)
+  - loading.tsx route geçişlerinde
+  - Build sonrası unused import yok
+  - Accordion primitive test (FiyatlarSSS + SSSListesi reuse)
+
+Commit özeti (5 atomik) VEYA tek:
+chore(redesign): LG-01~LG-05 Faz 6 son paket — yasal + hata + cleanup 
++ final QA
+
+BACKLOG'da LG-01~LG-05 [x] işaretle.
+
+Bittikten sonra rapor:
+- Commit listesi
+- Orphan dosya silme listesi (kaç dosya silindi)
+- Accordion primitive entegrasyonu (FiyatlarSSS + SSSListesi reuse 
+  başarılı mı)
+- Scheduled task + backend ticket'lar BACKLOG.md'ye taşındı mı
+- Lighthouse + metin taraması checklist eklendi mi
+- Aziz preview test'e hazır mı (CI temiz, build OK)
+```
+
+**Redesign tamamlandığında:** Aziz toplu acceptance → main'e merge → Vercel auto-deploy → canlı yzliste.com yenilenir. Sonrası Faz 7+ Paraşüt entegrasyonu ve diğer backend bekleyen ticket'lar (canlı BACKLOG.md'de).
 
 ---
 

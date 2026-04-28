@@ -1,90 +1,53 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { ChevronDown, Mail } from 'lucide-react'
+import { Mail } from "lucide-react";
+import Accordion, { type AccordionItem } from "@/components/primitives/Accordion";
 
 const SSS_ITEMS = [
   {
-    soru: 'Kredi nedir, nasıl çalışır?',
-    cevap: 'Her içerik üretimi kredi tüketir. Listing metni 1 kredi, görsel 1 kredi (stil başına), sosyal medya 1 kredi, video 10-20 kredi. Kayıt olunca 3 ücretsiz kredi hediye edilir.',
+    soru: "Kredi nedir, nasıl çalışır?",
+    cevap:
+      "Her içerik üretimi kredi tüketir. Listing metni 1 kredi, görsel 1 kredi (stil başına), sosyal medya 1 kredi, video 10-20 kredi. Kayıt olunca 3 ücretsiz kredi hediye edilir.",
   },
   {
-    soru: 'Satın aldığım krediler ne zaman sona erer?',
-    cevap: 'Kredilerin sona erme tarihi yoktur. Tüm kullandığın krediler bitene kadar hesabında kalır.',
+    soru: "Satın aldığım krediler ne zaman sona erer?",
+    cevap:
+      "Kredilerin sona erme tarihi yoktur. Tüm kullandığın krediler bitene kadar hesabında kalır.",
   },
   {
-    soru: 'Görsel üretimde kredi nasıl düşer?',
-    cevap: 'Seçtiğin her stil için 1 görsel üretilir ve kredi üretim anında düşer. Birden fazla stil seçersen her biri ayrı kredi harcar. İndirme bedavadır.',
+    soru: "Görsel üretimde kredi nasıl düşer?",
+    cevap:
+      "Seçtiğin her stil için 1 görsel üretilir ve kredi üretim anında düşer. Birden fazla stil seçersen her biri ayrı kredi harcar. İndirme bedavadır.",
   },
   {
-    soru: 'Video üretimi kaç kredi tutar?',
-    cevap: '5 saniyelik video 10 kredi, 10 saniyelik video 20 kredi tüketir. Dikey (9:16 · Reels/TikTok), kare (1:1 · Feed) veya yatay (16:9 · YouTube) format seçebilirsin. Video MP4 formatında indirilir.',
+    soru: "Video üretimi kaç kredi tutar?",
+    cevap:
+      "5 saniyelik video 10 kredi, 10 saniyelik video 20 kredi tüketir. Dikey (9:16 · Reels/TikTok), kare (1:1 · Feed) veya yatay (16:9 · YouTube) format seçebilirsin. Video MP4 formatında indirilir.",
   },
   {
-    soru: 'Hangi platformlar için listing üretebiliyorum?',
-    cevap: 'Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA. Her platform için başlık uzunlukları, özellik sayısı ve dil kuralları (Türkçe/İngilizce) ayrı ayrı optimize edilmiştir.',
+    soru: "Hangi platformlar için listing üretebiliyorum?",
+    cevap:
+      "Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA. Her platform için başlık uzunlukları, özellik sayısı ve dil kuralları (Türkçe/İngilizce) ayrı ayrı optimize edilmiştir.",
   },
   {
-    soru: 'Paket satın almak için ne gerekiyor?',
-    cevap: 'Hesap oluşturup fatura bilgilerini (ad soyad + TC kimlik veya vergi numarası) profil sayfandan girmen yeterli. Ödeme iyzico altyapısıyla güvenle yapılır.',
+    soru: "Paket satın almak için ne gerekiyor?",
+    cevap:
+      "Hesap oluşturup fatura bilgilerini (ad soyad + TC kimlik veya vergi numarası) profil sayfandan girmen yeterli. Ödeme iyzico altyapısıyla güvenle yapılır.",
   },
   {
-    soru: 'İade politikası nedir?',
-    cevap: 'Kullanılmamış krediler için iade talebi oluşturabilirsiniz. Kullanılan krediler iade edilmez. Detaylar için destek@yzliste.com adresine yazabilirsiniz.',
+    soru: "İade politikası nedir?",
+    cevap:
+      "Kullanılmamış krediler için iade talebi oluşturabilirsiniz. Kullanılan krediler iade edilmez. Detaylar için destek@yzliste.com adresine yazabilirsiniz.",
   },
-]
+];
 
-function AccordionItem({
-  soru,
-  cevap,
-  isOpen,
-  onToggle,
-  index,
-}: {
-  soru: string
-  cevap: string
-  isOpen: boolean
-  onToggle: () => void
-  index: number
-}) {
-  const id = `fiyatlar-sss-${index}`
-
-  return (
-    <div role="listitem">
-      <button
-        id={`${id}-trigger`}
-        aria-expanded={isOpen}
-        aria-controls={`${id}-panel`}
-        onClick={onToggle}
-        className="flex w-full items-center justify-between gap-4 py-5 text-left transition-colors hover:text-rd-primary-600"
-      >
-        <span className="text-sm font-medium text-rd-neutral-900">{soru}</span>
-        <ChevronDown
-          className={`h-4 w-4 flex-shrink-0 text-rd-neutral-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-          aria-hidden="true"
-        />
-      </button>
-
-      <div
-        id={`${id}-panel`}
-        role="region"
-        aria-labelledby={`${id}-trigger`}
-        className="grid transition-[grid-template-rows] duration-200 ease-out"
-        style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
-      >
-        <div className="overflow-hidden">
-          <p className="pb-5 text-sm leading-relaxed text-rd-neutral-500">{cevap}</p>
-        </div>
-      </div>
-    </div>
-  )
-}
+const accordionItems: AccordionItem[] = SSS_ITEMS.map((item, i) => ({
+  id: `fiyatlar-sss-${i}`,
+  trigger: item.soru,
+  content: item.cevap,
+}));
 
 export default function FiyatlarSSS() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0)
-
-  const toggle = (i: number) => setOpenIndex(prev => (prev === i ? null : i))
-
   return (
     <section
       className="px-4 sm:px-6 py-16 bg-white"
@@ -92,37 +55,38 @@ export default function FiyatlarSSS() {
     >
       <div className="max-w-3xl mx-auto">
         <p
-          className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-primary-600 text-center mb-3"
-          style={{ fontFamily: 'var(--font-rd-display)' }}
+          className="text-xs font-medium tracking-[0.1em] uppercase text-rd-primary-600 text-center mb-3"
+          style={{ fontFamily: "var(--font-rd-display)" }}
         >
           Sık sorulan sorular
         </p>
         <h2
           id="fiyatlar-sss-heading"
-          className="text-2xl font-bold text-rd-neutral-900 text-center mb-10"
-          style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em' }}
+          className="text-2xl font-medium text-rd-neutral-900 text-center mb-10"
+          style={{
+            fontFamily: "var(--font-rd-display)",
+            letterSpacing: "-0.01em",
+          }}
         >
           Merak ettiklerin
         </h2>
 
-        <div className="divide-y divide-rd-neutral-200" role="list">
-          {SSS_ITEMS.map((item, i) => (
-            <AccordionItem
-              key={i}
-              soru={item.soru}
-              cevap={item.cevap}
-              isOpen={openIndex === i}
-              onToggle={() => toggle(i)}
-              index={i}
-            />
-          ))}
-        </div>
+        <Accordion
+          items={accordionItems}
+          defaultOpen={0}
+          idPrefix="fiyatlar-sss"
+        />
 
         <div className="mt-10 flex flex-col items-center gap-3 rounded-lg bg-rd-neutral-50 p-6 text-center sm:flex-row sm:justify-between sm:text-left">
           <div className="flex items-center gap-3">
-            <Mail className="h-5 w-5 text-rd-neutral-400" aria-hidden="true" />
+            <Mail
+              className="h-5 w-5 text-rd-neutral-400"
+              aria-hidden="true"
+            />
             <div>
-              <p className="text-sm font-medium text-rd-neutral-700">Başka soruların mı var?</p>
+              <p className="text-sm font-medium text-rd-neutral-700">
+                Başka soruların mı var?
+              </p>
               <a
                 href="mailto:destek@yzliste.com"
                 className="text-sm text-rd-primary-600 hover:text-rd-primary-700 transition-colors"
@@ -134,5 +98,5 @@ export default function FiyatlarSSS() {
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,7 +1,8 @@
 "use client";
 import { useState, useMemo } from "react";
-import { Search, X, ChevronDown, Mail } from "lucide-react";
+import { Search, X, Mail } from "lucide-react";
 import ChipSelector from "@/components/primitives/ChipSelector";
+import Accordion, { type AccordionItem } from "@/components/primitives/Accordion";
 
 export interface SSSItem {
   s: string;
@@ -13,57 +14,9 @@ interface Props {
   sorular: SSSItem[];
 }
 
-function AccordionItem({
-  soru,
-  cevap,
-  isOpen,
-  onToggle,
-  id,
-}: {
-  soru: string;
-  cevap: string;
-  isOpen: boolean;
-  onToggle: () => void;
-  id: string;
-}) {
-  return (
-    <div role="listitem">
-      <button
-        id={`${id}-trigger`}
-        aria-expanded={isOpen}
-        aria-controls={`${id}-panel`}
-        onClick={onToggle}
-        className="flex w-full items-center justify-between gap-4 py-5 text-left transition-colors hover:text-rd-primary-600"
-      >
-        <span className="text-sm font-medium text-rd-neutral-900">{soru}</span>
-        <ChevronDown
-          className={`h-4 w-4 flex-shrink-0 text-rd-neutral-400 transition-transform duration-200 ${
-            isOpen ? "rotate-180" : ""
-          }`}
-          aria-hidden="true"
-        />
-      </button>
-      <div
-        id={`${id}-panel`}
-        role="region"
-        aria-labelledby={`${id}-trigger`}
-        className="grid transition-[grid-template-rows] duration-200 ease-out"
-        style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
-      >
-        <div className="overflow-hidden">
-          <p className="pb-5 text-sm leading-relaxed text-rd-neutral-500">
-            {cevap}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function SSSListesi({ sorular }: Props) {
   const [aramaMetni, setAramaMetni] = useState("");
   const [aktifKategori, setAktifKategori] = useState("tümü");
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const kategoriler = useMemo(
     () => [...new Set(sorular.map((s) => s.kategori))],
@@ -90,8 +43,15 @@ export default function SSSListesi({ sorular }: Props) {
     });
   }, [sorular, aramaMetni, aktifKategori]);
 
-  const toggle = (i: number) =>
-    setOpenIndex((prev) => (prev === i ? null : i));
+  const accordionItems: AccordionItem[] = useMemo(
+    () =>
+      filtrelenmis.map((item, i) => ({
+        id: `sss-item-${i}`,
+        trigger: item.s,
+        content: item.c,
+      })),
+    [filtrelenmis]
+  );
 
   return (
     <>
@@ -107,10 +67,7 @@ export default function SSSListesi({ sorular }: Props) {
           <input
             type="search"
             value={aramaMetni}
-            onChange={(e) => {
-              setAramaMetni(e.target.value);
-              setOpenIndex(null);
-            }}
+            onChange={(e) => setAramaMetni(e.target.value)}
             placeholder="Soru ara..."
             className="w-full pl-9 pr-9 py-2.5 text-sm border border-rd-neutral-200 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-500 bg-white"
             aria-label="SSS'te ara"
@@ -132,28 +89,18 @@ export default function SSSListesi({ sorular }: Props) {
             label="Kategori filtresi"
             options={chipOptions}
             value={aktifKategori}
-            onChange={(v) => {
-              setAktifKategori(v);
-              setOpenIndex(null);
-            }}
+            onChange={setAktifKategori}
           />
         </div>
       </div>
 
       {/* Accordion */}
       {filtrelenmis.length > 0 ? (
-        <div className="divide-y divide-rd-neutral-200" role="list">
-          {filtrelenmis.map((item, i) => (
-            <AccordionItem
-              key={i}
-              id={`sss-item-${i}`}
-              soru={item.s}
-              cevap={item.c}
-              isOpen={openIndex === i}
-              onToggle={() => toggle(i)}
-            />
-          ))}
-        </div>
+        <Accordion
+          key={`${aktifKategori}-${aramaMetni}`}
+          items={accordionItems}
+          idPrefix="sss"
+        />
       ) : (
         <div className="text-center py-12">
           <p className="text-sm text-rd-neutral-500">Soru bulunamadı.</p>
