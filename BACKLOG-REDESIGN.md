@@ -1545,8 +1545,9 @@ Bittikten sonra:
 | AU-06 | `/sifre-sifirla` form | Bekliyor | AU-01 | KeyRound, 2 step. |
 | AU-07 | Mobile responsive | Bekliyor | AU-06 | Tek kolon. |
 | AU-08 | A11y + acceptance | Bekliyor | AU-07 | Form aria, autocomplete. |
+| AU-09 | Google OAuth preview URL fix | Bekliyor | AU-02 | Aziz 28 Nis bulgusu: Google ile giriş preview deployment'ında canlı yzliste.com'a yönlendiriyor. Email+şifre OK. Çözüm 2 adımda: (1) Supabase dashboard → Authentication → URL Configuration → Redirect URLs listesine `https://*.vercel.app/**` pattern ekle. (2) Google Cloud Console → APIs → Credentials → OAuth 2.0 Client → Authorized redirect URIs listesine Vercel preview URL pattern eklenmiyor (Google wildcard kabul etmiyor) — onaylı redirect URI'ları olarak Supabase callback URL (`https://<project>.supabase.co/auth/v1/callback`) tek başına yeterli olmalı, çünkü Google Supabase'e geri döner, Supabase de Site URL/Redirect URL listesindeki en yakın eşleşmeye gönderir. Kontrol: Supabase config doğruysa Google whitelist sorun değildir. Kod tarafı temiz (AuthForm.tsx `window.location.origin` kullanıyor, hardcoded yok). |
 
-**Faz 4 toplam:** 8 ticket.
+**Faz 4 toplam:** 9 ticket.
 
 ---
 
@@ -1583,18 +1584,447 @@ Bittikten sonra:
 
 ---
 
-## Faz Özeti — Roadmap
+## 18 — Anasayfa Reroll (Faz 1.5)
+
+**Spec:** `uploads/anasayfa-kisaltma-spec.md` (Aziz 28 Nis upload)
+**Mockup:** `uploads/3-adim-animasyonlu-mockup-v2.html`
+**Branch:** `claude/redesign-modern-ui`
+**Aziz önceliği (28 Nis):** "1 en önemli anasayfa ve üretim sayfası. Gerisini sen seç."
+
+**Hedef:** Anasayfayı 9 bölümden 7 bölüme indir. "4 içerik türü" mesajı şu an 3 farklı bölümde tekrar ediliyor (Bölüm 2 + 3 + 4) — kullanıcı "tamam, anladım" der + scroll'a devam eder. Yeni "3 Adım Animasyonlu" bölümü 9 sn'lik döngüyle "ne yapıyoruz" sorusunu cevaplar, altındaki birleşik bilgi şeridi 4 içerik tipini kompakt gösterir.
+
+**Önemli yapı kararı:** Aziz spec'inde 24 ticket vardı. Cowork bunu **6 birleşik ticket'a** sıkıştırdı (Code'un /uret 17-ticket başarısı + SR 6-ticket başarısı kanıtladığı kapasiteye uygun granularite).
+
+**Kapsam DIŞI:**
+- Hero, Marka profili, Neden yzliste, Fiyatlar, SSS, Final CTA bölümleri DEĞİŞMİYOR
+- Backend / API değişikliği yok
+- Lottie / Rive yok — sadece CSS keyframes (mockup'tan kopya)
+- Sosyal medya örnek caption'ı uydurma değil — gerçek bir AI üretim çıktısıyla doldurulacak (AS-05'te). Yoksa "Yakında" gösterilir.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| AS-01 | Eski bölümler kaldır + sıralama | ✅ Tamam | — | Anasayfada "Tek platformda 4 içerik türü" (Bölüm 3) ve "Aynı üründen, her pazaryeri için ayrı içerik" (Bölüm 4) komponentleri kaldırılır. app/page.tsx (veya layout'un router) sıralama güncellenir. Silinen komponent dosyaları silinir veya `_archive/` klasörüne taşınır. Mevcut "Aynı üründen" bölümünün hard-coded data'sı kaybolmasın — `lib/data/exampleContent.ts`'ye taşı (AS-05'te kullanılacak). |
+| AS-02 | StepAnimation komponenti (3 adım canvas + döngü + replay + progress) | ✅ Tamam | AS-01 | components/landing/StepAnimation.tsx (yeni). 3 adım yan yana, ok connector. Otomatik 9 sn döngü, her adım 3 sn. Mockup'tan CSS keyframes kopyala (photoIn, orFade, textIn, chipIn, chipPulse, sparkleIn, lineGrow, downloadIn). Sağ üstte "↺ Tekrar oynat" Lucide RotateCcw butonu. Altta progress bar (33% → 66% → 100%). Aktif adım rd-primary border + soft shadow + step number scale 1.1, inaktif gri ton. Mockup'taki JS interval mantığı useEffect + setInterval ile React'a aktarılır. |
+| AS-03 | InfoStrip komponenti (4 sekme + detay accordion + pazaryeri chips + 4 panel) | ✅ Tamam | AS-01 | components/landing/InfoStrip.tsx (yeni). Üst header: "İÇERİK TÜRLERİ" eyebrow + "4 içerik türü, 7 pazaryeri için" başlık + "Detaya bak ▾" butonu (Lucide ChevronDown). 4 içerik tipi sekmesi her zaman görünür (Metin / Görsel / Video / Sosyal — her biri Lucide ikon + ad + kredi pill + süre). Default sekme: Metin. Detay alanı default kapalı, max-height transition ile expand. Pazaryeri mini chip row (Trendyol / Amazon TR / Etsy). Her sekmenin paneli farklı içerik renderı (text panel / görsel grid / video preview / sosyal caption). Sekme tıklayınca aktif değişir + detay otomatik açılır. |
+| AS-04 | exampleContent.ts veri kaynağı tek noktadan | ✅ Tamam | AS-01, AS-03 | lib/data/exampleContent.ts (yeni). Selin Porselen örnek datası: brand, name, listing (3 pazaryeri için title/features/description/tags), gorsel (6 placeholder etiketi), video (sahne açıklaması), sosyal (caption örnekleri). InfoStrip 4 paneli bu data'dan beslensin — hard-coded string YOK. Hem mevcut "Aynı üründen" eski içeriği (zaten AS-01'de silindi ama veri taşındı) hem de yeni InfoStrip aynı kaynaktan çekiyor olur. Sosyal caption: gerçek AI üretim çıktısı varsa kullan, yoksa mockup'ta uydurmaları temizle ve "Yakında" placeholder göster — Aziz onayı sonrası gerçek üretim eklenir. |
+| AS-05 | StepAnimation + InfoStrip aynı section container içinde birleştirme | ✅ Tamam | AS-02, AS-03, AS-04 | components/landing/StepSection.tsx (yeni — wrapper). Tek section içinde üst parça StepAnimation, alt parça InfoStrip. Aralarında ince ayraç (border-b border-rd-neutral-200). Section'ın eyebrow + H2 başlığı: "3 ADIMDA HAZIR" eyebrow + "Ürünü tanıt, AI senin için yapsın" H2 (font-display Manrope). app/page.tsx'te eski 3 Adım bölümü yerine bu yeni bileşen yerleştirilir, eski Bölüm 3-4 zaten silinmiştir. |
+| AS-06 | Mobile + a11y + reduced-motion + acceptance | ✅ Tamam | AS-05 | 375px: 3 adım dikey istif (yan yana değil), animasyon devam. InfoStrip sekmeler 2x2 grid mobile. Detay paneli mobile readable. A11y: replay butonu klavye erişilebilir + Tab focus, sekmeler `role="tab" aria-selected`, detay aç/kapat `aria-expanded`, animate öğeler `aria-hidden="true"`. `prefers-reduced-motion: reduce` → tüm keyframes durur, son hâli statik göster (mockup'taki @media query'i kopyala). Lighthouse mobile: Perf >85 (animasyon var, 90 zor olabilir), A11y >90, CLS <0.1. Aziz preview onayı. |
+
+**Aziz açık soruları (spec H bölümü, varsayılan cevaplar Cowork önerisi):**
+1. **Sosyal medya örneği** canlı sitede yok → AS-05'te gerçek AI üretim çıktısı kullan, yoksa "Yakında" placeholder.
+2. **9 saniyelik döngü** — varsayılan 9sn, A/B test ileride.
+3. **"Detaya bak" başlangıçta kapalı** — kompakt görünüm, kullanıcı isterse açar.
+4. **exampleContent.ts CMS mi static mi** — şimdilik static, Faz 7+ admin paneli geldiğinde Sanity/Notion'a taşınabilir.
+
+#### AS-01~AS-06 Birleşik Prompt (Anasayfa Reroll)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md "yzliste — 
+UI değişiklikleri için kalıcı kurallar" bölümü bu branch'te GEÇERSİZ. 
+Bunun yerine BACKLOG-REDESIGN.md başındaki redesign branch UI 
+kuralları geçerli (font 400-800 serbest, gölge serbest, rounded-2xl 
+serbest, Manrope+Inter, rd-* token'lar, sadece emoji yasak — Lucide 
+ikon kullan).
+
+Branch: claude/redesign-modern-ui
+Görev: AS-01~AS-06 — Anasayfa kısaltma + 3 adım animasyonlu bölüm
+
+Spec referansı: uploads/anasayfa-kisaltma-spec.md (Aziz 28 Nis upload)
+Mockup referansı: uploads/3-adim-animasyonlu-mockup-v2.html — TÜM CSS 
+keyframes + JS döngü mantığı + state örnekleri burada. KOPYA ile başla, 
+React'a aktar.
+
+Hedef: Anasayfayı 9 bölümden 7 bölüme indir. Bölüm 3 + Bölüm 4 silinir, 
+içerikleri yeni "3 Adım Animasyonlu + Birleşik Bilgi Şeridi" bölümüne 
+gömülür. Tek section içinde üst parça animasyon, alt parça info strip.
+
+Kapsam DIŞI: Hero, Marka profili, Neden yzliste, Fiyatlar, SSS, Final 
+CTA bölümleri DEĞİŞMİYOR. Backend/API yok. Lottie/Rive yok — sadece 
+CSS keyframes. /yzstudio, /uret, /hesap, vs sayfalar dokunulmuyor.
+
+────────────────────────────────────────────
+BÖLÜM 1 — AS-01: Eski bölümler kaldır + sıralama
+────────────────────────────────────────────
+
+Mevcut anasayfa bölüm sırası (app/page.tsx veya bağlı section import'ları):
+1. Hero
+2. 3 Adımda Hazır (statik 3 kart + mini preview)
+3. Tek platformda 4 içerik türü ← SİLİNECEK
+4. Aynı üründen, her pazaryeri için ayrı içerik (sekmeli demo) ← SİLİNECEK
+5. Marka profili
+6. Neden yzliste
+7. Fiyatlar
+8. SSS
+9. Final CTA
+
+Yapılacak:
+
+1. Bölüm 3 ve Bölüm 4 komponentlerini bul. components/landing/ altında 
+   muhtemelen "IcerikTurleri.tsx" / "PazaryeriBolumu.tsx" gibi isimlerde. 
+   Glob "components/landing/*.tsx" + import zincirini takip et.
+
+2. Bu komponentler app/page.tsx'ten (veya hangi dosyada section'lar 
+   compose ediliyorsa) KALDIR. Import'ları temizle.
+
+3. Komponent dosyalarını _archive/ klasörüne taşı VEYA sil. Tercih: 
+   archive (geri ihtiyaç olursa diff kolay). Klasör yoksa oluştur.
+
+4. **KRİTİK — Veri taşıma:** Bölüm 4 ("Aynı üründen, her pazaryeri için 
+   ayrı içerik") içinde hard-coded olan Selin Porselen örnek metinleri/
+   görsel etiketleri/video açıklaması KAYBOLMASIN. AS-04'te 
+   lib/data/exampleContent.ts'ye taşıyacağız. Şimdi bu adımda örnek 
+   datayı bir not dosyasına çıkar veya komponentten oku, AS-04'te 
+   kullanılacak şekilde sakla. (En kolay yol: archive dosyalarını AS-04'te 
+   tekrar aç, datayı al.)
+
+5. Sıralama yeni hâli: Hero → 3 Adımda Hazır (yeni, AS-05'te kuracağız) 
+   → Marka profili → Neden yzliste → Fiyatlar → SSS → Final CTA. 
+
+6. Build temiz olmalı (kaldırılan import'lardan tek bir referans kalmasın).
+
+Commit: chore(landing): AS-01 eski Bölüm 3-4 kaldırıldı (4 içerik türü 
++ aynı üründen) — yeni 3 adım bölümü için yer açıldı
+
+────────────────────────────────────────────
+BÖLÜM 2 — AS-02: StepAnimation komponenti
+────────────────────────────────────────────
+
+Yeni dosya: components/landing/StepAnimation.tsx
+
+Mockup'taki yapı (uploads/3-adim-animasyonlu-mockup-v2.html):
+- 3 adım yan yana
+- Her adım: numara dairesi (1/2/3) + canvas alanı + altta etiket
+- Adımlar arasında ok connector (Lucide ChevronRight veya CSS arrow)
+- Otomatik 9 sn döngü, her adım 3 sn aktif
+- Aktif adım: rd-primary-700 border + soft shadow + step number scale 1.1
+- Inaktif adımlar: rd-neutral-300 border + gri ton
+- Sağ üstte "↺ Tekrar oynat" Lucide RotateCcw butonu (size-4 + text-sm 
+  text-rd-neutral-500 hover:text-rd-neutral-700)
+- Altta ince progress bar (h-0.5 bg-rd-neutral-200, içinde aktif kısım 
+  bg-rd-primary-700, width animasyonla 33% → 66% → 100%)
+
+Adım canvasleri:
+
+**Adım 1 — "Ürünü tanıt"**
+- @keyframes photoIn — fotoğraf yukarı kayar (translate-y dönüşü)
+- @keyframes orFade — "VEYA" fade in
+- @keyframes textIn — açıklama metni belirme (opacity + translate-y)
+- İçerik: kahve fincanı emoji yerine Lucide Coffee ikon (size-12 
+  text-rd-warm-700) → "VEYA" → "Selin Porselen Çiçek Desenli Kahve 
+  Fincanı 6'lı Set 80ml..." text fade in
+
+**Adım 2 — "Pazaryeri ve içerik seç"**
+- @keyframes chipIn — pazaryeri chip'leri stagger (0.2s, 0.4s, 0.6s, 
+  0.8s, 1.0s gecikmeli)
+- @keyframes chipPulse — ilk 3 pazaryeri chip'i aktif rengine döner 
+  (border-rd-primary-700 + bg-rd-primary-50)
+- 5 pazaryeri chip'i (Trendyol/Amazon TR/Hepsiburada/N11/Etsy) sırayla 
+  belirir, ilk 3'ü pulse → 4 içerik chip'i (Metin/Görsel/Video/Sosyal) 
+  belirir, Metin + Görsel pulse
+
+**Adım 3 — "AI senin için hazırlasın"**
+- @keyframes sparkleIn — Lucide Sparkles size-3 pop (scale 0 → 1)
+- @keyframes lineGrow — 4 farklı renkte içerik çubuğu büyüme (width 
+  0 → 100%, stagger). Renkler: rd-primary-500, rd-success-500, 
+  rd-warning-500, rd-danger-500 — VEYA tüm 4 çubuk rd-primary tonları 
+  (ön söz değişiklik isteği değilse rd-* palettine sadık kal)
+- @keyframes downloadIn — Lucide Download butonu pop (scale + opacity)
+
+State + döngü:
+```tsx
+const [currentStep, setCurrentStep] = useState(0); // 0 | 1 | 2
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    setCurrentStep((s) => (s + 1) % 3);
+  }, 3000); // her 3 sn'de adım değişir
+  return () => clearInterval(interval);
+}, []);
+
+const handleReplay = () => setCurrentStep(0);
+```
+
+Tüm keyframes'i app/globals.css'in @theme bloğuna ekle (--animate-* 
+şeklinde Tailwind v4 patternine uygun). Mockup'tan kopya, isimler 
+photoIn → animate-photo-in vs.
+
+A11y: animate öğeler aria-hidden="true". Replay butonu aria-label 
+"Animasyonu baştan oynat". role="region" aria-label "3 adım üretim 
+animasyonu".
+
+Commit: feat(landing): AS-02 StepAnimation 3 adım otomatik döngü
+
+────────────────────────────────────────────
+BÖLÜM 3 — AS-03: InfoStrip komponenti
+────────────────────────────────────────────
+
+Yeni dosya: components/landing/InfoStrip.tsx
+
+Yapı (mockup D bölümü):
+
+1. **Header strip:**
+   - text-[10px] uppercase tracking-[0.15em] text-rd-warm-700 eyebrow 
+     "İÇERİK TÜRLERİ"
+   - font-display text-xl md:text-2xl text-rd-neutral-900 başlık 
+     "4 içerik türü, 7 pazaryeri için"
+   - Sağında "Detaya bak" toggle button (Lucide ChevronDown size-4, 
+     açıkken rotate-180). text-sm text-rd-neutral-600 hover
+
+2. **Açıklama satırı:**
+   - text-sm text-rd-neutral-600
+   - "Her tür ayrı kredi · birini, birkaçını veya hepsini birden 
+     seçebilirsin. Pazaryeri kuralı otomatik uygulanır."
+
+3. **4 içerik tipi sekmesi (her zaman görünür):**
+   - grid grid-cols-2 md:grid-cols-4 gap-3
+   - Her sekme button: Lucide ikon (size-5) + ad + kredi pill + süre
+     - Metin: Lucide FileText, "1 kr", "~10sn"
+     - Görsel: Lucide Image, "1 kr", "~30sn"
+     - Video: Lucide Video, "2 kr", "~2dk"
+     - Sosyal: Lucide MessageSquare, "3 kr", "~20sn"
+   - Aktif sekme: bg-rd-primary-50 border-2 border-rd-primary-700 
+     text-rd-primary-700
+   - Pasif: border border-rd-neutral-200 text-rd-neutral-700 
+     hover:border-rd-primary-400
+   - role="tab" aria-selected
+   - Default aktif: Metin
+
+4. **Detay alanı (default kapalı, max-height transition):**
+   - aria-expanded
+   - Pazaryeri mini chip row: Trendyol / Amazon TR / Etsy (3 chip, 
+     ilki aktif)
+   - Aktif sekmenin paneli (4 panel ayrı komponent veya inline):
+     - **Metin paneli:** title + features ul + description + tags chip row
+     - **Görsel paneli:** 6 placeholder grid (3x2), her cell aspect-square 
+       bg-rd-neutral-100 + Lucide ImageIcon + etiket altta
+     - **Video paneli:** dikey 9:16 placeholder + Lucide Play size-12 + 
+       sahne açıklama
+     - **Sosyal paneli:** 2-3 caption örneği card layout (Instagram, 
+       TikTok, Pinterest etiketli)
+
+5. **Etkileşim:**
+   - Sekme tıklayınca: aktif sekme değişir + detay otomatik açılır 
+     (eğer kapalıysa)
+   - "Detaya bak" toggle: detay aç/kapat
+   - Pazaryeri chip tıklayınca: aktif chip değişir (görsel only — 
+     gelecekte backend bağlanırsa platforma özel içerik)
+
+State:
+```tsx
+const [activeTab, setActiveTab] = useState<'metin'|'gorsel'|'video'|'sosyal'>('metin');
+const [detailOpen, setDetailOpen] = useState(false);
+const [activeMarket, setActiveMarket] = useState('trendyol');
+
+const handleTabClick = (tab) => {
+  setActiveTab(tab);
+  if (!detailOpen) setDetailOpen(true);
+};
+```
+
+Commit: feat(landing): AS-03 InfoStrip 4 sekme + detay accordion
+
+────────────────────────────────────────────
+BÖLÜM 4 — AS-04: exampleContent.ts veri kaynağı
+────────────────────────────────────────────
+
+Yeni dosya: lib/data/exampleContent.ts
+
+```ts
+export const EXAMPLE_PRODUCT = {
+  brand: 'Selin Porselen',
+  name: 'Selin Porselen Çiçek Desenli Kahve Fincanı 6\'lı Set',
+  shortDescription: '6\'lı set · 80 ml · altın yaldızlı',
+} as const;
+
+export const EXAMPLE_CONTENT = {
+  metin: {
+    trendyol: {
+      title: '...',  // AS-01'de archive'lanan eski "Aynı üründen" 
+                     // Trendyol başlığı buraya
+      features: [/* eski 5 madde */],
+      description: '...',
+      tags: [/* eski 10 etiket */],
+    },
+    'amazon-tr': { /* eski Amazon TR datası */ },
+    etsy: { /* eski Etsy datası */ },
+  },
+  gorsel: {
+    placeholders: [
+      'Ana görsel',
+      'Set görünümü',
+      'Ölçek referansı',
+      'Paket içeriği',
+      'Kullanım detayı',
+      'Lifestyle sahne',
+    ],
+    standard: 'Trendyol stüdyo standardı: 1200×1200, beyaz zemin',
+  },
+  video: {
+    duration: '5 saniye',
+    aspect: '9:16 dikey',
+    sceneDescription: '...',  // mockup'tan kopya
+  },
+  sosyal: {
+    instagram: '...',
+    tiktok: '...',
+    pinterest: '...',
+    // VEYA: status: 'coming-soon' (Aziz onayına göre)
+  },
+} as const;
+```
+
+InfoStrip ve gelecekte gerekirse başka anasayfa komponentleri bu 
+data'dan beslensin. Hard-coded string YOK.
+
+Sosyal caption kararı: AS-01'de archive'lanan eski Bölüm 4 datasında 
+sosyal içerik var mı kontrol et. Yoksa mockup'taki uydurma metinleri 
+KULLANMA — bunun yerine status: 'coming-soon' bırak, InfoStrip sosyal 
+panel "Yakında" göstersin (Aziz onayı sonra eklenir).
+
+Commit: feat(landing): AS-04 exampleContent.ts tek kaynak veri 
+(Selin Porselen örneği)
+
+────────────────────────────────────────────
+BÖLÜM 5 — AS-05: StepSection wrapper birleştirme
+────────────────────────────────────────────
+
+Yeni dosya: components/landing/StepSection.tsx
+
+Yapı:
+```tsx
+export function StepSection() {
+  return (
+    <section aria-labelledby="step-section-baslik" 
+             className="py-16 md:py-20 bg-white">
+      <div className="max-w-6xl mx-auto px-4">
+        {/* Üst — Başlık */}
+        <div className="text-center mb-10 md:mb-12">
+          <p className="text-[10px] uppercase tracking-[0.15em] 
+                        text-rd-warm-700 font-medium mb-2">
+            3 ADIMDA HAZIR
+          </p>
+          <h2 id="step-section-baslik" 
+              className="font-display text-3xl md:text-4xl 
+                         text-rd-neutral-900 font-medium">
+            Ürünü tanıt, AI senin için yapsın
+          </h2>
+        </div>
+        
+        {/* Üst — Animasyon */}
+        <StepAnimation />
+        
+        {/* Ayraç */}
+        <div className="my-12 border-t border-rd-neutral-200" />
+        
+        {/* Alt — Bilgi şeridi */}
+        <InfoStrip />
+      </div>
+    </section>
+  );
+}
+```
+
+app/page.tsx'te eski 3 Adım bölümü (mevcut Bölüm 2, statik kart 
+versiyonu) yerine bu StepSection import edilir. Eski statik 3-kart 
+bölümü kaldırılır.
+
+Commit: feat(landing): AS-05 StepSection wrapper (StepAnimation + 
+InfoStrip birleşik)
+
+────────────────────────────────────────────
+BÖLÜM 6 — AS-06: Mobile + a11y + reduced-motion + acceptance
+────────────────────────────────────────────
+
+1. **Mobile (375px):**
+   - StepAnimation: 3 adım dikey istif (flex-col), her adım tam genişlik. 
+     Ok connector dikey rotate-90.
+   - Replay butonu mobil de görünür (sağ üstte, küçük)
+   - Progress bar yatay tam genişlik
+   - InfoStrip: 4 sekme grid 2x2 (mobile 4 kolon yerine 2 kolon)
+   - Detay alanı tek kolon
+   - Görsel panel placeholder grid: 3x2 → 2x3 mobile
+
+2. **A11y:**
+   - StepAnimation region: role="region" aria-label "3 adım üretim 
+     animasyonu". Her adım canvas aria-hidden (decorative).
+   - Replay buton: aria-label "Animasyonu baştan oynat", Tab focus, 
+     focus-visible ring
+   - InfoStrip sekmeler: role="tab" aria-selected aria-controls="detay-X". 
+     Detay container role="tabpanel" id="detay-X".
+   - Detay aç/kapat butonu: aria-expanded
+   - Pazaryeri chip'leri: role="radio" aria-checked, parent 
+     role="radiogroup" aria-label "Pazaryeri seç"
+   - Klavye: Tab → Replay → ilk sekme (Arrow Left/Right ile diğer 
+     sekmeler) → Detaya bak → Pazaryeri chip'leri (Arrow ile gez)
+
+3. **Reduced motion (`@media (prefers-reduced-motion: reduce)`):**
+   - app/globals.css'e ekle:
+   ```css
+   @media (prefers-reduced-motion: reduce) {
+     /* Tüm step animasyonları durdur, son hâli statik göster */
+     .step-anim-1 .photo-anim,
+     .step-anim-1 .or-anim,
+     .step-anim-1 .text-anim { 
+       animation: none; 
+       opacity: 1; 
+       transform: none; 
+     }
+     /* ... diğer adım keyframes için aynı */
+   }
+   ```
+   - Otomatik döngü interval'ı: prefers-reduced-motion uygulanıyorsa 
+     useEffect'te detect et, döngü çalıştırma. Kullanıcı sadece replay 
+     butonu ile manuel ilerletsin (veya 3 adım hep aktif görünsün).
+
+4. **Lighthouse:**
+   - Animation overhead var, mobile Perf >90 zor olabilir. Hedef Perf >85, 
+     A11y >90, CLS <0.1
+   - Eğer Perf <85 ise: animasyonu intersection observer ile sadece 
+     viewport'ta görününce başlat, viewport'tan çıkınca durdur (bundle 
+     büyütmeden CPU tasarrufu)
+
+5. **Build + commit:**
+   - npm run build temiz
+   - TypeScript clean
+   - localhost:3000/ → 3 adım bölümü görünür, animasyon çalışıyor, 
+     bilgi şeridi 4 sekme tıklanır, detay açılıp kapanır
+   - 375px DevTools mobile: dikey istif, sekme 2x2 grid
+
+Commit: chore(landing): AS-06 mobile + a11y + reduced-motion polish
+
+────────────────────────────────────────────
+Test ve teslim
+────────────────────────────────────────────
+
+- 6 atomik commit (yukarıdaki gibi) VEYA tek commit:
+  feat(landing): AS-01~AS-06 anasayfa kısaltma + 3 adım animasyon
+
+- BACKLOG-REDESIGN.md'de AS-01~AS-06 [x] işaretle
+
+- Bittikten sonra rapor:
+  - Commit listesi
+  - Değişen / yeni / silinen dosyalar
+  - Eski Bölüm 3-4 nereye taşındı (archive klasörü mü, silindi mi)
+  - Sosyal caption kararı (gerçek üretim mi, "Yakında" placeholder mı)
+  - Lighthouse skorları (Aziz preview'da çalıştıracaksa "ben çalıştırmadım" 
+    de, ama kendi optimizasyonlarını listele)
+  - Açık riskler / Aziz preview'da test ederken nelere bakmalı
+```
+
+---
 
 | Faz | Bölüm | Sayfa | Ticket | Durum |
 |---|---|---|---|---|
 | 1 | Landing (4-10) | 1 | ~64 | ✅ Tamam (HR-14/15 kalan) |
-| 2 | Üretim akışı (11, 13) | 4 | 38 | 🔄 Devam (U-01~17 done, kalan 21: U-18~21 + YS + SR + OD) |
-| 3 | Hesap alanı (12, 14) | 10 | 41 | Bekliyor |
-| 4 | Auth (15) | 3 | 8 | Bekliyor |
+| **1.5** | **Anasayfa reroll (18)** | **1** | **6** | **✅ Tamam (792e182)** |
+| 2 | Üretim akışı (11, 13) | 4 | 42 | 🔄 Kod tamam, U-21 acceptance bekliyor (Aziz email+şifre ile preview'da test edebilir; Google OAuth Faz 4'e ertelendi) |
+| 3 | Hesap alanı (12, 14) | 10 | ~50 | Bekliyor — Aziz yeni spec eklendi (canlı önizleme + profil + faturalar UI), önceliği marka profili |
+| 4 | Auth (15) | 3 | 9 | Bekliyor (+1: AU-09 Google OAuth preview URL fix — Supabase + Google Cloud Console whitelist) |
 | 5 | İçerik (16) | 4 | 8 | Bekliyor |
 | 6 | Yasal + hata (17) | 9 | 5 | Bekliyor |
 
-**Toplam kalan:** ~83 ticket (130 başladı, ~47 done).
+**Toplam kalan:** ~78 ticket. Faz 2 kod-wise tamam (30 done, 1 acceptance kaldı). Faz 1.5 yeni eklendi.
 
 **Kapsam dışı (Aziz onayı):** `/admin`, `/hesap/admin/feedback`, `/(auth)/app` (eski), `/profil` (eski), `/toplu` (kaldırılıyor).
 
