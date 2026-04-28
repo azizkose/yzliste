@@ -540,282 +540,229 @@ Canlı sitedeki örnek çıktıları (text/görsel/video/sosyal) ve mevcut görs
 - "E-postama gönder" backend endpoint
 - profiles tablosuna TC kimlik + Vergi no + Şirket adı kolonu (PR'da ertelenmişti)
 
-#### FT-01~FT-05 Birleşik Prompt (Faturalar UI)
+
+### Grup 3 — Hesabım `/hesap` (HS-01~HS-04, eski H-15~21 birleştirildi)
+
+**Mevcut sayfa:** app/(auth)/hesap/page.tsx (kullanıcı login sonrası ilk burayı görür — retention için kritik)
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| HS-01 | Scaffold + Manrope + tasarruf rozeti + 3 KPI grid | ✅ Tamam | FT done | fa48477 — eyebrow+H1, warm-earth rozet, 3 KPI |
+| HS-02 | 6 menü kartı + uyarı durumları | ✅ Tamam | HS-01 | fa48477 — marka eksik→warm, kredi düşük→danger, StatusBadge reuse |
+| HS-03 | Denenmemiş özellikler keşif + davet kutusu | ✅ Tamam | HS-01 | 7a0f839+fa48477 — InviteBox + content_type keşif; HS-03b: davet backend mevcut (/api/referral/stats) |
+| HS-04 | Mobile + a11y polish | ✅ Tamam | HS-03 | fa48477 — grid-cols-1 mobile, aria-label KPI, aria-hidden ikonlar |
+
+**Açık karar (Cowork önerisi):**
+- Tasarruf hesabı pre-traffic'te 0 — placeholder göster ("yzliste ile birlikte tasarruf etmeye başla") VEYA gizle, gerçek metrik geldiğinde aç. **Önerim: placeholder göster** (boş kalmasın), value = `Math.max(0, krediKullanim * 5)` gibi yaklaşık hesap (1 kredi ≈ ₺5 işçi tasarrufu).
+- "Henüz denemediklerin" — kullanıcının üretim geçmişine bağlı. generations tablosundan content_type'lar çekilir, eksik olanlar listelenir. Veri yoksa: tüm 4 içerik tipi gösterilir (yeni kullanıcı için onboarding).
+
+#### HS-01~HS-04 Birleşik Prompt (Hesabım anasayfa)
 
 ```
 ÖNEMLİ — KURAL OVERRIDE:
 Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
 kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
-kuralları geçerli (font 400-800, gölge serbest, rounded-2xl serbest, 
-Manrope+Inter, rd-* token, sadece emoji yasak — Lucide ikon).
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
 
 Branch: claude/redesign-modern-ui
-Görev: FT-01~FT-05 — /hesap/faturalar sayfası refactor + 4 durum 
-sistemi + UI hazırlığı (Paraşüt henüz yok, mock data ile demo).
+Görev: HS-01~HS-04 — /hesap sayfası refactor (kullanıcı login sonrası 
+ilk burayı görür, retention için kritik).
 
-Spec: uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 5)
-Mockup: uploads/faturalar-mockup.jsx (referans için, kopyala/adapt et)
-Mevcut sayfa: app/(auth)/hesap/faturalar/page.tsx — önce oku.
+Mevcut sayfa: app/(auth)/hesap/page.tsx — önce oku, mevcut yapıyı anla.
 
-Aziz kararı: "Paraşüt henüz yok, sonra bırakalım ama sayfa hazır 
-olsa iyi olur." UI hazır olur, Paraşüt geldiğinde gerçek status field 
-akar.
-
-Reuse: components/primitives/{Toast, StickySaveBar (gerekmiyor), 
-ChipSelector (gerekmiyor)}.tsx + ProgressIndicator (gerekmiyor).
+Reuse: components/primitives/{StatusBadge}.tsx (uyarı durumları için 
+extend gerekebilir — "warning"/"info" durumları zaten var).
 
 KAPSAM DIŞI:
-- Paraşüt API entegrasyonu
-- PDF blob generation (sahte blob URL veya disabled)
-- Email send backend endpoint
-- profiles tablosu yeni kolonlar (TC kimlik vs)
+- Tasarruf metrik backend hesabı (frontend approximation yeter)
+- Davet sistemi backend (frontend zero-state ve 1+ state UI hazır 
+  olur, backend sonra)
 
 ────────────────────────────────────────────
-BÖLÜM 1 — FT-01: Scaffold + bilgi banner + yıllık toplam + filtre
+BÖLÜM 1 — HS-01: Scaffold + tasarruf rozeti + 3 KPI grid
 ────────────────────────────────────────────
 
 1. Sayfa rd-* token swap.
 
 2. Sayfa başlığı:
    - Eyebrow: text-[10px] uppercase tracking-[0.15em] text-rd-primary-700 
-     "FATURALAR"
+     "HESABIM"
    - H1 (font-display): text-3xl md:text-4xl text-rd-neutral-900 
-     "Fatura ve ödemelerin"
-   - Subtitle: text-rd-neutral-600 — "e-Arşiv faturaların burada 
-     görünür ve indirebilirsin."
+     "Hoş geldin, [kullanıcı adı]" — kullanıcı adı yoksa fallback 
+     "Hoş geldin"
+   - Subtitle: text-rd-neutral-600 — "Hesap durumun ve sıradaki 
+     adımların."
 
-3. Bilgi banner (header altında):
-   - bg-rd-primary-50 border border-rd-primary-200 rounded-lg px-4 py-3
-   - Lucide Info size-4 text-rd-primary-700
-   - Text: "Faturalar ödeme sonrası 1-3 iş günü içinde otomatik 
-     oluşturulur ve e-postanıza gönderilir. Hazır olanları aşağıdan 
-     indirebilirsin."
+3. Tasarruf rozeti (sayfa hero):
+   - bg-gradient-to-br from-rd-warm-50 to-rd-warm-100 (warm-earth 
+     gradient — Aziz spec mavi diyor ama warm-earth premium pozisyon 
+     için daha uygun; mavi tercih edilirse bg-rd-primary-50 to 
+     bg-rd-primary-100)
+   - border border-rd-warm-200 rounded-xl p-5 md:p-6
+   - Lucide Trophy size-8 text-rd-warm-700
+   - Sol metin: eyebrow "TASARRUF" text-xs + "₺X" font-display text-3xl 
+     text-rd-warm-900
+   - Sağ açıklama: "yzliste ile birlikte tasarruf ettin"
+   - Hesaplama: krediKullanim * 5 (1 kredi ≈ ₺5 stüdyo/copywriter 
+     tasarrufu approximation). Pre-traffic kullanıcı için 0 ise: 
+     "yzliste ile birlikte tasarruf etmeye başla — ilk üretim için 
+     ücretsiz ipuçları" (CTA: /uret)
 
-4. Yıllık toplam rozeti (banner ile filtre arası):
-   - bg-rd-neutral-50 border border-rd-neutral-200 rounded-lg p-4
-   - Sol: "2026 yılı toplam" eyebrow + büyük "6 fatura · ₺198" 
-     (font-display)
-   - Sağ: küçük "KDV dahil" + Lucide Receipt
-   - Yıl filtresi değişince bu rakam güncellenir (filtered list'e göre)
+4. 3 KPI grid (rozetin altında):
+   - grid grid-cols-1 md:grid-cols-3 gap-4
+   - Her KPI: rounded-xl border p-5 + Lucide ikon (size-6) + label 
+     (text-xs uppercase) + value (font-display text-2xl)
+   - **Kalan kredi:** Lucide Coins, "Kalan kredi" + sayı. Eğer ≤5: 
+     border-rd-danger-300 bg-rd-danger-50 + ikon text-rd-danger-700. 
+     Tüm KPI Link href="/kredi-yukle" + ChevronRight (PR pattern reuse).
+   - **Bu ay üretim:** Lucide TrendingUp, "Bu ay" + sayı. Link 
+     href="/hesap/uretimler".
+   - **Toplam üretim:** Lucide Activity, "Toplam" + sayı. Link 
+     href="/hesap/uretimler".
+   - "Favori platform" KPI YOK (Aziz spec: 4→3 KPI).
 
-5. Filtre satırı:
-   - flex gap-3
-   - Yıl: native `<select>` — options: ["2026", "2025", "Tümü"]
-   - Durum: native `<select>` — options: ["Tümü", "Hazır", "Hazırlanıyor", 
-     "Gönderildi", "Hata"]
-   - Sağda toplam fatura sayısı: "X fatura"
+5. Data fetching: useCredits + supabase.from('generations').select('*', 
+   { count: 'exact' }).eq('user_id', userId) toplam ve ay filtreli.
 
-6. Mock data karar (Aziz preview demo'su için):
-   - Mevcut Supabase faturalar tablosunda status field VAR mı kontrol 
-     et. Yoksa: feature flag FF.FATURALAR_DEMO (lib/feature-flags.ts'e 
-     ekle) — true ise mockup'taki 5 örnek statik render, false ise 
-     gerçek Supabase fetch + tüm status='preparing'
-   - Demo flag'i development + preview'da true, prod'da false
-   - Aziz prod'da gerçek faturaları görür (preparing), preview'da 
-     4 durumu test edebilir
-
-Commit: feat(faturalar): FT-01 scaffold + banner + yıllık toplam + 
-filtre
-
-────────────────────────────────────────────
-BÖLÜM 2 — FT-02: StatusBadge primitive
-────────────────────────────────────────────
-
-Yeni dosya: components/primitives/StatusBadge.tsx (reusable — 
-üretimler/krediler listelerinde de kullanılabilir).
-
-```tsx
-type StatusType = 'preparing' | 'ready' | 'sent' | 'error';
-
-const STATUS_CONFIG = {
-  preparing: { 
-    label: 'Hazırlanıyor', 
-    icon: Clock, 
-    bg: 'bg-rd-warning-50', 
-    text: 'text-rd-warning-700', 
-    border: 'border-rd-warning-200' 
-  },
-  ready: { 
-    label: 'Hazır', 
-    icon: Check, 
-    bg: 'bg-rd-success-50', 
-    text: 'text-rd-success-700', 
-    border: 'border-rd-success-200' 
-  },
-  sent: { 
-    label: 'Gönderildi', 
-    icon: Mail, 
-    bg: 'bg-rd-primary-50', 
-    text: 'text-rd-primary-700', 
-    border: 'border-rd-primary-200' 
-  },
-  error: { 
-    label: 'Hata', 
-    icon: AlertCircle, 
-    bg: 'bg-rd-danger-50', 
-    text: 'text-rd-danger-700', 
-    border: 'border-rd-danger-200' 
-  },
-};
-
-export function StatusBadge({ status, label }: Props) {
-  const config = STATUS_CONFIG[status];
-  const Icon = config.icon;
-  return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 
-                       rounded-md text-xs font-medium border 
-                       ${config.bg} ${config.text} ${config.border}`}
-          aria-label={`Durum: ${label || config.label}`}>
-      <Icon size={12} strokeWidth={2} aria-hidden="true" />
-      {label || config.label}
-    </span>
-  );
-}
-```
-
-rd-warning palette gerekirse globals.css @theme'e ekle (yoksa). 
-Mockup'ta amber (#FEF3C7 / #92400E) kullanılmış — bunu rd-warning-50 
-/ rd-warning-700 olarak ekle (rd-warm-* ile karıştırma).
-
-Commit: feat(primitives): FT-02 StatusBadge primitive (4 durum)
+Commit: feat(hesap): HS-01 scaffold + tasarruf rozeti + 3 KPI grid
 
 ────────────────────────────────────────────
-BÖLÜM 3 — FT-03: Liste + İndir + Gönder + boş state
+BÖLÜM 2 — HS-02: 6 menü kartı + uyarı durumları
 ────────────────────────────────────────────
 
-1. Her fatura satırı (kart layout):
-   - rounded-xl border border-rd-neutral-200 p-5
-   - Üst satır: paket adı (font-medium) + ₺ (font-display, sağa hizalı)
-   - Orta satır: tarih (text-sm text-rd-neutral-600) + StatusBadge 
-     (sağa hizalı)
-   - Alt satır (durum bağımlı):
-     - **ready/sent:** "İndir" buton (bg-rd-neutral-900 text-white + 
-       Lucide Download) + "E-postama gönder" (ghost border + Lucide 
-       Mail)
-     - **preparing:** italic text-xs text-rd-neutral-500 — "Tahmini 
-       hazır: 02 Nisan"
-     - **error:** FT-04'te detayı
+1. Bölüm başlığı: "Hesap menün" (font-display text-xl md:text-2xl)
 
-2. Liste container:
-   - space-y-3 (kartlar arası boşluk)
-   - role="list"
-   - Filtre değişince filtered listeyi render et
+2. Grid: grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4
 
-3. İndir buton tıklayınca:
-   - Mevcut PDF blob URL varsa: download attribute ile direkt indir
-   - YOKSA (Paraşüt yok): toast (rd-warning-700) — "Fatura PDF'i 
-     Paraşüt entegrasyonu ile gelecek. Şimdilik destek@yzliste.com'a 
-     yazabilirsin."
-   - VEYA disabled buton + tooltip "Yakında"
+3. 6 kart (her biri Link, hover lift -translate-y-0.5 transition):
+   - rounded-xl border border-rd-neutral-200 bg-white p-5 hover:
+     border-rd-primary-300
+   - Üst: Lucide ikon (size-6 text-rd-primary-700) + sağda 
+     ChevronRight + (varsa) badge
+   - Başlık (font-medium text-rd-neutral-900)
+   - Alt mikro-metin (text-sm text-rd-neutral-600)
 
-4. Gönder buton tıklayınca:
-   - Backend endpoint yok → toast — "E-posta gönderme yakında, 
-     destek@yzliste.com'a yazabilirsin"
-   - VEYA disabled buton
+4. 6 kart:
+   - **Marka profili** → /hesap/marka (Lucide Building2). Mikro: 
+     "AI metinlerini kişiselleştir." Uyarı: marka boşsa veya 
+     storeName yoksa → border-rd-warm-300 + StatusBadge "preparing" 
+     "Eksik" (warm tonu, danger değil — uyarı kibar)
+   - **Profil** → /hesap/profil (Lucide User). Mikro: "Kişisel ve 
+     fatura bilgilerin."
+   - **Üretimler** → /hesap/uretimler (Lucide FileText). Mikro: 
+     "Geçmiş üretimlerini gör."
+   - **Krediler** → /hesap/krediler (Lucide Coins). Mikro: 
+     "Kredi geçmişin ve paketler." Uyarı: kredi ≤5 → 
+     border-rd-danger-300 + StatusBadge "error" "Düşük"
+   - **Faturalar** → /hesap/faturalar (Lucide Receipt). Mikro: 
+     "Ödeme geçmişin." Uyarı: error status'lü fatura varsa → 
+     border-rd-danger-300 + StatusBadge "error" "Hata"
+   - **Ayarlar** → /hesap/ayarlar (Lucide Settings). Mikro: 
+     "Şifre, e-posta, hesap silme."
 
-5. Boş state:
-   - Lucide Receipt size-12 text-rd-neutral-300
-   - H3: "Henüz faturanız yok"
-   - p: "İlk paket aldığınızda burada görünecek."
-   - Primary CTA: Link href="/fiyatlar" — "Paketleri görüntüle"
+5. Uyarı bilgisi:
+   - Marka profil status: profiles.marka_data null veya storeName 
+     boş → "eksik"
+   - Kredi ≤5: useCredits.data <= 5
+   - Fatura error: faturalar tablosunda status='error' var mı
 
-Commit: feat(faturalar): FT-03 liste + indir/gönder + boş state
-
-────────────────────────────────────────────
-BÖLÜM 4 — FT-04: Hatalı fatura "profili düzenle" link
-────────────────────────────────────────────
-
-error status'lü fatura satırının altında ek info bloğu:
-
-```jsx
-<div className="mt-3 pt-3 border-t border-rd-danger-200 
-                bg-rd-danger-50 -mx-5 -mb-5 px-5 py-3 rounded-b-xl">
-  <p className="text-sm text-rd-danger-700 mb-2">
-    <AlertCircle size-4 inline /> Bu faturada bilgi sorunu var: 
-    {invoice.errorReason || 'detay yok'}
-  </p>
-  <Link href="/hesap/profil" 
-        className="text-sm font-medium text-rd-primary-700 
-                   hover:text-rd-primary-800 inline-flex items-center 
-                   gap-1">
-    Profili düzenle <ChevronRight size-3 />
-  </Link>
-</div>
-```
-
-errorReason field'ı backend'de yoksa "Bilgi eksik" generic mesaj.
-
-Commit: feat(faturalar): FT-04 hatalı fatura için profil düzenle linki
+Commit: feat(hesap): HS-02 6 menü kartı + uyarı durumları
 
 ────────────────────────────────────────────
-BÖLÜM 5 — FT-05: Mobile + a11y polish
+BÖLÜM 3 — HS-03: Denenmemiş özellikler + davet kutusu
+────────────────────────────────────────────
+
+1. **Denenmemiş özellikler keşif:**
+   - generations tablosundan kullanıcının yaptığı content_type'ları çek
+   - Eksik olanlar (yapmadığı): 4 tip - yapılan = eksik
+   - Yeni kullanıcı (hiç üretim yok): tüm 4 tipi göster
+   - UI: bölüm başlığı "Henüz denemediğin" + 2-4 kart (tip başına)
+     - Kart: rounded-xl bg-rd-warm-50 border border-rd-warm-200 p-4
+     - Lucide Sparkles size-5 text-rd-warm-700
+     - Başlık: "Video try-on", "Görsel üretim", "Sosyal medya kit", 
+       "Listing metni"
+     - Mikro: "5sn video, 13 kredi" gibi ipucu
+     - CTA: Link → /uret veya /yzstudio
+   - Tüm 4 tip yapıldıysa: bu bölüm gizlen (boş listeden boş bölüm 
+     gösterme)
+
+2. **Davet kutusu basitleştirme:**
+   - Mevcut sayfada davet sistemi varsa kullan, yoksa yeni komponent 
+     komponents/hesap/InviteBox.tsx (basit)
+   - 0 davet (count === 0):
+     - bg-rd-primary-50 border border-rd-primary-200 rounded-xl p-5
+     - Lucide UserPlus size-6 text-rd-primary-700
+     - Başlık: "Arkadaşını davet et"
+     - p: "Sen ve arkadaşın bonus kredi alır."
+     - CTA: "Davet linkimi kopyala" (clipboard) veya "Davet et" 
+       button → modal/page (sonra)
+   - 1+ davet (count >= 1):
+     - Aynı kart yapı ama:
+     - "X arkadaş davet ettin, Y bonus aldın" istatistik
+     - CTA daha küçük: "Daha fazla davet et"
+
+   - Backend: davetler tablosu/sütunu var mı kontrol. Yoksa 
+     count = 0 default + UI hazır olur, backend sonra. BACKLOG'a 
+     HS-03b not düş.
+
+Commit: feat(hesap): HS-03 denenmemiş özellikler keşif + davet kutusu
+
+────────────────────────────────────────────
+BÖLÜM 4 — HS-04: Mobile + a11y polish
 ────────────────────────────────────────────
 
 1. **Mobile (375px):**
-   - Filtre satırı dikey: yıl + durum üst üste, full width selectler
-   - Yıllık toplam rozeti: tek satır responsive, ikon mobile gizlenebilir
-   - Fatura satır kartı: paket adı + ₺ aynı satır (justify-between), 
-     tarih + StatusBadge alt satır, butonlar full width dikey
-   - Boş state center, max-w-sm
+   - Tasarruf rozeti: ikon üstte + metin altta dikey
+   - 3 KPI grid: tek kolon
+   - 6 menü kartı: tek kolon
+   - Denenmemiş kartlar: tek kolon
+   - Davet kutusu: full width, ikon küçülür
 
 2. **A11y:**
    - main aria-labelledby h1
-   - Filtre selectler aria-label
-   - Liste role="list", her satır role="listitem"
-   - StatusBadge aria-label dahil (FT-02'de)
-   - İndir/Gönder buton aria-label net (örn "Faturayı indir: [paket] - 
-     [tarih]")
-   - Boş state CTA Tab erişilebilir
+   - KPI Link aria-label net (örn "Krediler — kalan: X")
+   - Menü kartları role="link" + aria-label başlık + uyarı durumu
+   - Uyarı badge'leri aria-live="polite" YOK (statik bilgi)
+   - Lucide ikonlar aria-hidden="true"
+   - Klavye Tab: KPI'lar → menü kartları → denenmemiş → davet kutusu
 
 3. **Edge case'ler:**
-   - Faturalar fetching: skeleton state (3 satırlık placeholder)
-   - Filtre sonucu boş: "Filtrelere uyan fatura yok" + filtre temizle 
-     CTA
-   - Fetch error: "Faturalar yüklenemedi" + retry buton
+   - useCredits null: KPI'da "—" placeholder
+   - generations fetch hata: "Üretim sayısı yüklenemedi" + "Toplam: —"
+   - Marka data fetching: hover state'i değiştirme, "yükleniyor" 
+     skeleton
 
-Commit: chore(faturalar): FT-05 mobile + a11y polish
+Commit: chore(hesap): HS-04 mobile + a11y polish
 
 ────────────────────────────────────────────
 Test
 ────────────────────────────────────────────
 
 - npm run build temiz
-- Localde /hesap/faturalar (FF.FATURALAR_DEMO=true ile):
-  - Eyebrow + Manrope H1 + bilgi banner görünür
-  - Yıllık toplam rozeti gerçek toplamla
-  - Filtre çalışır (yıl + durum)
-  - 4 status renkli badge'ler doğru render
-  - ready/sent satırlarında İndir + Gönder butonları
-  - preparing satırında "Tahmini hazır" italic
-  - error satırında "Profili düzenle" linki
-  - Boş state CTA → /fiyatlar
+- Localde /hesap:
+  - Eyebrow + Manrope H1 (kullanıcı adı varsa)
+  - Tasarruf rozeti gradient + Trophy
+  - 3 KPI clickable, kalan kredi ≤5'te kırmızı
+  - 6 menü kartı, marka eksikse warm uyarı, kredi düşükse danger uyarı
+  - Denenmemiş kartlar (yeni kullanıcı = 4 tip)
+  - Davet kutusu 0 state CTA
   - 375px mobile sıkıntısız
+  - Klavye Tab full tour
 
-Commit özeti (5 atomik) VEYA tek:
-feat(faturalar): FT-01~FT-05 /hesap/faturalar refactor + 4 durum 
-sistemi + UI hazırlığı (mock data, Paraşüt entegrasyonu sonra)
+Commit özeti (4 atomik) VEYA tek:
+feat(hesap): HS-01~HS-04 /hesap anasayfa refactor
 
-BACKLOG-REDESIGN.md'de FT-01~FT-05 [x] işaretle.
+BACKLOG-REDESIGN.md'de HS-01~HS-04 [x] işaretle. Backend bağımlı 
+ticket'lar (davet sistemi, tasarruf metrik) için BACKLOG'a 
+not düş (HS-03b vs).
 
 Bittikten sonra rapor:
 - Commit listesi
-- Yeni dosyalar (StatusBadge primitive, feature flag varsa)
-- Mock data kararı (FF flag mi, statik 5 örnek mi, gerçek Supabase mi)
-- rd-warning palette eklendi mi globals.css @theme'e
+- Yeni dosyalar (InviteBox vs)
+- Davet sistemi backend kararı
+- Tasarruf rozeti hesaplama (approximation mı gerçek metrik mi)
 - Açık riskler / Aziz preview test
 ```
-
-### Grup 3 — Hesabım `/hesap`
-
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| H-15 | Tasarruf rozeti | Bekliyor | H-01 | Mavi gradient, Trophy. |
-| H-16 | 3 KPI grid | Bekliyor | H-01 | Kalan kredi (≤5'te kırmızı), bu ay üretim, toplam. |
-| H-17 | Denenmemiş özellikler keşif | Bekliyor | H-01 | Dinamik grid. |
-| H-18 | 6 menü kartı + uyarı durumları | Bekliyor | H-01 | Marka/Profil/Üretimler/Krediler/Faturalar/Ayarlar. |
-| H-19 | Davet kutusu basitleştirme | Bekliyor | H-01 | 0=CTA, 1+=istatistik. |
-| H-20 | "Favori platform" KPI kaldırma | Bekliyor | H-16 | 4→3 KPI. |
-| H-21 | Mobile responsive | Bekliyor | H-19 | 375px overflow yok. |
 
 ### Grup 4 — Fiyatlar `/fiyatlar`
 
