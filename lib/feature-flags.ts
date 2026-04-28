@@ -59,3 +59,6 @@ export const FF = {
 // Env-based flags (no PostHog — deterministic at build time)
 // FATURALAR_DEMO: dev + preview'da 4 durum mock data, prod'da gerçek Supabase
 export const FATURALAR_DEMO = process.env.NODE_ENV !== 'production'
+
+// KREDILER_DEMO: dev + preview'da 4 işlem türü mock data (kredi_log yokken)
+export const KREDILER_DEMO = process.env.NODE_ENV !== 'production'
