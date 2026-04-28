@@ -556,7 +556,22 @@ Canlı sitedeki örnek çıktıları (text/görsel/video/sosyal) ve mevcut görs
 - Tasarruf hesabı pre-traffic'te 0 — placeholder göster ("yzliste ile birlikte tasarruf etmeye başla") VEYA gizle, gerçek metrik geldiğinde aç. **Önerim: placeholder göster** (boş kalmasın), value = `Math.max(0, krediKullanim * 5)` gibi yaklaşık hesap (1 kredi ≈ ₺5 işçi tasarrufu).
 - "Henüz denemediklerin" — kullanıcının üretim geçmişine bağlı. generations tablosundan content_type'lar çekilir, eksik olanlar listelenir. Veri yoksa: tüm 4 içerik tipi gösterilir (yeni kullanıcı için onboarding).
 
-#### HS-01~HS-04 Birleşik Prompt (Hesabım anasayfa)
+### Grup 3B — Krediler `/hesap/krediler` (Aziz 28 Nis spec, EX.12~EX.14)
+
+**Spec:** uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 3)
+**Mevcut sorun:** "Bu ay tüketim" istatistiği yok, ödeme geçmişinde işlem türü etiketi yok (satın alım vs hediye vs iade belirsiz), satıra tıklayınca detay açılmıyor.
+
+| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
+|---|---|---|---|---|
+| KR-01 | Sayfa scaffold + 3 mini stat (mevcut + bu ay + geçen ay) | ✅ Tamam | HS done | 6e67de2+12f6852 — uretimler count ile bu/geçen ay |
+| KR-02 | İşlem geçmişi + işlem türü etiketi | ✅ Tamam | KR-01 | 6e67de2 — TransactionBadge ayrı primitive; KR-02b: kredi_log tablosu yok, payments heuristic (tümü satin_alim), KREDILER_DEMO ile 4 tür görünür |
+| KR-03 | Detay accordion + Mobile + a11y | ✅ Tamam | KR-02 | 12f6852 — aria-expanded/controls/region, ChevronDown rotate, mobile dikey |
+
+**Mock data kararı:** Mevcut kredi log tablosunda işlem_turu (transaction_type) kolonu var mı kontrol et. Yoksa: tüm geçmiş "Satın alım" varsayılır + KR-02b ticket aç ("Backend: kredi_log işlem_turu kolonu"). Demo flag kullanılabilir (FT-01'deki gibi env-based) preview'da 4 türü görmek için.
+
+**KR-02b (Backend ticket):** `kredi_log` tablosu yok — krediler `payments` tablosundan çekiliyor, tüm kayıtlar `satin_alim` varsayılan. Çözüm: `kredi_log` tablosu oluştur (id, user_id, islem_turu, miktar, created_at, detay JSONB). `KREDILER_DEMO=true` ile dev'de 4 tür görünür.
+
+#### KR-01~KR-03 Birleşik Prompt (Krediler)
 
 ```
 ÖNEMLİ — KURAL OVERRIDE:
@@ -565,203 +580,153 @@ kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch
 kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
 
 Branch: claude/redesign-modern-ui
-Görev: HS-01~HS-04 — /hesap sayfası refactor (kullanıcı login sonrası 
-ilk burayı görür, retention için kritik).
+Görev: KR-01~KR-03 — /hesap/krediler refactor (3 mini stat + işlem 
+türü etiketi + detay accordion).
 
-Mevcut sayfa: app/(auth)/hesap/page.tsx — önce oku, mevcut yapıyı anla.
+Spec: uploads/hesap-alti-sayfalar-ek-spec.md (Sayfa 3)
+Mevcut sayfa: app/(auth)/hesap/krediler/page.tsx — önce oku.
 
-Reuse: components/primitives/{StatusBadge}.tsx (uyarı durumları için 
-extend gerekebilir — "warning"/"info" durumları zaten var).
+Reuse: components/primitives/{StatusBadge}.tsx (4 durum tanımlı, 
+işlem türleri için extend gerekirse Code karar versin — yeni 
+TransactionBadge primitive de yapılabilir).
 
 KAPSAM DIŞI:
-- Tasarruf metrik backend hesabı (frontend approximation yeter)
-- Davet sistemi backend (frontend zero-state ve 1+ state UI hazır 
-  olur, backend sonra)
+- Backend: kredi_log işlem_turu kolonu yoksa eklenmesi (ayrı ticket)
+- Paraşüt fatura linki (FT'de hazır, burada link verir sadece)
 
 ────────────────────────────────────────────
-BÖLÜM 1 — HS-01: Scaffold + tasarruf rozeti + 3 KPI grid
+BÖLÜM 1 — KR-01: Scaffold + 3 mini stat
 ────────────────────────────────────────────
 
-1. Sayfa rd-* token swap.
+1. Sayfa rd-* swap.
 
 2. Sayfa başlığı:
-   - Eyebrow: text-[10px] uppercase tracking-[0.15em] text-rd-primary-700 
-     "HESABIM"
-   - H1 (font-display): text-3xl md:text-4xl text-rd-neutral-900 
-     "Hoş geldin, [kullanıcı adı]" — kullanıcı adı yoksa fallback 
-     "Hoş geldin"
-   - Subtitle: text-rd-neutral-600 — "Hesap durumun ve sıradaki 
-     adımların."
+   - Eyebrow text-rd-primary-700 "KREDİLER"
+   - H1 (font-display): "Kredi geçmişin"
+   - Subtitle: "Mevcut bakiye, tüketim ve satın alma geçmişi."
 
-3. Tasarruf rozeti (sayfa hero):
-   - bg-gradient-to-br from-rd-warm-50 to-rd-warm-100 (warm-earth 
-     gradient — Aziz spec mavi diyor ama warm-earth premium pozisyon 
-     için daha uygun; mavi tercih edilirse bg-rd-primary-50 to 
-     bg-rd-primary-100)
-   - border border-rd-warm-200 rounded-xl p-5 md:p-6
-   - Lucide Trophy size-8 text-rd-warm-700
-   - Sol metin: eyebrow "TASARRUF" text-xs + "₺X" font-display text-3xl 
-     text-rd-warm-900
-   - Sağ açıklama: "yzliste ile birlikte tasarruf ettin"
-   - Hesaplama: krediKullanim * 5 (1 kredi ≈ ₺5 stüdyo/copywriter 
-     tasarrufu approximation). Pre-traffic kullanıcı için 0 ise: 
-     "yzliste ile birlikte tasarruf etmeye başla — ilk üretim için 
-     ücretsiz ipuçları" (CTA: /uret)
-
-4. 3 KPI grid (rozetin altında):
+3. 3 mini stat (yan yana, mobile dikey):
    - grid grid-cols-1 md:grid-cols-3 gap-4
-   - Her KPI: rounded-xl border p-5 + Lucide ikon (size-6) + label 
-     (text-xs uppercase) + value (font-display text-2xl)
-   - **Kalan kredi:** Lucide Coins, "Kalan kredi" + sayı. Eğer ≤5: 
-     border-rd-danger-300 bg-rd-danger-50 + ikon text-rd-danger-700. 
-     Tüm KPI Link href="/kredi-yukle" + ChevronRight (PR pattern reuse).
-   - **Bu ay üretim:** Lucide TrendingUp, "Bu ay" + sayı. Link 
-     href="/hesap/uretimler".
-   - **Toplam üretim:** Lucide Activity, "Toplam" + sayı. Link 
-     href="/hesap/uretimler".
-   - "Favori platform" KPI YOK (Aziz spec: 4→3 KPI).
+   - Her stat: rounded-xl border border-rd-neutral-200 p-5
+   - **Mevcut:** Lucide Coins + label "Mevcut" + sayı (font-display 
+     text-3xl)
+   - **Bu ay tüketim:** Lucide TrendingDown + "Bu ay" + sayı (kullanım 
+     toplamı)
+   - **Geçen ay tüketim:** Lucide Calendar + "Geçen ay" + sayı
 
-5. Data fetching: useCredits + supabase.from('generations').select('*', 
-   { count: 'exact' }).eq('user_id', userId) toplam ve ay filtreli.
+4. Hesaplama:
+   - Bu ay: kredi_log.created_at >= startOfMonth(now) AND 
+     islem_turu = 'kullanim' (negatif kredi miktarı toplam)
+   - Geçen ay: startOfMonth(prevMonth) <= created_at < startOfMonth(now)
+   - Mutlak değer al (kullanım kayıtları negatif olabilir)
 
-Commit: feat(hesap): HS-01 scaffold + tasarruf rozeti + 3 KPI grid
+5. Üstte "Kredi yükle" CTA buton: bg-rd-primary-700 → /kredi-yukle
+   (sayfa header sağında, sticky değil)
 
-────────────────────────────────────────────
-BÖLÜM 2 — HS-02: 6 menü kartı + uyarı durumları
-────────────────────────────────────────────
-
-1. Bölüm başlığı: "Hesap menün" (font-display text-xl md:text-2xl)
-
-2. Grid: grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4
-
-3. 6 kart (her biri Link, hover lift -translate-y-0.5 transition):
-   - rounded-xl border border-rd-neutral-200 bg-white p-5 hover:
-     border-rd-primary-300
-   - Üst: Lucide ikon (size-6 text-rd-primary-700) + sağda 
-     ChevronRight + (varsa) badge
-   - Başlık (font-medium text-rd-neutral-900)
-   - Alt mikro-metin (text-sm text-rd-neutral-600)
-
-4. 6 kart:
-   - **Marka profili** → /hesap/marka (Lucide Building2). Mikro: 
-     "AI metinlerini kişiselleştir." Uyarı: marka boşsa veya 
-     storeName yoksa → border-rd-warm-300 + StatusBadge "preparing" 
-     "Eksik" (warm tonu, danger değil — uyarı kibar)
-   - **Profil** → /hesap/profil (Lucide User). Mikro: "Kişisel ve 
-     fatura bilgilerin."
-   - **Üretimler** → /hesap/uretimler (Lucide FileText). Mikro: 
-     "Geçmiş üretimlerini gör."
-   - **Krediler** → /hesap/krediler (Lucide Coins). Mikro: 
-     "Kredi geçmişin ve paketler." Uyarı: kredi ≤5 → 
-     border-rd-danger-300 + StatusBadge "error" "Düşük"
-   - **Faturalar** → /hesap/faturalar (Lucide Receipt). Mikro: 
-     "Ödeme geçmişin." Uyarı: error status'lü fatura varsa → 
-     border-rd-danger-300 + StatusBadge "error" "Hata"
-   - **Ayarlar** → /hesap/ayarlar (Lucide Settings). Mikro: 
-     "Şifre, e-posta, hesap silme."
-
-5. Uyarı bilgisi:
-   - Marka profil status: profiles.marka_data null veya storeName 
-     boş → "eksik"
-   - Kredi ≤5: useCredits.data <= 5
-   - Fatura error: faturalar tablosunda status='error' var mı
-
-Commit: feat(hesap): HS-02 6 menü kartı + uyarı durumları
+Commit: feat(krediler): KR-01 scaffold + 3 mini stat
 
 ────────────────────────────────────────────
-BÖLÜM 3 — HS-03: Denenmemiş özellikler + davet kutusu
+BÖLÜM 2 — KR-02: İşlem geçmişi + işlem türü etiketi
 ────────────────────────────────────────────
 
-1. **Denenmemiş özellikler keşif:**
-   - generations tablosundan kullanıcının yaptığı content_type'ları çek
-   - Eksik olanlar (yapmadığı): 4 tip - yapılan = eksik
-   - Yeni kullanıcı (hiç üretim yok): tüm 4 tipi göster
-   - UI: bölüm başlığı "Henüz denemediğin" + 2-4 kart (tip başına)
-     - Kart: rounded-xl bg-rd-warm-50 border border-rd-warm-200 p-4
-     - Lucide Sparkles size-5 text-rd-warm-700
-     - Başlık: "Video try-on", "Görsel üretim", "Sosyal medya kit", 
-       "Listing metni"
-     - Mikro: "5sn video, 13 kredi" gibi ipucu
-     - CTA: Link → /uret veya /yzstudio
-   - Tüm 4 tip yapıldıysa: bu bölüm gizlen (boş listeden boş bölüm 
-     gösterme)
+1. Bölüm başlığı: "İşlem geçmişin" (font-display text-xl)
 
-2. **Davet kutusu basitleştirme:**
-   - Mevcut sayfada davet sistemi varsa kullan, yoksa yeni komponent 
-     komponents/hesap/InviteBox.tsx (basit)
-   - 0 davet (count === 0):
-     - bg-rd-primary-50 border border-rd-primary-200 rounded-xl p-5
-     - Lucide UserPlus size-6 text-rd-primary-700
-     - Başlık: "Arkadaşını davet et"
-     - p: "Sen ve arkadaşın bonus kredi alır."
-     - CTA: "Davet linkimi kopyala" (clipboard) veya "Davet et" 
-       button → modal/page (sonra)
-   - 1+ davet (count >= 1):
-     - Aynı kart yapı ama:
-     - "X arkadaş davet ettin, Y bonus aldın" istatistik
-     - CTA daha küçük: "Daha fazla davet et"
+2. Liste container: space-y-2, role="list"
 
-   - Backend: davetler tablosu/sütunu var mı kontrol. Yoksa 
-     count = 0 default + UI hazır olur, backend sonra. BACKLOG'a 
-     HS-03b not düş.
+3. Her satır (kompakt kart):
+   - rounded-lg border border-rd-neutral-200 p-4 bg-white
+   - flex items-center justify-between
+   - Sol: işlem türü badge + miktar + tarih
+   - Sağ: tutar (varsa) + ChevronDown (KR-03'te accordion için)
 
-Commit: feat(hesap): HS-03 denenmemiş özellikler keşif + davet kutusu
+4. İşlem türü badge — 4 tip (StatusBadge extend VEYA yeni 
+   TransactionBadge primitive):
+   - **Satın alım:** bg-rd-primary-50 + text-rd-primary-700 + Lucide 
+     ShoppingCart size-3
+   - **Hediye:** bg-rd-success-50 + text-rd-success-700 + Lucide Gift size-3
+   - **İade:** bg-rd-warning-50 + text-rd-warning-700 + Lucide Undo2 size-3
+   - **Kullanım:** bg-rd-neutral-50 + text-rd-neutral-600 + Lucide Minus size-3
+
+5. Backend kontrol: kredi_log tablosunda işlem_turu (transaction_type) 
+   kolonu var mı?
+   - VAR: gerçek değer kullan
+   - YOK: satın alım için heuristic (kredi miktarı > 0 = satın alım, 
+     < 0 = kullanım). Hediye/İade ayırt edilemez → varsayılan 
+     "Satın alım" veya "Kullanım"
+   - YOKSA: BACKLOG'a KR-02b ticket aç ("Backend: kredi_log 
+     işlem_turu kolonu"). Demo için env-based flag (FATURALAR_DEMO 
+     pattern) opsiyonel.
+
+6. Miktar formatı:
+   - Satın alım/Hediye/İade: "+10 kredi" (yeşil text)
+   - Kullanım: "−1 kredi" (gri text)
+   - font-medium
+
+7. Tarih: "16.04.2026" formatı (kısa Türk tarih)
+
+Commit: feat(krediler): KR-02 işlem geçmişi + işlem türü etiketi
 
 ────────────────────────────────────────────
-BÖLÜM 4 — HS-04: Mobile + a11y polish
+BÖLÜM 3 — KR-03: Detay accordion + Mobile + a11y
 ────────────────────────────────────────────
 
-1. **Mobile (375px):**
-   - Tasarruf rozeti: ikon üstte + metin altta dikey
-   - 3 KPI grid: tek kolon
-   - 6 menü kartı: tek kolon
-   - Denenmemiş kartlar: tek kolon
-   - Davet kutusu: full width, ikon küçülür
+1. Detay accordion:
+   - Satıra tıklayınca aşağıda detay panel açılır
+   - aria-expanded + ChevronDown rotate-180 transition
+   - Detay içeriği (işlem türüne göre):
+     - **Satın alım:** Paket adı, ödeme yöntemi (varsa), fatura 
+       linki (varsa, /hesap/faturalar/[id])
+     - **Hediye:** Sebep ("Hoş geldin bonusu", "Davet bonusu" vs)
+     - **İade:** Sebep ("Hatalı çekim", manuel iade)
+     - **Kullanım:** Üretim ID (link to /sonuc/[id])
+   - Backend'de detay field'ları yoksa: "Detay yok" placeholder + 
+     console warn
 
-2. **A11y:**
+2. **Mobile (375px):**
+   - 3 mini stat dikey
+   - İşlem satırları kompakt: badge + miktar üst, tarih + tutar alt
+   - Detay accordion full width
+
+3. **A11y:**
    - main aria-labelledby h1
-   - KPI Link aria-label net (örn "Krediler — kalan: X")
-   - Menü kartları role="link" + aria-label başlık + uyarı durumu
-   - Uyarı badge'leri aria-live="polite" YOK (statik bilgi)
-   - Lucide ikonlar aria-hidden="true"
-   - Klavye Tab: KPI'lar → menü kartları → denenmemiş → davet kutusu
+   - Liste role="list", her satır role="listitem"
+   - Accordion buton aria-expanded + aria-controls
+   - Detay panel role="region" + id eşleşmeli
+   - Klavye: Tab → satır → Space/Enter aç/kapa
 
-3. **Edge case'ler:**
-   - useCredits null: KPI'da "—" placeholder
-   - generations fetch hata: "Üretim sayısı yüklenemedi" + "Toplam: —"
-   - Marka data fetching: hover state'i değiştirme, "yükleniyor" 
-     skeleton
+4. **Edge case'ler:**
+   - Boş liste: "Henüz işlem yok" + Lucide Coins + "İlk paketini al" 
+     CTA → /kredi-yukle
+   - Fetch hata: "İşlemler yüklenemedi" + retry buton
+   - Mevcut kredi 0 + yeni kullanıcı: "Hoş geldin! Bu sayfada kredi 
+     hareketlerin görünür."
 
-Commit: chore(hesap): HS-04 mobile + a11y polish
+Commit: feat(krediler): KR-03 detay accordion + mobile + a11y
 
 ────────────────────────────────────────────
 Test
 ────────────────────────────────────────────
 
 - npm run build temiz
-- Localde /hesap:
-  - Eyebrow + Manrope H1 (kullanıcı adı varsa)
-  - Tasarruf rozeti gradient + Trophy
-  - 3 KPI clickable, kalan kredi ≤5'te kırmızı
-  - 6 menü kartı, marka eksikse warm uyarı, kredi düşükse danger uyarı
-  - Denenmemiş kartlar (yeni kullanıcı = 4 tip)
-  - Davet kutusu 0 state CTA
+- Localde /hesap/krediler:
+  - Eyebrow + Manrope H1
+  - 3 mini stat doğru hesaplama
+  - İşlem listesi 4 türü ayırt eder (badge renkleri)
+  - Satıra tık → accordion açılır
   - 375px mobile sıkıntısız
-  - Klavye Tab full tour
 
-Commit özeti (4 atomik) VEYA tek:
-feat(hesap): HS-01~HS-04 /hesap anasayfa refactor
+Commit özeti (3 atomik) VEYA tek:
+feat(krediler): KR-01~KR-03 /hesap/krediler refactor
 
-BACKLOG-REDESIGN.md'de HS-01~HS-04 [x] işaretle. Backend bağımlı 
-ticket'lar (davet sistemi, tasarruf metrik) için BACKLOG'a 
-not düş (HS-03b vs).
+BACKLOG'da KR-01~KR-03 [x] işaretle. Backend bağımlı varsa 
+KR-02b not düş.
 
 Bittikten sonra rapor:
 - Commit listesi
-- Yeni dosyalar (InviteBox vs)
-- Davet sistemi backend kararı
-- Tasarruf rozeti hesaplama (approximation mı gerçek metrik mi)
-- Açık riskler / Aziz preview test
+- TransactionBadge yeni primitive mi yoksa StatusBadge extend mi
+- kredi_log işlem_turu kolonu var mı
+- Demo data kararı (env-based flag mi, gerçek heuristic mi)
+- Açık riskler
 ```
 
 ### Grup 4 — Fiyatlar `/fiyatlar`
