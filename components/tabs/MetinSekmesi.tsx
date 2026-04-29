@@ -1,6 +1,6 @@
 ﻿"use client";
 import { useState, useRef } from "react";
-import { Edit3, Camera, ScanLine, FileSpreadsheet, Barcode, FileText, AlertTriangle, RotateCcw, Scissors, FolderOpen, Check, X as XIcon, Loader2, Download, ClipboardList, BarChart3, CreditCard, Tag, Lightbulb, PenLine } from "lucide-react";
+import { Edit3, Camera, ScanLine, FileSpreadsheet, Barcode, FileText, AlertTriangle, Scissors, FolderOpen, Check, X as XIcon, Loader2, Download, ClipboardList, BarChart3, CreditCard, Tag, Lightbulb, PenLine } from "lucide-react";
 import { PLATFORM_BILGI, PLATFORM_PLACEHOLDER, YUKLENIYOR_MESAJLARI, KATEGORI_LISTESI } from "@/lib/constants";
 import { sonucuBolumle, docxIndir } from "@/lib/listing-utils";
 import { parseExcel, excelOlustur, type ParseSonucu } from "@/lib/excel-parser";
@@ -730,21 +730,11 @@ export default function MetinSekmesi({
               setDuzenleYukleniyor(false);
             };
             return (
-              <div className="flex flex-wrap gap-2 px-1">
-                <button onClick={async () => {
-                  if (!kullanici || yukleniyor || duzenleYukleniyor) return;
-                  if (uretimId && yenidenUretHakki > 0) {
-                    setDuzenleYukleniyor(true);
-                    const res = await fetch("/api/uret/duzenle", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sonuc, aksiyon: "yeniden_uret_context", userId: kullanici.id, platform, kategori }) });
-                    const data = await res.json();
-                    if (data.sonuc) { setSonuc(data.sonuc); setYenidenUretHakki(h => h - 1); }
-                    setDuzenleYukleniyor(false);
-                  } else {
-                    icerikUret();
-                  }
-                }} disabled={yukleniyor || duzenleYukleniyor} className="flex items-center gap-1 text-xs bg-rd-primary-100 hover:bg-rd-primary-50 text-rd-primary-800 px-3 py-1.5 rounded-lg border border-rd-primary-800/20 transition-colors disabled:opacity-40">
-                  <RotateCcw size={12} strokeWidth={1.5} /> Yeniden üret{uretimId && yenidenUretHakki > 0 ? ` (${yenidenUretHakki} ücretsiz)` : ""}
-                </button>
+              <div className="space-y-2 px-1">
+                <p className="text-xs text-rd-neutral-500">
+                  <span className="font-medium text-rd-neutral-700">{yenidenUretHakki}/3 ücretsiz revize</span> kaldı — birini seç:
+                </p>
+                <div className="flex flex-wrap gap-2">
                 <button onClick={() => mikro("kisalt")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
                   <Scissors size={12} strokeWidth={1.5} /> Kısalt
                 </button>
@@ -757,6 +747,7 @@ export default function MetinSekmesi({
                 <button onClick={() => mikro("ton_resmi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
                   Resmi
                 </button>
+                </div>
               </div>
             );
           })()}
