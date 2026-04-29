@@ -136,6 +136,8 @@ export default function Home() {
   // Sticky bar — cost + credit check
   const cost = calculateCredits({
     activeTab: (anaSekme ?? "metin") as ActiveTab,
+    productName: metin.urunAdi,
+    hasPhoto: fotolar.length > 0,
     selectedStylesCount: gorsel.seciliStiller?.size,
     videoLengthSec: Number(video.videoSure) as 5 | 10,
     selectedPlatformsCount: 1,
