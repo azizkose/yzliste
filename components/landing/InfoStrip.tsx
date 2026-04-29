@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { FileText, Image as ImageIcon, Video, MessageSquare, ChevronDown, RotateCw, ZoomIn, Lightbulb, Leaf, ScanSearch, Wind } from 'lucide-react'
+import { FileText, Image as ImageIcon, Video, MessageSquare, ChevronDown, RotateCw, ZoomIn, Lightbulb, Leaf, ScanSearch, Wind, Check, X, Tag, Hash, Camera, Timer, Film, Columns2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { EXAMPLE_CONTENT, EXAMPLE_CONTENT_TR } from '@/lib/data/exampleContent'
 
@@ -48,6 +48,33 @@ const MARKETS: { id: MarketId; label: string }[] = [
   { id: 'amazon', label: 'Amazon TR' },
   { id: 'etsy', label: 'Etsy' },
 ]
+
+// ---- KopyalaButon ----
+
+function KopyalaButon({ metin }: { metin: string }) {
+  const [kopyalandi, setKopyalandi] = useState(false)
+  const handle = () => {
+    navigator.clipboard.writeText(metin).then(() => {
+      setKopyalandi(true)
+      setTimeout(() => setKopyalandi(false), 1800)
+    })
+  }
+  return (
+    <button
+      type="button"
+      onClick={handle}
+      className={cn(
+        'text-xs px-2 py-0.5 rounded-lg transition-colors shrink-0 flex items-center gap-1',
+        kopyalandi
+          ? 'bg-rd-success-50 border border-rd-success-200 text-rd-success-700'
+          : 'bg-white border border-rd-neutral-200 text-rd-neutral-500 hover:text-rd-neutral-800',
+      )}
+    >
+      {kopyalandi && <Check size={11} strokeWidth={2} />}
+      {kopyalandi ? 'Kopyalandı' : 'Kopyala'}
+    </button>
+  )
+}
 
 // ---- Panels ----
 
