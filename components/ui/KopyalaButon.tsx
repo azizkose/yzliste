@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { Check } from 'lucide-react'
@@ -23,12 +23,12 @@ export default function KopyalaButon({ metin, getDuzenlenmisMevin }: KopyalaButo
       onClick={kopyala}
       className={`text-xs font-medium px-3 py-1 rounded-lg transition-all duration-200 ${
         kopyalandi
-          ? 'bg-[#E8F5EE] text-[#0F5132] border border-[#0F5132]/20 scale-95'
-          : 'bg-[#F1F0EB] text-[#908E86] hover:bg-[#F0F4FB] hover:text-[#1E4DD8]'
+          ? 'bg-rd-success-50 text-rd-success-700 border border-rd-success-700/20 scale-95'
+          : 'bg-rd-neutral-100 text-rd-neutral-400 hover:bg-rd-primary-50 hover:text-rd-primary-800'
       }`}
     >
       {kopyalandi ? (
-        <span className="flex items-center gap-1 text-[#0F5132]">
+        <span className="flex items-center gap-1 text-rd-success-700">
           <Check size={12} strokeWidth={2} /> Kopyalandı
         </span>
       ) : (

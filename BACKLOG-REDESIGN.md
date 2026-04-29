@@ -1,96 +1,125 @@
-# yzliste Redesign — Backlog
+# BACKLOG — Redesign
 
-Amaç: Mevcut canlı siteyi koruyarak, ayrı branch'te modern UI redesign çalışması.
-
-**Kurallar:**
-- Branch: `claude/redesign-modern-ui` (main'e dokunulmaz)
-- Preview: Vercel preview URL'den kontrol
-- Her bölüm ayrı commit, ayrı onay
-- Merge ancak Aziz onayıyla
-- Backend, API, Supabase, env dokunulmaz — sadece frontend
-
-**Dokunulabilir:**
-- `app/page.tsx` (anasayfa)
-- `app/layout.tsx` (font/global stil)
-- `components/sections/*`
-- `components/tanitim/*`
-- `components/primitives/*` (yeni — design system primitives)
-- `lib/constants/*` (yeni — demo data, token constants)
-- `tailwind.config.ts` (renk/font tokenları)
-- `app/globals.css` (CSS variable'lar)
-- `public/` (görsel/font asset)
-
-**Dokunulmaz (Aziz izni olmadan):**
-- `app/uret/*`, `app/kayit/*`, `app/fiyatlar/*`, `app/blog/*`
-- `app/api/*`, `lib/supabase/*`
-- `.env*`, `middleware.ts`
-
-**Redesign branch UI kuralları (CLAUDE.md'den farklılaşan):**
-- Font ağırlıkları: 400–800 serbest (mevcut sitede 400–500)
-- Gölge: serbest (mevcut sitede yasak)
-- Border radius: 16px (rounded-2xl) kartlarda serbest (mevcut max 12px)
-- Font: Manrope (display 18px+) + Inter (body) (mevcut sadece Inter)
-- Renk paleti: yeni spec paleti geçerli (primary #2563EB, accent #F97316, slate nötrler)
-- İçerik türü renkleri: metin #1E40AF, görsel #7C3AED, video #DC2626, sosyal #059669
-- **Emoji yasak** — kurallar bandı ve placeholder'larda Lucide ikon kullanılacak
+> **Aktif iş listesi.** Tamamlanan polish'lerin tam içeriği için → `archive/backlog-redesign/BACKLOG-REDESIGN-completed-2026-04-29.md` (5629 satır, 26 bölüm — Polish-1 ila Polish-8 tüm prompt'lar ve commit hash'leri).
+>
+> **Branch:** `claude/redesign-modern-ui` → preview → main
+>
+> **Son güncelleme:** 29 Nis 2026 (genel temizlik sonrası)
 
 ---
 
-## Açık işler
+## Faz tablosu — özet (kapsamlı geçmiş archive'da)
 
-### Altyapı
-
-| ID | Başlık | Durum | Bağımlılık | Notlar |
-|---|---|---|---|---|
-| RD-00 | Branch kurulumu + Vercel preview doğrulama | Bekliyor | — | `claude/redesign-modern-ui` branch'i aç, push et, preview URL al |
-
-### Design System Primitives
-
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| DS-01 | Design token'ları kur | Bekliyor | RD-00 | `tailwind.config.ts`'ye yeni renk/font/radius/shadow token'ları ekle. `globals.css`'ye CSS variable'lar ekle. Manrope font'u `layout.tsx`'e next/font ile ekle. Mevcut token'lar bozulmaz — extend ile ekle. |
-| DS-02 | Button primitive | Bekliyor | DS-01 | `components/primitives/Button.tsx` — 4 varyant (primary, secondary, ghost, outline), 3 boyut (sm, md, lg). Hover/focus/disabled state'leri. `font-medium`, `rounded-lg`. TypeScript props, `any` yok. |
-| DS-03 | Card primitive | Bekliyor | DS-01 | `components/primitives/Card.tsx` — `rounded-2xl`, ince border, opsiyonel shadow. `variant` prop: default, elevated, bordered. Padding token'dan. |
-| DS-04 | Badge primitive | Bekliyor | DS-01 | `components/primitives/Badge.tsx` — 6 renk varyantı (primary, success, warning, danger, neutral, accent). 2 boyut (sm, md). `rounded-full`, pill görünüm. |
-| DS-05 | Eyebrow primitive | Bekliyor | DS-01 | `components/primitives/Eyebrow.tsx` — uppercase, `tracking-wider`, `text-xs`, opsiyonel ikon. Renk prop'u. |
-| DS-06 | Tab primitive | Bekliyor | DS-01 | `components/primitives/Tab.tsx` — `role="tablist"` + `role="tab"` + `aria-selected`. Klavye navigasyonu (Arrow Left/Right). Pill ve underline varyantları. |
-| DS-07 | SectionHeader primitive | Bekliyor | DS-05 | `components/primitives/SectionHeader.tsx` — Eyebrow + h2 (Manrope, display) + subtitle paragraf. Center-aligned. Max-width constraint. |
-| DS-08 | CopyButton primitive | Bekliyor | DS-01 | `components/primitives/CopyButton.tsx` — clipboard API + fallback. State: default → copied (1500ms) → default. `aria-live="polite"`. Lucide Copy/Check ikonları. |
-
-### Pazaryeri Bölümü — Pilot 1
-
-| ID | Başlık | Durum | Bağımlılık | Kabul Kriteri |
-|---|---|---|---|---|
-| PZ-01 | Constants & data layer | Bekliyor | DS-01 | `lib/constants/pazaryeri.ts` — CONTENT_TYPES, PLATFORMS, PAZARYERI_DEMO_DATA. TypeScript strict, `as const`. Mockup'taki demo metinler aynen. Kurallar bandı emoji'leri Lucide ikon string'ine çevrilmiş. |
-| PZ-02 | Component scaffold + SectionHeader | Bekliyor | DS-07, PZ-01 | `components/sections/PazaryeriSection.tsx` iskelet. SectionHeader entegre: eyebrow "Tek üründen, 4 içerik · 3 platform", h2, subtitle. State tanımı (activeContentType, activePlatform, copiedField). |
-| PZ-03 | ContentTypeStep (üst tab'lar) + FlowConnector | Bekliyor | DS-06, PZ-02 | 4 pill tab (metin/görsel/video/sosyal), her biri kendi rengiyle. Seçili tab vurgulu. FlowConnector "Örnek aşağıda" bounce animasyonu, seçili rengi takip ediyor. |
-| PZ-04 | DynamicTitleBar + OutputCard frame | Bekliyor | PZ-03 | Başlık barı: ikon + "Üretilen örnek" eyebrow + "{ContentType} — {Platform} için". OutputCard: üst köşeleri yok (title bar'a yapışık), border-color content type rengini takip ediyor. |
-| PZ-05 | ProductInputCard (sol kart, sticky) | Bekliyor | DS-03, PZ-02 | Sol kart: ürün görseli (emoji yerine Lucide ikon placeholder), ürün bilgisi, girdi yöntemleri (Camera, Pencil, Barcode). Desktop'ta `position: sticky; top: 20px`. Mobilde sticky devre dışı. |
-| PZ-06 | PlatformTabs + PlatformRulesBar | Bekliyor | DS-06, PZ-04 | 3 platform tab'ı (Trendyol/Amazon/Etsy), platform renkleriyle. Kurallar bandı: platform soft bg, kurallar Lucide ikon + metin (emoji değil). |
-| PZ-07 | ContentRenderer: Text type | Bekliyor | DS-08, PZ-06 | 4 OutputField (Başlık, Özellikler, Açıklama, Etiketler). Her field'da CopyButton. Özellikler bullet dot'u platform renginde. Etiketler pill chip. 300ms fade geçişi. |
-| PZ-08 | ContentRenderer: Image type | Bekliyor | PZ-06 | 4'lü görsel grid (placeholder: Lucide ImageIcon + label, emoji değil). "Tümünü indir" butonu. Stil notu kutusu (platform renk left border). |
-| PZ-09 | ContentRenderer: Video type | Bekliyor | PZ-06 | Video player mockup, aspect ratio platforma göre (9:16 / 16:9 / 1:1). Play butonu (Lucide). Video spec etiketi. Sahne planı listesi (timestamp + Lucide ikon + açıklama, emoji değil). |
-| PZ-10 | ContentRenderer: Social type | Bekliyor | DS-08, PZ-06 | Instagram + TikTok/Pinterest mockup'ları (platforma göre). CopyButton her post'ta. Instagram'da hashtag chip'leri + engagement ikonları (Lucide). |
-| PZ-11 | Mobile responsive pass | Bekliyor | PZ-07~PZ-10 | Mobile: tek kolon, sticky off, tab'lar yatay scroll. Tablet: 2 kolon dar input. Desktop: tam mockup. Hiçbir breakpoint'te overflow yok. |
-| PZ-12 | A11y pass | Bekliyor | PZ-11 | `role="tablist/tab"`, `aria-selected`, `aria-controls`. Arrow Left/Right navigasyon. Focus-visible ring. `aria-live="polite"` kopyala bildirimi. WCAG AA kontrast. |
-| PZ-13 | Acceptance review | Bekliyor | PZ-12 | Aziz preview URL'de kontrol eder. 12 kombinasyon (4 × 3) test. Performans: Lighthouse >90, CLS <0.05. Console error yok. Bundle <30KB gzip. |
-
-### Açık Sorular (Aziz kararı bekliyor)
-
-| # | Soru | Varsayılan | Aziz cevabı |
+| Faz | İş | Durum | Son commit |
 |---|---|---|---|
-| Q1 | Görsel placeholder: gerçek ürün görseli mi, Lucide ikon placeholder mı? | Pilot: Lucide ikon placeholder | — |
-| Q2 | Demo metinler: mockup'taki "Selin Porselen" mi, gerçek ürün mü? | Pilot: mockup metni | — |
-| Q3 | Sosyal medya: Trendyol→Instagram+TikTok, Amazon/Etsy→Instagram+Pinterest? | Evet | — |
+| 1 | Landing Hero + section yapı | ✅ | — |
+| 1.5 | Anasayfa reroll | ✅ | a4093418 |
+| 1.6 | Anasayfa polish (LP-01~10) | ✅ | 38b10b4 |
+| 1.7 | Sayfa akış (LP-11~12) | ✅ | c986919c |
+| 1.8 | Polish-3 (P3-A1~U5) | ✅ | 02b07827 |
+| 1.9 | Polish-4 (P4-A1~A3) | ⚠️ kısmen | bebfec83 |
+| 1.95 | Polish-4 FIX (P4-FIX-1~3) | ✅ | 1258d73 |
+| 1.96 | Polish-5 (P5-FIX-1~4 InfoStrip geri) | ✅ | bc65db5 |
+| 1.97 | Polish-6 (tipografi + StepAnimation tek Canvas) | ✅ | c9e6d7e |
+| 1.98 | Polish-7 (InfoStrip canlı pattern transplant) | ✅ | bccf903 |
+| **1.99** | **Polish-8 (Beta+cost+tipografi+ton+hiyerarşi)** | **✅** | **4093053** |
+| 2 | Üretim akışı | ✅ | — |
+| 3 | Hesap alanı | ✅ | — |
+| 4 | Auth | ✅ | eba2681a |
+| 5 | İçerik (blog/sss/hakkimizda) | ✅ | 46efb355 |
+| 6 | Yasal + hata + cleanup (LG-01~05) | ✅ | ce60e8a2 |
+
+**Önemli son durum:** Polish-8 sonrası anasayfa ~bitiş noktasına yakın. Ufak sorun varsa Polish-9, sonra preview branch → main merge.
 
 ---
 
-## Tamamlanan
+## Sıradaki açık iş
 
-(henüz yok)
+### 1. Polish-8 acceptance test (Aziz)
+- [ ] Vercel preview URL incognito test (yzliste-git-claude-redesign-modern-ui-azizkoses-projects.vercel.app)
+- [ ] InfoStrip detay alanı: kart bg-white + zemin neutral-100, alanlar belli mi?
+- [ ] /uret aç hiç seçim yapmadan → sticky bar "—" gösteriyor mu?
+- [ ] Anasayfa H2'leri tutarlı (font-bold + text-3xl/4xl)
+- [ ] Logo "Beta" badge yok
+- [ ] MarkaBilgileri 3 ton metni belirgin fark gösteriyor mu (özellikle premium ≠ markaDolu)
+- [ ] MarkaBilgileri sol kolonda "Metin tonu vs Marka bilgisi" UX kutusu var
+- [ ] Hero text-slate-* hiç yok (HeroContent + TrustStrip rd-* token)
+
+### 2. Polish-9 (varsa Aziz acceptance bulgu)
+- TBD — preview test sonrası
+
+### 3. Pre-merge checklist
+- [ ] `git tag v1.0-pre-redesign main` (canlı snapshot, redesign main merge öncesi)
+- [ ] `git push origin v1.0-pre-redesign`
+- [ ] `git worktree add ../yzliste-v1-archive v1.0-pre-redesign` (lokal yedek klasör)
+- [ ] preview branch'e merge → preview deploy doğrula
+- [ ] main'e merge → Vercel auto deploy
+- [ ] post-merge: 5 PAUSED scheduled task → enabled:true
+
+### 4. Post-merge (canlı/main, redesign-dışı)
+- BACKLOG.md → P2b backend ticket'lar (8 adet): Paraşüt entegrasyonu (FT), KR-02b kredi_log, OD-02b payment_failed, UR-03b /uret pre-fill, SR-04b ZIP/PDF, HD-01b bildirim_tercihleri, profiles TC kimlik kolonu, YS-11 yol haritası
 
 ---
 
-## İptal / Revert edilen
+## Reusable redesign primitives (referans)
 
-(henüz yok)
+**components/primitives/:** Tooltip, ChipSelector, Toast, StickySaveBar, StatusBadge, TransactionBadge, Accordion, Eyebrow, SectionHeader, Badge
+**components/auth/:** AuthForm, TurnstileWidget
+**components/modal/:** Modal
+**components/marka/:** BrandPreviewPanel, BrandedAIPreview, GenericAIPreview
+**components/uret/:** BrandProfileBlock, IntentBanner, StickySubmitBar, ToneSelector, useCalculateCredits, useCTAState
+**components/yzstudio/:** StudioHeader, BetaBanner, StudioStickyBar
+**components/landing/:** StepAnimation, StepSection, InfoStrip
+**components/fiyatlar/:** KrediCalculator, FiyatlarSSS, FiyatlarHybridSection
+**components/blog/:** BlogListesi, BlogPaylas, SSSListesi
+**components/hesap/:** InviteBox
+**components/sections/HeroBlock/:** TrustStrip, Nav, HeroSection, HeroContent, AppScreenshotMockup, VideoModal
+**components/sections/:** MarkaBilgileriSection, NedenYzlisteSection, SSSSection, FinalCTASection, FooterSection, FiyatlarSection
+**lib/data/:** markaPreviewTemplates, turkiye-il-ilce, exampleContent (basketbol topu + bakır cezve), EXAMPLE_MARKA_KIYAS
+**lib/constants/:** hero, marka-bilgileri, neden-yzliste, sss-landing, ton, fiyatlar-landing, footer-landing, final-cta, icerik-turleri, pazaryeri, uc-adim
+**globals.css @theme:** rd-primary/neutral/warm/warning/success/danger token sistemi + animasyonlar
+**docs/:** auth-config.md, lighthouse-checklist.md, metin-tarama.md, **redesign-typography.md** (29 Nis Cowork referans tablosu — Hero H1/Section H2 font-bold, eyebrow text-xs, body min text-xs)
+
+---
+
+## Pattern'ler (Faz 1-6 birikimi)
+
+- **Save:** Supabase direkt `.update()` (endpoint API yok)
+- **Demo flag:** env-based `process.env.NODE_ENV !== 'production'`
+- **Auth redirectTo:** `window.location.origin` (preview/prod auto)
+- **"Yeniden üret":** frontend `/uret?onceki=...` (kredi düşmez, kullanıcı kontrol)
+- **URL pre-fill:** `/uret?tab=metin/gorsel/video/sosyal`
+- **Polish iterasyonları:** Aziz preview test → bulgu → Cowork prompt → Code commit → tekrar preview
+- **CLAUDE.md UI override:** redesign branch'te CLAUDE.md geçersiz, `docs/redesign-typography.md` referans tablo
+
+---
+
+## İçerik kararları (29 Nis)
+
+- Anasayfa örnek ürün: **basketbol topu** (Trendyol + Amazon TR — public/ornek_*.{jpg,png} + hero-video.mp4)
+- Etsy: **el yapımı bakır cezve seti** (zanaat + Anatolian craftsmanship)
+- MarkaBilgileri kıyas: bakır cezve (marka etkisi belirgin)
+- "kr" → "kredi" tam yazım
+- Anasayfada fiyat bölümü TAMAMEN kaldırıldı (Faz 1.7)
+- Logo: "yzliste Beta" badge kaldırıldı (Polish-8)
+
+---
+
+## Fiyatlama
+
+49/129/299 TL — 10/30/100 kredi. Video 5sn=10kr, 10sn=20kr | Try-on 3kr | Listing/Görsel/Sosyal 1kr | Kit 2kr. Krediler süresiz.
+
+---
+
+## Açık öncelikler (canlı/main branch — non-redesign, post-merge)
+
+- **P0:** AUTH-01, FY-01 test, OPS-07 (DSN), CI-01 (lint 12 error)
+- **Test kalan:** PE-01~PE-11 (kod DONE, post-redesign Aziz manuel)
+- **Detay:** BACKLOG.md (canlı site iş listesi)
+
+---
+
+## Tarihsel arşiv
+
+Tam Polish-1 ila Polish-8 prompt'ları, commit hash'leri, kabul kriterleri:
+→ **`archive/backlog-redesign/BACKLOG-REDESIGN-completed-2026-04-29.md`** (5629 satır, 26 bölüm)

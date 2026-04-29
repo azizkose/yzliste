@@ -160,6 +160,22 @@
 - ✅ yzliste-yzstudio-premium-ozellikler
 - ✅ yzliste-vs-manuel-zaman-karsilastirma
 
+## Toplu Üretim Kümesi 3 (2026-04-27) — Envanter 100'den 106'ya
+
+6 yeni yazı (envanter 100 hedefini aştı, organik genişleme):
+
+### Platform Rehberleri (3)
+- ✅ trendyol-reklam-optimizasyonu-rehberi
+- ✅ shopify-turkiye-magaza-acma-rehberi
+- ✅ pazarama-saticilik-rehberi
+
+### AI ve Görsel (1)
+- ✅ ai-urun-mockup-olusturma-rehberi
+
+### İşletme ve SEO (2)
+- ✅ email-pazarlama-e-ticaret-rehberi
+- ✅ influencer-pazarlama-e-ticaret-stratejisi
+
 ## Yazı Standartları
 
 - **Kelime sayısı:** 800-1200 kelime (5-8 dk okuma)

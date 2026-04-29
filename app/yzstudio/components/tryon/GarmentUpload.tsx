@@ -30,38 +30,44 @@ export function GarmentUpload({
     if (file && file.type.startsWith("image/")) handleFile(file);
   }, [handleFile]);
 
+  const chipBase = "text-xs px-3 py-1.5 rounded-lg border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-500 focus-visible:ring-offset-1";
+  const chipActive = "border-2 border-rd-primary-700 bg-rd-primary-50 text-rd-primary-700";
+  const chipIdle = "border border-rd-neutral-300 text-rd-neutral-700 hover:border-rd-primary-400 hover:bg-rd-neutral-50";
+
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-medium text-[#1A1A17]">Kıyafet fotoğrafı</h3>
-
+      {/* Drop zone */}
       <div
         onDrop={onDrop}
         onDragOver={(e) => e.preventDefault()}
         onClick={() => !foto && inputRef.current?.click()}
-        className={`relative border rounded-xl overflow-hidden transition-colors ${
+        className={[
+          "relative border rounded-xl overflow-hidden transition-colors bg-white",
           foto
-            ? "border-[#D8D6CE]"
-            : "border-dashed border-[#D8D6CE] hover:border-[#1E4DD8] cursor-pointer"
-        } bg-white`}
-        style={{ minHeight: 160 }}
+            ? "border-rd-neutral-200"
+            : "border-dashed border-rd-neutral-300 hover:border-rd-primary-500 cursor-pointer",
+        ].join(" ")}
+        style={{ minHeight: 260 }}
       >
         {foto ? (
           <div className="relative w-full" style={{ paddingBottom: "133%" }}>
             <Image src={foto} alt="Kıyafet" fill className="object-contain" />
             <button
+              type="button"
               onClick={(e) => { e.stopPropagation(); onFotoChange(null); }}
-              className="absolute top-2 right-2 p-1 rounded bg-white/80 border border-[#D8D6CE] text-[#5A5852] hover:text-[#1A1A17] transition-colors"
+              aria-label="Fotoğrafı kaldır"
+              className="absolute top-2 right-2 p-1 rounded bg-white/80 border border-rd-neutral-200 text-rd-neutral-600 hover:text-rd-neutral-900 transition-colors"
             >
-              <X size={14} strokeWidth={1.5} />
+              <X size={14} strokeWidth={1.5} aria-hidden="true" />
             </button>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center gap-2 py-12 px-4 text-center">
-            <div className="w-14 h-14 rounded-lg bg-[#F1F0EB] flex items-center justify-center mb-1">
-              <ImageUp size={24} strokeWidth={1.5} className="text-[#5A5852]" />
+          <div className="flex flex-col items-center justify-center gap-2 py-16 px-4 text-center">
+            <div className="w-14 h-14 rounded-lg bg-rd-neutral-100 flex items-center justify-center mb-1">
+              <ImageUp size={28} strokeWidth={1.5} className="text-rd-neutral-500" aria-hidden="true" />
             </div>
-            <p className="text-sm font-medium text-[#1A1A17]">Fotoğraf yükle veya sürükle bırak</p>
-            <p className="text-xs text-[#908E86] mt-1">JPG, PNG — en fazla 10 MB</p>
+            <p className="text-sm font-medium text-rd-neutral-900">Fotoğraf yükle veya sürükle bırak</p>
+            <p className="text-xs text-rd-neutral-500 mt-1">JPG, PNG — en fazla 10 MB</p>
           </div>
         )}
       </div>
@@ -73,19 +79,18 @@ export function GarmentUpload({
         onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
       />
 
+      {/* Filters */}
       <div className="space-y-3">
         <div>
-          <p className="text-xs text-[#908E86] mb-2">Fotoğraf tipi</p>
+          <p className="text-xs uppercase tracking-wide text-rd-neutral-500 mb-2">Fotoğraf tipi</p>
           <div className="flex gap-2 flex-wrap">
             {(["auto", "flat-lay", "model"] as const).map((t) => (
               <button
                 key={t}
+                type="button"
                 onClick={() => onPhotoTypeChange(t)}
-                className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
-                  garmentPhotoType === t
-                    ? "border-[#1E4DD8] bg-[#1E4DD8] text-white"
-                    : "border-[#D8D6CE] text-[#5A5852] hover:border-[#7B9BD9]"
-                }`}
+                aria-pressed={garmentPhotoType === t}
+                className={`${chipBase} ${garmentPhotoType === t ? chipActive : chipIdle}`}
               >
                 {t === "auto" ? "Otomatik" : t === "flat-lay" ? "Düz/askı" : "Mankendeki"}
               </button>
@@ -94,17 +99,15 @@ export function GarmentUpload({
         </div>
 
         <div>
-          <p className="text-xs text-[#908E86] mb-2">Kategori</p>
+          <p className="text-xs uppercase tracking-wide text-rd-neutral-500 mb-2">Kategori</p>
           <div className="flex gap-2 flex-wrap">
             {(["auto", "tops", "bottoms", "one-pieces"] as const).map((c) => (
               <button
                 key={c}
+                type="button"
                 onClick={() => onCategoryChange(c)}
-                className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
-                  category === c
-                    ? "border-[#1E4DD8] bg-[#1E4DD8] text-white"
-                    : "border-[#D8D6CE] text-[#5A5852] hover:border-[#7B9BD9]"
-                }`}
+                aria-pressed={category === c}
+                className={`${chipBase} ${category === c ? chipActive : chipIdle}`}
               >
                 {c === "auto" ? "Otomatik" : c === "tops" ? "Üst" : c === "bottoms" ? "Alt" : "Tek parça"}
               </button>

@@ -1,6 +1,8 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
+import { Search, X, FileText } from "lucide-react";
+import ChipSelector from "@/components/primitives/ChipSelector";
 import type { BlogYazisi } from "./icerikler";
 
 interface Props {
@@ -8,9 +10,25 @@ interface Props {
   kategoriler: string[];
 }
 
+const SAYFA_BOYUTU = 12;
+
 export default function BlogListesi({ yazilar, kategoriler }: Props) {
   const [aramaMetni, setAramaMetni] = useState("");
-  const [aktifKategori, setAktifKategori] = useState<string | null>(null);
+  const [aktifKategori, setAktifKategori] = useState("tümü");
+  const [sayfa, setSayfa] = useState(1);
+
+  const chipOptions = useMemo(
+    () => [
+      { id: "tümü", label: "Tümü" },
+      ...kategoriler.map((k) => ({ id: k, label: k })),
+    ],
+    [kategoriler]
+  );
+
+  const handleKategoriDegis = useCallback((v: string) => {
+    setAktifKategori(v);
+    setSayfa(1);
+  }, []);
 
   const filtrelenmis = useMemo(() => {
     return yazilar.filter((y) => {
@@ -19,63 +37,57 @@ export default function BlogListesi({ yazilar, kategoriler }: Props) {
         y.baslik.toLowerCase().includes(aramaMetni.toLowerCase()) ||
         y.ozet.toLowerCase().includes(aramaMetni.toLowerCase());
       const kategoriUyumu =
-        aktifKategori === null || y.kategori === aktifKategori;
+        aktifKategori === "tümü" || y.kategori === aktifKategori;
       return aramaUyumu && kategoriUyumu;
     });
   }, [yazilar, aramaMetni, aktifKategori]);
+
+  const gosterilen = filtrelenmis.slice(0, sayfa * SAYFA_BOYUTU);
+  const dahaVar = gosterilen.length < filtrelenmis.length;
 
   return (
     <>
       {/* ARAMA + KATEGORİ */}
       <section className="px-4 sm:px-6 pb-6">
         <div className="max-w-4xl mx-auto space-y-4">
-          {/* Arama kutusu */}
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔍</span>
+            <Search
+              size={16}
+              strokeWidth={1.5}
+              aria-hidden="true"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-rd-neutral-400"
+            />
             <input
               type="search"
               value={aramaMetni}
-              onChange={(e) => setAramaMetni(e.target.value)}
-              placeholder="Yazılarda ara..."
-              className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white"
+              onChange={(e) => {
+                setAramaMetni(e.target.value);
+                setSayfa(1);
+              }}
+              placeholder="Yazı ara..."
+              className="w-full pl-9 pr-9 py-2.5 text-sm border border-rd-neutral-200 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-500 bg-white"
+              aria-label="Blog yazılarında ara"
             />
             {aramaMetni && (
               <button
                 onClick={() => setAramaMetni("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-rd-neutral-400 hover:text-rd-neutral-600"
                 aria-label="Aramayı temizle"
               >
-                ×
+                <X size={14} strokeWidth={1.5} aria-hidden="true" />
               </button>
             )}
           </div>
 
-          {/* Kategori pilleri */}
           {kategoriler.length > 1 && (
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setAktifKategori(null)}
-                className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${
-                  aktifKategori === null
-                    ? "bg-indigo-500 text-white border-indigo-500"
-                    : "bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100"
-                }`}
-              >
-                Tümü
-              </button>
-              {kategoriler.map((k) => (
-                <button
-                  key={k}
-                  onClick={() => setAktifKategori(aktifKategori === k ? null : k)}
-                  className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${
-                    aktifKategori === k
-                      ? "bg-indigo-500 text-white border-indigo-500"
-                      : "bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100"
-                  }`}
-                >
-                  {k}
-                </button>
-              ))}
+            <div className="overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
+              <ChipSelector
+                mode="single"
+                label="Kategori filtresi"
+                options={chipOptions}
+                value={aktifKategori}
+                onChange={handleKategoriDegis}
+              />
             </div>
           )}
         </div>
@@ -84,62 +96,88 @@ export default function BlogListesi({ yazilar, kategoriler }: Props) {
       {/* YAZI LİSTESİ */}
       <section className="px-4 sm:px-6 py-8">
         <div className="max-w-4xl mx-auto">
-          {filtrelenmis.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {filtrelenmis.map((yazi) => (
-                <Link
-                  key={yazi.slug}
-                  href={`/blog/${yazi.slug}`}
-                  className="group bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
-                >
-                  {yazi.kapakGorsel && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={yazi.kapakGorsel}
-                      alt={yazi.baslik}
-                      style={{ width: "100%", height: "176px", objectFit: "cover", display: "block" }}
-                    />
-                  )}
-                  <div className="p-5 flex flex-col flex-1">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="text-xs bg-indigo-50 text-indigo-600 border border-indigo-100 px-2 py-0.5 rounded-full font-medium">
-                        {yazi.kategori}
-                      </span>
-                      <span className="text-xs text-gray-400">{yazi.okumaSuresi} dk okuma</span>
-                    </div>
-                    <h2 className="font-bold text-gray-800 text-sm leading-snug mb-2 group-hover:text-indigo-600 transition-colors line-clamp-3">
-                      {yazi.baslik}
-                    </h2>
-                    <p className="text-xs text-gray-500 leading-relaxed flex-1 line-clamp-3">
-                      {yazi.ozet}
-                    </p>
-                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
-                      <span className="text-xs text-gray-400">
-                        {new Date(yazi.yayinTarihi).toLocaleDateString("tr-TR", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </span>
-                      <span className="text-xs text-indigo-500 font-medium group-hover:underline">
-                        Oku →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+          {gosterilen.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {gosterilen.map((yazi) => {
+                  const titleId = `blog-kart-${yazi.slug}`;
+                  return (
+                    <article key={yazi.slug} aria-labelledby={titleId}>
+                      <Link
+                        href={`/blog/${yazi.slug}`}
+                        className="group rounded-xl border border-rd-neutral-200 bg-white overflow-hidden flex flex-col h-full hover:border-rd-primary-300 hover:-translate-y-0.5 transition-all"
+                      >
+                        <div className="p-5 flex flex-col flex-1">
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="text-xs bg-rd-warm-50 text-rd-warm-700 border border-rd-warm-200 px-2 py-0.5 rounded font-medium">
+                              {yazi.kategori}
+                            </span>
+                            <span className="text-xs text-rd-neutral-400">
+                              {yazi.okumaSuresi} dk okuma
+                            </span>
+                          </div>
+                          <h2
+                            id={titleId}
+                            className="font-medium text-rd-neutral-900 text-base leading-snug mb-2 group-hover:text-rd-primary-700 transition-colors line-clamp-3"
+                            style={{ fontFamily: "var(--font-rd-display)" }}
+                          >
+                            {yazi.baslik}
+                          </h2>
+                          <p className="text-sm text-rd-neutral-500 leading-relaxed flex-1 line-clamp-2">
+                            {yazi.ozet}
+                          </p>
+                          <div className="flex items-center justify-between mt-4 pt-3 border-t border-rd-neutral-100">
+                            <span className="text-xs text-rd-neutral-400">
+                              {new Date(yazi.yayinTarihi).toLocaleDateString(
+                                "tr-TR",
+                                {
+                                  day: "numeric",
+                                  month: "long",
+                                  year: "numeric",
+                                }
+                              )}
+                            </span>
+                            <span className="text-xs text-rd-primary-600 font-medium">
+                              Oku →
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    </article>
+                  );
+                })}
+              </div>
+
+              {dahaVar && (
+                <div className="mt-10 text-center">
+                  <button
+                    onClick={() => setSayfa((s) => s + 1)}
+                    className="px-6 py-2.5 text-sm font-medium border border-rd-neutral-300 rounded-lg text-rd-neutral-700 hover:border-rd-primary-400 hover:text-rd-primary-700 transition-colors"
+                  >
+                    Daha fazla yükle
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
-            <div className="text-center py-20 text-gray-400">
-              <div className="text-4xl mb-4">🔍</div>
-              <p className="text-sm">
+            <div className="text-center py-20">
+              <FileText
+                size={32}
+                strokeWidth={1.5}
+                className="text-rd-neutral-300 mx-auto mb-4"
+                aria-hidden="true"
+              />
+              <p className="text-sm text-rd-neutral-500">
                 {aramaMetni
                   ? `"${aramaMetni}" için sonuç bulunamadı.`
                   : "Bu kategoride yazı yok."}
               </p>
               <button
-                onClick={() => { setAramaMetni(""); setAktifKategori(null); }}
-                className="mt-4 text-xs text-indigo-500 hover:underline"
+                onClick={() => {
+                  setAramaMetni("");
+                  setAktifKategori("tümü");
+                }}
+                className="mt-4 text-xs text-rd-primary-600 hover:underline"
               >
                 Filtreyi temizle
               </button>

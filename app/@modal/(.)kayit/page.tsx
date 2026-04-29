@@ -8,10 +8,10 @@ export default function KayitModal() {
   const router = useRouter()
 
   return (
-    <Modal title="Ücretsiz Hesap Oluştur">
-      <div className="mb-4">
-        <p className="text-sm text-gray-500">3 ücretsiz kredi · Kredi kartı gerekmez</p>
-      </div>
+    <Modal title="Hesabını oluştur">
+      <p className="text-sm text-rd-neutral-500 mb-5">
+        3 ücretsiz kredi · Kredi kartı gerekmez
+      </p>
       <AuthForm
         defaultMode="kayit"
         redirectTo="/uret"

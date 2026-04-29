@@ -4,7 +4,7 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 
 **Kurallar:**
 - Her oturumun başında bu dosyayı oku, nerede kaldığımızı anla.
-- Detaylı spec gerekiyorsa `specs/{ID}.md` dosyasını oku.
+- Detaylı spec gerekiyorsa `archive/specs-completed/{ID}.md` dosyasını oku (29 Nis 2026 itibariyle specs/ klasörü arşive taşındı, sadece aktif spec'ler specs/'te kalır).
 - Bir iş bittiğinde `- [ ]` → `- [x]` olarak güncelle. Yarım iş `[x]` olmaz.
 - Tamamlanmış maddelerin detayı `BACKLOG-DONE.md` dosyasında.
 
@@ -20,47 +20,62 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | FY-01 | Fiyat artışı — 49/129/299 TL | Kod OK, test kaldı | inline |
 | OPS-07 | Sentry error monitoring | Kısmen OK, DSN sonrası 3 madde | inline |
 | CI-01 | CI lint hataları düzelt — 12 error (setState in effect + prototype dosyaları) | Tamamlandı (0 error) | inline |
-| AI-01 | Chatbot SYSTEM_PROMPT güncelle — fiyat/platform/stil/yzstudio yanlış | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-1 |
-| AI-02 | Merkezi AI config — model + temperature + cost haritası (`lib/ai-config.ts`) | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P0-2, P0-3 |
+| AI-01 | Chatbot SYSTEM_PROMPT güncelle — fiyat/platform/stil/yzstudio yanlış | Tamamlandı | [archive/specs-completed/ai-denetim-01.md](archive/specs-completed/ai-denetim-01.md) §P0-1 |
+| AI-02 | Merkezi AI config — model + temperature + cost haritası (`lib/ai-config.ts`) | Tamamlandı | [archive/specs-completed/ai-denetim-01.md](archive/specs-completed/ai-denetim-01.md) §P0-2, P0-3 |
 
 ### P1 — Yakın vadeli
 
 | ID | Başlık | Durum | Spec |
 |---|---|---|---|
-| NF-02 | yzstudio — premium araçlar sayfası | Faz 1-4 OK (kod), Faz 5 test + stok fotoğraf kaldı | [specs/nf-02-yzstudio.md](specs/nf-02-yzstudio.md) |
-| DR-03 | /hakkimizda kurucu bölümü — kısa, profesyonel, şirket adı yok | Tamamlandı | [specs/dr-03-hakkimizda-yeniden-yaz.md](specs/dr-03-hakkimizda-yeniden-yaz.md) |
-| DA-05 | /uret modern UX — monochrome çözümü | Tamamlandı | [specs/da-05-uret-modern-ux.md](specs/da-05-uret-modern-ux.md) |
-| AI-04 | /duzenle marka bağlamı + kategori kuralları eksik | Tamamlandı (AI-14 ile) | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-1 |
-| AI-05 | Platform karakter limiti tutarsızlığı — Hepsiburada 100→150, tek kaynak | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-2 |
-| AI-06 | TON_TANIMLARI 3→7 ton genişlet, tek dosyaya taşı | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-3 |
-| AI-07 | max_tokens platforma göre + stop_reason:max_tokens yakala | Tamamlandı (AI-16 ile) | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-4 |
-| AI-08 | Çıktı doğrulama — karakter limiti aşımı + yasaklı kelime regex check | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P1-5 |
-| AI-13 | Blog paket/kredi/platform yanlışlarını düzelt — Pro/Enterprise yok, süresiz kredi, 6 platform | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P1-1 |
-| AI-14 | /uret/duzenle KATEGORI_KURALLARI + YASAKLI_KELIMELER ekle (AI-04 tamamlama) | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P1-2 |
-| AI-15 | /api/chat rate limit ekle — Upstash per-user 30 req/dk | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P1-3 |
+| NF-02 | yzstudio — premium araçlar sayfası | Faz 1-4 OK (kod), Faz 5 test + stok fotoğraf kaldı | [archive/specs-completed/nf-02-yzstudio.md](archive/specs-completed/nf-02-yzstudio.md) |
+| DR-03 | /hakkimizda kurucu bölümü — kısa, profesyonel, şirket adı yok | Tamamlandı | [archive/specs-completed/dr-03-hakkimizda-yeniden-yaz.md](archive/specs-completed/dr-03-hakkimizda-yeniden-yaz.md) |
+| DA-05 | /uret modern UX — monochrome çözümü | Tamamlandı | [archive/specs-completed/da-05-uret-modern-ux.md](archive/specs-completed/da-05-uret-modern-ux.md) |
+| AI-04 | /duzenle marka bağlamı + kategori kuralları eksik | Tamamlandı (AI-14 ile) | [archive/specs-completed/ai-denetim-01.md](archive/specs-completed/ai-denetim-01.md) §P1-1 |
+| AI-05 | Platform karakter limiti tutarsızlığı — Hepsiburada 100→150, tek kaynak | Tamamlandı | [archive/specs-completed/ai-denetim-01.md](archive/specs-completed/ai-denetim-01.md) §P1-2 |
+| AI-06 | TON_TANIMLARI 3→7 ton genişlet, tek dosyaya taşı | Tamamlandı | [archive/specs-completed/ai-denetim-01.md](archive/specs-completed/ai-denetim-01.md) §P1-3 |
+| AI-07 | max_tokens platforma göre + stop_reason:max_tokens yakala | Tamamlandı (AI-16 ile) | [archive/specs-completed/ai-denetim-01.md](archive/specs-completed/ai-denetim-01.md) §P1-4 |
+| AI-08 | Çıktı doğrulama — karakter limiti aşımı + yasaklı kelime regex check | Tamamlandı | [archive/specs-completed/ai-denetim-01.md](archive/specs-completed/ai-denetim-01.md) §P1-5 |
+| AI-13 | Blog paket/kredi/platform yanlışlarını düzelt — Pro/Enterprise yok, süresiz kredi, 6 platform | Tamamlandı | [archive/specs-completed/ai-denetim-02.md](archive/specs-completed/ai-denetim-02.md) §P1-1 |
+| AI-14 | /uret/duzenle KATEGORI_KURALLARI + YASAKLI_KELIMELER ekle (AI-04 tamamlama) | Tamamlandı | [archive/specs-completed/ai-denetim-02.md](archive/specs-completed/ai-denetim-02.md) §P1-2 |
+| AI-15 | /api/chat rate limit ekle — Upstash per-user 30 req/dk | Tamamlandı | [archive/specs-completed/ai-denetim-02.md](archive/specs-completed/ai-denetim-02.md) §P1-3 |
 | UI-01 | Araçlar dropdown menüsünde ikonlar güncel değil — LP-11'deki Lucide ikonlarıyla eşitle | Tamamlandı | inline |
 | UI-02 | /fiyatlar "Kredi nasıl çalışır?" bölümünü daha görünür yap | Tamamlandı | inline |
-| OPS-20 | KVKK + yasal uyumluluk tamamlama | Aziz — hukuki | [specs/kume-11.md](specs/kume-11.md) |
+| OPS-20 | KVKK + yasal uyumluluk tamamlama | Aziz — hukuki | [archive/specs-completed/kume-11.md](archive/specs-completed/kume-11.md) |
 
 ### P2 — Orta vadeli
 
 | ID | Başlık | Durum | Spec |
 |---|---|---|---|
-| AI-09 | Sosyal üretim DB kaydına prompt_version ekle | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-1 |
-| AI-10 | /toplu route sistemPromptOlustur paylaşsın (kategori+yasaklı+marka) | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-2 |
-| AI-11 | "Bilinen ürün özellikleri" kuralı kaldır — sadece kullanıcı verisini kullan | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-3 |
-| AI-12 | /studio/manken promptuna profil ton + hedef_kitle ekle | Tamamlandı | [specs/ai-denetim-01.md](specs/ai-denetim-01.md) §P2-4 |
-| AI-16 | stop_reason:max_tokens yakala — 6 route'ta log + uyarı + truncated flag | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P2-1 |
-| AI-17 | ciktiDogrula helper'ı çıkar — /duzenle, /sosyal, /kit, /toplu'dan çağır | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P2-2 |
-| AI-18 | 3 küçük fix: kit DB log + toplu kategori param + chat fotoğraflı kit 4kr | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P2-5 |
-| AI-19 | GORSEL_STILLER emoji kaldır + PLATFORM_BILGI Tailwind default → proje paleti hex | Tamamlandı | [specs/ai-denetim-02.md](specs/ai-denetim-02.md) §P2-6 |
-| OPS-14~19 | KÜME 11 — operasyonel olgunluk faz 2 | OPS-14/15/16/17/18/19 OK | [specs/kume-11.md](specs/kume-11.md) |
+| AI-09 | Sosyal üretim DB kaydına prompt_version ekle | Tamamlandı | [archive/specs-completed/ai-denetim-01.md](archive/specs-completed/ai-denetim-01.md) §P2-1 |
+| AI-10 | /toplu route sistemPromptOlustur paylaşsın (kategori+yasaklı+marka) | Tamamlandı | [archive/specs-completed/ai-denetim-01.md](archive/specs-completed/ai-denetim-01.md) §P2-2 |
+| AI-11 | "Bilinen ürün özellikleri" kuralı kaldır — sadece kullanıcı verisini kullan | Tamamlandı | [archive/specs-completed/ai-denetim-01.md](archive/specs-completed/ai-denetim-01.md) §P2-3 |
+| AI-12 | /studio/manken promptuna profil ton + hedef_kitle ekle | Tamamlandı | [archive/specs-completed/ai-denetim-01.md](archive/specs-completed/ai-denetim-01.md) §P2-4 |
+| AI-16 | stop_reason:max_tokens yakala — 6 route'ta log + uyarı + truncated flag | Tamamlandı | [archive/specs-completed/ai-denetim-02.md](archive/specs-completed/ai-denetim-02.md) §P2-1 |
+| AI-17 | ciktiDogrula helper'ı çıkar — /duzenle, /sosyal, /kit, /toplu'dan çağır | Tamamlandı | [archive/specs-completed/ai-denetim-02.md](archive/specs-completed/ai-denetim-02.md) §P2-2 |
+| AI-18 | 3 küçük fix: kit DB log + toplu kategori param + chat fotoğraflı kit 4kr | Tamamlandı | [archive/specs-completed/ai-denetim-02.md](archive/specs-completed/ai-denetim-02.md) §P2-5 |
+| AI-19 | GORSEL_STILLER emoji kaldır + PLATFORM_BILGI Tailwind default → proje paleti hex | Tamamlandı | [archive/specs-completed/ai-denetim-02.md](archive/specs-completed/ai-denetim-02.md) §P2-6 |
+| OPS-14~19 | KÜME 11 — operasyonel olgunluk faz 2 | OPS-14/15/16/17/18/19 OK | [archive/specs-completed/kume-11.md](archive/specs-completed/kume-11.md) |
+
+### P2b — Redesign sonrası açılan backend işleri
+
+> Redesign branch'i main'e merge edilince bu ticket'lar aktif olur.
+
+| ID | Başlık | Durum | Not |
+|---|---|---|---|
+| HD-01b | Hesap ayarları — profil fotoğrafı yükleme (Storage + avatar URL) | Bekliyor | /hesap/ayarlar sayfası hazır |
+| HD-02b | profiles tablosuna TC kimlik / vergi numarası kolonları — iyzico fatura için zorunlu | Bekliyor | Migration gerekli |
+| KR-02b | Kredi yükleme — iyzico ödeme tamamlama webhook idempotency | Bekliyor | /kredi-yukle sayfası hazır |
+| OD-02b | Sipariş geçmişi — iyzico ödeme kayıtlarını listele | Bekliyor | UI placeholder var |
+| UR-03b | /uret'te kalan kullanılmış kredi geçmişi tablosu | Bekliyor | DB log var, UI yok |
+| SR-04b | Scheduled task reaktivasyon — `blog-seo-yazisi` cron'u production'da kapat, redesign merge sonrası aç | Bekliyor | Supabase scheduled task |
+| FT-01 | Paraşüt e-Arşiv entegrasyonu — kredi satın alımında otomatik fatura | Bekliyor | Redesign ile bağımsız |
+| YS-11 | yzstudio Faz 5 — production test + stok fotoğraf yükleme | Bekliyor | specs/nf-02-yzstudio.md |
 
 ### P3 — Gelecek / Ertelenmiş
 
 | ID | Başlık | Durum | Spec |
 |---|---|---|---|
-| NF-01 | Video Kling 3.0 Pro + ses desteği | Ertelenmiş | [specs/nf-01.md](specs/nf-01.md) |
+| NF-01 | Video Kling 3.0 Pro + ses desteği | Ertelenmiş | [archive/specs-completed/nf-01.md](archive/specs-completed/nf-01.md) |
 | NF-05 | Premium video — Seedance 2.0 | Ertelenmiş | inline |
 | SC-07 | Product snippets — aggregateRating | Gerçek review gelince | inline |
 | BLOG-01 | Scheduled task `blog-seo-yazisi` — toplu üretim moduna geçirildi (5-8 yazı/çalışma, çakışma kontrolü, 100 hedef) | Tamamlandı (2026-04-24) | inline |

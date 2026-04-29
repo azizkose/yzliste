@@ -11,6 +11,114 @@
   --font-sans: var(--font-inter);
 }
 
+/* === Redesign Design System v1.0 === */
+
+@theme {
+  /* Redesign Colors — Primary */
+  --color-rd-primary-50: #EFF6FF;
+  --color-rd-primary-100: #DBEAFE;
+  --color-rd-primary-200: #BFDBFE;
+  --color-rd-primary-300: #93C5FD;
+  --color-rd-primary-400: #60A5FA;
+  --color-rd-primary-500: #3B82F6;
+  --color-rd-primary-600: #2563EB;
+  --color-rd-primary: #2563EB;
+  --color-rd-primary-700: #1D4ED8;
+  --color-rd-primary-800: #1E40AF;
+  --color-rd-primary-900: #1E3A8A;
+
+  /* Redesign Colors — Accent */
+  --color-rd-accent-50: #FFF7ED;
+  --color-rd-accent-100: #FFEDD5;
+  --color-rd-accent-200: #FED7AA;
+  --color-rd-accent-300: #FDBA74;
+  --color-rd-accent-400: #FB923C;
+  --color-rd-accent: #F97316;
+  --color-rd-accent-600: #EA580C;
+  --color-rd-accent-700: #C2410C;
+
+  /* Redesign Colors — Neutral (Slate) */
+  --color-rd-neutral-50: #F8FAFC;
+  --color-rd-neutral-100: #F1F5F9;
+  --color-rd-neutral-200: #E2E8F0;
+  --color-rd-neutral-300: #CBD5E1;
+  --color-rd-neutral-400: #94A3B8;
+  --color-rd-neutral-500: #64748B;
+  --color-rd-neutral-600: #475569;
+  --color-rd-neutral-700: #334155;
+  --color-rd-neutral-800: #1E293B;
+  --color-rd-neutral-900: #0F172A;
+
+  /* Redesign Colors — Content Type */
+  --color-rd-content-text: #1E40AF;
+  --color-rd-content-text-bg: #EFF6FF;
+  --color-rd-content-image: #7C3AED;
+  --color-rd-content-image-bg: #F5F3FF;
+  --color-rd-content-video: #DC2626;
+  --color-rd-content-video-bg: #FEF2F2;
+  --color-rd-content-social: #059669;
+  --color-rd-content-social-bg: #ECFDF5;
+
+  /* Redesign Colors — Platform */
+  --color-rd-platform-trendyol: #F27A1A;
+  --color-rd-platform-trendyol-bg: #FFF4ED;
+  --color-rd-platform-amazon: #FF9900;
+  --color-rd-platform-amazon-bg: #FFF8EB;
+  --color-rd-platform-etsy: #F1641E;
+  --color-rd-platform-etsy-bg: #FEF2EC;
+  --color-rd-platform-hepsiburada: #FF6000;
+  --color-rd-platform-hepsiburada-bg: #FFF1E6;
+  --color-rd-platform-n11: #F8B62D;
+  --color-rd-platform-n11-bg: #FEF6E0;
+
+  /* Redesign Colors — Warm Earth (Premium / Studio) */
+  --color-rd-warm-50: #FAF4ED;
+  --color-rd-warm-100: #F5E9D6;
+  --color-rd-warm-200: #EED8BD;
+  --color-rd-warm-300: #DDBF98;
+  --color-rd-warm-400: #C9A070;
+  --color-rd-warm-500: #A87847;
+  --color-rd-warm-600: #8B6035;
+  --color-rd-warm-700: #7D5630;
+  --color-rd-warm-800: #5A3A1A;
+  --color-rd-warm-900: #3D2710;
+
+  /* Redesign Colors — Semantic */
+  --color-rd-success-50: #ECFDF5;
+  --color-rd-success-200: #A7F3D0;
+  --color-rd-success-600: #059669;
+  --color-rd-success-700: #047857;
+
+  --color-rd-warning-50: #FFFBEB;
+  --color-rd-warning-200: #FDE68A;
+  --color-rd-warning-600: #D97706;
+  --color-rd-warning-700: #B45309;
+
+  --color-rd-danger-50: #FEF2F2;
+  --color-rd-danger-200: #FECACA;
+  --color-rd-danger-600: #DC2626;
+  --color-rd-danger-700: #B91C1C;
+
+  /* Redesign Shadows */
+  --shadow-rd-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-rd-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-rd-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-rd-lg: 0 8px 24px rgba(15, 23, 42, 0.12);
+
+  /* Redesign Border Radius */
+  --radius-rd-card: 16px;
+  --radius-rd-pill: 100px;
+  --radius-rd-button: 10px;
+  --radius-rd-input: 8px;
+
+  /* Redesign Font Family */
+  --font-rd-display: var(--font-manrope), system-ui, sans-serif;
+  --font-rd-body: var(--font-inter), system-ui, sans-serif;
+
+  /* Redesign Animations */
+  --animate-fade-in: fade-in 200ms ease-out;
+}
+
 /* Dark mode desteklenmiyor — tüm component'ler light-mode hardcoded */
 :root {
   color-scheme: light;
@@ -24,6 +132,26 @@ body {
   overscroll-behavior: none; /* iOS/Safari elastic bounce engelleme */
 }
 
+@keyframes modal-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-panel-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes subtle-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes tab-enter {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0);   }
@@ -33,4 +161,218 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .animate-tab-enter { animation: none; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-soft { animation: none; }
+}
+
+/* Hero float-in animation */
+@keyframes hero-float-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-hero-float-in-left {
+  animation: hero-float-in 600ms ease-out both;
+}
+
+.animate-hero-float-in-right {
+  animation: hero-float-in 600ms ease-out 150ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-float-in-left,
+  .animate-hero-float-in-right {
+    animation: none;
+  }
+}
+
+/* 3 Adımda Hazır — stagger fade-in (UA-09) / Step3 output cards (LP-05) */
+.animate-step-card-1 { animation: fade-in 500ms ease-out both; }
+.animate-step-card-2 { animation: fade-in 500ms ease-out 150ms both; }
+.animate-step-card-3 { animation: fade-in 500ms ease-out 300ms both; }
+.animate-step-card-4 { animation: fade-in 500ms ease-out 450ms both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-step-card-1,
+  .animate-step-card-2,
+  .animate-step-card-3,
+  .animate-step-card-4 { animation: none; }
+}
+
+/* Marka Bilgileri — output tone fade-in (MB-07) */
+@keyframes output-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-output-fade-in {
+  animation: output-fade-in 300ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-output-fade-in { animation: none; }
+}
+
+/* Fiyatlar — custom range slider (FY-04) */
+.fiyatlar-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--color-rd-primary-500) var(--slider-fill, 0%), var(--color-rd-neutral-200) var(--slider-fill, 0%));
+  outline: none;
+  cursor: pointer;
+}
+
+.fiyatlar-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--color-rd-primary-500);
+  cursor: pointer;
+  transition: box-shadow 150ms ease;
+}
+
+.fiyatlar-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-rd-primary-500) 15%, transparent);
+}
+
+.fiyatlar-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--color-rd-primary-200);
+}
+
+.fiyatlar-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--color-rd-primary-500);
+  cursor: pointer;
+}
+
+.fiyatlar-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-rd-neutral-200);
+}
+
+.fiyatlar-slider::-moz-range-progress {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-rd-primary-500);
+}
+
+/* animate-fade-in — reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in { animation: none; }
+}
+
+/* === StepAnimation keyframes (AS-02/AS-06) === */
+
+@keyframes step-photo-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes step-or-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes step-text-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes step-chip-in {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes step-sparkle-in {
+  from { opacity: 0; transform: scale(0); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes step-line-grow {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+@keyframes step-download-in {
+  from { opacity: 0; transform: scale(0.8) translateY(4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Applied classes */
+.animate-step-photo-in  { animation: step-photo-in  400ms ease-out both; }
+.animate-step-or-fade   { animation: step-or-fade   300ms ease-out 350ms both; }
+.animate-step-text-in   { animation: step-text-in   300ms ease-out 650ms both; }
+
+/* Market chip stagger (0–4) */
+.animate-step-chip-0 { animation: step-chip-in 220ms ease-out 0ms   both; }
+.animate-step-chip-1 { animation: step-chip-in 220ms ease-out 150ms both; }
+.animate-step-chip-2 { animation: step-chip-in 220ms ease-out 300ms both; }
+.animate-step-chip-3 { animation: step-chip-in 220ms ease-out 450ms both; }
+.animate-step-chip-4 { animation: step-chip-in 220ms ease-out 600ms both; }
+
+/* Content chip stagger (5–8, offset after market chips) */
+.animate-step-chip-5 { animation: step-chip-in 220ms ease-out 800ms  both; }
+.animate-step-chip-6 { animation: step-chip-in 220ms ease-out 950ms  both; }
+.animate-step-chip-7 { animation: step-chip-in 220ms ease-out 1100ms both; }
+.animate-step-chip-8 { animation: step-chip-in 220ms ease-out 1250ms both; }
+
+.animate-step-sparkle-in { animation: step-sparkle-in 280ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+/* Output line grow stagger */
+.animate-step-line-0 { animation: step-line-grow 550ms ease-out 250ms  both; }
+.animate-step-line-1 { animation: step-line-grow 550ms ease-out 550ms  both; }
+.animate-step-line-2 { animation: step-line-grow 550ms ease-out 850ms  both; }
+.animate-step-line-3 { animation: step-line-grow 550ms ease-out 1150ms both; }
+
+.animate-step-download-in { animation: step-download-in 280ms ease-out 1500ms both; }
+
+/* Reduced motion — disable all step animations */
+@media (prefers-reduced-motion: reduce) {
+  .animate-step-photo-in,
+  .animate-step-or-fade,
+  .animate-step-text-in,
+  .animate-step-chip-0,
+  .animate-step-chip-1,
+  .animate-step-chip-2,
+  .animate-step-chip-3,
+  .animate-step-chip-4,
+  .animate-step-chip-5,
+  .animate-step-chip-6,
+  .animate-step-chip-7,
+  .animate-step-chip-8,
+  .animate-step-sparkle-in,
+  .animate-step-line-0,
+  .animate-step-line-1,
+  .animate-step-line-2,
+  .animate-step-line-3,
+  .animate-step-download-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* SSS accordion — reduced motion (SS-05) */
+@media (prefers-reduced-motion: reduce) {
+  [id^="faq-"][role="region"] {
+    transition: none;
+  }
 }
