@@ -1,6 +1,6 @@
 'use client'
 
-// MB-02~10 — Marka Bilgileri Section
+// P3-A5 — Marka Bilgileri Section
 
 import { useRef, useState } from "react"
 import { ArrowRight, Check, Sparkles } from "lucide-react"
@@ -16,8 +16,9 @@ import {
   TONE_CHIPS,
 } from "@/lib/constants/marka-bilgileri"
 import type { ToneKey } from "@/lib/constants/marka-bilgileri"
+import { EXAMPLE_CONTENT_TR } from "@/lib/data/exampleContent"
 
-// ---- BrandFormPreview (MB-04~08) ----
+// ---- BrandFormPreview ----
 
 interface BrandFormPreviewProps {
   selectedTone: ToneKey
@@ -27,7 +28,6 @@ interface BrandFormPreviewProps {
 function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps) {
   const radioGroupRef = useRef<HTMLDivElement>(null)
 
-  // MB-06: Arrow Left/Right roving tabindex keyboard nav
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
     let nextIndex = -1
     if (e.key === "ArrowRight") {
@@ -39,9 +39,7 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
     }
     if (nextIndex >= 0) {
       onToneChange(TONE_CHIPS[nextIndex].key)
-      const buttons = radioGroupRef.current?.querySelectorAll<HTMLButtonElement>(
-        '[role="radio"]'
-      )
+      const buttons = radioGroupRef.current?.querySelectorAll<HTMLButtonElement>('[role="radio"]')
       buttons?.[nextIndex]?.focus()
     }
   }
@@ -49,7 +47,6 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
   const currentTone = TONE_CHIPS.find((t) => t.key === selectedTone)!
 
   return (
-    // MB-04: white kart, border, rounded-xl
     <div className="bg-white rounded-xl border border-rd-neutral-200 p-6 lg:p-8">
       {/* Kart header */}
       <div className="flex items-center justify-between mb-6">
@@ -61,29 +58,23 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
         </Badge>
       </div>
 
-      {/* MB-05: Static fields */}
+      {/* Statik alanlar (örnek) */}
       <div className="space-y-4 mb-6">
-        {/* Mağaza adı — primary-50 */}
         <div>
-          <p className="text-xs text-rd-neutral-500 mb-1.5">
-            {BRAND_FORM_FIELDS.storeName.label}
-          </p>
+          <p className="text-xs text-rd-neutral-500 mb-1.5">{BRAND_FORM_FIELDS.storeName.label}</p>
           <div className="bg-rd-primary-50 border border-rd-primary-200 rounded-lg px-3 py-2.5 text-sm text-rd-primary-800 font-medium">
             {BRAND_FORM_FIELDS.storeName.value}
           </div>
         </div>
-        {/* Hedef kitle — neutral-50 */}
         <div>
-          <p className="text-xs text-rd-neutral-500 mb-1.5">
-            {BRAND_FORM_FIELDS.targetAudience.label}
-          </p>
+          <p className="text-xs text-rd-neutral-500 mb-1.5">{BRAND_FORM_FIELDS.targetAudience.label}</p>
           <div className="bg-rd-neutral-50 border border-rd-neutral-200 rounded-lg px-3 py-2.5 text-sm text-rd-neutral-700 font-medium">
             {BRAND_FORM_FIELDS.targetAudience.value}
           </div>
         </div>
       </div>
 
-      {/* MB-06: Metin tonu radio group */}
+      {/* Metin tonu radio group */}
       <p className="text-xs text-rd-neutral-500 mb-2">Metin tonu</p>
       <div
         ref={radioGroupRef}
@@ -112,7 +103,7 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
         ))}
       </div>
 
-      {/* MB-07: OutputPreview */}
+      {/* AI çıktı önizleme */}
       <div className="border-t border-rd-neutral-200 my-6" aria-hidden="true" />
       <div
         className="bg-rd-neutral-50 rounded-lg p-4"
@@ -126,7 +117,6 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
         >
           AI çıktısı — {currentTone.label.toLowerCase()} tonda
         </Eyebrow>
-        {/* key değişince remount → fade-in tetiklenir */}
         <p
           key={selectedTone}
           className="text-sm text-rd-neutral-700 leading-relaxed animate-output-fade-in"
@@ -137,6 +127,31 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
           <Check size={12} strokeWidth={2} aria-hidden="true" />
           Her üretimde otomatik uygulanır
         </p>
+      </div>
+
+      {/* Marka ile üretilen örnek */}
+      <div className="mt-5 rounded-xl border border-rd-accent-200 bg-rd-accent-50 p-4">
+        <p className="text-[10px] font-medium uppercase tracking-widest text-rd-accent-700 mb-3">
+          Marka ile üretilen
+        </p>
+        <p className="text-xs font-medium text-rd-neutral-900 leading-snug mb-2">
+          {EXAMPLE_CONTENT_TR.metin.trendyol.title}
+        </p>
+        <ul className="space-y-1 mb-3">
+          {EXAMPLE_CONTENT_TR.metin.trendyol.features.slice(0, 2).map((f, i) => (
+            <li key={i} className="flex items-start gap-1.5 text-xs text-rd-neutral-700">
+              <span className="w-1 h-1 rounded-full bg-rd-accent-500 mt-1.5 shrink-0" />
+              {f}
+            </li>
+          ))}
+        </ul>
+        <div className="flex flex-wrap gap-1">
+          {EXAMPLE_CONTENT_TR.metin.trendyol.tags.slice(0, 4).map((tag, i) => (
+            <span key={i} className="text-[9px] bg-white border border-rd-neutral-200 text-rd-neutral-600 px-1.5 py-0.5 rounded-full">
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -153,12 +168,10 @@ export default function MarkaBilgileriSection() {
       aria-label="Marka bilgileri"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        {/* MB-02: 2 kolon grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
-          {/* MB-03: Sol kolon — özellikler + CTA */}
+          {/* Sol kolon */}
           <div>
-            {/* Accent Sparkles eyebrow */}
             <Eyebrow
               color="accent"
               icon={<Sparkles size={14} aria-hidden="true" />}
@@ -167,43 +180,34 @@ export default function MarkaBilgileriSection() {
               {MB_HEADER.eyebrow}
             </Eyebrow>
 
-            {/* h2 heading */}
-            <h2 className="font-rd-display text-3xl md:text-4xl font-extrabold tracking-tight text-rd-neutral-900">
+            <h2 className="font-rd-display text-3xl md:text-4xl font-medium tracking-tight text-rd-neutral-900">
               {MB_HEADER.title}
             </h2>
 
-            {/* Subtitle */}
-            <p className="text-lg text-rd-neutral-600 leading-relaxed mt-4">
+            <p className="text-base text-rd-neutral-600 leading-relaxed mt-4">
               {MB_HEADER.subtitle}
             </p>
 
-            {/* 4 feature item */}
-            <div className="mt-8 space-y-5">
+            {/* 8 alan listesi */}
+            <div className="mt-8 space-y-4">
               {BRAND_FEATURES.map((feature) => (
                 <div key={feature.title} className="flex items-start gap-4">
-                  {/* Icon box */}
-                  <div className="w-10 h-10 rounded-xl bg-rd-accent-50 flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-rd-accent-50 flex items-center justify-center shrink-0">
                     <feature.icon
-                      size={20}
+                      size={18}
                       strokeWidth={1.5}
                       className="text-rd-accent-700"
                       aria-hidden="true"
                     />
                   </div>
-                  {/* Text */}
                   <div>
-                    <p className="text-sm font-medium text-rd-neutral-900">
-                      {feature.title}
-                    </p>
-                    <p className="text-sm text-rd-neutral-600 mt-0.5">
-                      {feature.description}
-                    </p>
+                    <p className="text-sm font-medium text-rd-neutral-900">{feature.title}</p>
+                    <p className="text-sm text-rd-neutral-600 mt-0.5">{feature.description}</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* CTA link */}
             <a
               href={MB_CTA.href}
               className="mt-8 inline-flex items-center gap-2 text-rd-primary font-medium text-sm hover:text-rd-primary-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary focus-visible:ring-offset-2 rounded"
@@ -213,14 +217,13 @@ export default function MarkaBilgileriSection() {
             </a>
           </div>
 
-          {/* MB-04~08: Sağ kolon — BrandFormPreview kartı */}
+          {/* Sağ kolon — BrandFormPreview */}
           <BrandFormPreview
             selectedTone={selectedTone}
             onToneChange={setSelectedTone}
           />
         </div>
 
-        {/* MB-08: Hint text — grid'den sonra */}
         <p className="text-center text-sm text-rd-neutral-500 italic mt-8 lg:mt-12">
           {MB_HINT}
         </p>
