@@ -220,8 +220,8 @@ export default function GorselSekmesi({
                     });
                     blobIndir(await res.blob(), `yzliste-${job.stil}.jpg`);
                   }}
-                    className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 hover:bg-white text-rd-primary-800 text-xs font-medium px-2 py-1 rounded-lg">
-                    İndir
+                    className="absolute bottom-2 right-2 bg-white/90 hover:bg-white text-rd-primary-800 text-xs font-medium px-3 py-1.5 rounded-lg flex items-center gap-1">
+                    <Download size={11} strokeWidth={1.5} /> İndir
                   </button>
                 </div>
                 <div className="flex items-center justify-between px-1">
