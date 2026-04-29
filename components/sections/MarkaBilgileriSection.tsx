@@ -16,7 +16,7 @@ import {
   TONE_CHIPS,
 } from "@/lib/constants/marka-bilgileri"
 import type { ToneKey } from "@/lib/constants/marka-bilgileri"
-import { EXAMPLE_CONTENT_TR } from "@/lib/data/exampleContent"
+import { EXAMPLE_MARKA_KIYAS } from "@/lib/data/exampleContent"
 
 // ---- BrandFormPreview ----
 
@@ -129,28 +129,42 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
         </p>
       </div>
 
-      {/* Marka ile üretilen örnek */}
-      <div className="mt-5 rounded-xl border border-rd-accent-200 bg-rd-accent-50 p-4">
-        <p className="text-[10px] font-medium uppercase tracking-widest text-rd-accent-700 mb-3">
-          Marka ile üretilen
-        </p>
-        <p className="text-xs font-medium text-rd-neutral-900 leading-snug mb-2">
-          {EXAMPLE_CONTENT_TR.metin.trendyol.title}
-        </p>
-        <ul className="space-y-1 mb-3">
-          {EXAMPLE_CONTENT_TR.metin.trendyol.features.slice(0, 2).map((f, i) => (
-            <li key={i} className="flex items-start gap-1.5 text-xs text-rd-neutral-700">
-              <span className="w-1 h-1 rounded-full bg-rd-accent-500 mt-1.5 shrink-0" />
-              {f}
-            </li>
-          ))}
-        </ul>
-        <div className="flex flex-wrap gap-1">
-          {EXAMPLE_CONTENT_TR.metin.trendyol.tags.slice(0, 4).map((tag, i) => (
-            <span key={i} className="text-[9px] bg-white border border-rd-neutral-200 text-rd-neutral-600 px-1.5 py-0.5 rounded-full">
-              {tag}
-            </span>
-          ))}
+      {/* Kıyas: marka boş vs marka dolu */}
+      <div className="mt-5 space-y-2">
+        {/* Marka bilgisi yokken */}
+        <div className="rounded-xl border border-rd-neutral-200 bg-white p-4">
+          <p className="text-[10px] font-medium uppercase tracking-widest text-rd-neutral-400 mb-2">
+            Marka bilgisi yokken
+          </p>
+          <p className="text-xs font-medium text-rd-neutral-700 leading-snug">
+            {EXAMPLE_MARKA_KIYAS.markaBos.baslik}
+          </p>
+          <p className="text-xs text-rd-neutral-400 mt-1">{EXAMPLE_MARKA_KIYAS.markaBos.aciklama}</p>
+        </div>
+        {/* Marka ile üretildiğinde */}
+        <div className="rounded-xl border-2 border-rd-warm-300 bg-rd-warm-50 p-4">
+          <p className="text-[10px] font-medium uppercase tracking-widest text-rd-warm-700 mb-2">
+            Marka ile üretildiğinde
+          </p>
+          <p className="text-xs font-medium text-rd-neutral-900 leading-snug mb-2"
+            style={{ fontFamily: "var(--font-rd-display)" }}>
+            {EXAMPLE_MARKA_KIYAS.markaDolu.baslik}
+          </p>
+          <p className="text-xs text-rd-neutral-700 leading-relaxed mb-3">
+            {EXAMPLE_MARKA_KIYAS.markaDolu.aciklama}
+          </p>
+          <div className="flex flex-wrap gap-1">
+            {[
+              EXAMPLE_MARKA_KIYAS.markaDolu.markaInputlari.storeName,
+              EXAMPLE_MARKA_KIYAS.markaDolu.markaInputlari.ton,
+              EXAMPLE_MARKA_KIYAS.markaDolu.markaInputlari.hedefKitle,
+              ...EXAMPLE_MARKA_KIYAS.markaDolu.markaInputlari.hizmetVurgulari,
+            ].map((chip, i) => (
+              <span key={i} className="text-[10px] bg-rd-warm-100 text-rd-warm-800 border border-rd-warm-200 px-2 py-0.5 rounded-full">
+                {chip}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </div>

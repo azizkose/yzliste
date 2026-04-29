@@ -73,25 +73,25 @@ export const TONE_CHIPS: ToneChip[] = [
     key: "samimi",
     label: "Samimi",
     output:
-      "Bu topu görünce anlarsınız — FIBA onaylı, kompozit deri, ve kutudan çıkar çıkmaz oyuna hazır. Okul takımından hobi sporcusuna, herkese uygun tam boyutlu bir top. Kuru pompa hediye geliyor!",
+      "Sabah kahvesi ritüelinizi güzelleştirsin diye tasarlandı. Gaziantep'te el dövme, tin kaplama içi, hediye kutusunda — kutudan çıkar çıkmaz hazır. Türk kahvesi sevenler için biçilmiş kaftan!",
   },
   {
     key: "profesyonel",
     label: "Profesyonel",
     output:
-      "7 numara FIBA standardı kompozit deri basketbol topu; 75-78 cm çevre, 567-650 g ağırlık, 8 panel sıkı dikişli yapı ve hava sızdırmaz iç tüp ile profesyonel kullanım gereksinimlerini karşılar. Kuru pompa ve iğne set içinde.",
+      "El dövme bakır cezve; gıda güvenli tin kaplama iç yüzey, 250 ml kapasite, 2 porselen fincan ile komple set. Gaziantep'te aile atölyesinden üretim, her parça ayrı kalite kontrolünden geçer.",
   },
   {
     key: "premium",
     label: "Premium",
     output:
-      "Turnuva standardında üretilen bu top, yalnızca performans arayanlar için. Kompozit deri yüzeyin ter emici dokusu ve 8 panel dikişin mühendislik hassasiyeti, her dokunuşta sahayı hissettir.",
+      "Anadolu'nun yüz yıllık bakırcılığını mutfağına taşı. Gaziantep ustalarının elinde şekillenen bu cezve, sabah kahvesi ritüelini sanat eserine dönüştürür. Hediye kutusunda, kullanım rehberi ile birlikte.",
   },
 ];
 
 export const BRAND_FORM_FIELDS = {
-  storeName: { label: "Mağaza adı", value: "SportZone TR" },
-  targetAudience: { label: "Hedef kitle", value: "Okul takımları, gençlik ligi, hobi sporcular" },
+  storeName: { label: "Mağaza adı", value: "Anadolu Bakır" },
+  targetAudience: { label: "Hedef kitle", value: "Türk kahvesi sevenler, hediye arayanlar" },
 };
 
 export const MB_CTA = {
