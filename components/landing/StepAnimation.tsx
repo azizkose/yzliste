@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   RotateCcw, ChevronRight, Sparkles, Download,
   ImagePlus, PenLine,
-  FileText, Image as ImageIcon, PlayCircle, MessageSquare,
+  FileText, PlayCircle, MessageSquare,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -16,29 +16,36 @@ function Step1Canvas({ reduced }: { reduced: boolean }) {
   return (
     <div
       aria-hidden="true"
-      className="flex flex-col items-center justify-center gap-2.5 min-h-[140px] px-4 py-3"
+      className="flex flex-col items-center justify-center gap-3 px-4 py-4"
     >
-      {/* Foto yükle kutusu */}
-      <div className={cn('flex flex-col items-center gap-1', !reduced && 'animate-step-photo-in')}>
-        <div className="flex items-center gap-2 rounded-xl bg-rd-warm-50 border border-rd-warm-200 px-3 py-2">
-          <ImagePlus size={18} strokeWidth={1.5} className="text-rd-warm-700 shrink-0" />
-          <span className="text-[10px] text-rd-warm-700 font-medium">Fotoğraf yükle</span>
+      {/* ImagePlus VEYA PenLine yatay */}
+      <div className={cn('flex items-center gap-3', !reduced && 'animate-step-photo-in')}>
+        <div className="flex flex-col items-center gap-1">
+          <div className="flex items-center gap-1.5 rounded-xl bg-rd-warm-50 border border-rd-warm-200 px-4 py-2.5">
+            <ImagePlus size={20} strokeWidth={1.5} className="text-rd-warm-700 shrink-0" />
+            <span className="text-xs text-rd-warm-700 font-medium">Fotoğraf</span>
+          </div>
+        </div>
+        <span
+          className={cn(
+            'text-[9px] uppercase tracking-[0.15em] text-rd-neutral-400 font-medium',
+            !reduced && 'animate-step-or-fade',
+          )}
+        >
+          VEYA
+        </span>
+        <div className="flex flex-col items-center gap-1">
+          <div className="flex items-center gap-1.5 rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 px-4 py-2.5">
+            <PenLine size={20} strokeWidth={1.5} className="text-rd-neutral-500 shrink-0" />
+            <span className="text-xs text-rd-neutral-500 font-medium">Açıklama</span>
+          </div>
         </div>
       </div>
-      <span
-        className={cn(
-          'text-[9px] uppercase tracking-[0.15em] text-rd-neutral-400 font-medium',
-          !reduced && 'animate-step-or-fade',
-        )}
-      >
-        VEYA
-      </span>
-      {/* Metin gir kutusu */}
-      <div className={cn('w-full max-w-[200px]', !reduced && 'animate-step-text-in')}>
-        <div className="flex items-start gap-2 rounded-lg border border-rd-neutral-200 bg-rd-neutral-50 px-3 py-2">
-          <PenLine size={13} strokeWidth={1.5} className="text-rd-neutral-400 mt-0.5 shrink-0" />
+      {/* Typing preview */}
+      <div className={cn('w-full max-w-[220px]', !reduced && 'animate-step-text-in')}>
+        <div className="rounded-lg border border-rd-neutral-200 bg-rd-neutral-50 px-3 py-2">
           <p className="text-[10px] text-rd-neutral-400 leading-snug">
-            Selin Porselen Çiçek Desenli Kahve Fincanı 6&apos;lı Set 80ml...
+            Profesyonel basketbol topu 7 numara FIBA...
           </p>
         </div>
       </div>
@@ -49,25 +56,25 @@ function Step1Canvas({ reduced }: { reduced: boolean }) {
 // ---- Step 2 canvas: Pazaryeri ve içerik seç ----
 
 const MARKET_CHIPS = [
-  { label: 'Trendyol', active: true },
-  { label: 'Hepsiburada', active: true },
-  { label: 'Amazon TR', active: true },
-  { label: 'Amazon USA', active: false },
-  { label: 'N11', active: false },
-  { label: 'Etsy', active: false },
-  { label: 'Çiçeksepeti', active: false },
+  { label: 'Trendyol', pulse: true },
+  { label: 'Hepsiburada', pulse: false },
+  { label: 'Amazon TR', pulse: false },
+  { label: 'Amazon USA', pulse: false },
+  { label: 'N11', pulse: false },
+  { label: 'Etsy', pulse: false },
+  { label: 'Çiçeksepeti', pulse: false },
 ]
 
 const CONTENT_CHIPS = [
-  { label: 'Metin', active: true },
-  { label: 'Görsel', active: true },
-  { label: 'Video', active: false },
-  { label: 'Sosyal', active: false },
+  { label: 'Metin' },
+  { label: 'Görsel' },
+  { label: 'Video' },
+  { label: 'Sosyal' },
 ]
 
 function Step2Canvas({ reduced }: { reduced: boolean }) {
   return (
-    <div aria-hidden="true" className="flex flex-col gap-3 px-4 py-3 min-h-[140px]">
+    <div aria-hidden="true" className="flex flex-col gap-3 px-4 py-4">
       <div>
         <p className="text-[9px] uppercase tracking-[0.1em] text-rd-neutral-400 mb-1.5">
           Pazaryerleri
@@ -78,10 +85,11 @@ function Step2Canvas({ reduced }: { reduced: boolean }) {
               key={chip.label}
               className={cn(
                 'text-[10px] font-medium px-2 py-0.5 rounded-full border transition-colors',
-                chip.active
+                chip.pulse
                   ? 'border-rd-primary-700 bg-rd-primary-50 text-rd-primary-700'
                   : 'border-rd-neutral-300 bg-white text-rd-neutral-500',
                 !reduced && `animate-step-chip-${i}`,
+                chip.pulse && !reduced && 'animate-pulse-soft',
               )}
             >
               {chip.label}
@@ -99,9 +107,7 @@ function Step2Canvas({ reduced }: { reduced: boolean }) {
               key={chip.label}
               className={cn(
                 'text-[10px] font-medium px-2 py-0.5 rounded-full border transition-colors',
-                chip.active
-                  ? 'border-rd-primary-700 bg-rd-primary-50 text-rd-primary-700'
-                  : 'border-rd-neutral-300 bg-white text-rd-neutral-500',
+                'border-rd-primary-700 bg-rd-primary-50 text-rd-primary-700',
                 !reduced && `animate-step-chip-${i + 5}`,
               )}
             >
@@ -122,21 +128,21 @@ const OUTPUT_CARDS_STEP3 = [
     label: 'Listing',
     colorClass: 'text-rd-primary-700',
     animClass: 'animate-step-card-1',
-    content: 'Selin Porselen Çiçek Desenli Kahve Fincanı 6\'lı Set...',
+    content: 'Profesyonel Kompozit Deri Basketbol Topu 7 Numara...',
     isText: true,
   },
   {
-    icon: ImageIcon,
+    icon: null,
     label: 'Görsel',
-    colorClass: 'text-violet-600',
+    colorClass: 'text-rd-primary-700',
     animClass: 'animate-step-card-2',
-    content: null,
+    imgSrc: '/ornek_beyaz.jpg',
     isText: false,
   },
   {
     icon: PlayCircle,
     label: 'Video',
-    colorClass: 'text-red-500',
+    colorClass: 'text-rd-neutral-500',
     animClass: 'animate-step-card-3',
     content: null,
     isText: false,
@@ -144,16 +150,16 @@ const OUTPUT_CARDS_STEP3 = [
   {
     icon: MessageSquare,
     label: 'Sosyal',
-    colorClass: 'text-emerald-600',
+    colorClass: 'text-rd-primary-700',
     animClass: 'animate-step-card-4',
-    content: 'Sabah kahvenizi daha özel kılacak bir set var...',
+    content: 'Sahaya çıkmadan önce doğru top şart...',
     isText: true,
   },
 ]
 
 function Step3Canvas({ reduced }: { reduced: boolean }) {
   return (
-    <div aria-hidden="true" className="flex flex-col gap-2.5 px-4 py-3 min-h-[140px]">
+    <div aria-hidden="true" className="flex flex-col gap-2.5 px-4 py-4">
       <div className={cn('flex items-center gap-1.5', !reduced && 'animate-step-sparkle-in')}>
         <Sparkles size={13} strokeWidth={2} className="text-rd-primary-700" />
         <span className="text-[10px] text-rd-neutral-500 font-medium">AI üretiyor...</span>
@@ -171,14 +177,17 @@ function Step3Canvas({ reduced }: { reduced: boolean }) {
               )}
             >
               <div className="flex items-center gap-1 mb-1">
-                <Icon size={10} strokeWidth={1.5} className={card.colorClass} />
+                {Icon && <Icon size={10} strokeWidth={1.5} className={card.colorClass} />}
                 <span className={cn('text-[9px] font-medium', card.colorClass)}>{card.label}</span>
               </div>
               {card.isText ? (
                 <p className="text-[9px] text-rd-neutral-500 leading-snug line-clamp-2">{card.content}</p>
+              ) : 'imgSrc' in card ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={card.imgSrc as string} alt={card.label} className="h-7 w-full rounded object-contain" />
               ) : (
-                <div className="h-6 w-full rounded bg-rd-neutral-100 flex items-center justify-center">
-                  <Icon size={12} strokeWidth={1.5} className="text-rd-neutral-300" />
+                <div className="h-6 w-full rounded bg-rd-neutral-800 flex items-center justify-center">
+                  {Icon && <Icon size={10} strokeWidth={1.5} className="text-white/40" />}
                 </div>
               )}
             </div>
@@ -202,30 +211,37 @@ function Step3Canvas({ reduced }: { reduced: boolean }) {
   )
 }
 
-// ---- Step 1 static (inactive) ----
+// ---- Static (inactive) versions ----
+
 function Step1Static() {
   return (
     <div
       aria-hidden="true"
-      className="flex flex-col items-center justify-center gap-2 min-h-[140px] px-4 py-3 opacity-40"
+      className="flex flex-col items-center justify-center gap-3 px-4 py-4"
     >
-      <div className="flex items-center gap-2 rounded-xl bg-rd-warm-50 border border-rd-warm-200 px-3 py-2">
-        <ImagePlus size={16} strokeWidth={1.5} className="text-rd-warm-700 shrink-0" />
-        <span className="text-[10px] text-rd-warm-700">Fotoğraf yükle</span>
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 rounded-xl bg-rd-warm-50 border border-rd-warm-200 px-3 py-2">
+          <ImagePlus size={18} strokeWidth={1.5} className="text-rd-warm-700 shrink-0" />
+          <span className="text-[10px] text-rd-warm-700">Fotoğraf</span>
+        </div>
+        <span className="text-[9px] uppercase tracking-[0.15em] text-rd-neutral-400">VEYA</span>
+        <div className="flex items-center gap-1.5 rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 px-3 py-2">
+          <PenLine size={18} strokeWidth={1.5} className="text-rd-neutral-400 shrink-0" />
+          <span className="text-[10px] text-rd-neutral-400">Açıklama</span>
+        </div>
       </div>
-      <div className="w-full max-w-[160px] rounded-lg border border-rd-neutral-200 bg-rd-neutral-50 px-3 py-2">
-        <p className="text-[10px] text-rd-neutral-400 leading-snug">Selin Porselen...</p>
+      <div className="w-full max-w-[200px] rounded-lg border border-rd-neutral-200 bg-rd-neutral-50 px-3 py-2">
+        <p className="text-[10px] text-rd-neutral-400 leading-snug">Basketbol topu...</p>
       </div>
     </div>
   )
 }
 
-// ---- Step 2 static (inactive) ----
 function Step2Static() {
   return (
     <div
       aria-hidden="true"
-      className="flex flex-col gap-2.5 px-4 py-3 min-h-[140px] opacity-40"
+      className="flex flex-col gap-2.5 px-4 py-4"
     >
       <div className="flex flex-wrap gap-1.5">
         {MARKET_CHIPS.map((chip) => (
@@ -233,7 +249,7 @@ function Step2Static() {
             key={chip.label}
             className={cn(
               'text-[10px] font-medium px-2 py-0.5 rounded-full border',
-              chip.active
+              chip.pulse
                 ? 'border-rd-primary-700 bg-rd-primary-50 text-rd-primary-700'
                 : 'border-rd-neutral-300 bg-white text-rd-neutral-500',
             )}
@@ -246,12 +262,7 @@ function Step2Static() {
         {CONTENT_CHIPS.map((chip) => (
           <span
             key={chip.label}
-            className={cn(
-              'text-[10px] font-medium px-2 py-0.5 rounded-full border',
-              chip.active
-                ? 'border-rd-primary-700 bg-rd-primary-50 text-rd-primary-700'
-                : 'border-rd-neutral-300 bg-white text-rd-neutral-500',
-            )}
+            className="text-[10px] font-medium px-2 py-0.5 rounded-full border border-rd-primary-700 bg-rd-primary-50 text-rd-primary-700"
           >
             {chip.label}
           </span>
@@ -261,12 +272,11 @@ function Step2Static() {
   )
 }
 
-// ---- Step 3 static (inactive) ----
 function Step3Static() {
   return (
     <div
       aria-hidden="true"
-      className="flex flex-col gap-2.5 px-4 py-3 min-h-[140px] opacity-40"
+      className="flex flex-col gap-2.5 px-4 py-4"
     >
       <div className="flex items-center gap-1.5">
         <Sparkles size={13} strokeWidth={2} className="text-rd-primary-700" />
@@ -278,7 +288,7 @@ function Step3Static() {
           return (
             <div key={card.label} className="rounded-lg border border-rd-neutral-200 bg-white p-2">
               <div className="flex items-center gap-1 mb-1">
-                <Icon size={10} strokeWidth={1.5} className={card.colorClass} />
+                {Icon && <Icon size={10} strokeWidth={1.5} className={card.colorClass} />}
                 <span className={cn('text-[9px] font-medium', card.colorClass)}>{card.label}</span>
               </div>
               <div className="h-5 w-full rounded bg-rd-neutral-100" />
@@ -295,7 +305,7 @@ function Step3Static() {
 const STEPS = [
   {
     number: '1',
-    title: 'Ürünü tanıt',
+    title: 'Fotoğraf VE/VEYA kısa açıklama',
     description: 'Fotoğraf yükle, barkod tara veya bilgileri kendin gir.',
     ActiveCanvas: Step1Canvas,
     StaticCanvas: Step1Static,
@@ -368,7 +378,7 @@ export function StepAnimation() {
       </div>
 
       {/* Steps — desktop: row, mobile: col */}
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto_1fr] gap-2 md:gap-0 md:items-start">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto_1fr] gap-2 md:gap-0 md:items-stretch">
         {STEPS.map((step, i) => {
           const isActive = currentStep === i
           const ActiveCanvas = step.ActiveCanvas
@@ -380,7 +390,7 @@ export function StepAnimation() {
               <div
                 key={`step-${i}`}
                 className={cn(
-                  'rounded-xl border transition-all duration-300 overflow-hidden',
+                  'rounded-xl border transition-all duration-300 overflow-hidden flex flex-col',
                   isActive
                     ? 'border-2 border-rd-primary-700 bg-white'
                     : 'border border-rd-neutral-200 bg-rd-neutral-50',
@@ -403,7 +413,7 @@ export function StepAnimation() {
                   >
                     <span
                       className={cn(
-                        'font-rd-display font-bold text-sm tabular-nums leading-none',
+                        'font-rd-display font-medium text-sm tabular-nums leading-none',
                         isActive ? 'text-rd-primary-700' : 'text-rd-neutral-400',
                       )}
                     >
@@ -414,25 +424,30 @@ export function StepAnimation() {
                     <p
                       className={cn(
                         'text-sm font-medium transition-colors duration-300 leading-snug',
-                        isActive ? 'text-rd-neutral-900' : 'text-rd-neutral-400',
+                        isActive ? 'text-rd-neutral-900' : 'text-rd-neutral-500',
                       )}
                     >
                       {step.title}
                     </p>
-                    <p className="text-[11px] text-rd-neutral-400 leading-snug mt-0.5 hidden md:block">
+                    <p className={cn(
+                      'text-xs leading-snug mt-0.5 hidden md:block',
+                      isActive ? 'text-rd-neutral-500' : 'text-rd-neutral-400',
+                    )}>
                       {step.description}
                     </p>
                   </div>
                 </div>
 
-                {/* Canvas */}
-                {isActive ? (
-                  <div key={animKey}>
-                    <ActiveCanvas reduced={reduced} />
-                  </div>
-                ) : (
-                  <StaticCanvas />
-                )}
+                {/* Canvas — flex-1 so all cards fill equal height */}
+                <div className="flex-1 flex flex-col justify-center">
+                  {isActive ? (
+                    <div key={animKey}>
+                      <ActiveCanvas reduced={reduced} />
+                    </div>
+                  ) : (
+                    <StaticCanvas />
+                  )}
+                </div>
               </div>
 
               {/* Connector (between steps) */}
@@ -470,13 +485,11 @@ export function StepAnimation() {
         {STEPS[currentStep].description}
       </p>
 
-      {/* Reduced motion: ImageIcon for decorative illustration hint */}
       {reduced && (
         <p className="sr-only">
-          3 adım: Ürünü tanıt, pazaryeri seç, AI üretsin.
+          3 adım: Fotoğraf veya açıklama ver, pazaryeri seç, AI üretsin.
         </p>
       )}
     </div>
   )
 }
-
