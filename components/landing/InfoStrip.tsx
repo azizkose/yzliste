@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { FileText, Image as ImageIcon, Video, MessageSquare, ChevronDown } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { FileText, Image as ImageIcon, Video, MessageSquare, ChevronDown, RotateCw, ZoomIn, Lightbulb, Leaf, ScanSearch, Wind } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { EXAMPLE_CONTENT, EXAMPLE_CONTENT_TR } from '@/lib/data/exampleContent'
 
@@ -124,32 +124,42 @@ function GorselPanel() {
   )
 }
 
+const VIDEO_STILLER = [
+  { icon: RotateCw, label: '360° döndür' },
+  { icon: ZoomIn, label: 'Yakınlaştır' },
+  { icon: Lightbulb, label: 'Dramatik ışık' },
+  { icon: Leaf, label: 'Doğal ortam' },
+  { icon: ScanSearch, label: 'Detay tarama' },
+  { icon: Wind, label: 'Kumaş hareketi' },
+]
+
 function VideoPanel() {
-  const { duration, aspect, sceneDescription } = EXAMPLE_CONTENT.video
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.playbackRate = 1.5
+  }, [])
   return (
     <div className="flex flex-col md:flex-row gap-4 items-start">
-      <div className="w-20 md:w-24 shrink-0">
-        <div
-          className="relative rounded-lg bg-rd-neutral-800 overflow-hidden"
+      <div className="w-32 md:w-40 shrink-0">
+        <video
+          ref={videoRef}
+          src="/video-ornekler/zoom-yaklasim.mp4"
+          muted
+          autoPlay
+          playsInline
+          loop
+          className="w-full rounded-lg object-cover bg-rd-neutral-200"
           style={{ aspectRatio: '9/16' }}
-        >
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-              <Video size={14} strokeWidth={2} className="text-white ml-0.5" aria-hidden="true" />
-            </div>
-          </div>
-        </div>
+          aria-hidden="true"
+        />
       </div>
-      <div className="space-y-2 flex-1">
-        <p className="text-sm text-rd-neutral-600">
-          <span className="font-medium text-rd-neutral-800">Süre:</span> {duration}
-        </p>
-        <p className="text-sm text-rd-neutral-600">
-          <span className="font-medium text-rd-neutral-800">Format:</span> {aspect}
-        </p>
-        <p className="text-sm text-rd-neutral-600">
-          <span className="font-medium text-rd-neutral-800">Sahne planı:</span> {sceneDescription}
-        </p>
+      <div className="flex-1 space-y-2">
+        {VIDEO_STILLER.map(({ icon: Icon, label }) => (
+          <div key={label} className="flex items-center gap-2">
+            <Icon size={14} strokeWidth={1.5} className="text-rd-neutral-400 shrink-0" aria-hidden="true" />
+            <span className="text-sm text-rd-neutral-700">{label}</span>
+          </div>
+        ))}
       </div>
     </div>
   )
