@@ -56,11 +56,11 @@ function MetinPanel({ market }: { market: MarketId }) {
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-[10px] uppercase tracking-[0.1em] text-rd-neutral-400 mb-1">Başlık</p>
+        <p className="text-xs uppercase tracking-[0.1em] font-semibold text-rd-neutral-400 mb-1">Başlık</p>
         <p className="text-sm font-medium text-rd-neutral-900 leading-snug">{data.title}</p>
       </div>
       <div>
-        <p className="text-[10px] uppercase tracking-[0.1em] text-rd-neutral-400 mb-1">
+        <p className="text-xs uppercase tracking-[0.1em] font-semibold text-rd-neutral-400 mb-1">
           Özellikler
         </p>
         <ul className="space-y-1">
@@ -73,16 +73,16 @@ function MetinPanel({ market }: { market: MarketId }) {
         </ul>
       </div>
       <div>
-        <p className="text-[10px] uppercase tracking-[0.1em] text-rd-neutral-400 mb-1">Açıklama</p>
+        <p className="text-xs uppercase tracking-[0.1em] font-semibold text-rd-neutral-400 mb-1">Açıklama</p>
         <p className="text-sm text-rd-neutral-700 leading-relaxed">{data.description}</p>
       </div>
       <div>
-        <p className="text-[10px] uppercase tracking-[0.1em] text-rd-neutral-400 mb-1">Etiketler</p>
+        <p className="text-xs uppercase tracking-[0.1em] font-semibold text-rd-neutral-400 mb-1">Etiketler</p>
         <div className="flex flex-wrap gap-1.5">
           {data.tags.map((tag, i) => (
             <span
               key={i}
-              className="text-xs bg-rd-neutral-100 text-rd-neutral-600 px-2 py-0.5 rounded-full"
+              className="text-xs font-medium bg-rd-neutral-100 text-rd-neutral-600 px-2 py-0.5 rounded-full"
             >
               {tag}
             </span>
@@ -191,12 +191,12 @@ function SosyalPanel() {
             <div className="px-3 py-2 border-t border-rd-neutral-100">
               <div className="flex flex-wrap gap-1.5">
                 {data.hashtags.slice(0, 6).map((tag, i) => (
-                  <span key={i} className="text-[10px] text-rd-primary-700 font-medium">
+                  <span key={i} className="text-xs text-rd-primary-700 font-medium">
                     {tag}
                   </span>
                 ))}
                 {data.hashtags.length > 6 && (
-                  <span className="text-[10px] text-rd-neutral-400">
+                  <span className="text-xs text-rd-neutral-400">
                     +{data.hashtags.length - 6}
                   </span>
                 )}
@@ -228,10 +228,10 @@ export function InfoStrip() {
       {/* Header */}
       <div className="flex items-start justify-between mb-5">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.15em] text-rd-warm-700 font-medium mb-1.5">
+          <p className="text-xs uppercase tracking-[0.15em] text-rd-warm-700 font-semibold mb-1.5">
             İÇERİK TÜRLERİ
           </p>
-          <h3 className="font-rd-display text-xl md:text-2xl text-rd-neutral-900 font-medium">
+          <h3 className="font-rd-display text-xl md:text-2xl text-rd-neutral-900 font-semibold">
             4 içerik türü, 7 pazaryeri için
           </h3>
           <p className="text-sm text-rd-neutral-500 mt-1.5 leading-relaxed max-w-[520px]">
@@ -300,7 +300,7 @@ export function InfoStrip() {
               <div className="flex items-center gap-1.5">
                 <span
                   className={cn(
-                    'text-[10px] font-medium px-1.5 py-0.5 rounded-full',
+                    'text-xs font-medium px-1.5 py-0.5 rounded-full',
                     isActive
                       ? 'bg-rd-primary-100 text-rd-primary-800'
                       : 'bg-rd-neutral-100 text-rd-neutral-500',
@@ -308,7 +308,7 @@ export function InfoStrip() {
                 >
                   {tab.kredi}
                 </span>
-                <span className="text-[10px] text-rd-neutral-400">{tab.sure}</span>
+                <span className="text-xs text-rd-neutral-400">{tab.sure}</span>
               </div>
             </button>
           )
