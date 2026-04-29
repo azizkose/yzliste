@@ -147,7 +147,7 @@ function MetinPanel({ market, setMarket }: { market: MarketId; setMarket: (m: Ma
       <p className="text-xs text-rd-neutral-500 mb-4">{platformVerileriInfoStrip[market].aciklamaKisa}</p>
       <div className="space-y-3">
         {platformVerileriInfoStrip[market].bolumler.map((bolum, i) => (
-          <div key={i} className={cn('rounded-xl border-l-4', bolum.renk, 'border border-rd-neutral-200 bg-rd-neutral-50 p-4')}>
+          <div key={i} className={cn('rounded-xl border-l-4', bolum.renk, 'border border-rd-neutral-200 bg-white p-4')}>
             <div className="flex items-center justify-between mb-2">
               <span className="flex items-center gap-1.5 text-sm font-semibold text-rd-neutral-900">
                 <BolumIkon ikon={bolum.ikon} />
@@ -159,7 +159,7 @@ function MetinPanel({ market, setMarket }: { market: MarketId; setMarket: (m: Ma
           </div>
         ))}
       </div>
-      <div className="mt-5 pt-4 border-t border-rd-neutral-200 flex flex-wrap gap-3 text-xs text-rd-neutral-600">
+      <div className="mt-6 pt-5 border-t border-rd-neutral-200 flex flex-wrap gap-3 text-xs text-rd-neutral-600">
         {['Manuel metin girişi', 'Fotoğraftan otomatik analiz', 'Barkod ile ürün tanıma', '7 platform desteği'].map((f) => (
           <span key={f} className="flex items-center gap-1.5">
             <span className="w-3.5 h-3.5 rounded-full bg-rd-primary-50 text-rd-primary-700 flex items-center justify-center">
@@ -174,7 +174,7 @@ function MetinPanel({ market, setMarket }: { market: MarketId; setMarket: (m: Ma
         Amazon 200&apos;e kadar keyword kabul eder, Etsy İngilizce + hikaye anlatımı sever.
         yzliste hepsini tek fotoğraftan üretir.
       </div>
-      <div className="mt-5 pt-4 border-t border-rd-neutral-200 text-center">
+      <div className="mt-6 pt-5 border-t border-rd-neutral-200 text-center">
         <a href="/uret?tab=metin" className="inline-block bg-rd-primary-700 hover:bg-rd-primary-800 text-white font-medium px-6 py-3 rounded-xl text-sm transition-colors">
           Listing metni üret →
         </a>
@@ -216,7 +216,7 @@ function GorselPanel() {
           { src: '/ornek_lifestyle.jpg', etiket: 'Lifestyle' },
         ].map((item) => (
           <div key={item.etiket} className="flex flex-col">
-            <div className="rounded-xl overflow-hidden border border-rd-primary-200 bg-rd-neutral-50">
+            <div className="rounded-xl overflow-hidden border border-rd-primary-200 bg-white">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" loading="lazy" />
             </div>
@@ -233,7 +233,7 @@ function GorselPanel() {
           { src: '/ornek_dogal.jpg', etiket: 'Doğal' },
         ].map((item) => (
           <div key={item.etiket} className="flex flex-col">
-            <div className="rounded-xl overflow-hidden border border-rd-primary-200 bg-rd-neutral-50">
+            <div className="rounded-xl overflow-hidden border border-rd-primary-200 bg-white">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" loading="lazy" />
             </div>
@@ -241,7 +241,7 @@ function GorselPanel() {
           </div>
         ))}
       </div>
-      <div className="mt-5 pt-4 border-t border-rd-neutral-200">
+      <div className="mt-6 pt-5 border-t border-rd-neutral-200">
         <p className="text-xs text-rd-neutral-600 font-semibold mb-2">3 farklı yöntemle sahne oluştur:</p>
         <div className="flex flex-wrap gap-2">
           {['Hazır stiller (Beyaz, Koyu…)', 'Kendi promptunu yaz', 'Arka plan fotoğrafı ver'].map((t, i) => (
@@ -249,7 +249,7 @@ function GorselPanel() {
           ))}
         </div>
       </div>
-      <div className="mt-5 pt-4 border-t border-rd-neutral-200 text-center">
+      <div className="mt-6 pt-5 border-t border-rd-neutral-200 text-center">
         <a href="/uret?tab=gorsel" className="inline-block bg-rd-primary-700 hover:bg-rd-primary-800 text-white font-medium px-6 py-3 rounded-xl text-sm transition-colors">
           Stüdyo görseli üret →
         </a>
@@ -278,7 +278,7 @@ function VideoPanel() {
           { src: '/video-ornekler/detay-tarama.mp4', Ikon: ScanSearch, baslik: 'Detay tarama', aciklama: 'Kamera yüzeyi soldan sağa tarar. Doku, işçilik, malzeme kalitesi ortaya çıkar. Elektronik ve deri ürünler için güçlü.' },
           { src: '/video-ornekler/kumas-hareketi.mp4', Ikon: Wind, baslik: 'Kumaş hareketi', aciklama: 'Hafif esinti kumaşı hareket ettirir. Döküm ve akışkanlık hissi verir. Elbise, şal, perde için ideal.' },
         ].map((v, i) => (
-          <div key={i} className="flex gap-3 rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-3">
+          <div key={i} className="flex gap-3 rounded-xl border border-rd-neutral-200 bg-white p-3">
             <video
               src={v.src}
               autoPlay
@@ -305,7 +305,7 @@ function VideoPanel() {
           { Ikon: Film, baslik: '10 saniyelik', aciklama: 'Showcase · Pazaryeri', etiket: '20 kredi' },
           { Ikon: Columns2, baslik: '3 format', aciklama: '9:16 · 1:1 · 16:9', etiket: 'Tüm platformlar' },
         ].map((v, i) => (
-          <div key={i} className="rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-3 text-center">
+          <div key={i} className="rounded-xl border border-rd-neutral-200 bg-white p-3 text-center">
             <v.Ikon size={20} strokeWidth={1.5} className="text-rd-neutral-600 mx-auto mb-1" />
             <p className="text-xs font-semibold text-rd-neutral-900">{v.baslik}</p>
             <p className="text-xs text-rd-neutral-500 mb-1">{v.aciklama}</p>
@@ -314,7 +314,7 @@ function VideoPanel() {
         ))}
       </div>
       {/* Nasıl çalışır */}
-      <div className="bg-rd-neutral-100 rounded-xl p-4">
+      <div className="bg-white border border-rd-neutral-200 rounded-xl p-4">
         <p className="text-xs font-semibold text-rd-neutral-600 mb-2">Nasıl çalışır?</p>
         <div className="space-y-1.5">
           {['Ürün fotoğrafını yükle', 'Süre ve format seç', 'AI ürünü animasyonlu videoya dönüştürür (~2 dk)', 'MP4 olarak indir, platforma yükle'].map((s, i) => (
@@ -325,7 +325,7 @@ function VideoPanel() {
           ))}
         </div>
       </div>
-      <div className="mt-5 pt-4 border-t border-rd-neutral-200 text-center">
+      <div className="mt-6 pt-5 border-t border-rd-neutral-200 text-center">
         <a href="/uret?tab=video" className="inline-block bg-rd-primary-700 hover:bg-rd-primary-800 text-white font-medium px-6 py-3 rounded-xl text-sm transition-colors">
           Ürün videosu üret →
         </a>
@@ -352,7 +352,7 @@ function SosyalPanel() {
         ))}
       </div>
       <div className="space-y-3">
-        <div className="rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-4">
+        <div className="rounded-xl border border-rd-neutral-200 bg-white p-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-rd-neutral-600 flex items-center gap-1.5">
               <Camera size={13} strokeWidth={1.5} />
@@ -362,7 +362,7 @@ function SosyalPanel() {
           </div>
           <p className="text-sm text-rd-neutral-600 leading-relaxed whitespace-pre-line">{igCaption}</p>
         </div>
-        <div className="rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-4">
+        <div className="rounded-xl border border-rd-neutral-200 bg-white p-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-rd-neutral-600 flex items-center gap-1.5">
               <Tag size={13} strokeWidth={1.5} />
@@ -372,7 +372,7 @@ function SosyalPanel() {
           </div>
           <p className="text-sm text-rd-success-700 leading-relaxed">{igHashtags}</p>
         </div>
-        <div className="rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-4">
+        <div className="rounded-xl border border-rd-neutral-200 bg-white p-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-rd-neutral-600">Twitter/X (280 karakter)</span>
             <KopyalaButon metin={twCaption} />
@@ -380,7 +380,7 @@ function SosyalPanel() {
           <p className="text-sm text-rd-neutral-600 leading-relaxed">{twCaption}</p>
         </div>
       </div>
-      <div className="mt-5 pt-4 border-t border-rd-neutral-200 text-center">
+      <div className="mt-6 pt-5 border-t border-rd-neutral-200 text-center">
         <a href="/uret?tab=sosyal" className="inline-block bg-rd-primary-700 hover:bg-rd-primary-800 text-white font-medium px-6 py-3 rounded-xl text-sm transition-colors">
           Sosyal içerik üret →
         </a>
@@ -499,7 +499,7 @@ export function InfoStrip() {
           id="infostrip-detail"
           role="tabpanel"
           aria-label={`${activeTabLabel} içerik türü detayı`}
-          className="mt-4 rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-4 md:p-5"
+          className="mt-4 rounded-xl border border-rd-neutral-200 bg-rd-neutral-100 p-5 md:p-6"
         >
           {/* Panel */}
           {activeTab === 'metin' && <MetinPanel market={activeMarket} setMarket={setActiveMarket} />}
