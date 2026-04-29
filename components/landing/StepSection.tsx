@@ -1,5 +1,6 @@
 import { StepAnimation } from './StepAnimation'
 import { InfoStrip } from './InfoStrip'
+import { Eyebrow } from '@/components/primitives/Eyebrow'
 
 export function StepSection() {
   return (
@@ -7,9 +8,11 @@ export function StepSection() {
       <div className="max-w-6xl mx-auto px-4 md:px-6">
         {/* Header */}
         <div className="text-center mb-10 md:mb-12">
-          <p className="text-xs uppercase tracking-[0.15em] text-rd-warm-700 font-semibold mb-2">
-            3 ADIMDA HAZIR
-          </p>
+          <div className="flex justify-center mb-3">
+            <Eyebrow color="accent" className="bg-rd-accent-50 px-3.5 py-1.5 rounded-full">
+              3 ADIMDA HAZIR
+            </Eyebrow>
+          </div>
           <h2
             id="step-section-baslik"
             className="font-rd-display text-3xl md:text-4xl text-rd-neutral-900 font-bold"

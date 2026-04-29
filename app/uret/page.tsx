@@ -23,6 +23,10 @@ import {
   Check,
   CheckCircle2,
   AlertCircle,
+  Edit3,
+  Camera,
+  Barcode,
+  FileSpreadsheet,
   type LucideIcon,
 } from "lucide-react";
 import { useMetinUretim } from "@/lib/hooks/useMetinUretim";
@@ -577,6 +581,40 @@ export default function Home() {
               2 · Ürünü tanıt
             </h2>
 
+            {/* P9-9: Giriş yöntemi kartları — sadece metin sekmesinde */}
+            {anaSekme === "metin" && (
+              <div className="mb-4">
+                <p className="text-sm text-rd-neutral-600 mb-3">Ürün bilgilerini şu yollardan biriyle gir:</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {(
+                    [
+                      { tip: "manuel", label: "Manuel yaz", mikro: "Bilgileri kendin gir", Icon: Edit3 },
+                      { tip: "foto", label: "Fotoğraftan tara", mikro: "Görselden tanıyalım", Icon: Camera },
+                      { tip: "barkod", label: "Barkod ile bul", mikro: "Barkod numarasını gir", Icon: Barcode },
+                      { tip: "excel", label: "Excel ile toplu", mikro: "Excel yükle, toplu üret", Icon: FileSpreadsheet },
+                    ] as { tip: typeof metin.girisTipi; label: string; mikro: string; Icon: typeof Edit3 }[]
+                  ).map(({ tip, label, mikro, Icon }) => (
+                    <button
+                      key={tip}
+                      onClick={() => metin.setGirisTipi(tip)}
+                      className={cn(
+                        "flex flex-col items-start gap-1 rounded-xl border px-3 py-2.5 text-left transition-colors",
+                        metin.girisTipi === tip
+                          ? "border-rd-primary-700 bg-rd-primary-50 text-rd-primary-800"
+                          : "border-rd-neutral-200 bg-white text-rd-neutral-600 hover:border-rd-primary-300"
+                      )}
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <Icon size={13} strokeWidth={1.5} />
+                        <span className="text-xs font-medium">{label}</span>
+                      </span>
+                      <span className="text-xs text-rd-neutral-400 leading-snug">{mikro}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* P3-U2: Marka profil hibrit rozet */}
             {kullanici && !kullanici.anonim && (
               <div className={cn(
@@ -637,8 +675,8 @@ export default function Home() {
               )}
             </div>
 
-            {/* P3-U5: Paylaşılan ürün bilgisi formu */}
-            <div className="bg-white rounded-xl border border-rd-neutral-200 p-4 mb-4 space-y-4">
+            {/* P3-U5: Paylaşılan ürün bilgisi formu — metin sekmesinde sadece manuel modda göster */}
+            {(anaSekme !== "metin" || metin.girisTipi === "manuel") && <div className="bg-white rounded-xl border border-rd-neutral-200 p-4 mb-4 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-rd-neutral-900 mb-1">
                   Ürün adı <span className="text-rd-danger-700">*</span>
@@ -726,32 +764,7 @@ export default function Home() {
                   </div>
                 )}
               </div>
-            </div>
-
-            {/* P3-U5: MetinSekmesi — hideProductFields=true, sadece giriş tipi + üretim UI */}
-            <MetinSekmesi
-              aktif={anaSekme === "metin"}
-              hideProductFields={true}
-              girisTipi={metin.girisTipi} setGirisTipi={metin.setGirisTipi}
-              platform={metin.platform}
-              urunAdi={metin.urunAdi} setUrunAdi={metin.setUrunAdi}
-              kategori={metin.kategori} setKategori={metin.setKategori}
-              ozellikler={metin.ozellikler} setOzellikler={metin.setOzellikler}
-              hedefKitle={metin.hedefKitle} setHedefKitle={metin.setHedefKitle}
-              fiyatSegmenti={metin.fiyatSegmenti} setFiyatSegmenti={metin.setFiyatSegmenti}
-              fotolar={fotolar} fotoKaldir={fotoKaldir}
-              kameraAcik={metin.kameraAcik} kameraAc={metin.kameraAc} kameraKapat={metin.kameraKapat}
-              barkodYukleniyor={metin.barkodYukleniyor} barkodBilgi={metin.barkodBilgi} setBarkodBilgi={metin.setBarkodBilgi}
-              yukleniyor={metin.yukleniyor} yukleniyorMesaj={metin.yukleniyorMesaj}
-              sonuc={metin.sonuc} setSonuc={metin.setSonuc}
-              duzenleYukleniyor={metin.duzenleYukleniyor} setDuzenleYukleniyor={metin.setDuzenleYukleniyor}
-              uretimId={metin.uretimId} yenidenUretHakki={metin.yenidenUretHakki} setYenidenUretHakki={metin.setYenidenUretHakki}
-              kullanici={kullanici} paketModalAc={paketModalAc} icerikUret={metin.icerikUret}
-              onGirisAc={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }}
-              skor={metin.skor} oneriler={metin.oneriler}
-              ucretsizRevizeKullanildi={metin.ucretsizRevizeKullanildi}
-              ucretsizRevizeBaslat={metin.ucretsizRevizeBaslat}
-            />
+            </div>}
           </section>
 
           {/* ========== ADIM 3 — İçerik seçimi & üretim ========== */}
@@ -783,22 +796,31 @@ export default function Home() {
               3 · İçerik seçimi ve üretim
             </h2>
 
-            {/* P3-U5: Metin sekmesinde sadece maliyet kartı; diğer sekmelerde tam UI */}
-            {anaSekme === "metin" && (
-              <div className="bg-white rounded-xl border border-rd-neutral-200 p-4 flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium text-rd-neutral-900">
-                    Maliyet: {cost} kredi
-                  </p>
-                  <p className="text-xs text-rd-neutral-500 mt-0.5">
-                    Kalan bakiye: {remainingCredits} kredi
-                  </p>
-                </div>
-                <p className="text-xs text-rd-neutral-400 text-right">
-                  Aşağıdaki "Üret" butonu ile başlat
-                </p>
-              </div>
-            )}
+            {/* P9-10: Metin sekmesinde üretim UI (adım 3'e taşındı) */}
+            <MetinSekmesi
+              aktif={anaSekme === "metin"}
+              hideProductFields={true}
+              hideChips={true}
+              girisTipi={metin.girisTipi} setGirisTipi={metin.setGirisTipi}
+              platform={metin.platform}
+              urunAdi={metin.urunAdi} setUrunAdi={metin.setUrunAdi}
+              kategori={metin.kategori} setKategori={metin.setKategori}
+              ozellikler={metin.ozellikler} setOzellikler={metin.setOzellikler}
+              hedefKitle={metin.hedefKitle} setHedefKitle={metin.setHedefKitle}
+              fiyatSegmenti={metin.fiyatSegmenti} setFiyatSegmenti={metin.setFiyatSegmenti}
+              fotolar={fotolar} fotoKaldir={fotoKaldir}
+              kameraAcik={metin.kameraAcik} kameraAc={metin.kameraAc} kameraKapat={metin.kameraKapat}
+              barkodYukleniyor={metin.barkodYukleniyor} barkodBilgi={metin.barkodBilgi} setBarkodBilgi={metin.setBarkodBilgi}
+              yukleniyor={metin.yukleniyor} yukleniyorMesaj={metin.yukleniyorMesaj}
+              sonuc={metin.sonuc} setSonuc={metin.setSonuc}
+              duzenleYukleniyor={metin.duzenleYukleniyor} setDuzenleYukleniyor={metin.setDuzenleYukleniyor}
+              uretimId={metin.uretimId} yenidenUretHakki={metin.yenidenUretHakki} setYenidenUretHakki={metin.setYenidenUretHakki}
+              kullanici={kullanici} paketModalAc={paketModalAc} icerikUret={metin.icerikUret}
+              onGirisAc={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }}
+              skor={metin.skor} oneriler={metin.oneriler}
+              ucretsizRevizeKullanildi={metin.ucretsizRevizeKullanildi}
+              ucretsizRevizeBaslat={metin.ucretsizRevizeBaslat}
+            />
 
             <div key={anaSekme} className="animate-tab-enter">
               <GorselSekmesi

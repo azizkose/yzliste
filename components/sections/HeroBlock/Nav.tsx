@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { NAV_LINKS, NAV_BRAND, NAV_CTAS } from '@/lib/constants/hero'
+import { NAV_LINKS, NAV_CTAS } from '@/lib/constants/hero'
 import Button from '@/components/primitives/Button'
 
 export default function Nav() {
@@ -68,9 +68,8 @@ export default function Nav() {
             href="/"
             className="flex items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary/40"
           >
-            <span className="font-rd-display text-[22px] font-[800] tracking-tight text-slate-900">
-              {NAV_BRAND.name}
-            </span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/yzliste_logo.png" alt="yzliste" className="h-8 w-auto" />
           </Link>
 
           {/* Desktop nav links */}
@@ -138,9 +137,8 @@ export default function Nav() {
           <div className="absolute right-0 top-0 flex h-full w-72 flex-col bg-white">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
-              <span className="font-rd-display font-bold text-lg tracking-tight text-slate-900">
-                {NAV_BRAND.name}
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/yzliste_logo.png" alt="yzliste" className="h-7 w-auto" />
               <button
                 ref={closeRef}
                 className="rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary/40"
