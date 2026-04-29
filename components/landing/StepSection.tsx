@@ -1,5 +1,5 @@
 import { StepAnimation } from './StepAnimation'
-import { InfoStrip } from './InfoStrip'
+import { RDFeaturesTabbed } from './RDFeaturesTabbed'
 
 export function StepSection() {
   return (
@@ -12,7 +12,7 @@ export function StepSection() {
           </p>
           <h2
             id="step-section-baslik"
-            className="font-rd-display text-3xl md:text-4xl text-rd-neutral-900 font-semibold"
+            className="font-rd-display text-3xl md:text-4xl text-rd-neutral-900 font-medium"
           >
             Ürünü tanıt, AI senin için yapsın
           </h2>
@@ -24,8 +24,8 @@ export function StepSection() {
         {/* Divider */}
         <div className="my-10 md:my-12 border-t border-rd-neutral-200" />
 
-        {/* Info strip */}
-        <InfoStrip />
+        {/* Features tabbed — replaces InfoStrip */}
+        <RDFeaturesTabbed />
       </div>
     </section>
   )
