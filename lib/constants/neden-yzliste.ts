@@ -1,11 +1,12 @@
 // NY-01 — Neden yzliste Section Constants
+// LP-09: Marka isimleri kaldırıldı (etik+yasal), tablo 4 satıra indirildi
 
 export const NEDEN_HEADER = {
   eyebrow: "Neden yzliste",
   eyebrowColor: "primary" as const,
   title: "Genel AI araçlarıyla aynı şey değil",
   subtitle:
-    "ChatGPT, Claude ve Gemini genel amaçlı asistanlardır. yzliste e-ticaret için özel inşa edildi.",
+    "Genel amaçlı AI araçları içerik üretir — ama e-ticaret listing'i için tasarlanmamışlardır. yzliste bu ihtiyaç için sıfırdan inşa edildi.",
 };
 
 export interface ComparisonRow {
@@ -16,41 +17,31 @@ export interface ComparisonRow {
 
 export const NEDEN_COMPARISONS: ComparisonRow[] = [
   {
-    feature: "Pazaryeri uyumlu metin",
+    feature: "Listing & SEO kuralları",
     generic: "Genel metin, format uyumsuz",
-    yzliste: "Trendyol, Hepsiburada, Amazon formatında",
+    yzliste: "Otomatik — 7 pazaryeri formatında",
   },
   {
-    feature: "SEO optimizasyonu",
-    generic: "Anahtar kelime bilmez",
-    yzliste: "Pazaryeri arama algoritmasına uygun",
-  },
-  {
-    feature: "Ürün görseli",
-    generic: "Görsel üretemez veya düşük kalite",
-    yzliste: "Arka plan kaldırma, stüdyo çekim, manken giydirme",
-  },
-  {
-    feature: "Ürün videosu",
-    generic: "Video üretemez",
-    yzliste: "AI ile ürün tanıtım videosu",
+    feature: "Görsel boyut & format",
+    generic: "Manuel ayarla",
+    yzliste: "Pazaryeri standardında üretilir",
   },
   {
     feature: "Marka tonu",
     generic: "Her seferinde yeniden anlat",
-    yzliste: "Profilde bir kez belirle, her üretimde uygulansın",
+    yzliste: "Bir kez ayarla, her üretimde uygular",
   },
   {
-    feature: "Toplu üretim",
-    generic: "Tek tek kopyala yapıştır",
-    yzliste: "Excel yükle, yüzlerce ürünü tek seferde üret",
+    feature: "Üretim hızı",
+    generic: "Saatler",
+    yzliste: "Saniyeler",
   },
 ];
 
 export const NEDEN_TABLE_HEADERS = {
   generic: {
     eyebrow: "Genel AI araçları",
-    subtitle: "ChatGPT, Claude, Gemini",
+    subtitle: "Pazaryeri-özel olmayan asistanlar",
   },
   yzliste: {
     eyebrow: "yzliste",
@@ -59,4 +50,4 @@ export const NEDEN_TABLE_HEADERS = {
 };
 
 export const NEDEN_FOOTNOTE =
-  "ChatGPT, Claude ve Gemini harika genel amaçlı asistanlardır. Ancak e-ticaret listing'i üretmek için tasarlanmamışlardır. yzliste bu ihtiyaç için sıfırdan inşa edildi.";
+  "Genel amaçlı AI araçları birçok konuda üretkendir; ancak pazaryeri listing'i, ürün görseli ve video üretimi için özelleşmemiştir. yzliste bu ihtiyaç için sıfırdan inşa edildi.";

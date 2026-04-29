@@ -2224,9 +2224,16 @@ Bittikten sonra rapor:
 
 **Faz 6 toplam:** 5 ticket.
 
-#### LG-01~LG-05 Birleşik Prompt (Faz 6 SON paket — yasal + hata + cleanup)
+**LG-01~LG-05 ✅ Tamam (28 Nis gece — redesign Code-side BİTTİ).**
+- LG-01: 6 yasal sayfa rd-* swap, mevcut metinler korundu
+- LG-02: not-found.tsx (FileQuestion), error.tsx (rd-warning-600), loading.tsx
+- LG-03: Accordion primitive yaratıldı (FY + IC reuse), 5 orphan dosya silindi, _tanitim.tsx archive bağı kesildi
+- LG-04: BACKLOG.md'ye P2b backend ticket tablosu eklendi (8 ticket)
+- LG-05: docs/lighthouse-checklist.md + docs/metin-tarama.md, build + tsc temiz
 
-```
+**Aziz acceptance + main merge bekleniyor.**
+
+<!-- LG prompt detay silindi
 ÖNEMLİ — KURAL OVERRIDE:
 Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
 kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
@@ -2447,8 +2454,14 @@ Bittikten sonra rapor:
 - Lighthouse + metin taraması checklist eklendi mi
 - Aziz preview test'e hazır mı (CI temiz, build OK)
 ```
+-->
 
-**Redesign tamamlandığında:** Aziz toplu acceptance → main'e merge → Vercel auto-deploy → canlı yzliste.com yenilenir. Sonrası Faz 7+ Paraşüt entegrasyonu ve diğer backend bekleyen ticket'lar (canlı BACKLOG.md'de).
+**Redesign Code-side TAMAM (28 Nis gece).** Sıradaki adımlar Aziz tarafında:
+1. Preview URL'de toplu acceptance (docs/lighthouse-checklist.md + docs/metin-tarama.md rehberi)
+2. Supabase Redirect URLs config doğruluğu test (Google OAuth incognito + preview)
+3. main'e merge → Vercel auto-deploy → canlı yzliste.com yeni tasarım
+4. 5 PAUSED scheduled task → enabled:true (blog-seo-yazisi vs)
+5. Faz 7+ canlı BACKLOG.md (P2b backend ticket'lar — 8 adet)
 
 ---
 
@@ -2476,7 +2489,1798 @@ Anasayfa 9 → 7 bölüm. Eski Bölüm 3 ("4 içerik türü") + 4 ("Aynı ürün
 - "Detaya bak" default kapalı OK mı (açık olsun derse `useState(true)` tek satır)
 - Lighthouse mobile (Code çalıştırmadı; Aziz preview'da skor verir)
 
-## Faz Özeti — Roadmap
+## 20 — /fiyatlar yerleşim + /uret 3 aşama akış (Faz 1.7 — Aziz acceptance 2. tur)
+
+**Aziz preview'da gördükleri (28 Nis gece, 2. tur acceptance):** İki sayfa yapısal iyileştirme. LP-01~10 (anasayfa polish) Code'da çalışıyor → bu paket sonra alınır.
+
+| ID | Başlık | Durum | Kabul Kriteri |
+|---|---|---|---|
+| LP-11 | /fiyatlar 2-kolon hibrit (Calculator + Paketler) | ✅ Tamam | Hero korunur. Yeni "PAKETLER + CALCULATOR" birleşik bölüm: desktop lg:grid-cols-2 gap-8, sol — KrediCalculator card (sticky lg:sticky top-24), sağ — 3 paket kart vertical grid. Mobile dikey istif: Calculator önce, paketler altta. Slider hareket edince önerilen paket border-2 border-rd-primary-700 highlight + smooth scroll-into-view. "Kredi nasıl çalışır" 4-mini bölümü KALDIRILABİLİR (paket bullet'lerinde zaten var) veya çok kompakt footer üstüne çekilir. SSS + CTA korunur. |
+| LP-12 | /uret 3 aşama yapısal akış + görsel rehber | ✅ Tamam | Mevcut karmaşık akış (IntentBanner+Sekmeler+Platform+Foto+Form+Sticky) yeniden düzenlendi. Yeni: 3 numbered aşama kartı (warm-earth daire numara + dikey çizgi), her aşama kartı sırayla doldurulur, aşama tamamlanınca next'e smooth scroll. Üstte horizontal ProgressIndicator (1-2-3, tamamlanan CheckCircle2, aktif pulse). Fonksiyonalite KORUNUR (tüm tab hooks, auth, kredi). |
+
+#### LP-11 + LP-12 Birleşik Prompt (Sayfa akış optimizasyonu)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: LP-11 + LP-12 — /fiyatlar yerleşim + /uret 3 aşama yapısal akış 
+(Aziz acceptance 2. tur).
+
+Bu paket LP-01~10 (anasayfa polish) bittikten sonra alınır. İki sayfa 
+ayrı dosya, paralel iş.
+
+KAPSAM DIŞI:
+- Backend değişikliği (auth, kredi, üretim hooks korunur)
+- /yzstudio dokunulmaz (pattern referans için kullanılır, kopyalanmaz)
+- Yeni primitive yaratma (mevcut yzstudio numbered daire pattern reuse)
+
+────────────────────────────────────────────
+LP-11: /fiyatlar 2-kolon hibrit yerleşim
+────────────────────────────────────────────
+
+Mevcut sayfa: app/fiyatlar/page.tsx
+Mevcut sıra: Hero → Paketler → Kredi nasıl çalışır → Calculator → SSS → CTA
+
+Yeni sıra:
+1. Hero (kompakt, korunur)
+2. **Paketler + Calculator birleşik bölüm** (yeni layout)
+3. Kredi nasıl çalışır (KOMPAKT veya KALDIRILDI — Aziz preview'da karar verir)
+4. SSS (korunur)
+5. CTA (korunur)
+
+**Birleşik bölüm yapısı:**
+
+```jsx
+<section className="px-4 sm:px-6 py-16">
+  <div className="max-w-6xl mx-auto">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 
+                    items-start">
+      {/* SOL — Calculator (desktop sticky) */}
+      <div className="lg:sticky lg:top-24 order-2 lg:order-1">
+        <KrediCalculator onPaketOner={setOnerilenPaket} />
+      </div>
+      
+      {/* SAĞ — 3 paket kart vertical */}
+      <div className="space-y-4 order-1 lg:order-2">
+        {PAKET_LISTESI.map((p) => (
+          <PaketKart 
+            paket={p} 
+            highlighted={onerilenPaket === p.id}
+            ref={highlighted ? scrollRef : null}
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+**Önemli:**
+- Mobile order: Calculator önce (order-2 lg:order-1), paketler sonra 
+  (order-1 lg:order-2 — desktop tersine çevrilir; kullanıcı mobile'da 
+  scroll ile önce calculator görür)
+- Calculator state'i `onerilenPaketId` döner, parent state'e push eder
+- Paket kart: `highlighted={paket.id === onerilenPaketId}` ile 
+  border-2 border-rd-primary-700 + scale-[1.02] + scroll-into-view 
+  (smooth)
+- "En popüler" rozet (mevcut, 129 TL paketinde) korunur — ayrı bir 
+  vurgu mekanizması (calculator önerisi geçici, popüler kalıcı)
+
+**Calculator komponentinde değişiklik:**
+- components/fiyatlar/KrediCalculator.tsx
+- Mevcut slider 1-100 ürün korunur
+- Yeni callback prop: onPaketOner(paketId: string) — slider değerine 
+  göre uygun paket id'si döner
+- Calculator card height kompakt (mobile için)
+
+**"Kredi nasıl çalışır" 4-mini bölümü:**
+- Mevcut: paketler altında, py-10
+- Karar: KALDIRILDI (paket bullet'lerinde zaten her tip kredi açıklı), 
+  veya çok kompakt — Aziz preview'da görür, gerekirse geri eklenir
+- Şimdilik KALDIR, footer öncesi gerekirse geri eklenir
+
+Commit: feat(fiyatlar): LP-11 2-kolon hibrit Calculator + Paketler
+
+────────────────────────────────────────────
+LP-12: /uret 3 aşama yapısal akış + görsel rehber
+────────────────────────────────────────────
+
+Mevcut sayfa: app/uret/page.tsx
+Mevcut karmaşa: IntentBanner + Sekmeler + Platform select + Foto + 
+Tab content + Sticky — kullanıcı "ne yapmam gerek?" anlamıyor.
+
+Yeni yapı: 3 numbered aşama kartı (yzstudio pattern reuse).
+
+**Sayfa düzeni:**
+
+```jsx
+<main>
+  <SiteHeader />
+  
+  {/* Hero + ProgressIndicator (üstte yatay) */}
+  <header className="max-w-5xl mx-auto pt-6 px-4">
+    <div className="text-center mb-6">
+      <p className="eyebrow">İÇERİK ÜRET</p>
+      <h1 className="font-display text-3xl md:text-4xl">
+        Ürününü tanıt, AI senin için yapsın
+      </h1>
+    </div>
+    <ProgressIndicator step={currentStep} />  {/* 1-2-3 horizontal */}
+  </header>
+
+  {/* Mevcut auth/hata banner'ları */}
+  {!kullanici && <AuthBanner />}
+  {hata && <ErrorBanner />}
+  
+  {/* 3 aşama kartı dikey */}
+  <div className="max-w-5xl mx-auto px-4 space-y-6">
+    
+    {/* AŞAMA 1 */}
+    <StepCard number={1} title="Ne üreteceksin?" 
+              completed={step1Done} active={currentStep === 1}>
+      {/* İçerik tipi 4 büyük kart */}
+      <ContentTypeGrid 
+        active={anaSekme} 
+        onChange={setAnaSekme} 
+      />
+      {/* Platform select */}
+      <PlatformSelect value={platform} onChange={setPlatform} />
+    </StepCard>
+    
+    {/* AŞAMA 2 */}
+    <StepCard number={2} title="Ürünü tanıt" 
+              completed={step2Done} active={currentStep === 2}>
+      {/* Foto upload paylaşılan */}
+      <FotoUpload fotolar={fotolar} setFotolar={setFotolar} />
+      {/* Aktif sekmenin form alanları */}
+      <TabContent activeTab={anaSekme} {...allHooks} />
+      {/* BrandProfileBlock yan-akış (collapsible) */}
+      <BrandProfileToggle />
+    </StepCard>
+    
+    {/* AŞAMA 3 */}
+    <StepCard number={3} title="Üret" 
+              completed={step3Done} active={currentStep === 3}>
+      {/* Maliyet özeti */}
+      <CostSummary cost={cost} remaining={remainingCredits} />
+      {/* Üret bilgisi (sticky bar zaten alttta) */}
+      <p>Aşağıdaki "Üret" butonuna bas.</p>
+    </StepCard>
+    
+  </div>
+  
+  {/* Sticky submit bar (mevcut, korunur) */}
+  <StickySubmitBar ... />
+  
+  <SiteFooter />
+</main>
+```
+
+**StepCard komponenti (yzstudio pattern reuse):**
+```jsx
+<section aria-labelledby={`step-${number}-title`}
+         className={`relative pl-16 md:pl-20 pb-8 last:pb-0 
+                     border-l-2 ${active ? 'border-rd-primary-200' : 'border-rd-neutral-200'}
+                     last:border-transparent ml-6`}>
+  {/* Sol başında dairesel numara */}
+  <div className={`absolute -left-6 top-0 size-12 rounded-full 
+                   ${completed ? 'bg-rd-success-700' : active ? 'bg-rd-warm-700' : 'bg-rd-neutral-300'}
+                   text-white font-display text-xl font-medium 
+                   flex items-center justify-center transition-all
+                   ${active ? 'animate-pulse-soft scale-110' : ''}`}>
+    {completed ? <CheckCircle2 size={24} /> : number}
+  </div>
+  
+  <div className="space-y-4">
+    <h2 id={`step-${number}-title`} 
+        className="font-display text-xl md:text-2xl 
+                   text-rd-neutral-900 font-medium">
+      {number} · {title}
+    </h2>
+    {children}
+  </div>
+</section>
+```
+
+Mobile (375px): numbered daire size-10, pl-12, ml-5.
+
+**ProgressIndicator (üstte yatay):**
+```jsx
+<div className="flex items-center justify-center gap-2 max-w-md mx-auto">
+  {[1, 2, 3].map((step, i) => (
+    <>
+      <button onClick={() => scrollToStep(step)}
+              className={`size-8 rounded-full flex items-center justify-center 
+                          ${step < currentStep ? 'bg-rd-success-700 text-white' : 
+                            step === currentStep ? 'bg-rd-primary-700 text-white' : 
+                            'bg-rd-neutral-200 text-rd-neutral-500'}`}>
+        {step < currentStep ? <Check size={14} /> : step}
+      </button>
+      {i < 2 && (
+        <div className={`flex-1 h-0.5 ${step < currentStep ? 'bg-rd-success-700' : 'bg-rd-neutral-200'}`} />
+      )}
+    </>
+  ))}
+</div>
+```
+
+**Aşama tamamlanma kriterleri:**
+- Step 1 done: anaSekme seçili + platform seçili (her ikisi default 
+  değerlerinden farklı veya kullanıcı tıklamış olmalı)
+- Step 2 done: foto VEYA form alanları min. doldurulmuş (sekmeye göre 
+  değişir — örn. metin için urunAdi var, görsel için seciliStiller > 0)
+- Step 3 done: cost <= remainingCredits + ctaState.canSubmit
+
+**currentStep hesaplama (useState veya useMemo):**
+```ts
+const currentStep = useMemo(() => {
+  if (!step1Done) return 1;
+  if (!step2Done) return 2;
+  return 3;
+}, [step1Done, step2Done, step3Done]);
+```
+
+**Aşama tamamlanınca next'e scroll:**
+```ts
+useEffect(() => {
+  if (step1Done && !prevStep1Done) {
+    document.getElementById('step-2')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  // ...
+}, [step1Done, step2Done]);
+```
+
+prefers-reduced-motion guard ile.
+
+**ContentTypeGrid (Aşama 1 — 4 büyük kart):**
+- IntentBanner + Sekmeler birleştirilir
+- 4 kart: grid grid-cols-2 lg:grid-cols-4 gap-3
+- Her kart: rounded-xl border, Lucide ikon size-8 + isim (font-medium) + 
+  1 satır açıklama + kredi maliyet ipucu (text-xs)
+- Aktif: border-2 border-rd-primary-700 + bg-rd-primary-50
+- 4 tipler: Metin / Görsel / Video / Sosyal medya
+- Tıklayınca anaSekme set + step1 progress check
+
+**PlatformSelect:**
+- Mevcut native select korunur (tek seçim, çok pratik) VEYA 
+- ChipSelector pattern (single mode + 7 pazaryeri chip)
+- Cowork önerisi: ChipSelector (görsel olarak daha güçlü, 7 pazaryeri 
+  net görünür, native select boring). Ama mobile yatay scroll gerekir.
+- Karar: ChipSelector single mode, mobile yatay scroll
+
+**FotoUpload (Aşama 2):**
+- Mevcut paylaşılan foto bloğu (satır 384-413) korunur ama büyütülür
+- Tek bir büyük drop zone (min-h 200) — fotolar.length > 0 ise küçük 
+  thumbnail + değiştir/kaldır
+
+**BrandProfileToggle (Aşama 2 yan-akış):**
+- Mevcut BrandProfileBlock collapsible şu an Aşama 2 üstünde
+- Yeni yer: Aşama 2 içinde, foto+form altında — opsiyonel link 
+  "Marka profilim ile özelleştir →" (Lucide Sparkles)
+- Tıklayınca BrandProfileBlock açılır
+- Kullanıcı bilinçli olarak isterse marka profili ekler
+
+**BrandProfileBlock korunur (sadece konumu değişir).**
+
+**Mevcut tab content (MetinSekmesi/GorselSekmesi/VideoSekmesi/
+SosyalSekmesi):** İçerikleri AYNEN korunur, sadece StepCard 
+wrapper'ının `<TabContent>` slot'una yerleştirilir. Tab hooks'ları 
+(useMetinUretim vs) dokunulmaz.
+
+**StickySubmitBar:** Korunur, alt sticky pozisyon.
+
+**Auth banner / kredi düşük banner / hata banner:** Korunur, sayfa 
+en üstünde.
+
+────────────────────────────────────────────
+Mobile + a11y polish
+────────────────────────────────────────────
+
+1. **Mobile (375px):**
+   - StepCard pl-12 ml-5 (size-10 daire)
+   - ProgressIndicator: 3 daire + 2 ince çizgi mobile'da uygun
+   - ContentTypeGrid 2 cols (grid-cols-2)
+   - PlatformSelect ChipSelector yatay scroll
+   - Foto upload mobile compact
+
+2. **A11y:**
+   - ProgressIndicator: aria-label "İlerleme: 1/3"
+   - Her StepCard: section role + aria-labelledby
+   - Numbered daire aria-hidden (decorative)
+   - Tamamlanan adım: aria-label "Adım 1 tamamlandı"
+   - Aktif adım: aria-current="step"
+   - ProgressIndicator buton: tıklanır + Tab focus + Enter/Space
+   - prefers-reduced-motion guard (smooth scroll + pulse animation)
+
+3. **Edge case'ler:**
+   - Tüm 3 aşama tamam + sticky bar disabled (yetersiz kredi): tooltip 
+     ile bilgi
+   - Aşama 1 değişince Aşama 2 form reset gerekiyor mu? Hayır — 
+     kullanıcı sekme değiştirince form'da kalan değer kaybolmasın 
+     (mevcut davranış korunur)
+   - Skeleton state: authYukleniyor sırasında ProgressIndicator gri
+
+Commit özeti (atomik 4-5):
+- feat(uret): LP-12 ProgressIndicator + StepCard primitive
+- feat(uret): LP-12 Aşama 1 (içerik tipi grid + platform chip)
+- feat(uret): LP-12 Aşama 2 (foto + form + brand toggle)
+- feat(uret): LP-12 Aşama 3 (maliyet + sticky bar bağlantı)
+- chore(uret): LP-12 mobile + a11y polish
+
+VEYA tek: feat(uret): LP-12 3 aşama yapısal akış + numbered görsel 
+rehber
+
+────────────────────────────────────────────
+Test
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde:
+  - /fiyatlar: 2-kolon Calculator + Paketler, slider değişince paket 
+    highlight + scroll
+  - /uret: 3 numbered aşama kartı, üstte ProgressIndicator
+  - Aşama 1 tamamlanınca Aşama 2'ye smooth scroll
+  - Aşama tamamlanma daire bg-success-700 + Check ikon
+  - 375px mobile sıkıntısız
+  - Klavye Tab full tour (ProgressIndicator + her aşama içeriği)
+  - prefers-reduced-motion: smooth scroll devre dışı, animasyon yok
+
+BACKLOG'da LP-11 + LP-12 [x] işaretle.
+
+Bittikten sonra rapor:
+- Commit listesi
+- /fiyatlar layout kararı (2-kolon, "kredi nasıl çalışır" bölümü 
+  kaldırıldı mı)
+- /uret aşama tamamlanma kriterleri (her aşama için doneCheck logic)
+- StepCard primitive'e taşıma kararı (yzstudio reuse mi, /uret kopyası mı)
+- ContentTypeGrid + PlatformSelect ChipSelector kararı
+- Açık riskler / Aziz preview test
+```
+
+**Aziz preview'da gördükleri (28 Nis gece, acceptance sırasında):** Anasayfada 10 ufak iyileştirme. Code-side redesign tamam ama bu polish maddeleri main'e merge'den ÖNCE halledilmeli.
+
+| ID | Başlık | Durum | Kabul Kriteri |
+|---|---|---|---|
+| LP-01 | TrustStrip "Türkiye'de geliştirildi" → "E-ticaret için yapay zeka stüdyosu" | ✅ Tamam | lib/constants/hero.ts satır 11. "Türkiye'de geliştirildi" yerine veya yanına "E-ticaret için yapay zeka stüdyosu" — daha net pozisyonlama. Cowork önerisi: tek label değiştir (Türkiye'de geliştirildi → E-ticaret için yapay zeka stüdyosu) çünkü trust strip 3 öğeli, dengeli. |
+| LP-02 | Hero subtitle "fotoğraf yükle" → "metin VEYA foto" | ✅ Tamam | components/sections/HeroBlock/HeroContent.tsx satır 47-51 + lib/constants/hero.ts HERO_COPY.sub. Yeni metin: "Ürününü anlat veya fotoğrafını yükle — listing metni, stüdyo görseli, tanıtım videosu ve sosyal medya içeriği dakikalar içinde hazır. Aylık abonelik yok." Vurgu: kullanıcı text de girebilir, sadece foto değil. |
+| LP-03 | AppScreenshotMockup görsel revize (input → output net) | ✅ Tamam | components/sections/HeroBlock/AppScreenshotMockup.tsx. Mevcut görsel kullanıcının NE BEKLEDİĞİNİ göstermiyor. Yeni: ya gerçek bir input (foto veya metin) → 4 output kart (listing/görsel/video/sosyal) animatif geçiş, ya da before/after shots. Code mevcut mockup'ı oku, gerçek beklenti yansıtacak revizeye karar ver. |
+| LP-04 | "Nasıl çalışır" video CTA pasife çek | ✅ Tamam | components/sections/HeroBlock/HeroContent.tsx satır 89-99 + VideoModal. Videomuz yok → secondary CTA buton GİZLE (yorum satırı veya display:none). VideoModal import'u ve setVideoOpen state'i de temizle. Sonradan video hazırlanınca açılır. |
+| LP-05 | StepAnimation 3 adım netleştir | ✅ Tamam | components/landing/StepAnimation.tsx. **Adım 1 "Ürünü tanıt":** mevcut foto VEYA "Selin Porselen..." text — ikisi de görünür (foto+VEYA+text). **Adım 2 "Pazaryeri ve içerik seç":** 5 değil 7 pazaryeri (Trendyol/Hepsiburada/Amazon TR/Amazon USA/N11/Etsy + 1 daha kontrol et) + 4 içerik tipi tam set net. **Adım 3 "AI senin için hazırlasın":** **Cowork önerisi:** mevcut sparkle+bar yerine 4 mini çıktı kartı (listing başlık + görsel placeholder + video play ikonu + sosyal caption snippet) sırayla pop animasyonu — kullanıcı somut çıktıyı görür. |
+| LP-06 | InfoStrip "4 içerik türü, 7 pazaryeri için" boş kutu içeriği | ✅ Tamam | components/landing/InfoStrip.tsx. Her sekme kartına (Metin/Görsel/Video/Sosyal) altına 1-2 satır mikro açıklama ekle: "Listing başlık + açıklama + arama etiketleri", "Stüdyo standardı 1200×1200, 6 görsel", "5 saniyelik dikey 9:16", "Instagram + TikTok + Pinterest caption". Boş kutu hissi gider. |
+| LP-07 | "kr" kısaltma → "kredi" tam yaz | ✅ Tamam | Tüm site grep "kr" → "kredi". Etkilenen dosyalar: InfoStrip kart pill'leri, KrediCalculator, fiyatlar paket kartları, /uret kredi etiketleri, /yzstudio sticky bar, vs. Code grep ile bul, "1 kr" → "1 kredi", "2 kr" → "2 kredi" şeklinde. |
+| LP-08 | MarkaBilgileriSection sağ şablon revize (gerçek çıktı) | ✅ Tamam | components/sections/MarkaBilgileriSection.tsx. Sağda "marka bilgilerini gir, sana özel içerik" örnek şablonu mevcut — Aziz: "gerçek şablon değil, revize". Yeni: gerçek bir AI üretim çıktısı (lib/data/exampleContent.ts'ten Selin Porselen veya benzeri gerçek metin) + şablon boyutları daha kompakt. |
+| LP-09 | "Genel araçlarla aynı şey değil" kıyas tablosu kompakt + marka ismi YOK | ✅ Tamam | MarkaBilgileriSection altındaki kıyas tablosu. Marka ismi (ChatGPT, Claude, vs) ASLA yazılmaz — etik+yasal. "Genel AI araçları" / "Pazaryeri-özel olmayan AI'lar" gibi nötr ifade. Tablo kompakt: 3-4 satır max, gereksiz bullet sil, derli toplu. |
+| LP-10 | MarkaBilgileri altı boşluk kontrolü | ✅ Tamam | Tablo bittikten sonra alt section ile arasında gereksiz padding/margin var mı kontrol. Layout sıkıştır gerekirse. py-16 → py-12 gibi. |
+
+**Cowork tahmin:** "Ege" = "AI" ses-yazım hatası varsayımı. Yanlışsa Aziz düzeltir, Hero H1 zaten "E-ticaret içeriğini AI ile üret".
+
+#### LP-01~LP-10 Birleşik Prompt (Anasayfa Polish — Faz 1.6)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: LP-01~LP-10 — Anasayfa polish iterasyonu (Aziz acceptance 
+bulguları). Main'e merge öncesi son tüning.
+
+Anasayfa: app/_tanitim-redesign.tsx → TrustStrip + Nav + HeroSection 
++ StepSection + MarkaBilgileriSection + NedenYzlisteSection + 
+SSSSection + FinalCTASection + FooterSection.
+
+KAPSAM DIŞI:
+- Yeni sayfa eklenmesi
+- Backend değişikliği
+- Faz 7 P2b backend ticket'ları (Paraşüt vs)
+
+────────────────────────────────────────────
+LP-01: TrustStrip metin güncelle
+────────────────────────────────────────────
+
+Dosya: lib/constants/hero.ts
+Satır 11: `{ icon: 'Flag', label: "Türkiye'de geliştirildi" }` 
+→ `{ icon: 'Sparkles', label: "E-ticaret için yapay zeka stüdyosu" }`
+
+Sebep: pozisyonlama net olsun. "Türkiye'de geliştirildi" jenerik, 
+yeni metin ne olduğumuzu söylüyor. Diğer 2 trust item (256-bit SSL + 
+Saniyeler içinde üretim) korunur.
+
+Commit: feat(landing): LP-01 trust strip pozisyonlama metni
+
+────────────────────────────────────────────
+LP-02: Hero subtitle metni güncelle
+────────────────────────────────────────────
+
+Dosya: lib/constants/hero.ts HERO_COPY.sub + HeroContent.tsx satır 
+47-51 (kullanılıyor mu kontrol et — ya constants'tan ya inline).
+
+Eski: "Ürün fotoğrafını yükle — listing metni, stüdyo görseli, 
+tanıtım videosu ve sosyal medya içeriği dakikalar içinde hazır. 
+Aylık abonelik yok."
+
+Yeni: "Ürününü anlat veya fotoğrafını yükle — listing metni, 
+stüdyo görseli, tanıtım videosu ve sosyal medya içeriği dakikalar 
+içinde hazır. Aylık abonelik yok."
+
+Vurgu: kullanıcı text de girebilir, sadece foto değil. /uret 
+sayfasında zaten her ikisi de mevcut.
+
+Commit: feat(landing): LP-02 hero subtitle metin/foto vurgusu
+
+────────────────────────────────────────────
+LP-03: AppScreenshotMockup görsel revize
+────────────────────────────────────────────
+
+Dosya: components/sections/HeroBlock/AppScreenshotMockup.tsx
+
+Mevcut mockup ne göstermiyor: kullanıcının NE BEKLEDİĞİ. Aziz: "ne 
+anlayacağını ne beklediğini gösterecek şekilde değiştirelim".
+
+Yeni yaklaşım (Cowork önerisi):
+- Sol: input bölümü (küçük foto thumbnail + "Selin Porselen Çiçek 
+  Desenli Kahve Fincanı" text input)
+- Ok ileri (Lucide ChevronRight)
+- Sağ: 4 output kartı 2x2 grid:
+  - Listing metni (kısa preview)
+  - Görsel (placeholder thumbnail)
+  - Video (Lucide PlayCircle)
+  - Sosyal (Instagram caption snippet)
+- Animatif geçiş: input → output kartlar sırayla pop
+
+VEYA before/after format:
+- Sol: "Önce" basit foto + minimal text
+- Sağ: "Sonra" 4 platform için 4 farklı zenginleştirilmiş çıktı
+
+Code mevcut mockup'ı oku, en uygun revizeye karar ver. lib/data/
+exampleContent.ts'teki Selin Porselen örneği reuse edilebilir.
+
+Commit: feat(landing): LP-03 hero mockup input→output net göster
+
+────────────────────────────────────────────
+LP-04: "Nasıl çalışır" video CTA pasife çek
+────────────────────────────────────────────
+
+Dosya: components/sections/HeroBlock/HeroContent.tsx satır 89-99 
+(secondary CTA buton + VideoModal). lib/constants/hero.ts 
+HERO_COPY.ctaSecondary.
+
+Yapılacak:
+- Secondary CTA buton (Play ikon + "Nasıl çalışır?") — JSX'i comment 
+  out VEYA `{false && (...)}` ile gizle
+- VideoModal import + dynamic import + setVideoOpen state — 
+  KALDIRILABİLİR ama sonradan açılması kolay olsun diye comment out 
+  daha iyi
+- Primary CTA tek başına kalır (full width mobile, w-auto desktop)
+
+Commit: chore(landing): LP-04 nasıl çalışır video CTA pasife çekildi 
+(video hazırlanınca aç)
+
+────────────────────────────────────────────
+LP-05: StepAnimation 3 adım netleştir
+────────────────────────────────────────────
+
+Dosya: components/landing/StepAnimation.tsx
+
+**Adım 1 "Ürünü tanıt":**
+- Mevcut: kahve fincanı emoji veya Coffee ikon → VEYA → text
+- Yeni doğrulama: foto thumbnail + "VEYA" + text input görsel olarak 
+  ikisi de net ayırt edilebilir olmalı. Foto kısmı: Lucide ImagePlus 
+  size-12 + "Fotoğraf yükle" altında. VEYA ayracı (text-rd-neutral-400 
+  ortada). Text kısmı: Lucide PenLine + "Ürününü anlat" + Selin 
+  Porselen örnek metin yazılır.
+
+**Adım 2 "Pazaryeri ve içerik seç":**
+- 5 pazaryeri chip → 7 pazaryeri (Trendyol / Hepsiburada / Amazon TR / 
+  Amazon USA / N11 / Etsy + Çiçeksepeti veya benzeri 7. — Aziz onayı 
+  veya mevcut listeyi koru)
+- Önemli: lib/constants/pazaryeri.ts'te tam liste var, oradan dinamik 
+  çek
+- 4 içerik tipi tam set: Metin / Görsel / Video / Sosyal
+- Animasyon: chip'ler stagger pop, ilk 3 pazaryeri + Metin+Görsel 
+  pulse aktif olur
+
+**Adım 3 "AI senin için hazırlasın":**
+- Mevcut: Sparkles + 4 renkli bar + Download
+- Yeni (Cowork önerisi): 4 mini çıktı kartı 2x2 grid sırayla pop:
+  - Sol üst: Listing kart — başlık + 2 satır açıklama snippet
+  - Sağ üst: Görsel kart — placeholder + Lucide ImageIcon
+  - Sol alt: Video kart — placeholder + Lucide PlayCircle
+  - Sağ alt: Sosyal kart — Instagram caption snippet
+- Stagger animation (0.3s gecikme her kart)
+- Sonunda Lucide Download + "İndir" buton pop
+
+Commit: feat(landing): LP-05 step animation 3 adım net (foto+text + 
+7 pazaryeri + 4 çıktı kart)
+
+────────────────────────────────────────────
+LP-06: InfoStrip kutu içerikleri
+────────────────────────────────────────────
+
+Dosya: components/landing/InfoStrip.tsx
+
+4 sekme kartı (Metin/Görsel/Video/Sosyal) — her birinin altında 
+mevcut: "1 kr · ~10sn" gibi minimum etiket. Aziz: "kutular çok boş, 
+kısa açıklama gerekli".
+
+Yeni — her kartın altında mikro açıklama satırı:
+- Metin: "Listing başlık + açıklama + arama etiketleri"
+- Görsel: "Stüdyo standardı 1200×1200, 6 görsel"
+- Video: "5 saniyelik dikey 9:16"
+- Sosyal: "Instagram + TikTok + Pinterest caption"
+
+text-xs text-rd-neutral-500 leading-relaxed mt-1.
+
+Commit: feat(landing): LP-06 InfoStrip kart açıklamaları
+
+────────────────────────────────────────────
+LP-07: "kr" → "kredi" tam yaz
+────────────────────────────────────────────
+
+Tüm site grep "kr" → "kredi". Etkilenen muhtemel dosyalar:
+- components/landing/InfoStrip.tsx (kredi pill'leri)
+- components/fiyatlar/KrediCalculator.tsx
+- app/fiyatlar/page.tsx (3 paket kart)
+- /uret kredi etiketleri (components/uret/* StickySubmitBar)
+- /yzstudio sticky bar (components/yzstudio/StudioStickyBar)
+- /hesap kredi sayıları
+- lib/constants/* — kredi metin sabitleri
+
+Pattern: "1 kr", "10 kr", "X kr" → "1 kredi", "10 kredi", "X kredi"
+Dikkat: "kredi kartı" gibi compound kelimeler etkilenmesin (regex 
+boundary).
+
+Commit: chore: LP-07 "kr" kısaltma → "kredi" tam yazım
+
+────────────────────────────────────────────
+LP-08: MarkaBilgileri sağ şablon revize
+────────────────────────────────────────────
+
+Dosya: components/sections/MarkaBilgileriSection.tsx
+
+Sağda "marka bilgilerini gir → sana özel içerik" şablonu var. Aziz: 
+"gerçek şablon değil, revize".
+
+Yeni:
+- Şablon kompaktlaştır (max 3-4 satır görsel kart)
+- İçerik: gerçek AI çıktısı kalitesinde — lib/data/exampleContent.ts 
+  EXAMPLE_CONTENT.metin.trendyol.title + ilk 1-2 madde features kullan
+- "Selin Porselen Çiçek Desenli Kahve Fincanı 6'lı Set" gibi gerçek 
+  başlık + 2 madde bullet
+- Görsel: warm-earth border + sticky kart hissi
+
+Commit: feat(landing): LP-08 marka şablon gerçek AI çıktısı
+
+────────────────────────────────────────────
+LP-09: Kıyas tablosu kompakt + marka ismi YOK
+────────────────────────────────────────────
+
+Dosya: MarkaBilgileriSection altındaki "Genel araçlarla aynı şey 
+değil" kıyas tablosu.
+
+KRİTİK kural: ChatGPT / Claude / Gemini gibi rakip MARKA İSİMLERİ 
+YAZMA. Etik + yasal risk. Nötr ifade kullan.
+
+Yeni:
+- Sol kolon: "Genel AI araçları" (veya "Pazaryeri-özel olmayan AI'lar")
+- Sağ kolon: "yzliste"
+- 3-4 satır max:
+  - Listing/SEO kuralları → "Manuel ayarla" / "Otomatik 7 pazaryeri"
+  - Görsel boyut/format → "Manuel ayarla" / "Pazaryeri standartı"
+  - Marka tonu → "Her seferinde anlat" / "Bir kez ayarla, hatırlar"
+  - Hız → "Saatler" / "Saniyeler"
+- Tablo kompakt: rounded-xl border, padding p-4 (p-6 yerine), 
+  satır arası space-y-2
+
+Commit: feat(landing): LP-09 kıyas tablosu kompakt + marka ismi 
+çıkarıldı
+
+────────────────────────────────────────────
+LP-10: MarkaBilgileri altı boşluk kontrolü
+────────────────────────────────────────────
+
+MarkaBilgileriSection ile bir sonraki section (NedenYzlisteSection) 
+arasındaki boşluk doğru mu kontrol et:
+- Section padding: py-16 md:py-20 standart
+- Eğer çift padding (alt+üst) varsa azalt
+- Görsel olarak Aziz preview'da kontrol eder
+
+Commit: chore(landing): LP-10 spacing kontrol
+
+────────────────────────────────────────────
+Test
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde:
+  - TrustStrip metin "E-ticaret için yapay zeka stüdyosu"
+  - Hero subtitle "Ürününü anlat veya fotoğrafını yükle"
+  - Hero mockup yeni input→output göstergesi
+  - Hero "Nasıl çalışır" buton GİZLİ
+  - StepAnimation: foto+text + 7 pazaryeri + 4 çıktı kart
+  - InfoStrip kartlarda mikro açıklama satırı
+  - "kr" yok, "kredi" tam yazım
+  - MarkaBilgileri sağ şablon gerçek içerik
+  - Kıyas tablo kompakt + marka ismi yok
+  - 375px mobile sıkıntısız
+
+Commit özeti (10 atomik) VEYA tek:
+chore(landing): LP-01~LP-10 anasayfa polish (Aziz acceptance bulguları)
+
+BACKLOG'da LP-01~LP-10 [x] işaretle.
+
+Bittikten sonra rapor:
+- Commit listesi
+- "kr" → "kredi" grep sonucu (kaç yerde değişti)
+- AppScreenshotMockup revize yaklaşımı (4 kart 2x2 mı, before/after 
+  mı, başka mı)
+- StepAnimation Adım 3 yeni 4 kart animasyon kararı
+- Açık riskler / Aziz preview test
+```
+
+---
+
+## 21 — Polish-3: Anasayfa içerik + üret akış 2. iter (Faz 1.8 — Aziz acceptance 3. tur)
+
+**Aziz preview test bulguları (28 Nis gece, 3. tur acceptance):** 10 madde — anasayfa içerik (basketbol topu asset reuse, FeaturesTabbed pattern InfoStrip'e uygula) + üret sayfa akış 2. iterasyon (Adım 2/3 yeniden ayır, default seçimsiz, marka profil hibrit rozet).
+
+**Aziz kararları (28 Nis gece):**
+- AppScreenshotMockup: gerçek basketbol topu asset'leri (public/ornek_*.{jpg,png} + hero-video.mp4 — zaten mevcut)
+- A2 listing içerik: Trendyol + Amazon TR basketbol topu, Etsy el yapımı bakır cezve seti (Cowork yazdı)
+- A6 InfoStrip detay panelleri: canlı FeaturesTabbed.tsx pattern reuse — bölmeler + Kopyala butonu + 3 platform sub-tab + alt info kutuları
+- U2 marka profil: hibrit rozet (boşsa motivasyon, doluysa yeşil onay) — kart üstünde compact
+- U5 Adım 2/3: ürün bilgisi (Adım 2) + içerik seçimi & üretim (Adım 3) ayrımı
+
+| ID | Başlık | Durum | Kabul Kriteri |
+|---|---|---|---|
+| P3-A1 | AppScreenshotMockup metin + asset güncelleme | ✅ Tamam | "4 dosyayı indir" → "Üretilen içerikleri indir". Selin fincan placeholder → public/ornek_once.jpg (girdi) + 4 output kart: ornek_beyaz.jpg (görsel slot), Listing snippet (basketbol topu Trendyol başlığı + 1-2 satır), hero-video.mp4 thumbnail (video slot), sosyal caption snippet. |
+| P3-A2 | StepAnimation kutu boyut + okunabilirlik + içerik | ✅ Tamam | 3 kart eşit yükseklik (flex-1 min-h-[X]). Text: text-xs → text-sm md:text-base. Pasif text-rd-neutral-500 (opacity-50 DEĞİL). 1. kart "Fotoğraf VE/VEYA kısa açıklama" (ImagePlus + "VEYA" + PenLine yan yana, ikonlar büyük). 2. kart: tek pazaryeri seçimi animasyonu (Trendyol pulse, diğer 6 pasif). 3. kart: 4 çıktı kart 2x2 grid (basketbol topu görselleri reuse — public/ornek_*). |
+| P3-A3 | InfoStrip → FeaturesTabbed pattern (üretim çıktısı + Kopyala) | ✅ Tamam | components/landing/InfoStrip.tsx YERİNE components/tanitim/FeaturesTabbed.tsx pattern reuse — rd-* token'a çevir, _tanitim-redesign.tsx'e yerleştir. Yapı: 4 sekme (Listing/Görsel/Video/Sosyal — KUTULAR), her sekmede üst açıklama + 3 platform sub-tab (Listing için) + bölmeler (Başlık/Özellikler/Açıklama/Etiketler) + Kopyala butonları + alt info kutusu + CTA. Görsel sekmesi: 8'li grid (ornek_once + 7 stil). Video sekmesi: 6 video grid (canlıdaki /video-ornekler/*.mp4). Sosyal sekmesi: 4 platform tab + caption örneği. |
+| P3-A4 | lib/data/exampleContent.ts + FeaturesTabbed metin güncelleme | ✅ Tamam | Trendyol + Amazon TR: basketbol topu (Cowork metinleri aşağıda). Etsy: el yapımı bakır cezve seti (Cowork metni aşağıda). Mevcut Selin Porselen verileri _archive/ veya kaldırılır. |
+| P3-A5 | MarkaBilgileriSection güncel marka inputları + sağ şablon | ✅ Tamam | Sol metin: marka profili özelliklerini güncel alan setine göre revize (storeName + tone + audience + features + kategori + fiyat bandı + hizmet vurguları + extraInfo — 8 alan). Sağ şablon: basketbol topu için marka profili kullanılan AI çıktısı örneği (gerçek metin, lib/data/exampleContent.ts'ten çek). Kıyas tablosu kompakt (LP-09 zaten yapıldı, kontrol et). |
+| P3-U1 | /uret 1. Adım default seçimsiz + ChipSelector görsel ağırlık | ✅ Tamam | anaSekme initial null (seçilmemiş), platform initial null. Kullanıcı aktif olarak seçmeden Adım 2 disabled. PlatformChips ChipSelector görsel ağırlığı içerik tipi 4 kartla aynı: text-sm + py-3 + size büyüt (mevcut text-xs küçük geliyor). step1Interacted true olur ancak kullanıcı hem içerik tipi hem platform seçtiğinde. |
+| P3-U2 | /uret 2. Adım marka profil hibrit rozet | ✅ Tamam | Adım 2 kart üstünde compact rozet: Marka profili boşsa warning toned (rd-warm-50 + Lucide AlertCircle + "Marka profilini doldur, AI sana özel yazsın" + "Aç" link → /hesap/marka). Doluysa success toned (rd-success-50 + CheckCircle2 + "Marka profilim aktif" + "Düzenle" link). Rozet form içeriğine yapışık değil, üstte ayrı kart. |
+| P3-U3 | /uret 2. Adım foto opsiyonel/zorunlu sekmeye göre | ✅ Tamam | Foto upload bölümü mevcut paylaşılan. Etiket dinamik: anaSekme="metin" veya "sosyal" → "Fotoğraf opsiyonel — ekle, sonucu iyileştirsin". anaSekme="gorsel" veya "video" → "Fotoğraf gerekli". Drop zone alt mikro metin değişir, sert ifade yok. |
+| P3-U4 | Listing giriş tipi açıklayıcı + URL pre-fill fix (LP-12b) | ✅ Tamam | MetinSekmesi giris tipi (manuel/foto/barkod/excel) seçim chip'leri açıklayıcı: her chip altında 1 satır "Manuel yaz", "Fotoğraftan tara — barkod/etiket", "Barkod numarası gir", "Excel ile toplu" mikro açıklama. **LP-12b fix:** kullaniciyiKontrolEt fonksiyonuna `setStep1Interacted(true)` ekle (URL'den ?tab=gorsel ile gelen kullanıcı için). |
+| P3-U5 | /uret Adım 2/3 yeniden ayır | ✅ Tamam | **Adım 2 (Ürün bilgisi):** foto + ürün adı + kategori + özellikler + hedef kitle + fiyat segmenti — sekmeden bağımsız genel ürün bilgisi. **Adım 3 (İçerik seçimi & üretim):** sekmeye göre özel + sticky bar bağlantısı: Metin sekmesinde sadece "Üret" + maliyet özet, Görsel: stiller + ek prompt, Video: süre + format + ek prompt, Sosyal: platform + ton + sezon. Tab hooks state'leri korunur, sadece UI placement değişir. |
+
+**Cowork basketbol topu listing metni (P3-A4 için):**
+
+**TRENDYOL:**
+- Başlık: "Profesyonel Kompozit Deri Basketbol Topu 7 Numara FIBA Onaylı İç-Dış Saha Antrenman Maç Topu"
+- Özellikler: (5 madde — FIBA Onaylı 7 Numara, Kompozit Deri Yüzey, 8 Panel Sıkı Dikiş, Kuru Pompa Hediye, 7 Yaş Üstü Kullanım — açıklamaları yukarıda)
+- Açıklama: "Profesyonel basketbol antrenman ve maç deneyimi için tasarlanmış 7 numara FIBA standardı kompozit deri basketbol topu. Ter emici dokulu yüzey kaplaması her hava koşulunda yüksek tutuş sağlarken, 8 panel sıkı dikişli yapı uzun ömürlü kullanımı garanti eder. İç saha parke ve dış saha asfalt zeminlerde aynı performansı sergileyen top, okul takımları, gençlik ligi ve hobi sporcular için tam profesyonel histir. Hediye kuru-tip pompa ve iğne ile birlikte gönderilir — kutudan çıkar çıkmaz oyuna hazır."
+- Etiketler: basketbol topu, 7 numara basketbol, FIBA onaylı top, kompozit deri basketbol, antrenman topu, maç topu, profesyonel basketbol, dış saha basketbol topu, iç saha basketbol topu, basketbol topu pompalı
+
+**AMAZON TR:**
+- Başlık: "Profesyonel Basketbol Topu 7 Numara | FIBA Onaylı Kompozit Deri Maç ve Antrenman Topu | İç-Dış Saha Kullanım | 8 Panel Sıkı Dikiş | Kuru Pompa Hediyeli | Okul Takımları için İdeal"
+- Özellikler: A+ stili büyük harf vurgu (FIBA STANDARTI 7 NUMARA, HAVA KOŞULUNA DAYANIKLI YÜZEY, 8 PANEL HAVA SIZDIRMAZ, KUTUDA POMPA + İĞNE, GENİŞ KULLANIM ARALIĞI)
+- Açıklama: Trendyol açıklaması + 1 paragraf "neden bu top, neden Amazon"
+- Etiketler: Trendyol + long-tail varyantları
+
+**ETSY (el yapımı bakır cezve seti):**
+- Title: "Handmade Hammered Copper Turkish Coffee Pot Set — Cezve with 2 Porcelain Cups, Authentic Anatolian Craftsmanship, Wedding Gift"
+- Highlights: Hand-Hammered Copper Cezve / Complete Set with 2 Cups / Tin-Lined Interior / Made in Turkey (Gaziantep workshop) / Includes Brewing Guide
+- Description: "There's something quietly beautiful about copper that's been shaped by human hands. This Turkish coffee set — a hammered copper cezve paired with two delicate porcelain cups — comes from a tiny workshop in Gaziantep, where families have been hammering copper for more than a century. Every dent, every curve, every pattern is unique. It's the kind of piece that turns a five-minute coffee ritual into something you'll look forward to all day. Whether you're brewing for yourself or sharing with someone you love, this set arrives in a fitted gift box with a printed brewing guide."
+- Tags: turkish coffee set, copper cezve, handmade copper pot, anatolian craftsmanship, hand hammered copper, turkish coffee gift, traditional coffee maker, gift for coffee lover, wedding gift set, housewarming gift, made in turkey, artisan home goods, copper kitchenware
+
+#### P3-A1~P3-U5 Birleşik Prompt (Polish-3 — Faz 1.8)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: P3-A1~P3-U5 — Polish-3 (Aziz acceptance 3. tur). 10 madde: 
+anasayfa içerik + üret akış 2. iterasyon. Bu paket sonrası redesign 
+toplu acceptance + main merge.
+
+Mevcut canlı pattern: components/tanitim/FeaturesTabbed.tsx — Aziz 
+beğendiği üretim çıktısı tarzı (4 sekme + bölmeler + Kopyala 
+butonları). InfoStrip.tsx YERİNE bu yapı redesign rd-* tokenıyla 
+yeniden yazılacak.
+
+Mevcut asset'ler:
+- public/ornek_once.jpg (basketbol topu ham fotoğraf)
+- public/ornek_{beyaz,koyu,lifestyle,mermer,ahsap,gradient,dogal}.{jpg,png}
+- public/hero-video.mp4 (basketbol topu tanıtım videosu)
+- public/video-ornekler/*.mp4 (6 hareket stili — kontrol et, varsa 
+  reuse)
+
+Reuse: components/tanitim/FeaturesTabbed.tsx pattern (yapı + 
+mantık), rd-* token'a çevirip yeni component yarat: 
+components/landing/RDFeaturesTabbed.tsx (veya InfoStrip yeniden 
+yaz). Mevcut FeaturesTabbed.tsx canlı landing için korunur 
+(_tanitim.tsx'ten import edilebilir, eğer hâlâ kullanılıyorsa).
+
+KAPSAM DIŞI:
+- /uret backend hooks (tab hooks, auth, kredi — değişmez)
+- Canlı FeaturesTabbed.tsx silme (sadece redesign'a kopya/adapt)
+
+────────────────────────────────────────────
+P3-A1: AppScreenshotMockup
+────────────────────────────────────────────
+
+Dosya: components/sections/HeroBlock/AppScreenshotMockup.tsx
+
+1. Metin: "4 dosyayı indir" → "Üretilen içerikleri indir"
+
+2. Asset güncelleme:
+   - Input thumbnail: /ornek_once.jpg (basketbol topu)
+   - Listing snippet: basketbol topu Trendyol başlığı + 1-2 satır 
+     özet (lib/data/exampleContent.ts'ten çek — P3-A4 sonrası)
+   - Görsel: /ornek_beyaz.jpg veya /ornek_lifestyle.jpg
+   - Video: hero-video.mp4 ilk frame thumbnail VEYA Lucide 
+     PlayCircle + "Tanıtım videosu" placeholder
+   - Sosyal: caption snippet (Instagram tarzı kısa metin)
+
+3. Layout korunur (Code önceki LP-03'te dikey akış seçti — devam et)
+
+Commit: feat(landing): P3-A1 AppScreenshotMockup metin + basketbol 
+topu asset
+
+────────────────────────────────────────────
+P3-A2: StepAnimation kutu boyut + okunabilirlik
+────────────────────────────────────────────
+
+Dosya: components/landing/StepAnimation.tsx
+
+1. **Eşit kutu yüksekliği:**
+   - 3 kart container: grid-cols-3 + items-stretch (zaten varsa OK)
+   - Her kart: flex-1 + min-h-[400px] (veya en uzun kartı baz al)
+   - İçerik dikey: justify-between (üst ikon, orta animasyon, alt 
+     etiket)
+
+2. **Text okunabilirlik:**
+   - Pasif kart: opacity-50 KALDIR. Yerine: text-rd-neutral-500 
+     (gri ama okunabilir)
+   - Aktif kart: text-rd-neutral-900 + animation
+   - Kart text size: text-xs → text-sm md:text-base (en azından 
+     adım başlığı)
+
+3. **1. kart "Ürünü tanıt" yeni içerik:**
+   - Başlık: "Fotoğraf ver VE/VEYA kısa açıklama yaz"
+   - Görsel: ImagePlus size-12 + "VEYA" text + PenLine size-12 yan 
+     yana (3 öğe horizontal flex)
+   - Animasyon: ImagePlus pop → "VEYA" fade → PenLine pop → text 
+     yazılır ("Profesyonel basketbol topu...")
+
+4. **2. kart "Pazaryeri ve içerik seç" tek pazaryeri:**
+   - Mevcut 5 pazaryeri stagger korunur AMA pulse aktivasyonu 
+     SADECE Trendyol'da
+   - Diğer 6 pazaryeri pasif (border, no fill)
+   - İçerik tipi: 4 chip stagger, hepsi aktif (Metin/Görsel/Video/
+     Sosyal — kullanıcı hepsini seçebilir mantığı)
+   - Mantık: "Tek pazaryeri (Trendyol) seçildi" + "4 içerik tipinin 
+     hepsi mümkün"
+
+5. **3. kart "AI senin için hazırlasın" gerçek görseller:**
+   - 4 çıktı kart 2x2 grid (LP-05'te zaten yapıldı, kontrol et)
+   - Görseller basketbol topu reuse: ornek_beyaz.jpg / ornek_koyu.jpg 
+     görsel slot'lara, hero-video.mp4 thumbnail video slot'una
+   - Listing snippet basketbol topu Trendyol başlığı
+
+Commit: feat(landing): P3-A2 StepAnimation eşit kutu + okunabilir 
+text + basketbol içerik
+
+────────────────────────────────────────────
+P3-A3: InfoStrip → FeaturesTabbed pattern
+────────────────────────────────────────────
+
+components/landing/InfoStrip.tsx YERİNE components/tanitim/
+FeaturesTabbed.tsx pattern reuse. Yeni component: 
+components/landing/RDFeaturesTabbed.tsx (rd-* token'larıyla).
+
+**Yapı:**
+
+1. **4 sekme kart üst (KUTULAR — canlıdaki gibi):**
+   - Listing Metni / Görsel / Video / Sosyal Medya
+   - Her kart: Lucide ikon + başlık + açıklama + kredi pill
+   - Aktif kart border-rd-primary-700 + bg-rd-primary-50, alt border 
+     yok (içeri açılmış görünür)
+
+2. **Tab content alanı (aktif sekmeye göre):**
+
+   **Listing sekmesi (sekme 0):**
+   - Üst açıklama: "Her pazaryerinin kendine özel karakter limiti, 
+     format kuralları ve yasaklı kelimeleri var. yzliste bunları 
+     bilir — platforma özel başlık, madde madde özellikler, SEO 
+     uyumlu açıklama ve arama etiketleri üretir."
+   - 3 platform sub-tab: Trendyol (orange), Amazon (amazon orange), 
+     Etsy (rose)
+   - Her platformda 4 bölme:
+     - Başlık (Tag ikon + Kopyala buton)
+     - Özellikler (Bullet ikon + Kopyala)
+     - Açıklama (FileText ikon + Kopyala)
+     - Etiketler (Hash ikon + Kopyala)
+   - Bölme stili: rounded-xl border-l-4 (renkli) + border + 
+     bg-rd-neutral-50 + p-4
+   - Kopyala buton: text-xs bg-white border + onClick clipboard + 
+     Toast "Kopyalandı"
+   - Alt info bant: "Manuel girişi · Foto analiz · Barkod tanıma · 
+     7 platform" (4 öğe Check ikon)
+   - Alt mavi info kutusu: "Her pazaryerinin kuralları farklı: 
+     Trendyol max 100 karakter başlık ister, Amazon 200'e kadar 
+     keyword kabul eder, Etsy İngilizce + hikaye anlatımı sever."
+   - CTA: "Listing metni üret →" /uret?tab=metin
+
+   **Görsel sekmesi (sekme 1):**
+   - Üst açıklama: "Tek bir ürün fotoğrafından profesyonel stüdyo 
+     görselleri oluşturun. Arka plan otomatik temizlenir, 7 farklı 
+     stüdyo stilinden seçin — ya da sahnenizi anlatın, kendi 
+     fonunuzu yükleyin."
+   - "Tek fotoğraftan 7 farklı stüdyo stili" başlık
+   - "Stil başına 1 kredi · Üretimde düşer, indirme bedava" alt
+   - 8 grid (4 col × 2 row): Ham fotoğraf (ornek_once.jpg + "Ham 
+     fotoğraf" badge) + 7 stil (Beyaz zemin, Koyu zemin, Lifestyle, 
+     Mermer, Ahşap, Gradient, Doğal) — public/ornek_*.jpg/png reuse
+   - Alt: "3 farklı yöntemle sahne oluştur" 3 chip (Hazır stiller, 
+     Kendi promptun, Arka plan fotoğrafı ver)
+   - CTA: "Stüdyo görseli üret →" /uret?tab=gorsel
+
+   **Video sekmesi (sekme 2):**
+   - Üst açıklama: "Ürün fotoğrafınızdan AI ile tanıtım videosu 
+     oluşturun. 6 ön tanımlı hareket stilinden seçin ya da kendi 
+     yönetmenliğinizi yapın — Reels, TikTok, YouTube ve pazaryeri 
+     formatlarında."
+   - 6 video grid (2 col): 360° Dönüş, Zoom yaklaşım, Dramatik ışık, 
+     Doğal ortam, Detay tarama, Kumaş hareketi
+   - Her video kart: video element (autoplay loop muted) + 
+     başlık + açıklama
+   - Asset: public/video-ornekler/*.mp4 (varsa reuse)
+   - 3 format kart (5sn 10kr / 10sn 20kr / 3 format)
+   - "Nasıl çalışır?" 4 step
+   - CTA: "Ürün videosu üret →" /uret?tab=video
+
+   **Sosyal sekmesi (sekme 3):**
+   - Üst açıklama: "Her platform için ayrı formatta caption ve 
+     hashtag seti üretin. Instagram, TikTok, Facebook ve X — hepsi 
+     tek tıkla."
+   - 4 platform tab (Instagram/TikTok/Facebook/Twitter)
+   - Her platform için caption + hashtag örneği (Cowork bakır 
+     cezve veya basketbol topu için 4 platforma metin yazar — 
+     Code talimat alır lib/data'dan)
+   - CTA: "Sosyal içerik üret →" /uret?tab=sosyal
+
+3. **rd-* token'a çevrim:**
+   - #1E4DD8 → rd-primary-700
+   - #163B9E → rd-primary-800
+   - #F0F4FB → rd-primary-50
+   - #BAC9EB → rd-primary-200
+   - #FAFAF8 → rd-neutral-50
+   - #F1F0EB → rd-neutral-100
+   - #D8D6CE → rd-neutral-200
+   - #908E86 → rd-neutral-500
+   - #5A5852 → rd-neutral-600
+   - #1A1A17 → rd-neutral-900
+   - #0F5132 → rd-success-700
+   - Trendyol orange-500, Amazon #E47911, Etsy rose-500 KORUNUR 
+     (platform brand renkleri)
+
+4. **_tanitim-redesign.tsx'te InfoStrip yerine RDFeaturesTabbed:**
+   - StepSection altında veya StepSection içinde (mevcut yapıya göre)
+   - Eski InfoStrip.tsx _archive/ veya silinir
+
+Commit: feat(landing): P3-A3 RDFeaturesTabbed (canlı pattern reuse 
++ rd-* token + 4 sekme detay paneli)
+
+────────────────────────────────────────────
+P3-A4: lib/data/exampleContent.ts + içerik metinleri
+────────────────────────────────────────────
+
+Dosya: lib/data/exampleContent.ts (ve gerekirse FeaturesTabbed 
+veya RDFeaturesTabbed içine inline)
+
+Yeni içerik (yukarıdaki Cowork metinleri):
+
+```ts
+export const EXAMPLE_PRODUCT_TR = {
+  brand: 'yzliste örnek',
+  name: 'Profesyonel Basketbol Topu 7 Numara',
+  category: 'Spor & Outdoor',
+} as const;
+
+export const EXAMPLE_CONTENT_TR = {
+  metin: {
+    trendyol: {
+      title: 'Profesyonel Kompozit Deri Basketbol Topu 7 Numara FIBA Onaylı İç-Dış Saha Antrenman Maç Topu',
+      features: [
+        'FIBA Onaylı Resmi Boyut — 7 numara, 75-78 cm çevre, 567-650 g ağırlık, profesyonel maç standartı',
+        'Kompozit Deri Yüzey — Yüksek tutuş, ter emici dokulu kaplama; iç-dış saha kullanımına uygun',
+        '8 Panel Sıkı Dikiş — Hava sızdırmaz iç tüp, uzun ömürlü performans, basınç stabilizasyonu',
+        'Kuru Pompa Hediye — Set içinde kuru-tip pompa ve iğne; satın alır almaz kullanıma hazır',
+        '7 Yaş Üstü Kullanıma Uygun — Antrenman, okul takımları, yarı-profesyonel ve hobi kullanım için ideal',
+      ],
+      description: 'Profesyonel basketbol antrenman ve maç deneyimi için tasarlanmış 7 numara FIBA standardı kompozit deri basketbol topu. Ter emici dokulu yüzey kaplaması her hava koşulunda yüksek tutuş sağlarken, 8 panel sıkı dikişli yapı uzun ömürlü kullanımı garanti eder. İç saha parke ve dış saha asfalt zeminlerde aynı performansı sergileyen top, okul takımları, gençlik ligi ve hobi sporcular için tam profesyonel histir. Hediye kuru-tip pompa ve iğne ile birlikte gönderilir — kutudan çıkar çıkmaz oyuna hazır.',
+      tags: ['basketbol topu', '7 numara basketbol', 'FIBA onaylı top', 'kompozit deri basketbol', 'antrenman topu', 'maç topu', 'profesyonel basketbol', 'dış saha basketbol topu', 'iç saha basketbol topu', 'basketbol topu pompalı'],
+    },
+    amazon: { /* Aynı yapı, Amazon TR uzun başlık + A+ stil özellikler */ },
+  },
+};
+
+export const EXAMPLE_CONTENT_ETSY = {
+  product: 'Handmade Hammered Copper Turkish Coffee Pot Set',
+  metin: {
+    title: 'Handmade Hammered Copper Turkish Coffee Pot Set — Cezve with 2 Porcelain Cups, Authentic Anatolian Craftsmanship, Wedding Gift',
+    highlights: [/* 5 madde, yukarıdaki Cowork önerisi */],
+    description: '...',  // yukarıdaki uzun storytelling
+    tags: [/* 13 tag */],
+  },
+};
+```
+
+components/tanitim/FeaturesTabbed.tsx (canlı) ve components/landing/
+RDFeaturesTabbed.tsx (redesign) bu data'dan beslenir. Inline 
+hard-coded metin temizlenir.
+
+Commit: feat(data): P3-A4 exampleContent.ts basketbol topu + bakır 
+cezve (Trendyol/Amazon TR/Etsy)
+
+────────────────────────────────────────────
+P3-A5: MarkaBilgileriSection güncel + sağ şablon
+────────────────────────────────────────────
+
+Dosya: components/sections/MarkaBilgileriSection.tsx
+
+1. **Sol metin güncel:** marka profili 8 alan setine göre revize.
+   - Eski: "marka adı + ton + hedef kitle + özellikler" 
+   - Yeni: 8 alan listesi (storeName + tone + audience + features + 
+     kategori + fiyat bandı + hizmet vurguları + extraInfo)
+   - Mikro açıklama her alan için (tooltip veya alt metin)
+
+2. **Sağ şablon basketbol topu çıktısı:**
+   - lib/data/exampleContent.ts EXAMPLE_CONTENT_TR.metin.trendyol'dan 
+     başlık + 2 özellik bullet + tag chip row çek
+   - Şablon kompakt rounded-xl border + p-5 (LP-08'den daha sade)
+   - Üstte eyebrow "MARKA İLE ÜRETİLEN" (warm-earth tone)
+
+3. **Kıyas tablosu:** LP-09'da yapıldı, kontrol et — marka ismi 
+   yok + kompakt durmuyor mu?
+
+Commit: feat(landing): P3-A5 MarkaBilgileri 8 alan + basketbol sağ 
+şablon
+
+────────────────────────────────────────────
+P3-U1: /uret 1. Adım default seçimsiz
+────────────────────────────────────────────
+
+Dosya: app/uret/page.tsx
+
+1. anaSekme initial: `useState<AnaSekme | null>(null)` (önceden 
+   "metin" idi — null yap)
+2. platform initial: `useState<string | null>(null)` (önceden 
+   "trendyol" idi)
+3. Adım 1 ContentTypeGrid: anaSekme === null → hiçbir kart aktif 
+   değil
+4. PlatformChips: platform === null → hiçbir chip aktif değil
+5. step1Interacted: anaSekme !== null AND platform !== null
+6. Adım 2 disabled: !step1Interacted → opacity-50 pointer-events-none
+7. **PlatformChips görsel ağırlık (ChipSelector size büyüt):**
+   - Mevcut text-xs px-3 py-1.5 → text-sm px-4 py-3
+   - 7 chip (Trendyol/Hepsiburada/Amazon TR/Amazon USA/N11/Etsy/
+     Çiçeksepeti — eğer 7 ise)
+   - Mobile yatay scroll (overflow-x-auto)
+   - Aktif: bg-rd-primary-50 + border-2 + text-rd-primary-700 + 
+     font-medium
+8. Tab hooks (useMetinUretim vs) initial state'leri etkilenmez 
+   (URL'den ?tab= varsa P3-U4 fix devreye girer)
+
+Commit: feat(uret): P3-U1 default seçimsiz + ChipSelector görsel 
+ağırlık
+
+────────────────────────────────────────────
+P3-U2: /uret 2. Adım marka profili hibrit rozet
+────────────────────────────────────────────
+
+Dosya: app/uret/page.tsx StepCard 2
+
+1. Marka profili durum check: kullanici.marka_adi var mı?
+   - markaProfilDolu = !!(kullanici?.marka_adi && kullanici?.ton)
+2. StepCard 2 üstünde rozet (form içeriğinden ayrı):
+   ```jsx
+   <div className={`rounded-xl border p-3 mb-4 flex items-center 
+                    justify-between gap-3 ${
+     markaProfilDolu ? 'bg-rd-success-50 border-rd-success-200' :
+                       'bg-rd-warm-50 border-rd-warm-200'
+   }`}>
+     <div className="flex items-center gap-2">
+       {markaProfilDolu ? <CheckCircle2 size-4 text-rd-success-700 /> 
+                         : <AlertCircle size-4 text-rd-warm-700 />}
+       <p className="text-sm">
+         {markaProfilDolu 
+           ? `Marka profilim aktif — AI senin tarzında yazacak`
+           : `Marka profilini doldur, AI sana özel yazsın`}
+       </p>
+     </div>
+     <Link href="/hesap/marka" className="text-sm font-medium 
+                                          underline">
+       {markaProfilDolu ? 'Düzenle' : 'Aç'}
+     </Link>
+   </div>
+   ```
+3. Mevcut BrandProfileBlock collapsible yan-akış: KALDIRILABİLİR 
+   (yeni rozet yeterli, kullanıcı /hesap/marka'ya direkt gider). 
+   Veya küçük "Hızlı düzenle" toggle olarak kalır — Code karar.
+
+Commit: feat(uret): P3-U2 marka profili hibrit rozet
+
+────────────────────────────────────────────
+P3-U3: /uret foto opsiyonel/zorunlu sekmeye göre
+────────────────────────────────────────────
+
+Dosya: app/uret/page.tsx foto upload bölümü (paylaşılan 
+fotolar[0] kontrolü)
+
+Etiket dinamik:
+```ts
+const fotoEtiketi = anaSekme === 'metin' || anaSekme === 'sosyal'
+  ? 'Fotoğraf opsiyonel — ekle, sonucu iyileştirsin'
+  : 'Fotoğraf gerekli';
+```
+
+Drop zone empty state'te bu etiket gösterilir. Sert ifade yok 
+(zorunlu büyük harf YASAK kelimesi yok), sade bilgilendirme.
+
+Commit: feat(uret): P3-U3 foto opsiyonel/zorunlu sekmeye göre 
+dinamik etiket
+
+────────────────────────────────────────────
+P3-U4: Listing giriş tipi açıklayıcı + LP-12b URL fix
+────────────────────────────────────────────
+
+1. **MetinSekmesi giriş tipi chip'leri açıklayıcı:**
+   - Mevcut chip etiketleri: muhtemelen "Manuel", "Foto", "Barkod", 
+     "Excel"
+   - Yeni etiketler:
+     - "Manuel yaz" — Lucide PenLine + "Ürün adını ve özellikleri 
+       sen yaz"
+     - "Fotoğraftan tara" — Lucide Camera + "Foto yükle, AI ürünü 
+       tanır"
+     - "Barkod ile bul" — Lucide Barcode + "Barkod numarasını gir"
+     - "Excel ile toplu" — Lucide FileSpreadsheet + "Excel yükle, 
+       toplu üret"
+   - Her chip alt-mikro: text-xs text-rd-neutral-500
+   - Aktif chip: bg-rd-primary-50 border-rd-primary-700
+
+2. **LP-12b URL pre-fill fix:**
+   - Dosya: app/uret/page.tsx kullaniciyiKontrolEt fonksiyonu
+   - Mevcut: tabParam varsa setAnaSekme(tabParam)
+   - Eklenecek: setStep1Interacted(true) (URL'den gelirse step1 
+     yapılmış sayılır)
+   - Ayrıca platform set ediliyorsa step1 tam, etmiyorsa platform 
+     hâlâ null → kullanıcı platform seçtiğinde step1Interacted 
+     etkilenir
+
+Commit: feat(uret): P3-U4 listing giriş tipi açıklayıcı + URL 
+pre-fill fix
+
+────────────────────────────────────────────
+P3-U5: /uret Adım 2 / Adım 3 yeniden ayır
+────────────────────────────────────────────
+
+Mevcut yapı: Adım 2 = foto + tüm form, Adım 3 = maliyet özet.
+Aziz kararı: Adım 2 = ürün bilgisi (genel), Adım 3 = içerik seçimi 
++ üret.
+
+**Adım 2 — Ürün bilgisi (sekmeden bağımsız):**
+- Foto upload (paylaşılan)
+- Ürün adı (urunAdi)
+- Kategori (kategori)
+- Özellikler (ozellikler)
+- Hedef kitle (hedefKitle — sadece Metin sekmesinde mevcut, ama 
+  Adım 2'de göster, opsiyonel)
+- Fiyat segmenti (fiyatSegmenti — aynı)
+
+**Adım 3 — İçerik seçimi & üretim (sekmeye göre):**
+- **Metin:** sadece "Üret" maliyet özet kart (özel seçim yok, 
+  Adım 2'deki ürün bilgisi yeterli)
+- **Görsel:** Stiller (seciliStiller multi) + ek prompt 
+  (gorselEkPrompt) + referans görsel
+- **Video:** Süre (5/10sn) + format (9:16/1:1/16:9) + ek prompt
+- **Sosyal:** Platform (Instagram/TikTok/Facebook/X) + ton + 
+  sezon + içerik tipi + ek bilgi
+
+Code refactor: MetinSekmesi/GorselSekmesi/VideoSekmesi/
+SosyalSekmesi içeriklerini iki bölüme ayır:
+- Üst yarı: Adım 2 slot'una (ortak ürün bilgisi)
+- Alt yarı: Adım 3 slot'una (sekmeye özel seçimler)
+
+Tab hooks state'leri DOKUNULMAZ — sadece JSX placement ayrılır. 
+useMetinUretim vs hook'lar olduğu gibi kalır.
+
+Karmaşıklık: her sekmenin alanları farklı yere taşınmalı. Code 
+mevcut sekme component'lerini iki props ile böl: 
+`<MetinSekmesi step={2|3} ...rest>` veya iki ayrı component:
+`<MetinUrunBilgisi>` + `<MetinIcerikSecimi>` ayrımı.
+
+**Önerim:** sub-component ayırma (her sekme component'i kendisini 
+2 sub'a böl). Daha temiz.
+
+Commit: feat(uret): P3-U5 Adım 2/3 yeniden ayrım (ürün bilgisi vs 
+içerik seçimi)
+
+────────────────────────────────────────────
+Mobile + a11y polish (her ticket içinde)
+────────────────────────────────────────────
+
+Her ticket'ta:
+- 375px viewport test
+- ARIA: role="region" / aria-labelledby / aria-expanded
+- Klavye Tab tour
+- prefers-reduced-motion guard
+
+────────────────────────────────────────────
+Test
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde:
+  - / : "Üretilen içerikleri indir" + basketbol topu mockup
+  - / StepAnimation: 3 kart eşit, text okunaklı, basketbol topu 
+    görseller
+  - / RDFeaturesTabbed: 4 sekme, üretim çıktısı + Kopyala butonları, 
+    basketbol topu (Trendyol/Amazon) + bakır cezve (Etsy)
+  - / MarkaBilgileri: 8 alan + basketbol sağ şablon
+  - /uret: default seçimsiz, ChipSelector görsel ağırlık eşit
+  - /uret Adım 2: marka profili hibrit rozet (boş/dolu)
+  - /uret Adım 2: foto opsiyonel etiketi sekmeye göre
+  - /uret listing giriş tipi açıklayıcı chip'ler
+  - /uret?tab=gorsel URL pre-fill (step1Interacted=true)
+  - /uret Adım 2 = ürün bilgisi, Adım 3 = içerik seçimi + Üret
+  - 375px mobile, klavye Tab tour, reduced-motion
+
+Commit özeti (10 atomik) VEYA tek:
+chore(redesign): P3-A1~P3-U5 polish-3 (Aziz acceptance 3. tur)
+
+BACKLOG'da P3-A1~P3-U5 [x] işaretle.
+
+Bittikten sonra rapor:
+- Commit listesi
+- RDFeaturesTabbed komponenti (yeni mi, FeaturesTabbed kopya/adapt 
+  mi)
+- exampleContent.ts yapısı
+- /uret Adım 2/3 ayrımı (sub-component mi prop tabanlı mı)
+- BrandProfileBlock akıbeti (rozetle yer değişti mi, kalktı mı)
+- Açık riskler / Aziz preview test
+```
+
+---
+
+## 23 — Polish-4 FIX (Faz 1.9b — Aziz preview, P4 yarım kalmış)
+
+**29 Nis — Vercel deploy `dpl_4kgVhykf` commit `bebfec83` analizi:** Code Polish-4'ün **sadece 1/3'ünü** uyguladı. Commit mesajı: *"feat(landing): P4-A3 video kutuları zoom-yaklasim 2x hız + blog thumbnail kaldır"*. P4-A1 ve P4-A2 atlanmış, P4-A3 yanlış uygulanmış.
+
+| ID | Başlık | Durum | Kabul Kriteri |
+|---|---|---|---|
+| P4-FIX-1 | RDFeaturesTabbed → canlı FeaturesTabbed birebir kopya | ✅ Tamamlandı | components/landing/RDFeaturesTabbed.tsx'i components/tanitim/FeaturesTabbed.tsx ile **birebir** aynı yap. Sadece rd-* token swap. Yeni-yorum tasarım YOK. İçerik P3-A4'te yazıldı (basketbol topu Trendyol/Amazon, bakır cezve Etsy — exampleContent.ts'ten çek). Aziz Vercel preview'da bunu net gördü: "metinler gitmiş, eski versiyon gelmiş". |
+| P4-FIX-2 | MarkaBilgileriSection sağ şablon basketbol → bakır cezve kıyası | ✅ Tamamlandı | components/sections/MarkaBilgileriSection.tsx sağ panel mevcut basketbol topu örneği YERİNE bakır cezve seti kıyası. lib/data/exampleContent.ts'e EXAMPLE_MARKA_KIYAS objesi ekle: markaBos = "Bakır cezve, 250ml, 2 fincan dahil" / markaDolu = "Anadolu Bakır El Dövme Cezve — Anadolu'nun yüz yıllık bakırcılığını mutfağına taşı...". Marka chip'leri (storeName, ton, kategori, hedef, hizmet vurguları) görünür. |
+| P4-FIX-3 | Video kutuları → 6 farklı stil geri gelsin | ✅ Tamamlandı | Code commit'i 6 src'yi zoom-yaklasim.mp4 yaptı — bu **HATALI**. public/video-ornekler/'de 6 farklı dosya MEVCUT. RDFeaturesTabbed VIDEO_ORNEKLER array'i 6 farklı src kullansın: 360-donus.mp4 / zoom-yaklasim.mp4 / dramatik-isik.mp4 / dogal-ortam.mp4 / detay-tarama.mp4 / kumas-hareketi.mp4. **playbackRate=2.0** isteğe bağlı kalabilir (Aziz "hızlandırarak" demişti — sadece zoom-yaklasim için 2x veya tüm 6 için 2x — Aziz preview'da karar). |
+
+**Cowork hata kabul:** P4-A3 prompt'unda "tüm 6 kutuya zoom-yaklasim koy" yazılmıştı. Aziz orijinal isteği "**boş kutularda** zoom yaklaşımı kullan" idi (28 Nis mesajı). Zaten 6 video da klasörde mevcuttu, "boş" yoktu. Cowork yanlış yorumladı, Code uyguladı. P4-FIX-3'te 6 farklı stil geri.
+
+#### P4-FIX-1~P4-FIX-3 Birleşik Prompt
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: P4-FIX-1~P4-FIX-3 — Polish-4 düzeltme. Önceki commit bebfec83 
+sadece P4-A3'ü uyguladı (yanlış olarak), P4-A1 + P4-A2 atlandı. Bu 
+paket eksikleri tamamlar + P4-A3 hatalarını düzeltir.
+
+Önemli: Aziz Vercel preview'da gördü, üç sorun da net:
+1. Anasayfada listing metni bölmeleri eski layout'ta (FeaturesTabbed 
+   pattern uygulanmadı)
+2. MarkaBilgileri sağ şablon hâlâ basketbol topu (bakır cezve değil)
+3. Video kutularının hepsi zoom-yaklasim (6 farklı stil olmalı)
+
+────────────────────────────────────────────
+P4-FIX-1: RDFeaturesTabbed = FeaturesTabbed (birebir + rd-* swap)
+────────────────────────────────────────────
+
+Dosyalar:
+- components/tanitim/FeaturesTabbed.tsx (KAYNAK — canlı pattern)
+- components/landing/RDFeaturesTabbed.tsx (HEDEF — yeniden yazılacak)
+
+Adımlar:
+1. components/tanitim/FeaturesTabbed.tsx tüm yapıyı oku (4 sekme + 
+   3 platform sub-tab Listing'de + bölmeler + Kopyala butonları + 
+   görsel grid + video grid + sosyal panel).
+
+2. components/landing/RDFeaturesTabbed.tsx'i SİL ve YENİDEN YAZ:
+   - Layout: FeaturesTabbed.tsx ile birebir aynı JSX yapısı
+   - Renk swap (FeaturesTabbed'in hardcode'lu hex'leri):
+     * #1E4DD8 → rd-primary-700
+     * #163B9E → rd-primary-800
+     * #F0F4FB → rd-primary-50
+     * #BAC9EB → rd-primary-200
+     * #FAFAF8 → rd-neutral-50
+     * #F1F0EB → rd-neutral-100
+     * #D8D6CE → rd-neutral-200
+     * #908E86 → rd-neutral-500
+     * #5A5852 → rd-neutral-600
+     * #1A1A17 → rd-neutral-900
+     * #0F5132 → rd-success-700
+     * Trendyol orange-500, Amazon #E47911, Etsy rose-500 KORUNUR 
+       (platform brand renkleri)
+   - İçerik: lib/data/exampleContent.ts'ten çek (P3-A4'te yazıldı):
+     * Trendyol + Amazon TR: basketbol topu (EXAMPLE_CONTENT_TR.metin)
+     * Etsy: bakır cezve seti (EXAMPLE_CONTENT_TR.metin.etsy veya ayrı 
+       EXAMPLE_CONTENT_ETSY)
+
+3. **Kritik kural:** "yeni-yorum tasarım YOK". Canlı FeaturesTabbed 
+   nasılsa, RDFeaturesTabbed öyle olsun. Kart tasarımı, tab dialog, 
+   bölme yapısı, Kopyala buton stili, alt info kutusu, CTA — hepsi 
+   birebir.
+
+4. _tanitim-redesign.tsx'te RDFeaturesTabbed import'u zaten var, 
+   tasarım değişimi sayfaya otomatik yansır.
+
+Commit: feat(landing): P4-FIX-1 RDFeaturesTabbed canlı pattern 
+birebir + rd-* swap (P4-A1 düzeltme)
+
+────────────────────────────────────────────
+P4-FIX-2: MarkaBilgileri sağ şablon → bakır cezve kıyası
+────────────────────────────────────────────
+
+Dosyalar:
+- components/sections/MarkaBilgileriSection.tsx
+- lib/data/exampleContent.ts (EXAMPLE_MARKA_KIYAS objesi eklenecek)
+
+Adımlar:
+
+1. lib/data/exampleContent.ts'e EXAMPLE_MARKA_KIYAS objesi ekle:
+
+```ts
+export const EXAMPLE_MARKA_KIYAS = {
+  urunAdi: 'Bakır cezve seti',
+  
+  markaBos: {
+    eyebrow: 'MARKA BİLGİSİ YOKKEN',
+    baslik: 'Bakır cezve, 250ml, 2 fincan dahil',
+    aciklama: 'Türk kahvesine uygun.',
+  },
+  
+  markaDolu: {
+    eyebrow: 'MARKA İLE ÜRETİLDİĞİNDE',
+    baslik: 'Anadolu Bakır El Dövme Cezve — Hediye Kutusunda 2 Fincan ile',
+    aciklama: 'Anadolu\'nun yüz yıllık bakırcılığını mutfağına taşı. Anadolu Bakır\'ın Gaziantep\'te dövülmüş cezvesi, sabah kahvesi ritüelini sanat eserine dönüştürür. Hediye kutusunda, kullanım rehberi ile birlikte.',
+    markaInputlari: {
+      storeName: 'Anadolu Bakır',
+      ton: 'premium',
+      kategori: 'Ev & Yaşam',
+      hedefKitle: 'Türk kahvesi sevenler',
+      hizmetVurgulari: ['el dövme', 'hediye paketi'],
+    },
+  },
+} as const;
+```
+
+2. MarkaBilgileriSection.tsx sağ panel:
+   - Mevcut basketbol topu örneği SİL
+   - 2 kart üst üste:
+     
+     **Üst kart (markaBos):**
+     - rounded-xl border border-rd-neutral-200 bg-white p-5
+     - Eyebrow: text-rd-neutral-500 "MARKA BİLGİSİ YOKKEN"
+     - Başlık: text-rd-neutral-700 "Bakır cezve, 250ml, 2 fincan dahil"
+     - Açıklama: text-sm text-rd-neutral-500 "Türk kahvesine uygun."
+     - Sade, jenerik vurgu yok
+     
+     **Alt kart (markaDolu):**
+     - rounded-xl border-2 border-rd-warm-300 bg-rd-warm-50 p-5 
+       (warm-earth premium accent)
+     - Eyebrow: text-rd-warm-700 "MARKA İLE ÜRETİLDİĞİNDE"
+     - Başlık (font-display): text-rd-neutral-900 "Anadolu Bakır El 
+       Dövme Cezve — Hediye Kutusunda 2 Fincan ile"
+     - Açıklama: text-sm text-rd-neutral-700 — bakır cezve hikayesi
+     - Marka inputları chip row (alt kısım): "Anadolu Bakır" + 
+       "premium ton" + "Türk kahvesi sevenler" + "el dövme" + 
+       "hediye paketi" — küçük chip pill'ler
+
+3. Sol metin: P3-A5'te 8 alanlı marka profili anlatımı yapıldı — 
+   eğer hâlâ basketbol topu referansı varsa bakır cezveye uyarla.
+
+Commit: feat(landing): P4-FIX-2 MarkaBilgileri bakır cezve kıyası 
+(P4-A2 düzeltme)
+
+────────────────────────────────────────────
+P4-FIX-3: Video kutuları 6 farklı stil
+────────────────────────────────────────────
+
+Dosya: components/landing/RDFeaturesTabbed.tsx (P4-FIX-1 ile yeniden 
+yazıldıktan sonra video sekmesi).
+
+P4-FIX-1 RDFeaturesTabbed'i FeaturesTabbed birebir kopyaladıysa, 
+VIDEO_ORNEKLER zaten 6 farklı stil olur (FeaturesTabbed'de 6 farklı 
+src var, satır 320-326'da):
+
+```ts
+const VIDEO_ORNEKLER = [
+  { src: '/video-ornekler/360-donus.mp4', Ikon: RotateCw, baslik: '360° Dönüş', ... },
+  { src: '/video-ornekler/zoom-yaklasim.mp4', Ikon: ZoomIn, baslik: 'Zoom yaklaşım', ... },
+  { src: '/video-ornekler/dramatik-isik.mp4', Ikon: Lightbulb, baslik: 'Dramatik ışık', ... },
+  { src: '/video-ornekler/dogal-ortam.mp4', Ikon: Leaf, baslik: 'Doğal ortam', ... },
+  { src: '/video-ornekler/detay-tarama.mp4', Ikon: ScanSearch, baslik: 'Detay tarama', ... },
+  { src: '/video-ornekler/kumas-hareketi.mp4', Ikon: Wind, baslik: 'Kumaş hareketi', ... },
+];
+```
+
+public/video-ornekler/ klasöründe 6 dosya MEVCUT (kontrol edildi).
+
+**playbackRate kararı:**
+- Aziz orijinal isteği: "boş video kutularında zoom yaklaşımı 
+  kullanabilirsin (videoyu hızlandırarak koyabilirsen daha iyi)"
+- Yorum: 6 video da MEVCUT, boş yok. playbackRate gerekli mi?
+- Cowork önerisi: playbackRate=1.5 tüm videolara (görsel hareket 
+  hissi artar, ama doğallık korunur). Aziz preview'da 1.5 mi 2.0 mı 
+  karar verir.
+- Implementation:
+  ```tsx
+  const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
+  useEffect(() => {
+    videoRefs.current.forEach((video) => {
+      if (video) video.playbackRate = 1.5;
+    });
+  }, []);
+  ```
+
+P4-FIX-1'in birebir kopyası içinde bu hız ekleme zaten yapılmazsa 
+(orijinal FeaturesTabbed'de yok), basit bir ek useEffect olarak 
+ekle.
+
+Commit: fix(landing): P4-FIX-3 video kutuları 6 farklı stil + 
+playbackRate=1.5 (P4-A3 düzeltme)
+
+────────────────────────────────────────────
+Test (commit öncesi)
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde:
+  - / RDFeaturesTabbed: canlı FeaturesTabbed birebir tasarım, rd-* 
+    renkler, basketbol topu (Trendyol/Amazon) + bakır cezve (Etsy) 
+    bölmeler + Kopyala butonları
+  - / MarkaBilgileri: bakır cezve kıyası, marka boş "Bakır cezve, 
+    250ml" üst kart vs marka dolu "Anadolu Bakır El Dövme..." alt 
+    warm-earth kart
+  - / Video sekmesi: 6 farklı video oynar (360°, zoom, dramatik, 
+    doğal, detay, kumaş), 1.5x hız (veya 2x — karar)
+
+Commit özeti (3 atomik):
+- feat(landing): P4-FIX-1 RDFeaturesTabbed canlı pattern birebir
+- feat(landing): P4-FIX-2 MarkaBilgileri bakır cezve kıyası
+- fix(landing): P4-FIX-3 video kutuları 6 farklı stil
+
+Push: git push origin claude/redesign-modern-ui
+
+Bittikten sonra rapor:
+- Commit listesi (3 commit)
+- RDFeaturesTabbed canlı pattern diff (FeaturesTabbed'le hangi 
+  satırlar farklı? sadece rd-* swap mi yoksa başka değişiklik mi?)
+- MarkaBilgileri kıyas görsel olarak belirgin mi
+- Video playbackRate değeri (1.5 mi 2.0 mı)
+- Açık riskler / Aziz preview test
+```
+
+---
+
+## 22 — Polish-4: Anasayfa içerik refinement (Faz 1.9 — Aziz acceptance 4. tur)
+
+**Aziz preview test bulguları (29 Nis):** P3 sonrası 3 madde — anasayfa içerik refinement. RDFeaturesTabbed yeni tasarım yerine canlı FeaturesTabbed tasarımına dön + MarkaBilgileri ürün değiştir + boş video kutuları doldur.
+
+| ID | Başlık | Durum | Kabul Kriteri |
+|---|---|---|---|
+| P4-A1 | RDFeaturesTabbed → canlı FeaturesTabbed tasarımına dön | ❌ ATLANDI | Vercel commit `bebfec83` mesajında YOK. RDFeaturesTabbed hâlâ P3-A3'te Code'un yaptığı yeni layout'ta. P4-FIX-1'de yeniden uygulanacak. |
+| P4-A2 | MarkaBilgileri ürün → bakır cezve seti (marka etkisi belirgin) | ❌ ATLANDI | Vercel commit `bebfec83` mesajında YOK. MarkaBilgileri hâlâ basketbol topu örneğinde. P4-FIX-2'de yeniden uygulanacak. |
+| P4-A3 | Boş video kutuları → zoom-yaklasim.mp4 hızlandırılmış | ⚠️ YANLIŞ UYGULANDI | Cowork prompt hatası: "tüm 6 kutuya" yazıldı, Aziz orijinal isteğinde "boş kutularda" demişti. Code commit `bebfec83` 6 src'yi zoom-yaklasim yaptı. Halbuki public/video-ornekler/'de 6 farklı video MEVCUT (360-donus, detay-tarama, dogal-ortam, dramatik-isik, kumas-hareketi, zoom-yaklasim). P4-FIX-3'te 6 farklı stil geri gelecek. |
+
+**Cowork MarkaBilgileri Türkçe metni (P4-A2 için):**
+
+**Marka boş (sade ürün açıklaması):**
+> Bakır cezve, 250ml, 2 fincan dahil. Türk kahvesine uygun.
+
+**Marka dolu** (storeName: "Anadolu Bakır", ton: premium, kategori: Ev & Yaşam, hedef kitle: Türk kahvesi sevenler, hizmet vurguları: el dövme + hediye paketi):
+> Anadolu'nun yüz yıllık bakırcılığını mutfağına taşı. Anadolu Bakır'ın Gaziantep'te dövülmüş cezvesi, sabah kahvesi ritüelini sanat eserine dönüştürür. Hediye kutusunda, kullanım rehberi ile birlikte.
+
+#### P4-A1~P4-A3 Birleşik Prompt (Polish-4 — Faz 1.9)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: P4-A1~P4-A3 — Polish (eski, P4-FIX ile çözüldü)
+```
+
+---
+
+## 24 — Polish-5: InfoStrip geri dönüş (Faz 1.96 — Aziz acceptance 5. tur)
+
+**Aziz preview test bulgusu (29 Nis P4-FIX sonrası):** Mevcut RDFeaturesTabbed (FeaturesTabbed canlı pattern birebir kopya) **istenen tasarım değil**. Aziz aslında AS-03'te yapılan **InfoStrip + "Detaya bak" accordion** yapısını istiyordu. Yatay 4-tab + sürekli açık panel pattern fazla yer kaplıyor + başlık fontu çok kalın geliyor.
+
+**Aziz net cümlesi:** "tablı yapı yerine ekteki tasarımı geri alalım. içerikler doğru, onlar olduğu gibi kalsın. başlık da ekteki fontlara göre düzenlensin. sayfada herodan buraya geçişi kontrol ederek yap revizeyi"
+
+**Cowork tarafından bulunan referans:**
+- Component: `components/landing/InfoStrip.tsx` — commit `38b10b4` (LP-06 polish son hali)
+- Eski hat: AS-03 (`72bbc0b`) → P3-A3 (`4d25ce6`) silindi → şimdi geri
+- Anasayfa entegrasyon: `components/landing/StepSection.tsx` — RDFeaturesTabbed → InfoStrip swap (1 import + 1 JSX)
+
+| ID | Başlık | Kabul Kriteri |
+|---|---|---|
+| P5-FIX-1 ✅ | InfoStrip.tsx geri getir | `git checkout 38b10b4 -- components/landing/InfoStrip.tsx` ile dosyayı geri al. Sonra **TEK değişiklik:** `import { EXAMPLE_CONTENT } from '@/lib/data/exampleContent'` → `import { EXAMPLE_CONTENT_TR } from '@/lib/data/exampleContent'`. MetinPanel/GorselPanel/VideoPanel/SosyalPanel içindeki `EXAMPLE_CONTENT.metin[market]` → `EXAMPLE_CONTENT_TR.metin[market === 'amazon-tr' ? 'amazon' : market]` (key isim farkı: eski `'amazon-tr'`, yeni `'amazon'`). Diğer 3 panel için exampleContent.ts'in doğru yolu Read ile bul. **Hiçbir başka yapı/stil değişikliği YOK** — eski dosya birebir korunsun. |
+| P5-FIX-2 ✅ | StepSection.tsx içinde RDFeaturesTabbed → InfoStrip swap | components/landing/StepSection.tsx satır 2: `import { RDFeaturesTabbed } from './RDFeaturesTabbed'` → `import { InfoStrip } from './InfoStrip'`. Satır 28: `<RDFeaturesTabbed />` → `<InfoStrip />`. Yorum satırı `{/* Features tabbed — replaces InfoStrip */}` → `{/* Info strip — 4 içerik türü + detay accordion */}`. **Başka değişiklik yok.** |
+| P5-FIX-3 ✅ | RDFeaturesTabbed.tsx archive et | components/landing/RDFeaturesTabbed.tsx dosyasını sil (`git rm`). Başka yerde import edilmiyor (P5-FIX-2'den sonra). Build temiz olmalı. |
+| P5-FIX-4 ✅ | Hero → StepSection geçişi kontrol | Hero'nun alt kısmı + StepSection üst spacing kontrol et. Boş gri alan oluşmasın. StepSection.tsx mevcut `py-16 md:py-20` doğru, **dokunma**. Eğer hero'nun bottom-padding'i aşırı geliyorsa (`components/hero/` veya `components/landing/Hero.tsx`'e bak) sadece raporda belirt — düzeltme yapma. |
+
+**Notlar:**
+
+1. **Başlık fontu zaten doğru olacak.** Eski InfoStrip header h3:
+   ```tsx
+   <h3 className="font-rd-display text-xl md:text-2xl text-rd-neutral-900 font-semibold">
+     4 içerik türü, 7 pazaryeri için
+   </h3>
+   ```
+   Şu anki "Aynı üründen, her pazaryeri için ayrı içerik" (text-3xl/4xl + font-bold) aşırı kalın. InfoStrip geri dönünce `text-xl md:text-2xl + font-semibold` olur — Aziz'in istediği bu.
+
+2. **InfoStrip header content:**
+   - Eyebrow: `İÇERİK TÜRLERİ` (rd-warm-700, küçük uppercase)
+   - H3: `4 içerik türü, 7 pazaryeri için`
+   - Subtitle: `Her tür ayrı kredi · birini, birkaçını veya hepsini birden seçebilirsin. Pazaryeri kuralı otomatik uygulanır.`
+   - Sağ üst: `Detaya bak ▼` toggle butonu
+
+3. **Detay alanı default kapalı.** Kullanıcı "Detaya bak" tıklayınca açılır, panel render edilir. Metin sekmesinde Trendyol/Amazon-TR/Etsy chip'leri görünür.
+
+4. **Etsy içerik:** EXAMPLE_CONTENT_TR.metin.etsy = bakır cezve İngilizce metni. Bu doğru, korunsun.
+
+5. **MarkaBilgileri'ne dokunma.** P4-FIX-2 başarılıydı, korunsun.
+
+6. **`exampleContent.ts` dosyasında 'amazon-tr' key var mı kontrol:** EXAMPLE_CONTENT_TR.metin'de `amazon` key kullanılıyor olabilir. InfoStrip eski hali `amazon-tr` bekliyor. **Çözüm:** InfoStrip içindeki `MARKETS` array'inde `id: 'amazon-tr'` → `id: 'amazon'` yap. Veya panel render'da `EXAMPLE_CONTENT_TR.metin[market === 'amazon-tr' ? 'amazon' : market]` mapping'i. İkisinden hangisi daha az risk taşıyorsa onu seç (önerim: MARKETS id'sini `amazon` yap, daha az nokta değişiyor).
+
+#### P5-FIX-1~P5-FIX-4 Birleşik Prompt
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui (devam, yeni branch açma)
+Görev: P5-FIX-1~P5-FIX-4 — InfoStrip geri dönüş (Polish-5)
+
+ARKAPLAN:
+P3-A3'te InfoStrip silinip RDFeaturesTabbed eklenmişti. P4-FIX-1'de 
+RDFeaturesTabbed canlı FeaturesTabbed birebir kopyalandı. Aziz preview'da
+gördü, bu tasarım istediği değildi. Aziz'in istediği orijinal AS-03 
+yapısı: 4 sekme kartı (kısa açıklama + kredi/süre) + "Detaya bak" 
+accordion ile aşağıda detay paneli açılan yapı. Bu yapı git history'de
+mevcut (commit 38b10b4 son hali).
+
+GÖREVLER (sırayla):
+
+═══════════════════════════════════════════════════════════════════
+P5-FIX-1: InfoStrip.tsx geri getir
+═══════════════════════════════════════════════════════════════════
+
+Komut:
+  git checkout 38b10b4 -- components/landing/InfoStrip.tsx
+
+Sonra dosyayı aç ve TEK değişiklik:
+  - import { EXAMPLE_CONTENT } → import { EXAMPLE_CONTENT_TR }
+  - 4 panel içinde EXAMPLE_CONTENT kullanımları → EXAMPLE_CONTENT_TR
+
+UYARI: lib/data/exampleContent.ts içinde EXAMPLE_CONTENT_TR.metin'de
+key 'amazon' (TR'de) ama eski InfoStrip MARKETS id'si 'amazon-tr'.
+Çözüm: MARKETS array içinde { id: 'amazon-tr', label: 'Amazon TR' }
+→ { id: 'amazon', label: 'Amazon TR' } yap. Bu en az değişiklikli yol.
+type MarketId 'metin' | 'gorsel' | ... yerine 'trendyol' | 'amazon' | 'etsy'.
+
+GorselPanel için: EXAMPLE_CONTENT_TR.gorsel.placeholders ve .standard 
+var mı? Yoksa exampleContent.ts okuyup uygun key adapt et — eski 
+EXAMPLE_CONTENT.gorsel = { placeholders, standard } yapısıydı.
+
+VideoPanel için: EXAMPLE_CONTENT_TR.video objesi (duration, aspect, 
+sceneDescription).
+
+SosyalPanel için: EXAMPLE_CONTENT_TR.sosyal objesi 
+(instagram, hashtag, twitter veya tiktok — eski hangiyse adapt et).
+
+Eğer EXAMPLE_CONTENT_TR'de bir field eksikse → exampleContent.ts'e 
+ekle, ama mevcut basketbol içeriğini koru. Etsy panel için de Etsy 
+key'inden bakır cezve verisini çek.
+
+Yeni-yorum tasarım YASAK. JSX yapısı, className'ler, animasyon
+1:1 commit 38b10b4'teki gibi olsun.
+
+Commit:
+  feat(landing): P5-FIX-1 InfoStrip geri getirildi + EXAMPLE_CONTENT_TR
+
+═══════════════════════════════════════════════════════════════════
+P5-FIX-2: StepSection.tsx swap
+═══════════════════════════════════════════════════════════════════
+
+Dosya: components/landing/StepSection.tsx
+
+Değişiklikler:
+  Satır 2: import { RDFeaturesTabbed } from './RDFeaturesTabbed'
+        → import { InfoStrip } from './InfoStrip'
+  Satır 28: <RDFeaturesTabbed />
+         → <InfoStrip />
+  Satır 27 yorum: 
+    {/* Features tabbed — replaces InfoStrip */} 
+    → {/* Info strip — 4 içerik türü + detay accordion */}
+
+Başka değişiklik YOK. h2 fontu, eyebrow, hepsi mevcut korunsun.
+
+Commit:
+  feat(landing): P5-FIX-2 StepSection RDFeaturesTabbed → InfoStrip
+
+═══════════════════════════════════════════════════════════════════
+P5-FIX-3: RDFeaturesTabbed.tsx sil
+═══════════════════════════════════════════════════════════════════
+
+Komut:
+  git rm components/landing/RDFeaturesTabbed.tsx
+
+Sonra projede başka import var mı kontrol:
+  grep -r "RDFeaturesTabbed" --include="*.tsx" --include="*.ts" .
+
+Hiçbiri olmamalı. Varsa kaldır.
+
+Commit:
+  chore(landing): P5-FIX-3 RDFeaturesTabbed silindi (InfoStrip yerine)
+
+═══════════════════════════════════════════════════════════════════
+P5-FIX-4: Hero → StepSection geçiş kontrolü (raporlama)
+═══════════════════════════════════════════════════════════════════
+
+Hiç kod yazma — sadece kontrol et + raporda belirt:
+
+1. Hero component dosyasını bul (components/hero/* veya components/landing/Hero*)
+2. Bottom padding/margin'ini oku
+3. StepSection.tsx üst padding'i (py-16 md:py-20) ile çakışıyor mu?
+   Boş bir gri/beyaz alan oluşuyor mu?
+4. dev/build çalıştır, build temiz mi:
+   npm run build && npm run lint
+
+Raporda:
+- Hero alt + StepSection üst arası boşluk: kaç px (yaklaşık)?
+- Görsel olarak doğal mı yoksa "kopuk" mu?
+- Bir öneri verebilirsin (örn. StepSection üst pt-12'ye düşürülmeli) 
+  ama UYGULAMA — sadece öneri.
+
+═══════════════════════════════════════════════════════════════════
+
+ACCEPTANCE (Code kendi yapsın bitiş öncesi):
+[ ] InfoStrip.tsx mevcut, JSX yapısı 38b10b4 ile birebir
+[ ] EXAMPLE_CONTENT_TR adapt edildi, 4 panel doğru içerik gösteriyor
+[ ] RDFeaturesTabbed.tsx silindi, hiçbir yerde import yok
+[ ] StepSection.tsx içinde InfoStrip render ediliyor
+[ ] npm run build temiz (no error, no type warning)
+[ ] npm run lint temiz (yeni hata yok)
+[ ] Detaya bak default kapalı, tıklayınca açılıyor (manuel test gerekirse Aziz)
+[ ] Metin sekmesinde Trendyol/Amazon TR/Etsy chip'leri var
+[ ] Etsy seçilince bakır cezve metni gösteriyor
+
+Rapor (bitince):
+- Hangi dosyalar değişti
+- 3 commit hash'i
+- npm run build çıktısı (özet)
+- Hero → StepSection geçiş gözlemi (P5-FIX-4)
+- Açık riskler / Aziz preview test
+```-4 (Aziz acceptance 4. tur). 3 madde, 
+anasayfa içerik refinement. Bu paket sonrası tekrar preview test → 
+main merge.
+
+Mevcut sayfalar:
+- components/landing/RDFeaturesTabbed.tsx (P3-A3'te yapıldı, 
+  yeniden çalışacak)
+- components/sections/MarkaBilgileriSection.tsx (P3-A5'te güncel)
+- components/tanitim/FeaturesTabbed.tsx (canlı pattern referansı)
+
+KAPSAM DIŞI:
+- RDFeaturesTabbed yeniden yarat değil — canlı FeaturesTabbed 
+  birebir kopya (sadece rd-* swap)
+- /uret sayfası dokunulmaz
+- Backend yok
+
+────────────────────────────────────────────
+P4-A1: RDFeaturesTabbed → canlı FeaturesTabbed tasarımına dön
+────────────────────────────────────────────
+
+**Önemli:** Code P3-A3'te yeni layout uyguladı, Aziz canlı pattern'i 
+istedi. Bu kez **birebir kopya** + sadece rd-* token swap.
+
+Adımlar:
+
+1. components/tanitim/FeaturesTabbed.tsx tüm yapıyı oku (4 sekme 
+   KUTULAR + her sekme için tab content + Listing'de 3 platform 
+   sub-tab + bölmeler + Kopyala butonları).
+
+2. components/landing/RDFeaturesTabbed.tsx tamamen yeniden yaz:
+   - Layout: FeaturesTabbed.tsx ile birebir aynı
+   - Renk swap (FeaturesTabbed'in kullandığı):
+     * #1E4DD8 → rd-primary-700
+     * #163B9E → rd-primary-800
+     * #F0F4FB → rd-primary-50
+     * #BAC9EB → rd-primary-200
+     * #FAFAF8 → rd-neutral-50
+     * #F1F0EB → rd-neutral-100
+     * #D8D6CE → rd-neutral-200
+     * #908E86 → rd-neutral-500
+     * #5A5852 → rd-neutral-600
+     * #1A1A17 → rd-neutral-900
+     * #0F5132 → rd-success-700
+     * Trendyol orange-500, Amazon #E47911, Etsy rose-500 KORUNUR 
+       (platform brand)
+   - İçerik: P3-A4'te yazılan basketbol+cezve (lib/data/
+     exampleContent.ts'ten çek, hardcode değil)
+
+3. _tanitim-redesign.tsx'te RDFeaturesTabbed import'u zaten var, 
+   tasarım değişimi sayfaya otomatik yansır.
+
+**Kritik kural:** "yeni-yorum tasarım YOK". Canlı FeaturesTabbed 
+nasılsa, RDFeaturesTabbed öyle olsun. Aziz beğendiği layout zaten.
+
+Commit: feat(landing): P4-A1 RDFeaturesTabbed canlı pattern birebir 
++ rd-* token
+
+────────────────────────────────────────────
+P4-A2: MarkaBilgileri ürün → bakır cezve seti
+────────────────────────────────────────────
+
+Dosya: components/sections/MarkaBilgileriSection.tsx
+
+Sağ şablonda mevcut basketbol topu örneği YERİNE bakır cezve seti 
+kıyası. Marka profili etkisini belirgin gösteren ürün.
+
+1. **Marka boş şablonu:**
+   - Container: rounded-xl border border-rd-neutral-200 bg-white p-5
+   - Eyebrow: "MARKA BILGISI YOKKEN" text-rd-neutral-500
+   - Başlık: "Bakır cezve, 250ml, 2 fincan dahil"
+   - Alt: "Türk kahvesine uygun."
+   - Sade, jenerik ürün açıklaması — vurgu yok
+
+2. **Marka dolu şablonu:**
+   - Container: rounded-xl border-2 border-rd-warm-300 bg-rd-warm-50 
+     p-5 (warm-earth premium accent)
+   - Eyebrow: "MARKA İLE ÜRETİLDİĞİNDE" text-rd-warm-700
+   - Başlık (font-display): "Anadolu Bakır El Dövme Cezve — Hediye 
+     Kutusunda 2 Fincan ile"
+   - Açıklama: "Anadolu'nun yüz yıllık bakırcılığını mutfağına taşı. 
+     Anadolu Bakır'ın Gaziantep'te dövülmüş cezvesi, sabah kahvesi 
+     ritüelini sanat eserine dönüştürür. Hediye kutusunda, kullanım 
+     rehberi ile birlikte."
+   - Marka profili etiketleri (chip): "Anadolu Bakır" + "premium ton" 
+     + "Türk kahvesi sevenler" + "hediye paketi" (chip pill)
+
+3. lib/data/exampleContent.ts'e EXAMPLE_MARKA_KIYAS objesi ekle:
+   ```ts
+   export const EXAMPLE_MARKA_KIYAS = {
+     urunAdi: 'Bakır cezve seti',
+     markaBos: {
+       baslik: 'Bakır cezve, 250ml, 2 fincan dahil',
+       aciklama: 'Türk kahvesine uygun.',
+     },
+     markaDolu: {
+       baslik: 'Anadolu Bakır El Dövme Cezve — Hediye Kutusunda 2 Fincan ile',
+       aciklama: 'Anadolu\'nun yüz yıllık bakırcılığını mutfağına taşı. Anadolu Bakır\'ın Gaziantep\'te dövülmüş cezvesi, sabah kahvesi ritüelini sanat eserine dönüştürür. Hediye kutusunda, kullanım rehberi ile birlikte.',
+       markaInputlari: {
+         storeName: 'Anadolu Bakır',
+         ton: 'premium',
+         kategori: 'Ev & Yaşam',
+         hedefKitle: 'Türk kahvesi sevenler',
+         hizmetVurgulari: ['el dövme', 'hediye paketi'],
+       },
+     },
+   };
+   ```
+
+4. **Sol metin:** P3-A5'te 8 alanlık marka profili güncel — kontrol 
+   et. Eğer hâlâ basketbol topu referansı varsa bakır cezveye 
+   uyarla.
+
+Commit: feat(landing): P4-A2 MarkaBilgileri bakır cezve kıyas (marka 
+etkisi belirgin)
+
+────────────────────────────────────────────
+P4-A3: Boş video kutuları → zoom-yaklasim.mp4 hızlandırılmış
+────────────────────────────────────────────
+
+Dosya: components/landing/RDFeaturesTabbed.tsx (Video sekmesi)
+
+P3-A3'te 6 video kart yapıldı (360° Dönüş, Zoom yaklaşım, Dramatik 
+ışık, Doğal ortam, Detay tarama, Kumaş hareketi). Bazı kutularda 
+asset yok → boş veya placeholder görünüyor.
+
+Çözüm: tüm 6 kutuya **aynı video** (`/video-ornekler/zoom-yaklasim.mp4`) 
+koy + JS ile `playbackRate = 2.0` ile hızlandır.
+
+Implementation:
+
+```tsx
+const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
+
+useEffect(() => {
+  videoRefs.current.forEach((video) => {
+    if (video) {
+      video.playbackRate = 2.0; // 2x hız
+    }
+  });
+}, []);
+
+// JSX:
+{HAREKET_STILLERI.map((stil, i) => (
+  <div key={stil.baslik} className="...">
+    <video
+      ref={(el) => { videoRefs.current[i] = el; }}
+      src="/video-ornekler/zoom-yaklasim.mp4"
+      autoPlay
+      loop
+      muted
+      playsInline
+      className="..."
+    />
+    <div>
+      <stil.Ikon />
+      {stil.baslik}
+    </div>
+    <p>{stil.aciklama}</p>
+  </div>
+))}
+```
+
+Eğer playbackRate=2.0 hâlâ yavaş kalırsa 2.5 veya 3.0 dene. Aziz 
+preview'da görsel olarak kontrol eder.
+
+**Not:** zoom-yaklasim videosunun her kutuda farklı içerik 
+göstermediği aşikar — ama 6 ayrı video asset'i yok, en iyi seçenek 
+aynı video. Aziz onayında kalır.
+
+Commit: feat(landing): P4-A3 video kutuları zoom-yaklasim 2x hız
+
+────────────────────────────────────────────
+Test
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde:
+  - / RDFeaturesTabbed: canlı FeaturesTabbed birebir tasarım, rd-* 
+    renkler, basketbol topu (Trendyol/Amazon) + bakır cezve (Etsy)
+  - / MarkaBilgileri: bakır cezve kıyası, marka boş vs marka dolu 
+    fark belirgin
+  - / Video sekmesi: 6 kutu hepsinde zoom-yaklasim 2x hızlı oynar
+  - 375px mobile sıkıntısız
+
+Commit özeti (3 atomik) VEYA tek:
+chore(redesign): P4-A1~P4-A3 polish-4 (Aziz acceptance 4. tur)
+
+BACKLOG'da P4-A1~P4-A3 [x] işaretle.
+
+Bittikten sonra rapor:
+- Commit listesi
+- RDFeaturesTabbed tasarım birebir mi (canlı FeaturesTabbed ile 
+  diff kontrolü)
+- MarkaBilgileri kıyas görsel olarak fark veriyor mu (Aziz preview 
+  bakacak)
+- Video playbackRate 2x yeterli mi yoksa daha yüksek mi (Aziz 
+  karar)
+- Açık riskler / Aziz preview test
+```
+
+---
 
 | Faz | Bölüm | Sayfa | Ticket | Durum |
 |---|---|---|---|---|
@@ -2485,14 +4289,17 @@ Anasayfa 9 → 7 bölüm. Eski Bölüm 3 ("4 içerik türü") + 4 ("Aynı ürün
 | 2 | Üretim akışı (11, 13) | 4 | 42 | ✅ Tamam (28 Nis). Açık: SR-04b (ZIP/PDF) + OD-02b (payment_failed analytics) + YS-11 (yol haritası) Faz 3'e ertelendi. TryonAyarlar.tsx orphan temizlik bekliyor. |
 | 3 | Hesap alanı (12, 14) | 10 | 8 paket | ✅ Tamam (28 Nis): MP+PR+FT+HS+KR+UR+FY+HD |
 | 4 | Auth (15) | 4 | 5 paket | ✅ Tamam (28 Nis): AU-01~05. Aziz devam dediğinde Cowork Supabase Redirect URLs config yapacak |
-| 5 | İçerik (16) | 4 | 8 ticket | Bekliyor (Aziz "devam" diyene kadar) |
-| 6 | Yasal + hata + cleanup (17) | 9+ | ~10 ticket | Bekliyor — orphan temizlik + scheduled task reaktivasyon + metin taraması + Lighthouse |
+| 5 | İçerik (16) | 4 | 5 paket | ✅ Tamam (28 Nis): IC-01~05 |
+| 6 | Yasal + hata + cleanup (17) | 9+ | 5 paket | ✅ Tamam (28 Nis): LG-01~05 |
 
-**Toplam kalan:** Faz 5 + Faz 6 + Faz 6 cleanup. Faz 1, 1.5, 2, 3, 4 ✅ Tamam.
+**🎯 REDESIGN Code-side TAMAM (28 Nis gece).** 7 faz, ~130 başlangıç ticket → ~40 birleşik paket. Aziz acceptance + main merge bekliyor.
 
-**Cowork bekleyen iş (Aziz "devam" deyince):**
-1. Supabase Dashboard → Authentication → URL Configuration → Redirect URLs'e `https://*.vercel.app/**` + production URL ekle (docs/auth-config.md adımları)
-2. Faz 5 İçerik prompt'u (blog/sss/hakkımızda) yazımı + Code'a hand
+**Aziz acceptance adımları:**
+1. Preview URL'de toplu test (docs/lighthouse-checklist.md + docs/metin-tarama.md rehber)
+2. Google OAuth incognito + preview test (Supabase config doğru)
+3. main'e merge (`git merge claude/redesign-modern-ui --no-ff`) → Vercel auto-deploy
+4. 5 PAUSED scheduled task enabled:true
+5. Faz 7+ canlı BACKLOG.md (P2b backend ticket'lar — 8 adet)
 
 **Kapsam dışı (Aziz onayı):** `/admin`, `/hesap/admin/feedback`, `/(auth)/app` (eski), `/profil` (eski), `/toplu` (kaldırılıyor).
 

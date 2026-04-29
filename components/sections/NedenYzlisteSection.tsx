@@ -38,13 +38,13 @@ export default function NedenYzlisteSection() {
               <tr>
                 <th
                   scope="col"
-                  className="w-[28%] bg-white px-5 py-4 text-left text-xs font-medium text-rd-neutral-500 uppercase tracking-wider border-b border-rd-neutral-200"
+                  className="w-[28%] bg-white px-4 py-3 text-left text-xs font-medium text-rd-neutral-500 uppercase tracking-wider border-b border-rd-neutral-200"
                 >
                   Özellik
                 </th>
                 <th
                   scope="col"
-                  className="w-[36%] bg-rd-neutral-100 px-5 py-4 text-left border-b border-rd-neutral-200"
+                  className="w-[36%] bg-rd-neutral-100 px-4 py-3 text-left border-b border-rd-neutral-200"
                 >
                   <p className="text-xs font-medium text-rd-neutral-500 uppercase tracking-wider">
                     {NEDEN_TABLE_HEADERS.generic.eyebrow}
@@ -55,7 +55,7 @@ export default function NedenYzlisteSection() {
                 </th>
                 <th
                   scope="col"
-                  className="w-[36%] bg-rd-primary-50 px-5 py-4 text-left border-b border-rd-neutral-200"
+                  className="w-[36%] bg-rd-primary-50 px-4 py-3 text-left border-b border-rd-neutral-200"
                 >
                   <p className="text-xs font-medium text-rd-primary uppercase tracking-wider">
                     {NEDEN_TABLE_HEADERS.yzliste.eyebrow}
@@ -79,12 +79,12 @@ export default function NedenYzlisteSection() {
                   }
                 >
                   {/* Feature label */}
-                  <td className="px-5 py-4 text-sm font-medium text-rd-neutral-900">
+                  <td className="px-4 py-3 text-sm font-medium text-rd-neutral-900">
                     {row.feature}
                   </td>
 
                   {/* Generic AI — X */}
-                  <td className="bg-rd-neutral-50/50 px-5 py-4">
+                  <td className="bg-rd-neutral-50/50 px-4 py-3">
                     <div className="flex items-start gap-2.5">
                       <span
                         className="mt-0.5 w-5 h-5 rounded-full bg-red-100 flex items-center justify-center shrink-0"
@@ -99,7 +99,7 @@ export default function NedenYzlisteSection() {
                   </td>
 
                   {/* yzliste — Check */}
-                  <td className="bg-[#FAFCFF] px-5 py-4">
+                  <td className="bg-[#FAFCFF] px-4 py-3">
                     <div className="flex items-start gap-2.5">
                       <span
                         className="mt-0.5 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0"

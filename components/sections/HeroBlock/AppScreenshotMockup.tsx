@@ -1,12 +1,82 @@
-import { Camera, Pencil, ScanLine, ImageIcon, Zap, Check } from 'lucide-react'
-import { MOCKUP_STEPS, MOCKUP_INPUT_METHODS, HERO_BADGES } from '@/lib/constants/hero'
-import StickerBadge from '@/components/primitives/StickerBadge'
+'use client'
 
-const INPUT_ICONS: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>> = {
-  Camera,
-  Pencil,
-  ScanLine,
+import { useEffect, useRef } from 'react'
+import {
+  Check,
+  Zap,
+  FileText,
+  PlayCircle,
+  MessageSquare,
+  Download,
+} from 'lucide-react'
+import StickerBadge from '@/components/primitives/StickerBadge'
+import { HERO_BADGES } from '@/lib/constants/hero'
+import { EXAMPLE_CONTENT_TR } from '@/lib/data/exampleContent'
+
+const trendyolTitle = EXAMPLE_CONTENT_TR.metin.trendyol.title
+
+// Hızlı video — 2x hızda kısa tanıtım
+function HizliVideo() {
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.playbackRate = 2.0
+  }, [])
+  return (
+    <video
+      ref={videoRef}
+      src="/video-ornekler/zoom-yaklasim.mp4"
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="auto"
+      className="h-8 w-full rounded object-cover bg-rd-neutral-200"
+      aria-hidden="true"
+    />
+  )
 }
+
+const OUTPUT_CARDS = [
+  {
+    icon: FileText,
+    label: 'Listing',
+    color: 'text-rd-primary-700',
+    content: (
+      <p className="text-xs text-rd-neutral-700 leading-snug line-clamp-2">
+        {trendyolTitle.slice(0, 60)}…
+      </p>
+    ),
+  },
+  {
+    icon: null,
+    label: 'Görsel',
+    color: 'text-rd-primary-700',
+    content: (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src="/ornek_beyaz.jpg"
+        alt="Basketbol topu beyaz zemin"
+        className="h-10 w-full object-contain rounded"
+      />
+    ),
+  },
+  {
+    icon: PlayCircle,
+    label: 'Video',
+    color: 'text-rd-primary-700',
+    content: <HizliVideo />,
+  },
+  {
+    icon: MessageSquare,
+    label: 'Sosyal',
+    color: 'text-rd-primary-700',
+    content: (
+      <p className="text-xs text-rd-neutral-500 leading-snug line-clamp-2">
+        Sahaya çıkmadan önce doğru top şart. 7 numara FIBA standardı...
+      </p>
+    ),
+  },
+]
 
 export default function AppScreenshotMockup() {
   return (
@@ -25,113 +95,79 @@ export default function AppScreenshotMockup() {
         borderColor="#FED7AA"
         className="hidden sm:flex sm:absolute sm:-bottom-3 sm:-left-3 z-10"
       />
+
       {/* Browser chrome */}
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white [box-shadow:var(--shadow-rd-lg)]">
+      <div className="overflow-hidden rounded-xl border border-rd-neutral-200 bg-white">
         {/* Browser top bar */}
-        <div className="flex items-center gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3">
+        <div className="flex items-center gap-3 border-b border-rd-neutral-200 bg-rd-neutral-50 px-4 py-3">
           <div className="flex items-center gap-1.5" aria-hidden="true">
             <span className="h-3 w-3 rounded-full bg-red-400" />
             <span className="h-3 w-3 rounded-full bg-amber-400" />
             <span className="h-3 w-3 rounded-full bg-green-400" />
           </div>
-          <div className="flex flex-1 items-center justify-center rounded-md border border-slate-200 bg-white px-3 py-1">
-            <span className="text-xs text-slate-400">yzliste.com/uret</span>
+          <div className="flex flex-1 items-center justify-center rounded-md border border-rd-neutral-200 bg-white px-3 py-1">
+            <span className="text-xs text-rd-neutral-400">yzliste.com/uret</span>
           </div>
         </div>
 
         {/* App content */}
         <div className="p-5">
-          {/* Step indicator */}
-          <div className="mb-5 flex items-center gap-1" aria-hidden="true">
-            {MOCKUP_STEPS.map((step, i) => (
-              <div key={step.number} className="flex items-center gap-1">
-                {i > 0 && <div className="h-px w-6 bg-slate-200" />}
-                <div className="flex items-center gap-1.5">
-                  <div
-                    className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
-                      step.active
-                        ? 'bg-rd-primary text-white'
-                        : 'bg-slate-100 text-slate-400'
-                    }`}
-                  >
-                    {step.number}
-                  </div>
-                  <span
-                    className={`text-xs ${
-                      step.active ? 'font-medium text-slate-700' : 'text-slate-400'
-                    }`}
-                  >
-                    {step.label}
-                  </span>
-                </div>
-              </div>
-            ))}
+          {/* INPUT: ürün fotoğrafı */}
+          <div
+            className="mb-4 flex items-center gap-3 rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-3"
+            aria-hidden="true"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/ornek_once.jpg"
+              alt="Basketbol topu ham fotoğraf"
+              className="h-10 w-10 shrink-0 rounded-lg object-cover border border-rd-neutral-200"
+            />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-xs font-medium text-rd-neutral-700">
+                Profesyonel Basketbol Topu 7 Numara
+              </p>
+              <p className="mt-0.5 text-xs text-rd-neutral-400">
+                Trendyol · Metin + Görsel + Video + Sosyal
+              </p>
+            </div>
+            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-rd-success-50 border border-rd-success-700/20">
+              <Check size={11} strokeWidth={2.5} className="text-rd-success-700" />
+            </div>
           </div>
 
-          {/* Input method cards */}
-          <div className="mb-4 flex gap-2" aria-hidden="true">
-            {MOCKUP_INPUT_METHODS.map((method) => {
-              const Icon = INPUT_ICONS[method.icon]
+          {/* AI Transform arrow */}
+          <div className="mb-4 flex items-center gap-2" aria-hidden="true">
+            <div className="h-px flex-1 bg-rd-neutral-200" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-rd-primary-700">
+              <Zap size={13} strokeWidth={2} className="text-white" />
+            </div>
+            <div className="h-px flex-1 bg-rd-neutral-200" />
+          </div>
+
+          {/* OUTPUT: 4 kart 2x2 grid */}
+          <div className="grid grid-cols-2 gap-2" aria-hidden="true">
+            {OUTPUT_CARDS.map((card) => {
+              const Icon = card.icon
               return (
-                <div
-                  key={method.label}
-                  className={`flex flex-1 flex-col items-center gap-1 rounded-lg border py-2 ${
-                    method.selected
-                      ? 'border-rd-primary bg-rd-primary-50'
-                      : 'border-slate-200 bg-slate-50'
-                  }`}
-                >
-                  {Icon && (
-                    <Icon
-                      size={16}
-                      strokeWidth={1.5}
-                      className={method.selected ? 'text-rd-primary' : 'text-slate-400'}
-                    />
-                  )}
-                  <span
-                    className={`text-[10px] ${
-                      method.selected ? 'font-medium text-rd-primary' : 'text-slate-400'
-                    }`}
-                  >
-                    {method.label}
-                  </span>
+                <div key={card.label} className="rounded-lg border border-rd-neutral-200 bg-white p-2.5">
+                  <div className="mb-1.5 flex items-center gap-1">
+                    {Icon && <Icon size={11} strokeWidth={1.5} className={card.color} aria-hidden="true" />}
+                    <span className={`text-xs font-medium ${card.color}`}>{card.label}</span>
+                  </div>
+                  {card.content}
                 </div>
               )
             })}
           </div>
 
-          {/* Upload area */}
+          {/* Download button */}
           <div
-            className="mb-4 flex items-center gap-3 rounded-xl border-[1.5px] border-dashed border-slate-300 bg-slate-50/50 px-4 py-3.5"
+            className="mt-3 flex items-center justify-center gap-1.5 rounded-[10px] bg-rd-primary-700 py-2.5"
             aria-hidden="true"
           >
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-amber-50 to-amber-100">
-              <ImageIcon size={22} strokeWidth={1.5} className="text-amber-600" />
-            </div>
-            <div className="flex flex-col gap-0.5">
-              <span className="text-xs font-semibold text-slate-700">fincan_01.jpg</span>
-              <span className="flex items-center gap-1 text-[11px] text-emerald-600">
-                <Check size={11} strokeWidth={2.5} />
-                Yüklendi · 2.4 MB
-              </span>
-            </div>
-          </div>
-
-          {/* Brand input */}
-          <div
-            className="mb-4 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5"
-            aria-hidden="true"
-          >
-            <span className="text-xs text-slate-400">Marka: Selin Porselen</span>
-          </div>
-
-          {/* Generate button */}
-          <div
-            className="flex items-center justify-center gap-2 rounded-[10px] bg-rd-primary py-2.5"
-            aria-hidden="true"
-          >
-            <Zap size={14} strokeWidth={2} className="text-white" />
-            <span className="text-sm font-medium text-white">İçerik üret</span>
+            <Download size={13} strokeWidth={2} className="text-white" />
+            <span className="text-sm font-medium text-white">Üretilen içerikleri indir</span>
           </div>
         </div>
       </div>

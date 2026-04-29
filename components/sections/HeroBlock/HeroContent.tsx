@@ -1,13 +1,12 @@
 'use client'
 
-import { useState } from 'react'
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { ArrowRight, Play, Check, Plug, CreditCard, Target, Zap } from 'lucide-react'
+import { ArrowRight, Check, Plug, CreditCard, Target, Zap } from 'lucide-react'
 import { HERO_COPY, HERO_TRUST_PILLS, NAV_CTAS } from '@/lib/constants/hero'
 import Button from '@/components/primitives/Button'
 
-const VideoModal = dynamic(() => import('./VideoModal'), { ssr: false })
+// const VideoModal = dynamic(() => import('./VideoModal'), { ssr: false })
+// Video CTA geçici olarak pasife çekildi — video hazırlanınca aç (LP-04)
 
 const TRUST_PILL_ICONS: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>> = {
   Plug,
@@ -17,7 +16,6 @@ const TRUST_PILL_ICONS: Record<string, React.ComponentType<{ size?: number; stro
 }
 
 export default function HeroContent() {
-  const [videoOpen, setVideoOpen] = useState(false)
 
   return (
     <div className="animate-hero-float-in-left">
@@ -44,7 +42,7 @@ export default function HeroContent() {
 
       {/* Subtitle */}
       <p className="mb-8 mt-5 max-w-[520px] text-lg leading-relaxed text-slate-600">
-        Ürün fotoğrafını yükle — listing metni, stüdyo görseli, tanıtım videosu
+        Ürününü anlat veya fotoğrafını yükle — listing metni, stüdyo görseli, tanıtım videosu
         ve sosyal medya içeriği{' '}
         <strong className="font-semibold text-slate-900">dakikalar içinde</strong>{' '}
         hazır. Aylık abonelik yok.
@@ -86,6 +84,7 @@ export default function HeroContent() {
             {HERO_COPY.ctaPrimary}
           </Button>
         </Link>
+        {/* "Nasıl çalışır?" video CTA — LP-04: pasife çekildi, video hazırlanınca aç
         <button
           type="button"
           onClick={() => setVideoOpen(true)}
@@ -97,6 +96,7 @@ export default function HeroContent() {
           </span>
           {HERO_COPY.ctaSecondary}
         </button>
+        */}
       </div>
 
       {/* Reassurance line */}
@@ -110,8 +110,7 @@ export default function HeroContent() {
         <span>{HERO_COPY.reassurance}</span>
       </div>
 
-      {/* Video modal */}
-      <VideoModal isOpen={videoOpen} onClose={() => setVideoOpen(false)} />
+      {/* <VideoModal isOpen={videoOpen} onClose={() => setVideoOpen(false)} /> */}
     </div>
   )
 }

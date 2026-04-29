@@ -1,38 +1,66 @@
 'use client'
 
-import { useState } from 'react'
-import { FileText, Image as ImageIcon, Video, MessageSquare, ChevronDown } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { FileText, Image as ImageIcon, Video, MessageSquare, ChevronDown, RotateCw, ZoomIn, Lightbulb, Leaf, ScanSearch, Wind } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { EXAMPLE_CONTENT } from '@/lib/data/exampleContent'
+import { EXAMPLE_CONTENT, EXAMPLE_CONTENT_TR } from '@/lib/data/exampleContent'
 
 type TabId = 'metin' | 'gorsel' | 'video' | 'sosyal'
-type MarketId = 'trendyol' | 'amazon-tr' | 'etsy'
+type MarketId = 'trendyol' | 'amazon' | 'etsy'
 
 const TABS = [
-  { id: 'metin' as TabId, label: 'Metin', icon: FileText, kredi: '1 kr', sure: '~10sn' },
-  { id: 'gorsel' as TabId, label: 'Görsel', icon: ImageIcon, kredi: '1 kr', sure: '~30sn' },
-  { id: 'video' as TabId, label: 'Video', icon: Video, kredi: '2 kr', sure: '~2dk' },
-  { id: 'sosyal' as TabId, label: 'Sosyal', icon: MessageSquare, kredi: '3 kr', sure: '~20sn' },
+  {
+    id: 'metin' as TabId,
+    label: 'Metin',
+    icon: FileText,
+    kredi: '1 kredi',
+    sure: '~10sn',
+    description: 'Listing başlık + açıklama + arama etiketleri',
+  },
+  {
+    id: 'gorsel' as TabId,
+    label: 'Görsel',
+    icon: ImageIcon,
+    kredi: '1 kredi',
+    sure: '~30sn',
+    description: 'Stüdyo standardı 1200×1200, 6 görsel',
+  },
+  {
+    id: 'video' as TabId,
+    label: 'Video',
+    icon: Video,
+    kredi: '2 kredi',
+    sure: '~2dk',
+    description: '5 saniyelik dikey 9:16',
+  },
+  {
+    id: 'sosyal' as TabId,
+    label: 'Sosyal',
+    icon: MessageSquare,
+    kredi: '3 kredi',
+    sure: '~20sn',
+    description: 'Instagram + TikTok + Pinterest caption',
+  },
 ]
 
 const MARKETS: { id: MarketId; label: string }[] = [
   { id: 'trendyol', label: 'Trendyol' },
-  { id: 'amazon-tr', label: 'Amazon TR' },
+  { id: 'amazon', label: 'Amazon TR' },
   { id: 'etsy', label: 'Etsy' },
 ]
 
 // ---- Panels ----
 
 function MetinPanel({ market }: { market: MarketId }) {
-  const data = EXAMPLE_CONTENT.metin[market]
+  const data = EXAMPLE_CONTENT_TR.metin[market]
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-[10px] uppercase tracking-[0.1em] text-rd-neutral-400 mb-1">Başlık</p>
+        <p className="text-xs uppercase tracking-[0.1em] font-semibold text-rd-neutral-400 mb-1">Başlık</p>
         <p className="text-sm font-medium text-rd-neutral-900 leading-snug">{data.title}</p>
       </div>
       <div>
-        <p className="text-[10px] uppercase tracking-[0.1em] text-rd-neutral-400 mb-1">
+        <p className="text-xs uppercase tracking-[0.1em] font-semibold text-rd-neutral-400 mb-1">
           Özellikler
         </p>
         <ul className="space-y-1">
@@ -45,16 +73,16 @@ function MetinPanel({ market }: { market: MarketId }) {
         </ul>
       </div>
       <div>
-        <p className="text-[10px] uppercase tracking-[0.1em] text-rd-neutral-400 mb-1">Açıklama</p>
+        <p className="text-xs uppercase tracking-[0.1em] font-semibold text-rd-neutral-400 mb-1">Açıklama</p>
         <p className="text-sm text-rd-neutral-700 leading-relaxed">{data.description}</p>
       </div>
       <div>
-        <p className="text-[10px] uppercase tracking-[0.1em] text-rd-neutral-400 mb-1">Etiketler</p>
+        <p className="text-xs uppercase tracking-[0.1em] font-semibold text-rd-neutral-400 mb-1">Etiketler</p>
         <div className="flex flex-wrap gap-1.5">
           {data.tags.map((tag, i) => (
             <span
               key={i}
-              className="text-xs bg-rd-neutral-100 text-rd-neutral-600 px-2 py-0.5 rounded-full"
+              className="text-xs font-medium bg-rd-neutral-100 text-rd-neutral-600 px-2 py-0.5 rounded-full"
             >
               {tag}
             </span>
@@ -65,51 +93,73 @@ function MetinPanel({ market }: { market: MarketId }) {
   )
 }
 
+const GORSEL_STILLER = [
+  { src: '/ornek_beyaz.jpg', label: 'Beyaz zemin' },
+  { src: '/ornek_dogal.jpg', label: 'Doğal' },
+  { src: '/ornek_lifestyle.jpg', label: 'Lifestyle' },
+  { src: '/ornek_ahsap.jpg', label: 'Ahşap' },
+  { src: '/ornek_mermer.jpg', label: 'Mermer' },
+  { src: '/ornek_gradient.jpg', label: 'Gradient' },
+  { src: '/ornek_koyu.jpg', label: 'Koyu' },
+]
+
 function GorselPanel() {
-  const { placeholders, standard } = EXAMPLE_CONTENT.gorsel
   return (
     <div>
-      <div className="grid grid-cols-3 gap-2">
-        {placeholders.map((label, i) => (
-          <div key={i} className="flex flex-col items-center gap-1">
-            <div className="aspect-square w-full rounded-lg bg-rd-neutral-100 flex items-center justify-center">
-              <ImageIcon size={18} strokeWidth={1.5} className="text-rd-neutral-400" aria-hidden="true" />
-            </div>
-            <span className="text-[9px] text-rd-neutral-500 text-center leading-tight">{label}</span>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+        {GORSEL_STILLER.map((stil) => (
+          <div key={stil.src} className="flex flex-col items-center gap-1">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={stil.src}
+              alt={stil.label}
+              className="aspect-square w-full rounded-lg object-cover"
+            />
+            <span className="text-xs text-rd-neutral-500 text-center leading-tight">{stil.label}</span>
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[10px] text-rd-neutral-400">{standard}</p>
+      <p className="mt-3 text-xs text-rd-neutral-400">7 farklı stil — her stilde 1 görsel, 1 kredi</p>
     </div>
   )
 }
 
+const VIDEO_STILLER = [
+  { icon: RotateCw, label: '360° döndür' },
+  { icon: ZoomIn, label: 'Yakınlaştır' },
+  { icon: Lightbulb, label: 'Dramatik ışık' },
+  { icon: Leaf, label: 'Doğal ortam' },
+  { icon: ScanSearch, label: 'Detay tarama' },
+  { icon: Wind, label: 'Kumaş hareketi' },
+]
+
 function VideoPanel() {
-  const { duration, aspect, sceneDescription } = EXAMPLE_CONTENT.video
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.playbackRate = 1.5
+  }, [])
   return (
     <div className="flex flex-col md:flex-row gap-4 items-start">
-      <div className="w-20 md:w-24 shrink-0">
-        <div
-          className="relative rounded-lg bg-rd-neutral-800 overflow-hidden"
+      <div className="w-32 md:w-40 shrink-0">
+        <video
+          ref={videoRef}
+          src="/video-ornekler/zoom-yaklasim.mp4"
+          muted
+          autoPlay
+          playsInline
+          loop
+          className="w-full rounded-lg object-cover bg-rd-neutral-200"
           style={{ aspectRatio: '9/16' }}
-        >
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-              <Video size={14} strokeWidth={2} className="text-white ml-0.5" aria-hidden="true" />
-            </div>
-          </div>
-        </div>
+          aria-hidden="true"
+        />
       </div>
-      <div className="space-y-2 flex-1">
-        <p className="text-sm text-rd-neutral-600">
-          <span className="font-medium text-rd-neutral-800">Süre:</span> {duration}
-        </p>
-        <p className="text-sm text-rd-neutral-600">
-          <span className="font-medium text-rd-neutral-800">Format:</span> {aspect}
-        </p>
-        <p className="text-sm text-rd-neutral-600">
-          <span className="font-medium text-rd-neutral-800">Sahne planı:</span> {sceneDescription}
-        </p>
+      <div className="flex-1 space-y-2">
+        {VIDEO_STILLER.map(({ icon: Icon, label }) => (
+          <div key={label} className="flex items-center gap-2">
+            <Icon size={14} strokeWidth={1.5} className="text-rd-neutral-400 shrink-0" aria-hidden="true" />
+            <span className="text-sm text-rd-neutral-700">{label}</span>
+          </div>
+        ))}
       </div>
     </div>
   )
@@ -141,12 +191,12 @@ function SosyalPanel() {
             <div className="px-3 py-2 border-t border-rd-neutral-100">
               <div className="flex flex-wrap gap-1.5">
                 {data.hashtags.slice(0, 6).map((tag, i) => (
-                  <span key={i} className="text-[10px] text-rd-primary-700 font-medium">
+                  <span key={i} className="text-xs text-rd-primary-700 font-medium">
                     {tag}
                   </span>
                 ))}
                 {data.hashtags.length > 6 && (
-                  <span className="text-[10px] text-rd-neutral-400">
+                  <span className="text-xs text-rd-neutral-400">
                     +{data.hashtags.length - 6}
                   </span>
                 )}
@@ -178,7 +228,7 @@ export function InfoStrip() {
       {/* Header */}
       <div className="flex items-start justify-between mb-5">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.15em] text-rd-warm-700 font-medium mb-1.5">
+          <p className="text-xs uppercase tracking-[0.15em] text-rd-warm-700 font-semibold mb-1.5">
             İÇERİK TÜRLERİ
           </p>
           <h3 className="font-rd-display text-xl md:text-2xl text-rd-neutral-900 font-semibold">
@@ -244,10 +294,13 @@ export function InfoStrip() {
               >
                 {tab.label}
               </span>
+              <p className="text-xs text-rd-neutral-500 leading-relaxed">
+                {tab.description}
+              </p>
               <div className="flex items-center gap-1.5">
                 <span
                   className={cn(
-                    'text-[10px] font-medium px-1.5 py-0.5 rounded-full',
+                    'text-xs font-medium px-1.5 py-0.5 rounded-full',
                     isActive
                       ? 'bg-rd-primary-100 text-rd-primary-800'
                       : 'bg-rd-neutral-100 text-rd-neutral-500',
@@ -255,7 +308,7 @@ export function InfoStrip() {
                 >
                   {tab.kredi}
                 </span>
-                <span className="text-[10px] text-rd-neutral-400">{tab.sure}</span>
+                <span className="text-xs text-rd-neutral-400">{tab.sure}</span>
               </div>
             </button>
           )

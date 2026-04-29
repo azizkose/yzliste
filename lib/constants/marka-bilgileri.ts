@@ -1,14 +1,14 @@
 // MB-01 — Marka Bilgileri Section Constants
 
-import { Store, Target, Palette, Lightbulb } from "lucide-react";
+import { Store, Target, Palette, Lightbulb, Tag, Banknote, Star, FileText } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export const MB_HEADER = {
-  eyebrow: "Yeni özellik",
+  eyebrow: "Marka profili",
   eyebrowColor: "accent" as const,
   title: "Marka bilgilerini gir, sana özel içerikler al",
   subtitle:
-    "Profilinden mağaza adını, hedef kitlenini ve metin tonunu belirle. Bundan sonra her üretimde AI bu bilgileri kullanır.",
+    "8 alanlık profilinden mağaza adını, hedef kitlenini, metin tonunu ve hizmet vurgularını belirle. Bundan sonra her üretimde AI bu bilgileri otomatik uygular.",
 };
 
 export interface BrandFeature {
@@ -20,25 +20,43 @@ export interface BrandFeature {
 export const BRAND_FEATURES: BrandFeature[] = [
   {
     icon: Store,
-    title: "Marka kimliği",
-    description: "Mağaza adın ve marka kimliğin metne yansır",
+    title: "Mağaza adı ve kimlik",
+    description: "Mağaza adın ve marka sesi metne yansır — her üretimde tutarlı",
   },
   {
     icon: Target,
     title: "Hedef kitle odaklı",
-    description: "Hedef kitlenin dilinde yazar — doğru kitleye hitap eder",
+    description: "Hedef kitlenin dilinde yazar — doğru kitleye doğru mesaj",
   },
   {
     icon: Palette,
-    title: "Ton seçimi",
-    description:
-      "Samimi, profesyonel veya premium — tonunu seç, her üretimde uygular",
+    title: "Ton ve ses seçimi",
+    description: "Samimi, profesyonel veya premium — tonunu seç, her üretimde uygular",
   },
   {
     icon: Lightbulb,
-    title: "Marka değerleri",
-    description:
-      "Hızlı kargo, yerli üretim gibi değerlerin her ürüne otomatik eklenir",
+    title: "Ürün kategorisi ve fiyat",
+    description: "Kategori ve fiyat segmenti rekabetçi konumlandırma sağlar",
+  },
+  {
+    icon: Tag,
+    title: "Öne çıkan özellikler",
+    description: "Yerli üretim, organik materyal, 2 yıl garanti — her ürüne otomatik eklenir",
+  },
+  {
+    icon: Banknote,
+    title: "Fiyat bandı",
+    description: "Bütçe, orta veya premium segment — dile getirme tarzı değişir",
+  },
+  {
+    icon: Star,
+    title: "Hizmet vurguları",
+    description: "Hızlı kargo, ücretsiz iade, özel ambalaj — metinde güven artırır",
+  },
+  {
+    icon: FileText,
+    title: "Ek bilgi ve notlar",
+    description: "Özel istekler, marka sloganı veya dikkat çekilecek noktalar",
   },
 ];
 
@@ -55,25 +73,25 @@ export const TONE_CHIPS: ToneChip[] = [
     key: "samimi",
     label: "Samimi",
     output:
-      "Bu tişört tam sana göre! Yumuşacık kumaşı ve şık kesimi ile her kombine uyum sağlar. Hemen sipariş ver, yarın kapında.",
+      "Sabah kahvesi ritüelinizi güzelleştirsin diye tasarlandı. Gaziantep'te el dövme, tin kaplama içi, hediye kutusunda — kutudan çıkar çıkmaz hazır. Türk kahvesi sevenler için biçilmiş kaftan!",
   },
   {
     key: "profesyonel",
     label: "Profesyonel",
     output:
-      "Premium pamuk karışımı kumaştan üretilmiş, ergonomik kesim tişört. Boyut tablosu için ürün detaylarını inceleyebilirsiniz.",
+      "El dövme bakır cezve; gıda güvenli tin kaplama iç yüzey, 250 ml kapasite, 2 porselen fincan ile komple set. Gaziantep'te aile atölyesinden üretim, her parça ayrı kalite kontrolünden geçer.",
   },
   {
     key: "premium",
     label: "Premium",
     output:
-      "Özenle seçilmiş Ege pamuğundan, sınırlı üretim koleksiyon parçası. Minimalist tasarımı ile gardırobunuzun vazgeçilmezi olacak.",
+      "Anadolu'nun yüz yıllık bakırcılığını mutfağına taşı. Gaziantep ustalarının elinde şekillenen bu cezve, sabah kahvesi ritüelini sanat eserine dönüştürür. Hediye kutusunda, kullanım rehberi ile birlikte.",
   },
 ];
 
 export const BRAND_FORM_FIELDS = {
-  storeName: { label: "Mağaza adı", value: "Ayşe Tekstil" },
-  targetAudience: { label: "Hedef kitle", value: "25-40 yaş kadınlar" },
+  storeName: { label: "Mağaza adı", value: "Anadolu Bakır" },
+  targetAudience: { label: "Hedef kitle", value: "Türk kahvesi sevenler, hediye arayanlar" },
 };
 
 export const MB_CTA = {

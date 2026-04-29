@@ -1,93 +1,126 @@
-// AS-04 — Selin Porselen örnek verisi, tek kaynak
-// InfoStrip ve gelecekteki anasayfa komponentleri buradan beslenir
+// P3-A4 — Basketbol topu (TR) + Bakır cezve (Etsy), tek kaynak
+// RDFeaturesTabbed, InfoStrip ve MarkaBilgileriSection buradan beslenir
 
-export const EXAMPLE_PRODUCT = {
-  brand: 'Selin Porselen',
-  name: "Selin Porselen Çiçek Desenli Kahve Fincanı 6'lı Set",
-  shortDescription: "6'lı set · 80 ml · altın yaldızlı",
+export const EXAMPLE_PRODUCT_TR = {
+  brand: 'yzliste örnek',
+  name: 'Profesyonel Basketbol Topu 7 Numara',
+  category: 'Spor & Outdoor',
 } as const
 
-export const EXAMPLE_CONTENT = {
+export const EXAMPLE_CONTENT_TR = {
   metin: {
     trendyol: {
-      title: "Selin Porselen Çiçek Desenli Kahve Fincanı 6'lı Set 80ml Altın Yaldızlı",
+      title: 'Profesyonel Kompozit Deri Basketbol Topu 7 Numara FIBA Onaylı İç-Dış Saha Antrenman Maç Topu',
       features: [
-        '6 fincan + 6 tabak içerir',
-        '80 ml kapasite, espresso ve Türk kahvesi uyumlu',
-        '24 ayar altın yaldız, el işlemesi',
-        'Bulaşık makinesine dayanıklı porselen',
-        'Hediye kutusunda teslim',
+        'FIBA Onaylı Resmi Boyut — 7 numara, 75-78 cm çevre, 567-650 g ağırlık, profesyonel maç standardı',
+        'Kompozit Deri Yüzey — Yüksek tutuş, ter emici dokulu kaplama; iç-dış saha kullanımına uygun',
+        '8 Panel Sıkı Dikiş — Hava sızdırmaz iç tüp, uzun ömürlü performans, basınç stabilizasyonu',
+        'Kuru Pompa Hediye — Set içinde kuru-tip pompa ve iğne; satın alır almaz kullanıma hazır',
+        '7 Yaş Üstü Kullanıma Uygun — Antrenman, okul takımları, yarı-profesyonel ve hobi kullanım için ideal',
       ],
       description:
-        "Selin Porselen'in çiçek desenli fincan seti, sofranıza zarafet katıyor. El işçiliğiyle hazırlanan altın yaldız detaylar ve dayanıklı porselen yapısıyla günlük kullanım ve özel günler için ideal.",
+        'Profesyonel basketbol antrenman ve maç deneyimi için tasarlanmış 7 numara FIBA standardı kompozit deri basketbol topu. Ter emici dokulu yüzey kaplaması her hava koşulunda yüksek tutuş sağlarken, 8 panel sıkı dikişli yapı uzun ömürlü kullanımı garanti eder. İç saha parke ve dış saha asfalt zeminlerde aynı performansı sergileyen top, okul takımları, gençlik ligi ve hobi sporcular için tam profesyonel histir. Hediye kuru-tip pompa ve iğne ile birlikte gönderilir — kutudan çıkar çıkmaz oyuna hazır.',
       tags: [
-        'kahve fincanı seti',
-        'porselen fincan',
-        'altın yaldızlı fincan',
-        'çiçek desenli fincan',
-        'türk kahvesi fincanı',
-        'hediye fincan seti',
-        '6lı fincan seti',
-        'el yapımı fincan',
-        'porselen kahve seti',
-        'fincan tabak seti',
+        'basketbol topu',
+        '7 numara basketbol',
+        'FIBA onaylı top',
+        'kompozit deri basketbol',
+        'antrenman topu',
+        'maç topu',
+        'profesyonel basketbol',
+        'dış saha basketbol topu',
+        'iç saha basketbol topu',
+        'basketbol topu pompalı',
       ],
     },
-    'amazon-tr': {
+    amazon: {
       title:
-        "Selin Porselen 6'lı Çiçek Desenli Kahve Fincanı Takımı – 80ml, 24 Ayar Altın Yaldız, El İşlemesi, Hediye Kutulu",
+        'Profesyonel Basketbol Topu 7 Numara | FIBA Onaylı Kompozit Deri Maç ve Antrenman Topu | İç-Dış Saha Kullanım | 8 Panel Sıkı Dikiş | Kuru Pompa Hediyeli | Okul Takımları için İdeal',
       features: [
-        '6 fincan + 6 tabak: Tam takım, hemen kullanıma hazır',
-        '80 ml kapasite: Espresso, Türk kahvesi ve ristretto için ideal boyut',
-        'El işlemesi altın yaldız: Her parçada 24 ayar altın detay, benzersiz görünüm',
-        'Üstün porselen kalite: Bulaşık makinesine dayanıklı, çizilmeye karşı dirençli',
-        'Hediye kutusunda: Özel kutuda teslim, doğum günü ve özel günler için hazır',
+        'FIBA STANDARTI 7 NUMARA — Resmi turnuva boyutu, 75-78 cm çevre, 567-650 g; profesyonel maç kalitesi',
+        'HAVA KOŞULUNA DAYANIKLI YÜZEY — Ter emici kompozit deri kaplama; iç saha parke ve dış saha asfalt için optimize edilmiş tutuş',
+        '8 PANEL HAVA SIZDIRMAZ — Sıkı dikişli panel yapısı, yüksek dayanımlı iç tüp; uzun ömürlü performans basıncı korur',
+        'KUTUDA POMPA + İĞNE — Kuru-tip pompa ve iğne ile set halinde gelir; satın alır almaz oyuna hazır',
+        'GENİŞ KULLANIM ARALIĞI — 7 yaş üstü, okul takımları, gençlik ligi, hobi ve yarı-profesyonel kullanım için uygundur',
       ],
       description:
-        "Selin Porselen'in bu zarif fincan takımı, geleneksel el işçiliği ile modern tasarımı bir arada sunuyor. Her fincan üzerindeki çiçek deseni ve altın yaldız detaylar, kahve ritüelinizi özel bir deneyime dönüştürüyor.",
+        'Profesyonel basketbol antrenman ve maç deneyimi için tasarlanmış 7 numara FIBA standardı kompozit deri basketbol topu. Ter emici dokulu yüzey kaplaması her hava koşulunda yüksek tutuş sağlarken, 8 panel sıkı dikişli yapı uzun ömürlü kullanımı garanti eder. İç saha parke ve dış saha asfalt zeminlerde aynı performansı sergileyen top, okul takımları, gençlik ligi ve hobi sporcular için tam profesyonel histir. Hediye kuru-tip pompa ve iğne ile birlikte gönderilir — kutudan çıkar çıkmaz oyuna hazır.\n\nNeden bu top, neden Amazon? Hızlı teslimat, 30 gün iade garantisi ve Amazon satıcı güvencesiyle alışveriş yapın.',
       tags: [
-        'porselen fincan seti',
-        'türk kahvesi fincanı',
-        'altın yaldızlı fincan seti',
-        'hediye fincan takımı',
-        '6lı kahve seti',
-        'el yapımı porselen fincan',
-        'çiçek desenli fincan',
-        'espresso fincanı',
-        'kahve fincanı takımı',
-        'porselen kahve seti',
+        'basketbol topu',
+        '7 numara basketbol',
+        'FIBA onaylı top',
+        'kompozit deri basketbol',
+        'antrenman topu',
+        'maç topu',
+        'profesyonel basketbol',
+        'dış saha basketbol topu',
+        'iç saha basketbol topu',
+        'basketbol topu pompalı',
+        'okul basketbol topu',
+        'gençlik basketbol topu',
       ],
     },
     etsy: {
       title:
-        'Handmade Porcelain Coffee Cup Set of 6 – Floral Design, 24K Gold Detail, 80ml, Gift Box',
+        'Handmade Hammered Copper Turkish Coffee Pot Set — Cezve with 2 Porcelain Cups, Authentic Anatolian Craftsmanship, Wedding Gift',
       features: [
-        'Set of 6 cups + 6 saucers, 80ml capacity',
-        '24K gold hand-painted detail on each piece',
-        'Dishwasher safe, chip-resistant porcelain',
-        'Suitable for espresso, Turkish coffee, and ristretto',
-        'Arrives in a gift-ready presentation box',
+        'Hand-Hammered Copper Cezve — Each pot is individually hammered, making every piece one-of-a-kind',
+        'Complete Set with 2 Cups — Copper cezve paired with two delicate porcelain cups',
+        'Tin-Lined Interior — Food-safe tin lining preserves coffee flavor, traditional craft technique',
+        'Made in Turkey (Gaziantep workshop) — From a family workshop with over a century of coppersmith heritage',
+        'Includes Brewing Guide — Printed Turkish coffee brewing guide arrives with your set',
       ],
       description:
-        'These handcrafted porcelain coffee cups bring a touch of artisan elegance to every coffee moment. Each cup features delicate hand-painted florals and genuine 24K gold accents — no two pieces are exactly alike.',
+        "There's something quietly beautiful about copper that's been shaped by human hands. This Turkish coffee set — a hammered copper cezve paired with two delicate porcelain cups — comes from a tiny workshop in Gaziantep, where families have been hammering copper for more than a century. Every dent, every curve, every pattern is unique. It's the kind of piece that turns a five-minute coffee ritual into something you'll look forward to all day. Whether you're brewing for yourself or sharing with someone you love, this set arrives in a fitted gift box with a printed brewing guide.",
       tags: [
-        'porcelain coffee cup',
-        'turkish coffee cup',
-        'handmade cup set',
-        'gold detail cup',
-        'floral coffee cup',
-        'espresso cup set',
-        'gift cup set',
-        'ceramic coffee set',
-        'hand painted cup',
-        'artisan coffee cup',
-        'porcelain tea cup',
-        'coffee lover gift',
-        'wedding gift cup',
+        'turkish coffee set',
+        'copper cezve',
+        'handmade copper pot',
+        'anatolian craftsmanship',
+        'hand hammered copper',
+        'turkish coffee gift',
+        'traditional coffee maker',
+        'gift for coffee lover',
+        'wedding gift set',
+        'housewarming gift',
+        'made in turkey',
+        'artisan home goods',
+        'copper kitchenware',
       ],
     },
   },
+} as const
 
+export const EXAMPLE_MARKA_KIYAS = {
+  urunAdi: 'Bakır cezve seti',
+  markaBos: {
+    eyebrow: 'MARKA BİLGİSİ YOKKEN',
+    baslik: 'Bakır cezve, 250ml, 2 fincan dahil',
+    aciklama: 'Türk kahvesine uygun.',
+  },
+  markaDolu: {
+    eyebrow: 'MARKA İLE ÜRETİLDİĞİNDE',
+    baslik: 'Anadolu Bakır El Dövme Cezve — Hediye Kutusunda 2 Fincan ile',
+    aciklama: "Anadolu'nun yüz yıllık bakırcılığını mutfağına taşı. Anadolu Bakır'ın Gaziantep'te dövülmüş cezvesi, sabah kahvesi ritüelini sanat eserine dönüştürür. Hediye kutusunda, kullanım rehberi ile birlikte.",
+    markaInputlari: {
+      storeName: 'Anadolu Bakır',
+      ton: 'premium ton',
+      kategori: 'Ev & Yaşam',
+      hedefKitle: 'Türk kahvesi sevenler',
+      hizmetVurgulari: ['el dövme', 'hediye paketi'],
+    },
+  },
+} as const
+
+// Legacy alias — InfoStrip ve diğer mevcut componentler için geriye uyumluluk
+export const EXAMPLE_PRODUCT = EXAMPLE_PRODUCT_TR
+
+export const EXAMPLE_CONTENT = {
+  metin: {
+    trendyol: EXAMPLE_CONTENT_TR.metin.trendyol,
+    'amazon-tr': EXAMPLE_CONTENT_TR.metin.amazon,
+    etsy: EXAMPLE_CONTENT_TR.metin.etsy,
+  },
   gorsel: {
     placeholders: [
       'Ana görsel',
@@ -99,46 +132,37 @@ export const EXAMPLE_CONTENT = {
     ],
     standard: 'Trendyol stüdyo standardı: 1200×1200 px, beyaz zemin',
   },
-
   video: {
     duration: '5–30 saniye',
     aspect: '9:16 dikey veya 1:1 kare',
     sceneDescription:
-      '360° ürün dönüşü → altın yaldız detay zoom → lifestyle kullanım → marka kapanışı',
+      '360° ürün dönüşü → detay zoom → dış saha kullanım → marka kapanışı',
   },
-
-  // Gerçek AI üretim çıktısı örnekleri (PazaryeriSection'dan taşındı)
   sosyal: {
     instagram: {
       caption:
-        "Sabah kahvenizi daha özel kılacak bir set var. Selin Porselen'in çiçek desenli fincan setini her yudumda hissedebilirsiniz.\n\nAltın yaldız detaylar, el işçiliği ve dayanıklı porselen — hem sofralık hem hediyelik.\n\nLink bio'da.",
+        'Sahaya çıkmadan önce doğru top şart. 7 numara FIBA standardı, kompozit deri, kuru pompa hediyeli.\n\nAntrenman için, maç için, hediye için — kutudan çıkar çıkmaz hazır.',
       hashtags: [
-        '#kahvefincanı',
-        '#porselenfincan',
-        '#altınyaldız',
-        '#kahvetöreni',
-        '#türkkahvesi',
-        '#mutfakdekorasyonu',
-        '#hediyelik',
-        '#elyapımı',
-        '#selinporselen',
-        '#fincankoleksiyonu',
-        '#kahveaşkı',
-        '#fincanmodelleri',
-        '#porselenset',
-        '#sabahkahvesi',
-        '#hediyefikirleri',
+        '#basketbol',
+        '#basketboltopu',
+        '#spor',
+        '#fibastandard',
+        '#antrenman',
+        '#okultakımı',
+        '#sporhediye',
+        '#kompozitderi',
+        '#trendyolda',
       ],
     },
     tiktok: {
       caption:
-        "Kahvenizi sunma şekliniz de lüks olabilir. Selin Porselen fincan seti ile tanışın — altın yaldız, el işçiliği, Trendyol'da.",
-      hashtags: ['#kahveaşkı', '#porselenfincan', '#trendyolda', '#mutfakdekor', '#hediyefikirleri'],
+        'FIBA onaylı 7 numara top, hediye kuru pompa ile — sahaya çıkmaya hazır mısın?',
+      hashtags: ['#basketbol', '#spor', '#antrenman', '#trendyol'],
     },
     pinterest: {
       caption:
-        'Beautiful handmade porcelain coffee cup set with 24K gold hand-painted detail. A perfect gift for coffee lovers and collectors. Made in Turkey.',
-      hashtags: ['#handmadeporcelain', '#coffeecupset', '#etsyfinds', '#giftideas', '#handcrafted'],
+        'Professional basketball for training and matches — FIBA approved size 7, composite leather, pump included. Perfect gift for young athletes.',
+      hashtags: ['#basketball', '#sportsgift', '#fibapro', '#youthsports'],
     },
   },
 } as const

@@ -7,12 +7,12 @@ export function StepSection() {
       <div className="max-w-6xl mx-auto px-4 md:px-6">
         {/* Header */}
         <div className="text-center mb-10 md:mb-12">
-          <p className="text-[10px] uppercase tracking-[0.15em] text-rd-warm-700 font-medium mb-2">
+          <p className="text-xs uppercase tracking-[0.15em] text-rd-warm-700 font-semibold mb-2">
             3 ADIMDA HAZIR
           </p>
           <h2
             id="step-section-baslik"
-            className="font-rd-display text-3xl md:text-4xl text-rd-neutral-900 font-semibold"
+            className="font-rd-display text-3xl md:text-4xl text-rd-neutral-900 font-bold"
           >
             Ürünü tanıt, AI senin için yapsın
           </h2>
@@ -24,7 +24,7 @@ export function StepSection() {
         {/* Divider */}
         <div className="my-10 md:my-12 border-t border-rd-neutral-200" />
 
-        {/* Info strip */}
+        {/* InfoStrip — 4 içerik türü + Detaya bak accordion */}
         <InfoStrip />
       </div>
     </section>

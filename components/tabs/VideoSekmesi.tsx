@@ -60,7 +60,7 @@ export default function VideoSekmesi({
     <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white border border-rd-neutral-200 rounded-xl p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-medium text-rd-neutral-900">Ürün videosu</h2>
-        <span className="text-xs text-rd-neutral-600 font-mono">5sn: 10 kr · 10sn: 20 kr</span>
+        <span className="text-xs text-rd-neutral-600 font-mono">5sn: 10 kredi · 10sn: 20 kredi</span>
       </div>
       <p className="text-xs text-rd-neutral-400">Ürün fotoğrafından kısa tanıtım videosu — pazaryerleri, Reels, TikTok ve YouTube için</p>
 

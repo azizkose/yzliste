@@ -8,7 +8,7 @@ export interface TrustStripItem {
 }
 
 export const TRUST_STRIP_ITEMS: TrustStripItem[] = [
-  { icon: 'Flag', label: "Türkiye'de geliştirildi" },
+  { icon: 'Sparkles', label: "E-ticaret için yapay zeka stüdyosu" },
   { icon: 'Lock', label: '256-bit SSL' },
   { icon: 'Zap', label: 'Saniyeler içinde üretim' },
 ]
@@ -43,7 +43,7 @@ export const HERO_COPY = {
   h1Pre: 'E-ticaret içeriğini',
   h1Highlight: 'AI ile',
   h1Post: 'üret.',
-  sub: 'Ürün fotoğrafını yükle — listing metni, stüdyo görseli, tanıtım videosu ve sosyal medya içeriği dakikalar içinde hazır. Aylık abonelik yok.',
+  sub: 'Ürününü anlat veya fotoğrafını yükle — listing metni, stüdyo görseli, tanıtım videosu ve sosyal medya içeriği dakikalar içinde hazır. Aylık abonelik yok.',
   ctaPrimary: 'Ücretsiz başla — 3 kredi hediye',
   ctaSecondary: 'Nasıl çalışır?',
   reassurance: 'Kredi kartı gerekmez · 30 saniyede ilk içeriğin hazır',

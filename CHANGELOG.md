@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-04-29 — Redesign P5-FIX-1~4: InfoStrip 38b10b4 geri getirildi (EXAMPLE_CONTENT_TR + amazon key), StepSection swap, RDFeaturesTabbed silindi, Hero→StepSection spacing raporu
+
+## 2026-04-29 — Redesign P4-FIX-1~3: RDFeaturesTabbed FeaturesTabbed.tsx birebir kopya (platformVerileri + inline panel + rd-* token), video 6 farklı stil + playbackRate=1.5, EXAMPLE_MARKA_KIYAS eyebrow + "premium ton"
+
+## 2026-04-29 — Redesign P4-A1~P4-A3 + blog: RDFeaturesTabbed canlı pattern birebir (hash nav + danger gorsel + rd-* token), MarkaBilgileri bakır cezve kıyas (marka boş/dolu), video zoom-yaklasim 2x hız, blog thumbnail kaldır
+
+## 2026-04-29 — Redesign P3-A1~P3-U5: Polish-3 (Aziz acceptance 3. tur) — basketbol içerik, RDFeaturesTabbed, MarkaBilgileri 8 alan, /uret default seçimsiz + marka rozet + Adım 2/3 ayrım
+
+## 2026-04-28 — Redesign LP-11~LP-12: /fiyatlar 2-kolon hibrit + /uret 3 aşama akış (FiyatlarHybridSection, KrediCalculator embedded+onPaketOner, StepCard vertical flow, ContentTypeGrid, PlatformChips, ProgressIndicator)
+
+## 2026-04-28 — Redesign LP-01~LP-10: Anasayfa polish (trust strip, hero subtitle/mockup, video CTA off, step animation 7 pazar+4 kart, InfoStrip açıklamaları, kr→kredi, marka şablonu Selin Porselen, kıyas tablosu marka ismi yok, spacing)
+
 ## 2026-04-28 — Redesign LG-01~LG-05: 6 yasal sayfa rd-* swap + not-found/error/loading + Accordion primitive + orphan cleanup + backend tickets + QA docs
 
 ## 2026-04-28 — Redesign IC-01~IC-05: /blog + /blog/[slug] + /sss + /hakkimizda (rd-* tokens, ChipSelector filter, accordion, warm-earth kurucu, BlogPaylas share)
