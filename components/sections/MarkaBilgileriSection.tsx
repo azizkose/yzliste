@@ -194,7 +194,7 @@ export default function MarkaBilgileriSection() {
               {MB_HEADER.eyebrow}
             </Eyebrow>
 
-            <h2 className="font-rd-display text-3xl md:text-4xl font-medium tracking-tight text-rd-neutral-900">
+            <h2 className="font-rd-display text-3xl md:text-4xl font-bold tracking-[-0.01em] text-rd-neutral-900">
               {MB_HEADER.title}
             </h2>
 
