@@ -3653,15 +3653,237 @@ Bittikten sonra rapor:
 
 ---
 
+## 23 — Polish-4 FIX (Faz 1.9b — Aziz preview, P4 yarım kalmış)
+
+**29 Nis — Vercel deploy `dpl_4kgVhykf` commit `bebfec83` analizi:** Code Polish-4'ün **sadece 1/3'ünü** uyguladı. Commit mesajı: *"feat(landing): P4-A3 video kutuları zoom-yaklasim 2x hız + blog thumbnail kaldır"*. P4-A1 ve P4-A2 atlanmış, P4-A3 yanlış uygulanmış.
+
+| ID | Başlık | Durum | Kabul Kriteri |
+|---|---|---|---|
+| P4-FIX-1 | RDFeaturesTabbed → canlı FeaturesTabbed birebir kopya | ✅ Tamamlandı | components/landing/RDFeaturesTabbed.tsx'i components/tanitim/FeaturesTabbed.tsx ile **birebir** aynı yap. Sadece rd-* token swap. Yeni-yorum tasarım YOK. İçerik P3-A4'te yazıldı (basketbol topu Trendyol/Amazon, bakır cezve Etsy — exampleContent.ts'ten çek). Aziz Vercel preview'da bunu net gördü: "metinler gitmiş, eski versiyon gelmiş". |
+| P4-FIX-2 | MarkaBilgileriSection sağ şablon basketbol → bakır cezve kıyası | ✅ Tamamlandı | components/sections/MarkaBilgileriSection.tsx sağ panel mevcut basketbol topu örneği YERİNE bakır cezve seti kıyası. lib/data/exampleContent.ts'e EXAMPLE_MARKA_KIYAS objesi ekle: markaBos = "Bakır cezve, 250ml, 2 fincan dahil" / markaDolu = "Anadolu Bakır El Dövme Cezve — Anadolu'nun yüz yıllık bakırcılığını mutfağına taşı...". Marka chip'leri (storeName, ton, kategori, hedef, hizmet vurguları) görünür. |
+| P4-FIX-3 | Video kutuları → 6 farklı stil geri gelsin | ✅ Tamamlandı | Code commit'i 6 src'yi zoom-yaklasim.mp4 yaptı — bu **HATALI**. public/video-ornekler/'de 6 farklı dosya MEVCUT. RDFeaturesTabbed VIDEO_ORNEKLER array'i 6 farklı src kullansın: 360-donus.mp4 / zoom-yaklasim.mp4 / dramatik-isik.mp4 / dogal-ortam.mp4 / detay-tarama.mp4 / kumas-hareketi.mp4. **playbackRate=2.0** isteğe bağlı kalabilir (Aziz "hızlandırarak" demişti — sadece zoom-yaklasim için 2x veya tüm 6 için 2x — Aziz preview'da karar). |
+
+**Cowork hata kabul:** P4-A3 prompt'unda "tüm 6 kutuya zoom-yaklasim koy" yazılmıştı. Aziz orijinal isteği "**boş kutularda** zoom yaklaşımı kullan" idi (28 Nis mesajı). Zaten 6 video da klasörde mevcuttu, "boş" yoktu. Cowork yanlış yorumladı, Code uyguladı. P4-FIX-3'te 6 farklı stil geri.
+
+#### P4-FIX-1~P4-FIX-3 Birleşik Prompt
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: P4-FIX-1~P4-FIX-3 — Polish-4 düzeltme. Önceki commit bebfec83 
+sadece P4-A3'ü uyguladı (yanlış olarak), P4-A1 + P4-A2 atlandı. Bu 
+paket eksikleri tamamlar + P4-A3 hatalarını düzeltir.
+
+Önemli: Aziz Vercel preview'da gördü, üç sorun da net:
+1. Anasayfada listing metni bölmeleri eski layout'ta (FeaturesTabbed 
+   pattern uygulanmadı)
+2. MarkaBilgileri sağ şablon hâlâ basketbol topu (bakır cezve değil)
+3. Video kutularının hepsi zoom-yaklasim (6 farklı stil olmalı)
+
+────────────────────────────────────────────
+P4-FIX-1: RDFeaturesTabbed = FeaturesTabbed (birebir + rd-* swap)
+────────────────────────────────────────────
+
+Dosyalar:
+- components/tanitim/FeaturesTabbed.tsx (KAYNAK — canlı pattern)
+- components/landing/RDFeaturesTabbed.tsx (HEDEF — yeniden yazılacak)
+
+Adımlar:
+1. components/tanitim/FeaturesTabbed.tsx tüm yapıyı oku (4 sekme + 
+   3 platform sub-tab Listing'de + bölmeler + Kopyala butonları + 
+   görsel grid + video grid + sosyal panel).
+
+2. components/landing/RDFeaturesTabbed.tsx'i SİL ve YENİDEN YAZ:
+   - Layout: FeaturesTabbed.tsx ile birebir aynı JSX yapısı
+   - Renk swap (FeaturesTabbed'in hardcode'lu hex'leri):
+     * #1E4DD8 → rd-primary-700
+     * #163B9E → rd-primary-800
+     * #F0F4FB → rd-primary-50
+     * #BAC9EB → rd-primary-200
+     * #FAFAF8 → rd-neutral-50
+     * #F1F0EB → rd-neutral-100
+     * #D8D6CE → rd-neutral-200
+     * #908E86 → rd-neutral-500
+     * #5A5852 → rd-neutral-600
+     * #1A1A17 → rd-neutral-900
+     * #0F5132 → rd-success-700
+     * Trendyol orange-500, Amazon #E47911, Etsy rose-500 KORUNUR 
+       (platform brand renkleri)
+   - İçerik: lib/data/exampleContent.ts'ten çek (P3-A4'te yazıldı):
+     * Trendyol + Amazon TR: basketbol topu (EXAMPLE_CONTENT_TR.metin)
+     * Etsy: bakır cezve seti (EXAMPLE_CONTENT_TR.metin.etsy veya ayrı 
+       EXAMPLE_CONTENT_ETSY)
+
+3. **Kritik kural:** "yeni-yorum tasarım YOK". Canlı FeaturesTabbed 
+   nasılsa, RDFeaturesTabbed öyle olsun. Kart tasarımı, tab dialog, 
+   bölme yapısı, Kopyala buton stili, alt info kutusu, CTA — hepsi 
+   birebir.
+
+4. _tanitim-redesign.tsx'te RDFeaturesTabbed import'u zaten var, 
+   tasarım değişimi sayfaya otomatik yansır.
+
+Commit: feat(landing): P4-FIX-1 RDFeaturesTabbed canlı pattern 
+birebir + rd-* swap (P4-A1 düzeltme)
+
+────────────────────────────────────────────
+P4-FIX-2: MarkaBilgileri sağ şablon → bakır cezve kıyası
+────────────────────────────────────────────
+
+Dosyalar:
+- components/sections/MarkaBilgileriSection.tsx
+- lib/data/exampleContent.ts (EXAMPLE_MARKA_KIYAS objesi eklenecek)
+
+Adımlar:
+
+1. lib/data/exampleContent.ts'e EXAMPLE_MARKA_KIYAS objesi ekle:
+
+```ts
+export const EXAMPLE_MARKA_KIYAS = {
+  urunAdi: 'Bakır cezve seti',
+  
+  markaBos: {
+    eyebrow: 'MARKA BİLGİSİ YOKKEN',
+    baslik: 'Bakır cezve, 250ml, 2 fincan dahil',
+    aciklama: 'Türk kahvesine uygun.',
+  },
+  
+  markaDolu: {
+    eyebrow: 'MARKA İLE ÜRETİLDİĞİNDE',
+    baslik: 'Anadolu Bakır El Dövme Cezve — Hediye Kutusunda 2 Fincan ile',
+    aciklama: 'Anadolu\'nun yüz yıllık bakırcılığını mutfağına taşı. Anadolu Bakır\'ın Gaziantep\'te dövülmüş cezvesi, sabah kahvesi ritüelini sanat eserine dönüştürür. Hediye kutusunda, kullanım rehberi ile birlikte.',
+    markaInputlari: {
+      storeName: 'Anadolu Bakır',
+      ton: 'premium',
+      kategori: 'Ev & Yaşam',
+      hedefKitle: 'Türk kahvesi sevenler',
+      hizmetVurgulari: ['el dövme', 'hediye paketi'],
+    },
+  },
+} as const;
+```
+
+2. MarkaBilgileriSection.tsx sağ panel:
+   - Mevcut basketbol topu örneği SİL
+   - 2 kart üst üste:
+     
+     **Üst kart (markaBos):**
+     - rounded-xl border border-rd-neutral-200 bg-white p-5
+     - Eyebrow: text-rd-neutral-500 "MARKA BİLGİSİ YOKKEN"
+     - Başlık: text-rd-neutral-700 "Bakır cezve, 250ml, 2 fincan dahil"
+     - Açıklama: text-sm text-rd-neutral-500 "Türk kahvesine uygun."
+     - Sade, jenerik vurgu yok
+     
+     **Alt kart (markaDolu):**
+     - rounded-xl border-2 border-rd-warm-300 bg-rd-warm-50 p-5 
+       (warm-earth premium accent)
+     - Eyebrow: text-rd-warm-700 "MARKA İLE ÜRETİLDİĞİNDE"
+     - Başlık (font-display): text-rd-neutral-900 "Anadolu Bakır El 
+       Dövme Cezve — Hediye Kutusunda 2 Fincan ile"
+     - Açıklama: text-sm text-rd-neutral-700 — bakır cezve hikayesi
+     - Marka inputları chip row (alt kısım): "Anadolu Bakır" + 
+       "premium ton" + "Türk kahvesi sevenler" + "el dövme" + 
+       "hediye paketi" — küçük chip pill'ler
+
+3. Sol metin: P3-A5'te 8 alanlı marka profili anlatımı yapıldı — 
+   eğer hâlâ basketbol topu referansı varsa bakır cezveye uyarla.
+
+Commit: feat(landing): P4-FIX-2 MarkaBilgileri bakır cezve kıyası 
+(P4-A2 düzeltme)
+
+────────────────────────────────────────────
+P4-FIX-3: Video kutuları 6 farklı stil
+────────────────────────────────────────────
+
+Dosya: components/landing/RDFeaturesTabbed.tsx (P4-FIX-1 ile yeniden 
+yazıldıktan sonra video sekmesi).
+
+P4-FIX-1 RDFeaturesTabbed'i FeaturesTabbed birebir kopyaladıysa, 
+VIDEO_ORNEKLER zaten 6 farklı stil olur (FeaturesTabbed'de 6 farklı 
+src var, satır 320-326'da):
+
+```ts
+const VIDEO_ORNEKLER = [
+  { src: '/video-ornekler/360-donus.mp4', Ikon: RotateCw, baslik: '360° Dönüş', ... },
+  { src: '/video-ornekler/zoom-yaklasim.mp4', Ikon: ZoomIn, baslik: 'Zoom yaklaşım', ... },
+  { src: '/video-ornekler/dramatik-isik.mp4', Ikon: Lightbulb, baslik: 'Dramatik ışık', ... },
+  { src: '/video-ornekler/dogal-ortam.mp4', Ikon: Leaf, baslik: 'Doğal ortam', ... },
+  { src: '/video-ornekler/detay-tarama.mp4', Ikon: ScanSearch, baslik: 'Detay tarama', ... },
+  { src: '/video-ornekler/kumas-hareketi.mp4', Ikon: Wind, baslik: 'Kumaş hareketi', ... },
+];
+```
+
+public/video-ornekler/ klasöründe 6 dosya MEVCUT (kontrol edildi).
+
+**playbackRate kararı:**
+- Aziz orijinal isteği: "boş video kutularında zoom yaklaşımı 
+  kullanabilirsin (videoyu hızlandırarak koyabilirsen daha iyi)"
+- Yorum: 6 video da MEVCUT, boş yok. playbackRate gerekli mi?
+- Cowork önerisi: playbackRate=1.5 tüm videolara (görsel hareket 
+  hissi artar, ama doğallık korunur). Aziz preview'da 1.5 mi 2.0 mı 
+  karar verir.
+- Implementation:
+  ```tsx
+  const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
+  useEffect(() => {
+    videoRefs.current.forEach((video) => {
+      if (video) video.playbackRate = 1.5;
+    });
+  }, []);
+  ```
+
+P4-FIX-1'in birebir kopyası içinde bu hız ekleme zaten yapılmazsa 
+(orijinal FeaturesTabbed'de yok), basit bir ek useEffect olarak 
+ekle.
+
+Commit: fix(landing): P4-FIX-3 video kutuları 6 farklı stil + 
+playbackRate=1.5 (P4-A3 düzeltme)
+
+────────────────────────────────────────────
+Test (commit öncesi)
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde:
+  - / RDFeaturesTabbed: canlı FeaturesTabbed birebir tasarım, rd-* 
+    renkler, basketbol topu (Trendyol/Amazon) + bakır cezve (Etsy) 
+    bölmeler + Kopyala butonları
+  - / MarkaBilgileri: bakır cezve kıyası, marka boş "Bakır cezve, 
+    250ml" üst kart vs marka dolu "Anadolu Bakır El Dövme..." alt 
+    warm-earth kart
+  - / Video sekmesi: 6 farklı video oynar (360°, zoom, dramatik, 
+    doğal, detay, kumaş), 1.5x hız (veya 2x — karar)
+
+Commit özeti (3 atomik):
+- feat(landing): P4-FIX-1 RDFeaturesTabbed canlı pattern birebir
+- feat(landing): P4-FIX-2 MarkaBilgileri bakır cezve kıyası
+- fix(landing): P4-FIX-3 video kutuları 6 farklı stil
+
+Push: git push origin claude/redesign-modern-ui
+
+Bittikten sonra rapor:
+- Commit listesi (3 commit)
+- RDFeaturesTabbed canlı pattern diff (FeaturesTabbed'le hangi 
+  satırlar farklı? sadece rd-* swap mi yoksa başka değişiklik mi?)
+- MarkaBilgileri kıyas görsel olarak belirgin mi
+- Video playbackRate değeri (1.5 mi 2.0 mı)
+- Açık riskler / Aziz preview test
+```
+
+---
+
 ## 22 — Polish-4: Anasayfa içerik refinement (Faz 1.9 — Aziz acceptance 4. tur)
 
 **Aziz preview test bulguları (29 Nis):** P3 sonrası 3 madde — anasayfa içerik refinement. RDFeaturesTabbed yeni tasarım yerine canlı FeaturesTabbed tasarımına dön + MarkaBilgileri ürün değiştir + boş video kutuları doldur.
 
 | ID | Başlık | Durum | Kabul Kriteri |
 |---|---|---|---|
-| P4-A1 | RDFeaturesTabbed → canlı FeaturesTabbed tasarımına dön | ✅ Tamamlandı | Code P3-A3'te yeni layout uyguladı — Aziz canlı FeaturesTabbed.tsx tasarımını istedi (sadece içerik değişecekti). Çözüm: components/landing/RDFeaturesTabbed.tsx'i components/tanitim/FeaturesTabbed.tsx tasarımı **birebir** kopya, sadece (a) rd-* token'a swap (b) içerik basketbol+cezve (P3-A4 ile zaten yapıldı). Yeni-yorum tasarım YOK — canlı yapı bire bir. |
-| P4-A2 | MarkaBilgileri ürün → bakır cezve seti (marka etkisi belirgin) | ✅ Tamamlandı | Mevcut basketbol topu örneği marka profili etkisini göstermiyor (teknik ürün). Cowork önerisi: bakır cezve seti — Etsy listing zaten yazıldı (Anatolian craftsmanship hikayesi), Türkçe versiyonu MarkaBilgileri sağ şablona yazılır. Marka boş vs marka dolu kıyas çok belirgin: "Bakır cezve, 250ml" vs "Anadolu'nun yüz yıllık bakırcılığı...". |
-| P4-A3 | Boş video kutuları → zoom-yaklasim.mp4 hızlandırılmış | ✅ Tamamlandı | RDFeaturesTabbed video sekmesinde 6 hareket stili kart var ama bazıları boş (asset yok). Tüm 6 kutuya `/video-ornekler/zoom-yaklasim.mp4` koy. JS ile `videoRef.current.playbackRate = 2.0` ile hızlandır (CSS değil, HTML5 video API). useEffect'te ref attach + playbackRate set. |
+| P4-A1 | RDFeaturesTabbed → canlı FeaturesTabbed tasarımına dön | ❌ ATLANDI | Vercel commit `bebfec83` mesajında YOK. RDFeaturesTabbed hâlâ P3-A3'te Code'un yaptığı yeni layout'ta. P4-FIX-1'de yeniden uygulanacak. |
+| P4-A2 | MarkaBilgileri ürün → bakır cezve seti (marka etkisi belirgin) | ❌ ATLANDI | Vercel commit `bebfec83` mesajında YOK. MarkaBilgileri hâlâ basketbol topu örneğinde. P4-FIX-2'de yeniden uygulanacak. |
+| P4-A3 | Boş video kutuları → zoom-yaklasim.mp4 hızlandırılmış | ⚠️ YANLIŞ UYGULANDI | Cowork prompt hatası: "tüm 6 kutuya" yazıldı, Aziz orijinal isteğinde "boş kutularda" demişti. Code commit `bebfec83` 6 src'yi zoom-yaklasim yaptı. Halbuki public/video-ornekler/'de 6 farklı video MEVCUT (360-donus, detay-tarama, dogal-ortam, dramatik-isik, kumas-hareketi, zoom-yaklasim). P4-FIX-3'te 6 farklı stil geri gelecek. |
 
 **Cowork MarkaBilgileri Türkçe metni (P4-A2 için):**
 

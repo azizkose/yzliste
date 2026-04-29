@@ -1,5 +1,7 @@
 # Changelog
 
+## 2026-04-29 — Redesign P4-FIX-1~3: RDFeaturesTabbed FeaturesTabbed.tsx birebir kopya (platformVerileri + inline panel + rd-* token), video 6 farklı stil + playbackRate=1.5, EXAMPLE_MARKA_KIYAS eyebrow + "premium ton"
+
 ## 2026-04-29 — Redesign P4-A1~P4-A3 + blog: RDFeaturesTabbed canlı pattern birebir (hash nav + danger gorsel + rd-* token), MarkaBilgileri bakır cezve kıyas (marka boş/dolu), video zoom-yaklasim 2x hız, blog thumbnail kaldır
 
 ## 2026-04-29 — Redesign P3-A1~P3-U5: Polish-3 (Aziz acceptance 3. tur) — basketbol içerik, RDFeaturesTabbed, MarkaBilgileri 8 alan, /uret default seçimsiz + marka rozet + Adım 2/3 ayrım
