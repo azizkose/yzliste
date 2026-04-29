@@ -1,6 +1,6 @@
 ﻿"use client";
 import { useState, useRef } from "react";
-import { Edit3, Camera, ScanLine, FileSpreadsheet, FileText, AlertTriangle, RotateCcw, Scissors, FolderOpen, Check, X as XIcon, Loader2, Download, ClipboardList, BarChart3, CreditCard, Tag, Lightbulb } from "lucide-react";
+import { Edit3, Camera, ScanLine, FileSpreadsheet, Barcode, FileText, AlertTriangle, RotateCcw, Scissors, FolderOpen, Check, X as XIcon, Loader2, Download, ClipboardList, BarChart3, CreditCard, Tag, Lightbulb, PenLine } from "lucide-react";
 import { PLATFORM_BILGI, PLATFORM_PLACEHOLDER, YUKLENIYOR_MESAJLARI, KATEGORI_LISTESI } from "@/lib/constants";
 import { sonucuBolumle, docxIndir } from "@/lib/listing-utils";
 import { parseExcel, excelOlustur, type ParseSonucu } from "@/lib/excel-parser";
@@ -40,6 +40,8 @@ const TOPLU_PLATFORM_ETIKET: Record<TopluPlatform, string> = {
 
 interface MetinSekmesiProps {
   aktif: boolean;
+  // P3-U5: true olduğunda ürün adı/kategori/özellikler/hedef/fiyat render edilmez (Adım 2'de ayrı gösterilir)
+  hideProductFields?: boolean;
   girisTipi: "manuel" | "foto" | "barkod" | "excel";
   setGirisTipi: (v: "manuel" | "foto" | "barkod" | "excel") => void;
   platform: string;
@@ -139,6 +141,7 @@ function SkorBari({ skor, oneriler, ucretsizRevizeKullanildi, onUcretsizRevize }
 
 export default function MetinSekmesi({
   aktif,
+  hideProductFields = false,
   girisTipi, setGirisTipi,
   platform,
   urunAdi, setUrunAdi,
@@ -180,34 +183,41 @@ export default function MetinSekmesi({
   );
   const sonucBolumleri = sonucuBolumle(sonuc);
 
+  // P3-U4: Açıklayıcı giriş tipi chip konfigürasyonu
   const GIRIS_TIPI_CONF = [
-    { tip: "manuel" as const, label: "Manuel",   Icon: Edit3 },
-    { tip: "foto"   as const, label: "Fotoğraf", Icon: Camera },
-    { tip: "barkod" as const, label: "Barkod",   Icon: ScanLine },
+    { tip: "manuel" as const, label: "Manuel yaz", mikro: "Ürün adını ve özellikleri sen yaz", Icon: PenLine },
+    { tip: "foto"   as const, label: "Fotoğraftan tara", mikro: "Foto yükle, AI ürünü tanır", Icon: Camera },
+    { tip: "barkod" as const, label: "Barkod ile bul", mikro: "Barkod numarasını gir", Icon: Barcode },
   ];
 
   const GirisTipiChips = (
-    <div className="flex items-center border-b border-rd-neutral-200">
-      {GIRIS_TIPI_CONF.map(({ tip, label, Icon }) => (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+      {GIRIS_TIPI_CONF.map(({ tip, label, mikro, Icon }) => (
         <button key={tip} onClick={() => setGirisTipi(tip)}
-          className={`flex items-center gap-1.5 py-2 px-3 text-xs font-medium transition-colors border-b-2 -mb-px ${
+          className={`flex flex-col items-start gap-1 rounded-xl border px-3 py-2.5 text-left transition-colors ${
             girisTipi === tip
-              ? "border-rd-primary-800 text-rd-neutral-900"
-              : "border-transparent text-rd-neutral-400 hover:text-rd-neutral-900"
+              ? "border-rd-primary-700 bg-rd-primary-50 text-rd-primary-800"
+              : "border-rd-neutral-200 bg-white text-rd-neutral-600 hover:border-rd-primary-300"
           }`}>
-          <Icon size={14} strokeWidth={1.5} />
-          <span>{label}</span>
+          <span className="flex items-center gap-1.5">
+            <Icon size={13} strokeWidth={1.5} />
+            <span className="text-xs font-medium">{label}</span>
+          </span>
+          <span className="text-[10px] text-rd-neutral-400 leading-snug">{mikro}</span>
         </button>
       ))}
       <button
         onClick={() => setGirisTipi("excel")}
-        className={`flex items-center gap-1.5 py-2 px-3 text-xs font-medium transition-colors border-b-2 -mb-px ${
+        className={`flex flex-col items-start gap-1 rounded-xl border px-3 py-2.5 text-left transition-colors ${
           girisTipi === "excel"
-            ? "border-rd-primary-800 text-rd-neutral-900"
-            : "border-transparent text-rd-neutral-400 hover:text-rd-neutral-900"
+            ? "border-rd-primary-700 bg-rd-primary-50 text-rd-primary-800"
+            : "border-rd-neutral-200 bg-white text-rd-neutral-600 hover:border-rd-primary-300"
         }`}>
-        <FileSpreadsheet size={14} strokeWidth={1.5} />
-        <span>Excel</span>
+        <span className="flex items-center gap-1.5">
+          <FileSpreadsheet size={13} strokeWidth={1.5} />
+          <span className="text-xs font-medium">Excel ile toplu</span>
+        </span>
+        <span className="text-[10px] text-rd-neutral-400 leading-snug">Excel yükle, toplu üret</span>
       </button>
     </div>
   );
@@ -552,38 +562,42 @@ export default function MetinSekmesi({
       {girisTipi === "manuel" && (
         <>
           {GirisTipiChips}
-          <div>
-            <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Ürün adı <span className="text-rd-danger-700">*</span></label>
-            <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)} placeholder={platformPh.urun} className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Kategori <span className="text-rd-danger-700">*</span></label>
-            <select
-              value={digerMod ? "Diğer" : (kategori || "")}
-              onChange={(e) => {
-                if (e.target.value === "Diğer") { setDigerMod(true); setKategori(""); }
-                else { setDigerMod(false); setKategori(e.target.value); }
-              }}
-              className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
-            >
-              <option value="">— Seç (isteğe bağlı) —</option>
-              {KATEGORI_LISTESI.map((k) => (
-                <option key={k} value={k}>{k}</option>
-              ))}
-            </select>
-            {digerMod && (
-              <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)}
-                placeholder="Kategori yaz..." autoFocus
-                className="mt-2 w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800" />
-            )}
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Ürün detayları <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
-            <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)}
-              placeholder="Renk, beden, malzeme, öne çıkan özellikler, arama kelimeleri — ne kadar detay girersen içerik o kadar iyi olur"
-              rows={3} className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800" />
-          </div>
-          {GelismisAyarlar}
+          {!hideProductFields && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Ürün adı <span className="text-rd-danger-700">*</span></label>
+                <input type="text" value={urunAdi} onChange={(e) => setUrunAdi(e.target.value)} placeholder={platformPh.urun} className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Kategori <span className="text-rd-danger-700">*</span></label>
+                <select
+                  value={digerMod ? "Diğer" : (kategori || "")}
+                  onChange={(e) => {
+                    if (e.target.value === "Diğer") { setDigerMod(true); setKategori(""); }
+                    else { setDigerMod(false); setKategori(e.target.value); }
+                  }}
+                  className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
+                >
+                  <option value="">— Seç (isteğe bağlı) —</option>
+                  {KATEGORI_LISTESI.map((k) => (
+                    <option key={k} value={k}>{k}</option>
+                  ))}
+                </select>
+                {digerMod && (
+                  <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)}
+                    placeholder="Kategori yaz..." autoFocus
+                    className="mt-2 w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800" />
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Ürün detayları <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
+                <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)}
+                  placeholder="Renk, beden, malzeme, öne çıkan özellikler, arama kelimeleri — ne kadar detay girersen içerik o kadar iyi olur"
+                  rows={3} className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800" />
+              </div>
+              {GelismisAyarlar}
+            </>
+          )}
         </>
       )}
 
@@ -591,28 +605,32 @@ export default function MetinSekmesi({
       {girisTipi === "foto" && (
         <div className="space-y-3">
           {GirisTipiChips}
-          <div>
-            <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Kategori <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
-            <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder="örn: Ayakkabı & Çanta / Erkek Bot" className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-rd-neutral-900 mb-2">Ürün fotoğrafı</label>
-            {fotolar.length === 0 ? (
-              <div className="bg-rd-primary-100 border border-rd-primary-800/20 rounded-lg p-4 text-center space-y-1">
-                <p className="text-xs text-rd-primary-800 flex items-center justify-center gap-1.5"><Camera size={14} strokeWidth={1.5} /> Fotoğraf metin kalitesini artırır — yukarıdan yükleyebilirsin</p>
-                <button type="button" onClick={() => setGirisTipi("manuel")} className="text-xs text-rd-primary-800 hover:text-rd-primary-900 underline">Fotoğrafsız devam et</button>
+          {!hideProductFields && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Kategori <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
+                <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} placeholder="örn: Ayakkabı & Çanta / Erkek Bot" className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800" />
               </div>
-            ) : (
-              <FotoThumbnail src={fotolar[0]} onKaldir={() => fotoKaldir(0)} renk="green" />
-            )}
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Ürün detayları <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
-            <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)}
-              placeholder="Renk, beden, malzeme, öne çıkan özellikler, arama kelimeleri — ne kadar detay girersen içerik o kadar iyi olur"
-              rows={2} className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800" />
-          </div>
-          {GelismisAyarlar}
+              <div>
+                <label className="block text-sm font-medium text-rd-neutral-900 mb-2">Ürün fotoğrafı</label>
+                {fotolar.length === 0 ? (
+                  <div className="bg-rd-primary-100 border border-rd-primary-800/20 rounded-lg p-4 text-center space-y-1">
+                    <p className="text-xs text-rd-primary-800 flex items-center justify-center gap-1.5"><Camera size={14} strokeWidth={1.5} /> Fotoğraf metin kalitesini artırır — yukarıdan yükleyebilirsin</p>
+                    <button type="button" onClick={() => setGirisTipi("manuel")} className="text-xs text-rd-primary-800 hover:text-rd-primary-900 underline">Fotoğrafsız devam et</button>
+                  </div>
+                ) : (
+                  <FotoThumbnail src={fotolar[0]} onKaldir={() => fotoKaldir(0)} renk="green" />
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Ürün detayları <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
+                <textarea value={ozellikler} onChange={(e) => setOzellikler(e.target.value)}
+                  placeholder="Renk, beden, malzeme, öne çıkan özellikler, arama kelimeleri — ne kadar detay girersen içerik o kadar iyi olur"
+                  rows={2} className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800" />
+              </div>
+              {GelismisAyarlar}
+            </>
+          )}
         </div>
       )}
 
