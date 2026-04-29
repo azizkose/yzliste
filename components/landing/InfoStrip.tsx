@@ -263,42 +263,77 @@ function GorselPanel() {
   )
 }
 
-const VIDEO_STILLER = [
-  { icon: RotateCw, label: '360° döndür' },
-  { icon: ZoomIn, label: 'Yakınlaştır' },
-  { icon: Lightbulb, label: 'Dramatik ışık' },
-  { icon: Leaf, label: 'Doğal ortam' },
-  { icon: ScanSearch, label: 'Detay tarama' },
-  { icon: Wind, label: 'Kumaş hareketi' },
-]
-
 function VideoPanel() {
-  const videoRef = useRef<HTMLVideoElement | null>(null)
-  useEffect(() => {
-    if (videoRef.current) videoRef.current.playbackRate = 1.5
-  }, [])
   return (
-    <div className="flex flex-col md:flex-row gap-4 items-start">
-      <div className="w-32 md:w-40 shrink-0">
-        <video
-          ref={videoRef}
-          src="/video-ornekler/zoom-yaklasim.mp4"
-          muted
-          autoPlay
-          playsInline
-          loop
-          className="w-full rounded-lg object-cover bg-rd-neutral-200"
-          style={{ aspectRatio: '9/16' }}
-          aria-hidden="true"
-        />
-      </div>
-      <div className="flex-1 space-y-2">
-        {VIDEO_STILLER.map(({ icon: Icon, label }) => (
-          <div key={label} className="flex items-center gap-2">
-            <Icon size={14} strokeWidth={1.5} className="text-rd-neutral-400 shrink-0" aria-hidden="true" />
-            <span className="text-sm text-rd-neutral-700">{label}</span>
+    <div>
+      <p className="text-sm text-rd-neutral-600 mb-4 leading-relaxed">
+        Ürün fotoğrafınızdan AI ile tanıtım videosu oluşturun. 6 ön tanımlı hareket
+        stilinden seçin ya da kendi yönetmenliğinizi yapın — Reels, TikTok,
+        YouTube ve pazaryeri formatlarında.
+      </p>
+      <p className="text-sm font-semibold text-rd-neutral-900 mb-1">Ürün fotoğrafından tanıtım videosu</p>
+      <p className="text-xs text-rd-neutral-500 mb-5">Ürünü hareket ettiren, platform uyumlu dikey/kare video — MP4 olarak indir</p>
+      {/* 6 video kartı 2-kolon */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+        {[
+          { src: '/video-ornekler/360-donus.mp4', Ikon: RotateCw, baslik: '360° Dönüş', aciklama: 'Ürün kendi ekseni etrafında döner. Tüm açılar görünür. Takı, aksesuar, elektronik için ideal.' },
+          { src: '/video-ornekler/zoom-yaklasim.mp4', Ikon: ZoomIn, baslik: 'Zoom yaklaşım', aciklama: 'Kamera ürüne doğru yaklaşır. Doku ve detay hissi. El yapımı ve tekstil ürünler için güçlü.' },
+          { src: '/video-ornekler/dramatik-isik.mp4', Ikon: Lightbulb, baslik: 'Dramatik ışık', aciklama: 'Karanlık sahnede spotlight açılır. Premium ve lüks his. Kozmetik ve elektronik için etkili.' },
+          { src: '/video-ornekler/dogal-ortam.mp4', Ikon: Leaf, baslik: 'Doğal ortam', aciklama: 'Yapraklar sallanır, ışık oynar. Organik ve sıcak his. Gıda, bitki, doğal ürünler için ideal.' },
+          { src: '/video-ornekler/detay-tarama.mp4', Ikon: ScanSearch, baslik: 'Detay tarama', aciklama: 'Kamera yüzeyi soldan sağa tarar. Doku, işçilik, malzeme kalitesi ortaya çıkar. Elektronik ve deri ürünler için güçlü.' },
+          { src: '/video-ornekler/kumas-hareketi.mp4', Ikon: Wind, baslik: 'Kumaş hareketi', aciklama: 'Hafif esinti kumaşı hareket ettirir. Döküm ve akışkanlık hissi verir. Elbise, şal, perde için ideal.' },
+        ].map((v, i) => (
+          <div key={i} className="flex gap-3 rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-3">
+            <video
+              src={v.src}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              className="w-24 h-24 rounded-lg object-cover flex-shrink-0 bg-rd-neutral-200"
+            />
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-rd-neutral-900 mb-1 flex items-center gap-1.5">
+                <v.Ikon size={13} strokeWidth={1.5} className="text-rd-neutral-600" />
+                {v.baslik}
+              </p>
+              <p className="text-xs text-rd-neutral-500 leading-relaxed">{v.aciklama}</p>
+            </div>
           </div>
         ))}
+      </div>
+      {/* 3 özellik kartı */}
+      <div className="grid grid-cols-3 gap-3 mb-5">
+        {[
+          { Ikon: Timer, baslik: '5 saniyelik', aciklama: 'Story · Reels', etiket: '10 kredi' },
+          { Ikon: Film, baslik: '10 saniyelik', aciklama: 'Showcase · Pazaryeri', etiket: '20 kredi' },
+          { Ikon: Columns2, baslik: '3 format', aciklama: '9:16 · 1:1 · 16:9', etiket: 'Tüm platformlar' },
+        ].map((v, i) => (
+          <div key={i} className="rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-3 text-center">
+            <v.Ikon size={20} strokeWidth={1.5} className="text-rd-neutral-600 mx-auto mb-1" />
+            <p className="text-xs font-semibold text-rd-neutral-900">{v.baslik}</p>
+            <p className="text-xs text-rd-neutral-500 mb-1">{v.aciklama}</p>
+            <span className="text-xs font-medium text-rd-primary-700 bg-white border border-rd-primary-200 px-1.5 py-0.5 rounded-full">{v.etiket}</span>
+          </div>
+        ))}
+      </div>
+      {/* Nasıl çalışır */}
+      <div className="bg-rd-neutral-100 rounded-xl p-4">
+        <p className="text-xs font-semibold text-rd-neutral-600 mb-2">Nasıl çalışır?</p>
+        <div className="space-y-1.5">
+          {['Ürün fotoğrafını yükle', 'Süre ve format seç', 'AI ürünü animasyonlu videoya dönüştürür (~2 dk)', 'MP4 olarak indir, platforma yükle'].map((s, i) => (
+            <div key={i} className="flex items-start gap-2 text-xs text-rd-neutral-600">
+              <span className="w-4 h-4 rounded-full bg-rd-primary-50 text-rd-primary-700 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">{i + 1}</span>
+              {s}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-5 pt-4 border-t border-rd-neutral-200 text-center">
+        <a href="/uret?tab=video" className="inline-block bg-rd-primary-700 hover:bg-rd-primary-800 text-white font-medium px-6 py-3 rounded-xl text-sm transition-colors">
+          Ürün videosu üret →
+        </a>
       </div>
     </div>
   )
