@@ -44,7 +44,15 @@ next-env.d.ts
 # test results
 test-results/
 playwright-report/
+
+# OneDrive sync geçici dosyaları
 .tmp.driveupload/
+.tmp.drivedownload/
+.fuse_hidden*
+
+# Sandbox artıkları
+C:Users*
+C\:*
 
 # strateji arşivi — sadece kişisel kayıt
 docs/redesign/yzliste-strateji-kararlari.md
