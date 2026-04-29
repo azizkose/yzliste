@@ -3,10 +3,10 @@
 import { useState } from 'react'
 import { FileText, Image as ImageIcon, Video, MessageSquare, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { EXAMPLE_CONTENT } from '@/lib/data/exampleContent'
+import { EXAMPLE_CONTENT, EXAMPLE_CONTENT_TR } from '@/lib/data/exampleContent'
 
 type TabId = 'metin' | 'gorsel' | 'video' | 'sosyal'
-type MarketId = 'trendyol' | 'amazon-tr' | 'etsy'
+type MarketId = 'trendyol' | 'amazon' | 'etsy'
 
 const TABS = [
   {
@@ -45,14 +45,14 @@ const TABS = [
 
 const MARKETS: { id: MarketId; label: string }[] = [
   { id: 'trendyol', label: 'Trendyol' },
-  { id: 'amazon-tr', label: 'Amazon TR' },
+  { id: 'amazon', label: 'Amazon TR' },
   { id: 'etsy', label: 'Etsy' },
 ]
 
 // ---- Panels ----
 
 function MetinPanel({ market }: { market: MarketId }) {
-  const data = EXAMPLE_CONTENT.metin[market]
+  const data = EXAMPLE_CONTENT_TR.metin[market]
   return (
     <div className="space-y-4">
       <div>
@@ -209,7 +209,7 @@ export function InfoStrip() {
           <p className="text-[10px] uppercase tracking-[0.15em] text-rd-warm-700 font-medium mb-1.5">
             İÇERİK TÜRLERİ
           </p>
-          <h3 className="font-rd-display text-xl md:text-2xl text-rd-neutral-900 font-semibold">
+          <h3 className="font-rd-display text-xl md:text-2xl text-rd-neutral-900 font-medium">
             4 içerik türü, 7 pazaryeri için
           </h3>
           <p className="text-sm text-rd-neutral-500 mt-1.5 leading-relaxed max-w-[520px]">

@@ -1,5 +1,5 @@
 import { StepAnimation } from './StepAnimation'
-import { RDFeaturesTabbed } from './RDFeaturesTabbed'
+import { InfoStrip } from './InfoStrip'
 
 export function StepSection() {
   return (
@@ -24,8 +24,8 @@ export function StepSection() {
         {/* Divider */}
         <div className="my-10 md:my-12 border-t border-rd-neutral-200" />
 
-        {/* Features tabbed — replaces InfoStrip */}
-        <RDFeaturesTabbed />
+        {/* InfoStrip — 4 içerik türü + Detaya bak accordion */}
+        <InfoStrip />
       </div>
     </section>
   )
