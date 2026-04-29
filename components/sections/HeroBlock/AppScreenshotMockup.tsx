@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useRef } from 'react'
 import {
   Check,
   Zap,
@@ -12,13 +15,34 @@ import { EXAMPLE_CONTENT_TR } from '@/lib/data/exampleContent'
 
 const trendyolTitle = EXAMPLE_CONTENT_TR.metin.trendyol.title
 
+// Hızlı video — 2x hızda kısa tanıtım
+function HizliVideo() {
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.playbackRate = 2.0
+  }, [])
+  return (
+    <video
+      ref={videoRef}
+      src="/video-ornekler/zoom-yaklasim.mp4"
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="auto"
+      className="h-8 w-full rounded object-cover bg-rd-neutral-200"
+      aria-hidden="true"
+    />
+  )
+}
+
 const OUTPUT_CARDS = [
   {
     icon: FileText,
     label: 'Listing',
     color: 'text-rd-primary-700',
     content: (
-      <p className="text-[10px] text-rd-neutral-700 leading-snug line-clamp-2">
+      <p className="text-xs text-rd-neutral-700 leading-snug line-clamp-2">
         {trendyolTitle.slice(0, 60)}…
       </p>
     ),
@@ -39,19 +63,15 @@ const OUTPUT_CARDS = [
   {
     icon: PlayCircle,
     label: 'Video',
-    color: 'text-rd-neutral-500',
-    content: (
-      <div className="h-8 w-full rounded bg-rd-neutral-800 flex items-center justify-center">
-        <PlayCircle size={14} strokeWidth={1.5} className="text-white/60" aria-hidden="true" />
-      </div>
-    ),
+    color: 'text-rd-primary-700',
+    content: <HizliVideo />,
   },
   {
     icon: MessageSquare,
     label: 'Sosyal',
     color: 'text-rd-primary-700',
     content: (
-      <p className="text-[9px] text-rd-neutral-500 leading-snug line-clamp-2">
+      <p className="text-xs text-rd-neutral-500 leading-snug line-clamp-2">
         Sahaya çıkmadan önce doğru top şart. 7 numara FIBA standardı...
       </p>
     ),
@@ -104,10 +124,10 @@ export default function AppScreenshotMockup() {
               className="h-10 w-10 shrink-0 rounded-lg object-cover border border-rd-neutral-200"
             />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[11px] font-medium text-rd-neutral-700">
+              <p className="truncate text-xs font-medium text-rd-neutral-700">
                 Profesyonel Basketbol Topu 7 Numara
               </p>
-              <p className="mt-0.5 text-[9px] text-rd-neutral-400">
+              <p className="mt-0.5 text-xs text-rd-neutral-400">
                 Trendyol · Metin + Görsel + Video + Sosyal
               </p>
             </div>
@@ -133,7 +153,7 @@ export default function AppScreenshotMockup() {
                 <div key={card.label} className="rounded-lg border border-rd-neutral-200 bg-white p-2.5">
                   <div className="mb-1.5 flex items-center gap-1">
                     {Icon && <Icon size={11} strokeWidth={1.5} className={card.color} aria-hidden="true" />}
-                    <span className={`text-[9px] font-medium ${card.color}`}>{card.label}</span>
+                    <span className={`text-xs font-medium ${card.color}`}>{card.label}</span>
                   </div>
                   {card.content}
                 </div>
