@@ -201,11 +201,11 @@ export default function GorselSekmesi({
           <div className={`grid gap-3 ${gorselJoblar.length === 1 ? "grid-cols-1" : gorselJoblar.length === 2 ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-3"}`}>
             {gorselJoblar.map((job) => (
               <div key={job.requestId} className="space-y-1.5">
-                <div className="rounded-xl overflow-hidden border border-rd-neutral-200 bg-rd-neutral-100 relative group">
+                <div className="rounded-xl overflow-hidden border border-rd-neutral-200 bg-rd-neutral-100 relative group flex items-center justify-center min-h-[300px]">
                   <img
                     src={`/api/gorsel/img?requestId=${job.requestId}&index=0`}
                     alt={job.label}
-                    className="w-full aspect-square object-cover select-none"
+                    className="w-full max-h-[500px] mx-auto object-contain select-none"
                     draggable={false}
                     onContextMenu={(e) => e.preventDefault()}
                   />
