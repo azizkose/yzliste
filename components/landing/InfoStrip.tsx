@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { FileText, Image as ImageIcon, Video, MessageSquare, ChevronDown, RotateCw, ZoomIn, Lightbulb, Leaf, ScanSearch, Wind, Check, X, Tag, Hash, Camera, Timer, Film, Columns2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Eyebrow } from '@/components/primitives/Eyebrow'
 import { EXAMPLE_CONTENT, EXAMPLE_CONTENT_TR } from '@/lib/data/exampleContent'
 
 type TabId = 'metin' | 'gorsel' | 'video' | 'sosyal'
@@ -407,9 +408,11 @@ export function InfoStrip() {
     <div>
       {/* Header */}
       <div className="mb-5">
-        <p className="text-xs uppercase tracking-[0.15em] text-rd-warm-700 font-semibold mb-1.5">
-          İÇERİK TÜRLERİ
-        </p>
+        <div className="flex mb-3">
+          <Eyebrow color="accent" className="bg-rd-accent-50 px-3.5 py-1.5 rounded-full">
+            İÇERİK TÜRLERİ
+          </Eyebrow>
+        </div>
         <h2 className="font-rd-display text-3xl md:text-4xl text-rd-neutral-900 font-bold tracking-[-0.01em]">
           4 içerik türü, 7 pazaryeri için
         </h2>
