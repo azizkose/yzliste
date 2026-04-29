@@ -202,6 +202,15 @@ export default function MarkaBilgileriSection() {
               {MB_HEADER.subtitle}
             </p>
 
+            <div className="mt-4 p-3 rounded-lg bg-rd-primary-50 border border-rd-primary-200">
+              <p className="text-xs text-rd-primary-700 leading-relaxed">
+                <strong className="font-semibold">Metin tonu</strong> kelime tercihini belirler —
+                aynı bilgiler, farklı ses.{' '}
+                <strong className="font-semibold">Marka bilgisi</strong> içeriğe ne kadar kişisel
+                detay katar — mağaza adı, hedef kitle, hizmet vurguları.
+              </p>
+            </div>
+
             {/* 8 alan listesi */}
             <div className="mt-8 space-y-4">
               {BRAND_FEATURES.map((feature) => (

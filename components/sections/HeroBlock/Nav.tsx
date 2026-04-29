@@ -6,7 +6,6 @@ import { ArrowRight, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { NAV_LINKS, NAV_BRAND, NAV_CTAS } from '@/lib/constants/hero'
 import Button from '@/components/primitives/Button'
-import Badge from '@/components/primitives/Badge'
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
@@ -72,11 +71,6 @@ export default function Nav() {
             <span className="font-rd-display text-[22px] font-[800] tracking-tight text-slate-900">
               {NAV_BRAND.name}
             </span>
-            {NAV_BRAND.betaBadge && (
-              <Badge variant="primary" size="sm">
-                Beta
-              </Badge>
-            )}
           </Link>
 
           {/* Desktop nav links */}

@@ -35,16 +35,27 @@ export default function StickySubmitBar({
             Bu üretimin maliyeti
           </p>
           <div className="mt-1 flex items-baseline gap-2">
-            <span
-              className="text-2xl font-bold text-rd-neutral-900 tabular-nums"
-              style={{ fontFamily: 'var(--font-rd-display)' }}
-            >
-              {cost} kredi
-            </span>
-            <span className={`text-xs ${isInsufficientCredit ? 'text-rd-danger-600 font-medium' : 'text-rd-neutral-500'}`}>
-              {isInsufficientCredit
-                ? `Bakiyenizde ${remainingCredits} kredi var`
-                : `Üretim sonrası: ${Math.max(0, remainingCredits - cost)} kredi kalır`}
+            {cost === 0 ? (
+              <span
+                className="text-2xl font-bold text-rd-neutral-300 tabular-nums"
+                style={{ fontFamily: 'var(--font-rd-display)' }}
+              >
+                —
+              </span>
+            ) : (
+              <span
+                className="text-2xl font-bold text-rd-neutral-900 tabular-nums"
+                style={{ fontFamily: 'var(--font-rd-display)' }}
+              >
+                {cost} kredi
+              </span>
+            )}
+            <span className={`text-xs ${cost === 0 ? 'text-rd-neutral-300' : isInsufficientCredit ? 'text-rd-danger-600 font-medium' : 'text-rd-neutral-500'}`}>
+              {cost === 0
+                ? 'Önce form alanlarını doldurun'
+                : isInsufficientCredit
+                  ? `Bakiyenizde ${remainingCredits} kredi var`
+                  : `Üretim sonrası: ${Math.max(0, remainingCredits - cost)} kredi kalır`}
             </span>
           </div>
         </div>
