@@ -93,21 +93,33 @@ function MetinPanel({ market }: { market: MarketId }) {
   )
 }
 
+const GORSEL_STILLER = [
+  { src: '/ornek_beyaz.jpg', label: 'Beyaz zemin' },
+  { src: '/ornek_dogal.jpg', label: 'Doğal' },
+  { src: '/ornek_lifestyle.jpg', label: 'Lifestyle' },
+  { src: '/ornek_ahsap.jpg', label: 'Ahşap' },
+  { src: '/ornek_mermer.jpg', label: 'Mermer' },
+  { src: '/ornek_gradient.jpg', label: 'Gradient' },
+  { src: '/ornek_koyu.jpg', label: 'Koyu' },
+]
+
 function GorselPanel() {
-  const { placeholders, standard } = EXAMPLE_CONTENT.gorsel
   return (
     <div>
-      <div className="grid grid-cols-3 gap-2">
-        {placeholders.map((label, i) => (
-          <div key={i} className="flex flex-col items-center gap-1">
-            <div className="aspect-square w-full rounded-lg bg-rd-neutral-100 flex items-center justify-center">
-              <ImageIcon size={18} strokeWidth={1.5} className="text-rd-neutral-400" aria-hidden="true" />
-            </div>
-            <span className="text-[9px] text-rd-neutral-500 text-center leading-tight">{label}</span>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+        {GORSEL_STILLER.map((stil) => (
+          <div key={stil.src} className="flex flex-col items-center gap-1">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={stil.src}
+              alt={stil.label}
+              className="aspect-square w-full rounded-lg object-cover"
+            />
+            <span className="text-xs text-rd-neutral-500 text-center leading-tight">{stil.label}</span>
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[10px] text-rd-neutral-400">{standard}</p>
+      <p className="mt-3 text-xs text-rd-neutral-400">7 farklı stil — her stilde 1 görsel, 1 kredi</p>
     </div>
   )
 }
