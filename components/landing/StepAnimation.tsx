@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   RotateCcw, ChevronRight, Sparkles, Download,
   ImagePlus, PenLine,
@@ -8,18 +8,41 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
+// Hızlı video — 2x hızda kısa tanıtım
+function HizliVideo({ className }: { className?: string }) {
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.playbackRate = 2.0
+  }, [])
+  return (
+    <video
+      ref={videoRef}
+      src="/video-ornekler/zoom-yaklasim.mp4"
+      autoPlay
+      loop
+      muted
+      playsInline
+      className={className}
+      aria-hidden="true"
+    />
+  )
+}
+
 const STEP_DURATION = 3000
 
 // ---- Step 1 canvas: Ürünü tanıt ----
 
-function Step1Canvas({ reduced }: { reduced: boolean }) {
+function Step1Canvas({ reduced, inactive }: { reduced: boolean; inactive?: boolean }) {
   return (
     <div
       aria-hidden="true"
-      className="flex flex-col items-center justify-center gap-3 px-4 py-4"
+      className={cn(
+        'flex flex-col items-center justify-center gap-3 px-4 py-4 transition-opacity duration-300',
+        inactive && 'opacity-60',
+      )}
     >
       {/* ImagePlus VEYA PenLine yatay */}
-      <div className={cn('flex items-center gap-3', !reduced && 'animate-step-photo-in')}>
+      <div className={cn('flex items-center gap-3', !reduced && !inactive && 'animate-step-photo-in')}>
         <div className="flex flex-col items-center gap-1">
           <div className="flex items-center gap-1.5 rounded-xl bg-rd-warm-50 border border-rd-warm-200 px-4 py-2.5">
             <ImagePlus size={20} strokeWidth={1.5} className="text-rd-warm-700 shrink-0" />
@@ -28,8 +51,8 @@ function Step1Canvas({ reduced }: { reduced: boolean }) {
         </div>
         <span
           className={cn(
-            'text-[9px] uppercase tracking-[0.15em] text-rd-neutral-400 font-medium',
-            !reduced && 'animate-step-or-fade',
+            'text-xs uppercase tracking-[0.15em] text-rd-neutral-400 font-medium',
+            !reduced && !inactive && 'animate-step-or-fade',
           )}
         >
           VEYA
@@ -42,9 +65,9 @@ function Step1Canvas({ reduced }: { reduced: boolean }) {
         </div>
       </div>
       {/* Typing preview */}
-      <div className={cn('w-full max-w-[220px]', !reduced && 'animate-step-text-in')}>
+      <div className={cn('w-full max-w-[220px]', !reduced && !inactive && 'animate-step-text-in')}>
         <div className="rounded-lg border border-rd-neutral-200 bg-rd-neutral-50 px-3 py-2">
-          <p className="text-[10px] text-rd-neutral-400 leading-snug">
+          <p className="text-xs text-rd-neutral-400 leading-snug">
             Profesyonel basketbol topu 7 numara FIBA...
           </p>
         </div>
@@ -72,11 +95,17 @@ const CONTENT_CHIPS = [
   { label: 'Sosyal' },
 ]
 
-function Step2Canvas({ reduced }: { reduced: boolean }) {
+function Step2Canvas({ reduced, inactive }: { reduced: boolean; inactive?: boolean }) {
   return (
-    <div aria-hidden="true" className="flex flex-col gap-3 px-4 py-4">
+    <div
+      aria-hidden="true"
+      className={cn(
+        'flex flex-col gap-3 px-4 py-4 transition-opacity duration-300',
+        inactive && 'opacity-60',
+      )}
+    >
       <div>
-        <p className="text-[9px] uppercase tracking-[0.1em] text-rd-neutral-400 mb-1.5">
+        <p className="text-xs uppercase tracking-[0.1em] text-rd-neutral-400 mb-1.5">
           Pazaryerleri
         </p>
         <div className="flex flex-wrap gap-1.5">
@@ -84,12 +113,12 @@ function Step2Canvas({ reduced }: { reduced: boolean }) {
             <span
               key={chip.label}
               className={cn(
-                'text-[10px] font-medium px-2 py-0.5 rounded-full border transition-colors',
+                'text-xs font-medium px-2 py-0.5 rounded-full border transition-colors',
                 chip.pulse
                   ? 'border-rd-primary-700 bg-rd-primary-50 text-rd-primary-700'
                   : 'border-rd-neutral-300 bg-white text-rd-neutral-500',
-                !reduced && `animate-step-chip-${i}`,
-                chip.pulse && !reduced && 'animate-pulse-soft',
+                !reduced && !inactive && `animate-step-chip-${i}`,
+                chip.pulse && !reduced && !inactive && 'animate-pulse-soft',
               )}
             >
               {chip.label}
@@ -98,7 +127,7 @@ function Step2Canvas({ reduced }: { reduced: boolean }) {
         </div>
       </div>
       <div>
-        <p className="text-[9px] uppercase tracking-[0.1em] text-rd-neutral-400 mb-1.5">
+        <p className="text-xs uppercase tracking-[0.1em] text-rd-neutral-400 mb-1.5">
           İçerik türleri
         </p>
         <div className="flex flex-wrap gap-1.5">
@@ -106,9 +135,9 @@ function Step2Canvas({ reduced }: { reduced: boolean }) {
             <span
               key={chip.label}
               className={cn(
-                'text-[10px] font-medium px-2 py-0.5 rounded-full border transition-colors',
+                'text-xs font-medium px-2 py-0.5 rounded-full border transition-colors',
                 'border-rd-primary-700 bg-rd-primary-50 text-rd-primary-700',
-                !reduced && `animate-step-chip-${i + 5}`,
+                !reduced && !inactive && `animate-step-chip-${i + 5}`,
               )}
             >
               {chip.label}
@@ -130,6 +159,7 @@ const OUTPUT_CARDS_STEP3 = [
     animClass: 'animate-step-card-1',
     content: 'Profesyonel Kompozit Deri Basketbol Topu 7 Numara...',
     isText: true,
+    isVideo: false,
   },
   {
     icon: null,
@@ -138,14 +168,16 @@ const OUTPUT_CARDS_STEP3 = [
     animClass: 'animate-step-card-2',
     imgSrc: '/ornek_beyaz.jpg',
     isText: false,
+    isVideo: false,
   },
   {
     icon: PlayCircle,
     label: 'Video',
-    colorClass: 'text-rd-neutral-500',
+    colorClass: 'text-rd-primary-700',
     animClass: 'animate-step-card-3',
     content: null,
     isText: false,
+    isVideo: true,
   },
   {
     icon: MessageSquare,
@@ -154,15 +186,22 @@ const OUTPUT_CARDS_STEP3 = [
     animClass: 'animate-step-card-4',
     content: 'Sahaya çıkmadan önce doğru top şart...',
     isText: true,
+    isVideo: false,
   },
 ]
 
-function Step3Canvas({ reduced }: { reduced: boolean }) {
+function Step3Canvas({ reduced, inactive }: { reduced: boolean; inactive?: boolean }) {
   return (
-    <div aria-hidden="true" className="flex flex-col gap-2.5 px-4 py-4">
-      <div className={cn('flex items-center gap-1.5', !reduced && 'animate-step-sparkle-in')}>
+    <div
+      aria-hidden="true"
+      className={cn(
+        'flex flex-col gap-2.5 px-4 py-4 transition-opacity duration-300',
+        inactive && 'opacity-60',
+      )}
+    >
+      <div className={cn('flex items-center gap-1.5', !reduced && !inactive && 'animate-step-sparkle-in')}>
         <Sparkles size={13} strokeWidth={2} className="text-rd-primary-700" />
-        <span className="text-[10px] text-rd-neutral-500 font-medium">AI üretiyor...</span>
+        <span className="text-xs text-rd-neutral-500 font-medium">AI üretiyor...</span>
       </div>
       {/* 4 çıktı kartı 2×2 grid */}
       <div className="grid grid-cols-2 gap-1.5">
@@ -173,22 +212,22 @@ function Step3Canvas({ reduced }: { reduced: boolean }) {
               key={card.label}
               className={cn(
                 'rounded-lg border border-rd-neutral-200 bg-white p-2',
-                !reduced && card.animClass,
+                !reduced && !inactive && card.animClass,
               )}
             >
               <div className="flex items-center gap-1 mb-1">
                 {Icon && <Icon size={10} strokeWidth={1.5} className={card.colorClass} />}
-                <span className={cn('text-[9px] font-medium', card.colorClass)}>{card.label}</span>
+                <span className={cn('text-xs font-medium', card.colorClass)}>{card.label}</span>
               </div>
               {card.isText ? (
-                <p className="text-[9px] text-rd-neutral-500 leading-snug line-clamp-2">{card.content}</p>
+                <p className="text-xs text-rd-neutral-500 leading-snug line-clamp-2">{card.content}</p>
+              ) : card.isVideo ? (
+                <HizliVideo className="h-7 w-full rounded object-cover bg-rd-neutral-200" />
               ) : 'imgSrc' in card ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={card.imgSrc as string} alt={card.label} className="h-7 w-full rounded object-contain" />
               ) : (
-                <div className="h-6 w-full rounded bg-rd-neutral-800 flex items-center justify-center">
-                  {Icon && <Icon size={10} strokeWidth={1.5} className="text-white/40" />}
-                </div>
+                <div className="h-7 w-full rounded bg-rd-neutral-200" />
               )}
             </div>
           )
@@ -198,104 +237,15 @@ function Step3Canvas({ reduced }: { reduced: boolean }) {
         tabIndex={-1}
         aria-hidden="true"
         className={cn(
-          'self-start mt-0.5 flex items-center gap-1.5 text-[10px] font-medium',
+          'self-start mt-0.5 flex items-center gap-1.5 text-xs font-medium',
           'text-rd-primary-700 border border-rd-primary-200 rounded-lg px-2.5 py-1.5',
           'bg-rd-primary-50',
-          !reduced && 'animate-step-download-in',
+          !reduced && !inactive && 'animate-step-download-in',
         )}
       >
         <Download size={11} strokeWidth={2} />
         İndir
       </button>
-    </div>
-  )
-}
-
-// ---- Static (inactive) versions ----
-
-function Step1Static() {
-  return (
-    <div
-      aria-hidden="true"
-      className="flex flex-col items-center justify-center gap-3 px-4 py-4"
-    >
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-1.5 rounded-xl bg-rd-warm-50 border border-rd-warm-200 px-3 py-2">
-          <ImagePlus size={18} strokeWidth={1.5} className="text-rd-warm-700 shrink-0" />
-          <span className="text-[10px] text-rd-warm-700">Fotoğraf</span>
-        </div>
-        <span className="text-[9px] uppercase tracking-[0.15em] text-rd-neutral-400">VEYA</span>
-        <div className="flex items-center gap-1.5 rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 px-3 py-2">
-          <PenLine size={18} strokeWidth={1.5} className="text-rd-neutral-400 shrink-0" />
-          <span className="text-[10px] text-rd-neutral-400">Açıklama</span>
-        </div>
-      </div>
-      <div className="w-full max-w-[200px] rounded-lg border border-rd-neutral-200 bg-rd-neutral-50 px-3 py-2">
-        <p className="text-[10px] text-rd-neutral-400 leading-snug">Basketbol topu...</p>
-      </div>
-    </div>
-  )
-}
-
-function Step2Static() {
-  return (
-    <div
-      aria-hidden="true"
-      className="flex flex-col gap-2.5 px-4 py-4"
-    >
-      <div className="flex flex-wrap gap-1.5">
-        {MARKET_CHIPS.map((chip) => (
-          <span
-            key={chip.label}
-            className={cn(
-              'text-[10px] font-medium px-2 py-0.5 rounded-full border',
-              chip.pulse
-                ? 'border-rd-primary-700 bg-rd-primary-50 text-rd-primary-700'
-                : 'border-rd-neutral-300 bg-white text-rd-neutral-500',
-            )}
-          >
-            {chip.label}
-          </span>
-        ))}
-      </div>
-      <div className="flex flex-wrap gap-1.5">
-        {CONTENT_CHIPS.map((chip) => (
-          <span
-            key={chip.label}
-            className="text-[10px] font-medium px-2 py-0.5 rounded-full border border-rd-primary-700 bg-rd-primary-50 text-rd-primary-700"
-          >
-            {chip.label}
-          </span>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function Step3Static() {
-  return (
-    <div
-      aria-hidden="true"
-      className="flex flex-col gap-2.5 px-4 py-4"
-    >
-      <div className="flex items-center gap-1.5">
-        <Sparkles size={13} strokeWidth={2} className="text-rd-primary-700" />
-        <span className="text-[10px] text-rd-neutral-500 font-medium">AI üretiyor...</span>
-      </div>
-      <div className="grid grid-cols-2 gap-1.5">
-        {OUTPUT_CARDS_STEP3.map((card) => {
-          const Icon = card.icon
-          return (
-            <div key={card.label} className="rounded-lg border border-rd-neutral-200 bg-white p-2">
-              <div className="flex items-center gap-1 mb-1">
-                {Icon && <Icon size={10} strokeWidth={1.5} className={card.colorClass} />}
-                <span className={cn('text-[9px] font-medium', card.colorClass)}>{card.label}</span>
-              </div>
-              <div className="h-5 w-full rounded bg-rd-neutral-100" />
-            </div>
-          )
-        })}
-      </div>
     </div>
   )
 }
@@ -307,22 +257,19 @@ const STEPS = [
     number: '1',
     title: 'Fotoğraf VE/VEYA kısa açıklama',
     description: 'Fotoğraf yükle, barkod tara veya bilgileri kendin gir.',
-    ActiveCanvas: Step1Canvas,
-    StaticCanvas: Step1Static,
+    Canvas: Step1Canvas,
   },
   {
     number: '2',
     title: 'Pazaryeri ve içerik seç',
     description: 'Hangi platformlar için, hangi içerik türleri — sen seçersin.',
-    ActiveCanvas: Step2Canvas,
-    StaticCanvas: Step2Static,
+    Canvas: Step2Canvas,
   },
   {
     number: '3',
     title: 'AI senin için hazırlasın',
     description: 'Saniyeler içinde platform kurallarına uygun içerik hazır.',
-    ActiveCanvas: Step3Canvas,
-    StaticCanvas: Step3Static,
+    Canvas: Step3Canvas,
   },
 ]
 
@@ -381,8 +328,7 @@ export function StepAnimation() {
       <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto_1fr] gap-2 md:gap-0 md:items-stretch">
         {STEPS.map((step, i) => {
           const isActive = currentStep === i
-          const ActiveCanvas = step.ActiveCanvas
-          const StaticCanvas = step.StaticCanvas
+          const StepCanvas = step.Canvas
 
           return (
             <>
@@ -423,7 +369,7 @@ export function StepAnimation() {
                   <div className="min-w-0 flex-1">
                     <p
                       className={cn(
-                        'text-sm font-medium transition-colors duration-300 leading-snug',
+                        'text-base font-semibold transition-colors duration-300 leading-snug',
                         isActive ? 'text-rd-neutral-900' : 'text-rd-neutral-500',
                       )}
                     >
@@ -442,10 +388,10 @@ export function StepAnimation() {
                 <div className="flex-1 flex flex-col justify-center">
                   {isActive ? (
                     <div key={animKey}>
-                      <ActiveCanvas reduced={reduced} />
+                      <StepCanvas reduced={reduced} inactive={false} />
                     </div>
                   ) : (
-                    <StaticCanvas />
+                    <StepCanvas reduced={reduced} inactive={true} />
                   )}
                 </div>
               </div>
