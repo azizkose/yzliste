@@ -28,7 +28,7 @@ export const NAV_LINKS: NavLink[] = [
 
 export const NAV_BRAND = {
   name: 'yzliste',
-  betaBadge: true,
+  betaBadge: false,
 } as const
 
 export const NAV_CTAS = {
