@@ -42,6 +42,8 @@ interface MetinSekmesiProps {
   aktif: boolean;
   // P3-U5: true olduğunda ürün adı/kategori/özellikler/hedef/fiyat render edilmez (Adım 2'de ayrı gösterilir)
   hideProductFields?: boolean;
+  // P9-9: true olduğunda giriş yöntemi kartları render edilmez (Adım 2'de üstte gösterilir)
+  hideChips?: boolean;
   girisTipi: "manuel" | "foto" | "barkod" | "excel";
   setGirisTipi: (v: "manuel" | "foto" | "barkod" | "excel") => void;
   platform: string;
@@ -142,6 +144,7 @@ function SkorBari({ skor, oneriler, ucretsizRevizeKullanildi, onUcretsizRevize }
 export default function MetinSekmesi({
   aktif,
   hideProductFields = false,
+  hideChips = false,
   girisTipi, setGirisTipi,
   platform,
   urunAdi, setUrunAdi,
@@ -356,7 +359,7 @@ export default function MetinSekmesi({
 
   const TopluExcelUI = (
     <div className="space-y-4">
-      {GirisTipiChips}
+      {!hideChips && GirisTipiChips}
 
       {topluHata && (
         <div className="bg-rd-danger-50 border border-rd-danger-700/20 rounded-lg p-4 flex items-center justify-between gap-3">
@@ -561,7 +564,7 @@ export default function MetinSekmesi({
       {/* Manuel */}
       {girisTipi === "manuel" && (
         <>
-          {GirisTipiChips}
+          {!hideChips && GirisTipiChips}
           {!hideProductFields && (
             <>
               <div>
@@ -604,7 +607,7 @@ export default function MetinSekmesi({
       {/* Fotoğraf */}
       {girisTipi === "foto" && (
         <div className="space-y-3">
-          {GirisTipiChips}
+          {!hideChips && GirisTipiChips}
           {!hideProductFields && (
             <>
               <div>
@@ -637,7 +640,7 @@ export default function MetinSekmesi({
       {/* Barkod */}
       {girisTipi === "barkod" && (
         <div className="space-y-3">
-          {GirisTipiChips}
+          {!hideChips && GirisTipiChips}
           {!kameraAcik && !barkodBilgi && (
             <div className="bg-rd-primary-100 border border-rd-primary-800/20 rounded-lg p-5 text-center space-y-3">
               <p className="text-sm text-rd-neutral-600">Ürünün barkodunu kameraya göster, bilgiler otomatik dolacak.</p>
