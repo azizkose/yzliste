@@ -410,9 +410,9 @@ export function InfoStrip() {
         <p className="text-xs uppercase tracking-[0.15em] text-rd-warm-700 font-semibold mb-1.5">
           İÇERİK TÜRLERİ
         </p>
-        <h3 className="font-rd-display text-xl md:text-2xl text-rd-neutral-900 font-semibold">
+        <h2 className="font-rd-display text-3xl md:text-4xl text-rd-neutral-900 font-bold tracking-[-0.01em]">
           4 içerik türü, 7 pazaryeri için
-        </h3>
+        </h2>
         <p className="text-sm text-rd-neutral-500 mt-1.5 leading-relaxed max-w-[520px]">
           Her tür ayrı kredi · birini, birkaçını veya hepsini birden seçebilirsin. Pazaryeri
           kuralı otomatik uygulanır.
