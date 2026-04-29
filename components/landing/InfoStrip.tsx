@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { FileText, Image as ImageIcon, Video, MessageSquare, ChevronDown, RotateCw, ZoomIn, Lightbulb, Leaf, ScanSearch, Wind, Check, X, Tag, Hash, Camera, Timer, Film, Columns2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { EXAMPLE_CONTENT, EXAMPLE_CONTENT_TR } from '@/lib/data/exampleContent'
@@ -43,11 +43,6 @@ const TABS = [
   },
 ]
 
-const MARKETS: { id: MarketId; label: string }[] = [
-  { id: 'trendyol', label: 'Trendyol' },
-  { id: 'amazon', label: 'Amazon TR' },
-  { id: 'etsy', label: 'Etsy' },
-]
 
 // ---- KopyalaButon ----
 
