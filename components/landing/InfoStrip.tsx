@@ -340,45 +340,56 @@ function VideoPanel() {
 }
 
 function SosyalPanel() {
-  const { instagram, tiktok, pinterest } = EXAMPLE_CONTENT.sosyal
-  const posts = [
-    { platform: 'Instagram', data: instagram },
-    { platform: 'TikTok', data: tiktok },
-    { platform: 'Pinterest', data: pinterest },
-  ]
+  const igCaption = EXAMPLE_CONTENT.sosyal.instagram.caption
+  const igHashtags = EXAMPLE_CONTENT.sosyal.instagram.hashtags.join(' ')
+  const twCaption = 'FIBA onaylı 7 numara basketbol topu, hediye kuru pompa ile — sahaya çıkmaya hazır mısın? Antrenman ve maç için profesyonel kalite. #basketbol #spor'
   return (
-    <div className="space-y-3">
-      {posts.map(({ platform, data }) => (
-        <div
-          key={platform}
-          className="rounded-lg border border-rd-neutral-200 bg-white overflow-hidden"
-        >
-          <div className="px-3 py-2 border-b border-rd-neutral-100 bg-rd-neutral-50">
-            <span className="text-xs font-medium text-rd-neutral-600">{platform}</span>
+    <div>
+      <p className="text-sm text-rd-neutral-600 mb-4 leading-relaxed">
+        Her platform için ayrı formatta caption ve hashtag seti üretin.
+        Instagram, TikTok, Facebook ve X — hepsi tek tıkla.
+      </p>
+      <p className="text-sm font-semibold text-rd-neutral-900 mb-1">Platform uyumlu caption + hashtag seti</p>
+      <p className="text-xs text-rd-neutral-500 mb-5">Instagram, TikTok, Facebook, Twitter/X — her platform için ayrı format · 1 kredi</p>
+      <div className="flex gap-2 mb-4 flex-wrap">
+        {['Instagram', 'TikTok', 'Facebook', 'Twitter/X'].map((p) => (
+          <span key={p} className="text-xs bg-rd-success-50 text-rd-success-700 border border-rd-success-200 px-3 py-1 rounded-full font-medium">{p}</span>
+        ))}
+      </div>
+      <div className="space-y-3">
+        <div className="rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-rd-neutral-600 flex items-center gap-1.5">
+              <Camera size={13} strokeWidth={1.5} />
+              Instagram Caption
+            </span>
+            <KopyalaButon metin={igCaption} />
           </div>
-          <div className="px-3 py-2.5">
-            <p className="text-sm text-rd-neutral-700 whitespace-pre-line leading-relaxed">
-              {data.caption}
-            </p>
-          </div>
-          {data.hashtags && data.hashtags.length > 0 && (
-            <div className="px-3 py-2 border-t border-rd-neutral-100">
-              <div className="flex flex-wrap gap-1.5">
-                {data.hashtags.slice(0, 6).map((tag, i) => (
-                  <span key={i} className="text-xs text-rd-primary-700 font-medium">
-                    {tag}
-                  </span>
-                ))}
-                {data.hashtags.length > 6 && (
-                  <span className="text-xs text-rd-neutral-400">
-                    +{data.hashtags.length - 6}
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
+          <p className="text-sm text-rd-neutral-600 leading-relaxed whitespace-pre-line">{igCaption}</p>
         </div>
-      ))}
+        <div className="rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-rd-neutral-600 flex items-center gap-1.5">
+              <Tag size={13} strokeWidth={1.5} />
+              Hashtag Seti
+            </span>
+            <KopyalaButon metin={igHashtags} />
+          </div>
+          <p className="text-sm text-rd-success-700 leading-relaxed">{igHashtags}</p>
+        </div>
+        <div className="rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-rd-neutral-600">Twitter/X (280 karakter)</span>
+            <KopyalaButon metin={twCaption} />
+          </div>
+          <p className="text-sm text-rd-neutral-600 leading-relaxed">{twCaption}</p>
+        </div>
+      </div>
+      <div className="mt-5 pt-4 border-t border-rd-neutral-200 text-center">
+        <a href="/uret?tab=sosyal" className="inline-block bg-rd-primary-700 hover:bg-rd-primary-800 text-white font-medium px-6 py-3 rounded-xl text-sm transition-colors">
+          Sosyal içerik üret →
+        </a>
+      </div>
     </div>
   )
 }
