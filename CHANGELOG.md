@@ -1,5 +1,7 @@
 # Changelog
 
+## 2026-04-29 — Redesign P3-A1~P3-U5: Polish-3 (Aziz acceptance 3. tur) — basketbol içerik, RDFeaturesTabbed, MarkaBilgileri 8 alan, /uret default seçimsiz + marka rozet + Adım 2/3 ayrım
+
 ## 2026-04-28 — Redesign LP-11~LP-12: /fiyatlar 2-kolon hibrit + /uret 3 aşama akış (FiyatlarHybridSection, KrediCalculator embedded+onPaketOner, StepCard vertical flow, ContentTypeGrid, PlatformChips, ProgressIndicator)
 
 ## 2026-04-28 — Redesign LP-01~LP-10: Anasayfa polish (trust strip, hero subtitle/mockup, video CTA off, step animation 7 pazar+4 kart, InfoStrip açıklamaları, kr→kredi, marka şablonu Selin Porselen, kıyas tablosu marka ismi yok, spacing)
