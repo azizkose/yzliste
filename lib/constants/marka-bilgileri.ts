@@ -73,19 +73,19 @@ export const TONE_CHIPS: ToneChip[] = [
     key: "samimi",
     label: "Samimi",
     output:
-      "Sabah kahvesi ritüelinizi güzelleştirsin diye tasarlandı. Gaziantep'te el dövme, tin kaplama içi, hediye kutusunda — kutudan çıkar çıkmaz hazır. Türk kahvesi sevenler için biçilmiş kaftan!",
+      "Sabah kahvene başlamadan bir bakar mısın? Bu cezve seninle kalmak için yapılmış. Gaziantep'te elle dövülmüş, kalay kaplı içi, hediye kutusunda — sevdiğine vermek için de tam zamanı.",
   },
   {
     key: "profesyonel",
     label: "Profesyonel",
     output:
-      "El dövme bakır cezve; gıda güvenli tin kaplama iç yüzey, 250 ml kapasite, 2 porselen fincan ile komple set. Gaziantep'te aile atölyesinden üretim, her parça ayrı kalite kontrolünden geçer.",
+      "El dövme bakır cezve; gıda güvenli kalay kaplı iç yüzey, 250 ml kapasite, 2 porselen fincan ile komple set. Gaziantep'te aile atölyesinden, her parça ayrı kalite kontrolünden geçer.",
   },
   {
     key: "premium",
     label: "Premium",
     output:
-      "Anadolu'nun yüz yıllık bakırcılığını mutfağına taşı. Gaziantep ustalarının elinde şekillenen bu cezve, sabah kahvesi ritüelini sanat eserine dönüştürür. Hediye kutusunda, kullanım rehberi ile birlikte.",
+      "Bakırın sıcaklığı, sabah kahvesini bir ritüele dönüştürür. El dövme yüzeyin her dokunuşunda Gaziantep ustalarının izi var. Hediye kutusunda, kullanım rehberi ile birlikte — özel anlar için biçilmiş bir hediye.",
   },
 ];
 
