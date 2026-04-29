@@ -1,7 +1,6 @@
 "use client";
-import { useState, useEffect, useCallback, useMemo, useRef, Fragment } from "react";
+import { useState, useEffect, useCallback, useRef, Fragment } from "react";
 import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import { useCredits, useInvalidateCredits } from "@/lib/hooks/useCredits";
@@ -9,7 +8,7 @@ import { analytics } from "@/lib/analytics";
 import AuthForm from "@/components/auth/AuthForm";
 import { resizeFoto } from "@/lib/listing-utils";
 import type { Kullanici } from "@/lib/listing-utils";
-import { PLATFORM_BILGI } from "@/lib/constants";
+import { PLATFORM_BILGI, KATEGORI_LISTESI } from "@/lib/constants";
 import PaketModal from "@/components/PaketModal";
 import MetinSekmesi from "@/components/tabs/MetinSekmesi";
 import GorselSekmesi from "@/components/tabs/GorselSekmesi";
@@ -23,17 +22,18 @@ import {
   ImagePlus,
   Check,
   CheckCircle2,
+  AlertCircle,
   type LucideIcon,
 } from "lucide-react";
 import { useMetinUretim } from "@/lib/hooks/useMetinUretim";
 import { useGorselUretim } from "@/lib/hooks/useGorselUretim";
 import { useVideoUretim } from "@/lib/hooks/useVideoUretim";
 import { useSosyalUretim } from "@/lib/hooks/useSosyalUretim";
-import BrandProfileBlock from "@/components/uret/BrandProfileBlock";
 import { calculateCredits, type ActiveTab } from "@/components/uret/useCalculateCredits";
 import { getCTAState } from "@/components/uret/useCTAState";
 import StickySubmitBar from "@/components/uret/StickySubmitBar";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 type AnaSekme = "metin" | "gorsel" | "video" | "sosyal";
 
@@ -63,12 +63,13 @@ const PLATFORMS = [
 ];
 
 export default function Home() {
-  const router = useRouter();
   const invalidateCredits = useInvalidateCredits();
   const { data: kredilerHook } = useCredits();
 
   // ===== SHARED STATE =====
-  const [anaSekme, setAnaSekme] = useState<AnaSekme>("metin");
+  // P3-U1: default null (seçilmemiş)
+  const [anaSekme, setAnaSekme] = useState<AnaSekme | null>(null);
+  const [platformSecimliydi, setPlatformSecimliydi] = useState(false);
   const [kullanici, setKullanici] = useState<Kullanici | null>(null);
   const [authYukleniyor, setAuthYukleniyor] = useState(true);
   const [gecmis, setGecmis] = useState<Uretim[]>([]);
@@ -83,15 +84,14 @@ export default function Home() {
   const [authPopupMod, setAuthPopupMod] = useState<"giris" | "kayit">("kayit");
   const [authSonraAksiyon, setAuthSonraAksiyon] = useState<"paket" | null>(null);
   const [fotolar, setFotolar] = useState<string[]>([]);
+  const [digerMod, setDigerMod] = useState(false);
+  const [gelismisAcik, setGelismisAcik] = useState(false);
 
-  // LP-12: step progress state
-  const [step1Interacted, setStep1Interacted] = useState(false);
   const prevStep1DoneRef = useRef(false);
   const prevStep2DoneRef = useRef(false);
 
   const krediDusuk = kullanici && !kullanici.is_admin && (kredilerHook ?? kullanici.kredi) <= 2;
 
-  // Stable functional-update wrapper so hooks get a stable reference
   const setKullaniciFn = useCallback((fn: (k: Kullanici | null) => Kullanici | null) => {
     setKullanici(fn);
   }, []);
@@ -135,7 +135,7 @@ export default function Home() {
 
   // Sticky bar — cost + credit check
   const cost = calculateCredits({
-    activeTab: anaSekme as ActiveTab,
+    activeTab: (anaSekme ?? "metin") as ActiveTab,
     selectedStylesCount: gorsel.seciliStiller?.size,
     videoLengthSec: Number(video.videoSure) as 5 | 10,
     selectedPlatformsCount: 1,
@@ -157,7 +157,7 @@ export default function Home() {
     sosyal.captionYukleniyor;
 
   const ctaState = getCTAState({
-    activeTab: anaSekme as ActiveTab,
+    activeTab: (anaSekme ?? "metin") as ActiveTab,
     productName: metin.urunAdi,
     hasPhoto: fotolar.length > 0,
     selectedStylesCount: gorsel.seciliStiller?.size,
@@ -165,21 +165,20 @@ export default function Home() {
     isLoggedIn: !!kullanici && !kullanici.anonim,
   });
 
-  // LP-12: step progress derived state
-  const step1Done = step1Interacted;
+  // P3-U1: step1Done = both content type AND platform actively selected
+  const step1Done = anaSekme !== null && platformSecimliydi;
   const step2Done = fotolar.length > 0 || metin.urunAdi.trim() !== "";
   const currentStep = !step1Done ? 1 : !step2Done ? 2 : 3;
 
-  // LP-12: step handlers
+  // P3-U1: step handlers — interacted only when both selections made
   const handleContentTypeChange = useCallback((tab: AnaSekme) => {
     setAnaSekme(tab);
-    setStep1Interacted(true);
   }, []);
 
   const handlePlatformChange = useCallback((platformId: string) => {
     metin.setPlatform(platformId);
     metin.setDil(PLATFORM_BILGI[platformId]?.dil || "tr");
-    setStep1Interacted(true);
+    setPlatformSecimliydi(true);
   }, [metin]);
 
   // LP-12: auto-scroll when step completes
@@ -247,6 +246,8 @@ export default function Home() {
     const girisParam = params.get("giris");
     if (tabParam && (["metin", "gorsel", "video", "sosyal"] as AnaSekme[]).includes(tabParam as AnaSekme)) {
       setAnaSekme(tabParam as AnaSekme);
+      // P3-U4 / LP-12b: URL pre-fill ile gelen sekme seçimi adım 1 sayılır
+      setPlatformSecimliydi(true);
     }
     if (tabParam === "metin" && girisParam === "excel") {
       metin.setGirisTipi("excel");
@@ -308,6 +309,14 @@ export default function Home() {
     );
   })();
 
+  // P3-U3: fotoğraf etiketi — metin/sosyal/seçimsiz = opsiyonel, gorsel/video = zorunlu
+  const fotoLabel = (anaSekme === "metin" || anaSekme === "sosyal" || anaSekme === null)
+    ? "Fotoğraf opsiyonel — ekle, sonucu iyileştirsin"
+    : "Fotoğraf gerekli";
+
+  // P3-U2: marka profil dolu mu?
+  const markaProfilDolu = !!(kullanici?.marka_adi && kullanici?.ton);
+
   return (
     <>
       <SiteHeader aktifSayfa="icerik" />
@@ -322,7 +331,7 @@ export default function Home() {
             İçerik üret
           </p>
           <h1
-            className="text-2xl sm:text-3xl font-bold text-rd-neutral-900 text-center mb-6"
+            className="text-2xl sm:text-3xl font-medium text-rd-neutral-900 text-center mb-6"
             style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em' }}
           >
             Ürününü tanıt, AI senin için yapsın
@@ -505,35 +514,38 @@ export default function Home() {
               ))}
             </div>
 
-            {/* PlatformChips — horizontal scroll on mobile */}
+            {/* P3-U1: PlatformChips — bigger, no active before first click */}
             <div
               role="group"
               aria-label="Platform seçimi"
               className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide"
             >
-              {PLATFORMS.map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => handlePlatformChange(p.id)}
-                  aria-pressed={metin.platform === p.id}
-                  className={cn(
-                    "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-700 focus-visible:ring-offset-2",
-                    metin.platform === p.id
-                      ? "bg-rd-primary-800 text-white"
-                      : "bg-white border border-rd-neutral-200 text-rd-neutral-700 hover:bg-rd-neutral-50"
-                  )}
-                >
-                  {p.label}
-                </button>
-              ))}
+              {PLATFORMS.map((p) => {
+                const isActive = platformSecimliydi && metin.platform === p.id;
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => handlePlatformChange(p.id)}
+                    aria-pressed={isActive}
+                    className={cn(
+                      "px-4 py-3 rounded-lg text-sm font-medium whitespace-nowrap transition-colors flex-shrink-0",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-700 focus-visible:ring-offset-2",
+                      isActive
+                        ? "bg-rd-primary-800 text-white"
+                        : "bg-white border border-rd-neutral-200 text-rd-neutral-700 hover:bg-rd-neutral-50"
+                    )}
+                  >
+                    {p.label}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Platform info bar */}
             {platformInfoBar}
           </section>
 
-          {/* ========== ADIM 2 ========== */}
+          {/* ========== ADIM 2 — Ürün bilgisi ========== */}
           <section
             id="step-2"
             aria-labelledby="step-2-title"
@@ -563,12 +575,35 @@ export default function Home() {
               2 · Ürünü tanıt
             </h2>
 
-            {/* BrandProfileBlock */}
-            <div className="mb-4">
-              <BrandProfileBlock />
-            </div>
+            {/* P3-U2: Marka profil hibrit rozet */}
+            {kullanici && !kullanici.anonim && (
+              <div className={cn(
+                "rounded-xl border p-3 mb-4 flex items-center justify-between gap-3",
+                markaProfilDolu
+                  ? "bg-rd-success-50 border-rd-success-700/20"
+                  : "bg-rd-warm-50 border-rd-warm-200"
+              )}>
+                <div className="flex items-center gap-2">
+                  {markaProfilDolu
+                    ? <CheckCircle2 size={16} className="text-rd-success-700 flex-shrink-0" aria-hidden="true" />
+                    : <AlertCircle size={16} className="text-rd-warm-700 flex-shrink-0" aria-hidden="true" />
+                  }
+                  <p className="text-sm text-rd-neutral-700">
+                    {markaProfilDolu
+                      ? "Marka profilim aktif — AI senin tarzında yazacak"
+                      : "Marka profilini doldur, AI sana özel yazsın"}
+                  </p>
+                </div>
+                <Link
+                  href="/hesap/marka"
+                  className="text-sm font-medium text-rd-primary-800 hover:text-rd-primary-900 underline whitespace-nowrap transition-colors"
+                >
+                  {markaProfilDolu ? "Düzenle" : "Aç"}
+                </Link>
+              </div>
+            )}
 
-            {/* Paylaşılan ürün fotoğrafı */}
+            {/* P3-U3: Paylaşılan ürün fotoğrafı — dynamic label */}
             <div className={`mb-4 bg-white rounded-xl p-4 transition-colors ${fotolar[0] ? "border border-rd-neutral-200" : "border border-dashed border-rd-neutral-200 hover:border-rd-primary-800"}`}>
               {fotolar[0] ? (
                 <div className="flex items-center gap-3">
@@ -592,7 +627,7 @@ export default function Home() {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-rd-neutral-900">Ürün fotoğrafı yükle</p>
-                    <p className="text-xs text-rd-neutral-400 mt-0.5">Tüm içerik türlerinde kullanılır</p>
+                    <p className="text-xs text-rd-neutral-400 mt-0.5">{fotoLabel}</p>
                   </div>
                   <span className="text-xs text-rd-neutral-400 group-hover:text-rd-primary-800 transition-colors flex-shrink-0">Seç</span>
                   <input type="file" accept="image/*" className="hidden" onChange={tekFotoSec} />
@@ -600,32 +635,170 @@ export default function Home() {
               )}
             </div>
 
-            {/* Tab content */}
+            {/* P3-U5: Paylaşılan ürün bilgisi formu */}
+            <div className="bg-white rounded-xl border border-rd-neutral-200 p-4 mb-4 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-rd-neutral-900 mb-1">
+                  Ürün adı <span className="text-rd-danger-700">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={metin.urunAdi}
+                  onChange={(e) => metin.setUrunAdi(e.target.value)}
+                  placeholder="örn: Profesyonel Basketbol Topu 7 Numara"
+                  className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Kategori <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
+                <select
+                  value={digerMod ? "Diğer" : (metin.kategori || "")}
+                  onChange={(e) => {
+                    if (e.target.value === "Diğer") { setDigerMod(true); metin.setKategori(""); }
+                    else { setDigerMod(false); metin.setKategori(e.target.value); }
+                  }}
+                  className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
+                >
+                  <option value="">— Seç (isteğe bağlı) —</option>
+                  {KATEGORI_LISTESI.map((k) => (
+                    <option key={k} value={k}>{k}</option>
+                  ))}
+                </select>
+                {digerMod && (
+                  <input
+                    type="text"
+                    value={metin.kategori}
+                    onChange={(e) => metin.setKategori(e.target.value)}
+                    placeholder="Kategori yaz..."
+                    autoFocus
+                    className="mt-2 w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
+                  />
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Ürün detayları <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
+                <textarea
+                  value={metin.ozellikler}
+                  onChange={(e) => metin.setOzellikler(e.target.value)}
+                  placeholder="Renk, beden, malzeme, öne çıkan özellikler, arama kelimeleri — ne kadar detay girersen içerik o kadar iyi olur"
+                  rows={3}
+                  className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
+                />
+              </div>
+
+              {/* Gelişmiş ayarlar */}
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setGelismisAcik(v => !v)}
+                  className="flex items-center gap-1 text-xs font-medium text-rd-neutral-600 hover:text-rd-neutral-900 transition-colors"
+                >
+                  <span>{gelismisAcik ? "▾" : "▸"}</span>
+                  Daha fazla seçenek
+                </button>
+                {gelismisAcik && (
+                  <div className="mt-3 space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Hedef kitle <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
+                      <select value={metin.hedefKitle} onChange={(e) => metin.setHedefKitle(e.target.value)} className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800">
+                        <option value="genel">Genel</option>
+                        <option value="kadinlar">Kadınlar</option>
+                        <option value="erkekler">Erkekler</option>
+                        <option value="gencler">Gençler (18-25)</option>
+                        <option value="ebeveynler">Ebeveynler</option>
+                        <option value="profesyoneller">Profesyoneller</option>
+                        <option value="sporcular">Sporcular</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Fiyat segmenti <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {(["butce", "orta", "premium"] as const).map((seg) => (
+                          <button key={seg} type="button" onClick={() => metin.setFiyatSegmenti(seg)}
+                            className={`py-2 rounded-lg border text-xs font-medium transition-all ${metin.fiyatSegmenti === seg ? "border-rd-primary-800 bg-rd-primary-100 text-rd-primary-800" : "border-rd-neutral-200 text-rd-neutral-600 hover:border-rd-primary-800"}`}>
+                            {seg === "butce" ? "Bütçe" : seg === "orta" ? "Orta" : "Premium"}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* P3-U5: MetinSekmesi — hideProductFields=true, sadece giriş tipi + üretim UI */}
+            <MetinSekmesi
+              aktif={anaSekme === "metin"}
+              hideProductFields={true}
+              girisTipi={metin.girisTipi} setGirisTipi={metin.setGirisTipi}
+              platform={metin.platform}
+              urunAdi={metin.urunAdi} setUrunAdi={metin.setUrunAdi}
+              kategori={metin.kategori} setKategori={metin.setKategori}
+              ozellikler={metin.ozellikler} setOzellikler={metin.setOzellikler}
+              hedefKitle={metin.hedefKitle} setHedefKitle={metin.setHedefKitle}
+              fiyatSegmenti={metin.fiyatSegmenti} setFiyatSegmenti={metin.setFiyatSegmenti}
+              fotolar={fotolar} fotoKaldir={fotoKaldir}
+              kameraAcik={metin.kameraAcik} kameraAc={metin.kameraAc} kameraKapat={metin.kameraKapat}
+              barkodYukleniyor={metin.barkodYukleniyor} barkodBilgi={metin.barkodBilgi} setBarkodBilgi={metin.setBarkodBilgi}
+              yukleniyor={metin.yukleniyor} yukleniyorMesaj={metin.yukleniyorMesaj}
+              sonuc={metin.sonuc} setSonuc={metin.setSonuc}
+              duzenleYukleniyor={metin.duzenleYukleniyor} setDuzenleYukleniyor={metin.setDuzenleYukleniyor}
+              uretimId={metin.uretimId} yenidenUretHakki={metin.yenidenUretHakki} setYenidenUretHakki={metin.setYenidenUretHakki}
+              kullanici={kullanici} paketModalAc={paketModalAc} icerikUret={metin.icerikUret}
+              onGirisAc={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }}
+              skor={metin.skor} oneriler={metin.oneriler}
+              ucretsizRevizeKullanildi={metin.ucretsizRevizeKullanildi}
+              ucretsizRevizeBaslat={metin.ucretsizRevizeBaslat}
+            />
+          </section>
+
+          {/* ========== ADIM 3 — İçerik seçimi & üretim ========== */}
+          <section
+            id="step-3"
+            aria-labelledby="step-3-title"
+            className={cn(
+              "relative ml-5 md:ml-6 pl-12 md:pl-16 pb-8 border-l-2 border-transparent transition-opacity",
+              !step1Done || !step2Done ? "opacity-40 pointer-events-none" : ""
+            )}
+          >
+            {/* Numbered circle */}
+            <div
+              className={cn(
+                "absolute -left-5 md:-left-6 top-0 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-white text-sm font-medium transition-all",
+                step1Done && step2Done ? "bg-rd-warm-700" : "bg-rd-neutral-300",
+                currentStep === 3 ? "animate-pulse-soft" : ""
+              )}
+              aria-hidden="true"
+            >
+              3
+            </div>
+
+            <h2
+              id="step-3-title"
+              className="text-base md:text-lg font-medium text-rd-neutral-900 mb-4"
+              style={{ fontFamily: 'var(--font-rd-display)' }}
+            >
+              3 · İçerik seçimi ve üretim
+            </h2>
+
+            {/* P3-U5: Metin sekmesinde sadece maliyet kartı; diğer sekmelerde tam UI */}
+            {anaSekme === "metin" && (
+              <div className="bg-white rounded-xl border border-rd-neutral-200 p-4 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium text-rd-neutral-900">
+                    Maliyet: {cost} kredi
+                  </p>
+                  <p className="text-xs text-rd-neutral-500 mt-0.5">
+                    Kalan bakiye: {remainingCredits} kredi
+                  </p>
+                </div>
+                <p className="text-xs text-rd-neutral-400 text-right">
+                  Aşağıdaki "Üret" butonu ile başlat
+                </p>
+              </div>
+            )}
+
             <div key={anaSekme} className="animate-tab-enter">
-
-              <MetinSekmesi
-                aktif={anaSekme === "metin"}
-                girisTipi={metin.girisTipi} setGirisTipi={metin.setGirisTipi}
-                platform={metin.platform}
-                urunAdi={metin.urunAdi} setUrunAdi={metin.setUrunAdi}
-                kategori={metin.kategori} setKategori={metin.setKategori}
-                ozellikler={metin.ozellikler} setOzellikler={metin.setOzellikler}
-                hedefKitle={metin.hedefKitle} setHedefKitle={metin.setHedefKitle}
-                fiyatSegmenti={metin.fiyatSegmenti} setFiyatSegmenti={metin.setFiyatSegmenti}
-                fotolar={fotolar} fotoKaldir={fotoKaldir}
-                kameraAcik={metin.kameraAcik} kameraAc={metin.kameraAc} kameraKapat={metin.kameraKapat}
-                barkodYukleniyor={metin.barkodYukleniyor} barkodBilgi={metin.barkodBilgi} setBarkodBilgi={metin.setBarkodBilgi}
-                yukleniyor={metin.yukleniyor} yukleniyorMesaj={metin.yukleniyorMesaj}
-                sonuc={metin.sonuc} setSonuc={metin.setSonuc}
-                duzenleYukleniyor={metin.duzenleYukleniyor} setDuzenleYukleniyor={metin.setDuzenleYukleniyor}
-                uretimId={metin.uretimId} yenidenUretHakki={metin.yenidenUretHakki} setYenidenUretHakki={metin.setYenidenUretHakki}
-                kullanici={kullanici} paketModalAc={paketModalAc} icerikUret={metin.icerikUret}
-                onGirisAc={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }}
-                skor={metin.skor} oneriler={metin.oneriler}
-                ucretsizRevizeKullanildi={metin.ucretsizRevizeKullanildi}
-                ucretsizRevizeBaslat={metin.ucretsizRevizeBaslat}
-              />
-
               <GorselSekmesi
                 aktif={anaSekme === "gorsel"}
                 urunAdi={metin.urunAdi} kategori={metin.kategori}
@@ -671,55 +844,10 @@ export default function Home() {
                 captionUret={sosyal.captionUret} sosyalGorselUret={sosyal.sosyalGorselUret}
                 setAnaSekme={setAnaSekme}
               />
-
             </div>
           </section>
 
-          {/* ========== ADIM 3 ========== */}
-          <section
-            id="step-3"
-            aria-labelledby="step-3-title"
-            className={cn(
-              "relative ml-5 md:ml-6 pl-12 md:pl-16 pb-8 border-l-2 border-transparent transition-opacity",
-              !step1Done || !step2Done ? "opacity-40" : ""
-            )}
-          >
-            {/* Numbered circle */}
-            <div
-              className={cn(
-                "absolute -left-5 md:-left-6 top-0 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-white text-sm font-medium transition-all",
-                step1Done && step2Done ? "bg-rd-warm-700" : "bg-rd-neutral-300",
-                currentStep === 3 ? "animate-pulse-soft" : ""
-              )}
-              aria-hidden="true"
-            >
-              3
-            </div>
-
-            <h2
-              id="step-3-title"
-              className="text-base md:text-lg font-medium text-rd-neutral-900 mb-4"
-              style={{ fontFamily: 'var(--font-rd-display)' }}
-            >
-              3 · Üret
-            </h2>
-
-            <div className="bg-white rounded-xl border border-rd-neutral-200 p-4 flex items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-medium text-rd-neutral-900">
-                  Maliyet: {cost} kredi
-                </p>
-                <p className="text-xs text-rd-neutral-500 mt-0.5">
-                  Kalan bakiye: {remainingCredits} kredi
-                </p>
-              </div>
-              <p className="text-xs text-rd-neutral-400 text-right">
-                Aşağıdaki "Üret" butonu ile başlat
-              </p>
-            </div>
-          </section>
-
-          {/* StickySubmitBar — preserved at bottom */}
+          {/* StickySubmitBar */}
           <StickySubmitBar
             cost={cost}
             remainingCredits={remainingCredits}
