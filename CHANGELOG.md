@@ -1,5 +1,7 @@
 # Changelog
 
+## 2026-04-29 — Redesign P4-A1~P4-A3 + blog: RDFeaturesTabbed canlı pattern birebir (hash nav + danger gorsel + rd-* token), MarkaBilgileri bakır cezve kıyas (marka boş/dolu), video zoom-yaklasim 2x hız, blog thumbnail kaldır
+
 ## 2026-04-29 — Redesign P3-A1~P3-U5: Polish-3 (Aziz acceptance 3. tur) — basketbol içerik, RDFeaturesTabbed, MarkaBilgileri 8 alan, /uret default seçimsiz + marka rozet + Adım 2/3 ayrım
 
 ## 2026-04-28 — Redesign LP-11~LP-12: /fiyatlar 2-kolon hibrit + /uret 3 aşama akış (FiyatlarHybridSection, KrediCalculator embedded+onPaketOner, StepCard vertical flow, ContentTypeGrid, PlatformChips, ProgressIndicator)

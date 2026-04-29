@@ -3651,6 +3651,237 @@ Bittikten sonra rapor:
 - Açık riskler / Aziz preview test
 ```
 
+---
+
+## 22 — Polish-4: Anasayfa içerik refinement (Faz 1.9 — Aziz acceptance 4. tur)
+
+**Aziz preview test bulguları (29 Nis):** P3 sonrası 3 madde — anasayfa içerik refinement. RDFeaturesTabbed yeni tasarım yerine canlı FeaturesTabbed tasarımına dön + MarkaBilgileri ürün değiştir + boş video kutuları doldur.
+
+| ID | Başlık | Durum | Kabul Kriteri |
+|---|---|---|---|
+| P4-A1 | RDFeaturesTabbed → canlı FeaturesTabbed tasarımına dön | ✅ Tamamlandı | Code P3-A3'te yeni layout uyguladı — Aziz canlı FeaturesTabbed.tsx tasarımını istedi (sadece içerik değişecekti). Çözüm: components/landing/RDFeaturesTabbed.tsx'i components/tanitim/FeaturesTabbed.tsx tasarımı **birebir** kopya, sadece (a) rd-* token'a swap (b) içerik basketbol+cezve (P3-A4 ile zaten yapıldı). Yeni-yorum tasarım YOK — canlı yapı bire bir. |
+| P4-A2 | MarkaBilgileri ürün → bakır cezve seti (marka etkisi belirgin) | ✅ Tamamlandı | Mevcut basketbol topu örneği marka profili etkisini göstermiyor (teknik ürün). Cowork önerisi: bakır cezve seti — Etsy listing zaten yazıldı (Anatolian craftsmanship hikayesi), Türkçe versiyonu MarkaBilgileri sağ şablona yazılır. Marka boş vs marka dolu kıyas çok belirgin: "Bakır cezve, 250ml" vs "Anadolu'nun yüz yıllık bakırcılığı...". |
+| P4-A3 | Boş video kutuları → zoom-yaklasim.mp4 hızlandırılmış | ✅ Tamamlandı | RDFeaturesTabbed video sekmesinde 6 hareket stili kart var ama bazıları boş (asset yok). Tüm 6 kutuya `/video-ornekler/zoom-yaklasim.mp4` koy. JS ile `videoRef.current.playbackRate = 2.0` ile hızlandır (CSS değil, HTML5 video API). useEffect'te ref attach + playbackRate set. |
+
+**Cowork MarkaBilgileri Türkçe metni (P4-A2 için):**
+
+**Marka boş (sade ürün açıklaması):**
+> Bakır cezve, 250ml, 2 fincan dahil. Türk kahvesine uygun.
+
+**Marka dolu** (storeName: "Anadolu Bakır", ton: premium, kategori: Ev & Yaşam, hedef kitle: Türk kahvesi sevenler, hizmet vurguları: el dövme + hediye paketi):
+> Anadolu'nun yüz yıllık bakırcılığını mutfağına taşı. Anadolu Bakır'ın Gaziantep'te dövülmüş cezvesi, sabah kahvesi ritüelini sanat eserine dönüştürür. Hediye kutusunda, kullanım rehberi ile birlikte.
+
+#### P4-A1~P4-A3 Birleşik Prompt (Polish-4 — Faz 1.9)
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui
+Görev: P4-A1~P4-A3 — Polish-4 (Aziz acceptance 4. tur). 3 madde, 
+anasayfa içerik refinement. Bu paket sonrası tekrar preview test → 
+main merge.
+
+Mevcut sayfalar:
+- components/landing/RDFeaturesTabbed.tsx (P3-A3'te yapıldı, 
+  yeniden çalışacak)
+- components/sections/MarkaBilgileriSection.tsx (P3-A5'te güncel)
+- components/tanitim/FeaturesTabbed.tsx (canlı pattern referansı)
+
+KAPSAM DIŞI:
+- RDFeaturesTabbed yeniden yarat değil — canlı FeaturesTabbed 
+  birebir kopya (sadece rd-* swap)
+- /uret sayfası dokunulmaz
+- Backend yok
+
+────────────────────────────────────────────
+P4-A1: RDFeaturesTabbed → canlı FeaturesTabbed tasarımına dön
+────────────────────────────────────────────
+
+**Önemli:** Code P3-A3'te yeni layout uyguladı, Aziz canlı pattern'i 
+istedi. Bu kez **birebir kopya** + sadece rd-* token swap.
+
+Adımlar:
+
+1. components/tanitim/FeaturesTabbed.tsx tüm yapıyı oku (4 sekme 
+   KUTULAR + her sekme için tab content + Listing'de 3 platform 
+   sub-tab + bölmeler + Kopyala butonları).
+
+2. components/landing/RDFeaturesTabbed.tsx tamamen yeniden yaz:
+   - Layout: FeaturesTabbed.tsx ile birebir aynı
+   - Renk swap (FeaturesTabbed'in kullandığı):
+     * #1E4DD8 → rd-primary-700
+     * #163B9E → rd-primary-800
+     * #F0F4FB → rd-primary-50
+     * #BAC9EB → rd-primary-200
+     * #FAFAF8 → rd-neutral-50
+     * #F1F0EB → rd-neutral-100
+     * #D8D6CE → rd-neutral-200
+     * #908E86 → rd-neutral-500
+     * #5A5852 → rd-neutral-600
+     * #1A1A17 → rd-neutral-900
+     * #0F5132 → rd-success-700
+     * Trendyol orange-500, Amazon #E47911, Etsy rose-500 KORUNUR 
+       (platform brand)
+   - İçerik: P3-A4'te yazılan basketbol+cezve (lib/data/
+     exampleContent.ts'ten çek, hardcode değil)
+
+3. _tanitim-redesign.tsx'te RDFeaturesTabbed import'u zaten var, 
+   tasarım değişimi sayfaya otomatik yansır.
+
+**Kritik kural:** "yeni-yorum tasarım YOK". Canlı FeaturesTabbed 
+nasılsa, RDFeaturesTabbed öyle olsun. Aziz beğendiği layout zaten.
+
+Commit: feat(landing): P4-A1 RDFeaturesTabbed canlı pattern birebir 
++ rd-* token
+
+────────────────────────────────────────────
+P4-A2: MarkaBilgileri ürün → bakır cezve seti
+────────────────────────────────────────────
+
+Dosya: components/sections/MarkaBilgileriSection.tsx
+
+Sağ şablonda mevcut basketbol topu örneği YERİNE bakır cezve seti 
+kıyası. Marka profili etkisini belirgin gösteren ürün.
+
+1. **Marka boş şablonu:**
+   - Container: rounded-xl border border-rd-neutral-200 bg-white p-5
+   - Eyebrow: "MARKA BILGISI YOKKEN" text-rd-neutral-500
+   - Başlık: "Bakır cezve, 250ml, 2 fincan dahil"
+   - Alt: "Türk kahvesine uygun."
+   - Sade, jenerik ürün açıklaması — vurgu yok
+
+2. **Marka dolu şablonu:**
+   - Container: rounded-xl border-2 border-rd-warm-300 bg-rd-warm-50 
+     p-5 (warm-earth premium accent)
+   - Eyebrow: "MARKA İLE ÜRETİLDİĞİNDE" text-rd-warm-700
+   - Başlık (font-display): "Anadolu Bakır El Dövme Cezve — Hediye 
+     Kutusunda 2 Fincan ile"
+   - Açıklama: "Anadolu'nun yüz yıllık bakırcılığını mutfağına taşı. 
+     Anadolu Bakır'ın Gaziantep'te dövülmüş cezvesi, sabah kahvesi 
+     ritüelini sanat eserine dönüştürür. Hediye kutusunda, kullanım 
+     rehberi ile birlikte."
+   - Marka profili etiketleri (chip): "Anadolu Bakır" + "premium ton" 
+     + "Türk kahvesi sevenler" + "hediye paketi" (chip pill)
+
+3. lib/data/exampleContent.ts'e EXAMPLE_MARKA_KIYAS objesi ekle:
+   ```ts
+   export const EXAMPLE_MARKA_KIYAS = {
+     urunAdi: 'Bakır cezve seti',
+     markaBos: {
+       baslik: 'Bakır cezve, 250ml, 2 fincan dahil',
+       aciklama: 'Türk kahvesine uygun.',
+     },
+     markaDolu: {
+       baslik: 'Anadolu Bakır El Dövme Cezve — Hediye Kutusunda 2 Fincan ile',
+       aciklama: 'Anadolu\'nun yüz yıllık bakırcılığını mutfağına taşı. Anadolu Bakır\'ın Gaziantep\'te dövülmüş cezvesi, sabah kahvesi ritüelini sanat eserine dönüştürür. Hediye kutusunda, kullanım rehberi ile birlikte.',
+       markaInputlari: {
+         storeName: 'Anadolu Bakır',
+         ton: 'premium',
+         kategori: 'Ev & Yaşam',
+         hedefKitle: 'Türk kahvesi sevenler',
+         hizmetVurgulari: ['el dövme', 'hediye paketi'],
+       },
+     },
+   };
+   ```
+
+4. **Sol metin:** P3-A5'te 8 alanlık marka profili güncel — kontrol 
+   et. Eğer hâlâ basketbol topu referansı varsa bakır cezveye 
+   uyarla.
+
+Commit: feat(landing): P4-A2 MarkaBilgileri bakır cezve kıyas (marka 
+etkisi belirgin)
+
+────────────────────────────────────────────
+P4-A3: Boş video kutuları → zoom-yaklasim.mp4 hızlandırılmış
+────────────────────────────────────────────
+
+Dosya: components/landing/RDFeaturesTabbed.tsx (Video sekmesi)
+
+P3-A3'te 6 video kart yapıldı (360° Dönüş, Zoom yaklaşım, Dramatik 
+ışık, Doğal ortam, Detay tarama, Kumaş hareketi). Bazı kutularda 
+asset yok → boş veya placeholder görünüyor.
+
+Çözüm: tüm 6 kutuya **aynı video** (`/video-ornekler/zoom-yaklasim.mp4`) 
+koy + JS ile `playbackRate = 2.0` ile hızlandır.
+
+Implementation:
+
+```tsx
+const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
+
+useEffect(() => {
+  videoRefs.current.forEach((video) => {
+    if (video) {
+      video.playbackRate = 2.0; // 2x hız
+    }
+  });
+}, []);
+
+// JSX:
+{HAREKET_STILLERI.map((stil, i) => (
+  <div key={stil.baslik} className="...">
+    <video
+      ref={(el) => { videoRefs.current[i] = el; }}
+      src="/video-ornekler/zoom-yaklasim.mp4"
+      autoPlay
+      loop
+      muted
+      playsInline
+      className="..."
+    />
+    <div>
+      <stil.Ikon />
+      {stil.baslik}
+    </div>
+    <p>{stil.aciklama}</p>
+  </div>
+))}
+```
+
+Eğer playbackRate=2.0 hâlâ yavaş kalırsa 2.5 veya 3.0 dene. Aziz 
+preview'da görsel olarak kontrol eder.
+
+**Not:** zoom-yaklasim videosunun her kutuda farklı içerik 
+göstermediği aşikar — ama 6 ayrı video asset'i yok, en iyi seçenek 
+aynı video. Aziz onayında kalır.
+
+Commit: feat(landing): P4-A3 video kutuları zoom-yaklasim 2x hız
+
+────────────────────────────────────────────
+Test
+────────────────────────────────────────────
+
+- npm run build temiz, TypeScript clean
+- Localde:
+  - / RDFeaturesTabbed: canlı FeaturesTabbed birebir tasarım, rd-* 
+    renkler, basketbol topu (Trendyol/Amazon) + bakır cezve (Etsy)
+  - / MarkaBilgileri: bakır cezve kıyası, marka boş vs marka dolu 
+    fark belirgin
+  - / Video sekmesi: 6 kutu hepsinde zoom-yaklasim 2x hızlı oynar
+  - 375px mobile sıkıntısız
+
+Commit özeti (3 atomik) VEYA tek:
+chore(redesign): P4-A1~P4-A3 polish-4 (Aziz acceptance 4. tur)
+
+BACKLOG'da P4-A1~P4-A3 [x] işaretle.
+
+Bittikten sonra rapor:
+- Commit listesi
+- RDFeaturesTabbed tasarım birebir mi (canlı FeaturesTabbed ile 
+  diff kontrolü)
+- MarkaBilgileri kıyas görsel olarak fark veriyor mu (Aziz preview 
+  bakacak)
+- Video playbackRate 2x yeterli mi yoksa daha yüksek mi (Aziz 
+  karar)
+- Açık riskler / Aziz preview test
+```
+
+---
+
 | Faz | Bölüm | Sayfa | Ticket | Durum |
 |---|---|---|---|---|
 | 1 | Landing (4-10) | 1 | ~64 | ✅ Tamam (HR-14/15 kalan) |

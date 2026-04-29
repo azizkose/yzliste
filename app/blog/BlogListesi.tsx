@@ -107,23 +107,6 @@ export default function BlogListesi({ yazilar, kategoriler }: Props) {
                         href={`/blog/${yazi.slug}`}
                         className="group rounded-xl border border-rd-neutral-200 bg-white overflow-hidden flex flex-col h-full hover:border-rd-primary-300 hover:-translate-y-0.5 transition-all"
                       >
-                        {yazi.kapakGorsel ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={yazi.kapakGorsel}
-                            alt={yazi.baslik}
-                            className="w-full aspect-video object-cover"
-                          />
-                        ) : (
-                          <div className="w-full aspect-video bg-rd-neutral-100 flex items-center justify-center">
-                            <FileText
-                              size={24}
-                              strokeWidth={1.5}
-                              className="text-rd-neutral-300"
-                              aria-hidden="true"
-                            />
-                          </div>
-                        )}
                         <div className="p-5 flex flex-col flex-1">
                           <div className="flex items-center gap-2 mb-3">
                             <span className="text-xs bg-rd-warm-50 text-rd-warm-700 border border-rd-warm-200 px-2 py-0.5 rounded font-medium">
