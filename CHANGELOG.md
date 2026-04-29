@@ -1,5 +1,7 @@
 # Changelog
 
+## 2026-04-29 — Redesign P5-FIX-1~4: InfoStrip 38b10b4 geri getirildi (EXAMPLE_CONTENT_TR + amazon key), StepSection swap, RDFeaturesTabbed silindi, Hero→StepSection spacing raporu
+
 ## 2026-04-29 — Redesign P4-FIX-1~3: RDFeaturesTabbed FeaturesTabbed.tsx birebir kopya (platformVerileri + inline panel + rd-* token), video 6 farklı stil + playbackRate=1.5, EXAMPLE_MARKA_KIYAS eyebrow + "premium ton"
 
 ## 2026-04-29 — Redesign P4-A1~P4-A3 + blog: RDFeaturesTabbed canlı pattern birebir (hash nav + danger gorsel + rd-* token), MarkaBilgileri bakır cezve kıyas (marka boş/dolu), video zoom-yaklasim 2x hız, blog thumbnail kaldır

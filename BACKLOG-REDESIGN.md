@@ -3902,7 +3902,185 @@ kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch
 kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
 
 Branch: claude/redesign-modern-ui
-Görev: P4-A1~P4-A3 — Polish-4 (Aziz acceptance 4. tur). 3 madde, 
+Görev: P4-A1~P4-A3 — Polish (eski, P4-FIX ile çözüldü)
+```
+
+---
+
+## 24 — Polish-5: InfoStrip geri dönüş (Faz 1.96 — Aziz acceptance 5. tur)
+
+**Aziz preview test bulgusu (29 Nis P4-FIX sonrası):** Mevcut RDFeaturesTabbed (FeaturesTabbed canlı pattern birebir kopya) **istenen tasarım değil**. Aziz aslında AS-03'te yapılan **InfoStrip + "Detaya bak" accordion** yapısını istiyordu. Yatay 4-tab + sürekli açık panel pattern fazla yer kaplıyor + başlık fontu çok kalın geliyor.
+
+**Aziz net cümlesi:** "tablı yapı yerine ekteki tasarımı geri alalım. içerikler doğru, onlar olduğu gibi kalsın. başlık da ekteki fontlara göre düzenlensin. sayfada herodan buraya geçişi kontrol ederek yap revizeyi"
+
+**Cowork tarafından bulunan referans:**
+- Component: `components/landing/InfoStrip.tsx` — commit `38b10b4` (LP-06 polish son hali)
+- Eski hat: AS-03 (`72bbc0b`) → P3-A3 (`4d25ce6`) silindi → şimdi geri
+- Anasayfa entegrasyon: `components/landing/StepSection.tsx` — RDFeaturesTabbed → InfoStrip swap (1 import + 1 JSX)
+
+| ID | Başlık | Kabul Kriteri |
+|---|---|---|
+| P5-FIX-1 ✅ | InfoStrip.tsx geri getir | `git checkout 38b10b4 -- components/landing/InfoStrip.tsx` ile dosyayı geri al. Sonra **TEK değişiklik:** `import { EXAMPLE_CONTENT } from '@/lib/data/exampleContent'` → `import { EXAMPLE_CONTENT_TR } from '@/lib/data/exampleContent'`. MetinPanel/GorselPanel/VideoPanel/SosyalPanel içindeki `EXAMPLE_CONTENT.metin[market]` → `EXAMPLE_CONTENT_TR.metin[market === 'amazon-tr' ? 'amazon' : market]` (key isim farkı: eski `'amazon-tr'`, yeni `'amazon'`). Diğer 3 panel için exampleContent.ts'in doğru yolu Read ile bul. **Hiçbir başka yapı/stil değişikliği YOK** — eski dosya birebir korunsun. |
+| P5-FIX-2 ✅ | StepSection.tsx içinde RDFeaturesTabbed → InfoStrip swap | components/landing/StepSection.tsx satır 2: `import { RDFeaturesTabbed } from './RDFeaturesTabbed'` → `import { InfoStrip } from './InfoStrip'`. Satır 28: `<RDFeaturesTabbed />` → `<InfoStrip />`. Yorum satırı `{/* Features tabbed — replaces InfoStrip */}` → `{/* Info strip — 4 içerik türü + detay accordion */}`. **Başka değişiklik yok.** |
+| P5-FIX-3 ✅ | RDFeaturesTabbed.tsx archive et | components/landing/RDFeaturesTabbed.tsx dosyasını sil (`git rm`). Başka yerde import edilmiyor (P5-FIX-2'den sonra). Build temiz olmalı. |
+| P5-FIX-4 ✅ | Hero → StepSection geçişi kontrol | Hero'nun alt kısmı + StepSection üst spacing kontrol et. Boş gri alan oluşmasın. StepSection.tsx mevcut `py-16 md:py-20` doğru, **dokunma**. Eğer hero'nun bottom-padding'i aşırı geliyorsa (`components/hero/` veya `components/landing/Hero.tsx`'e bak) sadece raporda belirt — düzeltme yapma. |
+
+**Notlar:**
+
+1. **Başlık fontu zaten doğru olacak.** Eski InfoStrip header h3:
+   ```tsx
+   <h3 className="font-rd-display text-xl md:text-2xl text-rd-neutral-900 font-semibold">
+     4 içerik türü, 7 pazaryeri için
+   </h3>
+   ```
+   Şu anki "Aynı üründen, her pazaryeri için ayrı içerik" (text-3xl/4xl + font-bold) aşırı kalın. InfoStrip geri dönünce `text-xl md:text-2xl + font-semibold` olur — Aziz'in istediği bu.
+
+2. **InfoStrip header content:**
+   - Eyebrow: `İÇERİK TÜRLERİ` (rd-warm-700, küçük uppercase)
+   - H3: `4 içerik türü, 7 pazaryeri için`
+   - Subtitle: `Her tür ayrı kredi · birini, birkaçını veya hepsini birden seçebilirsin. Pazaryeri kuralı otomatik uygulanır.`
+   - Sağ üst: `Detaya bak ▼` toggle butonu
+
+3. **Detay alanı default kapalı.** Kullanıcı "Detaya bak" tıklayınca açılır, panel render edilir. Metin sekmesinde Trendyol/Amazon-TR/Etsy chip'leri görünür.
+
+4. **Etsy içerik:** EXAMPLE_CONTENT_TR.metin.etsy = bakır cezve İngilizce metni. Bu doğru, korunsun.
+
+5. **MarkaBilgileri'ne dokunma.** P4-FIX-2 başarılıydı, korunsun.
+
+6. **`exampleContent.ts` dosyasında 'amazon-tr' key var mı kontrol:** EXAMPLE_CONTENT_TR.metin'de `amazon` key kullanılıyor olabilir. InfoStrip eski hali `amazon-tr` bekliyor. **Çözüm:** InfoStrip içindeki `MARKETS` array'inde `id: 'amazon-tr'` → `id: 'amazon'` yap. Veya panel render'da `EXAMPLE_CONTENT_TR.metin[market === 'amazon-tr' ? 'amazon' : market]` mapping'i. İkisinden hangisi daha az risk taşıyorsa onu seç (önerim: MARKETS id'sini `amazon` yap, daha az nokta değişiyor).
+
+#### P5-FIX-1~P5-FIX-4 Birleşik Prompt
+
+```
+ÖNEMLİ — KURAL OVERRIDE:
+Bu görev `claude/redesign-modern-ui` branch'inde. CLAUDE.md UI 
+kuralları GEÇERSİZ. BACKLOG-REDESIGN.md başındaki redesign branch 
+kuralları geçerli (Manrope+Inter, rd-* token, Lucide ikon).
+
+Branch: claude/redesign-modern-ui (devam, yeni branch açma)
+Görev: P5-FIX-1~P5-FIX-4 — InfoStrip geri dönüş (Polish-5)
+
+ARKAPLAN:
+P3-A3'te InfoStrip silinip RDFeaturesTabbed eklenmişti. P4-FIX-1'de 
+RDFeaturesTabbed canlı FeaturesTabbed birebir kopyalandı. Aziz preview'da
+gördü, bu tasarım istediği değildi. Aziz'in istediği orijinal AS-03 
+yapısı: 4 sekme kartı (kısa açıklama + kredi/süre) + "Detaya bak" 
+accordion ile aşağıda detay paneli açılan yapı. Bu yapı git history'de
+mevcut (commit 38b10b4 son hali).
+
+GÖREVLER (sırayla):
+
+═══════════════════════════════════════════════════════════════════
+P5-FIX-1: InfoStrip.tsx geri getir
+═══════════════════════════════════════════════════════════════════
+
+Komut:
+  git checkout 38b10b4 -- components/landing/InfoStrip.tsx
+
+Sonra dosyayı aç ve TEK değişiklik:
+  - import { EXAMPLE_CONTENT } → import { EXAMPLE_CONTENT_TR }
+  - 4 panel içinde EXAMPLE_CONTENT kullanımları → EXAMPLE_CONTENT_TR
+
+UYARI: lib/data/exampleContent.ts içinde EXAMPLE_CONTENT_TR.metin'de
+key 'amazon' (TR'de) ama eski InfoStrip MARKETS id'si 'amazon-tr'.
+Çözüm: MARKETS array içinde { id: 'amazon-tr', label: 'Amazon TR' }
+→ { id: 'amazon', label: 'Amazon TR' } yap. Bu en az değişiklikli yol.
+type MarketId 'metin' | 'gorsel' | ... yerine 'trendyol' | 'amazon' | 'etsy'.
+
+GorselPanel için: EXAMPLE_CONTENT_TR.gorsel.placeholders ve .standard 
+var mı? Yoksa exampleContent.ts okuyup uygun key adapt et — eski 
+EXAMPLE_CONTENT.gorsel = { placeholders, standard } yapısıydı.
+
+VideoPanel için: EXAMPLE_CONTENT_TR.video objesi (duration, aspect, 
+sceneDescription).
+
+SosyalPanel için: EXAMPLE_CONTENT_TR.sosyal objesi 
+(instagram, hashtag, twitter veya tiktok — eski hangiyse adapt et).
+
+Eğer EXAMPLE_CONTENT_TR'de bir field eksikse → exampleContent.ts'e 
+ekle, ama mevcut basketbol içeriğini koru. Etsy panel için de Etsy 
+key'inden bakır cezve verisini çek.
+
+Yeni-yorum tasarım YASAK. JSX yapısı, className'ler, animasyon
+1:1 commit 38b10b4'teki gibi olsun.
+
+Commit:
+  feat(landing): P5-FIX-1 InfoStrip geri getirildi + EXAMPLE_CONTENT_TR
+
+═══════════════════════════════════════════════════════════════════
+P5-FIX-2: StepSection.tsx swap
+═══════════════════════════════════════════════════════════════════
+
+Dosya: components/landing/StepSection.tsx
+
+Değişiklikler:
+  Satır 2: import { RDFeaturesTabbed } from './RDFeaturesTabbed'
+        → import { InfoStrip } from './InfoStrip'
+  Satır 28: <RDFeaturesTabbed />
+         → <InfoStrip />
+  Satır 27 yorum: 
+    {/* Features tabbed — replaces InfoStrip */} 
+    → {/* Info strip — 4 içerik türü + detay accordion */}
+
+Başka değişiklik YOK. h2 fontu, eyebrow, hepsi mevcut korunsun.
+
+Commit:
+  feat(landing): P5-FIX-2 StepSection RDFeaturesTabbed → InfoStrip
+
+═══════════════════════════════════════════════════════════════════
+P5-FIX-3: RDFeaturesTabbed.tsx sil
+═══════════════════════════════════════════════════════════════════
+
+Komut:
+  git rm components/landing/RDFeaturesTabbed.tsx
+
+Sonra projede başka import var mı kontrol:
+  grep -r "RDFeaturesTabbed" --include="*.tsx" --include="*.ts" .
+
+Hiçbiri olmamalı. Varsa kaldır.
+
+Commit:
+  chore(landing): P5-FIX-3 RDFeaturesTabbed silindi (InfoStrip yerine)
+
+═══════════════════════════════════════════════════════════════════
+P5-FIX-4: Hero → StepSection geçiş kontrolü (raporlama)
+═══════════════════════════════════════════════════════════════════
+
+Hiç kod yazma — sadece kontrol et + raporda belirt:
+
+1. Hero component dosyasını bul (components/hero/* veya components/landing/Hero*)
+2. Bottom padding/margin'ini oku
+3. StepSection.tsx üst padding'i (py-16 md:py-20) ile çakışıyor mu?
+   Boş bir gri/beyaz alan oluşuyor mu?
+4. dev/build çalıştır, build temiz mi:
+   npm run build && npm run lint
+
+Raporda:
+- Hero alt + StepSection üst arası boşluk: kaç px (yaklaşık)?
+- Görsel olarak doğal mı yoksa "kopuk" mu?
+- Bir öneri verebilirsin (örn. StepSection üst pt-12'ye düşürülmeli) 
+  ama UYGULAMA — sadece öneri.
+
+═══════════════════════════════════════════════════════════════════
+
+ACCEPTANCE (Code kendi yapsın bitiş öncesi):
+[ ] InfoStrip.tsx mevcut, JSX yapısı 38b10b4 ile birebir
+[ ] EXAMPLE_CONTENT_TR adapt edildi, 4 panel doğru içerik gösteriyor
+[ ] RDFeaturesTabbed.tsx silindi, hiçbir yerde import yok
+[ ] StepSection.tsx içinde InfoStrip render ediliyor
+[ ] npm run build temiz (no error, no type warning)
+[ ] npm run lint temiz (yeni hata yok)
+[ ] Detaya bak default kapalı, tıklayınca açılıyor (manuel test gerekirse Aziz)
+[ ] Metin sekmesinde Trendyol/Amazon TR/Etsy chip'leri var
+[ ] Etsy seçilince bakır cezve metni gösteriyor
+
+Rapor (bitince):
+- Hangi dosyalar değişti
+- 3 commit hash'i
+- npm run build çıktısı (özet)
+- Hero → StepSection geçiş gözlemi (P5-FIX-4)
+- Açık riskler / Aziz preview test
+```-4 (Aziz acceptance 4. tur). 3 madde, 
 anasayfa içerik refinement. Bu paket sonrası tekrar preview test → 
 main merge.
 
