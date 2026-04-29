@@ -188,33 +188,77 @@ function MetinPanel({ market, setMarket }: { market: MarketId; setMarket: (m: Ma
   )
 }
 
-const GORSEL_STILLER = [
-  { src: '/ornek_beyaz.jpg', label: 'Beyaz zemin' },
-  { src: '/ornek_dogal.jpg', label: 'Doğal' },
-  { src: '/ornek_lifestyle.jpg', label: 'Lifestyle' },
-  { src: '/ornek_ahsap.jpg', label: 'Ahşap' },
-  { src: '/ornek_mermer.jpg', label: 'Mermer' },
-  { src: '/ornek_gradient.jpg', label: 'Gradient' },
-  { src: '/ornek_koyu.jpg', label: 'Koyu' },
-]
-
 function GorselPanel() {
   return (
     <div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-        {GORSEL_STILLER.map((stil) => (
-          <div key={stil.src} className="flex flex-col items-center gap-1">
+      <p className="text-sm text-rd-neutral-600 mb-4 leading-relaxed">
+        Tek bir ürün fotoğrafından profesyonel stüdyo görselleri oluşturun.
+        Arka plan otomatik temizlenir, 7 farklı stüdyo stilinden seçin —
+        ya da sahnenizi anlatın, kendi fonunuzu yükleyin.
+      </p>
+      <p className="text-sm font-semibold text-rd-neutral-900 mb-1">Tek fotoğraftan 7 farklı stüdyo stili</p>
+      <p className="text-xs text-rd-neutral-500 mb-5">Stil başına 1 kredi · Üretimde düşer, indirme bedava</p>
+      {/* 1. satır: ham + 3 stil */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="flex flex-col">
+          <div className="relative rounded-xl overflow-hidden border border-rd-neutral-200 bg-rd-neutral-100">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={stil.src}
-              alt={stil.label}
-              className="aspect-square w-full rounded-lg object-cover"
-            />
-            <span className="text-xs text-rd-neutral-500 text-center leading-tight">{stil.label}</span>
+            <img src="/ornek_once.jpg" alt="önce" className="w-full aspect-square object-contain" loading="lazy" />
+            <div className="absolute top-2 left-2">
+              <span className="bg-rd-neutral-900/80 text-white text-xs px-2 py-1 rounded-full">Ham fotoğraf</span>
+            </div>
+          </div>
+          <div className="bg-rd-danger-50 rounded-lg p-2 border border-rd-danger-200 mt-2">
+            <p className="text-xs text-rd-danger-700 font-medium flex items-center gap-1">
+              <X size={10} strokeWidth={2} />
+              Dağınık arka plan
+            </p>
+          </div>
+        </div>
+        {[
+          { src: '/ornek_beyaz.jpg', etiket: 'Beyaz zemin' },
+          { src: '/ornek_koyu.jpg', etiket: 'Koyu zemin' },
+          { src: '/ornek_lifestyle.jpg', etiket: 'Lifestyle' },
+        ].map((item) => (
+          <div key={item.etiket} className="flex flex-col">
+            <div className="rounded-xl overflow-hidden border border-rd-primary-200 bg-rd-neutral-50">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" loading="lazy" />
+            </div>
+            <p className="text-xs text-rd-neutral-600 font-medium text-center mt-1.5">{item.etiket}</p>
           </div>
         ))}
       </div>
-      <p className="mt-3 text-xs text-rd-neutral-400">7 farklı stil — her stilde 1 görsel, 1 kredi</p>
+      {/* 2. satır: 4 stil daha */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
+        {[
+          { src: '/ornek_mermer.jpg', etiket: 'Mermer' },
+          { src: '/ornek_ahsap.jpg', etiket: 'Ahşap' },
+          { src: '/ornek_gradient.jpg', etiket: 'Gradient' },
+          { src: '/ornek_dogal.jpg', etiket: 'Doğal' },
+        ].map((item) => (
+          <div key={item.etiket} className="flex flex-col">
+            <div className="rounded-xl overflow-hidden border border-rd-primary-200 bg-rd-neutral-50">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" loading="lazy" />
+            </div>
+            <p className="text-xs text-rd-neutral-600 font-medium text-center mt-1.5">{item.etiket}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-5 pt-4 border-t border-rd-neutral-200">
+        <p className="text-xs text-rd-neutral-600 font-semibold mb-2">3 farklı yöntemle sahne oluştur:</p>
+        <div className="flex flex-wrap gap-2">
+          {['Hazır stiller (Beyaz, Koyu…)', 'Kendi promptunu yaz', 'Arka plan fotoğrafı ver'].map((t, i) => (
+            <span key={i} className="text-xs bg-rd-primary-50 text-rd-primary-700 px-3 py-1 rounded-full border border-rd-primary-200">{i + 1}. {t}</span>
+          ))}
+        </div>
+      </div>
+      <div className="mt-5 pt-4 border-t border-rd-neutral-200 text-center">
+        <a href="/uret?tab=gorsel" className="inline-block bg-rd-primary-700 hover:bg-rd-primary-800 text-white font-medium px-6 py-3 rounded-xl text-sm transition-colors">
+          Stüdyo görseli üret →
+        </a>
+      </div>
     </div>
   )
 }
