@@ -76,45 +76,113 @@ function KopyalaButon({ metin }: { metin: string }) {
   )
 }
 
+// ---- MetinPanel data ----
+
+const platformVerileriInfoStrip: Record<MarketId, {
+  etiket: string
+  aciklamaKisa: string
+  bolumler: { ikon: string; baslik: string; icerik: string; renk: string }[]
+}> = {
+  trendyol: {
+    etiket: 'Trendyol',
+    aciklamaKisa: 'Max 100 karakter başlık · Türkçe · Keyword-yoğun',
+    bolumler: [
+      { ikon: 'pin', baslik: 'Başlık', icerik: EXAMPLE_CONTENT_TR.metin.trendyol.title, renk: 'border-l-orange-400' },
+      { ikon: 'bullet', baslik: 'Özellikler', icerik: EXAMPLE_CONTENT_TR.metin.trendyol.features.join('\n'), renk: 'border-l-orange-400' },
+      { ikon: 'filetext', baslik: 'Açıklama', icerik: EXAMPLE_CONTENT_TR.metin.trendyol.description, renk: 'border-l-rd-success-700' },
+      { ikon: 'bookmark', baslik: 'Arama Etiketleri', icerik: EXAMPLE_CONTENT_TR.metin.trendyol.tags.join(', '), renk: 'border-l-rd-primary-300' },
+    ],
+  },
+  amazon: {
+    etiket: 'Amazon TR',
+    aciklamaKisa: 'Max 200 karakter başlık · Keyword-stuffed · A+ bullet\'lar',
+    bolumler: [
+      { ikon: 'pin', baslik: 'Başlık', icerik: EXAMPLE_CONTENT_TR.metin.amazon.title, renk: 'border-l-[#E47911]' },
+      { ikon: 'bullet', baslik: 'Özellikler', icerik: EXAMPLE_CONTENT_TR.metin.amazon.features.join('\n'), renk: 'border-l-[#E47911]' },
+      { ikon: 'filetext', baslik: 'Açıklama', icerik: EXAMPLE_CONTENT_TR.metin.amazon.description, renk: 'border-l-rd-success-700' },
+      { ikon: 'bookmark', baslik: 'Arama Etiketleri', icerik: EXAMPLE_CONTENT_TR.metin.amazon.tags.join(', '), renk: 'border-l-rd-primary-300' },
+    ],
+  },
+  etsy: {
+    etiket: 'Etsy',
+    aciklamaKisa: 'İngilizce · Hikaye anlatımı · Handmade & artisan vurgusu',
+    bolumler: [
+      { ikon: 'pin', baslik: 'Title', icerik: EXAMPLE_CONTENT_TR.metin.etsy.title, renk: 'border-l-rose-400' },
+      { ikon: 'bullet', baslik: 'Features', icerik: EXAMPLE_CONTENT_TR.metin.etsy.features.join('\n'), renk: 'border-l-rose-400' },
+      { ikon: 'filetext', baslik: 'Description', icerik: EXAMPLE_CONTENT_TR.metin.etsy.description, renk: 'border-l-rd-success-700' },
+      { ikon: 'bookmark', baslik: 'Tags', icerik: EXAMPLE_CONTENT_TR.metin.etsy.tags.join(', '), renk: 'border-l-rd-primary-300' },
+    ],
+  },
+}
+
+function BolumIkon({ ikon }: { ikon: string }) {
+  if (ikon === 'pin') return <Tag size={14} strokeWidth={1.5} className="text-rd-neutral-600 flex-shrink-0" />
+  if (ikon === 'bookmark') return <Hash size={14} strokeWidth={1.5} className="text-rd-neutral-600 flex-shrink-0" />
+  if (ikon === 'filetext') return <FileText size={14} strokeWidth={1.5} className="text-rd-neutral-600 flex-shrink-0" />
+  return <span className="w-2 h-2 rounded-full bg-rd-neutral-200 flex-shrink-0 mt-1" />
+}
+
 // ---- Panels ----
 
-function MetinPanel({ market }: { market: MarketId }) {
-  const data = EXAMPLE_CONTENT_TR.metin[market]
+function MetinPanel({ market, setMarket }: { market: MarketId; setMarket: (m: MarketId) => void }) {
+  const renkMap: Record<MarketId, string> = {
+    trendyol: market === 'trendyol' ? 'bg-orange-500 text-white' : 'bg-rd-neutral-100 text-rd-neutral-600 hover:bg-rd-neutral-200',
+    amazon: market === 'amazon' ? 'bg-[#E47911] text-white' : 'bg-rd-neutral-100 text-rd-neutral-600 hover:bg-rd-neutral-200',
+    etsy: market === 'etsy' ? 'bg-rose-500 text-white' : 'bg-rd-neutral-100 text-rd-neutral-600 hover:bg-rd-neutral-200',
+  }
   return (
-    <div className="space-y-4">
-      <div>
-        <p className="text-xs uppercase tracking-[0.1em] font-semibold text-rd-neutral-400 mb-1">Başlık</p>
-        <p className="text-sm font-medium text-rd-neutral-900 leading-snug">{data.title}</p>
+    <div>
+      <p className="text-sm text-rd-neutral-600 mb-4 leading-relaxed">
+        Her pazaryerinin kendine özel karakter limiti, format kuralları ve yasaklı kelimeleri var.
+        yzliste bunları bilir — platforma özel başlık, madde madde özellikler, SEO uyumlu açıklama
+        ve arama etiketleri üretir.
+      </p>
+      <div className="flex gap-2 mb-1">
+        {(Object.keys(platformVerileriInfoStrip) as MarketId[]).map((key) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => setMarket(key)}
+            className={cn('px-3 py-1.5 rounded-full text-xs font-medium transition-colors', renkMap[key])}
+          >
+            {platformVerileriInfoStrip[key].etiket}
+          </button>
+        ))}
       </div>
-      <div>
-        <p className="text-xs uppercase tracking-[0.1em] font-semibold text-rd-neutral-400 mb-1">
-          Özellikler
-        </p>
-        <ul className="space-y-1">
-          {data.features.map((f, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm text-rd-neutral-700">
-              <span className="w-1.5 h-1.5 rounded-full bg-rd-primary-700 mt-1.5 shrink-0" />
-              {f}
-            </li>
-          ))}
-        </ul>
+      <p className="text-xs text-rd-neutral-500 mb-4">{platformVerileriInfoStrip[market].aciklamaKisa}</p>
+      <div className="space-y-3">
+        {platformVerileriInfoStrip[market].bolumler.map((bolum, i) => (
+          <div key={i} className={cn('rounded-xl border-l-4', bolum.renk, 'border border-rd-neutral-200 bg-rd-neutral-50 p-4')}>
+            <div className="flex items-center justify-between mb-2">
+              <span className="flex items-center gap-1.5 text-sm font-semibold text-rd-neutral-900">
+                <BolumIkon ikon={bolum.ikon} />
+                {bolum.baslik}
+              </span>
+              <KopyalaButon metin={bolum.icerik} />
+            </div>
+            <p className="text-sm text-rd-neutral-600 leading-relaxed whitespace-pre-line">{bolum.icerik}</p>
+          </div>
+        ))}
       </div>
-      <div>
-        <p className="text-xs uppercase tracking-[0.1em] font-semibold text-rd-neutral-400 mb-1">Açıklama</p>
-        <p className="text-sm text-rd-neutral-700 leading-relaxed">{data.description}</p>
-      </div>
-      <div>
-        <p className="text-xs uppercase tracking-[0.1em] font-semibold text-rd-neutral-400 mb-1">Etiketler</p>
-        <div className="flex flex-wrap gap-1.5">
-          {data.tags.map((tag, i) => (
-            <span
-              key={i}
-              className="text-xs font-medium bg-rd-neutral-100 text-rd-neutral-600 px-2 py-0.5 rounded-full"
-            >
-              {tag}
+      <div className="mt-5 pt-4 border-t border-rd-neutral-200 flex flex-wrap gap-3 text-xs text-rd-neutral-600">
+        {['Manuel metin girişi', 'Fotoğraftan otomatik analiz', 'Barkod ile ürün tanıma', '7 platform desteği'].map((f) => (
+          <span key={f} className="flex items-center gap-1.5">
+            <span className="w-3.5 h-3.5 rounded-full bg-rd-primary-50 text-rd-primary-700 flex items-center justify-center">
+              <Check size={9} strokeWidth={2} />
             </span>
-          ))}
-        </div>
+            {f}
+          </span>
+        ))}
+      </div>
+      <div className="mt-4 rounded-xl bg-rd-primary-50 border border-rd-primary-200 p-3 text-xs text-rd-primary-700 leading-relaxed">
+        <strong className="font-semibold">Her pazaryerinin kuralları farklı:</strong> Trendyol max 100 karakter başlık ister,
+        Amazon 200&apos;e kadar keyword kabul eder, Etsy İngilizce + hikaye anlatımı sever.
+        yzliste hepsini tek fotoğraftan üretir.
+      </div>
+      <div className="mt-5 pt-4 border-t border-rd-neutral-200 text-center">
+        <a href="/uret?tab=metin" className="inline-block bg-rd-primary-700 hover:bg-rd-primary-800 text-white font-medium px-6 py-3 rounded-xl text-sm transition-colors">
+          Listing metni üret →
+        </a>
       </div>
     </div>
   )
@@ -348,35 +416,8 @@ export function InfoStrip() {
           aria-label={`${activeTabLabel} içerik türü detayı`}
           className="mt-4 rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-4 md:p-5"
         >
-          {/* Marketplace selector (only for Metin tab) */}
-          {activeTab === 'metin' && (
-            <div
-              role="radiogroup"
-              aria-label="Pazaryeri seç"
-              className="flex gap-2 mb-5 flex-wrap"
-            >
-              {MARKETS.map((market) => (
-                <button
-                  key={market.id}
-                  role="radio"
-                  aria-checked={activeMarket === market.id}
-                  onClick={() => setActiveMarket(market.id)}
-                  className={cn(
-                    'text-xs px-3 py-1.5 rounded-full border transition-all',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-300',
-                    activeMarket === market.id
-                      ? 'border-rd-primary-700 bg-rd-primary-50 text-rd-primary-700 font-medium'
-                      : 'border-rd-neutral-300 bg-white text-rd-neutral-500 hover:border-rd-primary-300',
-                  )}
-                >
-                  {market.label}
-                </button>
-              ))}
-            </div>
-          )}
-
           {/* Panel */}
-          {activeTab === 'metin' && <MetinPanel market={activeMarket} />}
+          {activeTab === 'metin' && <MetinPanel market={activeMarket} setMarket={setActiveMarket} />}
           {activeTab === 'gorsel' && <GorselPanel />}
           {activeTab === 'video' && <VideoPanel />}
           {activeTab === 'sosyal' && <SosyalPanel />}
