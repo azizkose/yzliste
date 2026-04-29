@@ -133,7 +133,7 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
       <div className="mt-5 space-y-2">
         {/* Marka bilgisi yokken */}
         <div className="rounded-xl border border-rd-neutral-200 bg-white p-4">
-          <p className="text-[10px] font-medium uppercase tracking-widest text-rd-neutral-400 mb-2">
+          <p className="text-xs font-semibold uppercase tracking-widest text-rd-neutral-400 mb-2">
             {EXAMPLE_MARKA_KIYAS.markaBos.eyebrow}
           </p>
           <p className="text-xs font-medium text-rd-neutral-700 leading-snug">
@@ -143,7 +143,7 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
         </div>
         {/* Marka ile üretildiğinde */}
         <div className="rounded-xl border-2 border-rd-warm-300 bg-rd-warm-50 p-4">
-          <p className="text-[10px] font-medium uppercase tracking-widest text-rd-warm-700 mb-2">
+          <p className="text-xs font-semibold uppercase tracking-widest text-rd-warm-700 mb-2">
             {EXAMPLE_MARKA_KIYAS.markaDolu.eyebrow}
           </p>
           <p className="text-xs font-medium text-rd-neutral-900 leading-snug mb-2"
@@ -160,7 +160,7 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
               EXAMPLE_MARKA_KIYAS.markaDolu.markaInputlari.hedefKitle,
               ...EXAMPLE_MARKA_KIYAS.markaDolu.markaInputlari.hizmetVurgulari,
             ].map((chip, i) => (
-              <span key={i} className="text-[10px] bg-rd-warm-100 text-rd-warm-800 border border-rd-warm-200 px-2 py-0.5 rounded-full">
+              <span key={i} className="text-xs font-medium bg-rd-warm-100 text-rd-warm-800 border border-rd-warm-200 px-2 py-0.5 rounded-full">
                 {chip}
               </span>
             ))}
