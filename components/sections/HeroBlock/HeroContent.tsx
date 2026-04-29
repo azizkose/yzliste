@@ -32,7 +32,7 @@ export default function HeroContent() {
 
       {/* H1 — 3-part: plain + highlight + plain */}
       <h1
-        className="mt-6 font-rd-display font-[800] leading-[1.05] tracking-[-0.025em] text-slate-900"
+        className="mt-6 font-rd-display font-bold leading-[1.05] tracking-[-0.025em] text-rd-neutral-900"
         style={{ fontSize: 'clamp(40px, 5.5vw, 64px)' }}
       >
         {HERO_COPY.h1Pre}{' '}
@@ -41,10 +41,10 @@ export default function HeroContent() {
       </h1>
 
       {/* Subtitle */}
-      <p className="mb-8 mt-5 max-w-[520px] text-lg leading-relaxed text-slate-600">
+      <p className="mb-8 mt-5 max-w-[520px] text-lg leading-relaxed text-rd-neutral-600">
         Ürününü anlat veya fotoğrafını yükle — listing metni, stüdyo görseli, tanıtım videosu
         ve sosyal medya içeriği{' '}
-        <strong className="font-semibold text-slate-900">dakikalar içinde</strong>{' '}
+        <strong className="font-semibold text-rd-neutral-900">dakikalar içinde</strong>{' '}
         hazır. Aylık abonelik yok.
       </p>
 
@@ -56,7 +56,7 @@ export default function HeroContent() {
             <div
               key={pill.label}
               role="listitem"
-              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px] font-medium text-slate-700 transition-all duration-150 hover:border-slate-300 hover:bg-slate-50"
+              className="flex items-center gap-1.5 rounded-lg border border-rd-neutral-200 bg-white px-3 py-2 text-sm font-medium text-rd-neutral-700 transition-all duration-150 hover:border-rd-neutral-300 hover:bg-rd-neutral-50"
             >
               {Icon && (
                 <Icon
@@ -100,7 +100,7 @@ export default function HeroContent() {
       </div>
 
       {/* Reassurance line */}
-      <div className="flex items-center gap-2 text-[13px] text-slate-500">
+      <div className="flex items-center gap-2 text-sm text-rd-neutral-500">
         <Check
           size={14}
           strokeWidth={2.5}

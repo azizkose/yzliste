@@ -57,8 +57,8 @@ export function SectionHeader({
 
       <h2
         className={cn(
-          "font-rd-display font-extrabold leading-tight tracking-tight",
-          "text-3xl md:text-4xl lg:text-5xl",
+          "font-rd-display font-bold leading-tight tracking-[-0.01em]",
+          "text-3xl md:text-4xl",
           "text-rd-neutral-900",
           subtitle && "mb-4"
         )}
