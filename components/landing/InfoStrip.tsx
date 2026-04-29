@@ -226,37 +226,17 @@ export function InfoStrip() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-start justify-between mb-5">
-        <div>
-          <p className="text-xs uppercase tracking-[0.15em] text-rd-warm-700 font-semibold mb-1.5">
-            İÇERİK TÜRLERİ
-          </p>
-          <h3 className="font-rd-display text-xl md:text-2xl text-rd-neutral-900 font-semibold">
-            4 içerik türü, 7 pazaryeri için
-          </h3>
-          <p className="text-sm text-rd-neutral-500 mt-1.5 leading-relaxed max-w-[520px]">
-            Her tür ayrı kredi · birini, birkaçını veya hepsini birden seçebilirsin. Pazaryeri
-            kuralı otomatik uygulanır.
-          </p>
-        </div>
-        <button
-          onClick={() => setDetailOpen((o) => !o)}
-          aria-expanded={detailOpen}
-          aria-controls="infostrip-detail"
-          className={cn(
-            'flex items-center gap-1 text-sm text-rd-neutral-500 hover:text-rd-neutral-800',
-            'transition-colors shrink-0 ml-4 mt-1',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-300 rounded px-1',
-          )}
-        >
-          <span>Detaya bak</span>
-          <ChevronDown
-            size={15}
-            strokeWidth={2}
-            aria-hidden="true"
-            className={cn('transition-transform duration-200', detailOpen && 'rotate-180')}
-          />
-        </button>
+      <div className="mb-5">
+        <p className="text-xs uppercase tracking-[0.15em] text-rd-warm-700 font-semibold mb-1.5">
+          İÇERİK TÜRLERİ
+        </p>
+        <h3 className="font-rd-display text-xl md:text-2xl text-rd-neutral-900 font-semibold">
+          4 içerik türü, 7 pazaryeri için
+        </h3>
+        <p className="text-sm text-rd-neutral-500 mt-1.5 leading-relaxed max-w-[520px]">
+          Her tür ayrı kredi · birini, birkaçını veya hepsini birden seçebilirsin. Pazaryeri
+          kuralı otomatik uygulanır.
+        </p>
       </div>
 
       {/* 4 content type tabs — always visible */}
@@ -313,6 +293,24 @@ export function InfoStrip() {
             </button>
           )
         })}
+      </div>
+
+      {/* Toggle — 4 kartın altında, ortalı */}
+      <div className="flex justify-center mt-4 mb-2">
+        <button
+          onClick={() => setDetailOpen((o) => !o)}
+          aria-expanded={detailOpen}
+          aria-controls="infostrip-detail"
+          className="flex items-center gap-1.5 text-sm text-rd-neutral-600 hover:text-rd-primary-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-300 rounded px-2 py-1"
+        >
+          <span>{detailOpen ? 'Detayı kapat' : 'Detaya bak'}</span>
+          <ChevronDown
+            size={16}
+            strokeWidth={2}
+            aria-hidden="true"
+            className={cn('transition-transform duration-200', detailOpen && 'rotate-180')}
+          />
+        </button>
       </div>
 
       {/* Detail area */}
