@@ -164,14 +164,16 @@ export default function GorselSekmesi({
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={gorselUret}
-        disabled={gorselYukleniyor || seciliStiller.size === 0 || fotolar.length === 0}
-        className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-lg transition-colors"
-      >
-        {gorselYukleniyor ? `${seciliStiller.size} görsel üretiliyor...` : "İçerik üret"}
-      </button>
+      {gorselJoblar.length === 0 && (
+        <button
+          type="button"
+          onClick={gorselUret}
+          disabled={gorselYukleniyor || seciliStiller.size === 0 || fotolar.length === 0}
+          className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-lg transition-colors"
+        >
+          {gorselYukleniyor ? `${seciliStiller.size} görsel üretiliyor...` : "İçerik üret"}
+        </button>
+      )}
 
       {gorselYukleniyor && (
         <p className="text-xs text-rd-primary-800 text-center">Sayfayı kapatmayın — görsel üretimi yaklaşık 1 dakika sürer</p>
@@ -201,11 +203,11 @@ export default function GorselSekmesi({
           <div className={`grid gap-3 ${gorselJoblar.length === 1 ? "grid-cols-1" : gorselJoblar.length === 2 ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-3"}`}>
             {gorselJoblar.map((job) => (
               <div key={job.requestId} className="space-y-1.5">
-                <div className="rounded-xl overflow-hidden border border-rd-neutral-200 bg-rd-neutral-100 relative group">
+                <div className="rounded-xl overflow-hidden border border-rd-neutral-200 bg-rd-neutral-100 relative group flex items-center justify-center min-h-[300px]">
                   <img
                     src={`/api/gorsel/img?requestId=${job.requestId}&index=0`}
                     alt={job.label}
-                    className="w-full aspect-square object-cover select-none"
+                    className="w-full max-h-[500px] mx-auto object-contain select-none"
                     draggable={false}
                     onContextMenu={(e) => e.preventDefault()}
                   />
@@ -218,8 +220,8 @@ export default function GorselSekmesi({
                     });
                     blobIndir(await res.blob(), `yzliste-${job.stil}.jpg`);
                   }}
-                    className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 hover:bg-white text-rd-primary-800 text-xs font-medium px-2 py-1 rounded-lg">
-                    İndir
+                    className="absolute bottom-2 right-2 bg-white/90 hover:bg-white text-rd-primary-800 text-xs font-medium px-3 py-1.5 rounded-lg flex items-center gap-1">
+                    <Download size={11} strokeWidth={1.5} /> İndir
                   </button>
                 </div>
                 <div className="flex items-center justify-between px-1">
@@ -255,7 +257,7 @@ export default function GorselSekmesi({
                     }
                   }}
                     className="text-xs text-rd-neutral-400 hover:text-rd-primary-800 transition-colors">
-                    Tekrar (1 kredi)
+                    Aynı stilde yeniden üret (1 kredi)
                   </button>
                 </div>
               </div>
