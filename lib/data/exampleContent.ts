@@ -94,15 +94,17 @@ export const EXAMPLE_CONTENT_TR = {
 export const EXAMPLE_MARKA_KIYAS = {
   urunAdi: 'Bakır cezve seti',
   markaBos: {
+    eyebrow: 'MARKA BİLGİSİ YOKKEN',
     baslik: 'Bakır cezve, 250ml, 2 fincan dahil',
     aciklama: 'Türk kahvesine uygun.',
   },
   markaDolu: {
+    eyebrow: 'MARKA İLE ÜRETİLDİĞİNDE',
     baslik: 'Anadolu Bakır El Dövme Cezve — Hediye Kutusunda 2 Fincan ile',
     aciklama: "Anadolu'nun yüz yıllık bakırcılığını mutfağına taşı. Anadolu Bakır'ın Gaziantep'te dövülmüş cezvesi, sabah kahvesi ritüelini sanat eserine dönüştürür. Hediye kutusunda, kullanım rehberi ile birlikte.",
     markaInputlari: {
       storeName: 'Anadolu Bakır',
-      ton: 'premium',
+      ton: 'premium ton',
       kategori: 'Ev & Yaşam',
       hedefKitle: 'Türk kahvesi sevenler',
       hizmetVurgulari: ['el dövme', 'hediye paketi'],

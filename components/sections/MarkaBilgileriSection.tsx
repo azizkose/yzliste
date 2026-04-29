@@ -134,7 +134,7 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
         {/* Marka bilgisi yokken */}
         <div className="rounded-xl border border-rd-neutral-200 bg-white p-4">
           <p className="text-[10px] font-medium uppercase tracking-widest text-rd-neutral-400 mb-2">
-            Marka bilgisi yokken
+            {EXAMPLE_MARKA_KIYAS.markaBos.eyebrow}
           </p>
           <p className="text-xs font-medium text-rd-neutral-700 leading-snug">
             {EXAMPLE_MARKA_KIYAS.markaBos.baslik}
@@ -144,7 +144,7 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
         {/* Marka ile üretildiğinde */}
         <div className="rounded-xl border-2 border-rd-warm-300 bg-rd-warm-50 p-4">
           <p className="text-[10px] font-medium uppercase tracking-widest text-rd-warm-700 mb-2">
-            Marka ile üretildiğinde
+            {EXAMPLE_MARKA_KIYAS.markaDolu.eyebrow}
           </p>
           <p className="text-xs font-medium text-rd-neutral-900 leading-snug mb-2"
             style={{ fontFamily: "var(--font-rd-display)" }}>
