@@ -30,7 +30,7 @@ function HizliVideo() {
       muted
       playsInline
       preload="auto"
-      className="h-8 w-full rounded object-cover bg-rd-neutral-200"
+      className="h-10 w-full rounded object-cover bg-rd-neutral-200"
       aria-hidden="true"
     />
   )
@@ -42,9 +42,11 @@ const OUTPUT_CARDS = [
     label: 'Listing',
     color: 'text-rd-primary-700',
     content: (
-      <p className="text-xs text-rd-neutral-700 leading-snug line-clamp-2">
-        {trendyolTitle.slice(0, 60)}…
-      </p>
+      <div className="h-10 overflow-hidden">
+        <p className="text-xs text-rd-neutral-700 leading-snug line-clamp-2">
+          {trendyolTitle.slice(0, 60)}…
+        </p>
+      </div>
     ),
   },
   {
@@ -71,9 +73,11 @@ const OUTPUT_CARDS = [
     label: 'Sosyal',
     color: 'text-rd-primary-700',
     content: (
-      <p className="text-xs text-rd-neutral-500 leading-snug line-clamp-2">
-        Sahaya çıkmadan önce doğru top şart. 7 numara FIBA standardı...
-      </p>
+      <div className="h-10 overflow-hidden">
+        <p className="text-xs text-rd-neutral-500 leading-snug line-clamp-2">
+          Sahaya çıkmadan önce doğru top şart. 7 numara FIBA standardı...
+        </p>
+      </div>
     ),
   },
 ]
