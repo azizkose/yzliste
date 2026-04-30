@@ -858,8 +858,7 @@ export default function Home() {
                 sosyalPlatform={sosyal.sosyalPlatform} setSosyalPlatform={sosyal.setSosyalPlatform}
                 sosyalTon={sosyal.sosyalTon} setSosyalTon={sosyal.setSosyalTon}
                 sosyalSezon={sosyal.sosyalSezon} setSosyalSezon={sosyal.setSosyalSezon}
-                sosyalUrunAdi={sosyal.sosyalUrunAdi} setSosyalUrunAdi={sosyal.setSosyalUrunAdi}
-                sosyalEkBilgi={sosyal.sosyalEkBilgi} setSosyalEkBilgi={sosyal.setSosyalEkBilgi}
+                sosyalUrunAdi={sosyal.sosyalUrunAdi}
                 captionYukleniyor={sosyal.captionYukleniyor}
                 sosyalCaption={sosyal.sosyalCaption} setSosyalCaption={sosyal.setSosyalCaption}
                 sosyalHashtag={sosyal.sosyalHashtag} setSosyalHashtag={sosyal.setSosyalHashtag}
@@ -869,8 +868,10 @@ export default function Home() {
                 sosyalGorselYukleniyor={sosyal.sosyalGorselYukleniyor}
                 sosyalGorselSonuclar={sosyal.sosyalGorselSonuclar} setSosyalGorselSonuclar={sosyal.setSosyalGorselSonuclar}
                 sosyalGorselPrompt={sosyal.sosyalGorselPrompt} setSosyalGorselPrompt={sosyal.setSosyalGorselPrompt}
+                sosyalKitYukleniyor={sosyal.sosyalKitYukleniyor}
+                sosyalKitSonuc={sosyal.sosyalKitSonuc} sosyalKitAcik={sosyal.sosyalKitAcik} setSosyalKitAcik={sosyal.setSosyalKitAcik}
                 kullanici={kullanici} paketModalAc={paketModalAc}
-                captionUret={sosyal.captionUret} sosyalGorselUret={sosyal.sosyalGorselUret}
+                captionUret={sosyal.captionUret} kitUret={sosyal.kitUret} sosyalGorselUret={sosyal.sosyalGorselUret}
                 setAnaSekme={setAnaSekme}
               />
             </div>

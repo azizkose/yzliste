@@ -1,5 +1,7 @@
 # Changelog
 
+## 2026-04-30 — Polish-11 P11-1~P11-9: bg zigzag, MarkaBilgileri collapsible, 7 pazaryeri+Çiçeksepeti metadata/PLATFORMS, Sosyal UX rewrite (sosyalUretimModu+2 buton), GarmentUpload bilgi kutusu, Hero CTA auth-aware, H1 yapay zeka, AppScreenshotMockup card heights
+
 ## 2026-04-29 — Redesign P5-FIX-1~4: InfoStrip 38b10b4 geri getirildi (EXAMPLE_CONTENT_TR + amazon key), StepSection swap, RDFeaturesTabbed silindi, Hero→StepSection spacing raporu
 
 ## 2026-04-29 — Redesign P4-FIX-1~3: RDFeaturesTabbed FeaturesTabbed.tsx birebir kopya (platformVerileri + inline panel + rd-* token), video 6 farklı stil + playbackRate=1.5, EXAMPLE_MARKA_KIYAS eyebrow + "premium ton"

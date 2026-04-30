@@ -16,7 +16,6 @@ import {
   TONE_CHIPS,
 } from "@/lib/constants/marka-bilgileri"
 import type { ToneKey } from "@/lib/constants/marka-bilgileri"
-import { EXAMPLE_MARKA_KIYAS } from "@/lib/data/exampleContent"
 
 // ---- BrandFormPreview ----
 
@@ -129,44 +128,6 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
         </p>
       </div>
 
-      {/* Kıyas: marka boş vs marka dolu */}
-      <div className="mt-5 space-y-2">
-        {/* Marka bilgisi yokken */}
-        <div className="rounded-xl border border-rd-neutral-200 bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-widest text-rd-neutral-400 mb-2">
-            {EXAMPLE_MARKA_KIYAS.markaBos.eyebrow}
-          </p>
-          <p className="text-xs font-medium text-rd-neutral-700 leading-snug">
-            {EXAMPLE_MARKA_KIYAS.markaBos.baslik}
-          </p>
-          <p className="text-xs text-rd-neutral-400 mt-1">{EXAMPLE_MARKA_KIYAS.markaBos.aciklama}</p>
-        </div>
-        {/* Marka ile üretildiğinde */}
-        <div className="rounded-xl border-2 border-rd-warm-300 bg-rd-warm-50 p-4">
-          <p className="text-xs font-semibold uppercase tracking-widest text-rd-warm-700 mb-2">
-            {EXAMPLE_MARKA_KIYAS.markaDolu.eyebrow}
-          </p>
-          <p className="text-xs font-medium text-rd-neutral-900 leading-snug mb-2"
-            style={{ fontFamily: "var(--font-rd-display)" }}>
-            {EXAMPLE_MARKA_KIYAS.markaDolu.baslik}
-          </p>
-          <p className="text-xs text-rd-neutral-700 leading-relaxed mb-3">
-            {EXAMPLE_MARKA_KIYAS.markaDolu.aciklama}
-          </p>
-          <div className="flex flex-wrap gap-1">
-            {[
-              EXAMPLE_MARKA_KIYAS.markaDolu.markaInputlari.storeName,
-              EXAMPLE_MARKA_KIYAS.markaDolu.markaInputlari.ton,
-              EXAMPLE_MARKA_KIYAS.markaDolu.markaInputlari.hedefKitle,
-              ...EXAMPLE_MARKA_KIYAS.markaDolu.markaInputlari.hizmetVurgulari,
-            ].map((chip, i) => (
-              <span key={i} className="text-xs font-medium bg-rd-warm-100 text-rd-warm-800 border border-rd-warm-200 px-2 py-0.5 rounded-full">
-                {chip}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
   )
 }
