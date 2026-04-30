@@ -25,7 +25,7 @@ export function useSosyalUretim(deps: SosyalDeps) {
   const [captionYukleniyor, setCaptionYukleniyor] = useState(false);
   const [sosyalCaption, setSosyalCaption] = useState("");
   const [sosyalHashtag, setSosyalHashtag] = useState("");
-  const [sosyalIcerikTipi, setSosyalIcerikTipi] = useState<"metin" | "gorsel">("metin");
+  const [sosyalUretimModu, setSosyalUretimModu] = useState<"sade" | "gorsel-ile">("sade");
   const [sosyalGorselStil, setSosyalGorselStil] = useState("beyaz");
   const [sosyalGorselFormat, setSosyalGorselFormat] = useState<"1:1" | "9:16" | "16:9">("1:1");
   const [sosyalGorselYukleniyor, setSosyalGorselYukleniyor] = useState(false);
@@ -144,7 +144,7 @@ export function useSosyalUretim(deps: SosyalDeps) {
     captionYukleniyor,
     sosyalCaption, setSosyalCaption,
     sosyalHashtag, setSosyalHashtag,
-    sosyalIcerikTipi, setSosyalIcerikTipi,
+    sosyalUretimModu, setSosyalUretimModu,
     sosyalGorselStil, setSosyalGorselStil,
     sosyalGorselFormat, setSosyalGorselFormat,
     sosyalGorselYukleniyor,
