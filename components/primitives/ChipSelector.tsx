@@ -7,6 +7,8 @@ interface ChipOption {
   label: string
   description?: string
   icon?: ReactNode
+  disabled?: boolean
+  disabledTooltip?: string
 }
 
 interface ChipSelectorSingleProps {
@@ -43,14 +45,15 @@ export default function ChipSelector(props: ChipSelectorProps) {
       >
         {options.map((opt) => {
           const isActive = value === opt.id
-          return (
+          const isOptDisabled = disabled || opt.disabled
+          const btn = (
             <button
               key={opt.id}
               type="button"
               role="radio"
               aria-checked={isActive}
-              disabled={disabled}
-              onClick={() => onChange(opt.id)}
+              disabled={isOptDisabled}
+              onClick={() => !isOptDisabled && onChange(opt.id)}
               onKeyDown={(e) => {
                 if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
                   e.preventDefault()
@@ -72,7 +75,7 @@ export default function ChipSelector(props: ChipSelectorProps) {
               className={[
                 'flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm transition-all',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-500 focus-visible:ring-offset-1',
-                disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
+                isOptDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
                 isActive
                   ? 'bg-rd-primary-50 border-2 border-rd-primary-700 text-rd-primary-700 font-medium'
                   : 'bg-white border border-rd-neutral-300 text-rd-neutral-700 hover:border-rd-primary-400 hover:bg-rd-neutral-50',
@@ -82,6 +85,14 @@ export default function ChipSelector(props: ChipSelectorProps) {
               {opt.label}
             </button>
           )
+          if (opt.disabledTooltip) {
+            return (
+              <span key={opt.id} title={opt.disabledTooltip} className="inline-block">
+                {btn}
+              </span>
+            )
+          }
+          return btn
         })}
       </div>
     )

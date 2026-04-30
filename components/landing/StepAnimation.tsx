@@ -8,16 +8,16 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-// Hızlı video — 2x hızda kısa tanıtım
+// Hızlı video — 3x hızda 360° dönüş
 function HizliVideo({ className }: { className?: string }) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   useEffect(() => {
-    if (videoRef.current) videoRef.current.playbackRate = 2.0
+    if (videoRef.current) videoRef.current.playbackRate = 3.0
   }, [])
   return (
     <video
       ref={videoRef}
-      src="/video-ornekler/zoom-yaklasim.mp4"
+      src="/video-ornekler/360-donus.mp4"
       autoPlay
       loop
       muted
@@ -222,7 +222,7 @@ function Step3Canvas({ reduced, inactive }: { reduced: boolean; inactive?: boole
               {card.isText ? (
                 <p className="text-xs text-rd-neutral-500 leading-snug line-clamp-2">{card.content}</p>
               ) : card.isVideo ? (
-                <HizliVideo className="h-7 w-full rounded object-cover bg-rd-neutral-200" />
+                <HizliVideo className="h-8 w-full rounded object-cover bg-rd-neutral-200" />
               ) : 'imgSrc' in card ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={card.imgSrc as string} alt={card.label} className="h-7 w-full rounded object-contain" />

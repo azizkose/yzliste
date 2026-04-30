@@ -16,7 +16,7 @@ const TABS = [
     icon: FileText,
     kredi: '1 kredi',
     sure: '~10sn',
-    description: 'Listing başlık + açıklama + arama etiketleri',
+    description: 'Başlık + özellikler + etiket · platforma özel format',
   },
   {
     id: 'gorsel' as TabId,
@@ -24,23 +24,23 @@ const TABS = [
     icon: ImageIcon,
     kredi: '1 kredi',
     sure: '~30sn',
-    description: 'Stüdyo standardı 1200×1200, 6 görsel',
+    description: '7 ön tanımlı stil · stüdyo standardı 1200×1200',
   },
   {
     id: 'video' as TabId,
     label: 'Video',
     icon: Video,
-    kredi: '2 kredi',
+    kredi: '10 kredi (5sn) / 20 kredi (10sn)',
     sure: '~2dk',
-    description: '5 saniyelik dikey 9:16',
+    description: '5 veya 10 sn · dikey + yatay format',
   },
   {
     id: 'sosyal' as TabId,
     label: 'Sosyal',
     icon: MessageSquare,
-    kredi: '3 kredi',
+    kredi: '1 kredi/platform · Kit: 3 kredi',
     sure: '~20sn',
-    description: 'Instagram + TikTok + Pinterest caption',
+    description: 'Instagram + TikTok + Pinterest · caption + hashtag',
   },
 ]
 

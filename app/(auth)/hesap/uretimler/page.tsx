@@ -70,7 +70,7 @@ const PLATFORM_OPTIONS = [
 const TIP_OPTIONS = [
   { id: 'tumu', label: 'Tümü' },
   { id: 'metin', label: 'Metin' },
-  { id: 'gorsel', label: 'Görsel' },
+  { id: 'gorsel', label: 'Görsel', disabled: true, disabledTooltip: 'Yakında — şimdilik sadece metin geçmişi' },
   { id: 'video', label: 'Video' },
   { id: 'sosyal', label: 'Sosyal' },
 ]
@@ -259,7 +259,7 @@ export default function HesapUretimlerPage() {
         {/* Başlık + CTA */}
         <div className="flex items-start justify-between gap-4 mb-6">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.15em] font-medium text-rd-primary-700 mb-1">
+            <p className="text-xs uppercase tracking-[0.15em] font-medium text-rd-primary-700 mb-1">
               Üretimler
             </p>
             <h1
@@ -290,7 +290,7 @@ export default function HesapUretimlerPage() {
         {/* Filtre chip bar */}
         <div className="mb-4 space-y-3">
           <div className="flex items-start gap-3">
-            <span className="text-[10px] uppercase tracking-[0.1em] font-medium text-rd-neutral-400 shrink-0 mt-2.5 w-14">
+            <span className="text-xs uppercase tracking-[0.1em] font-medium text-rd-neutral-400 shrink-0 mt-2.5 w-14">
               Platform
             </span>
             <div className="flex-1 overflow-x-auto pb-1">
@@ -305,7 +305,7 @@ export default function HesapUretimlerPage() {
           </div>
 
           <div className="flex items-start gap-3">
-            <span className="text-[10px] uppercase tracking-[0.1em] font-medium text-rd-neutral-400 shrink-0 mt-2.5 w-14">
+            <span className="text-xs uppercase tracking-[0.1em] font-medium text-rd-neutral-400 shrink-0 mt-2.5 w-14">
               İçerik
             </span>
             <div className="flex-1">
@@ -320,7 +320,7 @@ export default function HesapUretimlerPage() {
           </div>
 
           <div className="flex items-start gap-3">
-            <span className="text-[10px] uppercase tracking-[0.1em] font-medium text-rd-neutral-400 shrink-0 mt-2.5 w-14">
+            <span className="text-xs uppercase tracking-[0.1em] font-medium text-rd-neutral-400 shrink-0 mt-2.5 w-14">
               Tarih
             </span>
             <div className="flex-1">
