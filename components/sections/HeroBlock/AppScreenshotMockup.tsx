@@ -30,7 +30,7 @@ function HizliVideo() {
       muted
       playsInline
       preload="auto"
-      className="h-10 w-full rounded object-cover bg-rd-neutral-200"
+      className="h-10 w-full rounded object-contain bg-rd-neutral-100"
       aria-hidden="true"
     />
   )
@@ -58,7 +58,7 @@ const OUTPUT_CARDS = [
       <img
         src="/ornek_beyaz.jpg"
         alt="Basketbol topu beyaz zemin"
-        className="h-10 w-full object-cover rounded"
+        className="h-10 w-full object-contain rounded bg-rd-neutral-50"
       />
     ),
   },
