@@ -252,8 +252,7 @@ export default function Home() {
     const girisParam = params.get("giris");
     if (tabParam && (["metin", "gorsel", "video", "sosyal"] as AnaSekme[]).includes(tabParam as AnaSekme)) {
       setAnaSekme(tabParam as AnaSekme);
-      // P3-U4 / LP-12b: URL pre-fill ile gelen sekme seçimi adım 1 sayılır
-      setPlatformSecimliydi(true);
+      // P10-10: tab URL param içerik türünü ön seçer ama step 1'de kalır (platform seçimi beklenir)
     }
     if (tabParam === "metin" && girisParam === "excel") {
       metin.setGirisTipi("excel");

@@ -15,16 +15,16 @@ import { EXAMPLE_CONTENT_TR } from '@/lib/data/exampleContent'
 
 const trendyolTitle = EXAMPLE_CONTENT_TR.metin.trendyol.title
 
-// Hızlı video — 2x hızda kısa tanıtım
+// Hızlı video — 3x hızda 360° dönüş
 function HizliVideo() {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   useEffect(() => {
-    if (videoRef.current) videoRef.current.playbackRate = 2.0
+    if (videoRef.current) videoRef.current.playbackRate = 3.0
   }, [])
   return (
     <video
       ref={videoRef}
-      src="/video-ornekler/zoom-yaklasim.mp4"
+      src="/video-ornekler/360-donus.mp4"
       autoPlay
       loop
       muted
