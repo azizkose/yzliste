@@ -133,6 +133,9 @@ function MetinPanel({ market, setMarket }: { market: MarketId; setMarket: (m: Ma
         yzliste bunları bilir — platforma özel başlık, madde madde özellikler, SEO uyumlu açıklama
         ve arama etiketleri üretir.
       </p>
+      <p className="text-xs text-rd-neutral-500 mb-2">
+        <strong className="font-medium text-rd-neutral-700">Örnek:</strong> Aynı üründen 3 pazaryeri için üretilmiş — formatların farkını gör.
+      </p>
       <div className="flex gap-2 mb-1">
         {(Object.keys(platformVerileriInfoStrip) as MarketId[]).map((key) => (
           <button
