@@ -37,6 +37,6 @@ export const FOOTER_COLUMNS = [
 
 export const FOOTER_COPYRIGHT = '© 2026 yzliste · SIMOON PAZARLAMA VE DANISMANLIK LIMITED SIRKETI'
 
-export const FOOTER_DISCLAIMER = 'yzliste; Trendyol, Hepsiburada, Amazon, N11 ve Etsy ile resmi bir iş birliği içinde değildir. Belirtilen marka adları yalnızca desteklenen pazaryerlerini tanımlamak için kullanılmaktadır. Tüm markalar kendi sahiplerine aittir.'
+export const FOOTER_DISCLAIMER = 'yzliste; Trendyol, Hepsiburada, Amazon, N11, Etsy, Amazon USA ve Çiçeksepeti ile resmi bir iş birliği içinde değildir. Belirtilen marka adları yalnızca desteklenen pazaryerlerini tanımlamak için kullanılmaktadır. Tüm markalar kendi sahiplerine aittir.'
 
 export const FOOTER_IYZICO_LOGO = '/iyzico_footer_logo.png'

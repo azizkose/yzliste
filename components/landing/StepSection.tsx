@@ -4,7 +4,7 @@ import { Eyebrow } from '@/components/primitives/Eyebrow'
 
 export function StepSection() {
   return (
-    <section aria-labelledby="step-section-baslik" className="py-16 md:py-20 bg-white">
+    <section aria-labelledby="step-section-baslik" className="py-16 md:py-20 bg-rd-neutral-50">
       <div className="max-w-6xl mx-auto px-4 md:px-6">
         {/* Header */}
         <div className="text-center mb-10 md:mb-12">

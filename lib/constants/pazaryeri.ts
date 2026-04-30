@@ -47,9 +47,10 @@ export const CONTENT_TYPES = [
 export type ContentTypeId = (typeof CONTENT_TYPES)[number]['id']
 
 export const PLATFORMS = {
-  trendyol: { name: 'Trendyol', letter: 'T', color: '#F27A1A', bgColor: '#FFF4ED' },
-  amazon:   { name: 'Amazon TR', letter: 'a', color: '#FF9900', bgColor: '#FFF8EB' },
-  etsy:     { name: 'Etsy',      letter: 'E', color: '#F1641E', bgColor: '#FEF2EC' },
+  trendyol:    { name: 'Trendyol',    letter: 'T', color: '#F27A1A', bgColor: '#FFF4ED' },
+  amazon:      { name: 'Amazon TR',   letter: 'a', color: '#FF9900', bgColor: '#FFF8EB' },
+  etsy:        { name: 'Etsy',        letter: 'E', color: '#F1641E', bgColor: '#FEF2EC' },
+  ciceksepeti: { name: 'Çiçeksepeti', letter: 'Ç', color: '#FF1493', bgColor: '#FFE4F1' },
 } as const
 
 export type PlatformId = keyof typeof PLATFORMS
@@ -108,10 +109,10 @@ interface SocialDemoData {
 }
 
 export type DemoDataMap = {
-  text: Record<PlatformId, TextDemoData>
-  image: Record<PlatformId, ImageDemoData>
-  video: Record<PlatformId, VideoDemoData>
-  social: Record<PlatformId, SocialDemoData>
+  text: Partial<Record<PlatformId, TextDemoData>>
+  image: Partial<Record<PlatformId, ImageDemoData>>
+  video: Partial<Record<PlatformId, VideoDemoData>>
+  social: Partial<Record<PlatformId, SocialDemoData>>
 }
 
 // --- Demo Data ---

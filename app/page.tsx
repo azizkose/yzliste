@@ -4,12 +4,12 @@ import TanitimSayfasi from "./_tanitim-redesign";
 export const metadata: Metadata = {
   title: { absolute: "yzliste — AI ile E-ticaret Listing, Görsel ve Video Üret" },
   description:
-    "Trendyol, Hepsiburada, Amazon, Etsy ve N11 için AI destekli listing metni, stüdyo görseli, ürün videosu ve sosyal medya içeriği üret. Fotoğraf yükle, gerisini YZ halleder.",
+    "Trendyol, Hepsiburada, Amazon, N11, Etsy, Amazon USA ve Çiçeksepeti için yapay zeka destekli listing metni, stüdyo görseli, ürün videosu ve sosyal medya içeriği üret. 7 pazaryeri, fotoğraf yükle gerisini YZ halleder.",
   alternates: { canonical: "https://www.yzliste.com" },
   openGraph: {
     title: "yzliste — AI ile E-ticaret Listing, Görsel ve Video Üret",
     description:
-      "Trendyol, Hepsiburada, Amazon, Etsy ve N11 için AI destekli listing metni, stüdyo görseli, ürün videosu ve sosyal medya içeriği üret.",
+      "Trendyol, Hepsiburada, Amazon, N11, Etsy, Amazon USA ve Çiçeksepeti için yapay zeka destekli listing metni, stüdyo görseli, ürün videosu ve sosyal medya içeriği üret. 7 pazaryeri.",
     url: "https://www.yzliste.com",
     type: "website",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "yzliste" }],
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "yzliste — AI ile E-ticaret Listing, Görsel ve Video Üret",
     description:
-      "Trendyol, Hepsiburada, Amazon, Etsy ve N11 için AI destekli listing metni ve görsel üret.",
+      "Trendyol, Hepsiburada, Amazon, N11, Etsy, Amazon USA ve Çiçeksepeti için yapay zeka destekli listing metni ve görsel üret. 7 pazaryeri.",
   },
 };
 

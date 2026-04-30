@@ -64,6 +64,7 @@ const PLATFORMS = [
   { id: "n11", label: "N11" },
   { id: "etsy", label: "Etsy" },
   { id: "amazon_usa", label: "Amazon USA" },
+  { id: "ciceksepeti", label: "Çiçeksepeti" },
 ];
 
 export default function Home() {
@@ -172,7 +173,8 @@ export default function Home() {
   });
 
   // P3-U1: step1Done = both content type AND platform actively selected
-  const step1Done = anaSekme !== null && platformSecimliydi;
+  // P11-5: sosyal tab skips marketplace platform selection
+  const step1Done = anaSekme !== null && (platformSecimliydi || anaSekme === "sosyal");
   const step2Done = fotolar.length > 0 || metin.urunAdi.trim() !== "";
   const currentStep = !step1Done ? 1 : !step2Done ? 2 : 3;
 
@@ -519,35 +521,39 @@ export default function Home() {
               ))}
             </div>
 
-            {/* P3-U1: PlatformChips — bigger, no active before first click */}
-            <div
-              role="group"
-              aria-label="Platform seçimi"
-              className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide"
-            >
-              {PLATFORMS.map((p) => {
-                const isActive = platformSecimliydi && metin.platform === p.id;
-                return (
-                  <button
-                    key={p.id}
-                    onClick={() => handlePlatformChange(p.id)}
-                    aria-pressed={isActive}
-                    className={cn(
-                      "px-4 py-3 rounded-lg text-sm font-medium whitespace-nowrap transition-colors flex-shrink-0",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-700 focus-visible:ring-offset-2",
-                      isActive
-                        ? "bg-rd-primary-800 text-white"
-                        : "bg-white border border-rd-neutral-200 text-rd-neutral-700 hover:bg-rd-neutral-50"
-                    )}
-                  >
-                    {p.label}
-                  </button>
-                );
-              })}
-            </div>
+            {/* P3-U1: PlatformChips — hidden when sosyal tab active (P11-5) */}
+            {anaSekme !== "sosyal" && (
+              <>
+                <div
+                  role="group"
+                  aria-label="Platform seçimi"
+                  className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide"
+                >
+                  {PLATFORMS.map((p) => {
+                    const isActive = platformSecimliydi && metin.platform === p.id;
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => handlePlatformChange(p.id)}
+                        aria-pressed={isActive}
+                        className={cn(
+                          "px-4 py-3 rounded-lg text-sm font-medium whitespace-nowrap transition-colors flex-shrink-0",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-700 focus-visible:ring-offset-2",
+                          isActive
+                            ? "bg-rd-primary-800 text-white"
+                            : "bg-white border border-rd-neutral-200 text-rd-neutral-700 hover:bg-rd-neutral-50"
+                        )}
+                      >
+                        {p.label}
+                      </button>
+                    );
+                  })}
+                </div>
 
-            {/* Platform info bar */}
-            {platformInfoBar}
+                {/* Platform info bar */}
+                {platformInfoBar}
+              </>
+            )}
           </section>
 
           {/* ========== ADIM 2 — Ürün bilgisi ========== */}
@@ -848,7 +854,7 @@ export default function Home() {
 
               <SosyalSekmesi
                 aktif={anaSekme === "sosyal"}
-                sosyalIcerikTipi={sosyal.sosyalIcerikTipi} setSosyalIcerikTipi={sosyal.setSosyalIcerikTipi}
+                sosyalUretimModu={sosyal.sosyalUretimModu} setSosyalUretimModu={sosyal.setSosyalUretimModu}
                 sosyalPlatform={sosyal.sosyalPlatform} setSosyalPlatform={sosyal.setSosyalPlatform}
                 sosyalTon={sosyal.sosyalTon} setSosyalTon={sosyal.setSosyalTon}
                 sosyalSezon={sosyal.sosyalSezon} setSosyalSezon={sosyal.setSosyalSezon}

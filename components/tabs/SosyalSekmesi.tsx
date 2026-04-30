@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState } from "react";
 import FotoEkleAlani from "@/components/ui/FotoEkleAlani";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
@@ -16,8 +16,8 @@ type Kullanici = {
 
 interface SosyalSekmesiProps {
   aktif: boolean;
-  sosyalIcerikTipi: "metin" | "gorsel";
-  setSosyalIcerikTipi: (v: "metin" | "gorsel") => void;
+  sosyalUretimModu: "sade" | "gorsel-ile";
+  setSosyalUretimModu: (v: "sade" | "gorsel-ile") => void;
   sosyalPlatform: SosyalPlatform;
   setSosyalPlatform: (v: SosyalPlatform) => void;
   sosyalTon: SosyalTon;
@@ -53,7 +53,7 @@ interface SosyalSekmesiProps {
 
 export default function SosyalSekmesi({
   aktif,
-  sosyalIcerikTipi, setSosyalIcerikTipi,
+  sosyalUretimModu, setSosyalUretimModu,
   sosyalPlatform, setSosyalPlatform,
   sosyalTon, setSosyalTon,
   sosyalSezon, setSosyalSezon,
@@ -82,24 +82,10 @@ export default function SosyalSekmesi({
         <button onClick={() => setAnaSekme("video")} className="text-xs bg-rd-primary-800 hover:bg-rd-primary-900 text-white font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">Video sekmesi →</button>
       </div>
 
-      {/* İçerik tipi: Metin / Görsel */}
       <div className="bg-white rounded-xl border border-rd-neutral-200 p-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-medium text-rd-neutral-900">Sosyal medya içeriği üret</h2>
-        </div>
+        <h2 className="text-base font-medium text-rd-neutral-900">Sosyal medya içeriği üret</h2>
 
-        <div className="grid grid-cols-2 gap-2">
-          <button onClick={() => setSosyalIcerikTipi("metin")}
-            className={`py-2.5 rounded-xl border-2 text-sm font-medium transition-all ${sosyalIcerikTipi === "metin" ? "border-rd-primary-800 bg-rd-neutral-100 text-rd-neutral-900" : "border-rd-neutral-200 text-rd-neutral-600 hover:border-rd-primary-800"}`}>
-            Caption + hashtag
-          </button>
-          <button onClick={() => setSosyalIcerikTipi("gorsel")}
-            className={`py-2.5 rounded-xl border-2 text-sm font-medium transition-all ${sosyalIcerikTipi === "gorsel" ? "border-rd-primary-800 bg-rd-neutral-100 text-rd-neutral-900" : "border-rd-neutral-200 text-rd-neutral-600 hover:border-rd-primary-800"}`}>
-            Ürün görseli
-          </button>
-        </div>
-
-        {/* Platform seçimi */}
+        {/* Platform seçimi — sosyal platformlar */}
         <div>
           <label className="block text-xs font-medium text-rd-neutral-600 mb-2">Platform</label>
           <div className="flex gap-2 flex-wrap">
@@ -115,10 +101,100 @@ export default function SosyalSekmesi({
               </button>
             ))}
           </div>
+        </div>
 
-          {/* Platform boyut rehberi */}
-          {sosyalIcerikTipi === "gorsel" && (
-            <div className="mt-2 rounded-xl border border-rd-neutral-200 bg-rd-neutral-100 p-3 text-xs space-y-1">
+        {/* Form — her zaman görünür */}
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Ürün adı <span className="text-rd-danger-600">*</span></label>
+            <input type="text" value={sosyalUrunAdi} onChange={(e) => setSosyalUrunAdi(e.target.value)} placeholder="örn: Bakır Cezve Set, Kadın Deri Çanta" className="w-full border border-rd-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/30" />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Ek bilgi <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
+            <textarea value={sosyalEkBilgi} onChange={(e) => setSosyalEkBilgi(e.target.value)} placeholder="örn: %20 indirimde, yeni sezon, el yapımı, hediye seçeneği" rows={2} className="w-full border border-rd-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/30" />
+          </div>
+
+          <button type="button" onClick={() => setGelismisAcik(v => !v)}
+            className="flex items-center gap-1.5 text-xs text-rd-neutral-600 hover:text-rd-neutral-900 transition-colors cursor-pointer">
+            <span>{gelismisAcik ? "▾" : "▸"}</span>
+            <span>Daha fazla seçenek</span>
+            {!gelismisAcik && (sosyalTon !== "tanitim" || sosyalSezon !== "normal") && (
+              <span className="text-rd-success-700 font-medium">• değiştirildi</span>
+            )}
+          </button>
+
+          {gelismisAcik && (
+            <div className="space-y-4 pl-1 border-l-2 border-rd-neutral-200">
+              <div>
+                <label className="block text-sm font-medium text-rd-neutral-900 mb-2">Ton</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {([
+                    { id: "tanitim", label: "Tanıtım", aciklama: "Ürünü öne çıkar" },
+                    { id: "indirim", label: "İndirim", aciklama: "Fırsatı vurgula" },
+                    { id: "hikaye", label: "Hikaye", aciklama: "Duygu bağı kur" },
+                  ] as { id: SosyalTon; label: string; aciklama: string }[]).map((t) => (
+                    <button key={t.id} onClick={() => setSosyalTon(t.id)}
+                      className={`p-3 rounded-xl border-2 text-left transition-all ${sosyalTon === t.id ? "border-rd-primary-800 bg-rd-neutral-100" : "border-rd-neutral-200 hover:border-rd-primary-800"}`}>
+                      <p className={`text-xs font-medium ${sosyalTon === t.id ? "text-rd-neutral-900" : "text-rd-neutral-600"}`}>{t.label}</p>
+                      <p className="text-xs text-rd-neutral-400 mt-0.5">{t.aciklama}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-rd-neutral-900 mb-2">Sezon / Etkinlik</label>
+                <select value={sosyalSezon} onChange={(e) => setSosyalSezon(e.target.value)}
+                  className="w-full border border-rd-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/30 bg-white">
+                  <option value="normal">Normal (sezon yok)</option>
+                  <option value="anneler_gunu">Anneler Günü</option>
+                  <option value="babalar_gunu">Babalar Günü</option>
+                  <option value="bayram">Bayram</option>
+                  <option value="yilbasi">Yılbaşı</option>
+                  <option value="black_friday">Black Friday</option>
+                  <option value="sevgililer_gunu">Sevgililer Günü</option>
+                </select>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* İki üretim butonu */}
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <button
+            type="button"
+            onClick={() => { setSosyalUretimModu("sade"); captionUret(); }}
+            disabled={captionYukleniyor || !sosyalUrunAdi.trim()}
+            className="w-full border-2 border-rd-primary-800 bg-white hover:bg-rd-primary-50 disabled:border-rd-neutral-200 disabled:bg-rd-neutral-50 disabled:text-rd-neutral-400 text-rd-primary-800 font-medium py-3 px-4 rounded-xl transition-colors text-left"
+          >
+            <p className="text-sm font-medium leading-snug">Sadece metin</p>
+            <p className="text-xs text-rd-neutral-500 mt-0.5">Caption + hashtag · 1 kredi/platform</p>
+          </button>
+          <button
+            type="button"
+            onClick={() => setSosyalUretimModu("gorsel-ile")}
+            disabled={captionYukleniyor}
+            className={`w-full border-2 disabled:border-rd-neutral-200 disabled:bg-rd-neutral-50 disabled:text-rd-neutral-400 font-medium py-3 px-4 rounded-xl transition-colors text-left ${sosyalUretimModu === "gorsel-ile" ? "border-rd-primary-800 bg-rd-primary-50 text-rd-primary-800" : "border-rd-neutral-200 bg-white hover:border-rd-primary-800 text-rd-neutral-700"}`}
+          >
+            <p className="text-sm font-medium leading-snug">Metin + Görsel</p>
+            <p className="text-xs text-rd-neutral-500 mt-0.5">+1 kredi görsel için</p>
+          </button>
+        </div>
+
+        {/* Görsel upload — sadece gorsel-ile modunda */}
+        {sosyalUretimModu === "gorsel-ile" && (
+          <div className="space-y-4 border-t border-rd-neutral-200 pt-4">
+            <p className="text-xs text-rd-neutral-600">Ürün fotoğrafından seçtiğin platform boyutunda görsel üretilir.</p>
+
+            {!sosyalFoto ? (
+              <FotoEkleAlani id="sosyal-gorsel-foto-input" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onload = () => setSosyalFoto(r.result as string); r.readAsDataURL(f); } }} renk="pink" metin="Ürün fotoğrafı yükle" altMetin="Temiz arka planlı fotoğraf en iyi sonucu verir" />
+            ) : (
+              <FotoThumbnail src={sosyalFoto} onKaldir={() => { setSosyalFoto(null); setSosyalGorselSonuclar([]); }} renk="green" />
+            )}
+
+            {/* Platform boyut rehberi */}
+            <div className="rounded-xl border border-rd-neutral-200 bg-rd-neutral-100 p-3 text-xs space-y-1">
               <p className="font-medium text-rd-neutral-900">Önerilen boyutlar</p>
               {sosyalPlatform === "instagram" && (
                 <div className="grid grid-cols-2 gap-2 text-rd-neutral-600 mt-1">
@@ -177,116 +253,10 @@ export default function SosyalSekmesi({
                 </div>
               )}
             </div>
-          )}
-        </div>
-
-        {/* METIN İÇERİĞİ */}
-        {sosyalIcerikTipi === "metin" && (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Ürün Adı <span className="text-rd-danger-600">*</span></label>
-              <input type="text" value={sosyalUrunAdi} onChange={(e) => setSosyalUrunAdi(e.target.value)} placeholder="örn: Bakır Cezve Set, Kadın Deri Çanta" className="w-full border border-rd-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/30" />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Ek Bilgi <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
-              <textarea value={sosyalEkBilgi} onChange={(e) => setSosyalEkBilgi(e.target.value)} placeholder="örn: %20 indirimde, yeni sezon, el yapımı, hediye seçeneği" rows={2} className="w-full border border-rd-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/30" />
-            </div>
-
-            <button type="button" onClick={() => setGelismisAcik(v => !v)}
-              className="flex items-center gap-1.5 text-xs text-rd-neutral-600 hover:text-rd-neutral-900 transition-colors cursor-pointer">
-              <span>{gelismisAcik ? "▾" : "▸"}</span>
-              <span>Daha fazla seçenek</span>
-              {!gelismisAcik && (sosyalTon !== "tanitim" || sosyalSezon !== "normal") && (
-                <span className="text-rd-success-700 font-medium">• değiştirildi</span>
-              )}
-            </button>
-
-            {gelismisAcik && (
-              <div className="space-y-4 pl-1 border-l-2 border-rd-neutral-200">
-                <div>
-                  <label className="block text-sm font-medium text-rd-neutral-900 mb-2">Ton</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {([
-                      { id: "tanitim", label: "Tanıtım", aciklama: "Ürünü öne çıkar" },
-                      { id: "indirim", label: "İndirim", aciklama: "Fırsatı vurgula" },
-                      { id: "hikaye", label: "Hikaye", aciklama: "Duygu bağı kur" },
-                    ] as { id: SosyalTon; label: string; aciklama: string }[]).map((t) => (
-                      <button key={t.id} onClick={() => setSosyalTon(t.id)}
-                        className={`p-3 rounded-xl border-2 text-left transition-all ${sosyalTon === t.id ? "border-rd-primary-800 bg-rd-neutral-100" : "border-rd-neutral-200 hover:border-rd-primary-800"}`}>
-                        <p className={`text-xs font-medium ${sosyalTon === t.id ? "text-rd-neutral-900" : "text-rd-neutral-600"}`}>{t.label}</p>
-                        <p className="text-xs text-rd-neutral-400 mt-0.5">{t.aciklama}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-rd-neutral-900 mb-2">Sezon / Etkinlik</label>
-                  <select value={sosyalSezon} onChange={(e) => setSosyalSezon(e.target.value)}
-                    className="w-full border border-rd-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/30 bg-white">
-                    <option value="normal">Normal (sezon yok)</option>
-                    <option value="anneler_gunu">Anneler Günü</option>
-                    <option value="babalar_gunu">Babalar Günü</option>
-                    <option value="bayram">Bayram</option>
-                    <option value="yilbasi">Yılbaşı</option>
-                    <option value="black_friday">Black Friday</option>
-                    <option value="sevgililer_gunu">Sevgililer Günü</option>
-                  </select>
-                </div>
-              </div>
-            )}
-
-            <button
-              type="button"
-              onClick={captionUret}
-              disabled={captionYukleniyor || !sosyalUrunAdi.trim()}
-              className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-xl transition-colors"
-            >
-              {captionYukleniyor ? "Üretiliyor..." : "İçerik üret"}
-            </button>
-
-            {(sosyalCaption || sosyalHashtag) && (
-              <div className="space-y-3">
-                {sosyalCaption && (
-                  <div className="bg-rd-neutral-50 rounded-xl p-5 border-l-4 border-l-rd-primary-800 border border-rd-neutral-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-medium text-rd-neutral-900">Paylaşım metni</span>
-                      <button onClick={() => navigator.clipboard.writeText(sosyalCaption)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-white text-rd-neutral-600 hover:bg-rd-neutral-100 hover:text-rd-neutral-900 transition-all border border-rd-neutral-200">Kopyala</button>
-                    </div>
-                    <p className="text-sm text-rd-neutral-600 leading-relaxed whitespace-pre-line">{sosyalCaption}</p>
-                  </div>
-                )}
-                {sosyalHashtag && (
-                  <div className="bg-rd-neutral-50 rounded-xl p-5 border-l-4 border-l-rd-primary-800 border border-rd-neutral-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-medium text-rd-neutral-900"># Hashtagler</span>
-                      <button onClick={() => navigator.clipboard.writeText(sosyalHashtag)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-white text-rd-neutral-600 hover:bg-rd-neutral-100 hover:text-rd-neutral-900 transition-all border border-rd-neutral-200">Kopyala</button>
-                    </div>
-                    <p className="text-sm text-rd-primary-800 leading-relaxed">{sosyalHashtag}</p>
-                  </div>
-                )}
-                <button onClick={() => { setSosyalCaption(""); setSosyalHashtag(""); }} className="w-full text-xs text-rd-neutral-400 hover:text-rd-neutral-600 py-2 transition-colors">Yeni metin üret</button>
-              </div>
-            )}
-
-          </div>
-        )}
-
-        {/* GÖRSEL İÇERİĞİ */}
-        {sosyalIcerikTipi === "gorsel" && (
-          <div className="space-y-4">
-            <p className="text-xs text-rd-neutral-600">Ürün fotoğrafından seçtiğin platform boyutunda görsel üretilir.</p>
-
-            {!sosyalFoto ? (
-              <FotoEkleAlani id="sosyal-gorsel-foto-input" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onload = () => setSosyalFoto(r.result as string); r.readAsDataURL(f); } }} renk="pink" metin="Ürün fotoğrafı yükle" altMetin="Temiz arka planlı fotoğraf en iyi sonucu verir" />
-            ) : (
-              <FotoThumbnail src={sosyalFoto} onKaldir={() => { setSosyalFoto(null); setSosyalGorselSonuclar([]); }} renk="green" />
-            )}
 
             {/* Boyut seçimi */}
             <div>
-              <label className="block text-xs font-medium text-rd-neutral-600 mb-2">Görsel Boyutu</label>
+              <label className="block text-xs font-medium text-rd-neutral-600 mb-2">Görsel boyutu</label>
               <div className="grid grid-cols-3 gap-2">
                 {([
                   { id: "1:1", label: "1:1", aciklama: "Feed / Post" },
@@ -304,7 +274,7 @@ export default function SosyalSekmesi({
 
             {/* Stil seçimi */}
             <div>
-              <label className="block text-xs font-medium text-rd-neutral-600 mb-2">Arka Plan Stili</label>
+              <label className="block text-xs font-medium text-rd-neutral-600 mb-2">Arka plan stili</label>
               <div className="grid grid-cols-4 gap-2">
                 {([
                   { id: "beyaz", label: "Beyaz" },
@@ -337,10 +307,10 @@ export default function SosyalSekmesi({
             <button
               type="button"
               onClick={sosyalGorselUret}
-              disabled={sosyalGorselYukleniyor || !sosyalFoto}
+              disabled={sosyalGorselYukleniyor || !sosyalFoto || !sosyalUrunAdi.trim()}
               className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-xl transition-colors"
             >
-              {sosyalGorselYukleniyor ? "Görsel üretiliyor..." : "İçerik üret"}
+              {sosyalGorselYukleniyor ? "Görsel üretiliyor..." : "Metin + görsel üret"}
             </button>
 
             {sosyalGorselYukleniyor && (
@@ -369,6 +339,31 @@ export default function SosyalSekmesi({
                 <button onClick={() => { setSosyalGorselSonuclar([]); setSosyalFoto(null); }} className="w-full text-xs text-rd-neutral-400 hover:text-rd-neutral-600 py-2 transition-colors">Yeni görsel üret</button>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Caption/hashtag sonuçları */}
+        {(sosyalCaption || sosyalHashtag) && (
+          <div className="space-y-3 border-t border-rd-neutral-200 pt-4">
+            {sosyalCaption && (
+              <div className="bg-rd-neutral-50 rounded-xl p-5 border-l-4 border-l-rd-primary-800 border border-rd-neutral-200">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-medium text-rd-neutral-900">Paylaşım metni</span>
+                  <button onClick={() => navigator.clipboard.writeText(sosyalCaption)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-white text-rd-neutral-600 hover:bg-rd-neutral-100 hover:text-rd-neutral-900 transition-all border border-rd-neutral-200">Kopyala</button>
+                </div>
+                <p className="text-sm text-rd-neutral-600 leading-relaxed whitespace-pre-line">{sosyalCaption}</p>
+              </div>
+            )}
+            {sosyalHashtag && (
+              <div className="bg-rd-neutral-50 rounded-xl p-5 border-l-4 border-l-rd-primary-800 border border-rd-neutral-200">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-medium text-rd-neutral-900"># Hashtagler</span>
+                  <button onClick={() => navigator.clipboard.writeText(sosyalHashtag)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-white text-rd-neutral-600 hover:bg-rd-neutral-100 hover:text-rd-neutral-900 transition-all border border-rd-neutral-200">Kopyala</button>
+                </div>
+                <p className="text-sm text-rd-primary-800 leading-relaxed">{sosyalHashtag}</p>
+              </div>
+            )}
+            <button onClick={() => { setSosyalCaption(""); setSosyalHashtag(""); }} className="w-full text-xs text-rd-neutral-400 hover:text-rd-neutral-600 py-2 transition-colors">Yeni metin üret</button>
           </div>
         )}
       </div>

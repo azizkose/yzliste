@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowRight, Check, Plug, CreditCard, Target, Zap } from 'lucide-react'
 import { HERO_COPY, HERO_TRUST_PILLS, NAV_CTAS } from '@/lib/constants/hero'
 import Button from '@/components/primitives/Button'
+import { useCurrentUser } from '@/lib/hooks/useCurrentUser'
 
 // const VideoModal = dynamic(() => import('./VideoModal'), { ssr: false })
 // Video CTA geçici olarak pasife çekildi — video hazırlanınca aç (LP-04)
@@ -16,6 +17,8 @@ const TRUST_PILL_ICONS: Record<string, React.ComponentType<{ size?: number; stro
 }
 
 export default function HeroContent() {
+  const { data: currentUser } = useCurrentUser()
+  const isLoggedIn = currentUser && !currentUser.anonim
 
   return (
     <div className="animate-hero-float-in-left">
@@ -74,16 +77,29 @@ export default function HeroContent() {
 
       {/* CTA group */}
       <div className="mb-5 mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-        <Link href={NAV_CTAS.primary.href} tabIndex={-1} className="w-full sm:w-auto">
-          <Button
-            variant="primary"
-            size="lg"
-            className="w-full sm:w-auto"
-            iconRight={<ArrowRight size={16} strokeWidth={2.5} aria-hidden="true" />}
-          >
-            {HERO_COPY.ctaPrimary}
-          </Button>
-        </Link>
+        {isLoggedIn ? (
+          <Link href="/uret" tabIndex={-1} className="w-full sm:w-auto">
+            <Button
+              variant="primary"
+              size="lg"
+              className="w-full sm:w-auto"
+              iconRight={<ArrowRight size={16} strokeWidth={2.5} aria-hidden="true" />}
+            >
+              Yeni içerik üret
+            </Button>
+          </Link>
+        ) : (
+          <Link href={NAV_CTAS.primary.href} tabIndex={-1} className="w-full sm:w-auto">
+            <Button
+              variant="primary"
+              size="lg"
+              className="w-full sm:w-auto"
+              iconRight={<ArrowRight size={16} strokeWidth={2.5} aria-hidden="true" />}
+            >
+              {HERO_COPY.ctaPrimary}
+            </Button>
+          </Link>
+        )}
         {/* "Nasıl çalışır?" video CTA — LP-04: pasife çekildi, video hazırlanınca aç
         <button
           type="button"

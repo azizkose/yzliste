@@ -39,6 +39,11 @@ export const BRAND_FEATURES: BrandFeature[] = [
     description: "Kategori ve fiyat segmenti rekabetçi konumlandırma sağlar",
   },
   {
+    icon: Star,
+    title: "Hizmet vurguları",
+    description: "Hızlı kargo, ücretsiz iade, özel ambalaj — metinde güven artırır",
+  },
+  {
     icon: Tag,
     title: "Öne çıkan özellikler",
     description: "Yerli üretim, organik materyal, 2 yıl garanti — her ürüne otomatik eklenir",
@@ -47,11 +52,6 @@ export const BRAND_FEATURES: BrandFeature[] = [
     icon: Banknote,
     title: "Fiyat bandı",
     description: "Bütçe, orta veya premium segment — dile getirme tarzı değişir",
-  },
-  {
-    icon: Star,
-    title: "Hizmet vurguları",
-    description: "Hızlı kargo, ücretsiz iade, özel ambalaj — metinde güven artırır",
   },
   {
     icon: FileText,
