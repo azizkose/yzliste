@@ -42,8 +42,8 @@ const OUTPUT_CARDS = [
     label: 'Listing',
     color: 'text-rd-primary-700',
     content: (
-      <div className="h-10 overflow-hidden">
-        <p className="text-xs text-rd-neutral-700 leading-snug line-clamp-2">
+      <div className="h-10 overflow-hidden flex items-start">
+        <p className="text-xs text-rd-neutral-700 leading-tight line-clamp-3">
           {trendyolTitle.slice(0, 60)}…
         </p>
       </div>
@@ -58,7 +58,7 @@ const OUTPUT_CARDS = [
       <img
         src="/ornek_beyaz.jpg"
         alt="Basketbol topu beyaz zemin"
-        className="h-10 w-full object-contain rounded"
+        className="h-10 w-full object-cover rounded"
       />
     ),
   },
@@ -73,8 +73,8 @@ const OUTPUT_CARDS = [
     label: 'Sosyal',
     color: 'text-rd-primary-700',
     content: (
-      <div className="h-10 overflow-hidden">
-        <p className="text-xs text-rd-neutral-500 leading-snug line-clamp-2">
+      <div className="h-10 overflow-hidden flex items-start">
+        <p className="text-xs text-rd-neutral-500 leading-tight line-clamp-3">
           Sahaya çıkmadan önce doğru top şart. 7 numara FIBA standardı...
         </p>
       </div>

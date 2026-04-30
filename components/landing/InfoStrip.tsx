@@ -171,7 +171,7 @@ function MetinPanel({ market, setMarket }: { market: MarketId; setMarket: (m: Ma
         ))}
       </div>
       <div className="mt-4 rounded-xl bg-rd-primary-50 border border-rd-primary-200 p-3 text-xs text-rd-primary-700 leading-relaxed">
-        <strong className="font-semibold">Her pazaryerinin kuralları farklı:</strong> Trendyol max 100 karakter başlık ister,
+        Her pazaryerinin kuralları farklı. <strong className="font-semibold">Örnek:</strong> Trendyol max 100 karakter başlık ister,
         Amazon 200&apos;e kadar keyword kabul eder, Etsy İngilizce + hikaye anlatımı sever.
         yzliste hepsini tek fotoğraftan üretir.
       </div>
