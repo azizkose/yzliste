@@ -42,6 +42,8 @@ export function useMetinUretim(deps: MetinDeps) {
   const [barkodYukleniyor, setBarkodYukleniyor] = useState(false);
   const [barkodBilgi, setBarkodBilgi] = useState<{ isim: string; marka: string; aciklama: string; kategori: string; renk: string; boyut: string } | null>(null);
   const [kameraAcik, setKameraAcik] = useState(false);
+  const [etiketler, setEtiketler] = useState<string[]>([]);
+  const [backendTerimler, setBackendTerimler] = useState("");
 
   const scannerRef = useRef<unknown>(null);
   const scannerBaslatildi = useRef(false);
@@ -149,6 +151,8 @@ export function useMetinUretim(deps: MetinDeps) {
           urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi,
           userId: kullanici.id, dil: platformDil, ton: kullanici.ton,
           hedefKitle, fiyatSegmenti, anahtarKelimeler, markaliUrun,
+          etiketler: etiketler.length > 0 ? etiketler : undefined,
+          backendTerimler: backendTerimler || undefined,
           ucretsizRevize: ucretsizRevizeAktifRef.current,
           orijinalUretimId: ucretsizRevizeAktifRef.current ? uretimIdRef.current : undefined,
         }),
@@ -178,7 +182,7 @@ export function useMetinUretim(deps: MetinDeps) {
     setYukleniyor(false);
     setTimeout(() => document.getElementById("sonuc-alani")?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urunAdi, kategori, ozellikler, platform, platformDil, hedefKitle, fiyatSegmenti, anahtarKelimeler, markaliUrun, girisTipi, barkodBilgi]);
+  }, [urunAdi, kategori, ozellikler, platform, platformDil, hedefKitle, fiyatSegmenti, anahtarKelimeler, markaliUrun, girisTipi, barkodBilgi, etiketler, backendTerimler]);
 
   return {
     urunAdi, setUrunAdi,
@@ -202,6 +206,8 @@ export function useMetinUretim(deps: MetinDeps) {
     barkodBilgi, setBarkodBilgi,
     kameraAcik,
     kameraAc, kameraKapat,
+    etiketler, setEtiketler,
+    backendTerimler, setBackendTerimler,
     icerikUret,
     skor, oneriler,
     ucretsizRevizeKullanildi,

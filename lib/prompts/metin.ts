@@ -1,9 +1,9 @@
 // Listing (metin) üretimi için prompt sabitleri
 // Versiyon arttırıldığında BACKLOG.md'ye not düşülmeli
 
-export const METIN_PROMPT_VERSION = "metin-v1.2";
+export const METIN_PROMPT_VERSION = "metin-v1.3";
 
-export type Platform = "trendyol" | "hepsiburada" | "amazon" | "n11" | "etsy" | "amazon_usa";
+export type Platform = "trendyol" | "hepsiburada" | "amazon" | "n11" | "etsy" | "amazon_usa" | "ciceksepeti";
 
 export const PLATFORM_KURALLARI: Record<Platform, {
   baslikLimit: number;
@@ -16,33 +16,38 @@ export const PLATFORM_KURALLARI: Record<Platform, {
 }> = {
   trendyol: {
     baslikLimit: 100, ozellikSayisi: 5, aciklamaKelime: 300, etiketSayisi: 10,
-    emojiDestekli: true, dil: "tr",
-    notlar: "Trendyol baslik formati: Marka + Urun Adi + Ana Ozellik + Model/Renk.",
+    emojiDestekli: false, dil: "tr",
+    notlar: "Trendyol baslik: Marka + Urun Tipi + Ana Ozellik + Varyant. Ilk 30 karakter kritik. BUYUK HARF yasak. 'EN UCUZ' gibi pazarlama dili yasak. Emoji 2026 itibarıyla yasak.",
   },
   hepsiburada: {
-    baslikLimit: 150, ozellikSayisi: 5, aciklamaKelime: 350, etiketSayisi: 10,
-    emojiDestekli: true, dil: "tr",
-    notlar: "Hepsiburada baslik daha uzun tutulabilir. Teknik ozellikler one cikarilmalidir.",
+    baslikLimit: 255, ozellikSayisi: 5, aciklamaKelime: 350, etiketSayisi: 10,
+    emojiDestekli: false, dil: "tr",
+    notlar: "Hepsiburada baslik 255 karakter — Trendyol'dan daha uzun, teknik detay one cikarilabilir. Ilk 60 char mobil snippet icin kritik. Aciklama 3 paragraf: kim/teknik/kullanim. Emoji yasak.",
   },
   amazon: {
     baslikLimit: 200, ozellikSayisi: 5, aciklamaKelime: 400, etiketSayisi: 0,
     emojiDestekli: false, dil: "tr",
-    notlar: "Amazon TR: Title Case, emoji yok, bullet fayda odakli.",
+    notlar: "Amazon TR: Title Case (her kelimenin ilk harfi buyuk), BUYUK HARF bullet baslik ('PREMIUM KALITE: ...'), backend arama terimleri 250 byte ayri. Emoji yasak.",
   },
   n11: {
-    baslikLimit: 100, ozellikSayisi: 5, aciklamaKelime: 250, etiketSayisi: 8,
-    emojiDestekli: true, dil: "tr",
-    notlar: "N11 icin sade ve anlasılir bir dil kullanilmalidir.",
+    baslikLimit: 65, ozellikSayisi: 5, aciklamaKelime: 250, etiketSayisi: 8,
+    emojiDestekli: false, dil: "tr",
+    notlar: "N11 baslik COK KISA: 15-65 karakter. Marka + Ozellik + Urun formulu. Her kelime kritik, gereksiz kelime yasak. Emoji yasak.",
   },
   etsy: {
     baslikLimit: 140, ozellikSayisi: 0, aciklamaKelime: 300, etiketSayisi: 13,
     emojiDestekli: false, dil: "en",
-    notlar: "Etsy: natural conversational English, no keyword stuffing, gift-focused tags.",
+    notlar: "Etsy: natural English, story + SEO blend. First 40-50 chars visible on mobile/Google. 13 tags x 20 chars each. Description first 160 chars = SEO meta. No emoji.",
   },
   amazon_usa: {
     baslikLimit: 200, ozellikSayisi: 5, aciklamaKelime: 400, etiketSayisi: 0,
     emojiDestekli: false, dil: "en",
-    notlar: "Amazon USA: Title Case, no emoji, benefit-first bullets, backend search terms.",
+    notlar: "Amazon USA: Title Case, benefit-first bullets with ALL CAPS keyword prefix, backend search terms 250 byte (critical for Turkish sellers ranking in USA). No emoji.",
+  },
+  ciceksepeti: {
+    baslikLimit: 80, ozellikSayisi: 0, aciklamaKelime: 250, etiketSayisi: 0,
+    emojiDestekli: false, dil: "tr",
+    notlar: "Ciceksepeti baslik: Marka + Model + [Kategori/Ozellik/Renk] formulu, max 80 char. Hediye/cicek/lifestyle dili, hikaye + duygu vurgusu. Aciklama renk/materyal/boyut + kullanim kosullari. Emoji yasak.",
   },
 };
 
@@ -213,6 +218,10 @@ export const YASAKLI_KELIMELER: Record<Platform, string[]> = {
   amazon_usa: [
     "best", "#1", "top rated", "cheapest", "guaranteed", "free",
     "bonus", "limited time", "miracle", "cure", "replica", "knock-off",
+  ],
+  ciceksepeti: [
+    "en iyi", "en ucuz", "1 numara", "süper", "şifalı", "mucize",
+    "garantili", "kesin sonuç", "hızlı kargo", "ücretsiz kargo",
   ],
 };
 
@@ -480,6 +489,38 @@ ARAMA TERIMLERI:
 [satir 5]
 
 Sadece bu formati kullan. Hic emoji kullanma.`;
+  }
+
+  // --- ÇİÇEKSEPETİ ---
+  if (platform === "ciceksepeti") {
+    return `Sen uzman bir Türk e-ticaret metin yazarısın. Çiçeksepeti platformunun hediye ve lifestyle odaklı dil tercihlerini ve alıcı psikolojisini derinlemesine biliyorsun.
+${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}${markaEki}
+${tonTanimi ? `MARKA TONU:\n${tonTanimi}\n` : ""}
+
+ÇİÇEKSEPETİ KURALLARI:
+
+BAŞLIK (max 80 karakter):
+- Format: Marka + Model + [Kategori / Özellik / Renk]
+- Sade, açık, doğal Türkçe. Emoji yok, büyük harf yok, noktalama işareti minimum
+- İlk 40 karakter mobil arama snippet'i için kritik
+- Gereksiz kelime (süper, harika, özel) yasak
+
+AÇIKLAMA (yaklaşık 200-250 kelime, 2-3 kısa paragraf):
+- Para 1: Ürünü duygu + kullanım bağlamında tanıt — hediye fikri, özel an, kime uygun
+- Para 2: Renk, malzeme, boyut, bakım gibi pratik detaylar (sadece biliniyorsa yaz, uydurma)
+- Para 3: Stil önerisi veya tamamlayıcı kullanım senaryosu (kısa, özlü)
+- Ton: Sıcak, samimi, günlük yaşama yakın. Çiçeksepeti'nin alıcı kitlesi (genellikle hediye alanlar) için yaz
+- Emoji kullanma
+- Her paragraf 3-4 cümle; kısa ve taranabilir yap
+
+ÇIKTI FORMATI:
+BAŞLIK:
+[başlık]
+
+AÇIKLAMA:
+[açıklama]
+
+Sadece bu formatı kullan. Hic emoji kullanma.`;
   }
 
   // --- TR PAZARYERLERİ (Trendyol, HB, N11) ---
