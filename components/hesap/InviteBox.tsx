@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { UserPlus, Check, Copy } from 'lucide-react'
+import { UserPlus, Check, Copy, MessageCircle, Send } from 'lucide-react'
 
 interface InviteStats {
   referralCode: string | null
@@ -58,21 +58,43 @@ export default function InviteBox({ userId }: { userId: string }) {
       </div>
 
       {link ? (
-        <div className="flex items-center gap-2">
-          <div className="flex-1 min-w-0 bg-white border border-rd-primary-200 rounded-lg px-3 py-2 text-xs text-rd-neutral-600 truncate font-mono">
-            {link}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <div className="flex-1 min-w-0 bg-white border border-rd-primary-200 rounded-lg px-3 py-2 text-xs text-rd-neutral-600 truncate font-mono">
+              {link}
+            </div>
+            <button
+              onClick={kopyala}
+              className="shrink-0 inline-flex items-center gap-1.5 text-sm font-medium text-white bg-rd-primary-700 hover:bg-rd-primary-800 px-4 py-2 rounded-lg transition-colors"
+              aria-label="Davet linkini kopyala"
+            >
+              {kopyalandi ? (
+                <><Check size={14} aria-hidden="true" />Kopyalandı</>
+              ) : (
+                <><Copy size={14} aria-hidden="true" />Kopyala</>
+              )}
+            </button>
           </div>
-          <button
-            onClick={kopyala}
-            className="shrink-0 inline-flex items-center gap-1.5 text-sm font-medium text-white bg-rd-primary-700 hover:bg-rd-primary-800 px-4 py-2 rounded-lg transition-colors"
-            aria-label="Davet linkini kopyala"
-          >
-            {kopyalandi ? (
-              <><Check size={14} aria-hidden="true" />Kopyalandı</>
-            ) : (
-              <><Copy size={14} aria-hidden="true" />Kopyala</>
-            )}
-          </button>
+          <div className="flex gap-2">
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(`yzliste'yi dene — AI ile e-ticaret içerikleri: ${link}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-white bg-[#25D366] hover:bg-[#1ebe5d] px-3 py-1.5 rounded-lg transition-colors"
+            >
+              <MessageCircle size={13} aria-hidden="true" />
+              WhatsApp
+            </a>
+            <a
+              href={`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('yzliste — AI ile e-ticaret içerikleri')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-white bg-[#2AABEE] hover:bg-[#1a9fd8] px-3 py-1.5 rounded-lg transition-colors"
+            >
+              <Send size={13} aria-hidden="true" />
+              Telegram
+            </a>
+          </div>
         </div>
       ) : (
         <p className="text-xs text-rd-neutral-400">Davet linki yükleniyor…</p>
