@@ -222,10 +222,10 @@ function Step3Canvas({ reduced, inactive }: { reduced: boolean; inactive?: boole
               {card.isText ? (
                 <p className="text-xs text-rd-neutral-500 leading-snug line-clamp-2">{card.content}</p>
               ) : card.isVideo ? (
-                <HizliVideo className="h-8 w-full rounded object-cover bg-rd-neutral-200" />
+                <HizliVideo className="h-8 w-full rounded object-contain bg-rd-neutral-100" />
               ) : 'imgSrc' in card ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={card.imgSrc as string} alt={card.label} className="h-7 w-full rounded object-contain" />
+                <img src={card.imgSrc as string} alt={card.label} className="h-7 w-full rounded object-contain bg-rd-neutral-50" />
               ) : (
                 <div className="h-7 w-full rounded bg-rd-neutral-200" />
               )}
