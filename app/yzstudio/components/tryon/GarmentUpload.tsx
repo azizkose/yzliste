@@ -36,6 +36,11 @@ export function GarmentUpload({
 
   return (
     <div className="space-y-4">
+      {/* P11-6: Ön/arka ayrı seans bilgisi */}
+      <div className="rounded-lg border border-rd-neutral-200 bg-rd-neutral-50 px-4 py-3 text-xs text-rd-neutral-600 leading-relaxed">
+        Kıyafetin ön ve arka tarafları farklıysa iki ayrı seans gerekiyor — bu modeli ön/arka için ayrı çalıştır. Yakında otomatik destek geliyor.
+      </div>
+
       {/* Drop zone */}
       <div
         onDrop={onDrop}
