@@ -73,7 +73,7 @@ export default function HeroContent() {
       </div>
 
       {/* CTA group */}
-      <div className="mb-5 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+      <div className="mb-5 mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
         <Link href={NAV_CTAS.primary.href} tabIndex={-1} className="w-full sm:w-auto">
           <Button
             variant="primary"
