@@ -9,6 +9,8 @@ import AuthForm from "@/components/auth/AuthForm";
 import { resizeFoto } from "@/lib/listing-utils";
 import type { Kullanici } from "@/lib/listing-utils";
 import { PLATFORM_BILGI, KATEGORI_LISTESI } from "@/lib/constants";
+import { PLATFORM_KURALLARI } from "@/lib/prompts/metin";
+import type { Platform } from "@/lib/prompts/metin";
 import PaketModal from "@/components/PaketModal";
 import MetinSekmesi from "@/components/tabs/MetinSekmesi";
 import GorselSekmesi from "@/components/tabs/GorselSekmesi";
@@ -23,10 +25,12 @@ import {
   Check,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
   Edit3,
   Camera,
   Barcode,
   FileSpreadsheet,
+  X as XIcon,
   type LucideIcon,
 } from "lucide-react";
 import { useMetinUretim } from "@/lib/hooks/useMetinUretim";
@@ -91,6 +95,7 @@ export default function Home() {
   const [fotolar, setFotolar] = useState<string[]>([]);
   const [digerMod, setDigerMod] = useState(false);
   const [gelismisAcik, setGelismisAcik] = useState(false);
+  const [etiketInput, setEtiketInput] = useState("");
 
   const prevStep1DoneRef = useRef(false);
   const prevStep2DoneRef = useRef(false);
@@ -683,16 +688,35 @@ export default function Home() {
             {/* P3-U5: Paylaşılan ürün bilgisi formu — metin sekmesinde sadece manuel modda göster */}
             {(anaSekme !== "metin" || metin.girisTipi === "manuel") && <div className="bg-white rounded-xl border border-rd-neutral-200 p-4 mb-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-rd-neutral-900 mb-1">
-                  Ürün adı <span className="text-rd-danger-700">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-sm font-medium text-rd-neutral-900">
+                    Ürün adı <span className="text-rd-danger-700">*</span>
+                  </label>
+                  {anaSekme === "metin" && (
+                    <span className={cn(
+                      "text-xs tabular-nums",
+                      metin.urunAdi.length > (PLATFORM_KURALLARI[metin.platform as Platform]?.baslikLimit ?? 100)
+                        ? "text-rd-danger-700"
+                        : "text-rd-neutral-400"
+                    )}>
+                      {metin.urunAdi.length}/{PLATFORM_KURALLARI[metin.platform as Platform]?.baslikLimit ?? 100}
+                    </span>
+                  )}
+                </div>
                 <input
                   type="text"
                   value={metin.urunAdi}
                   onChange={(e) => metin.setUrunAdi(e.target.value)}
+                  maxLength={anaSekme === "metin" ? (PLATFORM_KURALLARI[metin.platform as Platform]?.baslikLimit ?? 100) : undefined}
                   placeholder="örn: Profesyonel Basketbol Topu 7 Numara"
                   className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
                 />
+                {anaSekme === "metin" && metin.platform === "n11" && (
+                  <div className="mt-1.5 flex items-center gap-1.5 text-xs text-rd-warning-700">
+                    <AlertTriangle size={12} strokeWidth={1.5} aria-hidden="true" />
+                    <span>N11 başlık 65 karakterle sınırlıdır — her kelime kritik.</span>
+                  </div>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Kategori <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
@@ -730,6 +754,67 @@ export default function Home() {
                   className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
                 />
               </div>
+
+              {/* Etsy tag ipuçları */}
+              {anaSekme === "metin" && metin.platform === "etsy" && (
+                <div>
+                  <label className="block text-sm font-medium text-rd-neutral-900 mb-1">
+                    Etsy etiket fikirleri <span className="text-rd-neutral-400 font-normal">(isteğe bağlı, max 13)</span>
+                  </label>
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {metin.etiketler.map((tag, i) => (
+                      <span key={i} className="flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border border-rd-primary-200 bg-rd-primary-50 text-rd-primary-800">
+                        {tag}
+                        <button
+                          type="button"
+                          onClick={() => metin.setEtiketler(metin.etiketler.filter((_, j) => j !== i))}
+                          aria-label={`${tag} etiketini kaldır`}
+                          className="text-rd-primary-600 hover:text-rd-primary-900 transition-colors"
+                        >
+                          <XIcon size={10} strokeWidth={2} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                  {metin.etiketler.length < 13 && (
+                    <input
+                      type="text"
+                      value={etiketInput}
+                      onChange={(e) => setEtiketInput(e.target.value.slice(0, 20))}
+                      onKeyDown={(e) => {
+                        if ((e.key === "Enter" || e.key === ",") && etiketInput.trim()) {
+                          e.preventDefault();
+                          const tag = etiketInput.trim().replace(/,$/, "");
+                          if (tag && metin.etiketler.length < 13) {
+                            metin.setEtiketler([...metin.etiketler, tag]);
+                            setEtiketInput("");
+                          }
+                        }
+                      }}
+                      placeholder="Etiket yaz, Enter ile ekle (max 20 karakter)"
+                      className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
+                    />
+                  )}
+                  <p className="mt-1 text-xs text-rd-neutral-400">{metin.etiketler.length}/13 etiket</p>
+                </div>
+              )}
+
+              {/* Amazon backend arama terimleri */}
+              {anaSekme === "metin" && (metin.platform === "amazon" || metin.platform === "amazon_usa") && (
+                <div>
+                  <label className="block text-sm font-medium text-rd-neutral-900 mb-1">
+                    Backend arama terimleri <span className="text-rd-neutral-400 font-normal">(isteğe bağlı, 250 byte)</span>
+                  </label>
+                  <textarea
+                    value={metin.backendTerimler}
+                    onChange={(e) => metin.setBackendTerimler(e.target.value.slice(0, 250))}
+                    placeholder="Başlıkta geçmeyen anahtar kelimeler, eşanlamlılar, yaygın yazım hataları..."
+                    rows={2}
+                    className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
+                  />
+                  <p className="mt-1 text-xs text-rd-neutral-400">{new TextEncoder().encode(metin.backendTerimler).length}/250 byte</p>
+                </div>
+              )}
 
               {/* Gelişmiş ayarlar */}
               <div className="pt-1">

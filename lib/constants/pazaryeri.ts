@@ -48,8 +48,11 @@ export type ContentTypeId = (typeof CONTENT_TYPES)[number]['id']
 
 export const PLATFORMS = {
   trendyol:    { name: 'Trendyol',    letter: 'T', color: '#F27A1A', bgColor: '#FFF4ED' },
+  hepsiburada: { name: 'Hepsiburada', letter: 'H', color: '#FF6000', bgColor: '#FFF3EE' },
   amazon:      { name: 'Amazon TR',   letter: 'a', color: '#FF9900', bgColor: '#FFF8EB' },
+  n11:         { name: 'N11',         letter: 'N', color: '#7B2D8B', bgColor: '#F7EEF9' },
   etsy:        { name: 'Etsy',        letter: 'E', color: '#F1641E', bgColor: '#FEF2EC' },
+  amazon_usa:  { name: 'Amazon USA',  letter: 'A', color: '#146EB4', bgColor: '#EBF5FF' },
   ciceksepeti: { name: 'Çiçeksepeti', letter: 'Ç', color: '#FF1493', bgColor: '#FFE4F1' },
 } as const
 

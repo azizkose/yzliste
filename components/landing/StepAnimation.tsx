@@ -8,11 +8,12 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-// Hızlı video — 3x hızda 360° dönüş
+// Hızlı video — 2x hızda 360° dönüş
 function HizliVideo({ className }: { className?: string }) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
+  const [loaded, setLoaded] = useState(false)
   useEffect(() => {
-    if (videoRef.current) videoRef.current.playbackRate = 3.0
+    if (videoRef.current) videoRef.current.playbackRate = 2.0
   }, [])
   return (
     <video
@@ -22,7 +23,8 @@ function HizliVideo({ className }: { className?: string }) {
       loop
       muted
       playsInline
-      className={className}
+      onLoadedData={() => setLoaded(true)}
+      className={`${className ?? ""} transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
       aria-hidden="true"
     />
   )
