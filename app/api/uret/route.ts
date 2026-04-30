@@ -43,6 +43,7 @@ export async function POST(req: NextRequest) {
     urunAdi, kategori, ozellikler, platform, fotolar,
     girisTipi, barkodBilgi, userId, dil, ton,
     hedefKitle, fiyatSegmenti, anahtarKelimeler, markaliUrun,
+    etiketler, backendTerimler,
     ucretsizRevize, orijinalUretimId,
   } = await req.json();
 
@@ -147,11 +148,14 @@ export async function POST(req: NextRequest) {
       if (hedefKitle && hedefKitle !== "genel") kullaniciBilgi += `\nTarget audience: ${hedefKitle}`;
       if (fiyatSegmenti) kullaniciBilgi += `\nPrice segment: ${fiyatSegmenti}`;
       if (anahtarKelimeler) kullaniciBilgi += `\nPriority keywords (weave naturally into title and description): ${anahtarKelimeler}`;
+      if (etiketler?.length > 0) kullaniciBilgi += `\nSuggested tag ideas (incorporate where relevant): ${etiketler.join(", ")}`;
+      if (backendTerimler) kullaniciBilgi += `\nBackend search term hints: ${backendTerimler}`;
     } else {
       kullaniciBilgi = `Urun adi: ${urunAdi}\nKategori: ${kategori}\nEk ozellikler ve bilgiler: ${ozellikler || "belirtilmedi"}`;
       if (hedefKitle && hedefKitle !== "genel") kullaniciBilgi += `\nHedef kitle: ${hedefKitle}`;
       if (fiyatSegmenti) kullaniciBilgi += `\nFiyat segmenti: ${fiyatSegmenti}`;
       if (anahtarKelimeler) kullaniciBilgi += `\nOncelikli anahtar kelimeler (bunlari dogal sekilde baslik ve aciklamaya yerlestir): ${anahtarKelimeler}`;
+      if (backendTerimler) kullaniciBilgi += `\nArama terimi onerileri: ${backendTerimler}`;
     }
   }
 
