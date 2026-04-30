@@ -1,5 +1,7 @@
 # Changelog
 
+## 2026-04-30 — Polish-13 P13H-1~P13H-3: Hero video opacity-0 fix, vitrin metinleri Anadolu Spor+Anadolu Bakır, InfoStrip "Örnek:" prefix tab üstüne
+
 ## 2026-04-30 — Polish-12 P12-1~P12-5: PLATFORM_KURALLARI 7 pazaryeri (Hepsi 255/N11 65/Çiçek yeni), PLATFORMS UI 4→7, markaEki ek_notlar 8. alan, platform form (karakter sayacı+N11 uyarı+Etsy 13 tag+Amazon backend SEO), video playbackRate 2.0+fade
 
 ## 2026-04-30 — Polish-12 P12H-1~P12H-4: InfoStrip 'Örnek:' prefix, Sosyal form duplikasyon kaldır + Hepsi(Kit) butonu (3/4 kredi), AppScreenshotMockup card heights tutarlı h-10, MarkaBilgileri BrandFormPreview kıyas alanı kaldır
