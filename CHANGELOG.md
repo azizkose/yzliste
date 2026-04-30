@@ -1,5 +1,7 @@
 # Changelog
 
+## 2026-04-30 — Polish-12 P12H-1~P12H-4: InfoStrip 'Örnek:' prefix, Sosyal form duplikasyon kaldır + Hepsi(Kit) butonu (3/4 kredi), AppScreenshotMockup card heights tutarlı h-10, MarkaBilgileri BrandFormPreview kıyas alanı kaldır
+
 ## 2026-04-30 — Polish-11 P11-1~P11-9: bg zigzag, MarkaBilgileri collapsible, 7 pazaryeri+Çiçeksepeti metadata/PLATFORMS, Sosyal UX rewrite (sosyalUretimModu+2 buton), GarmentUpload bilgi kutusu, Hero CTA auth-aware, H1 yapay zeka, AppScreenshotMockup card heights
 
 ## 2026-04-29 — Redesign P5-FIX-1~4: InfoStrip 38b10b4 geri getirildi (EXAMPLE_CONTENT_TR + amazon key), StepSection swap, RDFeaturesTabbed silindi, Hero→StepSection spacing raporu
