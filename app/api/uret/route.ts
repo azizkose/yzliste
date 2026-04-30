@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profil } = await supabaseAdmin
     .from("profiles")
-    .select("kredi, is_admin, is_test, marka_adi, hedef_kitle, vurgulanan_ozellikler, magaza_kategorileri, fiyat_bandi, teslimat_vurgulari, benchmark_magaza")
+    .select("kredi, is_admin, is_test, marka_adi, hedef_kitle, vurgulanan_ozellikler, magaza_kategorileri, fiyat_bandi, teslimat_vurgulari, benchmark_magaza, ek_notlar")
     .eq("id", userId)
     .single();
 
@@ -165,6 +165,7 @@ export async function POST(req: NextRequest) {
   if (profil.fiyat_bandi) markaBaglami.push(platformDilOnceki === "en" ? `Price segment: ${profil.fiyat_bandi}` : `Fiyat bandı: ${profil.fiyat_bandi}`);
   if (profil.teslimat_vurgulari?.length) markaBaglami.push(platformDilOnceki === "en" ? `Service highlights: ${profil.teslimat_vurgulari.join(", ")}` : `Hizmet vurguları: ${profil.teslimat_vurgulari.join(", ")}`);
   if (profil.benchmark_magaza) markaBaglami.push(platformDilOnceki === "en" ? `Reference store style: ${profil.benchmark_magaza}` : `Referans mağaza tarzı: ${profil.benchmark_magaza}`);
+  if (profil.ek_notlar) markaBaglami.push(platformDilOnceki === "en" ? `Additional brand notes: ${profil.ek_notlar}` : `Ek marka notları: ${profil.ek_notlar}`);
   if (markaBaglami.length > 0) {
     kullaniciBilgi += platformDilOnceki === "en"
       ? `\n\nBrand context:\n${markaBaglami.join("\n")}`
