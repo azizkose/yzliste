@@ -69,7 +69,7 @@ export default function Nav() {
             className="flex items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary/40"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/yzliste_logo.png" alt="yzliste" className="h-8 w-auto" />
+            <img src="/yzliste_logo.png" alt="yzliste" className="h-9 w-auto" />
           </Link>
 
           {/* Desktop nav links */}
@@ -138,7 +138,7 @@ export default function Nav() {
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/yzliste_logo.png" alt="yzliste" className="h-7 w-auto" />
+              <img src="/yzliste_logo.png" alt="yzliste" className="h-8 w-auto" />
               <button
                 ref={closeRef}
                 className="rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary/40"

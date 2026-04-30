@@ -58,7 +58,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
         {/* Logo */}
         <Link href="/" className="flex-shrink-0 mr-1">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/yzliste_logo.png" alt="yzliste" className={`h-8 transition-all duration-300 ${transparent ? "brightness-0 invert" : ""}`} />
+          <img src="/yzliste_logo.png" alt="yzliste" className={`h-9 transition-all duration-300 ${transparent ? "brightness-0 invert" : ""}`} />
         </Link>
 
         {/* Desktop nav */}
