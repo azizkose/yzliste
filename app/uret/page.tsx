@@ -64,6 +64,7 @@ const PLATFORMS = [
   { id: "n11", label: "N11" },
   { id: "etsy", label: "Etsy" },
   { id: "amazon_usa", label: "Amazon USA" },
+  { id: "ciceksepeti", label: "Çiçeksepeti" },
 ];
 
 export default function Home() {
