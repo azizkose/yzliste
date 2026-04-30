@@ -70,7 +70,7 @@ const PLATFORM_OPTIONS = [
 const TIP_OPTIONS = [
   { id: 'tumu', label: 'Tümü' },
   { id: 'metin', label: 'Metin' },
-  { id: 'gorsel', label: 'Görsel' },
+  { id: 'gorsel', label: 'Görsel', disabled: true, disabledTooltip: 'Yakında — şimdilik sadece metin geçmişi' },
   { id: 'video', label: 'Video' },
   { id: 'sosyal', label: 'Sosyal' },
 ]
