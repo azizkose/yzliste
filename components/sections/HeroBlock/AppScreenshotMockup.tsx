@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   Check,
   Zap,
@@ -18,7 +18,6 @@ const trendyolTitle = EXAMPLE_CONTENT_TR.metin.trendyol.title
 // Hızlı video — 2x hızda 360° dönüş
 function HizliVideo() {
   const videoRef = useRef<HTMLVideoElement | null>(null)
-  const [loaded, setLoaded] = useState(false)
   useEffect(() => {
     if (videoRef.current) videoRef.current.playbackRate = 2.0
   }, [])
@@ -31,8 +30,7 @@ function HizliVideo() {
       muted
       playsInline
       preload="auto"
-      onLoadedData={() => setLoaded(true)}
-      className={`h-10 w-full rounded object-contain bg-rd-neutral-100 transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+      className="h-10 w-full rounded object-contain bg-rd-neutral-100"
       aria-hidden="true"
     />
   )
