@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { useCurrentUser } from '@/lib/hooks/useCurrentUser'
 
 interface FiyatlarCtaProps {
   className?: string
@@ -11,13 +10,8 @@ interface FiyatlarCtaProps {
 }
 
 export default function FiyatlarCta({ className, variant = 'primary', paketButonRenk, paketFiyatStr }: FiyatlarCtaProps) {
-  const [girisVar, setGirisVar] = useState<boolean | null>(null)
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setGirisVar(!!user && !user.is_anonymous)
-    })
-  }, [])
+  const { data: currentUser, isLoading } = useCurrentUser()
+  const girisVar = !isLoading && currentUser != null && !currentUser.anonim
 
   const paketLabel = paketFiyatStr ? `Satın Al — ${paketFiyatStr}` : 'Satın Al'
 

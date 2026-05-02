@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { useCurrentUser } from '@/lib/hooks/useCurrentUser'
 import {
   ChevronLeft,
   Info,
@@ -124,6 +125,7 @@ const DURUM_OPTIONS: { value: string; label: string }[] = [
 // ─── Sayfa ───────────────────────────────────────────────────────────────────
 
 export default function FaturalarPage() {
+  const { data: currentUser, isLoading: authLoading } = useCurrentUser()
   const [faturalar, setFaturalar] = useState<Fatura[]>([])
   const [yukleniyor, setYukleniyor] = useState(!FATURALAR_DEMO)
   const [fetchHata, setFetchHata] = useState(false)
@@ -144,13 +146,12 @@ export default function FaturalarPage() {
     setYukleniyor(true)
     setFetchHata(false)
     try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      if (!currentUser) return
 
       const { data, error } = await supabase
         .from('payments')
         .select('id, paket, kredi, tutar, durum, parasut_fatura_id, fatura_email_gonderildi, created_at')
-        .eq('user_id', user.id)
+        .eq('user_id', currentUser.id)
         .eq('durum', 'basarili')
         .order('created_at', { ascending: false })
 
@@ -174,7 +175,10 @@ export default function FaturalarPage() {
     }
   }
 
-  useEffect(() => { yukle() }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!FATURALAR_DEMO && authLoading) return
+    yukle()
+  }, [authLoading, currentUser]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Filtreli liste ─────────────────────────────────────────────────────────
 

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { useCurrentUser } from '@/lib/hooks/useCurrentUser'
 import {
   FileText,
   Search,
@@ -132,7 +133,7 @@ function tarihFiltrele(u: Uretim, filtre: string): boolean {
 
 export default function HesapUretimlerPage() {
   const router = useRouter()
-  const [userId, setUserId] = useState<string | null>(null)
+  const { data: currentUser, isLoading: authLoading } = useCurrentUser()
 
   const [platformFiltre, setPlatformFiltre] = useState('tumu')
   const [tipFiltre, setTipFiltre] = useState('tumu')
@@ -146,11 +147,9 @@ export default function HesapUretimlerPage() {
 
   // Auth
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user) router.push('/giris')
-      else setUserId(user.id)
-    })
-  }, [router])
+    if (authLoading) return
+    if (!currentUser) { router.push('/giris'); return }
+  }, [authLoading, currentUser, router])
 
   // Data
   const {
@@ -162,13 +161,13 @@ export default function HesapUretimlerPage() {
     isError,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ['uretimler', userId],
+    queryKey: ['uretimler', currentUser?.id],
     queryFn: async ({ pageParam }: { pageParam: number }) => {
-      if (!userId) return [] as Uretim[]
+      if (!currentUser?.id) return [] as Uretim[]
       const { data } = await supabase
         .from('uretimler')
         .select('id, urun_adi, platform, giris_tipi, content_type, sonuc, created_at')
-        .eq('user_id', userId)
+        .eq('user_id', currentUser.id)
         .order('created_at', { ascending: false })
         .range(pageParam, pageParam + PAGE_SIZE - 1)
       return (data ?? []) as Uretim[]
@@ -176,7 +175,7 @@ export default function HesapUretimlerPage() {
     getNextPageParam: (lastPage, allPages) =>
       lastPage.length === PAGE_SIZE ? allPages.flat().length : undefined,
     initialPageParam: 0,
-    enabled: !!userId,
+    enabled: !!currentUser?.id,
   })
 
   const allUretimler = data?.pages.flat() ?? []
@@ -231,8 +230,7 @@ export default function HesapUretimlerPage() {
     setTimeout(() => setKopyalananKey(null), 1800)
   }
 
-  // Auth yükleniyor
-  if (!userId) {
+  if (authLoading || !currentUser) {
     return (
       <main className="min-h-screen bg-rd-neutral-50 flex items-center justify-center">
         <Loader2 size={28} className="text-rd-primary-400 animate-spin" aria-hidden="true" />
