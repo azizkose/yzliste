@@ -5,12 +5,24 @@ import { krediDus, krediIade } from "@/lib/credits";
 import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
 import { SOSYAL_PROMPT_VERSION } from "@/lib/prompts/sosyal";
 import logger from "@/lib/logger";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+let rlDakika: Ratelimit | null = null;
+if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+  const redis = new Redis({ url: process.env.UPSTASH_REDIS_REST_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN });
+  rlDakika = new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(60, "1 m"), prefix: "rl:sosyal:dk" });
+}
 
 export async function POST(req: NextRequest) {
   const { urunAdi, ekBilgi, platform, ton, userId, sezon = "normal" } = await req.json();
 
-  if (!urunAdi) {
-    return NextResponse.json({ hata: "Ürün adı gerekli" }, { status: 400 });
+  if (!userId) return NextResponse.json({ hata: "Giriş yapılmadı" }, { status: 401 });
+  if (!urunAdi) return NextResponse.json({ hata: "Ürün adı gerekli" }, { status: 400 });
+
+  if (rlDakika) {
+    const { success } = await rlDakika.limit(userId);
+    if (!success) return NextResponse.json({ hata: "Çok fazla istek gönderdiniz. Lütfen bir dakika bekleyin." }, { status: 429 });
   }
 
   const supabase = createClient(
@@ -18,17 +30,21 @@ export async function POST(req: NextRequest) {
     process.env.SUPABASE_SERVICE_KEY!
   );
 
-  const { data: profil } = await supabase
+  const { data: profil, error: profilError } = await supabase
     .from("profiles")
-    .select("kredi, is_admin, marka_adi, hedef_kitle, vurgulanan_ozellikler, ton, magaza_kategorileri, teslimat_vurgulari")
+    .select("kredi, is_admin, is_test, marka_adi, hedef_kitle, vurgulanan_ozellikler, ton, magaza_kategorileri, teslimat_vurgulari")
     .eq("id", userId)
     .single();
 
+  if (profilError) {
+    logger.error({ err: profilError.message, userId }, "sosyal: profil sorgusu başarısız");
+    return NextResponse.json({ hata: "Kullanıcı bilgileri alınamadı, lütfen tekrar deneyin." }, { status: 500 });
+  }
   if (!profil) {
-    return NextResponse.json({ hata: "Kullanıcı bulunamadı" }, { status: 401 });
+    return NextResponse.json({ hata: "Kullanıcı bulunamadı. Lütfen tekrar giriş yapın." }, { status: 404 });
   }
 
-  const isAdmin = profil.is_admin === true;
+  const isAdmin = profil.is_admin === true || profil.is_test === true;
 
   // Atomik kredi düşümü — LLM çağrısından ÖNCE
   if (!isAdmin) {
