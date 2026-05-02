@@ -161,6 +161,12 @@ export function useMetinUretim(deps: MetinDeps) {
       const data = await res.json();
       if (mesajInterval.current) clearInterval(mesajInterval.current);
       if (res.status === 402) { analytics.creditExhausted(); paketModalAc(); setYukleniyor(false); return; }
+      if (!res.ok) {
+        analytics.generationFailed({ platform, type: "metin", error: `http_${res.status}` });
+        setHata(data.hata || "İçerik üretilemedi. Lütfen tekrar deneyin.");
+        setYukleniyor(false);
+        return;
+      }
       setSonuc(data.icerik);
       setSkor(data.skor ?? null);
       setOneriler(data.oneriler ?? []);

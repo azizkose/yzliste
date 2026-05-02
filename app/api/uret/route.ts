@@ -69,13 +69,17 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const { data: profil } = await supabaseAdmin
+  const { data: profil, error: profilError } = await supabaseAdmin
     .from("profiles")
     .select("kredi, is_admin, is_test, marka_adi, hedef_kitle, vurgulanan_ozellikler, magaza_kategorileri, fiyat_bandi, teslimat_vurgulari, benchmark_magaza, ek_notlar")
     .eq("id", userId)
     .single();
 
-  if (!profil) return NextResponse.json({ hata: "Kullanici bulunamadi" }, { status: 404 });
+  if (profilError) {
+    logger.error({ err: profilError.message, userId }, "uret: profil sorgusu başarısız");
+    return NextResponse.json({ hata: "Kullanıcı bilgileri alınamadı, lütfen tekrar deneyin." }, { status: 500 });
+  }
+  if (!profil) return NextResponse.json({ hata: "Kullanıcı bulunamadı. Lütfen tekrar giriş yapın." }, { status: 404 });
 
   const isAdmin = profil.is_admin === true || profil.is_test === true;
 
