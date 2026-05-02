@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Loader2, Download, Trash2, Bell, ShieldAlert, User, Lock, ArrowLeft } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import { useCurrentUser } from '@/lib/hooks/useCurrentUser'
 import StickySaveBar from '@/components/primitives/StickySaveBar'
 import Toast, { type ToastMessage } from '@/components/primitives/Toast'
 
@@ -100,6 +101,7 @@ const BILDIRIM_DEFAULT = {
 
 export default function AyarlarPage() {
   const router = useRouter()
+  const { data: currentUser, isLoading: authLoading } = useCurrentUser()
 
   // Hesap
   const [email, setEmail] = useState('')
@@ -132,11 +134,10 @@ export default function AyarlarPage() {
   }, [])
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) { router.push('/giris'); return }
-      setEmail(data.user.email ?? '')
-    })
-  }, [router])
+    if (authLoading) return
+    if (!currentUser) { router.push('/giris'); return }
+    setEmail(currentUser.email ?? '')
+  }, [authLoading, currentUser, router])
 
   // Şifre değiştir
   const handleSifreDegistir = async () => {

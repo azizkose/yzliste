@@ -9,6 +9,7 @@ import {
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { ChevronLeft, ChevronRight, Store, ClipboardList } from "lucide-react";
 import { useCredits } from "@/lib/hooks/useCredits";
 import StickySaveBar from "@/components/primitives/StickySaveBar";
@@ -105,6 +106,7 @@ function countFilled(f: ProfilForm): number {
 
 export default function HesapProfilPage() {
   const router = useRouter();
+  const { data: currentUser, isLoading: authLoading } = useCurrentUser();
 
   // alan id'leri (a11y)
   const adSoyadId = useId();
@@ -121,7 +123,6 @@ export default function HesapProfilPage() {
   const vergiNoId = useId();
   const vergiDairesiId = useId();
 
-  const [userId, setUserId] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [toplamUretim, setToplamUretim] = useState(0);
@@ -145,28 +146,19 @@ export default function HesapProfilPage() {
 
   // ─── Yükleme ─────────────────────────────────────────────────────────────
 
-  const yukle = useCallback(async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      router.push("/giris");
-      return;
-    }
-    setUserId(user.id);
-
+  const yukle = useCallback(async (uid: string) => {
     const { data } = await supabase
       .from("profiles")
       .select(
         "email, is_admin, ad_soyad, telefon, adres, fatura_tipi, tc_kimlik, vergi_no, vergi_dairesi"
       )
-      .eq("id", user.id)
+      .eq("id", uid)
       .single();
 
     const { count } = await supabase
       .from("uretimler")
       .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id);
+      .eq("user_id", uid);
 
     if (data) {
       setEmail(data.email ?? "");
@@ -189,11 +181,13 @@ export default function HesapProfilPage() {
       originalRef.current = JSON.stringify(BOSH_FORM);
     }
     setYukleniyor(false);
-  }, [router]);
+  }, []);
 
   useEffect(() => {
-    yukle();
-  }, [yukle]);
+    if (authLoading) return;
+    if (!currentUser) { router.push("/giris"); return; }
+    yukle(currentUser.id);
+  }, [authLoading, currentUser, yukle, router]);
 
   // ─── beforeunload ────────────────────────────────────────────────────────
 
@@ -221,6 +215,7 @@ export default function HesapProfilPage() {
   // ─── Kaydet ──────────────────────────────────────────────────────────────
 
   const kaydet = async () => {
+    const userId = currentUser?.id;
     if (!userId) return;
     if (form.tcKimlik && !form.tcKvkkOnay) {
       setToast({
@@ -274,7 +269,7 @@ export default function HesapProfilPage() {
 
   // ─── Yükleniyor ──────────────────────────────────────────────────────────
 
-  if (yukleniyor) {
+  if (authLoading || yukleniyor) {
     return (
       <div className="min-h-screen bg-rd-neutral-50 flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-rd-neutral-300 border-t-rd-primary-600 rounded-full animate-spin" />

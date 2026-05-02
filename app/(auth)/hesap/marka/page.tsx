@@ -11,6 +11,7 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft, ChevronDown, Info, Heart, Briefcase, Crown } from "lucide-react";
+import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import ChipSelector from "@/components/primitives/ChipSelector";
 import BrandPreviewPanel from "@/components/marka/BrandPreviewPanel";
 import StickySaveBar from "@/components/marka/StickySaveBar";
@@ -98,12 +99,12 @@ function countFilled(f: MarkaForm): number {
 
 export default function HesapMarkaPage() {
   const router = useRouter();
+  const { data: currentUser, isLoading: authLoading } = useCurrentUser();
   const markaAdiId = useId();
   const hedefKitleId = useId();
   const vurgulananlarId = useId();
   const extraInfoId = useId();
 
-  const [userId, setUserId] = useState<string | null>(null);
   const [yukleniyor, setYukleniyor] = useState(true);
   const [kaydediliyor, setKaydediliyor] = useState(false);
   const [form, setForm] = useState<MarkaForm>(BOSH_FORM);
@@ -118,22 +119,13 @@ export default function HesapMarkaPage() {
 
   // ─── Yükleme ───────────────────────────────────────────────────────────────
 
-  const yukle = useCallback(async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      router.push("/giris");
-      return;
-    }
-    setUserId(user.id);
-
+  const yukle = useCallback(async (uid: string) => {
     const { data } = await supabase
       .from("profiles")
       .select(
         "marka_adi, ton, hedef_kitle, vurgulanan_ozellikler, magaza_kategorileri, fiyat_bandi, teslimat_vurgulari, benchmark_magaza"
       )
-      .eq("id", user.id)
+      .eq("id", uid)
       .single();
 
     if (data) {
@@ -153,13 +145,13 @@ export default function HesapMarkaPage() {
       originalRef.current = JSON.stringify(BOSH_FORM);
     }
     setYukleniyor(false);
-  }, [router]);
+  }, []);
 
   useEffect(() => {
-    startTransition(() => {
-      yukle();
-    });
-  }, [yukle]);
+    if (authLoading) return;
+    if (!currentUser) { router.push("/giris"); return; }
+    startTransition(() => { yukle(currentUser.id); });
+  }, [authLoading, currentUser, yukle, router]);
 
   // ─── beforeunload ──────────────────────────────────────────────────────────
 
@@ -177,6 +169,7 @@ export default function HesapMarkaPage() {
   // ─── Kaydet ────────────────────────────────────────────────────────────────
 
   const kaydet = async () => {
+    const userId = currentUser?.id;
     if (!userId) return;
     setKaydediliyor(true);
     const { error } = await supabase
@@ -215,7 +208,7 @@ export default function HesapMarkaPage() {
 
   // ─── Yükleniyor ────────────────────────────────────────────────────────────
 
-  if (yukleniyor) {
+  if (authLoading || yukleniyor) {
     return (
       <div className="min-h-screen bg-rd-neutral-50 flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-rd-neutral-300 border-t-rd-primary-600 rounded-full animate-spin" />
