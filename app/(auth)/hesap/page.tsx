@@ -65,7 +65,7 @@ type IcerikTip = (typeof ICERIK_TIPLERI)[number]['tip']
 export default function HesapPage() {
   const router = useRouter()
   const { data: krediData, isLoading: krediYukleniyor } = useCredits()
-  const { data: currentUser } = useCurrentUser()
+  const { data: currentUser, isLoading: authLoading } = useCurrentUser()
 
   const [buAyUretim, setBuAyUretim] = useState<number | null>(null)
   const [toplamUretim, setToplamUretim] = useState<number | null>(null)
@@ -73,15 +73,11 @@ export default function HesapPage() {
   const [dataYukleniyor, setDataYukleniyor] = useState(true)
 
   useEffect(() => {
-    async function yukle() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) {
-        router.push('/giris')
-        return
-      }
+    if (authLoading) return
+    if (!currentUser) { router.push('/giris'); return }
 
+    async function yukle() {
+      const uid = currentUser!.id
       const bugun = new Date()
       const ayBaslangic = new Date(bugun.getFullYear(), bugun.getMonth(), 1).toISOString()
 
@@ -89,16 +85,16 @@ export default function HesapPage() {
         supabase
           .from('uretimler')
           .select('id', { count: 'exact', head: true })
-          .eq('user_id', user.id)
+          .eq('user_id', uid)
           .gte('created_at', ayBaslangic),
         supabase
           .from('uretimler')
           .select('id', { count: 'exact', head: true })
-          .eq('user_id', user.id),
+          .eq('user_id', uid),
         supabase
           .from('uretimler')
           .select('content_type')
-          .eq('user_id', user.id)
+          .eq('user_id', uid)
           .not('content_type', 'is', null),
       ])
 
@@ -114,7 +110,7 @@ export default function HesapPage() {
       setDataYukleniyor(false)
     }
     yukle()
-  }, [router])
+  }, [authLoading, currentUser, router])
 
   // ─── Türetilen değerler ───────────────────────────────────────────────────
 

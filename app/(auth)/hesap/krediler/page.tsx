@@ -102,7 +102,7 @@ function ayBaslangici(yillik: number, ay: number): Date {
 export default function KredilerPage() {
   const router = useRouter()
   const { data: krediData, isLoading: krediYukleniyor } = useCredits()
-  const { data: currentUser } = useCurrentUser()
+  const { data: currentUser, isLoading: authLoading } = useCurrentUser()
 
   const [islemler, setIslemler] = useState<Islem[]>([])
   const [buAyTuketim, setBuAyTuketim] = useState<number | null>(null)
@@ -145,10 +145,7 @@ export default function KredilerPage() {
     setYukleniyor(true)
     setFetchHata(false)
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) {
+      if (!currentUser) {
         router.push('/giris')
         return
       }
@@ -165,18 +162,18 @@ export default function KredilerPage() {
         supabase
           .from('uretimler')
           .select('id', { count: 'exact', head: true })
-          .eq('user_id', user.id)
+          .eq('user_id', currentUser.id)
           .gte('created_at', buAyBas.toISOString()),
         supabase
           .from('uretimler')
           .select('id', { count: 'exact', head: true })
-          .eq('user_id', user.id)
+          .eq('user_id', currentUser.id)
           .gte('created_at', gecenAyBas.toISOString())
           .lt('created_at', buAyBas.toISOString()),
         supabase
           .from('payments')
           .select('id, paket, kredi, tutar, created_at, durum')
-          .eq('user_id', user.id)
+          .eq('user_id', currentUser.id)
           .eq('durum', 'basarili')
           .order('created_at', { ascending: false })
           .limit(50),
@@ -202,8 +199,9 @@ export default function KredilerPage() {
   }
 
   useEffect(() => {
+    if (!KREDILER_DEMO && authLoading) return
     yukle()
-  }, [router]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [authLoading, currentUser]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Accordion ─────────────────────────────────────────────────────────────
 
