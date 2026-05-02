@@ -14,14 +14,37 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 
 ### P0 — Acil / Kritik
 
-| ID | Başlık | Durum | Spec |
+> 🚨 **30 Nis 2026 acil hotfix paketi (Cowork `icerik-kalite-testi` task'ından):** 3 P0 production bug tespit edildi. **Demo öncesi mutlaka düzeltilmeli.**
+
+| ID | Başlık | Durum | Detay |
 |---|---|---|---|
+| **HOTFIX-01** | ~~🚨 `/api/uret` 404 "Kullanici bulunamadi" — text üretimi 7 pazaryerinde tamamen çökmüş~~ | ✅ Tamamlandı (2026-05-02) | `app/api/uret/route.ts` user lookup query farklı (`users` vs `profiles` veya RLS bug). `/api/sosyal` çalışıyor, sadece `/api/uret` etkilenmiş. Diff at `/api/uret` ile `/api/sosyal` arasında, çalışan pattern'i kopyala. UI'da error feedback YOK — kullanıcı sessiz fail görüyor (P0 da düzelt: toast/alert ekle). |
+| **HOTFIX-02** | ~~🚨 `/api/sosyal` kredi düşürmüyor — revenue sızıntısı~~ | ✅ Tamamlandı (2026-05-02) | 4 başarılı sosyal üretim (3kr × 4 = 12kr düşmesi gerekirdi) **0 kredi düştü**. RPC `kredi_kullan` veya RLS policy bug. Production log'da çağrı çıktısına bak. Gerçek kullanıcılar bedava içerik üretiyor. |
+| **HOTFIX-03** | ~~🚨 **`/hesap/*` TÜMü kalıcı "Yükleniyor..." kilidinde + header anonim'e düşüyor**~~ | ✅ Tamamlandı (2026-05-02) | **Tek kök neden, multi-impact:** Login → `/uret` (header doğru) → `/hesap/profil` (sonsuz Yükleniyor...) → `/uret` döndüğünde header **anonim** (kredi badge + Çıkış kayıp). Hiçbir Supabase REST/auth çağrısı tetiklenmiyor (DevTools Network boş, Console hata yok). Auth cookie korunuyor, server `/hesap` 200 dönüyor — sadece **client-side hydration mismatch**. `useUser()` hook sonsuz loading state'inde takılı veya AuthProvider context client'ta sıfırlanıyor. **Etki:** profil/krediler/ayarlar/faturalar TAMAMEN kullanılamaz + Çıkış butonu kayboluyor (güvenlik açığı, paylaşılan cihazda) + dashboard "TOPLAM 20" ama `/hesap/uretimler` boş. **%100 reproducible.** |
+| **HOTFIX-04** | ~~🚨 `/fiyatlar` login'li kullanıcıda anonim CTA gösteriyor~~ | ✅ Tamamlandı (2026-05-02) | HOTFIX-03'ün türevi (aynı hydration mismatch). "Satın Al ₺49/₺129/₺299" → `/kayit` (yanlış, login'li için `/kredi-yukle` veya modal olmalı). HOTFIX-03 fix'i otomatik çözmesi muhtemel. T6R-NEW-3. |
 | AUTH-01 | Mobilde kayıt engeli — Turnstile devre dışı | Kod OK, mobil test kaldı | inline |
 | FY-01 | Fiyat artışı — 49/129/299 TL | Kod OK, test kaldı | inline |
 | OPS-07 | Sentry error monitoring | Kısmen OK, DSN sonrası 3 madde | inline |
 | CI-01 | CI lint hataları düzelt — 12 error (setState in effect + prototype dosyaları) | Tamamlandı (0 error) | inline |
 | AI-01 | Chatbot SYSTEM_PROMPT güncelle — fiyat/platform/stil/yzstudio yanlış | Tamamlandı | [archive/specs-completed/ai-denetim-01.md](archive/specs-completed/ai-denetim-01.md) §P0-1 |
 | AI-02 | Merkezi AI config — model + temperature + cost haritası (`lib/ai-config.ts`) | Tamamlandı | [archive/specs-completed/ai-denetim-01.md](archive/specs-completed/ai-denetim-01.md) §P0-2, P0-3 |
+
+### P0.5 — Cowork test bulguları (30 Nis 2026, P1 öncelikli)
+
+> **Kaynak:** Cowork `icerik-kalite-testi` task raporu. Sosyal medya üretim kalitesi 4.19/5 ortalama (4 ürün test). Halüsinasyon yok ama dilsel slip'ler ve eski tarih hashtag'leri var.
+
+| ID | Başlık | Durum | Detay |
+|---|---|---|---|
+| AI-PROMPT-01 | AI sistem prompt'una **bugünün tarihi context** geç (Sonbahar2024 hashtag → 2026 sorunu) | Bekliyor | `lib/prompts/sosyal.ts` ve `lib/prompts/metin.ts` system prompt'una `Şu anki tarih: {YYYY-MM-DD}` veya benzer dinamik tarih ekle. LLM güncel takvim kullansın. |
+| AI-PROMPT-02 | Türkçe yazım kontrolü post-process | Bekliyor | "stilish" → "şık", "hoşça deyin" → "hoşça kalın", "kütüphane" (giyim için) → "gardırop" gibi yaygın slip'ler için sözlük kontrolü veya prompt'a "yaygın yanlış kullanımlar" listesi |
+| AI-PROMPT-03 | Hashtag uydurma engelleme | Bekliyor | "#KaliteBilir", "#BeşModası", "#TürkiyedeTeknoloji" gibi anlamsız uydurma hashtag'ler. Prompt'a "sadece gerçek kullanılan hashtag'ler kullan" + post-process whitelist |
+| AI-PROMPT-04 | CTA güçlendirme | Bekliyor (P2) | "Senin olması bekleyen şey" gibi muğlak satış cümleleri yerine net CTA ("Hemen sepete ekle", "Sipariş ver") |
+| TEST-01 | Smoke test'e `/api/uret` ekle — healthcheck endpoint tek tek tüm üretim API'larını çağırsın | Bekliyor | Production'da sessiz fail (HOTFIX-01 gibi) için CI'da otomatik test. Bu olmasaydı bug'ı yakalayamayacaktık. |
+| **T6R-04** | Chatbot widget production'da yok | Bekliyor (P1) | Önceki tur stub vardı, mevcut build'de fixed-position chat widget yok. Karar: kasıtlı kaldırma mı yoksa kayıp component mi? |
+| **T6R-05** | `/sifre-sifirla` `<title>` etiketi anasayfa title'ını gösteriyor | Bekliyor (P1) | Sayfa metadata `Şifreni sıfırla \| yzliste` olmalı. H1 doğru ("Şifreni sıfırla") ama `<title>` `yzliste — Ürünün için metin, görsel...` (root). |
+| **T6R-06** | `/profil` (anonim) hâlâ 200 dönüyor + canonical = root | Bekliyor (P1) | Anonim ziyaretçi için içeriksiz 200 + root canonical → SEO duplicate content riski. Karar: 404 mü, 301 → `/` mi, gerçek landing mi? Login'liyken `/hesap/profil`'e redirect zaten OK. |
+| **T6R-07** | Title'larda Title Case ihlali (P2) | Bekliyor | "Giriş Yap" → "Giriş yap", "E-ticaret Listing Üretici" → "e-ticaret listing üretici". CLAUDE.md sentence case kuralı title meta'da ihlal. |
+| **T6R-08** | `/hesap/krediler` `<title>` "\| yzliste" suffix eksik (P2) | Bekliyor | Sadece "Krediler". Diğer sayfalarda "X \| yzliste" pattern var, brand tutarsızlığı. |
 
 ### P1 — Yakın vadeli
 
@@ -56,6 +79,125 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | AI-19 | GORSEL_STILLER emoji kaldır + PLATFORM_BILGI Tailwind default → proje paleti hex | Tamamlandı | [archive/specs-completed/ai-denetim-02.md](archive/specs-completed/ai-denetim-02.md) §P2-6 |
 | OPS-14~19 | KÜME 11 — operasyonel olgunluk faz 2 | OPS-14/15/16/17/18/19 OK | [archive/specs-completed/kume-11.md](archive/specs-completed/kume-11.md) |
 
+### P1.5 — Monitoring & Analytics setup (29 Nis 2026 — Aziz talebi)
+
+> Pre-traffic dönemde hata izleme + analytics altyapısı kurulması. Trafik gelmeye başlamadan önce bitirilmesi kritik. Sıralı, her madde bir öncekine bağımlı değil ama önerilen sıra var.
+
+| ID | Başlık | Durum | Süre | Kim |
+|---|---|---|---|---|
+| MON-01 | **Sentry hesap + DSN aktive** — sentry.io free plan, project oluştur, DSN al, `.env`'e koy (`NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_AUTH_TOKEN` source maps için), Vercel env'lere de ekle | Bekliyor | 30 dk | Aziz manuel |
+| MON-02 | **Sentry alert + Source maps** — Code: `npm run build` source maps upload aktif, alert kuralı (her yeni issue → Aziz e-posta), Sentry DSN env'den okuma kontrolü, sentry.client/server/edge config doğru | Bekliyor | 30 dk | Code |
+| MON-03 | **PostHog projeyi kur** — eu.posthog.com hesap, project oluştur, API key (`NEXT_PUBLIC_POSTHOG_KEY`), `.env` + Vercel env, KVKK için EU region | Bekliyor | 20 dk | Aziz manuel |
+| MON-04 | **PostHog 12 event implement et** — `lib/analytics.ts` üzerinden capture: cta_clicked, signup_started/completed/dropped, email_verified, login_completed, uretim_started/completed/failed, paket_viewed, paket_purchased, $pageview otomatik. Property'ler: contentType, platform, source, error_type, paket_name, price_tl. User identify: email, signup_date, is_paying, total_generations, last_credit_balance | Bekliyor | 2-3 saat | Code |
+| MON-05 | **Cookie consent gating** — vanilla-cookieconsent v3 zaten kurulmalı, reddedilirse PostHog event göndermesin (`analytics.consent === 'rejected'` guard) | Bekliyor | 30 dk | Code |
+| MON-06 | **PostHog 3 funnel dashboard'a kur** — Funnel 1: Aktivasyon ($pageview → cta_clicked → signup_completed → uretim_completed). Funnel 2: Gelir (uretim_completed → paket_viewed → paket_purchased). Funnel 3: Anonim → kayıtlı dropoff | Bekliyor | 30 dk | Aziz manuel (PostHog UI) |
+| MON-07 | **Daily Monitoring Agent** — Cowork scheduled task, her sabah 08:00 (TR saati) çalışır. Sentry + PostHog + Vercel + Supabase API'lerinden dünün verilerini çeker, Markdown rapor olarak `yzliste test/daily-reports/{YYYY-MM-DD}.md` dosyasına yazar | Bekliyor | 1-2 saat | Cowork (kurulum) |
+
+#### MON-07 — Daily Monitoring Agent detayı
+
+**Çalışma zamanı:** Her gün 08:00 (Europe/Istanbul, GMT+3)
+
+**Kapsam (her sabah çekilecek metrikler):**
+
+| Kaynak | Metrik | API/MCP |
+|---|---|---|
+| Sentry | Dün açılan yeni issue sayısı, en sık hata 5 tanesi, kaç kullanıcı etkilendi | Sentry REST API + token |
+| Sentry | Resolved issue sayısı (dün düzeltildi) | Sentry REST API |
+| PostHog | DAU (dün aktif kullanıcı), yeni signup sayısı, üretim sayısı (toplam + tipe göre) | PostHog Query API |
+| PostHog | Funnel 1 dropoff: signup → ilk üretim oranı | PostHog Query API |
+| PostHog | Top 3 popüler sayfa (dünün $pageview) | PostHog Query API |
+| Vercel | Son 24 saat deploy sayısı, başarısız deploy var mı, build süresi ortalama | Vercel MCP (mevcut) |
+| Supabase | Dün toplam kullanıcı (yeni + toplam), kredi yükleme sayısı + TL toplam, payment_failed sayısı | Supabase MCP (mevcut) |
+| Hesaplama | Dün vs önceki gün kıyas (% değişim) | Cowork hesaplar |
+| Hesaplama | Bu hafta vs geçen hafta trend | Cowork hesaplar |
+
+**Çıktı formatı (`yzliste test/daily-reports/2026-04-30.md`):**
+
+```markdown
+# Günlük Monitoring — 30 Nis 2026 (Salı)
+
+## Özet (3 satır)
+- 🟢 / 🟡 / 🔴 sağlık durumu
+- En önemli olay (yeni feature deployed / kritik hata / büyük çıkış)
+- Bugün dikkat: <Aziz için 1-2 madde>
+
+## Kullanıcı
+- DAU: 142 (dün 138, +%2.9)
+- Yeni signup: 8 (dün 5, +%60)
+- E-posta doğrulama oranı: %62 (8/13)
+
+## Üretim
+- Toplam: 89 üretim (dün 72)
+  - Metin: 45 | Görsel: 28 | Video: 12 | Sosyal: 4
+- Başarı oranı: %94 (5 hata)
+
+## Funnel
+- Aktivasyon (sayfa → kayıt → üretim): %3.2 (dün %2.8)
+- Gelir (üretim → ödeme): %1.1 (dün %0.9)
+
+## Hatalar (Sentry)
+🔴 Yeni issue (dün 0 → bugün 2):
+  1. TypeError: Cannot read 'kredi' of null at /uret (3 kullanıcı etkilendi)
+  2. NetworkError: fal.ai timeout (1 kullanıcı)
+🟢 Düzeltilen: 1 (P3 video poll race condition)
+
+## Gelir
+- Kredi yükleme: 2 satış (149 TL)
+- Toplam bugün: 149 TL
+- Bu hafta: 487 TL (geçen hafta 312 TL, +%56)
+
+## Deploy
+- Son 24 saat: 3 başarılı deploy (Polish-9 hotfix)
+- Build süresi ort: 2dk 14sn
+
+## Bugün için Cowork önerisi
+- 🔴 İlgilen: Sentry'deki "Cannot read 'kredi' of null" — 3 kullanıcıyı etkiledi, hızlı fix gerekli
+- 🟡 Bak: Aktivasyon %3.2 — Polish-9 sonrası beklenen artış henüz olmadı, bir gün daha bekle
+
+## Sources
+- Sentry: https://sentry.io/organizations/.../issues/
+- PostHog: https://eu.posthog.com/project/.../insights/
+- Vercel: https://vercel.com/azizkoses-projects/yzliste/deployments
+```
+
+**MON-07 kurulum adımları (Cowork yapacak):**
+1. **Bağımlılıklar:** Sentry API token, PostHog API key (MON-01 + MON-03 sonrası hazır olur)
+2. **Scheduled task tanımla:** `cron: "0 5 * * *"` (UTC 05:00 = TR 08:00), `timezone: Europe/Istanbul`
+3. **Task body:** Tek bir Cowork prompt — "Daily monitoring rapor üret" — agent şunları çağırır:
+   - Sentry API: `GET /api/0/projects/{org}/{project}/issues/?statsPeriod=24h`
+   - PostHog API: `POST /api/projects/{id}/query/` HogQL ile
+   - Vercel MCP: `list_deployments` (son 24 saat)
+   - Supabase MCP: `execute_sql` ile dün kayıt + ödeme query'leri
+4. **Çıktıyı yaz:** `Write` tool ile `yzliste test/daily-reports/{date}.md`
+5. **Aziz nereden okur:** OneDrive'da `yzliste test\daily-reports\` klasörü, ya da Cowork sabah açtığında "bugünkü rapor hazır mı" diye sor
+
+**Kurulum sırası:**
+- MON-01 + MON-03 → DSN/API key'ler hazır
+- MON-02 + MON-04 → Sentry/PostHog'da gerçek veri akmaya başlar (~3-5 gün veri biriktirir)
+- MON-07 → ondan sonra kurulur, anlamlı rapor için en az 1 hafta veri lazım
+
+---
+
+### P1.6 — Cowork Scheduled Tasks (öneriler — Aziz'in kendi listesi ile birleştirilecek, acil değil)
+
+> **Durum (30 Nis 2026):** İlk Cowork scheduled task kuruldu (pazaryeri-kural-takip). Aziz'in kendi yaptığı/planladığı task'lar var, çakışanlar birleştirilecek. Bu liste Cowork önerisi, karar Aziz'de.
+
+| ID | Task | Frequency | Ne işe yarar | Durum |
+|---|---|---|---|---|
+| ST-01 | **pazaryeri-kural-takip** | Aylık (1'i 09:00 TR) | 7 pazaryeri (Trendyol/Hepsi/Amazon TR/N11/Etsy/Amazon USA/Çiçeksepeti) listing kurallarını web search ile doğrula, değişiklik raporla. Çıktı: `yzliste test/pazaryeri-kural-takip/{YYYY-MM}-rapor.md` | ✅ Kuruldu (30 Nis) — Cowork sidebar `pazaryeri-kural-takip` |
+| ST-02 | **fal.ai pricing takip** | Aylık | fal.ai modellerinin (FASHN tryon, Kling video, Imagen, Flux, vb.) fiyatları değişince yzliste'nin kredi modelini ayarlamak için bilgilendirme. Memory'deki `project_falai_pricing.md` referans güncel kalsın | Öneri |
+| ST-03 | **MON-07 Daily Monitoring Agent** | Günlük 08:00 TR | Sentry + PostHog + Vercel + Supabase'den dünün verilerini derler, Markdown rapor `yzliste test/daily-reports/{date}.md`. Bağımlılık: MON-01~05 (Sentry+PostHog kurulum) | Bekliyor (BACKLOG.md P1.5 MON-07) |
+| ST-04 | **Blog URL canlılık kontrolü** | Haftalık | 100+ blog post içindeki dış link'ler canlı mı (broken link audit). Çıktı: kırık link listesi + öneri | Öneri |
+| ST-05 | **Vercel build health** | Haftalık | Son 7 günün build başarı oranı, ortalama süre, fail var mı. Vercel MCP ile çekilir. CI/CD durumu da dahil. | Öneri |
+| ST-06 | **SEO keyword research** | Çeyrek dönem | "AI listing", "AI ürün açıklaması", "yapay zeka e-ticaret" keyword trends'i (search volume, rank). Blog stratejisi + landing page kelime hedeflemesi için. PostHog + Search Console + 3rd party tool ile. | Öneri |
+| ST-07 | **Aziz'in mevcut task'ları** | TBD | Aziz'in kendi tasarladığı/planladığı task'lar var, listelenecek ve çakışanlar ST-02~06 ile birleştirilecek | TBD |
+
+**Aksiyon (acil değil):**
+1. Aziz mevcut task listesini paylaşsın (ST-07)
+2. ST-02~06 ile karşılaştır — çakışan/benzer olanları birleştir
+3. Final liste netleştirildiğinde Cowork sırayla ST'leri kurar
+4. ST-03 (MON-07) için MON-01~05 önce tamamlanmalı
+
 ### P2b — Redesign sonrası açılan backend işleri
 
 > Redesign branch'i main'e merge edilince bu ticket'lar aktif olur.
@@ -69,7 +211,8 @@ Aşama: pre-traffic. Demo hazırlığı — içerik kalitesi 1 numara öncelik.
 | UR-03b | /uret'te kalan kullanılmış kredi geçmişi tablosu | Bekliyor | DB log var, UI yok |
 | SR-04b | Scheduled task reaktivasyon — `blog-seo-yazisi` cron'u production'da kapat, redesign merge sonrası aç | Bekliyor | Supabase scheduled task |
 | FT-01 | Paraşüt e-Arşiv entegrasyonu — kredi satın alımında otomatik fatura | Bekliyor | Redesign ile bağımsız |
-| YS-11 | yzstudio Faz 5 — production test + stok fotoğraf yükleme | Bekliyor | specs/nf-02-yzstudio.md |
+| YS-11 | yzstudio Faz 5 — production test + stok fotoğraf yükleme | Bekliyor | archive/specs-completed/nf-02-yzstudio.md |
+| YS-12 | yzstudio çoklu fotoğraf workflow — kıyafet ön/arka 2 ayrı fashn job + sonuç birleştirme | Bekliyor (P3, sonra ele alınacak) | Aziz onaylı 30 Nis: "sonra ele alalım" |
 
 ### P3 — Gelecek / Ertelenmiş
 
