@@ -39,7 +39,7 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | ID | Başlık |
 |---|---|
 | T6R-04 (P1) | Chatbot widget production'da yok (kasıtlı mı?) |
-| T6R-05 (P1) | /sifre-sifirla `<title>` anasayfa title gösteriyor |
+| ~~T6R-05~~ | /sifre-sifirla `<title>` anasayfa title gösteriyor | ✅ Tamamlandı (2026-05-04) |
 | T6R-06 (P1) | /profil anonim 200 + root canonical (SEO duplicate) |
 
 **P0.5 prompt iyileştirme:**
@@ -79,7 +79,7 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 
 | ID | Başlık |
 |---|---|
-| SEO-01 | /blog `<title>` 74 char → ~55 char |
+| ~~SEO-01~~ | /blog `<title>` 74 → 58 char | ✅ Tamamlandı (2026-05-04) |
 | SEO-02 | OG description HTML entity bug (`&#x27;`) |
 | SEO-03 | Homepage H1 doğrulama (h1 vs div) |
 | SEO-04 | Hreflang etiketi (gelecek için not) |
