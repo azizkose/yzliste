@@ -132,11 +132,35 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
   )
 }
 
+// ---- FeatureItem ----
+
+function FeatureItem({ feature }: { feature: typeof BRAND_FEATURES[number] }) {
+  return (
+    <div className="flex items-start gap-4">
+      <div className="w-9 h-9 rounded-xl bg-rd-accent-50 flex items-center justify-center shrink-0">
+        <feature.icon
+          size={18}
+          strokeWidth={1.5}
+          className="text-rd-accent-700"
+          aria-hidden="true"
+        />
+      </div>
+      <div>
+        <p className="text-sm font-medium text-rd-neutral-900">{feature.title}</p>
+        <p className="text-sm text-rd-neutral-600 mt-0.5">{feature.description}</p>
+      </div>
+    </div>
+  )
+}
+
 // ---- MarkaBilgileriSection ----
 
 export default function MarkaBilgileriSection() {
   const [selectedTone, setSelectedTone] = useState<ToneKey>("samimi")
-  const [showAllFeatures, setShowAllFeatures] = useState(false)
+  // Desktop: first 5 visible, toggle remaining 3
+  const [showAllDesktop, setShowAllDesktop] = useState(false)
+  // Mobile: first 4 visible, toggle remaining 4
+  const [showAllMobile, setShowAllMobile] = useState(false)
 
   return (
     <section
@@ -173,43 +197,36 @@ export default function MarkaBilgileriSection() {
               </p>
             </div>
 
-            {/* Özellik listesi — ilk 5 görünür, son 3 gizli */}
-            <div className="mt-8 space-y-4">
-              {BRAND_FEATURES.slice(0, 5).map((feature) => (
-                <div key={feature.title} className="flex items-start gap-4">
-                  <div className="w-9 h-9 rounded-xl bg-rd-accent-50 flex items-center justify-center shrink-0">
-                    <feature.icon
-                      size={18}
-                      strokeWidth={1.5}
-                      className="text-rd-accent-700"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-rd-neutral-900">{feature.title}</p>
-                    <p className="text-sm text-rd-neutral-600 mt-0.5">{feature.description}</p>
-                  </div>
-                </div>
+            {/* Mobile özellik listesi — lg:hidden, ilk 4 görünür + Devamını oku */}
+            <div className="mt-8 space-y-4 lg:hidden">
+              {BRAND_FEATURES.slice(0, 4).map((feature) => (
+                <FeatureItem key={feature.title} feature={feature} />
               ))}
-              {showAllFeatures && BRAND_FEATURES.slice(5).map((feature) => (
-                <div key={feature.title} className="flex items-start gap-4">
-                  <div className="w-9 h-9 rounded-xl bg-rd-accent-50 flex items-center justify-center shrink-0">
-                    <feature.icon
-                      size={18}
-                      strokeWidth={1.5}
-                      className="text-rd-accent-700"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-rd-neutral-900">{feature.title}</p>
-                    <p className="text-sm text-rd-neutral-600 mt-0.5">{feature.description}</p>
-                  </div>
-                </div>
+              {showAllMobile && BRAND_FEATURES.slice(4).map((feature) => (
+                <FeatureItem key={feature.title} feature={feature} />
               ))}
-              {!showAllFeatures && (
+              {!showAllMobile && (
                 <button
-                  onClick={() => setShowAllFeatures(true)}
+                  onClick={() => setShowAllMobile(true)}
+                  className="flex items-center gap-1.5 text-sm text-rd-neutral-500 hover:text-rd-neutral-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary focus-visible:ring-offset-2 rounded"
+                >
+                  <ChevronDown size={15} strokeWidth={1.5} aria-hidden="true" />
+                  Devamını oku ({BRAND_FEATURES.length - 4} alan daha)
+                </button>
+              )}
+            </div>
+
+            {/* Desktop özellik listesi — hidden lg:block, ilk 5 görünür + Daha fazla */}
+            <div className="mt-8 space-y-4 hidden lg:block">
+              {BRAND_FEATURES.slice(0, 5).map((feature) => (
+                <FeatureItem key={feature.title} feature={feature} />
+              ))}
+              {showAllDesktop && BRAND_FEATURES.slice(5).map((feature) => (
+                <FeatureItem key={feature.title} feature={feature} />
+              ))}
+              {!showAllDesktop && (
+                <button
+                  onClick={() => setShowAllDesktop(true)}
                   className="flex items-center gap-1.5 text-sm text-rd-neutral-500 hover:text-rd-neutral-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary focus-visible:ring-offset-2 rounded"
                 >
                   <ChevronDown size={15} strokeWidth={1.5} aria-hidden="true" />
