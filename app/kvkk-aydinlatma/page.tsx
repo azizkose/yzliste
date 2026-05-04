@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     "6698 sayılı KVKK kapsamında yzliste kişisel veri aydınlatma metni.",
   openGraph: { title: "KVKK Aydınlatma Metni | yzliste" },
   alternates: {
-    canonical: "/kvkk-aydinlatma",
+    canonical: "https://www.yzliste.com/kvkk-aydinlatma",
     languages: {
       tr: "https://www.yzliste.com/kvkk-aydinlatma",
       "x-default": "https://www.yzliste.com/kvkk-aydinlatma",

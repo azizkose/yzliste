@@ -7,7 +7,7 @@ const IYZICO_API_KEY = process.env.IYZICO_API_KEY!;
 const IYZICO_SECRET_KEY = process.env.IYZICO_SECRET_KEY!;
 const IYZICO_BASE_URL = "https://api.iyzipay.com"; // LIVE
 const URI_PATH = "/payment/iyzipos/checkoutform/auth/ecom/detail";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://yzliste.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.yzliste.com";
 
 // Paraşüt env
 const PARASUT_CLIENT_ID = process.env.PARASUT_CLIENT_ID;

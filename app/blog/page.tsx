@@ -9,7 +9,7 @@ import { Eyebrow } from "@/components/primitives/Eyebrow";
 export const revalidate = 3600; // 1 saat ISR cache
 
 export const metadata: Metadata = {
-  title: "Blog — E-ticaret Listing, AI Görsel, Video ve Satış Rehberleri",
+  title: "Blog — E-ticaret listing ve satış rehberleri",
   description:
     "Trendyol, Hepsiburada, Amazon, Etsy ve N11'de satış artıran listing rehberleri. AI ürün görseli ve videosu, sosyal medya içeriği, SEO, fiyatlandırma stratejileri ve e-ticaret ipuçları.",
   keywords: [
