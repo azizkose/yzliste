@@ -1,6 +1,9 @@
+'use client'
+
 // NY-02~07 — Neden yzliste Section
 
-import { X, Check } from "lucide-react"
+import { useState } from "react"
+import { X, Check, ChevronDown } from "lucide-react"
 import SectionHeader from "@/components/primitives/SectionHeader"
 import {
   NEDEN_HEADER,
@@ -9,7 +12,15 @@ import {
   NEDEN_FOOTNOTE,
 } from "@/lib/constants/neden-yzliste"
 
+const MOBILE_VISIBLE = 3
+
 export default function NedenYzlisteSection() {
+  const [showAllMobile, setShowAllMobile] = useState(false)
+
+  const visibleRows = showAllMobile
+    ? NEDEN_COMPARISONS
+    : NEDEN_COMPARISONS.slice(0, MOBILE_VISIBLE)
+
   return (
     // NY-02: bg-white, section padding
     <section
@@ -120,7 +131,7 @@ export default function NedenYzlisteSection() {
 
         {/* NY-07: Mobile card layout (md altı) */}
         <div className="md:hidden mt-10 space-y-4">
-          {NEDEN_COMPARISONS.map((row, i) => (
+          {visibleRows.map((row, i) => (
             <div
               key={i}
               className="rounded-xl border border-rd-neutral-200 overflow-hidden"
@@ -165,6 +176,17 @@ export default function NedenYzlisteSection() {
               </div>
             </div>
           ))}
+
+          {/* "Tüm karşılaştırmayı gör" butonu */}
+          {!showAllMobile && NEDEN_COMPARISONS.length > MOBILE_VISIBLE && (
+            <button
+              onClick={() => setShowAllMobile(true)}
+              className="w-full flex items-center justify-center gap-1.5 text-sm text-rd-neutral-500 hover:text-rd-neutral-700 border border-rd-neutral-200 rounded-xl py-3 bg-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary focus-visible:ring-offset-2"
+            >
+              <ChevronDown size={15} strokeWidth={1.5} aria-hidden="true" />
+              Tüm karşılaştırmayı gör ({NEDEN_COMPARISONS.length - MOBILE_VISIBLE} satır daha)
+            </button>
+          )}
         </div>
 
         {/* NY-06: Footnote */}
