@@ -4,9 +4,10 @@ import { Mail, ExternalLink } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { Eyebrow } from "@/components/primitives/Eyebrow";
+import HakkimizdaCollapse from "./HakkimizdaCollapse";
 
 export const metadata: Metadata = {
-  title: "Hakkımızda — yzliste",
+  title: "Hakkimizda — yzliste",
   description:
     "yzliste, e-ticaret satıcılarının Trendyol, Hepsiburada, Amazon ve daha fazlası için AI destekli listing ve görsel üretmesini sağlayan bir platform. İstanbul, 2026.",
   openGraph: {
@@ -49,120 +50,129 @@ export default function HakkimizdaPage() {
             </h1>
           </div>
 
-          {/* Neden yzliste */}
-          <section className="mb-10">
-            <h2 className="text-base font-medium text-rd-neutral-900 mb-3">
-              Neden yzliste?
-            </h2>
-            <p className="text-sm text-rd-neutral-600 leading-relaxed">
-              E-ticaret satıcıları her platform için ayrı içerik hazırlamak
-              zorunda. Her platformun karakter limiti, format ve SEO mantığı
-              farklı; genel amaçlı AI araçları bunu bilmiyor. yzliste bu
-              içerikleri tek çatı altında toplar: ürün bilgisini bir kez gir,
-              7 platforma özel metin, görsel, video ve sosyal içerik çıkar —
-              dakikalar içinde.
-            </p>
-          </section>
+          <HakkimizdaCollapse
+            preview={
+              <>
+                {/* Neden yzliste */}
+                <section className="mb-10">
+                  <h2 className="text-base font-medium text-rd-neutral-900 mb-3">
+                    Neden yzliste?
+                  </h2>
+                  <p className="text-sm text-rd-neutral-600 leading-relaxed">
+                    E-ticaret satıcıları her platform için ayrı içerik hazırlamak
+                    zorunda. Her platformun karakter limiti, format ve SEO mantığı
+                    farklı; genel amaçlı AI araçları bunu bilmiyor. yzliste bu
+                    içerikleri tek çatı altında toplar: ürün bilgisini bir kez gir,
+                    7 platforma özel metin, görsel, video ve sosyal içerik çıkar —
+                    dakikalar içinde.
+                  </p>
+                </section>
 
-          {/* Platform listesi */}
-          <section className="mb-10 bg-rd-neutral-100 border border-rd-neutral-200 rounded-xl p-5">
-            <p className="text-xs font-medium text-rd-neutral-500 mb-3 uppercase tracking-wide">
-              Desteklenen platformlar
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {[
-                "Trendyol",
-                "Hepsiburada",
-                "Amazon TR",
-                "Amazon USA",
-                "N11",
-                "Etsy",
-              ].map((p) => (
-                <span
-                  key={p}
-                  className="text-xs text-rd-neutral-600 bg-white border border-rd-neutral-200 rounded px-3 py-1.5"
-                >
-                  {p}
-                </span>
-              ))}
-            </div>
-          </section>
+                {/* Platform listesi */}
+                <section className="mb-10 bg-rd-neutral-100 border border-rd-neutral-200 rounded-xl p-5">
+                  <p className="text-xs font-medium text-rd-neutral-500 mb-3 uppercase tracking-wide">
+                    Desteklenen platformlar
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      "Trendyol",
+                      "Hepsiburada",
+                      "Amazon TR",
+                      "Amazon USA",
+                      "N11",
+                      "Etsy",
+                    ].map((p) => (
+                      <span
+                        key={p}
+                        className="text-xs text-rd-neutral-600 bg-white border border-rd-neutral-200 rounded px-3 py-1.5"
+                      >
+                        {p}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+              </>
+            }
+            rest={
+              <>
+                {/* Kurucu — warm-earth accent */}
+                <section className="mb-10">
+                  <h2 className="text-base font-medium text-rd-neutral-900 mb-4">
+                    Kurucu
+                  </h2>
+                  <div className="rounded-xl border border-rd-warm-300 bg-rd-warm-50 p-6">
+                    <div className="text-sm text-rd-neutral-700 leading-relaxed space-y-3">
+                      <p>
+                        <span className="font-medium text-rd-warm-800">
+                          Aziz Köse
+                        </span>{" "}
+                        — fintech ve inovasyon alanında 18 yıllık deneyime sahip bir
+                        girişimci. Kurumsal inovasyon ve girişim yatırımı üzerine
+                        çalıştı, 600&apos;den fazla startup değerlendirdi; AI tabanlı
+                        bir derin öğrenme şirketi kurup çıkış yaptı. E-ticaret
+                        satıcılarının içerik sorununu yakından görünce
+                        yzliste&apos;yi kişisel bir proje olarak başlattı.
+                      </p>
+                      <a
+                        href="https://linkedin.com/in/azizkose"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs text-rd-warm-700 hover:text-rd-warm-800 transition-colors"
+                      >
+                        <ExternalLink size={12} strokeWidth={1.5} aria-hidden="true" />
+                        linkedin.com/in/azizkose
+                      </a>
+                    </div>
+                  </div>
+                </section>
 
-          {/* Kurucu — warm-earth accent */}
-          <section className="mb-10">
-            <h2 className="text-base font-medium text-rd-neutral-900 mb-4">
-              Kurucu
-            </h2>
-            <div className="rounded-xl border border-rd-warm-300 bg-rd-warm-50 p-6">
-              <div className="text-sm text-rd-neutral-700 leading-relaxed space-y-3">
-                <p>
-                  <span className="font-medium text-rd-warm-800">
-                    Aziz Köse
-                  </span>{" "}
-                  — fintech ve inovasyon alanında 18 yıllık deneyime sahip bir
-                  girişimci. Kurumsal inovasyon ve girişim yatırımı üzerine
-                  çalıştı, 600&apos;den fazla startup değerlendirdi; AI tabanlı
-                  bir derin öğrenme şirketi kurup çıkış yaptı. E-ticaret
-                  satıcılarının içerik sorununu yakından görünce
-                  yzliste&apos;yi kişisel bir proje olarak başlattı.
-                </p>
-                <a
-                  href="https://linkedin.com/in/azizkose"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-rd-warm-700 hover:text-rd-warm-800 transition-colors"
-                >
-                  <ExternalLink size={12} strokeWidth={1.5} aria-hidden="true" />
-                  linkedin.com/in/azizkose
-                </a>
-              </div>
-            </div>
-          </section>
+                {/* İletişim */}
+                <section className="mb-10">
+                  <h2 className="text-base font-medium text-rd-neutral-900 mb-3">
+                    İletişim
+                  </h2>
+                  <a
+                    href="mailto:destek@yzliste.com"
+                    className="inline-flex items-center gap-2 text-sm text-rd-primary-600 hover:text-rd-primary-700 transition-colors"
+                  >
+                    <Mail size={14} strokeWidth={1.5} aria-hidden="true" />
+                    destek@yzliste.com
+                  </a>
+                </section>
 
-          {/* İletişim */}
-          <section className="mb-10">
-            <h2 className="text-base font-medium text-rd-neutral-900 mb-3">
-              İletişim
-            </h2>
-            <a
-              href="mailto:destek@yzliste.com"
-              className="inline-flex items-center gap-2 text-sm text-rd-primary-600 hover:text-rd-primary-700 transition-colors"
-            >
-              <Mail size={14} strokeWidth={1.5} aria-hidden="true" />
-              destek@yzliste.com
-            </a>
-          </section>
-
-          {/* Şirket bilgileri */}
-          <section className="border-t border-rd-neutral-200 pt-8">
-            <h2 className="text-sm font-medium text-rd-neutral-500 mb-4">
-              Şirket bilgileri
-            </h2>
-            <dl className="space-y-2 text-sm">
-              {[
-                {
-                  label: "Ünvan",
-                  value:
-                    "SIMOON PAZARLAMA VE DANISMANLIK LIMITED SİRKETİ",
-                },
-                {
-                  label: "Adres",
-                  value:
-                    "Mehmet Akif Mah. Ulubatlı Hasan Cad. Paradise City Sitesi C1 Blok No: 43L İç Kapı No: 31 Çekmeköy / İstanbul",
-                },
-                { label: "Kuruluş", value: "2026 · İstanbul" },
-                { label: "Vergi dairesi", value: "Sarıgazi" },
-                { label: "Vergi no", value: "7701113995" },
-              ].map(({ label, value }) => (
-                <div key={label} className="flex gap-3">
-                  <dt className="text-rd-neutral-500 w-28 flex-shrink-0">
-                    {label}
-                  </dt>
-                  <dd className="text-rd-neutral-600">{value}</dd>
-                </div>
-              ))}
-            </dl>
-          </section>
+                {/* Şirket bilgileri */}
+                <section className="border-t border-rd-neutral-200 pt-8">
+                  <h2 className="text-sm font-medium text-rd-neutral-500 mb-4">
+                    Şirket bilgileri
+                  </h2>
+                  <dl className="space-y-2 text-sm">
+                    {[
+                      {
+                        label: "Ünvan",
+                        value:
+                          "SIMOON PAZARLAMA VE DANISMANLIK LIMITED SİRKETİ",
+                      },
+                      {
+                        label: "Adres",
+                        value:
+                          "Mehmet Akif Mah. Ulubatlı Hasan Cad. Paradise City Sitesi C1 Blok No: 43L İç Kapı No: 31 Çekmeköy / İstanbul",
+                      },
+                      { label: "Kuruluş", value: "2026 · İstanbul" },
+                      { label: "Vergi dairesi", value: "Sarıgazi" },
+                      { label: "Vergi no", value: "7701113995" },
+                    ].map(({ label, value }) => (
+                      <div key={label} className="flex gap-3">
+                        <dt className="text-rd-neutral-500 w-28 flex-shrink-0">
+                          {label}
+                        </dt>
+                        <dd className="text-rd-neutral-600">{value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
+              </>
+            }
+          />
         </div>
         <SiteFooter />
       </main>
