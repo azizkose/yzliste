@@ -3,6 +3,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { YUKLENIYOR_MESAJLARI, PLATFORM_BILGI } from "@/lib/constants";
 import { analytics } from "@/lib/analytics";
 import { useUretimStore } from "@/store/uretimStore";
+import { resizeFoto } from "@/lib/listing-utils";
 import type { Kullanici } from "@/lib/listing-utils";
 
 interface MetinDeps {
@@ -144,11 +145,14 @@ export function useMetinUretim(deps: MetinDeps) {
     analytics.generationStarted({ platform, type: "metin" });
     mesajInterval.current = setInterval(() => setYukleniyorMesaj((prev) => (prev + 1) % YUKLENIYOR_MESAJLARI.length), 1800);
     try {
+      const fotolarResized = fotolar.length > 0
+        ? await Promise.all(fotolar.slice(0, 3).map(f => resizeFoto(f)))
+        : [];
       const res = await fetch("/api/uret", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          urunAdi, kategori, ozellikler, platform, fotolar, girisTipi, barkodBilgi,
+          urunAdi, kategori, ozellikler, platform, fotolar: fotolarResized, girisTipi, barkodBilgi,
           userId: kullanici.id, dil: platformDil, ton: kullanici.ton,
           hedefKitle, fiyatSegmenti, anahtarKelimeler, markaliUrun,
           etiketler: etiketler.length > 0 ? etiketler : undefined,
