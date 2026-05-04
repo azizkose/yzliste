@@ -95,8 +95,8 @@ function ArticleJsonLd({ yazi }: { yazi: BlogYazisi }) {
           author: { "@id": "https://www.yzliste.com/#organization" },
           publisher: { "@id": "https://www.yzliste.com/#organization" },
           image: yazi.kapakGorsel
-            ? `https://yzliste.com${yazi.kapakGorsel}`
-            : "https://yzliste.com/yzliste_logo.png",
+            ? `https://www.yzliste.com${yazi.kapakGorsel}`
+            : "https://www.yzliste.com/yzliste_logo.png",
           keywords: yazi.etiketler.join(", "),
           articleSection: yazi.kategori,
         }),
