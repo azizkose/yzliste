@@ -921,6 +921,7 @@ export default function Home() {
                 seciliStiller={gorsel.seciliStiller} stilToggle={gorsel.stilToggle}
                 gorselYukleniyor={gorsel.gorselYukleniyor} gorselJoblar={gorsel.gorselJoblar} setGorselJoblar={gorsel.setGorselJoblar}
                 referansGorsel={gorsel.referansGorsel} setReferansGorsel={gorsel.setReferansGorsel}
+                seciliKategori={gorsel.seciliKategori} setSeciliKategori={gorsel.setSeciliKategori}
                 kullanici={kullanici} paketModalAc={paketModalAc} gorselUret={gorsel.gorselUret}
                 blobIndir={blobIndir} resizeFoto={resizeFoto} invalidateCredits={invalidateCredits} setKullanici={setKullaniciFn}
               />

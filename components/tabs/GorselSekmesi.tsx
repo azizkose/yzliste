@@ -3,6 +3,8 @@ import { Link2, ImageIcon as ImageIconLucide, Download } from "lucide-react";
 import { GORSEL_STILLER, kategoriKoduHesapla } from "@/lib/constants";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
 import KrediButon from "@/components/ui/KrediButon";
+import KategoriSelector from "@/components/uret/KategoriSelector";
+import type { Kategori } from "@/lib/fal/prompts/index";
 
 type Kullanici = {
   id: string;
@@ -25,10 +27,13 @@ interface GorselSekmesiProps {
   seciliStiller: Set<string>;
   stilToggle: (id: string) => void;
   gorselYukleniyor: boolean;
-  gorselJoblar: { requestId: string; label: string; stil: string }[];
-  setGorselJoblar: (fn: (prev: { requestId: string; label: string; stil: string }[]) => { requestId: string; label: string; stil: string }[]) => void;
+  gorselJoblar: { requestId: string; label: string; stil: string; model?: string }[];
+  setGorselJoblar: (fn: (prev: { requestId: string; label: string; stil: string; model?: string }[]) => { requestId: string; label: string; stil: string; model?: string }[]) => void;
   referansGorsel: string | null;
   setReferansGorsel: (v: string | null) => void;
+  // V2: kategori seçimi
+  seciliKategori: Kategori | null;
+  setSeciliKategori: (k: Kategori | null) => void;
   kullanici: Kullanici | null;
   paketModalAc: () => void;
   gorselUret: () => void;
@@ -46,6 +51,7 @@ export default function GorselSekmesi({
   seciliStiller, stilToggle,
   gorselYukleniyor, gorselJoblar, setGorselJoblar,
   referansGorsel, setReferansGorsel,
+  seciliKategori, setSeciliKategori,
   kullanici, paketModalAc, gorselUret,
   blobIndir, resizeFoto, invalidateCredits, setKullanici,
 }: GorselSekmesiProps) {
@@ -94,6 +100,12 @@ export default function GorselSekmesi({
           Rehberi oku
         </a>
       </p>
+
+      {/* V2: Ürün tipi seçimi — doğru model routing için zorunlu */}
+      <KategoriSelector
+        value={seciliKategori}
+        onChange={setSeciliKategori}
+      />
 
       <div>
         <p className="block text-xs font-medium text-rd-neutral-600 mb-2">Stil seç</p>
@@ -205,7 +217,7 @@ export default function GorselSekmesi({
               <div key={job.requestId} className="space-y-1.5">
                 <div className="rounded-xl overflow-hidden border border-rd-neutral-200 bg-rd-neutral-100 relative group flex items-center justify-center min-h-[300px]">
                   <img
-                    src={`/api/gorsel/img?requestId=${job.requestId}&index=0`}
+                    src={`/api/gorsel/img?requestId=${job.requestId}&index=0${job.model ? `&model=${encodeURIComponent(job.model)}` : ""}`}
                     alt={job.label}
                     className="w-full max-h-[500px] mx-auto object-contain select-none"
                     draggable={false}
@@ -233,7 +245,7 @@ export default function GorselSekmesi({
                     const res = await fetch("/api/gorsel", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ foto: resizedFoto, stiller: [job.stil], ekPrompt: gorselEkPrompt, userId: kullanici.id, referansGorsel }),
+                      body: JSON.stringify({ foto: resizedFoto, stiller: [job.stil], ekPrompt: gorselEkPrompt, userId: kullanici.id, referansGorsel, kategori: seciliKategori }),
                     });
                     const data = await res.json();
                     if (!data.jobs?.[0]) return;
@@ -242,9 +254,10 @@ export default function GorselSekmesi({
                       invalidateCredits();
                     }
                     const newJob = data.jobs[0];
+                    const modelParam = newJob.model ? `&model=${encodeURIComponent(newJob.model)}` : "";
                     for (let d = 0; d < 40; d++) {
                       await new Promise(r => setTimeout(r, 4000));
-                      const pollRes = await fetch(`/api/gorsel/poll?requestId=${newJob.requestId}`);
+                      const pollRes = await fetch(`/api/gorsel/poll?requestId=${newJob.requestId}${modelParam}`);
                       const pollData = await pollRes.json();
                       if (pollData.status === "COMPLETED") {
                         setGorselJoblar(prev => prev.map(j => j.requestId === job.requestId ? newJob : j));

@@ -62,3 +62,6 @@ export const FATURALAR_DEMO = process.env.NODE_ENV !== 'production'
 
 // KREDILER_DEMO: dev + preview'da 4 işlem türü mock data (kredi_log yokken)
 export const KREDILER_DEMO = process.env.NODE_ENV !== 'production'
+
+// Server-side flag'ler için: lib/feature-flags-server.ts
+// (React hook'u olmayan, API route'ta import edilebilen)

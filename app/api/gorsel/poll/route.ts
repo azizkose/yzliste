@@ -3,7 +3,14 @@ import { fal } from "@fal-ai/client";
 
 fal.config({ credentials: process.env.FAL_KEY });
 
-const ENDPOINT = "fal-ai/bria/product-shot";
+const DEFAULT_ENDPOINT = "fal-ai/bria/product-shot";
+
+// V2'de kontext veya image-apps-v2 kullanılabilir — endpoint job'dan taşınır
+const ALLOWED_ENDPOINTS = new Set([
+  "fal-ai/bria/product-shot",
+  "fal-ai/flux-pro/kontext",
+  "fal-ai/image-apps-v2/product-photography",
+]);
 
 export async function GET(req: NextRequest) {
   const requestId = req.nextUrl.searchParams.get("requestId");
@@ -11,8 +18,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ hata: "requestId gerekli" }, { status: 400 });
   }
 
+  const modelParam = req.nextUrl.searchParams.get("model");
+  const endpoint =
+    modelParam && ALLOWED_ENDPOINTS.has(modelParam) ? modelParam : DEFAULT_ENDPOINT;
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const status = await fal.queue.status(ENDPOINT, { requestId, logs: false }) as any;
+  const status = await fal.queue.status(endpoint, { requestId, logs: false }) as any;
 
   if (status.status === "FAILED") {
     const errMsg = status?.error?.message || status?.error || "Görsel üretim başarısız";

@@ -1,5 +1,7 @@
 # Changelog
 
+## 2026-05-05 — GORSEL-V2-A~G: görsel pipeline refactor — kategori dropdown (5 tip), model routing (giyim→kontext, diğer→bria), 35 prompt template (5 kategori × 7 stil), vision-classify (Anthropic Haiku, silent), Sharp post-process (Pass 4), feature flag GORSEL_V2_PERCENT, gorsel_uretim DB tablosu — FASHN/eraser araştırma sonucu kaldırıldı
+
 ## 2026-05-05 — URETIM-BUG-PAKETI: revize sayacı (mikro try/catch+decrement), loading banner, görsel pipeline (shotSizeFromAspect dikey/yatay/kare, NO_HANGER_PREFIX tüm stiller)
 
 ## 2026-05-05 — TUR-9 fix paketi: /hesap/profil+krediler launch-blocker (auth layout getUser kaldırıldı, yukle try/finally), hakkimizda title, UTF-8 mojibake (layout+JSON-LD), CLAUDE.md UI ihlalleri 0'a düşürüldü (font-bold/semibold→medium, bg-amber/emerald/indigo→palette), /profil noindex, eski SEO açıklar kapatıldı

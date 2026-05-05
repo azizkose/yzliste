@@ -13,8 +13,11 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 
 ### P0 — Acil
 
-| ID | Başlık | Durum | Detay |
-|---|---|---|---|
+| ID | Başlık | Sahip | Durum | Detay |
+|---|---|---|---|---|
+| GORSEL-V2-A~G | Görsel V2 pipeline refactor | Code | ✅ Tamamlandı (2026-05-05) | Faz 1 araştırma + Faz 2 implementasyon |
+| GORSEL-V2-H | A/B test 50 görsel manuel skor | Aziz | Bekliyor | V2 önce preview'da test — 5 kategori, her stili dene |
+| GORSEL-V2-I | Kademeli rollout %10 → %100 | Aziz + Cowork | Bekliyor | GORSEL_V2_PERCENT artır, Sentry/PostHog izle |
 | ~~POST-HF-01~~ | /uret metin foto+metin patladı | ✅ Tamamlandı (2026-05-04) | Code teşhis + fix |
 | ~~INPUT-MAP-01~~ | 4 tab input alanları haritası | ✅ Tamamlandı (2026-05-04) | `docs/icerik-input-map.md` |
 | AUTH-01 | Mobilde kayıt — Turnstile devre dışı | Kod OK, mobil test kaldı | Aziz manuel test |

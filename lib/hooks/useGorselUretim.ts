@@ -3,6 +3,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { resizeFoto } from "@/lib/listing-utils";
 import type { Kullanici } from "@/lib/listing-utils";
 import { analytics } from "@/lib/analytics";
+import type { Kategori } from "@/lib/fal/prompts/index";
 
 interface GorselDeps {
   fotolar: string[];
@@ -18,8 +19,9 @@ export function useGorselUretim(deps: GorselDeps) {
   const [gorselEkPrompt, setGorselEkPrompt] = useState("");
   const [seciliStiller, setSeciliStiller] = useState<Set<string>>(new Set());
   const [gorselYukleniyor, setGorselYukleniyor] = useState(false);
-  const [gorselJoblar, setGorselJoblar] = useState<{ requestId: string; label: string; stil: string }[]>([]);
+  const [gorselJoblar, setGorselJoblar] = useState<{ requestId: string; label: string; stil: string; model?: string }[]>([]);
   const [referansGorsel, setReferansGorsel] = useState<string | null>(null);
+  const [seciliKategori, setSeciliKategori] = useState<Kategori | null>(null);
 
   const depsRef = useRef(deps);
   useEffect(() => { depsRef.current = deps; });
@@ -61,7 +63,15 @@ export function useGorselUretim(deps: GorselDeps) {
       const res = await fetch("/api/gorsel", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ foto: resized, stiller: Array.from(seciliStiller), ekPrompt: gorselEkPrompt, userId: kullanici.id, referansGorsel, inputBoyut }),
+        body: JSON.stringify({
+          foto: resized,
+          stiller: Array.from(seciliStiller),
+          ekPrompt: gorselEkPrompt,
+          userId: kullanici.id,
+          referansGorsel,
+          inputBoyut,
+          kategori: seciliKategori, // V2: null ise backend V1 pipeline kullanır
+        }),
       });
       const data = await res.json();
       if (res.status === 402) { analytics.creditExhausted(); paketModalAc(); setGorselYukleniyor(false); return; }
@@ -70,10 +80,12 @@ export function useGorselUretim(deps: GorselDeps) {
       let tamamlananSayisi = 0;
       const hataMesajlari: string[] = [];
       await Promise.all(
-        data.jobs.map(async (job: { requestId: string; label: string; stil: string }) => {
+        data.jobs.map(async (job: { requestId: string; label: string; stil: string; model?: string }) => {
+          // model parametresi V2'de dolu (kontext veya bria), V1'de undefined → poll default bria kullanır
+          const modelParam = job.model ? `&model=${encodeURIComponent(job.model)}` : "";
           for (let deneme = 0; deneme < 40; deneme++) {
             await new Promise(r => setTimeout(r, 4000));
-            const pollRes = await fetch(`/api/gorsel/poll?requestId=${job.requestId}`);
+            const pollRes = await fetch(`/api/gorsel/poll?requestId=${job.requestId}${modelParam}`);
             const pollData = await pollRes.json();
             if (pollData.status === "COMPLETED") { tamamlananSayisi++; setGorselJoblar(prev => [...prev, job]); break; }
             if (pollData.status === "FAILED") { hataMesajlari.push(`${job.label}: ${pollData.hata || "Görsel üretilemedi"}`); break; }
@@ -90,7 +102,7 @@ export function useGorselUretim(deps: GorselDeps) {
     } catch { analytics.generationFailed({ platform: "gorsel", type: "gorsel", error: "network" }); setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setGorselYukleniyor(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [seciliStiller, gorselEkPrompt, referansGorsel]);
+  }, [seciliStiller, gorselEkPrompt, referansGorsel, seciliKategori]);
 
   return {
     gorselEkPrompt, setGorselEkPrompt,
@@ -98,6 +110,7 @@ export function useGorselUretim(deps: GorselDeps) {
     gorselYukleniyor,
     gorselJoblar, setGorselJoblar,
     referansGorsel, setReferansGorsel,
+    seciliKategori, setSeciliKategori,
     gorselUret,
   };
 }
