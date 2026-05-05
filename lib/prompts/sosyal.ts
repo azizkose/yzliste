@@ -101,6 +101,12 @@ HALLUCINATION KURALLARI — KESİNLİKLE UYACAKSIN:
 - Ürün hakkında tahmin veya varsayım YAPMA
 - Boyut, renk, malzeme, fiyat gibi belirtilmeyen detayları UYDURMA
 - Belirtilmeyen özellikler için genel ifadeler kullan ("kaliteli malzeme", "özenle üretilmiş" gibi)
+
+HASHTAG KURALLARI:
+- Sadece gerçekten kullanılan, anlamlı hashtag yaz
+- 30+ karakterli veya sadece rakamlı hashtag yazma
+- Uyduruk hashtag yazma — bilmiyorsan ekleme
+- Yıl referansı kullanacaksan bugünün yılını kullan (yukarıdaki tarih bağlamına bak)
 ${markaBaglami ? `\nMarka bilgileri:\n${markaBaglami}` : ""}`;
 
   const kullanici = `Şu ürün için ${kural.adi} paylaşım metni ve hashtag üret:
