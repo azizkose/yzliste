@@ -20,16 +20,15 @@ export default function GlobalError({
     <html lang="tr">
       <body className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="max-w-md w-full text-center">
-          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-10">
-            <p className="text-5xl mb-4">⚠️</p>
-            <h1 className="text-xl font-bold text-gray-900 mb-2">Bir sorun oluştu</h1>
-            <p className="text-sm text-gray-500 mb-8">
+          <div className="bg-white rounded-xl border border-rd-neutral-200 p-10">
+            <h1 className="text-xl font-medium text-rd-neutral-900 mb-2">Bir sorun oluştu</h1>
+            <p className="text-sm text-rd-neutral-500 mb-8">
               Beklenmedik bir hata meydana geldi.
             </p>
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => reset()}
-                className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
+                className="bg-rd-primary-700 hover:bg-rd-primary-800 text-white font-medium py-3 rounded-lg text-sm transition-colors"
               >
                 Tekrar Dene
               </button>

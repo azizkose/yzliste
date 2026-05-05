@@ -26,7 +26,7 @@ export default function FinalCTASection() {
 
         <h2
           id="final-cta-heading"
-          className="mt-5 text-3xl font-bold text-white md:text-4xl"
+          className="mt-5 text-3xl font-medium text-white md:text-4xl"
           style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.02em', lineHeight: '1.3' }}
         >
           {FINAL_CTA.title}

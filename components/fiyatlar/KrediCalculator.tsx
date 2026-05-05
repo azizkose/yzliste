@@ -75,7 +75,7 @@ export default function KrediCalculator({ onPaketOner, embedded = false }: Props
       </div>
       <p className="mt-4 text-center">
         <span
-          className="text-3xl font-bold text-rd-primary-700 tabular-nums"
+          className="text-3xl font-medium text-rd-primary-700 tabular-nums"
           style={{ fontFamily: 'var(--font-rd-display)' }}
         >
           {productCount}
@@ -98,7 +98,7 @@ export default function KrediCalculator({ onPaketOner, embedded = false }: Props
         Sana uygun paket
       </p>
       <p
-        className="text-xl font-bold text-rd-neutral-900"
+        className="text-xl font-medium text-rd-neutral-900"
         style={{ fontFamily: 'var(--font-rd-display)' }}
       >
         {recommended.isim}
@@ -134,14 +134,14 @@ export default function KrediCalculator({ onPaketOner, embedded = false }: Props
     >
       <div className="max-w-3xl mx-auto">
         <p
-          className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-primary-600 text-center mb-3"
+          className="text-xs font-medium tracking-[0.1em] uppercase text-rd-primary-600 text-center mb-3"
           style={{ fontFamily: 'var(--font-rd-display)' }}
         >
           Kaç kredi yeter?
         </p>
         <h2
           id="calculator-heading"
-          className="text-xl font-bold text-rd-neutral-900 text-center mb-2"
+          className="text-xl font-medium text-rd-neutral-900 text-center mb-2"
           style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em' }}
         >
           Kullanımına göre hesapla

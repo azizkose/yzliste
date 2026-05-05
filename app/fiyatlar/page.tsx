@@ -95,13 +95,13 @@ export default function FiyatlarPage() {
       {/* HERO */}
       <section className="px-4 sm:px-6 pt-14 pb-10 text-center max-w-2xl mx-auto">
         <p
-          className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-primary-600 mb-4"
+          className="text-xs font-medium tracking-[0.1em] uppercase text-rd-primary-600 mb-4"
           style={{ fontFamily: 'var(--font-rd-display)' }}
         >
           Fiyatlar
         </p>
         <h1
-          className="text-3xl sm:text-4xl font-bold text-rd-neutral-900 mb-4"
+          className="text-3xl sm:text-4xl font-medium text-rd-neutral-900 mb-4"
           style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.02em', lineHeight: '1.3' }}
         >
           Sade kredi paketleri
@@ -125,13 +125,13 @@ export default function FiyatlarPage() {
       {/* CTA */}
       <section className="px-4 sm:px-6 py-14 bg-rd-neutral-50 border-t border-rd-neutral-200 text-center">
         <p
-          className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-primary-600 mb-3"
+          className="text-xs font-medium tracking-[0.1em] uppercase text-rd-primary-600 mb-3"
           style={{ fontFamily: 'var(--font-rd-display)' }}
         >
           Hemen başla
         </p>
         <h2
-          className="text-2xl font-bold text-rd-neutral-900 mb-3"
+          className="text-2xl font-medium text-rd-neutral-900 mb-3"
           style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em' }}
         >
           Ücretsiz dene

@@ -13,7 +13,7 @@ export function StickerBadge({ icon, label, color, borderColor, className }: Sti
   return (
     <div
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full bg-white py-1.5 px-3 font-rd-body text-[11px] font-semibold [box-shadow:var(--shadow-rd-md)]',
+        'inline-flex items-center gap-1.5 rounded-full bg-white py-1.5 px-3 font-rd-body text-[11px] font-medium [box-shadow:var(--shadow-rd-md)]',
         className
       )}
       style={{ border: `1px solid ${borderColor}` }}

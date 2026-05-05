@@ -153,7 +153,7 @@ function MetinPanel({ market, setMarket }: { market: MarketId; setMarket: (m: Ma
         {platformVerileriInfoStrip[market].bolumler.map((bolum, i) => (
           <div key={i} className={cn('rounded-xl border-l-4', bolum.renk, 'border border-rd-neutral-200 bg-white p-4')}>
             <div className="flex items-center justify-between mb-2">
-              <span className="flex items-center gap-1.5 text-sm font-semibold text-rd-neutral-900">
+              <span className="flex items-center gap-1.5 text-sm font-medium text-rd-neutral-900">
                 <BolumIkon ikon={bolum.ikon} />
                 {bolum.baslik}
               </span>
@@ -174,7 +174,7 @@ function MetinPanel({ market, setMarket }: { market: MarketId; setMarket: (m: Ma
         ))}
       </div>
       <div className="mt-4 rounded-xl bg-rd-primary-50 border border-rd-primary-200 p-3 text-xs text-rd-primary-700 leading-relaxed">
-        Her pazaryerinin kuralları farklı. <strong className="font-semibold">Örnek:</strong> Trendyol max 100 karakter başlık ister,
+        Her pazaryerinin kuralları farklı. <strong className="font-medium">Örnek:</strong> Trendyol max 100 karakter başlık ister,
         Amazon 200&apos;e kadar keyword kabul eder, Etsy İngilizce + hikaye anlatımı sever.
         yzliste hepsini tek fotoğraftan üretir.
       </div>
@@ -195,7 +195,7 @@ function GorselPanel() {
         Arka plan otomatik temizlenir, 7 farklı stüdyo stilinden seçin —
         ya da sahnenizi anlatın, kendi fonunuzu yükleyin.
       </p>
-      <p className="text-sm font-semibold text-rd-neutral-900 mb-1">Tek fotoğraftan 7 farklı stüdyo stili</p>
+      <p className="text-sm font-medium text-rd-neutral-900 mb-1">Tek fotoğraftan 7 farklı stüdyo stili</p>
       <p className="text-xs text-rd-neutral-500 mb-5">Stil başına 1 kredi · Üretimde düşer, indirme bedava</p>
       {/* 1. satır: ham + 3 stil */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -246,7 +246,7 @@ function GorselPanel() {
         ))}
       </div>
       <div className="mt-6 pt-5 border-t border-rd-neutral-200">
-        <p className="text-xs text-rd-neutral-600 font-semibold mb-2">3 farklı yöntemle sahne oluştur:</p>
+        <p className="text-xs text-rd-neutral-600 font-medium mb-2">3 farklı yöntemle sahne oluştur:</p>
         <div className="flex flex-wrap gap-2">
           {['Hazır stiller (Beyaz, Koyu…)', 'Kendi promptunu yaz', 'Arka plan fotoğrafı ver'].map((t, i) => (
             <span key={i} className="text-xs bg-rd-primary-50 text-rd-primary-700 px-3 py-1 rounded-full border border-rd-primary-200">{i + 1}. {t}</span>
@@ -270,7 +270,7 @@ function VideoPanel() {
         stilinden seçin ya da kendi yönetmenliğinizi yapın — Reels, TikTok,
         YouTube ve pazaryeri formatlarında.
       </p>
-      <p className="text-sm font-semibold text-rd-neutral-900 mb-1">Ürün fotoğrafından tanıtım videosu</p>
+      <p className="text-sm font-medium text-rd-neutral-900 mb-1">Ürün fotoğrafından tanıtım videosu</p>
       <p className="text-xs text-rd-neutral-500 mb-5">Ürünü hareket ettiren, platform uyumlu dikey/kare video — MP4 olarak indir</p>
       {/* 6 video kartı 3-kolon — video üstte kare, metin altta */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5">
@@ -311,7 +311,7 @@ function VideoPanel() {
         ].map((v, i) => (
           <div key={i} className="rounded-xl border border-rd-neutral-200 bg-white p-3 text-center">
             <v.Ikon size={20} strokeWidth={1.5} className="text-rd-neutral-600 mx-auto mb-1" />
-            <p className="text-xs font-semibold text-rd-neutral-900">{v.baslik}</p>
+            <p className="text-xs font-medium text-rd-neutral-900">{v.baslik}</p>
             <p className="text-xs text-rd-neutral-500 mb-1">{v.aciklama}</p>
             <span className="text-xs font-medium text-rd-primary-700 bg-white border border-rd-primary-200 px-1.5 py-0.5 rounded-full">{v.etiket}</span>
           </div>
@@ -319,7 +319,7 @@ function VideoPanel() {
       </div>
       {/* Nasıl çalışır */}
       <div className="bg-white border border-rd-neutral-200 rounded-xl p-4">
-        <p className="text-xs font-semibold text-rd-neutral-600 mb-2">Nasıl çalışır?</p>
+        <p className="text-xs font-medium text-rd-neutral-600 mb-2">Nasıl çalışır?</p>
         <div className="space-y-1.5">
           {['Ürün fotoğrafını yükle', 'Süre ve format seç', 'AI ürünü animasyonlu videoya dönüştürür (~2 dk)', 'MP4 olarak indir, platforma yükle'].map((s, i) => (
             <div key={i} className="flex items-start gap-2 text-xs text-rd-neutral-600">
@@ -348,7 +348,7 @@ function SosyalPanel() {
         Her platform için ayrı formatta caption ve hashtag seti üretin.
         Instagram, TikTok, Facebook ve X — hepsi tek tıkla.
       </p>
-      <p className="text-sm font-semibold text-rd-neutral-900 mb-1">Platform uyumlu caption + hashtag seti</p>
+      <p className="text-sm font-medium text-rd-neutral-900 mb-1">Platform uyumlu caption + hashtag seti</p>
       <p className="text-xs text-rd-neutral-500 mb-5">Instagram, TikTok, Facebook, Twitter/X — her platform için ayrı format · 1 kredi</p>
       <div className="flex gap-2 mb-4 flex-wrap">
         {['Instagram', 'TikTok', 'Facebook', 'Twitter/X'].map((p) => (
@@ -358,7 +358,7 @@ function SosyalPanel() {
       <div className="space-y-3">
         <div className="rounded-xl border border-rd-neutral-200 bg-white p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-rd-neutral-600 flex items-center gap-1.5">
+            <span className="text-xs font-medium text-rd-neutral-600 flex items-center gap-1.5">
               <Camera size={13} strokeWidth={1.5} />
               Instagram Caption
             </span>
@@ -368,7 +368,7 @@ function SosyalPanel() {
         </div>
         <div className="rounded-xl border border-rd-neutral-200 bg-white p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-rd-neutral-600 flex items-center gap-1.5">
+            <span className="text-xs font-medium text-rd-neutral-600 flex items-center gap-1.5">
               <Tag size={13} strokeWidth={1.5} />
               Hashtag Seti
             </span>
@@ -378,7 +378,7 @@ function SosyalPanel() {
         </div>
         <div className="rounded-xl border border-rd-neutral-200 bg-white p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-rd-neutral-600">Twitter/X (280 karakter)</span>
+            <span className="text-xs font-medium text-rd-neutral-600">Twitter/X (280 karakter)</span>
             <KopyalaButon metin={twCaption} />
           </div>
           <p className="text-sm text-rd-neutral-600 leading-relaxed">{twCaption}</p>
@@ -410,7 +410,7 @@ export function InfoStrip() {
             İÇERİK TÜRLERİ
           </Eyebrow>
         </div>
-        <h2 className="font-rd-display text-3xl md:text-4xl text-rd-neutral-900 font-bold tracking-[-0.01em]">
+        <h2 className="font-rd-display text-3xl md:text-4xl text-rd-neutral-900 font-medium tracking-[-0.01em]">
           4 içerik türü, 7 pazaryeri için
         </h2>
         <p className="text-sm text-rd-neutral-500 mt-1.5 leading-relaxed max-w-[520px]">

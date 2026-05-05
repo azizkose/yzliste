@@ -64,13 +64,13 @@ function PaketKart({
 
       <div className="mb-4">
         <p
-          className="font-bold text-rd-neutral-900 text-lg"
+          className="font-medium text-rd-neutral-900 text-lg"
           style={{ fontFamily: 'var(--font-rd-display)' }}
         >
           {paket.isim}
         </p>
         <p
-          className="text-3xl font-bold text-rd-neutral-900 mt-1 tabular-nums"
+          className="text-3xl font-medium text-rd-neutral-900 mt-1 tabular-nums"
           style={{ fontFamily: 'var(--font-rd-display)' }}
         >
           {paket.fiyatStr}
@@ -200,13 +200,13 @@ function KrediYukleIcerik() {
           {!odemeForm && (
             <div className="text-center mb-8">
               <p
-                className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-primary-600 mb-2"
+                className="text-xs font-medium tracking-[0.1em] uppercase text-rd-primary-600 mb-2"
                 style={{ fontFamily: 'var(--font-rd-display)' }}
               >
                 Kredi yükle
               </p>
               <h1
-                className="text-2xl font-bold text-rd-neutral-900 mb-1"
+                className="text-2xl font-medium text-rd-neutral-900 mb-1"
                 style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em' }}
               >
                 Paket seç
@@ -221,7 +221,7 @@ function KrediYukleIcerik() {
           {!odemeForm && kredi !== undefined && (
             <div className="rounded-xl border border-rd-neutral-200 bg-white px-5 py-4 mb-6 flex items-center justify-between">
               <p className="text-sm text-rd-neutral-500">Mevcut krediniz</p>
-              <p className="text-xl font-bold text-rd-neutral-900 tabular-nums"
+              <p className="text-xl font-medium text-rd-neutral-900 tabular-nums"
                  style={{ fontFamily: 'var(--font-rd-display)' }}>
                 {kredi ?? '–'}
                 <span className="text-sm font-normal text-rd-neutral-400 ml-1">kredi</span>
@@ -274,7 +274,7 @@ function KrediYukleIcerik() {
                 role="group"
                 aria-label="Satın alma onayları"
               >
-                <p className="text-xs font-semibold text-rd-neutral-600 mb-1">
+                <p className="text-xs font-medium text-rd-neutral-600 mb-1">
                   Satın almak için aşağıdakileri onaylayın:
                 </p>
 

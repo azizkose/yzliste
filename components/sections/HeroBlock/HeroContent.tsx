@@ -28,14 +28,14 @@ export default function HeroContent() {
           className="h-1.5 w-1.5 rounded-full bg-rd-primary-500 animate-[pulse-soft_2s_ease-in-out_infinite]"
           aria-hidden="true"
         />
-        <span className="font-rd-body text-xs font-semibold tracking-wide text-rd-primary-700">
+        <span className="font-rd-body text-xs font-medium tracking-wide text-rd-primary-700">
           {HERO_COPY.eyebrow}
         </span>
       </div>
 
       {/* H1 — 3-part: plain + highlight + plain */}
       <h1
-        className="mt-6 font-rd-display font-bold leading-[1.05] tracking-[-0.025em] text-rd-neutral-900"
+        className="mt-6 font-rd-display font-medium leading-[1.05] tracking-[-0.025em] text-rd-neutral-900"
         style={{ fontSize: 'clamp(40px, 5.5vw, 64px)' }}
       >
         {HERO_COPY.h1Pre}{' '}
@@ -117,7 +117,7 @@ export default function HeroContent() {
         <Check
           size={14}
           strokeWidth={2.5}
-          className="shrink-0 text-emerald-500"
+          className="shrink-0 text-rd-success-600"
           aria-hidden="true"
         />
         <span>{HERO_COPY.reassurance}</span>

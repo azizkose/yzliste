@@ -11,7 +11,7 @@ export default function IntentBanner() {
       </p>
       <h1
         id="intent-banner-heading"
-        className="mt-2 text-2xl font-bold text-rd-neutral-900 md:text-3xl"
+        className="mt-2 text-2xl font-medium text-rd-neutral-900 md:text-3xl"
         style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em', lineHeight: '1.3' }}
       >
         İçerik türünü seç

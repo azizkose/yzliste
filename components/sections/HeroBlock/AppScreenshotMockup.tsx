@@ -105,9 +105,9 @@ export default function AppScreenshotMockup() {
         {/* Browser top bar */}
         <div className="flex items-center gap-3 border-b border-rd-neutral-200 bg-rd-neutral-50 px-4 py-3">
           <div className="flex items-center gap-1.5" aria-hidden="true">
-            <span className="h-3 w-3 rounded-full bg-red-400" />
-            <span className="h-3 w-3 rounded-full bg-amber-400" />
-            <span className="h-3 w-3 rounded-full bg-green-400" />
+            <span className="h-3 w-3 rounded-full bg-rd-danger-600" />
+            <span className="h-3 w-3 rounded-full bg-rd-warning-600" />
+            <span className="h-3 w-3 rounded-full bg-rd-success-600" />
           </div>
           <div className="flex flex-1 items-center justify-center rounded-md border border-rd-neutral-200 bg-white px-3 py-1">
             <span className="text-xs text-rd-neutral-400">yzliste.com/uret</span>

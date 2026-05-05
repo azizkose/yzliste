@@ -22,16 +22,16 @@ type ChatFeedback = {
 };
 
 const TUR_ETIKET: Record<string, { label: string; renk: string }> = {
-  bug:        { label: "🐛 Hata",    renk: "bg-red-100 text-red-700" },
-  suggestion: { label: "💡 Öneri",   renk: "bg-blue-100 text-blue-700" },
-  complaint:  { label: "😟 Şikayet", renk: "bg-amber-100 text-amber-700" },
-  other:      { label: "📝 Diğer",   renk: "bg-gray-100 text-gray-700" },
+  bug:        { label: "Hata",    renk: "bg-rd-danger-50 text-rd-danger-700" },
+  suggestion: { label: "Öneri",   renk: "bg-rd-primary-50 text-rd-primary-700" },
+  complaint:  { label: "Şikayet", renk: "bg-rd-warning-50 text-rd-warning-700" },
+  other:      { label: "Diğer",   renk: "bg-rd-neutral-100 text-rd-neutral-700" },
 };
 
 const DURUM_ETIKET: Record<string, { label: string; renk: string }> = {
-  new:      { label: "Yeni",     renk: "bg-indigo-100 text-indigo-700" },
-  read:     { label: "Okundu",   renk: "bg-gray-100 text-gray-600" },
-  resolved: { label: "Çözüldü", renk: "bg-emerald-100 text-emerald-700" },
+  new:      { label: "Yeni",     renk: "bg-rd-primary-50 text-rd-primary-700" },
+  read:     { label: "Okundu",   renk: "bg-rd-neutral-100 text-rd-neutral-600" },
+  resolved: { label: "Çözüldü", renk: "bg-rd-success-50 text-rd-success-700" },
 };
 
 export default function AdminFeedbackPage() {
@@ -83,7 +83,7 @@ export default function AdminFeedbackPage() {
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
           <Link href="/admin" className="text-sm text-gray-400 hover:text-gray-600">← Admin</Link>
-          <h1 className="text-2xl font-bold text-gray-900">Geri Bildirimler</h1>
+          <h1 className="text-2xl font-medium text-gray-900">Geri Bildirimler</h1>
         </div>
 
         {/* Filtreler */}
@@ -108,7 +108,7 @@ export default function AdminFeedbackPage() {
         {/* Kullanıcı Geri Bildirimleri */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-8">
           <div className="px-5 py-4 border-b border-gray-100">
-            <h2 className="font-semibold text-gray-800">Kullanıcı Geri Bildirimleri ({userFeedback.length})</h2>
+            <h2 className="font-medium text-gray-800">Kullanıcı Geri Bildirimleri ({userFeedback.length})</h2>
           </div>
           {yukleniyor ? (
             <div className="p-8 text-center text-sm text-gray-400">Yükleniyor...</div>
@@ -124,7 +124,7 @@ export default function AdminFeedbackPage() {
                   <div key={f.id} className="px-5 py-4">
                     <div className="flex items-start gap-3 flex-wrap">
                       <div className="flex gap-2 flex-shrink-0">
-                        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${tur.renk}`}>{tur.label}</span>
+                        <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${tur.renk}`}>{tur.label}</span>
                         <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${durum.renk}`}>{durum.label}</span>
                       </div>
                       <p className="text-sm text-gray-500 flex-1">{new Date(f.created_at).toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</p>
@@ -133,7 +133,7 @@ export default function AdminFeedbackPage() {
                           <button onClick={() => durumGuncelle(f.id, "read")} className="text-xs border border-gray-200 px-2.5 py-1 rounded-lg text-gray-500 hover:bg-gray-50 transition-colors">Okundu</button>
                         )}
                         {f.status !== "resolved" && (
-                          <button onClick={() => durumGuncelle(f.id, "resolved")} className="text-xs bg-emerald-500 hover:bg-emerald-600 text-white px-2.5 py-1 rounded-lg transition-colors">Çözüldü</button>
+                          <button onClick={() => durumGuncelle(f.id, "resolved")} className="text-xs bg-rd-success-600 hover:bg-rd-success-700 text-white px-2.5 py-1 rounded-lg transition-colors">Çözüldü</button>
                         )}
                       </div>
                     </div>
@@ -156,7 +156,7 @@ export default function AdminFeedbackPage() {
         {/* Chat Feedback (thumbs) */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <div className="px-5 py-4 border-b border-gray-100">
-            <h2 className="font-semibold text-gray-800">Chatbot Değerlendirmeleri ({chatFeedback.length})</h2>
+            <h2 className="font-medium text-gray-800">Chatbot Değerlendirmeleri ({chatFeedback.length})</h2>
           </div>
           {chatFeedback.length === 0 ? (
             <div className="p-8 text-center text-sm text-gray-400">Değerlendirme yok.</div>

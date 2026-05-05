@@ -6,7 +6,7 @@ import SiteFooter from "@/components/SiteFooter";
 import { Eyebrow } from "@/components/primitives/Eyebrow";
 
 export const metadata: Metadata = {
-  title: "Hakkımızda — yzliste",
+  title: "Hakkımızda",
   description:
     "yzliste, e-ticaret satıcılarının Trendyol, Hepsiburada, Amazon ve daha fazlası için AI destekli listing ve görsel üretmesini sağlayan bir platform. İstanbul, 2026.",
   openGraph: {

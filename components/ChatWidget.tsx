@@ -34,7 +34,7 @@ export default function ChatWidget() {
         <div className="mb-3 bg-white rounded-xl border border-[#D8D6CE] w-80 flex flex-col overflow-hidden">
           <div className="bg-[#1A1A17] px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
+              <div className="w-2 h-2 bg-rd-success-200 rounded-full animate-pulse" />
               <span className="text-white text-sm font-medium">yzliste destek</span>
             </div>
             <button onClick={() => setAcik(false)} className="text-white/60 hover:text-white transition-colors">

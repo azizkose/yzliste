@@ -25,13 +25,13 @@ export default function KrediYukleModal() {
               )}
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-bold text-rd-neutral-900"
+                  <p className="text-sm font-medium text-rd-neutral-900"
                      style={{ fontFamily: 'var(--font-rd-display)' }}>
                     {p.isim}
                   </p>
                   <p className="text-xs text-rd-neutral-500 mt-0.5">{p.krediStr}</p>
                 </div>
-                <p className="text-xl font-bold text-rd-neutral-900 tabular-nums"
+                <p className="text-xl font-medium text-rd-neutral-900 tabular-nums"
                    style={{ fontFamily: 'var(--font-rd-display)' }}>
                   {p.fiyatStr}
                 </p>

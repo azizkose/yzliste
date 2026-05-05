@@ -667,7 +667,7 @@ export default function Home() {
                       Değiştir
                       <input type="file" accept="image/*" className="hidden" onChange={tekFotoSec} />
                     </label>
-                    <button onClick={() => { setFotolar([]); gorsel.setGorselJoblar([]); }} className="text-xs text-rd-neutral-400 hover:text-red-500 transition-colors">Kaldır</button>
+                    <button onClick={() => { setFotolar([]); gorsel.setGorselJoblar([]); }} className="text-xs text-rd-neutral-400 hover:text-rd-danger-600 transition-colors">Kaldır</button>
                   </div>
                 </div>
               ) : (

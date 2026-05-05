@@ -147,40 +147,43 @@ export default function HesapProfilPage() {
   // ─── Yükleme ─────────────────────────────────────────────────────────────
 
   const yukle = useCallback(async (uid: string) => {
-    const { data } = await supabase
-      .from("profiles")
-      .select(
-        "email, is_admin, ad_soyad, telefon, adres, fatura_tipi, tc_kimlik, vergi_no, vergi_dairesi"
-      )
-      .eq("id", uid)
-      .single();
+    try {
+      const { data } = await supabase
+        .from("profiles")
+        .select(
+          "email, is_admin, ad_soyad, telefon, adres, fatura_tipi, tc_kimlik, vergi_no, vergi_dairesi"
+        )
+        .eq("id", uid)
+        .single();
 
-    const { count } = await supabase
-      .from("uretimler")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", uid);
+      const { count } = await supabase
+        .from("uretimler")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", uid);
 
-    if (data) {
-      setEmail(data.email ?? "");
-      setIsAdmin(!!data.is_admin);
-      setToplamUretim(count ?? 0);
+      if (data) {
+        setEmail(data.email ?? "");
+        setIsAdmin(!!data.is_admin);
+        setToplamUretim(count ?? 0);
 
-      const loaded: ProfilForm = {
-        adSoyad: data.ad_soyad ?? "",
-        telefon: data.telefon ?? "",
-        adres: parseAdres(data.adres),
-        faturaTipi: data.fatura_tipi ?? "bireysel",
-        tcKimlik: data.tc_kimlik ?? "",
-        tcKvkkOnay: !!data.tc_kimlik,
-        vergiNo: data.vergi_no ?? "",
-        vergiDairesi: data.vergi_dairesi ?? "",
-      };
-      setForm(loaded);
-      originalRef.current = JSON.stringify(loaded);
-    } else {
-      originalRef.current = JSON.stringify(BOSH_FORM);
+        const loaded: ProfilForm = {
+          adSoyad: data.ad_soyad ?? "",
+          telefon: data.telefon ?? "",
+          adres: parseAdres(data.adres),
+          faturaTipi: data.fatura_tipi ?? "bireysel",
+          tcKimlik: data.tc_kimlik ?? "",
+          tcKvkkOnay: !!data.tc_kimlik,
+          vergiNo: data.vergi_no ?? "",
+          vergiDairesi: data.vergi_dairesi ?? "",
+        };
+        setForm(loaded);
+        originalRef.current = JSON.stringify(loaded);
+      } else {
+        originalRef.current = JSON.stringify(BOSH_FORM);
+      }
+    } finally {
+      setYukleniyor(false);
     }
-    setYukleniyor(false);
   }, []);
 
   useEffect(() => {
@@ -320,7 +323,7 @@ export default function HesapProfilPage() {
           <p className="text-[10px] uppercase tracking-[0.15em] font-medium text-rd-primary-700 mb-1">
             Profil
           </p>
-          <h1 className="font-[family-name:var(--font-rd-display)] text-3xl md:text-4xl font-bold text-rd-neutral-900 leading-tight tracking-tight mb-2">
+          <h1 className="font-[family-name:var(--font-rd-display)] text-3xl md:text-4xl font-medium text-rd-neutral-900 leading-tight tracking-tight mb-2">
             Kişisel ve fatura bilgilerin
           </h1>
           <p className="text-rd-neutral-600 text-sm mb-2">

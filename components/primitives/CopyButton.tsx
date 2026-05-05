@@ -84,9 +84,9 @@ export function CopyButton({
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary/40",
         sizeClasses[size],
         variant === "default" && !copied && "border border-rd-neutral-200 bg-white text-rd-neutral-600 hover:border-rd-neutral-300 hover:text-rd-neutral-800",
-        variant === "default" && copied && "border border-emerald-200 bg-emerald-50 text-emerald-600",
+        variant === "default" && copied && "border border-rd-success-200 bg-rd-success-50 text-rd-success-600",
         variant === "minimal" && !copied && "text-rd-neutral-600 hover:text-rd-neutral-800",
-        variant === "minimal" && copied && "text-emerald-600",
+        variant === "minimal" && copied && "text-rd-success-600",
         className
       )}
       {...props}

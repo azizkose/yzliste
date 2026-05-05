@@ -74,7 +74,7 @@ function EmailGonderildiUI({
         <MailCheck size={48} className="text-rd-success-600" strokeWidth={1.5} aria-hidden="true" />
       </div>
       <div>
-        <p className="font-bold text-rd-neutral-900" style={{ fontFamily: 'var(--font-rd-display)' }}>
+        <p className="font-medium text-rd-neutral-900" style={{ fontFamily: 'var(--font-rd-display)' }}>
           E-postanı kontrol et
         </p>
         <p className="text-sm text-rd-neutral-500 mt-1 leading-relaxed">

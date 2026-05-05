@@ -245,7 +245,7 @@ export default function HesapMarkaPage() {
           <p className="text-[10px] uppercase tracking-[0.15em] font-medium text-rd-primary-700 mb-1">
             Marka profili
           </p>
-          <h1 className="font-[family-name:var(--font-rd-display)] text-3xl md:text-4xl font-bold text-rd-neutral-900 leading-tight tracking-tight mb-2">
+          <h1 className="font-[family-name:var(--font-rd-display)] text-3xl md:text-4xl font-medium text-rd-neutral-900 leading-tight tracking-tight mb-2">
             Markanı tanıt, AI sana özel yazsın
           </h1>
           <p className="text-rd-neutral-600 text-sm mb-4">

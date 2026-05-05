@@ -21,6 +21,11 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | FY-01 | Fiyat 49/129/299 TL | Kod OK, test kaldı | Aziz manuel test |
 | CI-01 | CI lint hataları (12 error) | Kısmen | inline (setState in effect + prototype) |
 | ~~SEO-DOMAIN-01~~ | Canonical URL tutarlılık temizliği | ✅ Tamamlandı (2026-05-04) | 4 dosya, sadece metadata |
+| ~~T9-01~~ | /hesap/profil sonsuz spinner | ✅ Tamamlandı (2026-05-05) | (auth)/layout.tsx auth check kaldırıldı, try/finally eklendi |
+| ~~T9-02~~ | /hesap/krediler bakiye "—" + header auth kayboluyor | ✅ Tamamlandı (2026-05-05) | T9-01 ile aynı kök neden — auth layout fix |
+| ~~T9-03~~ | /hakkimizda double brand title | ✅ Tamamlandı (2026-05-05) | "Hakkımızda — yzliste" → "Hakkımızda" |
+| ~~T9-04~~ | UTF-8 mojibake og:title/description | ✅ Tamamlandı (2026-05-05) | app/layout.tsx + mesafeli-satis + teslimat-iade |
+| ~~T9-05~~ | UI kural ihlalleri (font-bold, yasak renkler) | ✅ Tamamlandı (2026-05-05) | 20+ dosya: font-medium, rd-* palette |
 
 ### P1 — Yakın vadeli
 
@@ -40,7 +45,7 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 |---|---|
 | T6R-04 (P1) | Chatbot widget production'da yok (kasıtlı mı?) |
 | ~~T6R-05~~ | /sifre-sifirla `<title>` anasayfa title gösteriyor | ✅ Tamamlandı (2026-05-04) |
-| T6R-06 (P1) | /profil anonim 200 + root canonical (SEO duplicate) |
+| ~~T6R-06~~ | /profil anonim 200 + root canonical | ✅ Tamamlandı (2026-05-05) | noindex eklendi, redirect 307 doğrulandı |
 
 **P0.5 prompt iyileştirme:**
 
@@ -65,7 +70,7 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 
 | ID | Başlık | Durum | Süre |
 |---|---|---|---|
-| MON-03 | PostHog projeyi kur | Aziz manuel | 20 dk |
+| ~~MON-03~~ | PostHog projeyi kur | ✅ Tamamlandı (2026-05-05) | EU Cloud, env Vercel'da |
 | ~~MON-04~~ | PostHog 12 event implement | ✅ Tamamlandı (2026-05-05) | `docs/posthog-events-2026-05-05.md` |
 | ~~MON-05~~ | Cookie consent gating | ✅ Tamamlandı (2026-05-05) | CookieConsent.tsx doğrulandı |
 | MON-06 | PostHog 3 funnel dashboard | Aziz manuel UI | 30 dk |

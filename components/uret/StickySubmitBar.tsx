@@ -37,14 +37,14 @@ export default function StickySubmitBar({
           <div className="mt-1 flex items-baseline gap-2">
             {cost === 0 ? (
               <span
-                className="text-2xl font-bold text-rd-neutral-300 tabular-nums"
+                className="text-2xl font-medium text-rd-neutral-300 tabular-nums"
                 style={{ fontFamily: 'var(--font-rd-display)' }}
               >
                 —
               </span>
             ) : (
               <span
-                className="text-2xl font-bold text-rd-neutral-900 tabular-nums"
+                className="text-2xl font-medium text-rd-neutral-900 tabular-nums"
                 style={{ fontFamily: 'var(--font-rd-display)' }}
               >
                 {cost} kredi
