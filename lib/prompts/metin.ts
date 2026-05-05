@@ -1,7 +1,9 @@
 // Listing (metin) üretimi için prompt sabitleri
 // Versiyon arttırıldığında BACKLOG.md'ye not düşülmeli
 
-export const METIN_PROMPT_VERSION = "metin-v1.3";
+import { bugununBaglami } from "./_helpers";
+
+export const METIN_PROMPT_VERSION = "metin-v1.4";
 
 export type Platform = "trendyol" | "hepsiburada" | "amazon" | "n11" | "etsy" | "amazon_usa" | "ciceksepeti";
 
@@ -295,6 +297,7 @@ export function sistemPromptOlustur(
 ): string {
   const kural = PLATFORM_KURALLARI[platform];
   const tonTanimi = ton && TON_TANIMLARI[ton] ? TON_TANIMLARI[ton][dil] : "";
+  const tarihBaglami = bugununBaglami();
 
   const markaEki = markaliUrun === false
     ? `\n\nMARKA KURALI: Kullanici yetkili satici oldugunu belirtmedi. Hicbir marka adi, tescilli isim veya ucuncu taraf marka referansi kullanma. Tamamen jenerik ifadeler kullan.`
@@ -315,7 +318,9 @@ export function sistemPromptOlustur(
 
   // --- ETSY (İngilizce) ---
   if (platform === "etsy") {
-    return `You are an elite Etsy listing copywriter with deep expertise in Etsy's search algorithm and buyer psychology. You craft listings that rank high AND convert browsers into buyers.
+    return `${tarihBaglami}
+
+You are an elite Etsy listing copywriter with deep expertise in Etsy's search algorithm and buyer psychology. You craft listings that rank high AND convert browsers into buyers.
 ${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}${markaEki}
 ${tonTanimi ? `BRAND VOICE:\n${tonTanimi}\n` : ""}
 
@@ -362,7 +367,9 @@ Only output this format. Nothing else.`;
 
   // --- AMAZON USA (İngilizce) ---
   if (platform === "amazon_usa") {
-    return `You are an elite Amazon USA listing strategist. You deeply understand the A10 algorithm, conversion-optimized copywriting, and how to make listings that rank AND sell.
+    return `${tarihBaglami}
+
+You are an elite Amazon USA listing strategist. You deeply understand the A10 algorithm, conversion-optimized copywriting, and how to make listings that rank AND sell.
 ${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}${markaEki}
 ${tonTanimi ? `BRAND VOICE:\n${tonTanimi}\n` : ""}
 
@@ -428,7 +435,9 @@ Only output this format. No emojis.`;
 
   // --- AMAZON TR ---
   if (platform === "amazon") {
-    return `Sen uzman bir Amazon TR listing stratejistisin. Amazon'un A9/A10 algoritmasini, Turk tuketici psikolojisini ve donusum optimizasyonunu cok iyi biliyorsun.
+    return `${tarihBaglami}
+
+Sen uzman bir Amazon TR listing stratejistisin. Amazon'un A9/A10 algoritmasini, Turk tuketici psikolojisini ve donusum optimizasyonunu cok iyi biliyorsun.
 ${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}${markaEki}
 ${tonTanimi ? `MARKA TONU:\n${tonTanimi}\n` : ""}
 
@@ -493,7 +502,9 @@ Sadece bu formati kullan. Hic emoji kullanma.`;
 
   // --- ÇİÇEKSEPETİ ---
   if (platform === "ciceksepeti") {
-    return `Sen uzman bir Türk e-ticaret metin yazarısın. Çiçeksepeti platformunun hediye ve lifestyle odaklı dil tercihlerini ve alıcı psikolojisini derinlemesine biliyorsun.
+    return `${tarihBaglami}
+
+Sen uzman bir Türk e-ticaret metin yazarısın. Çiçeksepeti platformunun hediye ve lifestyle odaklı dil tercihlerini ve alıcı psikolojisini derinlemesine biliyorsun.
 ${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}${markaEki}
 ${tonTanimi ? `MARKA TONU:\n${tonTanimi}\n` : ""}
 
@@ -524,7 +535,9 @@ Sadece bu formatı kullan. Hic emoji kullanma.`;
   }
 
   // --- TR PAZARYERLERİ (Trendyol, HB, N11) ---
-  return `Sen uzman bir Turk e-ticaret metin yazarisın. ${platform.toUpperCase()} platformunun arama algoritmasini, Turk tuketici psikolojisini ve donusum optimizasyonunu derinlemesine biliyorsun. Gorev: verilen urun icin en yuksek tiklama ve satis orani getirecek listing icerigi uret.
+  return `${tarihBaglami}
+
+Sen uzman bir Turk e-ticaret metin yazarisın. ${platform.toUpperCase()} platformunun arama algoritmasini, Turk tuketici psikolojisini ve donusum optimizasyonunu derinlemesine biliyorsun. Gorev: verilen urun icin en yuksek tiklama ve satis orani getirecek listing icerigi uret.
 ${ICERIK_KURALLARI}${kategoriEki}${fiyatEki}${yasakEki}${markaEki}
 ${tonTanimi ? `MARKA TONU:\n${tonTanimi}\n` : ""}
 

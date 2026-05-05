@@ -1,6 +1,8 @@
 // Sosyal medya caption üretimi için prompt sabitleri ve builder'ları
 
-export const SOSYAL_PROMPT_VERSION = "sosyal-v1.1";
+import { bugununBaglami } from "./_helpers";
+
+export const SOSYAL_PROMPT_VERSION = "sosyal-v1.2";
 
 export const PLATFORM_KURALLAR: Record<string, {
   adi: string;
@@ -14,7 +16,7 @@ export const PLATFORM_KURALLAR: Record<string, {
     adi: "Instagram ve TikTok",
     uzunluk: "Instagram için 150-220 kelime. İlk 125 karakter özellikle önemli — 'daha fazla' katlanmadan önce görünen kısım bu.",
     hashtagSayisi: "7-10 hashtag",
-    hashtagStrateji: "Karışım: 2-3 yüksek hacimli (#moda, #alisveris), 3-4 orta niş (#turkishfashion, #trendyolda), 2-3 çok spesifik (#yazlikelbise2025). Her birini yeni satıra değil, bitişik yaz.",
+    hashtagStrateji: `Karışım: 2-3 yüksek hacimli (#moda, #alisveris), 3-4 orta niş (#turkishfashion, #trendyolda), 2-3 çok spesifik (mevsim/yıl bağlamlı: #yaz${new Date().getFullYear()}). Bitişik yaz.`,
     format: "Hook cümlesi (soru veya güçlü iddia) → Ürün faydaları → Duygusal bağ → CTA",
     ekKurallar: "İlk cümle dikkat çekici olmalı. TikTok'ta kısa enerjik cümleler tercih edilir — uzun paragraflardan kaçın.",
   },
@@ -22,7 +24,7 @@ export const PLATFORM_KURALLAR: Record<string, {
     adi: "Instagram",
     uzunluk: "150-220 kelime. İlk 125 karakter çok önemli — 'daha fazla' katlanmadan önce görünen kısım bu.",
     hashtagSayisi: "7-10 hashtag",
-    hashtagStrateji: "Karışım: 2-3 yüksek hacimli (#moda, #alisveris), 3-4 orta niş (#turkishfashion, #trendyolda), 2-3 çok spesifik (#yazlikelbise2025). Bitişik yaz, her biri yeni satıra değil.",
+    hashtagStrateji: `Karışım: 2-3 yüksek hacimli (#moda, #alisveris), 3-4 orta niş (#turkishfashion, #trendyolda), 2-3 çok spesifik (mevsim/yıl bağlamlı: #yaz${new Date().getFullYear()}). Bitişik yaz, her biri yeni satıra değil.`,
     format: "Hook cümlesi (soru veya güçlü iddia) → Ürün faydaları → Duygusal bağ → CTA",
     ekKurallar: "İlk cümle dikkat çekici olmalı. Görseli tamamlar metin yaz, görsel ile aynı şeyi tekrarlama.",
   },
@@ -90,7 +92,9 @@ export function captionSistemPrompt(params: CaptionPromptParams): { sistem: stri
 
   const sezonContext = SEZON_CONTEXT[sezon] || "";
 
-  const sistem = `Sen bir Türk e-ticaret sosyal medya uzmanısın. ${kural.adi} için satış odaklı, özgün paylaşım metni ve hashtag üretiyorsun.
+  const sistem = `${bugununBaglami()}
+
+Sen bir Türk e-ticaret sosyal medya uzmanısın. ${kural.adi} için satış odaklı, özgün paylaşım metni ve hashtag üretiyorsun.
 
 HALLUCINATION KURALLARI — KESİNLİKLE UYACAKSIN:
 - Sadece kullanıcının verdiği bilgileri kullan
