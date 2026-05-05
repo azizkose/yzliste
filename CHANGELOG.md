@@ -1,5 +1,7 @@
 # Changelog
 
+## 2026-05-05 — AI-PROMPT-01~05 + TEST-01: input audit, tarih ctx, Türkçe post-process, hashtag validasyon, CTA emir kipi, vitest smoke test — metin-v1.4, sosyal-v1.2
+
 ## 2026-05-05 — REDESIGN-15: anasayfa sadeleştirme paketi — yeni hero metni, pazaryeri logo şeridi, step section silindi, infostrip accordion kaldırıldı, marka/neden bölümleri kısaltıldı, sss anasayfadan kaldırıldı
 
 ## 2026-05-04 — SEO-DOMAIN-01: canonical URL tutarlılığı — 2 sayfa relatif→absolute, blog logo www, iyzico fallback www

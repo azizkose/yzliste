@@ -44,13 +44,22 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 
 **P0.5 prompt iyileştirme:**
 
-| ID | Başlık |
-|---|---|
-| AI-PROMPT-01 | Sistem prompt'a bugünün tarihi context (2024 hashtag → 2026) |
-| AI-PROMPT-02 | Türkçe yazım kontrolü post-process ("hoşça deyin", "stilish") |
-| AI-PROMPT-03 | Hashtag uydurma engelleme |
-| AI-PROMPT-04 (P2) | CTA güçlendirme |
-| TEST-01 | Smoke test'e /api/uret + tüm üretim API'ları |
+| ID | Başlık | Durum |
+|---|---|---|
+| ~~AI-PROMPT-01~~ | Sistem prompt'a bugünün tarihi context | ✅ Tamamlandı (2026-05-05) |
+| ~~AI-PROMPT-02~~ | Türkçe yazım post-process ("hoşça deyin", "stilish") | ✅ Tamamlandı (2026-05-05) |
+| ~~AI-PROMPT-03~~ | Hashtag uydurma engelleme | ✅ Tamamlandı (2026-05-05) |
+| ~~AI-PROMPT-04~~ | CTA güçlendirme emir kipi | ✅ Tamamlandı (2026-05-05) |
+| ~~AI-PROMPT-05~~ | Input completeness audit + sosyalEkBilgi UI fix | ✅ Tamamlandı (2026-05-05) |
+| ~~TEST-01~~ | Vitest smoke test — /api/uret + /api/sosyal + /api/health | ✅ Tamamlandı (2026-05-05) |
+
+**P3 — gelecek:**
+
+| ID | Başlık | Detay |
+|---|---|---|
+| CI-02 | GitHub Actions smoke test CI | Vitest local çalışıyor, CI sonra |
+| AI-PROMPT-06 | MetinSekmesi — anahtar kelime + etiket + backend terim UI alanları | Şu an ozellikler textarea'sına yazılıyor |
+| AI-PROMPT-07 | markaliUrun UI toggle — profilde marka_adi varsa otomatik true | Şu an hardcoded false |
 
 ### P1.5 — Monitoring (Sentry tamam, PostHog kaldı)
 
