@@ -4,9 +4,11 @@ import { Ratelimit } from "@upstash/ratelimit";
 import logger from "@/lib/logger";
 import { Redis } from "@upstash/redis";
 import { METIN_PROMPT_VERSION, Platform, sistemPromptOlustur, kategoriKoduBul } from "@/lib/prompts/metin";
+import { turkceyiDuzelt } from "@/lib/prompts/_turkce-duzeltme";
 import { ciktiDogrula } from "@/lib/output-validator";
 import { listingSkorHesapla } from "@/lib/listingSkor";
 import { AI_MODELS, AI_TEMPERATURES, AI_COSTS } from "@/lib/ai-config";
+import * as Sentry from "@sentry/nextjs";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -210,7 +212,19 @@ export async function POST(req: NextRequest) {
   }
 
   const data = await response.json();
-  const icerik = data.content?.[0]?.text;
+  const icerikHam = data.content?.[0]?.text as string | undefined;
+  let icerik = icerikHam;
+
+  if (icerikHam) {
+    const { duzeltilmis, bulgular } = turkceyiDuzelt(icerikHam);
+    icerik = duzeltilmis;
+    if (bulgular.length > 0) {
+      Sentry.captureMessage("Türkçe post-process bulgu", {
+        level: "info",
+        extra: { bulgular, prompt_version: METIN_PROMPT_VERSION, platform: platformKey },
+      });
+    }
+  }
 
   if (data.stop_reason === "max_tokens") {
     logger.warn({ userId, platform: platformKey }, "uret stop_reason:max_tokens — çıktı kesildi");
