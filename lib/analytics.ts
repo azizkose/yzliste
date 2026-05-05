@@ -79,11 +79,11 @@ export const analytics = {
     posthog.capture('signup_completed', props)
   },
 
-  generationStarted(props: { platform: string; type: 'metin' | 'gorsel' | 'video' | 'sosyal' }) {
+  generationStarted(props: { platform: string; type: 'metin' | 'gorsel' | 'video' | 'sosyal'; prompt_version?: string }) {
     posthog.capture('generation_started', props)
   },
 
-  generationCompleted(props: { platform: string; type: string; credits_remaining: number }) {
+  generationCompleted(props: { platform: string; type: string; credits_remaining: number; prompt_version?: string }) {
     posthog.capture('generation_completed', props)
   },
 
@@ -105,5 +105,17 @@ export const analytics = {
 
   shareClicked(props: { content_type: string }) {
     posthog.capture('share_clicked', props)
+  },
+
+  loginCompleted(props: { method: 'email' | 'google' }) {
+    posthog.capture('login_completed', props)
+  },
+
+  logoutCompleted() {
+    posthog.capture('logout_completed')
+  },
+
+  generationFeedback(props: { type: string; platform?: string; rating: 'up' | 'down'; comment?: string }) {
+    posthog.capture('generation_feedback', props)
   },
 }
