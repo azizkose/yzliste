@@ -272,17 +272,17 @@ function VideoPanel() {
       </p>
       <p className="text-sm font-semibold text-rd-neutral-900 mb-1">Ürün fotoğrafından tanıtım videosu</p>
       <p className="text-xs text-rd-neutral-500 mb-5">Ürünü hareket ettiren, platform uyumlu dikey/kare video — MP4 olarak indir</p>
-      {/* 6 video kartı 2-kolon */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+      {/* 6 video kartı 3-kolon — video üstte kare, metin altta */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5">
         {[
-          { src: '/video-ornekler/360-donus.mp4', Ikon: RotateCw, baslik: '360° Dönüş', aciklama: 'Ürün kendi ekseni etrafında döner. Tüm açılar görünür. Takı, aksesuar, elektronik için ideal.' },
-          { src: '/video-ornekler/zoom-yaklasim.mp4', Ikon: ZoomIn, baslik: 'Zoom yaklaşım', aciklama: 'Kamera ürüne doğru yaklaşır. Doku ve detay hissi. El yapımı ve tekstil ürünler için güçlü.' },
-          { src: '/video-ornekler/dramatik-isik.mp4', Ikon: Lightbulb, baslik: 'Dramatik ışık', aciklama: 'Karanlık sahnede spotlight açılır. Premium ve lüks his. Kozmetik ve elektronik için etkili.' },
-          { src: '/video-ornekler/dogal-ortam.mp4', Ikon: Leaf, baslik: 'Doğal ortam', aciklama: 'Yapraklar sallanır, ışık oynar. Organik ve sıcak his. Gıda, bitki, doğal ürünler için ideal.' },
-          { src: '/video-ornekler/detay-tarama.mp4', Ikon: ScanSearch, baslik: 'Detay tarama', aciklama: 'Kamera yüzeyi soldan sağa tarar. Doku, işçilik, malzeme kalitesi ortaya çıkar. Elektronik ve deri ürünler için güçlü.' },
-          { src: '/video-ornekler/kumas-hareketi.mp4', Ikon: Wind, baslik: 'Kumaş hareketi', aciklama: 'Hafif esinti kumaşı hareket ettirir. Döküm ve akışkanlık hissi verir. Elbise, şal, perde için ideal.' },
+          { src: '/video-ornekler/360-donus.mp4', Ikon: RotateCw, baslik: '360° Dönüş', aciklama: 'Ürün kendi ekseni etrafında döner. Tüm açılar görünür.' },
+          { src: '/video-ornekler/zoom-yaklasim.mp4', Ikon: ZoomIn, baslik: 'Zoom yaklaşım', aciklama: 'Kamera ürüne doğru yaklaşır. Doku ve detay hissi.' },
+          { src: '/video-ornekler/dramatik-isik.mp4', Ikon: Lightbulb, baslik: 'Dramatik ışık', aciklama: 'Karanlık sahnede spotlight açılır. Premium his.' },
+          { src: '/video-ornekler/dogal-ortam.mp4', Ikon: Leaf, baslik: 'Doğal ortam', aciklama: 'Yapraklar sallanır, ışık oynar. Organik ve sıcak his.' },
+          { src: '/video-ornekler/detay-tarama.mp4', Ikon: ScanSearch, baslik: 'Detay tarama', aciklama: 'Kamera yüzeyi soldan sağa tarar. Doku ve işçilik.' },
+          { src: '/video-ornekler/kumas-hareketi.mp4', Ikon: Wind, baslik: 'Kumaş hareketi', aciklama: 'Hafif esinti kumaşı hareket ettirir. Döküm hissi.' },
         ].map((v, i) => (
-          <div key={i} className="flex gap-3 rounded-xl border border-rd-neutral-200 bg-white p-3">
+          <div key={i} className="rounded-xl border border-rd-neutral-200 bg-white overflow-hidden">
             <video
               src={v.src}
               autoPlay
@@ -290,10 +290,10 @@ function VideoPanel() {
               muted
               playsInline
               preload="auto"
-              className="w-24 h-24 rounded-lg object-cover flex-shrink-0 bg-rd-neutral-200"
+              className="w-full aspect-square object-cover bg-rd-neutral-200"
             />
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-rd-neutral-900 mb-1 flex items-center gap-1.5">
+            <div className="p-3">
+              <p className="text-xs font-medium text-rd-neutral-900 mb-1 flex items-center gap-1.5">
                 <v.Ikon size={13} strokeWidth={1.5} className="text-rd-neutral-600" />
                 {v.baslik}
               </p>
