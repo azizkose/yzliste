@@ -21,6 +21,11 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | FY-01 | Fiyat 49/129/299 TL | Kod OK, test kaldı | Aziz manuel test |
 | CI-01 | CI lint hataları (12 error) | Kısmen | inline (setState in effect + prototype) |
 | ~~SEO-DOMAIN-01~~ | Canonical URL tutarlılık temizliği | ✅ Tamamlandı (2026-05-04) | 4 dosya, sadece metadata |
+| ~~URET-BUG-1A~~ | Metin revize sayacı düşmüyor | ✅ Tamamlandı (2026-05-05) | mikro() try/catch + setYenidenUretHakki(prev-1) |
+| ~~URET-BUG-1B~~ | Üretim loading state yok | ✅ Tamamlandı (2026-05-05) | revize banner + tüm butonlar disabled |
+| ~~URET-BUG-2A~~ | Görsel ürün küçük (aspect mismatch) | ✅ Tamamlandı (2026-05-05) | shotSizeFromAspect() + inputBoyut frontend→backend |
+| ~~URET-BUG-2B~~ | Görsel oran bozulması (stretch) | ✅ Tamamlandı (2026-05-05) | 2A fix ile doğru aspect seçilince stretch kalkmaz |
+| ~~URET-BUG-2C~~ | Görsel askı silinmiyor | ✅ Tamamlandı (2026-05-05) | NO_HANGER_PREFIX tüm stilSahneleri'ne eklendi |
 | ~~T9-01~~ | /hesap/profil sonsuz spinner | ✅ Tamamlandı (2026-05-05) | (auth)/layout.tsx auth check kaldırıldı, try/finally eklendi |
 | ~~T9-02~~ | /hesap/krediler bakiye "—" + header auth kayboluyor | ✅ Tamamlandı (2026-05-05) | T9-01 ile aynı kök neden — auth layout fix |
 | ~~T9-03~~ | /hakkimizda double brand title | ✅ Tamamlandı (2026-05-05) | "Hakkımızda — yzliste" → "Hakkımızda" |

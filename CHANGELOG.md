@@ -1,5 +1,7 @@
 # Changelog
 
+## 2026-05-05 — URETIM-BUG-PAKETI: revize sayacı (mikro try/catch+decrement), loading banner, görsel pipeline (shotSizeFromAspect dikey/yatay/kare, NO_HANGER_PREFIX tüm stiller)
+
 ## 2026-05-05 — TUR-9 fix paketi: /hesap/profil+krediler launch-blocker (auth layout getUser kaldırıldı, yukle try/finally), hakkimizda title, UTF-8 mojibake (layout+JSON-LD), CLAUDE.md UI ihlalleri 0'a düşürüldü (font-bold/semibold→medium, bg-amber/emerald/indigo→palette), /profil noindex, eski SEO açıklar kapatıldı
 
 ## 2026-05-05 — MON-04/05: PostHog 12 event (auth, generation×4 hooks, feedback, share) + prompt_version A/B — event kataloğu docs/posthog-events-2026-05-05.md

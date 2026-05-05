@@ -51,10 +51,17 @@ export function useGorselUretim(deps: GorselDeps) {
     analytics.generationStarted({ platform: "gorsel", type: "gorsel" });
     try {
       const resized = await resizeFoto(fotolar[0]);
+      // Bug 2A: input boyutunu ölç — backend aspect-based shot_size hesaplasın
+      const inputBoyut = await new Promise<{ width: number; height: number }>((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+        img.onerror = () => resolve({ width: 1000, height: 1000 }); // fallback
+        img.src = resized;
+      });
       const res = await fetch("/api/gorsel", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ foto: resized, stiller: Array.from(seciliStiller), ekPrompt: gorselEkPrompt, userId: kullanici.id, referansGorsel }),
+        body: JSON.stringify({ foto: resized, stiller: Array.from(seciliStiller), ekPrompt: gorselEkPrompt, userId: kullanici.id, referansGorsel, inputBoyut }),
       });
       const data = await res.json();
       if (res.status === 402) { analytics.creditExhausted(); paketModalAc(); setGorselYukleniyor(false); return; }

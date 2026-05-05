@@ -721,35 +721,58 @@ export default function MetinSekmesi({
           {/* Mikro-aksiyonlar */}
           {(() => {
             const mikro = async (aksiyon: string) => {
-              if (!kullanici || duzenleYukleniyor) return;
+              // Bug 1A: guard — sıfırda revize yapılmasın
+              if (!kullanici || duzenleYukleniyor || yenidenUretHakki <= 0) return;
               setDuzenleYukleniyor(true);
-              const res = await fetch("/api/uret/duzenle", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ sonuc, aksiyon, userId: kullanici.id, platform, kategori }),
-              });
-              const data = await res.json();
-              if (data.sonuc) setSonuc(data.sonuc);
-              setDuzenleYukleniyor(false);
+              try {
+                const res = await fetch("/api/uret/duzenle", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ sonuc, aksiyon, userId: kullanici.id, platform, kategori }),
+                });
+                const data = await res.json();
+                if (data.sonuc) {
+                  setSonuc(data.sonuc);
+                  // Bug 1A: success sonrası sayacı düşür (hata durumunda düşmez)
+                  setYenidenUretHakki(prev => prev - 1);
+                }
+              } catch {
+                // Ağ hatası — sayaç DÜŞMEZ
+              } finally {
+                setDuzenleYukleniyor(false);
+              }
             };
             return (
               <div className="space-y-2 px-1">
-                <p className="text-xs text-rd-neutral-500">
-                  <span className="font-medium text-rd-neutral-700">{yenidenUretHakki}/3 ücretsiz revize</span> kaldı — birini seç:
-                </p>
+                {/* Bug 1B: revize sırasında loading banner */}
+                {duzenleYukleniyor ? (
+                  <div className="rounded-xl bg-rd-primary-50 border border-rd-primary-200 p-4">
+                    <div className="flex items-start gap-3">
+                      <Loader2 size={16} className="animate-spin text-rd-primary-700 mt-0.5 shrink-0" aria-hidden="true" />
+                      <div>
+                        <p className="text-sm font-medium text-rd-primary-700">Yapay zeka içeriği revize ediyor</p>
+                        <p className="text-xs text-rd-primary-600 mt-0.5">Bu işlem yaklaşık 30 saniye sürer. Sayfadan ayrılma.</p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-xs text-rd-neutral-500">
+                    <span className="font-medium text-rd-neutral-700">{yenidenUretHakki}/3 ücretsiz revize</span> kaldı — birini seç:
+                  </p>
+                )}
                 <div className="flex flex-wrap gap-2">
-                <button onClick={() => mikro("kisalt")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
-                  <Scissors size={12} strokeWidth={1.5} /> Kısalt
-                </button>
-                <button onClick={() => mikro("genislet")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
-                  Genişlet
-                </button>
-                <button onClick={() => mikro("ton_samimi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
-                  Samimi
-                </button>
-                <button onClick={() => mikro("ton_resmi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
-                  Resmi
-                </button>
+                  <button onClick={() => mikro("kisalt")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
+                    <Scissors size={12} strokeWidth={1.5} /> Kısalt
+                  </button>
+                  <button onClick={() => mikro("genislet")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
+                    Genişlet
+                  </button>
+                  <button onClick={() => mikro("ton_samimi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
+                    Samimi
+                  </button>
+                  <button onClick={() => mikro("ton_resmi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
+                    Resmi
+                  </button>
                 </div>
               </div>
             );

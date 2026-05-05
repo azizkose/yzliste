@@ -20,14 +20,28 @@ const FORMAT_BOYUT: Record<string, [number, number]> = {
   "16:9": [1778, 1000],
 };
 
+// Bug 2A: input aspect ratio'ya göre shot_size seç
+// Bria product-shot kareye sığdırırken ürünü küçültür; doğru boyut seçilince
+// ürün frame'i doldurur ve stretching olmaz (Bug 2B de bu şekilde çözülür)
+function shotSizeFromAspect(width: number, height: number): [number, number] {
+  const ratio = width / height;
+  if (ratio < 0.85) return [1000, 1500]; // dikey (kıyafet, şişe, telefon)
+  if (ratio > 1.15) return [1500, 1000]; // yatay (laptop, kitap)
+  return [1000, 1000];                   // kare-ish (kozmetik, takı)
+}
+
+// Bug 2C: kıyafet askısı, stand ve hook'ları silen prefix
+// "keep the original product exactly as is" askıyı da koruyordu — bunu override et
+const NO_HANGER_PREFIX = "product only no hanger no clothes hanger no display stand no hook no mannequin floating isolated product, ";
+
 const stilSahneleri: Record<string, string> = {
-  beyaz: "solid pure white (#FFFFFF) seamless studio cyclorama background, absolutely no gradients or off-white tones, professional e-commerce product photography, soft diffused even lighting from all sides, product centered and filling the frame prominently, very subtle soft contact shadow beneath product is allowed, keep the original product exactly as is, do not alter modify or reimagine the product",
-  koyu: "solid pure black (#000000) seamless studio background, absolutely no dark gray or gradients, no color halos or glowing effects, luxury product photography, product sitting on the dark surface not floating, soft subtle overhead studio light only, no dramatic spotlights or rim lights, product centered and filling the frame prominently, subtle soft contact shadow beneath product, keep the original product exactly as is, do not alter modify or reimagine the product",
-  lifestyle: "modern minimalist interior setting, product placed on a surface such as a table shelf or countertop not floating in air, warm natural daylight streaming from a large side window, shallow depth of field with softly blurred background featuring neutral decor and subtle greenery, product as the clear hero element filling the frame prominently, editorial lifestyle product photography, warm color palette, keep the original product exactly as is, do not alter modify or reimagine the product",
-  mermer: "elegant white marble surface with subtle gray veining, clean and luxurious product photography, soft overhead studio lighting with gentle reflections on marble, product centered and filling the frame prominently, premium cosmetics and jewelry aesthetic, keep the original product exactly as is, do not alter modify or reimagine the product",
-  ahsap: "warm natural wood table surface with visible grain texture, rustic artisan product photography, soft warm directional lighting from the side, shallow depth of field with blurred cozy background, product centered and filling the frame prominently, handcraft and organic aesthetic, keep the original product exactly as is, do not alter modify or reimagine the product",
-  gradient: "smooth modern gradient background transitioning from soft pastel tones, contemporary minimalist product photography, even studio lighting, product centered and filling the frame prominently, clean tech and lifestyle brand aesthetic, keep the original product exactly as is, do not alter modify or reimagine the product",
-  dogal: "outdoor natural setting with soft sunlight and green foliage in the background, shallow depth of field, product placed on a natural stone or wooden surface, fresh and organic product photography, product centered and filling the frame prominently, keep the original product exactly as is, do not alter modify or reimagine the product",
+  beyaz: NO_HANGER_PREFIX + "solid pure white (#FFFFFF) seamless studio cyclorama background, absolutely no gradients or off-white tones, professional e-commerce product photography, soft diffused even lighting from all sides, product centered and filling the frame prominently, very subtle soft contact shadow beneath product is allowed, keep the original product exactly as is, do not alter modify or reimagine the product",
+  koyu: NO_HANGER_PREFIX + "solid pure black (#000000) seamless studio background, absolutely no dark gray or gradients, no color halos or glowing effects, luxury product photography, product sitting on the dark surface not floating, soft subtle overhead studio light only, no dramatic spotlights or rim lights, product centered and filling the frame prominently, subtle soft contact shadow beneath product, keep the original product exactly as is, do not alter modify or reimagine the product",
+  lifestyle: NO_HANGER_PREFIX + "modern minimalist interior setting, product placed on a surface such as a table shelf or countertop not floating in air, warm natural daylight streaming from a large side window, shallow depth of field with softly blurred background featuring neutral decor and subtle greenery, product as the clear hero element filling the frame prominently, editorial lifestyle product photography, warm color palette, keep the original product exactly as is, do not alter modify or reimagine the product",
+  mermer: NO_HANGER_PREFIX + "elegant white marble surface with subtle gray veining, clean and luxurious product photography, soft overhead studio lighting with gentle reflections on marble, product centered and filling the frame prominently, premium cosmetics and jewelry aesthetic, keep the original product exactly as is, do not alter modify or reimagine the product",
+  ahsap: NO_HANGER_PREFIX + "warm natural wood table surface with visible grain texture, rustic artisan product photography, soft warm directional lighting from the side, shallow depth of field with blurred cozy background, product centered and filling the frame prominently, handcraft and organic aesthetic, keep the original product exactly as is, do not alter modify or reimagine the product",
+  gradient: NO_HANGER_PREFIX + "smooth modern gradient background transitioning from soft pastel tones, contemporary minimalist product photography, even studio lighting, product centered and filling the frame prominently, clean tech and lifestyle brand aesthetic, keep the original product exactly as is, do not alter modify or reimagine the product",
+  dogal: NO_HANGER_PREFIX + "outdoor natural setting with soft sunlight and green foliage in the background, shallow depth of field, product placed on a natural stone or wooden surface, fresh and organic product photography, product centered and filling the frame prominently, keep the original product exactly as is, do not alter modify or reimagine the product",
 };
 
 const stilEtiketleri: Record<string, string> = {
@@ -53,7 +67,7 @@ function pozisyonSec(stil: string, sosyalFormat?: string): string {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { foto, stiller, stil, ekPrompt, userId, referansGorsel, sosyalFormat } = body;
+  const { foto, stiller, stil, ekPrompt, userId, referansGorsel, sosyalFormat, inputBoyut } = body;
 
   // Backwards compat: tek stil gelirse diziye çevir
   const stilListesi: string[] = stiller || (stil ? [stil] : ["beyaz"]);
@@ -110,7 +124,12 @@ export async function POST(req: NextRequest) {
     for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
     const imageUrl = await fal.storage.upload(new Blob([bytes], { type: mediaType }));
 
-    const shotSize: [number, number] = sosyalFormat ? (FORMAT_BOYUT[sosyalFormat] || [1000, 1000]) : [1000, 1000];
+    // Bug 2A: sosyal format öncelik — yoksa input aspect'e göre dinamik shot_size
+    const shotSize: [number, number] = sosyalFormat
+      ? (FORMAT_BOYUT[sosyalFormat] || [1000, 1000])
+      : inputBoyut?.width && inputBoyut?.height
+        ? shotSizeFromAspect(inputBoyut.width, inputBoyut.height)
+        : [1000, 1000];
 
     // RMBG — 1 kez, tüm stiller için
     const cleanImageUrl = await rmbgUygula(imageUrl);
