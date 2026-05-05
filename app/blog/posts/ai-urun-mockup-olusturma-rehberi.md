@@ -10,6 +10,8 @@ etiketler: ai,mockup,ürün görseli,tasarım,e-ticaret
 kapakGorsel: 
 ---
 
+# GİRİŞ
+
 Tasarımınızı önce gerçekleştirip sonra fotoğraf çekmek zaman ve para alan bir süreç. T-shirt, mug, çanta, telefon kılıfı gibi ürünlerde özellikle "ürünü basıp çekmek" yerine "tasarımı dijital olarak ürüne giydirmek" çok daha pratik. Yapay zeka destekli mock-up araçları bu işi son birkaç yılda belirgin şekilde hızlandırdı. Bu rehberde print-on-demand ve butik tasarım satıcıları için AI mock-up üretiminin temellerini, doğru aracı seçmenin yolunu ve gerçekçi sonuç için dikkat edilmesi gereken detayları göreceksiniz.
 
 ---

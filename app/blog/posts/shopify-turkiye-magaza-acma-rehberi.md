@@ -10,6 +10,8 @@ etiketler: shopify,türkiye,e-ticaret,mağaza açma,online satış
 kapakGorsel: 
 ---
 
+# GİRİŞ
+
 Pazaryerlerinde komisyon ve rekabet artarken kendi e-ticaret sitenizi açmak ciddi anlamda gündeme geliyor. Shopify, kod yazmadan kendi markalı online mağazanızı kurmak için en bilinen platformlardan biri. Türkiye'den Shopify mağazası açmak teknik olarak basit, ancak ödeme altyapısı, vergi entegrasyonu ve KVKK uyumu gibi konularda ülkeye özgü adımlar gerekiyor. Bu rehberde sıfırdan yayına almaya kadar olan süreci ve en sık karşılaşılan tuzakları göreceksiniz.
 
 ---

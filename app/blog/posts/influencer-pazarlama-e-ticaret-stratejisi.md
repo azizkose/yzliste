@@ -10,6 +10,8 @@ etiketler: influencer,pazarlama,e-ticaret,işbirliği,sosyal medya
 kapakGorsel: 
 ---
 
+# GİRİŞ
+
 Influencer pazarlama bir trend olmaktan çıkıp e-ticaretin standart kanallarından birine dönüştü. Reklamlara karşı duvar ören tüketici, güvendiği bir sosyal medya kullanıcısının önerisini farklı bir yerde değerlendiriyor. Ancak influencer işbirlikleri pahalı olabilir ve geri dönüşü ölçmek alışılmış reklam metriklerinden farklı. Bu rehberde mikro ve makro influencer farkını, hangi işbirliği modelinin hangi durumda işe yaradığını, anlaşma sürecini ve sonucu ölçmenin pratik yollarını bulacaksınız.
 
 ---

@@ -10,6 +10,8 @@ etiketler: trendyol,reklam,cpc,ctr,bütçe yönetimi,e-ticaret
 kapakGorsel: 
 ---
 
+# GİRİŞ
+
 Trendyol'da reklam vermek, ürünlerinizi organik sıralamanın üstünde, kategori sayfalarının ön sıralarında ve arama sonuçlarının başında göstermenin yolu. Ancak panelin önünüze koyduğu "günlük bütçe", "tıklama başı maliyet" ve "anahtar kelime puanı" kavramları doğru ayarlanmadığında reklam bütçesi hızla erir. Bu rehberde Trendyol Reklam panelini ilk açışta yapmanız gereken ayarları, ölçmeniz gereken metrikleri ve kar marjınızı korumak için izleyebileceğiniz çerçeveyi göreceksiniz.
 
 ---

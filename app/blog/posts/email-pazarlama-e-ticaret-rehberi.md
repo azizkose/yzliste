@@ -10,6 +10,8 @@ etiketler: email pazarlama,e-ticaret,otomasyon,liste,müşteri sadakati
 kapakGorsel: 
 ---
 
+# GİRİŞ
+
 E-ticaret işletmecilerinin sosyal medya algoritmalarına ve reklam maliyetlerine bağımlılığını azaltan en etkili kanal email pazarlama. Sosyal medyada ulaştığınız kişi sayısı algoritma tarafından sınırlandırılırken, email listesinde sahip olduğunuz adresler doğrudan size aittir ve istediğiniz zaman ulaşabilirsiniz. Bu rehberde sıfırdan email listesi büyütmenin yollarını, kurulması gereken temel otomasyon akışlarını ve mesajlarınızın açılma ve tıklama oranını yükseltmek için izlenebilir teknikleri göreceksiniz.
 
 ---

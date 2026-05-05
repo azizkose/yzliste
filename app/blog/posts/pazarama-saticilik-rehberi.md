@@ -10,6 +10,8 @@ etiketler: pazarama,satıcı olmak,e-ticaret,listing,pazaryeri
 kapakGorsel: 
 ---
 
+# GİRİŞ
+
 Pazarama, Türkiye'nin yükselen pazaryerlerinden biri. Trendyol ve Hepsiburada'daki yoğun rekabetin yorduğu satıcılar, daha az satıcının bulunduğu Pazarama'da ürünlerini öne çıkarmayı kolay bulabiliyor. Bu rehberde Pazarama'da satıcı olmanın şartlarını, mağaza açma sürecini, komisyon yapısını ve ilk listinginizi yayına almak için izlemeniz gereken adımları bulacaksınız.
 
 ---
