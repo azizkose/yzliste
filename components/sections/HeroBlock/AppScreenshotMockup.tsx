@@ -30,7 +30,7 @@ function HizliVideo() {
       muted
       playsInline
       preload="auto"
-      className="h-10 w-full rounded object-contain bg-rd-neutral-100"
+      className="h-24 w-full rounded object-cover bg-rd-neutral-100"
       aria-hidden="true"
     />
   )
@@ -42,7 +42,7 @@ const OUTPUT_CARDS = [
     label: 'Listing',
     color: 'text-rd-primary-700',
     content: (
-      <div className="h-10 overflow-hidden flex items-start">
+      <div className="h-24 overflow-hidden flex items-start">
         <p className="text-xs text-rd-neutral-700 leading-tight line-clamp-3">
           {trendyolTitle.slice(0, 60)}…
         </p>
@@ -58,7 +58,7 @@ const OUTPUT_CARDS = [
       <img
         src="/ornek_beyaz.jpg"
         alt="Basketbol topu beyaz zemin"
-        className="h-10 w-full object-contain rounded bg-rd-neutral-50"
+        className="h-24 w-full object-cover rounded bg-rd-neutral-50"
       />
     ),
   },
@@ -73,7 +73,7 @@ const OUTPUT_CARDS = [
     label: 'Sosyal',
     color: 'text-rd-primary-700',
     content: (
-      <div className="h-10 overflow-hidden flex items-start">
+      <div className="h-24 overflow-hidden flex items-start">
         <p className="text-xs text-rd-neutral-500 leading-tight line-clamp-3">
           Sahaya çıkmadan önce doğru top şart. 7 numara FIBA standardı...
         </p>
