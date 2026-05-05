@@ -160,8 +160,8 @@ export default function MarkaBilgileriSection() {
               Değiştirmek istediğinde tek tıkla güncelle.
             </p>
 
-            {/* İlk 3 özellik */}
-            <div className="mt-8 space-y-4">
+            {/* İlk 3 özellik — mobilde gizli */}
+            <div className="hidden md:block mt-8 space-y-4">
               {BRAND_FEATURES.slice(0, 3).map((feature) => (
                 <div key={feature.title} className="flex items-start gap-4">
                   <div className="w-9 h-9 rounded-xl bg-rd-accent-50 flex items-center justify-center shrink-0">
@@ -189,11 +189,13 @@ export default function MarkaBilgileriSection() {
             </a>
           </div>
 
-          {/* Sağ kolon — BrandFormPreview */}
-          <BrandFormPreview
-            selectedTone={selectedTone}
-            onToneChange={setSelectedTone}
-          />
+          {/* Sağ kolon — BrandFormPreview, mobilde gizli */}
+          <div className="hidden md:block">
+            <BrandFormPreview
+              selectedTone={selectedTone}
+              onToneChange={setSelectedTone}
+            />
+          </div>
         </div>
       </div>
     </section>
