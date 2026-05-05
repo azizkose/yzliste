@@ -30,7 +30,7 @@ function HizliVideo() {
       muted
       playsInline
       preload="auto"
-      className="h-24 w-full rounded object-cover bg-rd-neutral-100"
+      className="w-full aspect-square rounded object-contain bg-rd-neutral-100"
       aria-hidden="true"
     />
   )
@@ -42,9 +42,21 @@ const OUTPUT_CARDS = [
     label: 'Listing',
     color: 'text-rd-primary-700',
     content: (
-      <div className="h-24 overflow-hidden flex items-start">
+      <div className="overflow-hidden flex items-start">
         <p className="text-xs text-rd-neutral-700 leading-tight line-clamp-3">
           {trendyolTitle.slice(0, 60)}…
+        </p>
+      </div>
+    ),
+  },
+  {
+    icon: MessageSquare,
+    label: 'Sosyal',
+    color: 'text-rd-primary-700',
+    content: (
+      <div className="overflow-hidden flex items-start">
+        <p className="text-xs text-rd-neutral-500 leading-tight line-clamp-3">
+          Sahaya çıkmadan önce doğru top şart. 7 numara FIBA standardı...
         </p>
       </div>
     ),
@@ -58,7 +70,7 @@ const OUTPUT_CARDS = [
       <img
         src="/ornek_beyaz.jpg"
         alt="Basketbol topu beyaz zemin"
-        className="h-24 w-full object-cover rounded bg-rd-neutral-50"
+        className="w-full aspect-square object-contain rounded bg-rd-neutral-50"
       />
     ),
   },
@@ -67,18 +79,6 @@ const OUTPUT_CARDS = [
     label: 'Video',
     color: 'text-rd-primary-700',
     content: <HizliVideo />,
-  },
-  {
-    icon: MessageSquare,
-    label: 'Sosyal',
-    color: 'text-rd-primary-700',
-    content: (
-      <div className="h-24 overflow-hidden flex items-start">
-        <p className="text-xs text-rd-neutral-500 leading-tight line-clamp-3">
-          Sahaya çıkmadan önce doğru top şart. 7 numara FIBA standardı...
-        </p>
-      </div>
-    ),
   },
 ]
 
