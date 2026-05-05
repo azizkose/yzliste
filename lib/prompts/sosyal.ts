@@ -125,7 +125,7 @@ PLATFORM KURALLARI — ${kural.adi.toUpperCase()}:
 - Ton: ${tonAciklama}
 - Emoji: doğal yerlerde kullan, abartma (max 4-5 emoji)
 - Türkçe, sade, çekici ve doğal bir dil
-- Harekete geçirici son cümle (satın al, linke tıkla, DM at, profili ziyaret et vb.)
+- CTA emir kipinde olmalı: "Hemen al", "Sepete ekle", "Linke tıkla", "DM at" — "bakabilirsin", "deneyebilirsin" YASAK
 ${markaBaglami ? "- Marka bilgilerini metne doğal şekilde yansıt, zorlamadan" : ""}
 
 ÇIKTI FORMATI — TAM OLARAK BU YAPIDA VER:

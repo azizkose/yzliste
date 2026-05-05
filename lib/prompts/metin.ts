@@ -53,6 +53,14 @@ export const PLATFORM_KURALLARI: Record<Platform, {
   },
 };
 
+export const CTA_KURALLARI = `
+CTA KURALLARI:
+- CTA emir kipinde olmalı: "Sepete ekle", "Hemen al", "Stokları kaçırma", "Hemen incele"
+- Yumuşak ifadeler YASAK: "bakabilirsin", "deneyebilirsin", "ister misin", "göz atabilirsin"
+- CTA'da kullanıcı somut fayda belirttiyse kullan (ücretsiz kargo, garanti vb.)
+- Belirtilmemişse genel emir kipi yeterli: "Hemen incele", "Sepete ekle"
+`;
+
 export const ICERIK_KURALLARI = `
 KRITIK KURALLAR — KESINLIKLE UY:
 
@@ -71,6 +79,12 @@ KOPYA KALITESI:
 - Hedef kitleyi dusun: kim alir, neden alir, hangi sorunu cozer?
 - Anahtar kelimeleri dogal olarak metne yerlestir, keyword stuffing yapma.
 - Her platformun karakter/kelime limitine KESINLIKLE uy. Limiti asma.
+
+CTA KURALLARI:
+- CTA emir kipinde olmalı: "Sepete ekle", "Hemen al", "Stokları kaçırma", "Hemen incele"
+- Yumuşak CTA YASAK: "bakabilirsin", "deneyebilirsin", "ister misin", "göz atabilirsin"
+- Kullanıcı somut fayda belirttiyse CTA'ya ekle (ücretsiz kargo, garanti vb.)
+- Belirtilmemişse genel emir kipi yeterli: "Hemen incele", "Sepete ekle"
 `;
 
 export const KATEGORI_KURALLARI: Record<string, { tr: string; en: string }> = {
