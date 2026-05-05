@@ -66,8 +66,8 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | ID | Başlık | Durum | Süre |
 |---|---|---|---|
 | MON-03 | PostHog projeyi kur | Aziz manuel | 20 dk |
-| MON-04 | PostHog 12 event implement | Code | 2-3 saat |
-| MON-05 | Cookie consent gating | Code | 30 dk |
+| ~~MON-04~~ | PostHog 12 event implement | ✅ Tamamlandı (2026-05-05) | `docs/posthog-events-2026-05-05.md` |
+| ~~MON-05~~ | Cookie consent gating | ✅ Tamamlandı (2026-05-05) | CookieConsent.tsx doğrulandı |
 | MON-06 | PostHog 3 funnel dashboard | Aziz manuel UI | 30 dk |
 | MON-07 | Daily Monitoring Agent | Cowork scheduled task | 1-2 saat |
 
@@ -159,7 +159,7 @@ PE-01~PE-11 (RMBG, düzenleme, video prompt, sosyal ton, görsel marka, atomik k
 |---|---|---|
 | K0 | 5 ürün × 3 platform = 15 listing | Test kaldı |
 | K1 | Geri tuşu modal, /fiyatlar SSR, kredi 3 yer | Kısmen |
-| K2 | PostHog 9 event + consent | Audit kaldı (MON-04) |
+| K2 | PostHog 12 event + consent | ✅ MON-04/05 tamamlandı (2026-05-05) |
 | K3 | Sitemap submit, view-source title, Rich Results | Kısmen |
 | K4 | Security headers, 60. istek 429, CSP | Test kaldı |
 | K5 | 3 belge hukuk onay | Aziz |

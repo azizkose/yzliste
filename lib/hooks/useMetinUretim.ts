@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { YUKLENIYOR_MESAJLARI, PLATFORM_BILGI } from "@/lib/constants";
 import { analytics } from "@/lib/analytics";
+import { METIN_PROMPT_VERSION } from "@/lib/prompts/metin";
 import { useUretimStore } from "@/store/uretimStore";
 import type { Kullanici } from "@/lib/listing-utils";
 
@@ -141,7 +142,7 @@ export function useMetinUretim(deps: MetinDeps) {
     setYukleniyor(true);
     setSonuc("");
     setYukleniyorMesaj(0);
-    analytics.generationStarted({ platform, type: "metin" });
+    analytics.generationStarted({ platform, type: "metin", prompt_version: METIN_PROMPT_VERSION });
     mesajInterval.current = setInterval(() => setYukleniyorMesaj((prev) => (prev + 1) % YUKLENIYOR_MESAJLARI.length), 1800);
     try {
       const res = await fetch("/api/uret", {
@@ -177,7 +178,7 @@ export function useMetinUretim(deps: MetinDeps) {
       setYenidenUretHakki(3);
       if (kullanici.is_admin) setKullanici(k => k ? { ...k, toplam_kullanilan: k.toplam_kullanilan + 1 } : k);
       else setKullanici(k => k ? { ...k, kredi: k.kredi - 1, toplam_kullanilan: k.toplam_kullanilan + 1 } : k);
-      analytics.generationCompleted({ platform, type: "metin", credits_remaining: kullanici.kredi - 1 });
+      analytics.generationCompleted({ platform, type: "metin", credits_remaining: kullanici.kredi - 1, prompt_version: METIN_PROMPT_VERSION });
       invalidateCredits();
       gecmisiYukle(kullanici.id);
     } catch {
