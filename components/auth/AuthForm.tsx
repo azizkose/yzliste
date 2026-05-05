@@ -7,6 +7,7 @@ import { Eye, EyeOff, AlertCircle, MailCheck, Loader2 } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import TurnstileWidget from './TurnstileWidget'
+import { analytics } from '@/lib/analytics'
 
 type AuthMode = 'giris' | 'kayit'
 
@@ -158,6 +159,7 @@ export default function AuthForm({ defaultMode = 'kayit', redirectTo = '/', onSu
 
     setYukleniyor(true)
     setHata('')
+    if (mod === 'kayit') analytics.signupStarted()
 
     if (turnstileEnabled && turnstileToken) {
       const verifyRes = await fetch('/api/turnstile', {
@@ -186,6 +188,7 @@ export default function AuthForm({ defaultMode = 'kayit', redirectTo = '/', onSu
             body: JSON.stringify({ userId: signUpData.user.id, refCode }),
           }).catch(() => {})
         }
+        analytics.signupCompleted({ method: 'email' })
         setKayitBasarili(true)
         setResendCooldown(60)
       }
@@ -194,6 +197,7 @@ export default function AuthForm({ defaultMode = 'kayit', redirectTo = '/', onSu
       if (error) {
         setHata(turkceHata(error.message))
       } else {
+        analytics.loginCompleted({ method: 'email' })
         queryClient.invalidateQueries({ queryKey: ['currentUser'] })
         queryClient.invalidateQueries({ queryKey: ['credits'] })
         if (onSuccess) onSuccess()

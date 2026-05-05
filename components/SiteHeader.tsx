@@ -40,6 +40,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
   }, [isHeroPage]);
 
   const cikisYap = async () => {
+    analytics.logoutCompleted();
     await supabase.auth.signOut();
     analytics.reset();
     queryClient.clear();
