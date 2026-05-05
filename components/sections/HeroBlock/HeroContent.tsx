@@ -45,10 +45,7 @@ export default function HeroContent() {
 
       {/* Subtitle */}
       <p className="mb-8 mt-5 max-w-[520px] text-lg leading-relaxed text-rd-neutral-600">
-        Ürününü anlat veya fotoğrafını yükle — listing metni, stüdyo görseli, tanıtım videosu
-        ve sosyal medya içeriği{' '}
-        <strong className="font-semibold text-rd-neutral-900">dakikalar içinde</strong>{' '}
-        hazır. Aylık abonelik yok.
+        {HERO_COPY.sub}
       </p>
 
       {/* Trust pills */}

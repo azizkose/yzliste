@@ -1,16 +1,12 @@
 'use client'
 
-// P3-A5 — Marka Bilgileri Section
-
 import { useRef, useState } from "react"
-import { ArrowRight, Check, ChevronDown, Sparkles } from "lucide-react"
+import { ArrowRight, Check, Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Eyebrow } from "@/components/primitives/Eyebrow"
 import Badge from "@/components/primitives/Badge"
 import {
-  MB_HEADER,
   MB_CTA,
-  MB_HINT,
   BRAND_FEATURES,
   BRAND_FORM_FIELDS,
   TONE_CHIPS,
@@ -46,11 +42,11 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
   const currentTone = TONE_CHIPS.find((t) => t.key === selectedTone)!
 
   return (
-    <div className="bg-white rounded-xl border border-rd-neutral-200 p-6 lg:p-8">
+    <div className="bg-white rounded-xl border border-rd-neutral-200 p-6 max-w-md w-full">
       {/* Kart header */}
       <div className="flex items-center justify-between mb-6">
         <p className="text-xs font-medium text-rd-neutral-500 uppercase tracking-widest">
-          Marka Profili
+          Marka profili
         </p>
         <Badge variant="success" size="sm">
           Aktif
@@ -127,7 +123,6 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
           Her üretimde otomatik uygulanır
         </p>
       </div>
-
     </div>
   )
 }
@@ -136,11 +131,10 @@ function BrandFormPreview({ selectedTone, onToneChange }: BrandFormPreviewProps)
 
 export default function MarkaBilgileriSection() {
   const [selectedTone, setSelectedTone] = useState<ToneKey>("samimi")
-  const [showAllFeatures, setShowAllFeatures] = useState(false)
 
   return (
     <section
-      className="bg-white py-16 md:py-20"
+      className="bg-white py-12 md:py-16"
       aria-label="Marka bilgileri"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -153,29 +147,22 @@ export default function MarkaBilgileriSection() {
               icon={<Sparkles size={14} aria-hidden="true" />}
               className="bg-rd-accent-50 px-3 py-1.5 rounded-full mb-4"
             >
-              {MB_HEADER.eyebrow}
+              Marka profili
             </Eyebrow>
 
-            <h2 className="font-rd-display text-3xl md:text-4xl font-bold tracking-[-0.01em] text-rd-neutral-900">
-              {MB_HEADER.title}
+            <h2 className="font-rd-display text-3xl md:text-4xl font-medium tracking-[-0.01em] text-rd-neutral-900">
+              Marka bilgilerini bir kez gir, yzliste her üretimde otomatik kullansın
             </h2>
 
             <p className="text-base text-rd-neutral-600 leading-relaxed mt-4">
-              {MB_HEADER.subtitle}
+              Marka adın, hedef kitlen ve metin tonun her içerikte tutarlı olsun.
+              Bir kez doldur, üret sayfasında her seferinde otomatik uygulansın.
+              Değiştirmek istediğinde tek tıkla güncelle.
             </p>
 
-            <div className="mt-4 p-3 rounded-lg bg-rd-primary-50 border border-rd-primary-200">
-              <p className="text-xs text-rd-primary-700 leading-relaxed">
-                <strong className="font-semibold">Metin tonu</strong> kelime tercihini belirler —
-                aynı bilgiler, farklı ses.{' '}
-                <strong className="font-semibold">Marka bilgisi</strong> içeriğe ne kadar kişisel
-                detay katar — mağaza adı, hedef kitle, hizmet vurguları.
-              </p>
-            </div>
-
-            {/* Özellik listesi — ilk 5 görünür, son 3 gizli */}
+            {/* İlk 3 özellik */}
             <div className="mt-8 space-y-4">
-              {BRAND_FEATURES.slice(0, 5).map((feature) => (
+              {BRAND_FEATURES.slice(0, 3).map((feature) => (
                 <div key={feature.title} className="flex items-start gap-4">
                   <div className="w-9 h-9 rounded-xl bg-rd-accent-50 flex items-center justify-center shrink-0">
                     <feature.icon
@@ -191,38 +178,13 @@ export default function MarkaBilgileriSection() {
                   </div>
                 </div>
               ))}
-              {showAllFeatures && BRAND_FEATURES.slice(5).map((feature) => (
-                <div key={feature.title} className="flex items-start gap-4">
-                  <div className="w-9 h-9 rounded-xl bg-rd-accent-50 flex items-center justify-center shrink-0">
-                    <feature.icon
-                      size={18}
-                      strokeWidth={1.5}
-                      className="text-rd-accent-700"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-rd-neutral-900">{feature.title}</p>
-                    <p className="text-sm text-rd-neutral-600 mt-0.5">{feature.description}</p>
-                  </div>
-                </div>
-              ))}
-              {!showAllFeatures && (
-                <button
-                  onClick={() => setShowAllFeatures(true)}
-                  className="flex items-center gap-1.5 text-sm text-rd-neutral-500 hover:text-rd-neutral-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary focus-visible:ring-offset-2 rounded"
-                >
-                  <ChevronDown size={15} strokeWidth={1.5} aria-hidden="true" />
-                  Daha fazla göster ({BRAND_FEATURES.length - 5} alan daha)
-                </button>
-              )}
             </div>
 
             <a
               href={MB_CTA.href}
               className="mt-8 inline-flex items-center gap-2 text-rd-primary font-medium text-sm hover:text-rd-primary-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary focus-visible:ring-offset-2 rounded"
             >
-              {MB_CTA.text}
+              Marka profilimi oluştur
               <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
             </a>
           </div>
@@ -233,10 +195,6 @@ export default function MarkaBilgileriSection() {
             onToneChange={setSelectedTone}
           />
         </div>
-
-        <p className="text-center text-sm text-rd-neutral-500 italic mt-8 lg:mt-12">
-          {MB_HINT}
-        </p>
       </div>
     </section>
   )

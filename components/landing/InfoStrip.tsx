@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { FileText, Image as ImageIcon, Video, MessageSquare, ChevronDown, RotateCw, ZoomIn, Lightbulb, Leaf, ScanSearch, Wind, Check, X, Tag, Hash, Camera, Timer, Film, Columns2 } from 'lucide-react'
+import { FileText, Image as ImageIcon, Video, MessageSquare, RotateCw, ZoomIn, Lightbulb, Leaf, ScanSearch, Wind, Check, X, Tag, Hash, Camera, Timer, Film, Columns2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Eyebrow } from '@/components/primitives/Eyebrow'
 import { EXAMPLE_CONTENT, EXAMPLE_CONTENT_TR } from '@/lib/data/exampleContent'
@@ -202,7 +202,7 @@ function GorselPanel() {
         <div className="flex flex-col">
           <div className="relative rounded-xl overflow-hidden border border-rd-neutral-200 bg-rd-neutral-100">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/ornek_once.jpg" alt="önce" className="w-full aspect-square object-contain" loading="lazy" />
+            <img src="/ornek_once.jpg" alt="önce" className="w-full aspect-square object-cover" loading="lazy" />
             <div className="absolute top-2 left-2">
               <span className="bg-rd-neutral-900/80 text-white text-xs px-2 py-1 rounded-full">Ham fotoğraf</span>
             </div>
@@ -222,7 +222,7 @@ function GorselPanel() {
           <div key={item.etiket} className="flex flex-col">
             <div className="rounded-xl overflow-hidden border border-rd-primary-200 bg-white">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" loading="lazy" />
+              <img src={item.src} alt={item.etiket} className="w-full aspect-square object-cover" loading="lazy" />
             </div>
             <p className="text-xs text-rd-neutral-600 font-medium text-center mt-1.5">{item.etiket}</p>
           </div>
@@ -239,7 +239,7 @@ function GorselPanel() {
           <div key={item.etiket} className="flex flex-col">
             <div className="rounded-xl overflow-hidden border border-rd-primary-200 bg-white">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" loading="lazy" />
+              <img src={item.src} alt={item.etiket} className="w-full aspect-square object-cover" loading="lazy" />
             </div>
             <p className="text-xs text-rd-neutral-600 font-medium text-center mt-1.5">{item.etiket}</p>
           </div>
@@ -397,13 +397,7 @@ function SosyalPanel() {
 
 export function InfoStrip() {
   const [activeTab, setActiveTab] = useState<TabId>('metin')
-  const [detailOpen, setDetailOpen] = useState(false)
   const [activeMarket, setActiveMarket] = useState<MarketId>('trendyol')
-
-  const handleTabClick = (tab: TabId) => {
-    setActiveTab(tab)
-    if (!detailOpen) setDetailOpen(true)
-  }
 
   const activeTabLabel = TABS.find((t) => t.id === activeTab)?.label ?? ''
 
@@ -440,7 +434,7 @@ export function InfoStrip() {
               role="tab"
               aria-selected={isActive}
               aria-controls="infostrip-detail"
-              onClick={() => handleTabClick(tab.id)}
+              onClick={() => setActiveTab(tab.id)}
               className={cn(
                 'flex flex-col items-start gap-2 p-3 rounded-xl border transition-all duration-200 text-left',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-300',
@@ -481,39 +475,18 @@ export function InfoStrip() {
         })}
       </div>
 
-      {/* Toggle — 4 kartın altında, ortalı */}
-      <div className="flex justify-center mt-4 mb-2">
-        <button
-          onClick={() => setDetailOpen((o) => !o)}
-          aria-expanded={detailOpen}
-          aria-controls="infostrip-detail"
-          className="flex items-center gap-1.5 text-sm text-rd-neutral-600 hover:text-rd-primary-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-300 rounded px-2 py-1"
-        >
-          <span>{detailOpen ? 'Detayı kapat' : 'Detaya bak'}</span>
-          <ChevronDown
-            size={16}
-            strokeWidth={2}
-            aria-hidden="true"
-            className={cn('transition-transform duration-200', detailOpen && 'rotate-180')}
-          />
-        </button>
+      {/* Detail area — always visible */}
+      <div
+        id="infostrip-detail"
+        role="tabpanel"
+        aria-label={`${activeTabLabel} içerik türü detayı`}
+        className="mt-4 rounded-xl border border-rd-neutral-200 bg-rd-neutral-100 p-5 md:p-6"
+      >
+        {activeTab === 'metin' && <MetinPanel market={activeMarket} setMarket={setActiveMarket} />}
+        {activeTab === 'gorsel' && <GorselPanel />}
+        {activeTab === 'video' && <VideoPanel />}
+        {activeTab === 'sosyal' && <SosyalPanel />}
       </div>
-
-      {/* Detail area */}
-      {detailOpen && (
-        <div
-          id="infostrip-detail"
-          role="tabpanel"
-          aria-label={`${activeTabLabel} içerik türü detayı`}
-          className="mt-4 rounded-xl border border-rd-neutral-200 bg-rd-neutral-100 p-5 md:p-6"
-        >
-          {/* Panel */}
-          {activeTab === 'metin' && <MetinPanel market={activeMarket} setMarket={setActiveMarket} />}
-          {activeTab === 'gorsel' && <GorselPanel />}
-          {activeTab === 'video' && <VideoPanel />}
-          {activeTab === 'sosyal' && <SosyalPanel />}
-        </div>
-      )}
     </div>
   )
 }
