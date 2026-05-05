@@ -944,6 +944,7 @@ export default function Home() {
                 sosyalTon={sosyal.sosyalTon} setSosyalTon={sosyal.setSosyalTon}
                 sosyalSezon={sosyal.sosyalSezon} setSosyalSezon={sosyal.setSosyalSezon}
                 sosyalUrunAdi={sosyal.sosyalUrunAdi}
+                sosyalEkBilgi={sosyal.sosyalEkBilgi} setSosyalEkBilgi={sosyal.setSosyalEkBilgi}
                 captionYukleniyor={sosyal.captionYukleniyor}
                 sosyalCaption={sosyal.sosyalCaption} setSosyalCaption={sosyal.setSosyalCaption}
                 sosyalHashtag={sosyal.sosyalHashtag} setSosyalHashtag={sosyal.setSosyalHashtag}
