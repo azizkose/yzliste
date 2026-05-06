@@ -2,9 +2,14 @@
  * Pass 4 — Sharp post-process
  *
  * - postProcessBuffer: JPEG quality 90 encode + aspect ratio doğrulama (V1)
- * - compositeProductOnScene: sahne + drop shadow + ürün → final JPEG (V2.2)
+ * - compositeProductOnScene: sahne + drop shadow + ürün → final JPEG (V2.2+)
+ *
+ * V2.3 değişikliği: compositeProductOnScene artık `stil` parametresi alıyor.
+ * beyaz/koyu → standart shadow (blur 18px, %22 opacity)
+ * atmosferik  → hafif shadow (blur 12px, %15 opacity) — bria doğal gölgesiyle uyumlu
  */
 import sharp from "sharp"
+import type { SceneSil } from "@/lib/fal/scene-generator"
 
 interface PostProcessResult {
   buffer: Buffer
@@ -48,26 +53,37 @@ export async function fetchAndProcess(
   return { buffer, contentType: "image/jpeg", aspectRatioPreserved }
 }
 
-// ── V2.2 Composite pipeline ──────────────────────────────────────────────────
+// ── V2.2 / V2.3 Composite pipeline ──────────────────────────────────────────
 
 interface CompositeOptions {
   productCanvas: Buffer  // prepareCanvas çıktısı: ürün %85 dolu transparent PNG
   scene: Buffer          // generateScene çıktısı: opak sahne (JPEG veya PNG)
   width: number
   height: number
+  stil?: SceneSil        // V2.3: beyaz/koyu programatik shadow, diğerleri atmosferik (hafif)
+}
+
+interface ShadowOptions {
+  blur?: number     // default 18px
+  opacity?: number  // default 0.22
+  offsetY?: number  // default 20px
 }
 
 /**
- * Subtle drop shadow oluşturur — ürünün altına Y+20px offset, soft blur.
- * Trendyol standardı: dramatik değil, zeminde bağlantı için yeterli.
+ * Subtle drop shadow oluşturur — ürünün altına Y+offsetY px, soft blur.
  *
  * Yöntem: raw pixel manipulation (Sharp blend mode'larına bağımlı değil).
  */
 async function generateDropShadow(
   productCanvas: Buffer,
   width: number,
-  height: number
+  height: number,
+  shadowOpts: ShadowOptions = {}
 ): Promise<Buffer> {
+  const blur = shadowOpts.blur ?? 18
+  const opacity = shadowOpts.opacity ?? 0.22
+  const offsetY = shadowOpts.offsetY ?? 20
+
   // 1. RGBA raw data al
   const rawData = await sharp(productCanvas)
     .ensureAlpha()
@@ -83,22 +99,21 @@ async function generateDropShadow(
     alphaOnly[i] = rgba[i * 4 + 3]
   }
 
-  // 3. Alpha mask'i blur et (18px soft blur)
+  // 3. Alpha mask'i blur et
   const blurredAlpha = await sharp(alphaOnly, {
     raw: { width, height, channels: 1 },
   })
-    .blur(18)
+    .blur(blur)
     .raw()
     .toBuffer()
 
-  // 4. RGBA shadow buffer: siyah piksel + %22 opacity blurred alpha
+  // 4. RGBA shadow buffer: siyah piksel + opacity*blurred alpha
   const shadowRgba = Buffer.alloc(pixelCount * 4, 0)
   for (let i = 0; i < pixelCount; i++) {
-    // R=0, G=0, B=0 (zaten 0), sadece alpha kanalını set et
-    shadowRgba[i * 4 + 3] = Math.round(blurredAlpha[i] * 0.22)
+    shadowRgba[i * 4 + 3] = Math.round(blurredAlpha[i] * opacity)
   }
 
-  // 5. Y+20px offset: shadow ürünün biraz altına düşsün
+  // 5. offsetY px: shadow ürünün biraz altına düşsün
   return sharp({
     create: {
       width, height,
@@ -109,7 +124,7 @@ async function generateDropShadow(
     .composite([{
       input: shadowRgba,
       raw: { width, height, channels: 4 },
-      top: 20,
+      top: offsetY,
       left: 0,
     }])
     .png()
@@ -119,17 +134,27 @@ async function generateDropShadow(
 /**
  * Sahne + drop shadow + ürün canvas → final JPEG composite.
  *
- * Katman sırası: scene (base) → shadow (blend over) → product (blend over)
+ * V2.3 iki mod:
+ * - Programatik (beyaz/koyu): blur 18px, %22 opacity — belirgin studio shadow
+ * - Atmosferik (bria sahne):  blur 12px, %15 opacity — bria doğal gölgesiyle uyumlu hafif shadow
+ *
+ * Her iki modda ürün productCanvas'ı MUTLAK korumalı — bria pseudo product re-overlay ile gömülür.
+ *
  * Graceful fallback: shadow üretimi hatası olursa shadowsuz composite.
  */
 export async function compositeProductOnScene(opts: CompositeOptions): Promise<Buffer> {
-  const { productCanvas, scene, width, height } = opts
+  const { productCanvas, scene, width, height, stil } = opts
+
+  const isAtmospheric = stil && stil !== "beyaz" && stil !== "koyu"
+
+  const shadowOpts: ShadowOptions = isAtmospheric
+    ? { blur: 12, opacity: 0.15, offsetY: 15 }
+    : { blur: 18, opacity: 0.22, offsetY: 20 }
 
   let shadow: Buffer | null = null
   try {
-    shadow = await generateDropShadow(productCanvas, width, height)
+    shadow = await generateDropShadow(productCanvas, width, height, shadowOpts)
   } catch {
-    // Shadow opsiyonel — hata olursa shadowsuz devam
     shadow = null
   }
 
@@ -138,7 +163,7 @@ export async function compositeProductOnScene(opts: CompositeOptions): Promise<B
   layers.push({ input: productCanvas, blend: "over" })
 
   return sharp(scene)
-    .resize(width, height, { fit: "fill" }) // sahneyi tam boyuta getir
+    .resize(width, height, { fit: "fill" })
     .composite(layers)
     .jpeg({ quality: 92 })
     .toBuffer()

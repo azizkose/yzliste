@@ -7,7 +7,7 @@ import { prepareCanvas } from "@/lib/fal/canvas-prepare";
 import { generateScene } from "@/lib/fal/scene-generator";
 import { compositeProductOnScene } from "@/lib/fal/post-process";
 import { TON_EN_MAP } from "@/lib/constants/ton";
-import { isGorselV2Enabled } from "@/lib/feature-flags-server";
+import { isGorselV2Enabled, isGorselV3Enabled } from "@/lib/feature-flags-server";
 import { visionKategoriTespit } from "@/lib/fal/vision-classify";
 import type { Kategori } from "@/lib/fal/prompts/index";
 import type { SceneSil } from "@/lib/fal/scene-generator";
@@ -167,7 +167,18 @@ export async function POST(req: NextRequest) {
         ? shotSizeFromAspect(inputBoyut.width, inputBoyut.height)
         : [1000, 1000];
 
-    // ── V2 pipeline ──────────────────────────────────────────────────────────
+    // ── V3 pipeline (bria atmosfer + Sharp re-overlay) ──────────────────────
+    const v3Aktif = !!kategori && isGorselV3Enabled(userId);
+
+    if (v3Aktif) {
+      return await handleV3(
+        { imageUrl, shotSize, stilListesi, kategori: kategori as Kategori,
+          ekPrompt, brandContext, userId, isAdmin },
+        body
+      );
+    }
+
+    // ── V2 pipeline (Sharp composite, flux-schnell atmosfer) ─────────────────
     const v2Aktif = !!kategori && isGorselV2Enabled(userId);
 
     if (v2Aktif) {
@@ -402,4 +413,146 @@ async function handleV2(
   );
 
   return NextResponse.json({ jobs, isAdmin, pipelineVersion: "v2.2" });
+}
+
+// ── V2.3 handler — Bria atmosfer + Sharp re-overlay hibrit ───────────────────
+
+async function handleV3(
+  params: {
+    imageUrl: string;
+    shotSize: [number, number];
+    stilListesi: string[];
+    kategori: Kategori;
+    ekPrompt: string;
+    brandContext: string;
+    userId: string;
+    isAdmin: boolean;
+  },
+  _body: Record<string, unknown>
+) {
+  const { imageUrl, shotSize, stilListesi, kategori, userId, isAdmin } = params;
+
+  const safeShotSize: [number, number] = [
+    Math.max(shotSize[0], 1500),
+    Math.max(shotSize[1], 1500),
+  ];
+
+  // Pass 1 — Vision (paralel başlat)
+  const visionPromise = visionKategoriTespit(imageUrl);
+
+  // Pass 2 — RMBG
+  const { buffer: rmbgBuffer } = await rmbgUygulaV2(imageUrl);
+
+  // Pass 2.5 — Sharp canvas hazırla (ürün %85 dolu)
+  const { buffer: productCanvas, productBox, rmbgZayıf } = await prepareCanvas(rmbgBuffer, {
+    targetWidth: safeShotSize[0],
+    targetHeight: safeShotSize[1],
+    productFillRatio: 0.85,
+    pad: 60,
+  });
+
+  const visionResult = await visionPromise;
+  const visionUyumsuz = visionResult.kategori !== kategori;
+
+  if (visionUyumsuz) {
+    Sentry.captureMessage(
+      `vision-uyumsuz: kullanici=${kategori}, vision=${visionResult.kategori}`,
+      "info"
+    );
+  }
+
+  if (rmbgZayıf) {
+    Sentry.captureMessage("rmbg-zayif: alpha-trim yetersiz", {
+      level: "warning",
+      extra: { kategori, productBox, shotSize: safeShotSize, userId },
+    });
+  }
+
+  Sentry.addBreadcrumb({
+    category: "gorsel-v2.3",
+    message: `Canvas: product ${productBox.width}x${productBox.height} in ${safeShotSize[0]}x${safeShotSize[1]}`,
+    data: { kategori, productBox, rmbgZayıf },
+  });
+
+  // Pass 3 — Her stil için: sahne üret + composite
+  const jobs = await Promise.all(
+    stilListesi.map(async (secilenStil) => {
+      try {
+        const isAtmospheric = secilenStil !== "beyaz" && secilenStil !== "koyu";
+
+        // 3a) Sahne üret (beyaz/koyu: programatik, diğerleri: bria atmosfer)
+        const scene = await generateScene({
+          stil: secilenStil as SceneSil,
+          width: safeShotSize[0],
+          height: safeShotSize[1],
+          productCanvas: isAtmospheric ? productCanvas : undefined,
+        });
+
+        // 3b) Composite: sahne + parametrik shadow + ürün re-overlay
+        const finalBuffer = await compositeProductOnScene({
+          productCanvas,
+          scene,
+          width: safeShotSize[0],
+          height: safeShotSize[1],
+          stil: secilenStil as SceneSil,
+        });
+
+        // 3c) Supabase storage'a yükle
+        const fileName = `gorsel-v23/${userId || "anon"}/${secilenStil}-${Date.now()}.jpg`;
+        const { error: uploadErr } = await supabaseAdmin.storage
+          .from("gorseller")
+          .upload(fileName, finalBuffer, {
+            contentType: "image/jpeg",
+            cacheControl: "3600",
+          });
+
+        if (uploadErr) throw uploadErr;
+
+        const { data: { publicUrl } } = supabaseAdmin.storage
+          .from("gorseller")
+          .getPublicUrl(fileName);
+
+        // 3d) DB log
+        supabaseAdmin.from("gorsel_uretim").insert({
+          user_id: userId || null,
+          request_id: `composite-v23-${secilenStil}-${Date.now()}`,
+          stil: secilenStil,
+          label: stilEtiketleri[secilenStil] || secilenStil,
+          kategori,
+          model_kullanilan: isAtmospheric ? "composite-v2.3-atmospheric" : "composite-v2.3-flat",
+          prompt_version: "gorsel-v2.3",
+          pipeline_version: "v2.3",
+          vision_classified_kategori: visionResult.kategori,
+          user_kategori_overridden: visionUyumsuz,
+          output_url: publicUrl,
+          api_cost: isAtmospheric ? 0.05 : 0.01,
+        }).then(({ error }) => {
+          if (error) logger.warn({ error }, "gorsel_uretim insert hatası");
+        });
+
+        return {
+          requestId: `composite-v23-${secilenStil}-${Date.now()}`,
+          label: stilEtiketleri[secilenStil] || secilenStil,
+          stil: secilenStil,
+          model: "composite-v2.3",
+          immediate: true,
+          url: publicUrl,
+        };
+      } catch (err) {
+        Sentry.captureException(err);
+        logger.error({ err, stil: secilenStil, kategori }, "composite-v2.3 fail");
+        return {
+          requestId: `failed-v23-${secilenStil}-${Date.now()}`,
+          label: stilEtiketleri[secilenStil] || secilenStil,
+          stil: secilenStil,
+          model: "composite-v2.3",
+          immediate: true,
+          error: true,
+          url: null as unknown as string,
+        };
+      }
+    })
+  );
+
+  return NextResponse.json({ jobs, isAdmin, pipelineVersion: "v2.3" });
 }
