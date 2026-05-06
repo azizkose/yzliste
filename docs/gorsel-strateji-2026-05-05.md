@@ -59,17 +59,23 @@ fal.ai'da **gerçek mevcut modeller** (5 May 2026 araştırması):
 | `fal-ai/bria/expand` | bilinmiyor | Outpainting (ürün küçük kalıyorsa frame büyütme) | Specific |
 | `fal-ai/bria/background/remove` (mevcut) | bilinmiyor | RMBG, ürün izolasyonu | Askı dahil siliyor — sorun |
 
-### Önerilen kategori × model eşleşmesi (HIPOTEZ — Code test edecek)
+### Kategori × model eşleşmesi — GÜNCEL (6 May 2026)
+
+> **Değişiklik:** `flux-pro/kontext` tüm kategorilerden çıkarıldı (6 May 2026).
+> **Sebep:** İstif kazak testi — kontext ürünü yeniden yorumladı (renk/form değişimi riski). Ürün korunma garantisi verilemez. Blacklist.
+>
+> **Whitelist:** `bria/product-shot`, `image-apps-v2/product-photography`
+> **Blacklist:** `flux-pro/kontext`, `kontext-max`, tüm image-edit modelleri
 
 | Kategori | Primary model | Fallback | Gerekçe |
 |---|---|---|---|
-| **giyim** | `fashn/tryon/v1.5` (flat-lay mode) **veya** `flux-pro/kontext` | `bria/product-shot` | FASHN flat-lay kıyafet için tasarlandı, garment detail koruyor. Kontext alternatif. |
-| **ayakkabi_canta** | `bria/product-shot` + custom prompt | `flux-pro/kontext` | bria ayakkabı/çanta gibi rigid forma iyi, tek sorun olabilir prompt detail |
-| **kozmetik** | `bria/product-shot` (mevcut) | `gpt-image-2` (label accuracy) | Mevcut zaten iyi çalışıyor. GPT premium fallback. |
-| **taki_aksesuar** | `bria/product-shot` makro mode | `flux-pro/kontext` (detail edit) | Takı küçük detay, makro lighting şart |
-| **genel** | `bria/product-shot` (mevcut) | `seedream` (cost-effective) | Genel ürün için bria yeterli |
+| **giyim** | `bria/product-shot` | `image-apps-v2/product-photography` | Kontext giyim uydurdu → bria scene-compose ürünü as-is korur |
+| **ayakkabi_canta** | `bria/product-shot` | `image-apps-v2/product-photography` | Rigid form, bria için ideal |
+| **kozmetik** | `bria/product-shot` | `image-apps-v2/product-photography` | Label korunma kritik, bria as-is |
+| **taki_aksesuar** | `bria/product-shot` | `image-apps-v2/product-photography` | Mikro detay değişim kabul edilemez |
+| **genel** | `bria/product-shot` | `image-apps-v2/product-photography` | Genel ürün için yeterli |
 
-**Kritik not:** FASHN tryon **try-on** modeli — yani kıyafeti modelin üzerine giydirir. **flat-lay** modu var mı netleştirilmeli — Code WebFetch ile fal.ai docs'tan parametre detayını alacak. Eğer flat-lay yoksa giyim için **flux-pro/kontext** primary olur.
+**Prensip — ürün korunma garantisi:** Hangi yeni model değerlendirilirse, önce "ürün birebir korunuyor mu?" sorusu sorulmalı. Image-edit modelleri otomatik blacklist. Photoroom sonraki alternatif (GORSEL-V2.1.3 backlog).
 
 ## 5. Pipeline mimarisi (4-pass)
 

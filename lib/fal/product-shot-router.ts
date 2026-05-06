@@ -2,7 +2,6 @@ import type { Kategori } from "./prompts/index"
 
 export type ModelId =
   | "fal-ai/bria/product-shot"
-  | "fal-ai/flux-pro/kontext"
   | "fal-ai/image-apps-v2/product-photography"
 
 interface BaseInput {
@@ -21,68 +20,38 @@ interface ModelConfig {
   buildInput: (i: BaseInput) => Record<string, unknown>
 }
 
-/**
- * [width, height] → kontext'in beklediği aspect_ratio string
- * Örn: [1000, 1500] → "2:3"
- */
-function toKontextAspectRatio(w: number, h: number): string {
-  const ratio = w / h
-  const presets: Array<[string, number]> = [
-    ["1:1", 1],
-    ["4:3", 4 / 3],
-    ["3:2", 3 / 2],
-    ["16:9", 16 / 9],
-    ["21:9", 21 / 9],
-    ["3:4", 3 / 4],
-    ["2:3", 2 / 3],
-    ["9:16", 9 / 16],
-    ["9:21", 9 / 21],
-  ]
-  const closest = presets.reduce((best, curr) =>
-    Math.abs(curr[1] - ratio) < Math.abs(best[1] - ratio) ? curr : best
-  )
-  return closest[0]
-}
-
 function briaInput(i: BaseInput) {
   return {
-    image_url: i.preparedImageUrl,  // V2.1: hazır canvas, ürün %85 dolu
+    image_url: i.preparedImageUrl,
     scene_description: i.prompt,
-    optimize_description: false,    // model prompt'a daha sıkı uysun
+    optimize_description: false,
     num_results: 1,
     fast: true,
-    placement_type: "original",     // bizim yerleştirdiğimiz konumu koru
+    placement_type: "original",
     shot_size: i.shotSize,
-    padding_values: [0, 0, 0, 0],   // bria ekstra boşluk eklemesin
-  }
-}
-
-function kontextInput(i: BaseInput) {
-  return {
-    image_url: i.preparedImageUrl,  // V2.1: hazır canvas (RMBG + alpha-trim + resize)
-    prompt: i.prompt,
-    aspect_ratio: toKontextAspectRatio(i.shotSize[0], i.shotSize[1]),
-    guidance_scale: 4.5,            // prompt'a daha sıkı uy
-    num_images: 1,
-    output_format: "jpeg",
+    padding_values: [0, 0, 0, 0],
   }
 }
 
 /**
  * Kategori → model eşleşmesi.
- * FASHN tryon/v1.5 kaldırıldı: flat-lay output modu yok, try-on only.
- * bria/eraser kaldırıldı: mask zorunlu, text-based hanger silme yok.
- * Giyim için kontext prompt'u hanger silmeyi halleder.
+ *
+ * Whitelist: bria/product-shot, image-apps-v2/product-photography
+ * Blacklist: flux-pro/kontext ve tüm image-edit modelleri
+ *
+ * Kural: ürün korunma garantisi — image-edit modelleri ürünü "yeniden yorumlayabilir"
+ * (renk, desen, form değişimi riski). Bu kabul edilmez. Bria scene-compose mimarisi
+ * ürünü as-is korur, sadece transparent alanı sahneye dönüştürür.
  */
 export const KATEGORI_MODEL_MAP: Record<Kategori, ModelConfig> = {
   giyim: {
-    primary: "fal-ai/flux-pro/kontext",
-    fallback: "fal-ai/bria/product-shot",
-    buildInput: kontextInput,
+    primary: "fal-ai/bria/product-shot",
+    fallback: "fal-ai/image-apps-v2/product-photography",
+    buildInput: briaInput,
   },
   ayakkabi_canta: {
     primary: "fal-ai/bria/product-shot",
-    fallback: "fal-ai/flux-pro/kontext",
+    fallback: "fal-ai/image-apps-v2/product-photography",
     buildInput: briaInput,
   },
   kozmetik: {
@@ -92,7 +61,7 @@ export const KATEGORI_MODEL_MAP: Record<Kategori, ModelConfig> = {
   },
   taki_aksesuar: {
     primary: "fal-ai/bria/product-shot",
-    fallback: "fal-ai/flux-pro/kontext",
+    fallback: "fal-ai/image-apps-v2/product-photography",
     buildInput: briaInput,
   },
   genel: {

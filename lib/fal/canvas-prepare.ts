@@ -21,6 +21,7 @@ export interface CanvasPrepareResult {
   inputBoundingBox: {
     x: number; y: number; width: number; height: number
   }
+  rmbgZayıf: boolean // true = alpha-trim yetersiz, RMBG zayıf çalışmış
 }
 
 /**
@@ -34,12 +35,18 @@ export async function prepareCanvas(
   const { targetWidth, targetHeight, productFillRatio = 0.85, pad = 40 } = opts
 
   // 1) Alpha kanalına göre bounding box bul + trim
+  const preMeta = await sharp(rmbgPng).metadata()
   const trimmed = sharp(rmbgPng).trim({ threshold: 1 })
   const trimMeta = await trimmed.metadata()
   const trimBuffer = await trimmed.toBuffer()
 
   const productW = trimMeta.width ?? 1
   const productH = trimMeta.height ?? 1
+
+  // RMBG kalitesi: trim sonrası ürün, orijinal alanın %95+'ini kaplıyorsa transparent yetersiz
+  const preArea = (preMeta.width ?? 1) * (preMeta.height ?? 1)
+  const trimRatio = (productW * productH) / preArea
+  const rmbgZayıf = trimRatio > 0.95
 
   // 2) Canvas'ta ne kadar yer kaplayacak? (fillRatio + padding)
   const maxW = (targetWidth - pad * 2) * productFillRatio
@@ -86,5 +93,6 @@ export async function prepareCanvas(
     inputBoundingBox: {
       x: 0, y: 0, width: productW, height: productH,
     },
+    rmbgZayıf,
   }
 }

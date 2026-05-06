@@ -1,10 +1,10 @@
 /**
  * GORSEL-V2: Kategori → model routing testleri
- * Araştırma kararları (2026-05-05):
+ * Araştırma kararları (2026-05-05 / 2026-05-06):
  * - FASHN kaldırıldı (try-on only, flat-lay output yok)
  * - bria/eraser kaldırıldı (mask zorunlu, text-based hedefleme yok)
- * - giyim → flux-pro/kontext (hanger removal prompt ile)
- * - diğer → bria/product-shot primary
+ * - kontext kaldırıldı (V2.1.1: ürün korunma prensibi — image-edit riski)
+ * - tüm kategoriler → bria/product-shot primary (bria-only pipeline)
  */
 import { describe, it, expect } from "vitest"
 import { KATEGORI_MODEL_MAP } from "@/lib/fal/product-shot-router"
@@ -13,12 +13,12 @@ import { isGorselV2Enabled } from "@/lib/feature-flags-server"
 import type { Kategori, Stil } from "@/lib/fal/prompts/index"
 
 describe("GORSEL-V2: KATEGORI_MODEL_MAP", () => {
-  it("giyim → primary kontext", () => {
-    expect(KATEGORI_MODEL_MAP.giyim.primary).toBe("fal-ai/flux-pro/kontext")
+  it("giyim → primary bria/product-shot (kontext kaldırıldı V2.1.1)", () => {
+    expect(KATEGORI_MODEL_MAP.giyim.primary).toBe("fal-ai/bria/product-shot")
   })
 
-  it("giyim → fallback bria/product-shot", () => {
-    expect(KATEGORI_MODEL_MAP.giyim.fallback).toBe("fal-ai/bria/product-shot")
+  it("giyim → fallback image-apps-v2", () => {
+    expect(KATEGORI_MODEL_MAP.giyim.fallback).toBe("fal-ai/image-apps-v2/product-photography")
   })
 
   it("ayakkabi_canta → primary bria/product-shot", () => {
@@ -45,20 +45,19 @@ describe("GORSEL-V2: KATEGORI_MODEL_MAP", () => {
     }
   })
 
-  it("kontext inputAdapter aspect_ratio string üretir", () => {
+  it("giyim inputAdapter bria kullanır (kontext kaldırıldı V2.1.1)", () => {
     const input = KATEGORI_MODEL_MAP.giyim.buildInput({
       imageUrl: "https://example.com/img.jpg",
       cleanImageUrl: "https://example.com/clean.jpg",
       preparedImageUrl: "https://example.com/prepared.png",
       prompt: "test prompt",
       negativePrompt: "negative",
-      shotSize: [1000, 1500], // dikey
+      shotSize: [1000, 1500],
       manualPlacement: "bottom_center",
     })
-    // [1000,1500] ratio=0.667 → "2:3"
-    expect(input.aspect_ratio).toBe("2:3")
-    // V2.1: kontext hazırlanmış canvas kullanır
     expect(input.image_url).toBe("https://example.com/prepared.png")
+    expect(input.placement_type).toBe("original")
+    expect(input.shot_size).toEqual([1000, 1500])
   })
 
   it("bria inputAdapter preparedImageUrl kullanır + placement_type original", () => {

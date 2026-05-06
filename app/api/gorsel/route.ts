@@ -287,7 +287,7 @@ async function handleV2(
   const { buffer: rmbgBuffer, url: cleanImageUrl } = await rmbgUygulaV2(imageUrl);
 
   // Pass 2.5 — Sharp ile canvas hazırla (ürün her zaman %85 dolu)
-  const { buffer: preparedBuffer, productBox } = await prepareCanvas(rmbgBuffer, {
+  const { buffer: preparedBuffer, productBox, rmbgZayıf } = await prepareCanvas(rmbgBuffer, {
     targetWidth: shotSize[0],
     targetHeight: shotSize[1],
     productFillRatio: 0.85,
@@ -310,10 +310,17 @@ async function handleV2(
     );
   }
 
+  if (rmbgZayıf) {
+    Sentry.captureMessage("rmbg-zayif: alpha-trim yetersiz", {
+      level: "warning",
+      extra: { kategori, productBox, shotSize, userId },
+    });
+  }
+
   Sentry.addBreadcrumb({
     category: "gorsel-v2.1",
     message: `Canvas prepared: product ${productBox.width}x${productBox.height} in ${shotSize[0]}x${shotSize[1]}`,
-    data: { kategori, productBox },
+    data: { kategori, productBox, rmbgZayıf },
   });
 
   const config = KATEGORI_MODEL_MAP[kategori];
