@@ -9,7 +9,6 @@ const DEFAULT_ENDPOINT = "fal-ai/bria/product-shot";
 
 const ALLOWED_ENDPOINTS = new Set([
   "fal-ai/bria/product-shot",
-  "fal-ai/flux-pro/kontext",
   "fal-ai/image-apps-v2/product-photography",
 ]);
 

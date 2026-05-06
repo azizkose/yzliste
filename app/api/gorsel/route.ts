@@ -4,12 +4,13 @@ import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { rmbgUygula, rmbgUygulaV2 } from "@/lib/fal/rmbg";
 import { prepareCanvas } from "@/lib/fal/canvas-prepare";
+import { generateScene } from "@/lib/fal/scene-generator";
+import { compositeProductOnScene } from "@/lib/fal/post-process";
 import { TON_EN_MAP } from "@/lib/constants/ton";
 import { isGorselV2Enabled } from "@/lib/feature-flags-server";
 import { visionKategoriTespit } from "@/lib/fal/vision-classify";
-import { KATEGORI_MODEL_MAP } from "@/lib/fal/product-shot-router";
-import { buildPrompt, GORSEL_PROMPT_VERSION } from "@/lib/fal/prompts/index";
-import type { Kategori, Stil } from "@/lib/fal/prompts/index";
+import type { Kategori } from "@/lib/fal/prompts/index";
+import type { SceneSil } from "@/lib/fal/scene-generator";
 import logger from "@/lib/logger";
 
 export const maxDuration = 60;
@@ -263,7 +264,7 @@ async function handleV1(
   return NextResponse.json({ jobs, isAdmin, pipelineVersion: "v1" });
 }
 
-// ── V2 handler ───────────────────────────────────────────────────────────────
+// ── V2.2 handler — Full composite pipeline (bria scene bypass) ───────────────
 
 async function handleV2(
   params: {
@@ -278,26 +279,27 @@ async function handleV2(
   },
   _body: Record<string, unknown>
 ) {
-  const { imageUrl, shotSize, stilListesi, kategori, ekPrompt, brandContext, userId, isAdmin } = params;
+  const { imageUrl, shotSize, stilListesi, kategori, userId, isAdmin } = params;
 
-  // Pass 1 — Vision (paralel başlat, RMBG ile çakışmasın)
+  // Trendyol uyumluluk: minimum 1500×1500
+  const safeShotSize: [number, number] = [
+    Math.max(shotSize[0], 1500),
+    Math.max(shotSize[1], 1500),
+  ];
+
+  // Pass 1 — Vision (paralel başlat)
   const visionPromise = visionKategoriTespit(imageUrl);
 
-  // Pass 2 — RMBG (buffer da alınıyor — Pass 2.5 için)
-  const { buffer: rmbgBuffer, url: cleanImageUrl } = await rmbgUygulaV2(imageUrl);
+  // Pass 2 — RMBG
+  const { buffer: rmbgBuffer } = await rmbgUygulaV2(imageUrl);
 
-  // Pass 2.5 — Sharp ile canvas hazırla (ürün her zaman %85 dolu)
-  const { buffer: preparedBuffer, productBox, rmbgZayıf } = await prepareCanvas(rmbgBuffer, {
-    targetWidth: shotSize[0],
-    targetHeight: shotSize[1],
+  // Pass 2.5 — Sharp canvas hazırla (ürün %85 dolu)
+  const { buffer: productCanvas, productBox, rmbgZayıf } = await prepareCanvas(rmbgBuffer, {
+    targetWidth: safeShotSize[0],
+    targetHeight: safeShotSize[1],
     productFillRatio: 0.85,
-    pad: 40,
+    pad: 60,
   });
-
-  // Hazırlanan canvas'ı fal storage'a yükle
-  const preparedImageUrl = await fal.storage.upload(
-    new Blob([new Uint8Array(preparedBuffer)], { type: "image/png" })
-  );
 
   // Vision sonucu
   const visionResult = await visionPromise;
@@ -313,65 +315,91 @@ async function handleV2(
   if (rmbgZayıf) {
     Sentry.captureMessage("rmbg-zayif: alpha-trim yetersiz", {
       level: "warning",
-      extra: { kategori, productBox, shotSize, userId },
+      extra: { kategori, productBox, shotSize: safeShotSize, userId },
     });
   }
 
   Sentry.addBreadcrumb({
-    category: "gorsel-v2.1",
-    message: `Canvas prepared: product ${productBox.width}x${productBox.height} in ${shotSize[0]}x${shotSize[1]}`,
+    category: "gorsel-v2.2",
+    message: `Canvas: product ${productBox.width}x${productBox.height} in ${safeShotSize[0]}x${safeShotSize[1]}`,
     data: { kategori, productBox, rmbgZayıf },
   });
 
-  const config = KATEGORI_MODEL_MAP[kategori];
-
-  // Pass 3 — Her stil için model routing + prompt
+  // Pass 3 — Her stil için: sahne üret + composite (bria scene compose YOK)
   const jobs = await Promise.all(
     stilListesi.map(async (secilenStil) => {
-      const { positive, negative } = buildPrompt({
-        kategori,
-        stil: secilenStil as Stil,
-        brandContext,
-        ekPrompt,
-      });
+      try {
+        // 3a) Sahne üret (beyaz/koyu: programatik, diğerleri: flux-schnell)
+        const scene = await generateScene({
+          stil: secilenStil as SceneSil,
+          width: safeShotSize[0],
+          height: safeShotSize[1],
+        });
 
-      const input = config.buildInput({
-        imageUrl,
-        cleanImageUrl,
-        preparedImageUrl,
-        prompt: positive,
-        negativePrompt: negative,
-        shotSize,
-        manualPlacement: pozisyonSec(secilenStil),
-      });
+        // 3b) Composite: sahne + drop shadow + ürün
+        const finalBuffer = await compositeProductOnScene({
+          productCanvas,
+          scene,
+          width: safeShotSize[0],
+          height: safeShotSize[1],
+        });
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const queued = await fal.queue.submit(config.primary, { input } as any);
+        // 3c) Supabase storage'a yükle
+        const fileName = `gorsel-v22/${userId || "anon"}/${secilenStil}-${Date.now()}.jpg`;
+        const { error: uploadErr } = await supabaseAdmin.storage
+          .from("gorseller")
+          .upload(fileName, finalBuffer, {
+            contentType: "image/jpeg",
+            cacheControl: "3600",
+          });
 
-      // DB log — analytics + rollout metrikleri için
-      supabaseAdmin.from("gorsel_uretim").insert({
-        user_id: userId || null,
-        request_id: queued.request_id,
-        stil: secilenStil,
-        label: stilEtiketleri[secilenStil] || secilenStil,
-        kategori,
-        model_kullanilan: config.primary,
-        prompt_version: GORSEL_PROMPT_VERSION,
-        pipeline_version: "v2.1",
-        vision_classified_kategori: visionResult.kategori,
-        user_kategori_overridden: visionUyumsuz,
-      }).then(({ error }) => {
-        if (error) logger.warn({ error }, "gorsel_uretim insert hatası");
-      });
+        if (uploadErr) throw uploadErr;
 
-      return {
-        requestId: queued.request_id,
-        label: stilEtiketleri[secilenStil] || secilenStil,
-        stil: secilenStil,
-        model: config.primary,
-      };
+        const { data: { publicUrl } } = supabaseAdmin.storage
+          .from("gorseller")
+          .getPublicUrl(fileName);
+
+        // 3d) DB log
+        supabaseAdmin.from("gorsel_uretim").insert({
+          user_id: userId || null,
+          request_id: `composite-${secilenStil}-${Date.now()}`,
+          stil: secilenStil,
+          label: stilEtiketleri[secilenStil] || secilenStil,
+          kategori,
+          model_kullanilan: "composite-v2.2",
+          prompt_version: "gorsel-v2.2",
+          pipeline_version: "v2.2",
+          vision_classified_kategori: visionResult.kategori,
+          user_kategori_overridden: visionUyumsuz,
+          output_url: publicUrl,
+          api_cost: secilenStil === "beyaz" || secilenStil === "koyu" ? 0.01 : 0.013,
+        }).then(({ error }) => {
+          if (error) logger.warn({ error }, "gorsel_uretim insert hatası");
+        });
+
+        return {
+          requestId: `composite-${secilenStil}-${Date.now()}`,
+          label: stilEtiketleri[secilenStil] || secilenStil,
+          stil: secilenStil,
+          model: "composite-v2.2",
+          immediate: true,
+          url: publicUrl,
+        };
+      } catch (err) {
+        Sentry.captureException(err);
+        logger.error({ err, stil: secilenStil, kategori }, "composite-v2.2 fail");
+        return {
+          requestId: `failed-${secilenStil}-${Date.now()}`,
+          label: stilEtiketleri[secilenStil] || secilenStil,
+          stil: secilenStil,
+          model: "composite-v2.2",
+          immediate: true,
+          error: true,
+          url: null as unknown as string,
+        };
+      }
     })
   );
 
-  return NextResponse.json({ jobs, isAdmin, pipelineVersion: "v2.1" });
+  return NextResponse.json({ jobs, isAdmin, pipelineVersion: "v2.2" });
 }

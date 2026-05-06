@@ -19,7 +19,7 @@ export function useGorselUretim(deps: GorselDeps) {
   const [gorselEkPrompt, setGorselEkPrompt] = useState("");
   const [seciliStiller, setSeciliStiller] = useState<Set<string>>(new Set());
   const [gorselYukleniyor, setGorselYukleniyor] = useState(false);
-  const [gorselJoblar, setGorselJoblar] = useState<{ requestId: string; label: string; stil: string; model?: string }[]>([]);
+  const [gorselJoblar, setGorselJoblar] = useState<{ requestId: string; label: string; stil: string; model?: string; url?: string; immediate?: boolean; error?: boolean }[]>([]);
   const [referansGorsel, setReferansGorsel] = useState<string | null>(null);
   const [seciliKategori, setSeciliKategori] = useState<Kategori | null>(null);
 
@@ -80,8 +80,18 @@ export function useGorselUretim(deps: GorselDeps) {
       let tamamlananSayisi = 0;
       const hataMesajlari: string[] = [];
       await Promise.all(
-        data.jobs.map(async (job: { requestId: string; label: string; stil: string; model?: string }) => {
-          // model parametresi V2'de dolu (kontext veya bria), V1'de undefined → poll default bria kullanır
+        data.jobs.map(async (job: { requestId: string; label: string; stil: string; model?: string; url?: string; immediate?: boolean; error?: boolean }) => {
+          // V2.2 composite: immediate=true → poll yok, direkt URL
+          if (job.immediate) {
+            if (job.url && !job.error) {
+              tamamlananSayisi++;
+              setGorselJoblar(prev => [...prev, job]);
+            } else {
+              hataMesajlari.push(`${job.label}: üretilemedi`);
+            }
+            return;
+          }
+          // V1/V2.1 eski: poll mekanizması
           const modelParam = job.model ? `&model=${encodeURIComponent(job.model)}` : "";
           for (let deneme = 0; deneme < 40; deneme++) {
             await new Promise(r => setTimeout(r, 4000));

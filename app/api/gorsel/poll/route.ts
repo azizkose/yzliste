@@ -5,10 +5,8 @@ fal.config({ credentials: process.env.FAL_KEY });
 
 const DEFAULT_ENDPOINT = "fal-ai/bria/product-shot";
 
-// V2'de kontext veya image-apps-v2 kullanılabilir — endpoint job'dan taşınır
 const ALLOWED_ENDPOINTS = new Set([
   "fal-ai/bria/product-shot",
-  "fal-ai/flux-pro/kontext",
   "fal-ai/image-apps-v2/product-photography",
 ]);
 
@@ -16,6 +14,11 @@ export async function GET(req: NextRequest) {
   const requestId = req.nextUrl.searchParams.get("requestId");
   if (!requestId) {
     return NextResponse.json({ hata: "requestId gerekli" }, { status: 400 });
+  }
+
+  // V2.2 composite jobs: immediate=true, poll gelmez — ama gelirse anında COMPLETED döndür
+  if (requestId.startsWith("composite-") || requestId.startsWith("failed-")) {
+    return NextResponse.json({ status: "COMPLETED" });
   }
 
   const modelParam = req.nextUrl.searchParams.get("model");

@@ -30,8 +30,8 @@ interface GorselSekmesiProps {
   seciliStiller: Set<string>;
   stilToggle: (id: string) => void;
   gorselYukleniyor: boolean;
-  gorselJoblar: { requestId: string; label: string; stil: string; model?: string }[];
-  setGorselJoblar: (fn: (prev: { requestId: string; label: string; stil: string; model?: string }[]) => { requestId: string; label: string; stil: string; model?: string }[]) => void;
+  gorselJoblar: { requestId: string; label: string; stil: string; model?: string; url?: string; immediate?: boolean; error?: boolean }[];
+  setGorselJoblar: (fn: (prev: { requestId: string; label: string; stil: string; model?: string; url?: string; immediate?: boolean; error?: boolean }[]) => { requestId: string; label: string; stil: string; model?: string; url?: string; immediate?: boolean; error?: boolean }[]) => void;
   referansGorsel: string | null;
   setReferansGorsel: (v: string | null) => void;
   // V2: kategori seçimi
@@ -247,13 +247,19 @@ export default function GorselSekmesi({
               <div key={job.requestId} className="space-y-1.5">
                 <div className="rounded-xl overflow-hidden border border-rd-neutral-200 bg-rd-neutral-100 relative group flex items-center justify-center min-h-[300px]">
                   <img
-                    src={`/api/gorsel/img?requestId=${job.requestId}&index=0${job.model ? `&model=${encodeURIComponent(job.model)}` : ""}`}
+                    src={job.url || `/api/gorsel/img?requestId=${job.requestId}&index=0${job.model ? `&model=${encodeURIComponent(job.model)}` : ""}`}
                     alt={job.label}
                     className="w-full max-h-[500px] mx-auto object-contain select-none"
                     draggable={false}
                     onContextMenu={(e) => e.preventDefault()}
                   />
                   <button onClick={async () => {
+                    if (job.url) {
+                      // V2.2: direkt Supabase URL'den indir
+                      const res = await fetch(job.url);
+                      blobIndir(await res.blob(), `yzliste-${job.stil}.jpg`);
+                      return;
+                    }
                     if (!kullanici) return;
                     const res = await fetch("/api/gorsel/download", {
                       method: "POST",
