@@ -1,9 +1,11 @@
 ﻿"use client";
+import { useState, useEffect } from "react";
 import { Link2, ImageIcon as ImageIconLucide, Download } from "lucide-react";
 import { GORSEL_STILLER, kategoriKoduHesapla } from "@/lib/constants";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
 import KrediButon from "@/components/ui/KrediButon";
 import KategoriSelector from "@/components/uret/KategoriSelector";
+import InputCropper from "@/components/uret/InputCropper";
 import type { Kategori } from "@/lib/fal/prompts/index";
 
 type Kullanici = {
@@ -21,6 +23,7 @@ interface GorselSekmesiProps {
   urunAdi: string;
   kategori: string;
   fotolar: string[];
+  setFotolar: (fn: (prev: string[]) => string[]) => void;
   fotoKaldir: (i: number) => void;
   gorselEkPrompt: string;
   setGorselEkPrompt: (v: string) => void;
@@ -46,7 +49,7 @@ interface GorselSekmesiProps {
 export default function GorselSekmesi({
   aktif,
   urunAdi, kategori,
-  fotolar, fotoKaldir,
+  fotolar, setFotolar, fotoKaldir,
   gorselEkPrompt, setGorselEkPrompt,
   seciliStiller, stilToggle,
   gorselYukleniyor, gorselJoblar, setGorselJoblar,
@@ -55,6 +58,16 @@ export default function GorselSekmesi({
   kullanici, paketModalAc, gorselUret,
   blobIndir, resizeFoto, invalidateCredits, setKullanici,
 }: GorselSekmesiProps) {
+  const [showCropper, setShowCropper] = useState(false)
+  const [croppingFotoIndex, setCroppingFotoIndex] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (fotolar.length > 0 && seciliKategori && !showCropper && croppingFotoIndex === null) {
+      setShowCropper(true)
+      setCroppingFotoIndex(0)
+    }
+  }, [fotolar.length, seciliKategori]) // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white border border-rd-neutral-200 rounded-xl p-6 space-y-4">
       <div className="flex items-center justify-between">
@@ -106,6 +119,23 @@ export default function GorselSekmesi({
         value={seciliKategori}
         onChange={setSeciliKategori}
       />
+
+      {/* V2.2: Crop UI — foto + kategori seçilince otomatik açılır */}
+      {showCropper && croppingFotoIndex !== null && fotolar[croppingFotoIndex] && (
+        <InputCropper
+          imageBase64={fotolar[croppingFotoIndex]}
+          kategori={seciliKategori}
+          onCropDone={(croppedBase64) => {
+            setFotolar((prev) => prev.map((f, i) => i === croppingFotoIndex ? croppedBase64 : f))
+            setShowCropper(false)
+            setCroppingFotoIndex(null)
+          }}
+          onSkip={() => {
+            setShowCropper(false)
+            setCroppingFotoIndex(null)
+          }}
+        />
+      )}
 
       <div>
         <p className="block text-xs font-medium text-rd-neutral-600 mb-2">Stil seç</p>

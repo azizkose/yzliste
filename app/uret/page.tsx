@@ -916,7 +916,7 @@ export default function Home() {
               <GorselSekmesi
                 aktif={anaSekme === "gorsel"}
                 urunAdi={metin.urunAdi} kategori={metin.kategori}
-                fotolar={fotolar} fotoKaldir={fotoKaldir}
+                fotolar={fotolar} setFotolar={setFotolar} fotoKaldir={fotoKaldir}
                 gorselEkPrompt={gorsel.gorselEkPrompt} setGorselEkPrompt={gorsel.setGorselEkPrompt}
                 seciliStiller={gorsel.seciliStiller} stilToggle={gorsel.stilToggle}
                 gorselYukleniyor={gorsel.gorselYukleniyor} gorselJoblar={gorsel.gorselJoblar} setGorselJoblar={gorsel.setGorselJoblar}
