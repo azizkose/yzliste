@@ -77,38 +77,40 @@ fal.ai'da **gerçek mevcut modeller** (5 May 2026 araştırması):
 
 **Prensip — ürün korunma garantisi:** Hangi yeni model değerlendirilirse, önce "ürün birebir korunuyor mu?" sorusu sorulmalı. Image-edit modelleri otomatik blacklist. Photoroom sonraki alternatif (GORSEL-V2.1.3 backlog).
 
-## 5. Pipeline mimarisi (4-pass)
+> **Ek: Bria/product-shot scene compose DEPRECATED** (6 May 2026).
+> Sebep: `placement_type: "original"` parametresi ürün boyutunu garanti etmiyor (~%22 doluluğa düşürdü). Yerine: Sharp composite + flux-schnell sahne (V2.2).
 
-Her görsel üretim çağrısı şu 4 aşamadan geçer:
+## 5. Pipeline mimarisi — V2.2 GÜNCEL (6 May 2026)
+
+Her görsel üretim çağrısı şu aşamalardan geçer:
 
 ```
 [Kullanıcı: foto + kategori + stil seçer]
          ↓
-[Pass 1: Vision kategori doğrulama]
-   ↓ %85+ uyumlu → devam
-   ↓ <%85 uyumlu → kullanıcıya uyarı + override seçeneği
+[Pass 1: Vision kategori doğrulama — paralel]
          ↓
-[Pass 2: Smart background remove]
-   ├─ giyim → bria/eraser (askı + mannequin specific)
-   ├─ ayakkabi_canta → bria/background/remove (mevcut)
-   ├─ kozmetik → bria/background/remove (mevcut)
-   ├─ taki_aksesuar → bria/background/remove + edge enhancement
-   └─ genel → bria/background/remove (mevcut)
+[Pass 2: RMBG — bria/background/remove → transparent PNG + Buffer]
          ↓
-[Pass 3: Compose — kategori × stil prompt + doğru model]
-   └─ Model routing (yukarıdaki matriks)
-   └─ Stil-spesifik prompt (35 template)
-   └─ shot_size = inputAspectRatio'dan dinamik
-   └─ num_results: 1, manual_placement, fast: true
+[Pass 2.5: Sharp prepareCanvas]
+   - alpha-trim (transparent kenarları kırp)
+   - ürünü hedef canvas'ın %85'i olacak şekilde resize + ortala
+   - min 1500×1500 (Trendyol uyumluluk)
+   - rmbgZayıf flag → Sentry warning
          ↓
-[Pass 4: Sharp post-process — boyut & oran garantisi]
-   ├─ Output'u oku (server-side)
-   ├─ Eğer ürün <%50 frame → bria/expand veya cropping ile büyüt
-   ├─ Aspect ratio doğrula (input ile uyumlu)
-   ├─ JPEG encode (quality: 90)
-   └─ Supabase storage'a yükle
+[Pass 3: Stil bazlı sahne — her stil için ayrı]
+   beyaz → Sharp programatik #FFFFFF ($0, ~0ms)
+   koyu  → Sharp programatik #1A1A1A ($0, ~0ms)
+   diğerleri → flux-schnell text-to-image ($0.003, ~4-5sn)
          ↓
-[Kullanıcıya sonuç döndür]
+[Pass 3.5: Sharp composite]
+   - generateDropShadow: blur 18px, %22 opacity, Y+20px offset
+   - scene + shadow + productCanvas → final JPEG
+   - quality: 92
+         ↓
+[Pass 4: Supabase storage upload → publicUrl]
+         ↓
+[Kullanıcıya immediate response: { url, immediate: true }]
+   Frontend: poll yok, direkt URL render
 ```
 
 ### Pass 1 — Vision kategori doğrulama detayı
