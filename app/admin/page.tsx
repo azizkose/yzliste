@@ -195,7 +195,8 @@ export default function AdminPage() {
                 {[
                   { tip: "Metin (Sonnet 4.6)", maliyet: "$0.005", kredi: 1, fiyat: "₺2.49", marj: "+1010%" },
                   { tip: "Metin düzenleme", maliyet: "$0.003", kredi: 1, fiyat: "₺2.49", marj: "+1500%+" },
-                  { tip: "Görsel (RMBG+Bria)", maliyet: "$0.012", kredi: 1, fiyat: "₺2.49", marj: "+363%" },
+                  { tip: "Görsel — Beyaz/Koyu (V2.3 flat)", maliyet: "$0.01", kredi: 1, fiyat: "₺2.49", marj: "+1390%" },
+                  { tip: "Görsel — Lifestyle/Mermer/Ahşap/Gradient/Doğal (V2.3 atmosfer)", maliyet: "$0.05", kredi: 1, fiyat: "₺2.49", marj: "+178%" },
                   { tip: "Video 5sn (Kling v2.1)", maliyet: "$0.28", kredi: 10, fiyat: "₺24.90", marj: "+98%" },
                   { tip: "Video 10sn (Kling v2.1)", maliyet: "$0.56", kredi: 20, fiyat: "₺49.80", marj: "+98%" },
                   { tip: "Sosyal caption", maliyet: "$0.003", kredi: 1, fiyat: "₺2.49", marj: "+1500%+" },
