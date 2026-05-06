@@ -49,6 +49,7 @@ describe("GORSEL-V2: KATEGORI_MODEL_MAP", () => {
     const input = KATEGORI_MODEL_MAP.giyim.buildInput({
       imageUrl: "https://example.com/img.jpg",
       cleanImageUrl: "https://example.com/clean.jpg",
+      preparedImageUrl: "https://example.com/prepared.png",
       prompt: "test prompt",
       negativePrompt: "negative",
       shotSize: [1000, 1500], // dikey
@@ -56,21 +57,26 @@ describe("GORSEL-V2: KATEGORI_MODEL_MAP", () => {
     })
     // [1000,1500] ratio=0.667 → "2:3"
     expect(input.aspect_ratio).toBe("2:3")
-    // kontext orijinal imageUrl kullanır (cleanImageUrl değil)
-    expect(input.image_url).toBe("https://example.com/img.jpg")
+    // V2.1: kontext hazırlanmış canvas kullanır
+    expect(input.image_url).toBe("https://example.com/prepared.png")
   })
 
-  it("bria inputAdapter cleanImageUrl kullanır", () => {
+  it("bria inputAdapter preparedImageUrl kullanır + placement_type original", () => {
     const input = KATEGORI_MODEL_MAP.kozmetik.buildInput({
       imageUrl: "https://example.com/img.jpg",
       cleanImageUrl: "https://example.com/clean.jpg",
+      preparedImageUrl: "https://example.com/prepared.png",
       prompt: "test",
       negativePrompt: "neg",
       shotSize: [1000, 1000],
       manualPlacement: "center_horizontal",
     })
-    expect(input.image_url).toBe("https://example.com/clean.jpg")
+    // V2.1: hazır canvas kullanılıyor
+    expect(input.image_url).toBe("https://example.com/prepared.png")
     expect(input.shot_size).toEqual([1000, 1000])
+    // V2.1: bria orijinal konumu korusun
+    expect(input.placement_type).toBe("original")
+    expect(input.padding_values).toEqual([0, 0, 0, 0])
   })
 })
 

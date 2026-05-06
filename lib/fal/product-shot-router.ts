@@ -6,8 +6,9 @@ export type ModelId =
   | "fal-ai/image-apps-v2/product-photography"
 
 interface BaseInput {
-  imageUrl: string      // orijinal (RMBG öncesi) — kontext için
-  cleanImageUrl: string // RMBG sonrası — bria için
+  imageUrl: string         // orijinal (RMBG öncesi)
+  cleanImageUrl: string    // RMBG sonrası (V1 fallback için)
+  preparedImageUrl: string // V2.1: Sharp ile hazırlanmış canvas (ürün %85 dolu)
   prompt: string
   negativePrompt: string
   shotSize: [number, number] // [width, height]
@@ -45,25 +46,23 @@ function toKontextAspectRatio(w: number, h: number): string {
 
 function briaInput(i: BaseInput) {
   return {
-    image_url: i.cleanImageUrl,
+    image_url: i.preparedImageUrl,  // V2.1: hazır canvas, ürün %85 dolu
     scene_description: i.prompt,
-    optimize_description: true,
+    optimize_description: false,    // model prompt'a daha sıkı uysun
     num_results: 1,
     fast: true,
-    placement_type: "manual_placement",
-    manual_placement_selection: i.manualPlacement,
+    placement_type: "original",     // bizim yerleştirdiğimiz konumu koru
     shot_size: i.shotSize,
+    padding_values: [0, 0, 0, 0],   // bria ekstra boşluk eklemesin
   }
 }
 
 function kontextInput(i: BaseInput) {
   return {
-    // Kontext orijinal fotoğrafla çalışır — RMBG değil
-    // Prompt'a hanger removal talimatı giyim için eklendi (giyim.ts'de)
-    image_url: i.imageUrl,
+    image_url: i.preparedImageUrl,  // V2.1: hazır canvas (RMBG + alpha-trim + resize)
     prompt: i.prompt,
     aspect_ratio: toKontextAspectRatio(i.shotSize[0], i.shotSize[1]),
-    guidance_scale: 3.5,
+    guidance_scale: 4.5,            // prompt'a daha sıkı uy
     num_images: 1,
     output_format: "jpeg",
   }
