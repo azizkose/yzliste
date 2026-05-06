@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { fal } from "@fal-ai/client";
 import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
-import { rmbgUygula } from "@/lib/fal/rmbg";
+import { rmbgUygula, rmbgUygulaV2 } from "@/lib/fal/rmbg";
+import { prepareCanvas } from "@/lib/fal/canvas-prepare";
 import { TON_EN_MAP } from "@/lib/constants/ton";
 import { isGorselV2Enabled } from "@/lib/feature-flags-server";
 import { visionKategoriTespit } from "@/lib/fal/vision-classify";
@@ -282,10 +283,21 @@ async function handleV2(
   // Pass 1 — Vision (paralel başlat, RMBG ile çakışmasın)
   const visionPromise = visionKategoriTespit(imageUrl);
 
-  // Pass 2 — Kategori-aware RMBG
-  // Giyim dahil tüm kategoriler için bria/background/remove
-  // Giyim'deki askı sorununu Pass 3 kontext prompt'u çözer
-  const cleanImageUrl = await rmbgUygula(imageUrl);
+  // Pass 2 — RMBG (buffer da alınıyor — Pass 2.5 için)
+  const { buffer: rmbgBuffer, url: cleanImageUrl } = await rmbgUygulaV2(imageUrl);
+
+  // Pass 2.5 — Sharp ile canvas hazırla (ürün her zaman %85 dolu)
+  const { buffer: preparedBuffer, productBox } = await prepareCanvas(rmbgBuffer, {
+    targetWidth: shotSize[0],
+    targetHeight: shotSize[1],
+    productFillRatio: 0.85,
+    pad: 40,
+  });
+
+  // Hazırlanan canvas'ı fal storage'a yükle
+  const preparedImageUrl = await fal.storage.upload(
+    new Blob([new Uint8Array(preparedBuffer)], { type: "image/png" })
+  );
 
   // Vision sonucu
   const visionResult = await visionPromise;
@@ -297,6 +309,12 @@ async function handleV2(
       "info"
     );
   }
+
+  Sentry.addBreadcrumb({
+    category: "gorsel-v2.1",
+    message: `Canvas prepared: product ${productBox.width}x${productBox.height} in ${shotSize[0]}x${shotSize[1]}`,
+    data: { kategori, productBox },
+  });
 
   const config = KATEGORI_MODEL_MAP[kategori];
 
@@ -313,6 +331,7 @@ async function handleV2(
       const input = config.buildInput({
         imageUrl,
         cleanImageUrl,
+        preparedImageUrl,
         prompt: positive,
         negativePrompt: negative,
         shotSize,
@@ -331,7 +350,7 @@ async function handleV2(
         kategori,
         model_kullanilan: config.primary,
         prompt_version: GORSEL_PROMPT_VERSION,
-        pipeline_version: "v2",
+        pipeline_version: "v2.1",
         vision_classified_kategori: visionResult.kategori,
         user_kategori_overridden: visionUyumsuz,
       }).then(({ error }) => {
@@ -347,5 +366,5 @@ async function handleV2(
     })
   );
 
-  return NextResponse.json({ jobs, isAdmin, pipelineVersion: "v2" });
+  return NextResponse.json({ jobs, isAdmin, pipelineVersion: "v2.1" });
 }
