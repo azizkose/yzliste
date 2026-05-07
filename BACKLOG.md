@@ -23,7 +23,7 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | ~~URET-KATEGORI-01~~ | Kategori zorunlu ama UI tutarsız | Code | ✅ Tamamlandı (2026-05-07) | getCTAState hasGorselKategori + GorselSekmesi alt buton check |
 | ~~REVIZE-01~~ | Revize 1'den 0'a düşmüyor + uyarı yok | Code | ✅ Tamamlandı (2026-05-07) | 0 olunca buton gizli + banner + metin değişimi |
 | ~~URET-FILTER-01~~ | /hesap/uretimler sosyal union | Code | ✅ Tamamlandı (önceden yapılmıştı) | sosyal_uretimler union + disabled chips zaten kodda vardı |
-| **REVIZE-02** | Her revize sonrası kalite skoru güncellenmiyor | Code | P1 Bekliyor | Backend /api/uret/duzenle skor dönmüyor — yapısal eksiklik. Ayrı sprint: backend'e skor ekle, frontend'de setSkor çağır |
+| ~~REVIZE-02~~ | Her revize sonrası kalite skoru güncellenmiyor | Code | ✅ Tamamlandı (2026-05-07) | listingSkorHesapla backend'e eklendi; setSkor/setOneriler hook'tan expose edildi; mikro() success handler güncellendi |
 | ~~AUTH-UX-02~~ | Login durumu belirsiz — kullanıcı adı/email gösterilmiyor | Code | ✅ Tamamlandı (2026-05-07) | SiteHeader "Hesabım" yanına email baş harfi avatar |
 | AUTH-UX-CLEANUP | Nav.tsx + NAV_CTAS/NAV_LINKS silme | Code | P3 — sonraki sprint | `components/sections/HeroBlock/Nav.tsx` artık kullanılmıyor (V2 ile SiteHeader'a geçildi); slate-* renk ihlalleri de var. Güvenli silme: grep ile son kez kontrol et |
 | GORSEL-V2-A~G | Görsel V2 pipeline refactor | Code | ✅ Tamamlandı (2026-05-05) | Faz 1 araştırma + Faz 2 implementasyon |
