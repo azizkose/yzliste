@@ -4,6 +4,7 @@ import logger from "@/lib/logger";
 import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
 import { KATEGORI_KURALLARI, YASAKLI_KELIMELER, kategoriKoduBul, type Platform } from "@/lib/prompts/metin";
 import { ciktiDogrula } from "@/lib/output-validator";
+import { listingSkorHesapla } from "@/lib/listingSkor";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -147,5 +148,11 @@ export async function POST(req: NextRequest) {
 
   const uyarilar = platform ? ciktiDogrula({ icerik: yeniSonuc, platform }) : [];
 
-  return NextResponse.json({ sonuc: yeniSonuc, uyarilar });
+  const { skor, oneriler } = listingSkorHesapla({
+    icerik: yeniSonuc,
+    platform: platform ?? "trendyol",
+    kategori,
+  });
+
+  return NextResponse.json({ sonuc: yeniSonuc, uyarilar, skor, oneriler });
 }

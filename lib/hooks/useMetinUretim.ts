@@ -216,7 +216,8 @@ export function useMetinUretim(deps: MetinDeps) {
     etiketler, setEtiketler,
     backendTerimler, setBackendTerimler,
     icerikUret,
-    skor, oneriler,
+    skor, setSkor,
+    oneriler, setOneriler,
     ucretsizRevizeKullanildi,
     ucretsizRevizeBaslat: () => { ucretsizRevizeAktifRef.current = true; },
   };

@@ -79,7 +79,9 @@ interface MetinSekmesiProps {
   icerikUret: () => void;
   onGirisAc?: () => void;
   skor: number | null;
+  setSkor: (v: number | null) => void;
   oneriler: string[];
+  setOneriler: (v: string[]) => void;
   ucretsizRevizeKullanildi: boolean;
   ucretsizRevizeBaslat: () => void;
 }
@@ -160,7 +162,7 @@ export default function MetinSekmesi({
   duzenleYukleniyor, setDuzenleYukleniyor,
   uretimId, yenidenUretHakki, setYenidenUretHakki,
   kullanici, paketModalAc, icerikUret, onGirisAc,
-  skor, oneriler, ucretsizRevizeKullanildi, ucretsizRevizeBaslat,
+  skor, setSkor, oneriler, setOneriler, ucretsizRevizeKullanildi, ucretsizRevizeBaslat,
 }: MetinSekmesiProps) {
   const platformBilgi = PLATFORM_BILGI[platform] || PLATFORM_BILGI.trendyol;
   const platformPh = PLATFORM_PLACEHOLDER[platform] || PLATFORM_PLACEHOLDER.trendyol;
@@ -733,6 +735,9 @@ export default function MetinSekmesi({
                 const data = await res.json();
                 if (data.sonuc) {
                   setSonuc(data.sonuc);
+                  // REVIZE-02: backend'den dönen güncel skor/öneriler
+                  if (data.skor !== undefined) setSkor(data.skor ?? null);
+                  if (data.oneriler !== undefined) setOneriler(data.oneriler ?? []);
                   // Bug 1A: success sonrası sayacı düşür (hata durumunda düşmez)
                   setYenidenUretHakki(prev => prev - 1);
                 }
