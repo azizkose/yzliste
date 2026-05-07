@@ -155,12 +155,14 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               Giriş Yap
             </a>
           )}
-          <a
-            href="/uret"
-            className="hidden sm:block text-xs sm:text-sm bg-[#1E4DD8] text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-[#163B9E] transition-colors font-medium whitespace-nowrap"
-          >
-            İçerik Üret →
-          </a>
+          {aktifSayfa !== "icerik" && (
+            <a
+              href="/uret"
+              className="hidden sm:block text-xs sm:text-sm bg-[#1E4DD8] text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-[#163B9E] transition-colors font-medium whitespace-nowrap"
+            >
+              İçerik Üret →
+            </a>
+          )}
           {/* Mobile hamburger */}
           <button
             onClick={() => setMenuAcik(!menuAcik)}
@@ -245,12 +247,14 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
                   Giriş Yap
                 </a>
               )}
-              <a
-                href="/uret"
-                className="block px-3 py-2 rounded-lg text-sm font-medium bg-[#1E4DD8] text-white text-center hover:bg-[#163B9E] transition-colors"
-              >
-                İçerik Üret →
-              </a>
+              {aktifSayfa !== "icerik" && (
+                <a
+                  href="/uret"
+                  className="block px-3 py-2 rounded-lg text-sm font-medium bg-[#1E4DD8] text-white text-center hover:bg-[#163B9E] transition-colors"
+                >
+                  İçerik Üret →
+                </a>
+              )}
             </div>
           </nav>
         </div>
