@@ -17,12 +17,37 @@ function isPublicCacheable(pathname: string): boolean {
 
 const BOT_UA_PATTERN = /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|sogou|exabot|facebot|ia_archiver/i
 
-function buildCsp(nonce: string, dev: boolean): string {
+// SHA-256 hash of the GA Consent Mode inline script in app/layout.tsx
+// Allows the script to run without a nonce (needed for statically rendered public pages)
+const GA_CONSENT_HASH = "'sha256-wap7CwPtYKe8hUIXSTPFBNrEp+Q9It4BlBcGgGaS8ls='"
+
+// Public pages: statically rendered → no per-request nonce available.
+// 'strict-dynamic' is intentionally OMITTED — it ignores URL allowlists, which breaks
+// static pages where no nonce is present. GA consent allowed via hash, Next.js bundles
+// via 'self' URL allowlist.
+function buildPublicCsp(dev: boolean): string {
   return [
     "default-src 'self'",
-    // nonce + strict-dynamic: scripts with this nonce are trusted; scripts they load are also trusted.
-    // URL allowlist is kept as fallback for browsers without nonce support.
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${dev ? " 'unsafe-eval'" : ""} https://js.iyzipay.com https://www.googletagmanager.com https://www.google-analytics.com https://challenges.cloudflare.com`,
+    `script-src 'self' ${GA_CONSENT_HASH}${dev ? " 'unsafe-eval'" : ""} https://js.iyzipay.com https://www.googletagmanager.com https://www.google-analytics.com https://challenges.cloudflare.com`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' blob: data: https://*.supabase.co https://www.google-analytics.com https://*.fal.media https://fal.media",
+    "font-src 'self'",
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://eu.i.posthog.com https://api.anthropic.com https://www.google-analytics.com https://challenges.cloudflare.com",
+    "frame-src 'self' https://pay.iyzipay.com https://checkout.iyzipay.com https://challenges.cloudflare.com",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self' https://*.iyzipay.com",
+    "frame-ancestors 'none'",
+    "upgrade-insecure-requests",
+  ].join('; ')
+}
+
+// Private/dynamic pages: nonce + strict-dynamic for full XSS protection.
+// Hash also included for the GA consent script (layout is non-async, script has no nonce).
+function buildPrivateCsp(nonce: string, dev: boolean): string {
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${GA_CONSENT_HASH}${dev ? " 'unsafe-eval'" : ""} https://js.iyzipay.com https://www.googletagmanager.com https://www.google-analytics.com https://challenges.cloudflare.com`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' blob: data: https://*.supabase.co https://www.google-analytics.com https://*.fal.media https://fal.media",
     "font-src 'self'",
@@ -40,11 +65,32 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const isDev = process.env.NODE_ENV === 'development'
 
-  // Generate per-request nonce for CSP
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
-  const csp = buildCsp(nonce, isDev)
+  // Crawler'lar korumalı sayfaya gelince redirect yerine 404 dön
+  const isProtectedEarly = PROTECTED_PATHS.some(
+    (p) => pathname === p || pathname.startsWith(p + '/')
+  )
+  if (isProtectedEarly) {
+    const ua = request.headers.get('user-agent') || ''
+    if (BOT_UA_PATTERN.test(ua)) {
+      const res = new NextResponse(null, { status: 404 })
+      res.headers.set('Content-Security-Policy', buildPrivateCsp('bot-blocked', isDev))
+      return res
+    }
+  }
 
-  // Forward nonce to Server Components via request header (readable via headers() in layouts)
+  // Public sayfa: statically rendered → Supabase atlıyoruz → Set-Cookie yok → CDN cacheable.
+  // CSP: nonce'suz, strict-dynamic yok, URL allowlist + hash bazlı.
+  if (isPublicCacheable(pathname)) {
+    const response = NextResponse.next()
+    response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate')
+    response.headers.set('Content-Security-Policy', buildPublicCsp(isDev))
+    return response
+  }
+
+  // Private pages: per-request nonce oluştur, x-nonce header'ı ile layout'a ilet
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
+  const csp = buildPrivateCsp(nonce, isDev)
+
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set('x-nonce', nonce)
 
@@ -53,25 +99,7 @@ export async function middleware(request: NextRequest) {
     return res
   }
 
-  // Crawler'lar korumalı sayfaya gelince redirect yerine 404 dön
-  const isProtectedEarly = PROTECTED_PATHS.some(
-    (p) => pathname === p || pathname.startsWith(p + '/')
-  )
-  if (isProtectedEarly) {
-    const ua = request.headers.get('user-agent') || ''
-    if (BOT_UA_PATTERN.test(ua)) {
-      return addCsp(new NextResponse(null, { status: 404 }))
-    }
-  }
-
   let response = NextResponse.next({ request: { headers: requestHeaders } })
-
-  // Public sayfa: Supabase çağrısını atla → Set-Cookie yok → Vercel CDN private override yapmaz
-  // Trade-off: public sayfalarda auth token refresh olmaz — kullanıcı /uret'e gittiğinde refresh olur
-  if (isPublicCacheable(pathname)) {
-    response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate')
-    return addCsp(response)
-  }
 
   // Env var guard — preview env'de eksik olabilir
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -90,7 +118,6 @@ export async function middleware(request: NextRequest) {
         cookiesToSet.forEach(({ name, value }) =>
           request.cookies.set(name, value)
         )
-        // Preserve nonce headers when creating a new response for cookie updates
         response = NextResponse.next({ request: { headers: requestHeaders } })
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, options)

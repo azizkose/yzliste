@@ -1,6 +1,5 @@
 ﻿import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
 import { GoogleAnalytics } from '@next/third-parties/google';
@@ -150,11 +149,10 @@ export default function RootLayout({
       <head>
         <RootJsonLd />
         {/* Google Consent Mode v2 — GA yüklenmeden önce default reddedildi */}
-        {/* next/script beforeInteractive: Next.js App Router x-nonce header'ını framework seviyesinde otomatik uygular */}
-        <Script
-          id="ga-consent-default"
-          strategy="beforeInteractive"
-        >{`
+        {/* Nonce yok — middleware'de hash ile izin verildi: sha256-wap7CwPtYKe8hUIXSTPFBNrEp+Q9It4BlBcGgGaS8ls= */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('consent', 'default', {
@@ -162,7 +160,9 @@ export default function RootLayout({
                 ad_storage: 'denied',
                 wait_for_update: 500
               });
-            `}</Script>
+            `,
+          }}
+        />
       </head>
       <body className="min-h-screen flex flex-col">
         <PostHogProvider>
