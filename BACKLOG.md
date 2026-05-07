@@ -15,9 +15,22 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 
 | ID | Başlık | Sahip | Durum | Detay |
 |---|---|---|---|---|
+| ~~GSC-001~~ | Redirect error fix (yzliste.com → www) | Aziz GSC "Validate Fix" | ✅ Çözüldü (2026-05-07) | May 4 geçici hataydı. May 6 crawl Successful. Aziz GSC butonu basacak |
+| ~~AUTH-UX-01~~ | Giriş yaptıktan sonra anasayfada hâlâ "Giriş yap" | Code | ✅ Tamamlandı (2026-05-07) | setQueryData instant cache + isFetching&&!currentUser guard — preview'da test bekliyor |
+| **URET-MODE-01** | Görsel + Video sekmeleri geçici kapat | Code | **P0 Bekliyor** | Sadece Metin + Sosyal aktif. Coming soon banner veya tab disabled. Görsel V2.3 tuning + Video kapsam dışı |
+| **URET-SCROLL-01** | "Üret" sonrası output alanına scroll YOK | Code | **P0 Bekliyor** | Kullanıcı süreci görmüyor. Üret tıklayınca step-3 veya output container'a scrollIntoView |
+| **URET-INPUT-01** | Ürün adı input'a yazınca sayfa aşağı kayıyor | Code | **P0 Bekliyor** | Step otomatik değişip scrollIntoView tetikliyor olabilir; input typing sırasında scroll önlenmeli |
+| **URET-KATEGORI-01** | Kategori zorunlu ama UI tutarsız (sticky aktif, alt pasif) | Code | **P0 Bekliyor** | KategoriSelector "Ürün tipi *" var ama belki başka yerde "isteğe bağlı" yazıyor; sticky bar disabled state alt buton ile aynı olmalı |
+| **REVIZE-01** | Revize 1'den 0'a düşmüyor + uyarı yok | Code | **P0 Bekliyor** | URET-BUG-1A regression veya UI feedback eksik; 0 olduğunda buton disabled + "kalmadı" mesajı |
+| URET-FILTER-01 | Eski üretimler filtrelenmiyor → /hesap/uretimler sadece `uretimler` tablosunu çekiyor (metin only) | Code | **P0 Bekliyor** | Sayfa var ama Video/Sosyal tip filter boş geliyor (yanlış tablo). Sosyal için `sosyal_uretimler` tablosu union edilmeli. Görsel + Video disabled (URET-MODE-01 ile uyumlu) |
+| REVIZE-02 | Her revize sonrası kalite skoru güncellenmiyor | Code | P1 Bekliyor | Score update logic eksik |
+| AUTH-UX-02 | Login durumu belirsiz — kullanıcı adı/email gösterilmiyor | Code | P2 Bekliyor | Header'da kullanıcı badge eksik (e-mail veya isim baş harfleri) |
 | GORSEL-V2-A~G | Görsel V2 pipeline refactor | Code | ✅ Tamamlandı (2026-05-05) | Faz 1 araştırma + Faz 2 implementasyon |
-| GORSEL-V2-H | A/B test 50 görsel manuel skor | Aziz | Bekliyor | V2 önce preview'da test — 5 kategori, her stili dene |
-| GORSEL-V2-I | Kademeli rollout %10 → %100 | Aziz + Cowork | Bekliyor | GORSEL_V2_PERCENT artır, Sentry/PostHog izle |
+| ~~GORSEL-V2.2.1~~ | Composite pipeline (Sharp + flux-schnell) | ✅ Tamamlandı (2026-05-06) | preview'da READY |
+| ~~GORSEL-V2.3~~ | Hibrit pipeline (bria atmosfer + Sharp re-overlay) | ✅ Tamamlandı (2026-05-06) | preview'da READY, GORSEL_V3_PERCENT=100 |
+| GORSEL-V2-H | A/B test — 5 senaryo manuel skor | Aziz | Bekliyor | V2.3 preview URL'de test: beyaz/lifestyle/mermer + giyim/takı; `pipelineVersion: "v2.3"` network kontrolü |
+| GORSEL-V2-I | Kademeli rollout %10 → %100 production | Aziz + Cowork | Bekliyor | V2.3 test geçince main → GORSEL_V3_PERCENT=10 production'a |
+| GORSEL-V2.3.1 | Re-overlay edge blending kalitesi | Aziz test sonrası | Aziz test sonrası belirlenecek |
 | ~~POST-HF-01~~ | /uret metin foto+metin patladı | ✅ Tamamlandı (2026-05-04) | Code teşhis + fix |
 | ~~INPUT-MAP-01~~ | 4 tab input alanları haritası | ✅ Tamamlandı (2026-05-04) | `docs/icerik-input-map.md` |
 | AUTH-01 | Mobilde kayıt — Turnstile devre dışı | Kod OK, mobil test kaldı | Aziz manuel test |
@@ -54,6 +67,17 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | T6R-04 (P1) | Chatbot widget production'da yok (kasıtlı mı?) |
 | ~~T6R-05~~ | /sifre-sifirla `<title>` anasayfa title gösteriyor | ✅ Tamamlandı (2026-05-04) |
 | ~~T6R-06~~ | /profil anonim 200 + root canonical | ✅ Tamamlandı (2026-05-05) | noindex eklendi, redirect 307 doğrulandı |
+
+**GSC denetim bulguları (2026-05-06):**
+
+| ID | Başlık | Öncelik | Detay |
+|---|---|---|---|
+| ~~GSC-001~~ | Redirect error (yzliste.com → www) | **Çözüldü (2026-05-06)** | May 4 geçici hataydı; May 6 crawl'da Page fetch Successful. GSC'de "Validate Fix" bas. Cache-Control fix (GSC-003) hâlâ önerilir. |
+| **GSC-002** | /auth robots.txt'e ekle | **P1 (yeniden açıldı)** | `specs/GSC-002.md` — /auth 4 impression alıyor, search'te görünüyor. 308 redirect var ama disallow eksik. |
+| GSC-003 | Public sayfalara doğru Cache-Control | P1 | `specs/GSC-003.md` — şu an `private, no-store` (Googlebot için yanlış sinyal). middleware'e public path override |
+| GSC-004 | Blog yazılarına BreadcrumbList JSON-LD | P1 | `specs/GSC-004.md` — Article/BlogPosting var, BreadcrumbList eksik |
+| ~~GSC-005~~ | /uret indexability (yanlış alarm) | Kapatıldı | Zaten `index, follow`, sitemap'te. Crawl/discovery zamanlama. GSC-003 sonrası Request Indexing |
+| GSC-006 | Manuel Request Indexing 5 sayfa | P2 | `specs/GSC-006.md` — Aziz manuel, GSC-001 + GSC-003 sonrası |
 
 **P0.5 prompt iyileştirme:**
 
