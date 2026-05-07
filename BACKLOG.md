@@ -25,6 +25,7 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | URET-FILTER-01 | Eski üretimler filtrelenmiyor → /hesap/uretimler sadece `uretimler` tablosunu çekiyor (metin only) | Code | **P0 Bekliyor** | Sayfa var ama Video/Sosyal tip filter boş geliyor (yanlış tablo). Sosyal için `sosyal_uretimler` tablosu union edilmeli. Görsel + Video disabled (URET-MODE-01 ile uyumlu) |
 | REVIZE-02 | Her revize sonrası kalite skoru güncellenmiyor | Code | P1 Bekliyor | Score update logic eksik |
 | AUTH-UX-02 | Login durumu belirsiz — kullanıcı adı/email gösterilmiyor | Code | P2 Bekliyor | Header'da kullanıcı badge eksik (e-mail veya isim baş harfleri) |
+| AUTH-UX-CLEANUP | Nav.tsx + NAV_CTAS/NAV_LINKS silme | Code | P3 — sonraki sprint | `components/sections/HeroBlock/Nav.tsx` artık kullanılmıyor (V2 ile SiteHeader'a geçildi); slate-* renk ihlalleri de var. Güvenli silme: grep ile son kez kontrol et |
 | GORSEL-V2-A~G | Görsel V2 pipeline refactor | Code | ✅ Tamamlandı (2026-05-05) | Faz 1 araştırma + Faz 2 implementasyon |
 | ~~GORSEL-V2.2.1~~ | Composite pipeline (Sharp + flux-schnell) | ✅ Tamamlandı (2026-05-06) | preview'da READY |
 | ~~GORSEL-V2.3~~ | Hibrit pipeline (bria atmosfer + Sharp re-overlay) | ✅ Tamamlandı (2026-05-06) | preview'da READY, GORSEL_V3_PERCENT=100 |
