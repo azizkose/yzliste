@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
 import { GoogleAnalytics } from '@next/third-parties/google';
@@ -134,13 +135,15 @@ function RootJsonLd() {
   );
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   modal,
 }: Readonly<{
   children: React.ReactNode;
   modal?: React.ReactNode;
 }>) {
+  const nonce = (await headers()).get('x-nonce') ?? ''
+
   return (
     <html
       lang="tr"
@@ -148,9 +151,9 @@ export default function RootLayout({
     >
       <head>
         <RootJsonLd />
-        {/* Google Consent Mode v2 — GA yüklenmeden önce default reddedildi */}
-        {/* Nonce yok — middleware'de hash ile izin verildi: sha256-wap7CwPtYKe8hUIXSTPFBNrEp+Q9It4BlBcGgGaS8ls= */}
+        {/* Google Consent Mode v2 â€" GA yÃ¼klenmeden Ã¶nce default reddedildi */}
         <script
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];

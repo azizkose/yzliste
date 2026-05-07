@@ -14,42 +14,13 @@ const securityHeaders = [
   },
 ];
 
-// Public sayfalarda Googlebot'a doğru sinyal: "public, her istekte yeniden doğrula"
-// max-age=0 → browser cache yok, must-revalidate → her zaman origin'e sor
-// next.config.ts headers(), Next.js'in dynamic page no-store'unu ezer (GSC-003)
-const PUBLIC_CACHE_HEADER = {
-  key: "Cache-Control",
-  value: "public, max-age=0, must-revalidate",
-}
-
-const PUBLIC_CACHEABLE_SOURCES = [
-  "/",
-  "/blog",
-  "/blog/:slug*",
-  "/fiyatlar",
-  "/sss",
-  "/hakkimizda",
-  "/gizlilik",
-  "/kosullar",
-  "/kvkk-aydinlatma",
-  "/cerez-politikasi",
-  "/mesafeli-satis",
-  "/teslimat-iade",
-]
-
 const nextConfig: NextConfig = {
   async headers() {
-    const publicCacheRules = PUBLIC_CACHEABLE_SOURCES.map((source) => ({
-      source,
-      headers: [PUBLIC_CACHE_HEADER],
-    }))
-
     return [
       {
         source: "/(.*)",
         headers: securityHeaders,
       },
-      ...publicCacheRules,
     ];
   },
   async redirects() {
