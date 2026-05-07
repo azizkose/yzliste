@@ -210,7 +210,7 @@ export default function GorselSekmesi({
         <button
           type="button"
           onClick={gorselUret}
-          disabled={gorselYukleniyor || seciliStiller.size === 0 || fotolar.length === 0}
+          disabled={gorselYukleniyor || !seciliKategori || seciliStiller.size === 0 || fotolar.length === 0}
           className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-lg transition-colors"
         >
           {gorselYukleniyor ? `${seciliStiller.size} görsel üretiliyor...` : "İçerik üret"}

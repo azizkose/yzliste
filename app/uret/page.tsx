@@ -54,10 +54,10 @@ type Uretim = {
   created_at: string;
 };
 
-const CONTENT_TYPES: { id: AnaSekme; label: string; Icon: LucideIcon; desc: string; credit: string }[] = [
+const CONTENT_TYPES: { id: AnaSekme; label: string; Icon: LucideIcon; desc: string; credit: string; disabled?: boolean; badge?: string }[] = [
   { id: "metin", label: "Listing metni", Icon: FileText, desc: "Başlık, özellikler, açıklama", credit: "1 kredi / ürün" },
-  { id: "gorsel", label: "Ürün görseli", Icon: ImageIcon, desc: "7 stüdyo stili", credit: "1 kredi / stil" },
-  { id: "video", label: "Ürün videosu", Icon: PlayCircle, desc: "5sn veya 10sn tanıtım", credit: "10–20 kredi" },
+  { id: "gorsel", label: "Ürün görseli", Icon: ImageIcon, desc: "7 stüdyo stili", credit: "1 kredi / stil", disabled: true, badge: "Yakında" },
+  { id: "video", label: "Ürün videosu", Icon: PlayCircle, desc: "5sn veya 10sn tanıtım", credit: "10–20 kredi", disabled: true, badge: "Yakında" },
   { id: "sosyal", label: "Sosyal medya", Icon: Share2, desc: "Instagram, TikTok, Pinterest", credit: "3 kredi / kit" },
 ];
 
@@ -156,11 +156,18 @@ export default function Home() {
   const isInsufficientCredit = !kullanici || kullanici.anonim || remainingCredits < cost;
 
   const handleStickySubmit = () => {
+    doScrollToStep3();
     if (anaSekme === "metin") metin.icerikUret();
     else if (anaSekme === "gorsel") gorsel.gorselUret();
     else if (anaSekme === "video") video.videoUret();
     else if (anaSekme === "sosyal") sosyal.captionUret();
   };
+
+  // URET-SCROLL-01: MetinSekmesi'nin kendi üret butonu için scroll wrapper
+  const icerikUretWithScroll = useCallback(() => {
+    doScrollToStep3();
+    metin.icerikUret();
+  }, [metin]);
 
   const isStickySubmitting =
     anaSekme === "metin" ? metin.yukleniyor :
@@ -175,6 +182,7 @@ export default function Home() {
     selectedStylesCount: gorsel.seciliStiller?.size,
     selectedPlatformsCount: 1,
     isLoggedIn: !!kullanici && !kullanici.anonim,
+    hasGorselKategori: !!gorsel.seciliKategori,
   });
 
   // P3-U1: step1Done = both content type AND platform actively selected
@@ -182,6 +190,14 @@ export default function Home() {
   const step1Done = anaSekme !== null && (platformSecimliydi || anaSekme === "sosyal");
   const step2Done = fotolar.length > 0 || metin.urunAdi.trim() !== "";
   const currentStep = !step1Done ? 1 : !step2Done ? 2 : 3;
+
+  // URET-SCROLL-01: bağımsız scroll helper — handleStickySubmit ve icerikUretWithScroll tarafından kullanılır
+  function doScrollToStep3() {
+    setTimeout(() => {
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      document.getElementById("step-3")?.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "start" });
+    }, 50);
+  }
 
   // P3-U1: step handlers — interacted only when both selections made
   const handleContentTypeChange = useCallback((tab: AnaSekme) => {
@@ -194,7 +210,7 @@ export default function Home() {
     setPlatformSecimliydi(true);
   }, [metin]);
 
-  // LP-12: auto-scroll when step completes
+  // LP-12: auto-scroll step-1→step-2 (platform seçimi sonrası)
   useEffect(() => {
     if (!step1Done) return;
     if (prevStep1DoneRef.current) return;
@@ -204,16 +220,9 @@ export default function Home() {
       document.getElementById("step-2")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [step1Done]);
+  // URET-INPUT-01: step2Done→step-3 auto-scroll kaldırıldı — input yazarken sayfa kayıyordu.
+  // Scroll artık sadece "Üret" butonu tıklandığında yapılıyor (URET-SCROLL-01).
 
-  useEffect(() => {
-    if (!step2Done || !step1Done) return;
-    if (prevStep2DoneRef.current) return;
-    prevStep2DoneRef.current = true;
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!prefersReduced) {
-      document.getElementById("step-3")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [step2Done, step1Done]);
 
   // Sync shared photo to sosyal tab (T7-07)
   useEffect(() => {
@@ -258,7 +267,10 @@ export default function Home() {
     const tabParam = params.get("tab");
     const girisParam = params.get("giris");
     if (tabParam && (["metin", "gorsel", "video", "sosyal"] as AnaSekme[]).includes(tabParam as AnaSekme)) {
-      setAnaSekme(tabParam as AnaSekme);
+      // URET-MODE-01: disabled tab'lara fallback — gorsel/video geçici kapalı
+      const disabledTabs: AnaSekme[] = ["gorsel", "video"];
+      const resolvedTab = disabledTabs.includes(tabParam as AnaSekme) ? "metin" : (tabParam as AnaSekme);
+      setAnaSekme(resolvedTab);
       // P10-10: tab URL param içerik türünü ön seçer ama step 1'de kalır (platform seçimi beklenir)
     }
     if (tabParam === "metin" && girisParam === "excel") {
@@ -494,29 +506,39 @@ export default function Home() {
               aria-label="İçerik türü seçimi"
               className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5"
             >
-              {CONTENT_TYPES.map(({ id, label, Icon, desc, credit }) => (
+              {CONTENT_TYPES.map(({ id, label, Icon, desc, credit, disabled, badge }) => (
                 <button
                   key={id}
                   role="tab"
                   aria-selected={anaSekme === id}
                   aria-controls={`sekme-panel-${id}`}
-                  onClick={() => handleContentTypeChange(id)}
+                  onClick={() => !disabled && handleContentTypeChange(id)}
+                  disabled={disabled}
                   className={cn(
                     "flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-700 focus-visible:ring-offset-2",
-                    anaSekme === id
+                    disabled
+                      ? "border border-rd-neutral-200 bg-rd-neutral-50 opacity-60 cursor-not-allowed"
+                      : anaSekme === id
                       ? "border-2 border-rd-primary-700 bg-rd-primary-50"
                       : "border border-rd-neutral-200 bg-white hover:bg-rd-neutral-50"
                   )}
                 >
-                  <Icon
-                    size={22}
-                    strokeWidth={1.5}
-                    className={anaSekme === id ? "text-rd-primary-700" : "text-rd-neutral-500"}
-                    aria-hidden="true"
-                  />
+                  <div className="flex items-center gap-2">
+                    <Icon
+                      size={22}
+                      strokeWidth={1.5}
+                      className={disabled ? "text-rd-neutral-300" : anaSekme === id ? "text-rd-primary-700" : "text-rd-neutral-500"}
+                      aria-hidden="true"
+                    />
+                    {badge && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-rd-warning-50 text-rd-warning-700 font-medium border border-rd-warning-700/20">
+                        {badge}
+                      </span>
+                    )}
+                  </div>
                   <div>
-                    <p className={cn("text-sm font-medium", anaSekme === id ? "text-rd-primary-800" : "text-rd-neutral-900")}>
+                    <p className={cn("text-sm font-medium", disabled ? "text-rd-neutral-400" : anaSekme === id ? "text-rd-primary-800" : "text-rd-neutral-900")}>
                       {label}
                     </p>
                     <p className="text-xs text-rd-neutral-500 mt-0.5">{desc}</p>
@@ -905,7 +927,7 @@ export default function Home() {
               sonuc={metin.sonuc} setSonuc={metin.setSonuc}
               duzenleYukleniyor={metin.duzenleYukleniyor} setDuzenleYukleniyor={metin.setDuzenleYukleniyor}
               uretimId={metin.uretimId} yenidenUretHakki={metin.yenidenUretHakki} setYenidenUretHakki={metin.setYenidenUretHakki}
-              kullanici={kullanici} paketModalAc={paketModalAc} icerikUret={metin.icerikUret}
+              kullanici={kullanici} paketModalAc={paketModalAc} icerikUret={icerikUretWithScroll}
               onGirisAc={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }}
               skor={metin.skor} oneriler={metin.oneriler}
               ucretsizRevizeKullanildi={metin.ucretsizRevizeKullanildi}
