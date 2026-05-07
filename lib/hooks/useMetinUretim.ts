@@ -1,10 +1,11 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
-import { YUKLENIYOR_MESAJLARI, PLATFORM_BILGI } from "@/lib/constants";
+import { YUKLENIYOR_MESAJLARI, PLATFORM_BILGI, inferUstKategori } from "@/lib/constants";
 import { analytics } from "@/lib/analytics";
 import { METIN_PROMPT_VERSION } from "@/lib/prompts/metin";
 import { useUretimStore } from "@/store/uretimStore";
 import type { Kullanici } from "@/lib/listing-utils";
+import type { Kategori as UstKategori } from "@/lib/fal/prompts/index";
 
 interface MetinDeps {
   fotolar: string[];
@@ -15,6 +16,9 @@ interface MetinDeps {
   setHata: (v: string | null) => void;
   gecmisiYukle: (userId: string) => void;
   invalidateCredits: () => void;
+  // Paylaşılan üst kategori (parent'tan gelir)
+  ustKategori: UstKategori | null;
+  setUstKategori: (k: UstKategori | null) => void;
 }
 
 export function useMetinUretim(deps: MetinDeps) {
@@ -93,6 +97,11 @@ export function useMetinUretim(deps: MetinDeps) {
         setUrunAdi(data.isim);
         if (data.marka) setKategori(data.marka);
         if (data.aciklama) setOzellikler(data.aciklama);
+        // Görev 7: barkod kategorisinden üst kategori infer et
+        if (data.kategori) {
+          const inferredUst = inferUstKategori(data.kategori);
+          if (inferredUst) depsRef.current.setUstKategori(inferredUst);
+        }
         kameraKapat();
       }
     } catch { alert("Barkod sorgulanırken hata oluştu."); }
@@ -156,6 +165,7 @@ export function useMetinUretim(deps: MetinDeps) {
           backendTerimler: backendTerimler || undefined,
           ucretsizRevize: ucretsizRevizeAktifRef.current,
           orijinalUretimId: ucretsizRevizeAktifRef.current ? uretimIdRef.current : undefined,
+          ustKategori: depsRef.current.ustKategori ?? undefined,
         }),
       });
       ucretsizRevizeAktifRef.current = false;

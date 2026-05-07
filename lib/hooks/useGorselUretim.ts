@@ -13,6 +13,8 @@ interface GorselDeps {
   paketModalAc: () => void;
   setHata: (v: string | null) => void;
   invalidateCredits: () => void;
+  // Üst kategori parent'tan gelir (paylaşılan state)
+  seciliKategori: Kategori | null;
 }
 
 export function useGorselUretim(deps: GorselDeps) {
@@ -21,7 +23,6 @@ export function useGorselUretim(deps: GorselDeps) {
   const [gorselYukleniyor, setGorselYukleniyor] = useState(false);
   const [gorselJoblar, setGorselJoblar] = useState<{ requestId: string; label: string; stil: string; model?: string; url?: string; immediate?: boolean; error?: boolean }[]>([]);
   const [referansGorsel, setReferansGorsel] = useState<string | null>(null);
-  const [seciliKategori, setSeciliKategori] = useState<Kategori | null>(null);
 
   const depsRef = useRef(deps);
   useEffect(() => { depsRef.current = deps; });
@@ -70,7 +71,7 @@ export function useGorselUretim(deps: GorselDeps) {
           userId: kullanici.id,
           referansGorsel,
           inputBoyut,
-          kategori: seciliKategori, // V2: null ise backend V1 pipeline kullanır
+          kategori: depsRef.current.seciliKategori, // V2: parent'tan gelir, null ise backend V1 pipeline kullanır
         }),
       });
       const data = await res.json();
@@ -112,7 +113,7 @@ export function useGorselUretim(deps: GorselDeps) {
     } catch { analytics.generationFailed({ platform: "gorsel", type: "gorsel", error: "network" }); setHata("Bir hata oluştu. Lütfen tekrar deneyin."); }
     setGorselYukleniyor(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [seciliStiller, gorselEkPrompt, referansGorsel, seciliKategori]);
+  }, [seciliStiller, gorselEkPrompt, referansGorsel]);
 
   return {
     gorselEkPrompt, setGorselEkPrompt,
@@ -120,7 +121,6 @@ export function useGorselUretim(deps: GorselDeps) {
     gorselYukleniyor,
     gorselJoblar, setGorselJoblar,
     referansGorsel, setReferansGorsel,
-    seciliKategori, setSeciliKategori,
     gorselUret,
   };
 }

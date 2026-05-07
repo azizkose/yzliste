@@ -4,7 +4,6 @@ import { Link2, ImageIcon as ImageIconLucide, Download } from "lucide-react";
 import { GORSEL_STILLER, kategoriKoduHesapla } from "@/lib/constants";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
 import KrediButon from "@/components/ui/KrediButon";
-import KategoriSelector from "@/components/uret/KategoriSelector";
 import InputCropper from "@/components/uret/InputCropper";
 import type { Kategori } from "@/lib/fal/prompts/index";
 
@@ -114,11 +113,7 @@ export default function GorselSekmesi({
         </a>
       </p>
 
-      {/* V2: Ürün tipi seçimi — doğru model routing için zorunlu */}
-      <KategoriSelector
-        value={seciliKategori}
-        onChange={setSeciliKategori}
-      />
+      {/* V2: Ürün tipi adım 2'de paylaşılan KategoriSelector'dan geliyor */}
 
       {/* V2.2: Crop UI — foto + kategori seçilince otomatik açılır */}
       {showCropper && croppingFotoIndex !== null && fotolar[croppingFotoIndex] && (

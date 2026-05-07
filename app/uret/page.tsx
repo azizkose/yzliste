@@ -8,9 +8,11 @@ import { analytics } from "@/lib/analytics";
 import AuthForm from "@/components/auth/AuthForm";
 import { resizeFoto } from "@/lib/listing-utils";
 import type { Kullanici } from "@/lib/listing-utils";
-import { PLATFORM_BILGI, KATEGORI_LISTESI } from "@/lib/constants";
+import { PLATFORM_BILGI, getAltKategoriler } from "@/lib/constants";
 import { PLATFORM_KURALLARI } from "@/lib/prompts/metin";
 import type { Platform } from "@/lib/prompts/metin";
+import KategoriSelector from "@/components/uret/KategoriSelector";
+import type { Kategori as UstKategori } from "@/lib/fal/prompts/index";
 import PaketModal from "@/components/PaketModal";
 import MetinSekmesi from "@/components/tabs/MetinSekmesi";
 import GorselSekmesi from "@/components/tabs/GorselSekmesi";
@@ -78,6 +80,8 @@ export default function Home() {
   // ===== SHARED STATE =====
   // P3-U1: default null (seçilmemiş)
   const [anaSekme, setAnaSekme] = useState<AnaSekme | null>(null);
+  // Hibrit kategori: paylaşılan üst kategori (tüm 4 sekme)
+  const [ustKategori, setUstKategori] = useState<UstKategori | null>(null);
   const [platformSecimliydi, setPlatformSecimliydi] = useState(false);
   const [kullanici, setKullanici] = useState<Kullanici | null>(null);
   const [authYukleniyor, setAuthYukleniyor] = useState(true);
@@ -138,8 +142,8 @@ export default function Home() {
   };
 
   // ===== TAB HOOKS =====
-  const metin = useMetinUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, gecmisiYukle, invalidateCredits });
-  const gorsel = useGorselUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
+  const metin = useMetinUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, gecmisiYukle, invalidateCredits, ustKategori, setUstKategori });
+  const gorsel = useGorselUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits, seciliKategori: ustKategori });
   const video = useVideoUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
   const sosyal = useSosyalUretim({ urunAdi: metin.urunAdi, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
 
@@ -182,7 +186,7 @@ export default function Home() {
     selectedStylesCount: gorsel.seciliStiller?.size,
     selectedPlatformsCount: 1,
     isLoggedIn: !!kullanici && !kullanici.anonim,
-    hasGorselKategori: !!gorsel.seciliKategori,
+    hasUstKategori: !!ustKategori,
   });
 
   // P3-U1: step1Done = both content type AND platform actively selected
@@ -613,6 +617,15 @@ export default function Home() {
               2 · Ürünü tanıt
             </h2>
 
+            {/* Hibrit kategori: paylaşılan üst kategori — 4 sekme için zorunlu */}
+            <div className="bg-white rounded-xl border border-rd-neutral-200 p-4 mb-4">
+              <KategoriSelector
+                value={ustKategori}
+                onChange={setUstKategori}
+                zorunlu
+              />
+            </div>
+
             {/* P9-9: Giriş yöntemi kartları — sadece metin sekmesinde */}
             {anaSekme === "metin" && (
               <div className="mb-4">
@@ -740,32 +753,42 @@ export default function Home() {
                   </div>
                 )}
               </div>
-              <div>
-                <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Kategori <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
-                <select
-                  value={digerMod ? "Diğer" : (metin.kategori || "")}
-                  onChange={(e) => {
-                    if (e.target.value === "Diğer") { setDigerMod(true); metin.setKategori(""); }
-                    else { setDigerMod(false); metin.setKategori(e.target.value); }
-                  }}
-                  className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
-                >
-                  <option value="">— Seç (isteğe bağlı) —</option>
-                  {KATEGORI_LISTESI.map((k) => (
-                    <option key={k} value={k}>{k}</option>
-                  ))}
-                </select>
-                {digerMod && (
-                  <input
-                    type="text"
-                    value={metin.kategori}
-                    onChange={(e) => metin.setKategori(e.target.value)}
-                    placeholder="Kategori yaz..."
-                    autoFocus
-                    className="mt-2 w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
-                  />
-                )}
-              </div>
+              {/* Alt kategori — sadece metin sekmesinde, üst kategori seçilince aktif */}
+              {anaSekme === "metin" && (() => {
+                const altlar = getAltKategoriler(ustKategori);
+                return (
+                  <div>
+                    <label className="block text-sm font-medium text-rd-neutral-900 mb-1">
+                      Detaylı kategori <span className="text-rd-neutral-400 font-normal">(önerilir, kalite için)</span>
+                    </label>
+                    <select
+                      value={digerMod ? "__diger__" : (metin.kategori || "")}
+                      onChange={(e) => {
+                        if (e.target.value === "__diger__") { setDigerMod(true); metin.setKategori(""); }
+                        else { setDigerMod(false); metin.setKategori(e.target.value); }
+                      }}
+                      disabled={!ustKategori}
+                      className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800 disabled:bg-rd-neutral-50 disabled:text-rd-neutral-400"
+                    >
+                      <option value="">— Boş bırak (AI tahmin etsin) —</option>
+                      {altlar.map((k) => (
+                        <option key={k} value={k}>{k}</option>
+                      ))}
+                      <option value="__diger__">Diğer (manuel yaz)</option>
+                    </select>
+                    {digerMod && (
+                      <input
+                        type="text"
+                        value={metin.kategori}
+                        onChange={(e) => metin.setKategori(e.target.value)}
+                        placeholder="Kategori yaz..."
+                        autoFocus
+                        className="mt-2 w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
+                      />
+                    )}
+                  </div>
+                );
+              })()}
               <div>
                 <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Ürün detayları <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
                 <textarea
@@ -944,7 +967,7 @@ export default function Home() {
                 seciliStiller={gorsel.seciliStiller} stilToggle={gorsel.stilToggle}
                 gorselYukleniyor={gorsel.gorselYukleniyor} gorselJoblar={gorsel.gorselJoblar} setGorselJoblar={gorsel.setGorselJoblar}
                 referansGorsel={gorsel.referansGorsel} setReferansGorsel={gorsel.setReferansGorsel}
-                seciliKategori={gorsel.seciliKategori} setSeciliKategori={gorsel.setSeciliKategori}
+                seciliKategori={ustKategori} setSeciliKategori={setUstKategori}
                 kullanici={kullanici} paketModalAc={paketModalAc} gorselUret={gorsel.gorselUret}
                 blobIndir={blobIndir} resizeFoto={resizeFoto} invalidateCredits={invalidateCredits} setKullanici={setKullaniciFn}
               />
