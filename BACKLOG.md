@@ -17,14 +17,14 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 |---|---|---|---|---|
 | ~~GSC-001~~ | Redirect error fix (yzliste.com → www) | Aziz GSC "Validate Fix" | ✅ Çözüldü (2026-05-07) | May 4 geçici hataydı. May 6 crawl Successful. Aziz GSC butonu basacak |
 | ~~AUTH-UX-01~~ | Giriş yaptıktan sonra anasayfada hâlâ "Giriş yap" | Code | ✅ Tamamlandı (2026-05-07) | setQueryData instant cache + isFetching&&!currentUser guard — preview'da test bekliyor |
-| **URET-MODE-01** | Görsel + Video sekmeleri geçici kapat | Code | **P0 Bekliyor** | Sadece Metin + Sosyal aktif. Coming soon banner veya tab disabled. Görsel V2.3 tuning + Video kapsam dışı |
-| **URET-SCROLL-01** | "Üret" sonrası output alanına scroll YOK | Code | **P0 Bekliyor** | Kullanıcı süreci görmüyor. Üret tıklayınca step-3 veya output container'a scrollIntoView |
-| **URET-INPUT-01** | Ürün adı input'a yazınca sayfa aşağı kayıyor | Code | **P0 Bekliyor** | Step otomatik değişip scrollIntoView tetikliyor olabilir; input typing sırasında scroll önlenmeli |
-| **URET-KATEGORI-01** | Kategori zorunlu ama UI tutarsız (sticky aktif, alt pasif) | Code | **P0 Bekliyor** | KategoriSelector "Ürün tipi *" var ama belki başka yerde "isteğe bağlı" yazıyor; sticky bar disabled state alt buton ile aynı olmalı |
-| **REVIZE-01** | Revize 1'den 0'a düşmüyor + uyarı yok | Code | **P0 Bekliyor** | URET-BUG-1A regression veya UI feedback eksik; 0 olduğunda buton disabled + "kalmadı" mesajı |
-| URET-FILTER-01 | Eski üretimler filtrelenmiyor → /hesap/uretimler sadece `uretimler` tablosunu çekiyor (metin only) | Code | **P0 Bekliyor** | Sayfa var ama Video/Sosyal tip filter boş geliyor (yanlış tablo). Sosyal için `sosyal_uretimler` tablosu union edilmeli. Görsel + Video disabled (URET-MODE-01 ile uyumlu) |
-| REVIZE-02 | Her revize sonrası kalite skoru güncellenmiyor | Code | P1 Bekliyor | Score update logic eksik |
-| AUTH-UX-02 | Login durumu belirsiz — kullanıcı adı/email gösterilmiyor | Code | P2 Bekliyor | Header'da kullanıcı badge eksik (e-mail veya isim baş harfleri) |
+| ~~URET-MODE-01~~ | Görsel + Video sekmeleri geçici kapat | Code | ✅ Tamamlandı (2026-05-07) | "Yakında" badge + disabled; URL fallback gorsel/video→metin |
+| ~~URET-SCROLL-01~~ | "Üret" sonrası output alanına scroll YOK | Code | ✅ Tamamlandı (2026-05-07) | doScrollToStep3() sticky bar + MetinSekmesi wrapper |
+| ~~URET-INPUT-01~~ | Ürün adı input'a yazınca sayfa aşağı kayıyor | Code | ✅ Tamamlandı (2026-05-07) | step2Done→step-3 auto-scroll effect kaldırıldı |
+| ~~URET-KATEGORI-01~~ | Kategori zorunlu ama UI tutarsız | Code | ✅ Tamamlandı (2026-05-07) | getCTAState hasGorselKategori + GorselSekmesi alt buton check |
+| ~~REVIZE-01~~ | Revize 1'den 0'a düşmüyor + uyarı yok | Code | ✅ Tamamlandı (2026-05-07) | 0 olunca buton gizli + banner + metin değişimi |
+| ~~URET-FILTER-01~~ | /hesap/uretimler sosyal union | Code | ✅ Tamamlandı (önceden yapılmıştı) | sosyal_uretimler union + disabled chips zaten kodda vardı |
+| **REVIZE-02** | Her revize sonrası kalite skoru güncellenmiyor | Code | P1 Bekliyor | Backend /api/uret/duzenle skor dönmüyor — yapısal eksiklik. Ayrı sprint: backend'e skor ekle, frontend'de setSkor çağır |
+| ~~AUTH-UX-02~~ | Login durumu belirsiz — kullanıcı adı/email gösterilmiyor | Code | ✅ Tamamlandı (2026-05-07) | SiteHeader "Hesabım" yanına email baş harfi avatar |
 | AUTH-UX-CLEANUP | Nav.tsx + NAV_CTAS/NAV_LINKS silme | Code | P3 — sonraki sprint | `components/sections/HeroBlock/Nav.tsx` artık kullanılmıyor (V2 ile SiteHeader'a geçildi); slate-* renk ihlalleri de var. Güvenli silme: grep ile son kez kontrol et |
 | GORSEL-V2-A~G | Görsel V2 pipeline refactor | Code | ✅ Tamamlandı (2026-05-05) | Faz 1 araştırma + Faz 2 implementasyon |
 | ~~GORSEL-V2.2.1~~ | Composite pipeline (Sharp + flux-schnell) | ✅ Tamamlandı (2026-05-06) | preview'da READY |
