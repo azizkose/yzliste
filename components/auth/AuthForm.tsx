@@ -193,13 +193,37 @@ export default function AuthForm({ defaultMode = 'kayit', redirectTo = '/', onSu
         setResendCooldown(60)
       }
     } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password: sifre })
+      const { data: loginData, error } = await supabase.auth.signInWithPassword({ email, password: sifre })
       if (error) {
         setHata(turkceHata(error.message))
       } else {
         analytics.loginCompleted({ method: 'email' })
+
+        // Katman 1: cache'i hemen doldur — stale null flash önleme
+        if (loginData.user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('kredi, toplam_kullanilan, is_admin, ton, marka_adi')
+            .eq('id', loginData.user.id)
+            .single()
+
+          queryClient.setQueryData(['currentUser'], {
+            id: loginData.user.id,
+            email: loginData.user.email ?? null,
+            kredi: profile?.kredi ?? 0,
+            toplam_kullanilan: profile?.toplam_kullanilan ?? 0,
+            is_admin: profile?.is_admin ?? false,
+            anonim: loginData.user.is_anonymous ?? false,
+            ton: profile?.ton ?? null,
+            marka_adi: profile?.marka_adi ?? null,
+          })
+          queryClient.setQueryData(['credits'], profile?.kredi ?? 0)
+        }
+
+        // Yedek invalidate (TOKEN_REFRESHED ve diğer event'ler için)
         queryClient.invalidateQueries({ queryKey: ['currentUser'] })
         queryClient.invalidateQueries({ queryKey: ['credits'] })
+
         if (onSuccess) onSuccess()
         else router.push(redirectTo)
       }

@@ -23,8 +23,10 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
   const [scrolled, setScrolled] = useState(false);
   const [araclarAcik, setAraclarAcik] = useState(false);
   const [mobilAraclarAcik, setMobilAraclarAcik] = useState(false);
-  const { data: currentUser, isLoading: authYukleniyor } = useCurrentUser();
+  const { data: currentUser, isLoading, isFetching } = useCurrentUser();
   const { data: kredi } = useCredits();
+  // loading veya stale-null refetch sırasında "Giriş Yap" flash'ı önle
+  const authYukleniyor = isLoading || (isFetching && !currentUser);
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -110,7 +112,9 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
 
         {/* Auth buttons */}
         <div className="flex gap-1 sm:gap-2 ml-auto items-center">
-          {authYukleniyor ? null : girisVar ? (
+          {authYukleniyor ? (
+            <div className="w-20 h-8" aria-hidden="true" />
+          ) : girisVar ? (
             <>
               {kredi !== null && kredi !== undefined && (
                 <a
