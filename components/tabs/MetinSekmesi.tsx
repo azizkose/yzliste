@@ -755,25 +755,33 @@ export default function MetinSekmesi({
                       </div>
                     </div>
                   </div>
+                ) : yenidenUretHakki === 0 ? (
+                  // REVIZE-01: 0 olunca bilgilendirici banner
+                  <div className="rounded-xl bg-rd-neutral-50 border border-rd-neutral-200 p-3 text-sm text-rd-neutral-700">
+                    Ücretsiz revize hakkın bitti. Yeni içerik için &ldquo;İçerik üret&rdquo; butonunu kullan.
+                  </div>
                 ) : (
                   <p className="text-xs text-rd-neutral-500">
                     <span className="font-medium text-rd-neutral-700">{yenidenUretHakki}/3 ücretsiz revize</span> kaldı — birini seç:
                   </p>
                 )}
+                {/* REVIZE-01: yenidenUretHakki > 0 olduğunda butonları göster */}
+                {yenidenUretHakki > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  <button onClick={() => mikro("kisalt")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
+                  <button onClick={() => mikro("kisalt")} disabled={duzenleYukleniyor || yukleniyor || yenidenUretHakki <= 0} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
                     <Scissors size={12} strokeWidth={1.5} /> Kısalt
                   </button>
-                  <button onClick={() => mikro("genislet")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
+                  <button onClick={() => mikro("genislet")} disabled={duzenleYukleniyor || yukleniyor || yenidenUretHakki <= 0} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
                     Genişlet
                   </button>
-                  <button onClick={() => mikro("ton_samimi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
+                  <button onClick={() => mikro("ton_samimi")} disabled={duzenleYukleniyor || yukleniyor || yenidenUretHakki <= 0} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
                     Samimi
                   </button>
-                  <button onClick={() => mikro("ton_resmi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
+                  <button onClick={() => mikro("ton_resmi")} disabled={duzenleYukleniyor || yukleniyor || yenidenUretHakki <= 0} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
                     Resmi
                   </button>
                 </div>
+                )}
               </div>
             );
           })()}

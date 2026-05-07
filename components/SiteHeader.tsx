@@ -127,8 +127,17 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               )}
               <a
                 href="/hesap"
-                className={`text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors whitespace-nowrap ${transparent ? "text-white/80 hover:text-white hover:bg-white/10" : "text-[#5A5852] hover:text-[#1A1A17] hover:bg-[#F1F0EB]"}`}
+                className={`flex items-center gap-1.5 text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors whitespace-nowrap ${transparent ? "text-white/80 hover:text-white hover:bg-white/10" : "text-[#5A5852] hover:text-[#1A1A17] hover:bg-[#F1F0EB]"}`}
               >
+                {currentUser?.email && (
+                  <span
+                    className="w-6 h-6 rounded-full bg-[#F0F4FB] text-[#1E4DD8] flex items-center justify-center text-xs font-medium flex-shrink-0"
+                    title={currentUser.email}
+                    aria-hidden="true"
+                  >
+                    {currentUser.email.charAt(0).toUpperCase()}
+                  </span>
+                )}
                 Hesabım
               </a>
               <button
