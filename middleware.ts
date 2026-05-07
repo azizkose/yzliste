@@ -22,7 +22,7 @@ function buildCsp(nonce: string, dev: boolean): string {
     "default-src 'self'",
     // nonce + strict-dynamic: scripts with this nonce are trusted; scripts they load are also trusted.
     // URL allowlist is kept as fallback for browsers without nonce support.
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${dev ? " 'unsafe-eval'" : ""} https://js.iyzipay.com https://www.googletagmanager.com https://www.google-analytics.com https://challenges.cloudflare.com`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'sha256-wap7CwPtYKe8hUIXSTPFBNrEp+Q9It4BlBcGgGaS8ls='${dev ? " 'unsafe-eval'" : ""} https://js.iyzipay.com https://www.googletagmanager.com https://www.google-analytics.com https://challenges.cloudflare.com`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' blob: data: https://*.supabase.co https://www.google-analytics.com https://*.fal.media https://fal.media",
     "font-src 'self'",
