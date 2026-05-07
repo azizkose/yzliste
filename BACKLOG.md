@@ -27,6 +27,7 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | ~~AUTH-UX-02~~ | Login durumu belirsiz — kullanıcı adı/email gösterilmiyor | Code | ✅ Tamamlandı (2026-05-07) | SiteHeader "Hesabım" yanına email baş harfi avatar |
 | ~~URET-KATEGORI-V2~~ | Kategori hibrit sistemi (4 sekme paylaşımlı üst + metin alt kategori) | Code | ✅ Tamamlandı (2026-05-07) | 5 enum üst kategori (KategoriSelector) + ALT_KATEGORI_MAP + getCTAState global guard + ustKategori state lifting |
 | ~~UX-CTA-CLEANUP~~ | /uret sayfasında 3 duplicate CTA temizliği | Code | ✅ Tamamlandı (2026-05-07) | SiteHeader "İçerik Üret →" aktifSayfa==="icerik" iken gizlendi; StickySubmitBar tek CTA |
+| ~~UX-PAKETI-03~~ | Kart-içi CTA labels + kategori hibrit tamamlama | Code | ✅ Tamamlandı (2026-05-08) | Metin→"Listing metnini üret", Görsel→"Görseli oluştur", Video→"Videoyu oluştur"; UST_KATEGORI_PROMPT_LABELS; sosyal/kit API'ye ustKategori; Sentry fallback |
 | AUTH-UX-CLEANUP | Nav.tsx + NAV_CTAS/NAV_LINKS silme | Code | P3 — sonraki sprint | `components/sections/HeroBlock/Nav.tsx` artık kullanılmıyor (V2 ile SiteHeader'a geçildi); slate-* renk ihlalleri de var. Güvenli silme: grep ile son kez kontrol et |
 | GORSEL-V2-A~G | Görsel V2 pipeline refactor | Code | ✅ Tamamlandı (2026-05-05) | Faz 1 araştırma + Faz 2 implementasyon |
 | ~~GORSEL-V2.2.1~~ | Composite pipeline (Sharp + flux-schnell) | ✅ Tamamlandı (2026-05-06) | preview'da READY |
