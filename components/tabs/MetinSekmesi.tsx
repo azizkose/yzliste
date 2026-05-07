@@ -686,7 +686,7 @@ export default function MetinSekmesi({
         disabled={!uretButonAktif || yukleniyor}
         className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-lg transition-colors"
       >
-        {yukleniyor ? YUKLENIYOR_MESAJLARI[yukleniyorMesaj] : "İçerik üret"}
+        {yukleniyor ? YUKLENIYOR_MESAJLARI[yukleniyorMesaj] : "Listing metnini üret"}
       </button>
       {(!kullanici || kullanici.anonim) && (
         <p className="text-xs text-center text-rd-neutral-400">

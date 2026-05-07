@@ -167,7 +167,7 @@ export default function VideoSekmesi({
         disabled={videoYukleniyor || fotolar.length === 0}
         className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-lg transition-colors"
       >
-        {videoYukleniyor ? "Video üretiliyor..." : "İçerik üret"}
+        {videoYukleniyor ? "Video üretiliyor..." : "Videoyu oluştur"}
       </button>
 
       {videoYukleniyor && (
