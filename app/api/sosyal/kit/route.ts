@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { fal } from "@fal-ai/client";
 import { captionSistemPrompt, captionCiktiParse, SOSYAL_PROMPT_VERSION } from "@/lib/prompts/sosyal";
+import { UST_KATEGORI_PROMPT_LABELS } from "@/lib/constants";
 import { rmbgUygula } from "@/lib/fal/rmbg";
 import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
 import logger from "@/lib/logger";
@@ -54,7 +55,12 @@ async function captionUret(params: {
 }
 
 export async function POST(req: NextRequest) {
-  const { urunAdi, ekBilgi = "", ton = "tanitim", userId, foto, gorselFormat = "1:1", gorselStil = "beyaz", sezon = "normal" } = await req.json();
+  const { urunAdi, ekBilgi: ekBilgiRaw = "", ton = "tanitim", userId, foto, gorselFormat = "1:1", gorselStil = "beyaz", sezon = "normal", ustKategori } = await req.json();
+
+  // ustKategori varsa ekBilgi başına ürün tipi bağlamı ekle
+  const ekBilgi = ustKategori
+    ? `Ürün tipi: ${UST_KATEGORI_PROMPT_LABELS[ustKategori as keyof typeof UST_KATEGORI_PROMPT_LABELS] ?? ustKategori}${ekBilgiRaw ? `\n${ekBilgiRaw}` : ""}`
+    : ekBilgiRaw;
 
   if (!urunAdi) return NextResponse.json({ hata: "Ürün adı gerekli" }, { status: 400 });
   if (!userId) return NextResponse.json({ hata: "Giriş yapılmadı" }, { status: 401 });

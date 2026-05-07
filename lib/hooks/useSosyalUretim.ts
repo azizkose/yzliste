@@ -4,6 +4,7 @@ import { resizeFoto } from "@/lib/listing-utils";
 import type { Kullanici } from "@/lib/listing-utils";
 import { analytics } from "@/lib/analytics";
 import { SOSYAL_PROMPT_VERSION } from "@/lib/prompts/sosyal";
+import type { Kategori as UstKategori } from "@/lib/fal/prompts/index";
 
 type SosyalPlatform = "instagram" | "tiktok" | "facebook" | "twitter";
 type SosyalTon = "tanitim" | "indirim" | "hikaye";
@@ -16,6 +17,7 @@ interface SosyalDeps {
   paketModalAc: () => void;
   setHata: (v: string | null) => void;
   invalidateCredits: () => void;
+  ustKategori: UstKategori | null;
 }
 
 export function useSosyalUretim(deps: SosyalDeps) {
@@ -62,7 +64,7 @@ export function useSosyalUretim(deps: SosyalDeps) {
       const res = await fetch("/api/sosyal", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, platform: sosyalPlatform, ton: sosyalTon, sezon: sosyalSezon, userId: kullanici.id }),
+        body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, platform: sosyalPlatform, ton: sosyalTon, sezon: sosyalSezon, userId: kullanici.id, ustKategori: depsRef.current.ustKategori ?? undefined }),
       });
       const data = await res.json();
       if (res.status === 402) { analytics.creditExhausted(); paketModalAc(); setCaptionYukleniyor(false); return; }
@@ -95,7 +97,7 @@ export function useSosyalUretim(deps: SosyalDeps) {
       const res = await fetch("/api/sosyal/kit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, ton: sosyalTon, sezon: sosyalSezon, userId: kullanici.id }),
+        body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, ton: sosyalTon, sezon: sosyalSezon, userId: kullanici.id, ustKategori: depsRef.current.ustKategori ?? undefined }),
       });
       const data = await res.json();
       if (res.status === 402) { analytics.creditExhausted(); paketModalAc(); setSosyalKitYukleniyor(false); return; }

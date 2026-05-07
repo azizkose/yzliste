@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { captionSistemPrompt, captionCiktiParse } from "@/lib/prompts/sosyal";
+import { UST_KATEGORI_PROMPT_LABELS } from "@/lib/constants";
 import { turkceyiDuzelt, hashtaglariValideEt } from "@/lib/prompts/_turkce-duzeltme";
 import { krediDus, krediIade } from "@/lib/credits";
 import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
@@ -17,7 +18,12 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
 }
 
 export async function POST(req: NextRequest) {
-  const { urunAdi, ekBilgi, platform, ton, userId, sezon = "normal" } = await req.json();
+  const { urunAdi, ekBilgi: ekBilgiRaw, platform, ton, userId, sezon = "normal", ustKategori } = await req.json();
+
+  // ustKategori varsa ekBilgi başına ürün tipi bağlamı ekle
+  const ekBilgi = ustKategori
+    ? `Ürün tipi: ${UST_KATEGORI_PROMPT_LABELS[ustKategori as keyof typeof UST_KATEGORI_PROMPT_LABELS] ?? ustKategori}${ekBilgiRaw ? `\n${ekBilgiRaw}` : ""}`
+    : (ekBilgiRaw || "");
 
   if (!userId) return NextResponse.json({ hata: "Giriş yapılmadı" }, { status: 401 });
   if (!urunAdi) return NextResponse.json({ hata: "Ürün adı gerekli" }, { status: 400 });

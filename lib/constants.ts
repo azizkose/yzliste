@@ -197,3 +197,12 @@ export const UST_KATEGORI_LABELS: Record<UstKategori, string> = {
   taki_aksesuar: "Takı / Aksesuar",
   genel: "Ev & Diğer",
 }
+
+// AI prompt'unda kullanılır — kısa label yerine örneklerle zengin açıklama
+export const UST_KATEGORI_PROMPT_LABELS: Record<UstKategori, string> = {
+  giyim: "Giyim (tişört, gömlek, kazak, elbise, pantolon, ceket, etek, iç giyim, spor giyim)",
+  ayakkabi_canta: "Ayakkabı/Çanta (ayakkabı, bot, sneakers, sandalet, çanta, sırt çantası, cüzdan, bavul)",
+  kozmetik: "Kozmetik/Bakım (krem, serum, parfüm, makyaj, şampuan, saç bakım, vücut losyonu, deodorant)",
+  taki_aksesuar: "Takı/Aksesuar (kolye, küpe, yüzük, bilezik, saat, gözlük, şapka, atkı, kemer)",
+  genel: "Ev & Diğer (mutfak, dekor, elektronik, oyuncak, gıda, hediye, kırtasiye, bebek, çiçek)",
+}
