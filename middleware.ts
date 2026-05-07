@@ -22,13 +22,15 @@ const BOT_UA_PATTERN = /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbo
 const GA_CONSENT_HASH = "'sha256-wap7CwPtYKe8hUIXSTPFBNrEp+Q9It4BlBcGgGaS8ls='"
 
 // Public pages: statically rendered → no per-request nonce available.
-// 'strict-dynamic' is intentionally OMITTED — it ignores URL allowlists, which breaks
-// static pages where no nonce is present. GA consent allowed via hash, Next.js bundles
-// via 'self' URL allowlist.
+// Next.js'in streaming hydration output'u 20+ dinamik inline script üretir
+// (self.__next_f.push, React resume helpers, vs.) — bunların hash'i önceden
+// bilinemez. 'unsafe-inline' inline script XSS korumasını kaldırır ama public
+// sayfalarda kullanıcı input'u/auth yok, kabul edilebilir trade-off.
+// 'unsafe-inline' yanına nonce/hash KOYMA — biri varsa 'unsafe-inline' ignore edilir.
 function buildPublicCsp(dev: boolean): string {
   return [
     "default-src 'self'",
-    `script-src 'self' ${GA_CONSENT_HASH}${dev ? " 'unsafe-eval'" : ""} https://js.iyzipay.com https://www.googletagmanager.com https://www.google-analytics.com https://challenges.cloudflare.com`,
+    `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""} https://js.iyzipay.com https://www.googletagmanager.com https://www.google-analytics.com https://challenges.cloudflare.com`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' blob: data: https://*.supabase.co https://www.google-analytics.com https://*.fal.media https://fal.media",
     "font-src 'self'",
