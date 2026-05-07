@@ -45,13 +45,17 @@ const KATEGORILER: {
 interface Props {
   value: Kategori | null
   onChange: (k: Kategori) => void
+  zorunlu?: boolean
 }
 
-export default function KategoriSelector({ value, onChange }: Props) {
+export default function KategoriSelector({ value, onChange, zorunlu }: Props) {
   return (
     <div className="space-y-2">
       <label className="block text-xs font-medium text-rd-neutral-600">
         Ürün tipi <span className="text-rd-danger-700">*</span>
+        {zorunlu && (
+          <span className="ml-1 text-xs text-rd-neutral-500 font-normal">(tüm içerik türleri için zorunlu)</span>
+        )}
       </label>
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
         {KATEGORILER.map(({ id, label, Icon, aciklama }) => {

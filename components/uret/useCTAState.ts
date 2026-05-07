@@ -9,7 +9,7 @@ interface CTAStateArgs {
   selectedStylesCount?: number
   selectedPlatformsCount?: number
   isLoggedIn?: boolean
-  hasGorselKategori?: boolean
+  hasUstKategori?: boolean
 }
 
 export interface CTAState {
@@ -25,10 +25,13 @@ export function getCTAState(args: CTAStateArgs): CTAState {
     selectedStylesCount = 0,
     selectedPlatformsCount = 0,
     isLoggedIn = true,
-    hasGorselKategori = false,
+    hasUstKategori = false,
   } = args
 
   if (!isLoggedIn) return { disabled: true, reason: 'Önce giriş yap' }
+
+  // Üst kategori tüm sekmeler için zorunlu
+  if (!hasUstKategori) return { disabled: true, reason: 'Ürün tipini seç' }
 
   const productNameTrimmed = productName.trim()
 
@@ -37,7 +40,6 @@ export function getCTAState(args: CTAStateArgs): CTAState {
   }
   if (activeTab === 'gorsel') {
     if (!hasPhoto) return { disabled: true, reason: 'Önce fotoğraf yükle' }
-    if (!hasGorselKategori) return { disabled: true, reason: 'Ürün tipini seç' }
     if (selectedStylesCount < 1) return { disabled: true, reason: 'En az bir stil seç' }
   }
   if (activeTab === 'video') {

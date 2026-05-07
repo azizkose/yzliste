@@ -4,6 +4,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 import logger from "@/lib/logger";
 import { Redis } from "@upstash/redis";
 import { METIN_PROMPT_VERSION, Platform, sistemPromptOlustur, kategoriKoduBul } from "@/lib/prompts/metin";
+import { UST_KATEGORI_LABELS } from "@/lib/constants";
 import { turkceyiDuzelt } from "@/lib/prompts/_turkce-duzeltme";
 import { ciktiDogrula } from "@/lib/output-validator";
 import { listingSkorHesapla } from "@/lib/listingSkor";
@@ -47,6 +48,7 @@ export async function POST(req: NextRequest) {
     hedefKitle, fiyatSegmenti, anahtarKelimeler, markaliUrun,
     etiketler, backendTerimler,
     ucretsizRevize, orijinalUretimId,
+    ustKategori,
   } = await req.json();
 
   if (!userId) return NextResponse.json({ hata: "Giris yapilmadi" }, { status: 401 });
@@ -132,12 +134,12 @@ export async function POST(req: NextRequest) {
   if (girisTipi === "foto") {
     const fotoDil: "tr" | "en" = ["etsy", "amazon_usa"].includes(platform) ? "en" : (dil || "tr");
     if (fotoDil === "en") {
-      kullaniciBilgi = `Generate listing from this product photo.\nCategory: ${kategori || "not specified"}\nExtra info: ${ozellikler || "none"}`;
+      kullaniciBilgi = `Generate listing from this product photo.\n${ustKategori ? `Product type: ${UST_KATEGORI_LABELS[ustKategori as keyof typeof UST_KATEGORI_LABELS] ?? ustKategori}\n` : ""}Category: ${kategori || "not specified"}\nExtra info: ${ozellikler || "none"}`;
       if (hedefKitle && hedefKitle !== "genel") kullaniciBilgi += `\nTarget audience: ${hedefKitle}`;
       if (fiyatSegmenti) kullaniciBilgi += `\nPrice segment: ${fiyatSegmenti}`;
       if (anahtarKelimeler) kullaniciBilgi += `\nPriority keywords: ${anahtarKelimeler}`;
     } else {
-      kullaniciBilgi = `Bu urun fotografina bakarak icerik uret.\nKategori: ${kategori || "belirtilmedi"}\nEk bilgi: ${ozellikler || "yok"}`;
+      kullaniciBilgi = `Bu urun fotografina bakarak icerik uret.\n${ustKategori ? `Urun tipi: ${UST_KATEGORI_LABELS[ustKategori as keyof typeof UST_KATEGORI_LABELS] ?? ustKategori}\n` : ""}Kategori: ${kategori || "belirtilmedi"}\nEk bilgi: ${ozellikler || "yok"}`;
       if (hedefKitle && hedefKitle !== "genel") kullaniciBilgi += `\nHedef kitle: ${hedefKitle}`;
       if (fiyatSegmenti) kullaniciBilgi += `\nFiyat segmenti: ${fiyatSegmenti}`;
       if (anahtarKelimeler) kullaniciBilgi += `\nOncelikli anahtar kelimeler: ${anahtarKelimeler}`;
@@ -150,14 +152,14 @@ export async function POST(req: NextRequest) {
   } else {
     const platformDil: "tr" | "en" = ["etsy", "amazon_usa"].includes(platform) ? "en" : (dil || "tr");
     if (platformDil === "en") {
-      kullaniciBilgi = `Product name: ${urunAdi}\nCategory: ${kategori}\nAdditional details: ${ozellikler || "none provided"}`;
+      kullaniciBilgi = `${ustKategori ? `Product type: ${UST_KATEGORI_LABELS[ustKategori as keyof typeof UST_KATEGORI_LABELS] ?? ustKategori}\n` : ""}Product name: ${urunAdi}\nDetailed category: ${kategori || "not specified (infer)"}\nAdditional details: ${ozellikler || "none provided"}`;
       if (hedefKitle && hedefKitle !== "genel") kullaniciBilgi += `\nTarget audience: ${hedefKitle}`;
       if (fiyatSegmenti) kullaniciBilgi += `\nPrice segment: ${fiyatSegmenti}`;
       if (anahtarKelimeler) kullaniciBilgi += `\nPriority keywords (weave naturally into title and description): ${anahtarKelimeler}`;
       if (etiketler?.length > 0) kullaniciBilgi += `\nSuggested tag ideas (incorporate where relevant): ${etiketler.join(", ")}`;
       if (backendTerimler) kullaniciBilgi += `\nBackend search term hints: ${backendTerimler}`;
     } else {
-      kullaniciBilgi = `Urun adi: ${urunAdi}\nKategori: ${kategori}\nEk ozellikler ve bilgiler: ${ozellikler || "belirtilmedi"}`;
+      kullaniciBilgi = `${ustKategori ? `Urun tipi (ana kategori): ${UST_KATEGORI_LABELS[ustKategori as keyof typeof UST_KATEGORI_LABELS] ?? ustKategori}\n` : ""}Urun adi: ${urunAdi}\nDetayli kategori: ${kategori || "belirtilmedi (tahmin et)"}\nEk ozellikler ve bilgiler: ${ozellikler || "belirtilmedi"}`;
       if (hedefKitle && hedefKitle !== "genel") kullaniciBilgi += `\nHedef kitle: ${hedefKitle}`;
       if (fiyatSegmenti) kullaniciBilgi += `\nFiyat segmenti: ${fiyatSegmenti}`;
       if (anahtarKelimeler) kullaniciBilgi += `\nOncelikli anahtar kelimeler (bunlari dogal sekilde baslik ve aciklamaya yerlestir): ${anahtarKelimeler}`;
