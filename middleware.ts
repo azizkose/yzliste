@@ -66,6 +66,13 @@ export async function middleware(request: NextRequest) {
 
   let response = NextResponse.next({ request: { headers: requestHeaders } })
 
+  // Public sayfa: Supabase çağrısını atla → Set-Cookie yok → Vercel CDN private override yapmaz
+  // Trade-off: public sayfalarda auth token refresh olmaz — kullanıcı /uret'e gittiğinde refresh olur
+  if (isPublicCacheable(pathname)) {
+    response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate')
+    return addCsp(response)
+  }
+
   // Env var guard — preview env'de eksik olabilir
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -122,12 +129,6 @@ export async function middleware(request: NextRequest) {
   const AUTH_ONLY_PATHS = ['/giris', '/kayit']
   if (user && !user.is_anonymous && AUTH_ONLY_PATHS.includes(pathname)) {
     return addCsp(NextResponse.redirect(new URL('/uret', request.url)))
-  }
-
-  // Anonim kullanıcı + public sayfa → Googlebot için doğru Cache-Control sinyali
-  const isAnonymous = !user || user.is_anonymous
-  if (isAnonymous && isPublicCacheable(pathname)) {
-    response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate')
   }
 
   return addCsp(response)
