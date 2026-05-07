@@ -105,6 +105,25 @@ function ArticleJsonLd({ yazi }: { yazi: BlogYazisi }) {
   );
 }
 
+function BreadcrumbJsonLd({ yazi }: { yazi: BlogYazisi }) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Anasayfa", item: "https://www.yzliste.com" },
+            { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.yzliste.com/blog" },
+            { "@type": "ListItem", position: 3, name: yazi.baslik, item: `https://www.yzliste.com/blog/${yazi.slug}` },
+          ],
+        }),
+      }}
+    />
+  )
+}
+
 function MetinLink({ text }: { text: string }) {
   type Token =
     | { type: "link"; label: string; href: string }
@@ -293,6 +312,7 @@ export default async function BlogYaziPage({
   return (
     <main className="min-h-screen bg-rd-neutral-50 font-sans">
       <ArticleJsonLd yazi={yazi} />
+      <BreadcrumbJsonLd yazi={yazi} />
 
       <SiteHeader aktifSayfa="blog" />
 
