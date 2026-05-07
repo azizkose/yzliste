@@ -1,5 +1,5 @@
 import TrustStrip from '@/components/sections/HeroBlock/TrustStrip'
-import Nav from '@/components/sections/HeroBlock/Nav'
+import SiteHeader from '@/components/SiteHeader'
 import HeroSection from '@/components/sections/HeroBlock/HeroSection'
 import PazaryeriLogoStrip from '@/components/sections/HeroBlock/PazaryeriLogoStrip'
 import { InfoStrip } from '@/components/landing/InfoStrip'
@@ -12,7 +12,7 @@ export default function TanitimRedesign() {
   return (
     <div className="min-h-screen bg-white font-sans">
       <TrustStrip />
-      <Nav />
+      <SiteHeader />
       <main>
         <HeroSection />
         <PazaryeriLogoStrip />
