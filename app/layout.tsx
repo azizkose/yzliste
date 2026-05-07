@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
-import { headers } from "next/headers";
+import Script from "next/script";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
 import { GoogleAnalytics } from '@next/third-parties/google';
@@ -135,15 +135,13 @@ function RootJsonLd() {
   );
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
   modal,
 }: Readonly<{
   children: React.ReactNode;
   modal?: React.ReactNode;
 }>) {
-  const nonce = (await headers()).get('x-nonce') ?? ''
-
   return (
     <html
       lang="tr"
@@ -151,11 +149,12 @@ export default async function RootLayout({
     >
       <head>
         <RootJsonLd />
-        {/* Google Consent Mode v2 â€" GA yÃ¼klenmeden Ã¶nce default reddedildi */}
-        <script
-          nonce={nonce}
-          dangerouslySetInnerHTML={{
-            __html: `
+        {/* Google Consent Mode v2 — GA yüklenmeden önce default reddedildi */}
+        {/* next/script beforeInteractive: Next.js App Router x-nonce header'ını framework seviyesinde otomatik uygular */}
+        <Script
+          id="ga-consent-default"
+          strategy="beforeInteractive"
+        >{`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('consent', 'default', {
@@ -163,9 +162,7 @@ export default async function RootLayout({
                 ad_storage: 'denied',
                 wait_for_update: 500
               });
-            `,
-          }}
-        />
+            `}</Script>
       </head>
       <body className="min-h-screen flex flex-col">
         <PostHogProvider>
