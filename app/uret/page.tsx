@@ -929,7 +929,8 @@ export default function Home() {
               uretimId={metin.uretimId} yenidenUretHakki={metin.yenidenUretHakki} setYenidenUretHakki={metin.setYenidenUretHakki}
               kullanici={kullanici} paketModalAc={paketModalAc} icerikUret={icerikUretWithScroll}
               onGirisAc={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }}
-              skor={metin.skor} oneriler={metin.oneriler}
+              skor={metin.skor} setSkor={metin.setSkor}
+              oneriler={metin.oneriler} setOneriler={metin.setOneriler}
               ucretsizRevizeKullanildi={metin.ucretsizRevizeKullanildi}
               ucretsizRevizeBaslat={metin.ucretsizRevizeBaslat}
             />
