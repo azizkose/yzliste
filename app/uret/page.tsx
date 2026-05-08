@@ -767,7 +767,7 @@ export default function Home() {
                       disabled={!ustKategori}
                       className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800 disabled:bg-rd-neutral-50 disabled:text-rd-neutral-400"
                     >
-                      <option value="">— Kategori belirtme —</option>
+                      <option value="">— Detaylı kategori seç —</option>
                       {altlar.map((k) => (
                         <option key={k} value={k}>{k}</option>
                       ))}
