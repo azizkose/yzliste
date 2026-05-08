@@ -1,50 +1,29 @@
 "use client"
 
-import { Shirt, ShoppingBag, Sparkles, Gem, Package } from "lucide-react"
+import { Shirt, ShoppingBag, Sparkles, Gem, Home, Cpu, Baby, Gift, Package } from "lucide-react"
 import { cn } from "@/lib/utils"
-import type { Kategori } from "@/lib/fal/prompts/index"
+import type { UstKategori } from "@/lib/constants/kategori-mapping"
 
 const KATEGORILER: {
-  id: Kategori
+  id: UstKategori
   label: string
   Icon: React.ComponentType<{ size?: number; strokeWidth?: number }>
   aciklama: string
 }[] = [
-  {
-    id: "giyim",
-    label: "Giyim",
-    Icon: Shirt,
-    aciklama: "Tişört, gömlek, kazak, elbise",
-  },
-  {
-    id: "ayakkabi_canta",
-    label: "Ayakkabı/Çanta",
-    Icon: ShoppingBag,
-    aciklama: "Ayakkabı, bot, çanta, cüzdan",
-  },
-  {
-    id: "kozmetik",
-    label: "Kozmetik/Bakım",
-    Icon: Sparkles,
-    aciklama: "Krem, parfüm, makyaj",
-  },
-  {
-    id: "taki_aksesuar",
-    label: "Takı/Aksesuar",
-    Icon: Gem,
-    aciklama: "Kolye, küpe, yüzük, saat",
-  },
-  {
-    id: "genel",
-    label: "Ev & Diğer",
-    Icon: Package,
-    aciklama: "Dekor, elektronik, gıda, hediye",
-  },
+  { id: "giyim",          label: "Giyim",            Icon: Shirt,        aciklama: "Tişört, gömlek, kazak, elbise" },
+  { id: "ayakkabi_canta", label: "Ayakkabı/Çanta",   Icon: ShoppingBag,  aciklama: "Ayakkabı, bot, çanta, cüzdan" },
+  { id: "kozmetik",       label: "Kozmetik/Bakım",   Icon: Sparkles,     aciklama: "Krem, parfüm, makyaj" },
+  { id: "taki_aksesuar",  label: "Takı/Aksesuar",    Icon: Gem,          aciklama: "Kolye, küpe, yüzük, saat" },
+  { id: "ev_dekor",       label: "Ev & Dekor",       Icon: Home,         aciklama: "Mutfak, dekor, halı, mum" },
+  { id: "elektronik",     label: "Elektronik",       Icon: Cpu,          aciklama: "Telefon aks., kulaklık, küçük alet" },
+  { id: "bebek_oyuncak",  label: "Bebek & Oyuncak",  Icon: Baby,         aciklama: "Bebek bakım, oyuncak, eğitici" },
+  { id: "gida_hediye",    label: "Gıda & Hediye",    Icon: Gift,         aciklama: "Çikolata, kahve, çiçek, hediye" },
+  { id: "diger",          label: "Diğer",            Icon: Package,      aciklama: "Spor, evcil, hobi, otomotiv" },
 ]
 
 interface Props {
-  value: Kategori | null
-  onChange: (k: Kategori) => void
+  value: UstKategori | null
+  onChange: (k: UstKategori) => void
   zorunlu?: boolean
 }
 
@@ -57,7 +36,7 @@ export default function KategoriSelector({ value, onChange, zorunlu }: Props) {
           <span className="ml-1 text-xs text-rd-neutral-500 font-normal">(tüm içerik türleri için zorunlu)</span>
         )}
       </label>
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
         {KATEGORILER.map(({ id, label, Icon, aciklama }) => {
           const secili = value === id
           return (
@@ -85,4 +64,4 @@ export default function KategoriSelector({ value, onChange, zorunlu }: Props) {
 }
 
 export { KATEGORILER }
-export type { Kategori }
+export type { UstKategori }

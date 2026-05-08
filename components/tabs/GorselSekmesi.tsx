@@ -5,7 +5,8 @@ import { GORSEL_STILLER, kategoriKoduHesapla } from "@/lib/constants";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
 import KrediButon from "@/components/ui/KrediButon";
 import InputCropper from "@/components/uret/InputCropper";
-import type { Kategori } from "@/lib/fal/prompts/index";
+import type { UstKategori } from "@/lib/constants/kategori-mapping";
+import { UST_TO_GORSEL_KATEGORI } from "@/lib/constants/kategori-mapping";
 
 type Kullanici = {
   id: string;
@@ -34,8 +35,8 @@ interface GorselSekmesiProps {
   referansGorsel: string | null;
   setReferansGorsel: (v: string | null) => void;
   // V2: kategori seçimi
-  seciliKategori: Kategori | null;
-  setSeciliKategori: (k: Kategori | null) => void;
+  seciliKategori: UstKategori | null;
+  setSeciliKategori: (k: UstKategori | null) => void;
   kullanici: Kullanici | null;
   paketModalAc: () => void;
   gorselUret: () => void;
@@ -119,7 +120,7 @@ export default function GorselSekmesi({
       {showCropper && croppingFotoIndex !== null && fotolar[croppingFotoIndex] && (
         <InputCropper
           imageBase64={fotolar[croppingFotoIndex]}
-          kategori={seciliKategori}
+          kategori={seciliKategori ? UST_TO_GORSEL_KATEGORI[seciliKategori] : null}
           onCropDone={(croppedBase64) => {
             setFotolar((prev) => prev.map((f, i) => i === croppingFotoIndex ? croppedBase64 : f))
             setShowCropper(false)
@@ -276,7 +277,7 @@ export default function GorselSekmesi({
                     const res = await fetch("/api/gorsel", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ foto: resizedFoto, stiller: [job.stil], ekPrompt: gorselEkPrompt, userId: kullanici.id, referansGorsel, kategori: seciliKategori }),
+                      body: JSON.stringify({ foto: resizedFoto, stiller: [job.stil], ekPrompt: gorselEkPrompt, userId: kullanici.id, referansGorsel, kategori: seciliKategori ? UST_TO_GORSEL_KATEGORI[seciliKategori] : null }),
                     });
                     const data = await res.json();
                     if (!data.jobs?.[0]) return;

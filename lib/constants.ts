@@ -117,92 +117,15 @@ export const KATEGORI_LISTESI = [
 ] as const;
 
 // ─── Hibrit kategori sistemi ──────────────────────────────────────────────────
-// Üst kategori (5 enum, Sistem B) → alt kategori listesi (Sistem A filtrelenmiş)
+// Üst kategori (9 enum) → alt kategori listesi
 // Sadece metin sekmesinde alt kategori dropdown'ı için kullanılır.
 
-import type { Kategori as UstKategori } from "@/lib/fal/prompts/index"
-
-export const ALT_KATEGORI_MAP: Record<UstKategori, string[]> = {
-  giyim: [
-    "Kadın Tişört", "Erkek Tişört", "Çocuk Tişört",
-    "Kadın Gömlek", "Erkek Gömlek",
-    "Kadın Elbise", "Kadın Etek",
-    "Kadın Pantolon", "Erkek Pantolon",
-    "Kadın Ceket", "Erkek Ceket", "Mont",
-    "Kazak", "Hırka", "Sweatshirt",
-    "İç Giyim", "Pijama",
-    "Mayo & Bikini", "Spor Giyim",
-    "Polar & Kürk", "Yelek",
-  ],
-  ayakkabi_canta: [
-    "Kadın Ayakkabı", "Erkek Ayakkabı", "Çocuk Ayakkabı",
-    "Kadın Bot", "Erkek Bot",
-    "Spor Ayakkabı", "Sneakers",
-    "Sandalet", "Terlik",
-    "Topuklu Ayakkabı", "Loafer",
-    "Kadın Çanta", "Erkek Çanta", "Sırt Çantası",
-    "El Çantası", "Omuz Çantası", "Cüzdan",
-    "Bavul", "Valiz", "Laptop Çantası",
-  ],
-  kozmetik: [
-    "Yüz Bakım", "Yüz Kremi", "Nemlendirici", "Serum",
-    "Güneş Kremi", "Maske",
-    "Saç Bakım", "Şampuan", "Saç Kremi", "Saç Maskesi",
-    "Makyaj", "Fondöten", "Ruj", "Maskara", "Far",
-    "Parfüm", "Kolonyа",
-    "Vücut Bakım", "Duş Jeli", "Losyon",
-    "Deodorant", "Tıraş Ürünleri",
-  ],
-  taki_aksesuar: [
-    "Kadın Kolye", "Erkek Kolye",
-    "Küpe", "Halka Küpe", "Sallantılı Küpe",
-    "Yüzük", "Bilezik", "Bileklik",
-    "Saat", "Akıllı Saat",
-    "Gözlük", "Güneş Gözlüğü",
-    "Şapka", "Bere", "Atkı", "Kemer",
-    "Kravat", "Papyon",
-  ],
-  genel: [
-    "Mutfak Eşyası", "Tencere Seti", "Kahve & Çay",
-    "Ev Dekor", "Mum", "Vazo", "Tablo",
-    "Yatak & Banyo", "Havlu", "Nevresim",
-    "Elektronik", "Telefon Aksesuarı", "Kulaklık", "Şarj Aleti",
-    "Oyuncak", "Bebek Ürünleri",
-    "Gıda", "Çikolata", "Kuruyemiş",
-    "Kitap & Kırtasiye", "Spor & Outdoor",
-    "Hediye", "Çiçek",
-    "Oto Aksesuar", "Bahçe",
-  ],
-}
-
-export function getAltKategoriler(ust: UstKategori | null): string[] {
-  if (!ust) return []
-  return ALT_KATEGORI_MAP[ust] ?? []
-}
-
-// Barkod/foto'dan gelen kategori string'ini üst kategoriye map'le
-export function inferUstKategori(kategoriStr: string): UstKategori | null {
-  const k = (kategoriStr || "").toLowerCase()
-  if (/giyim|tişört|elbise|gömlek|pantolon|ceket|kazak|hırka|pijama|mayo|spor.giy/i.test(k)) return "giyim"
-  if (/ayakkabı|bot|sandalet|terlik|sneaker|çanta|cüzdan|bavul|valiz/i.test(k)) return "ayakkabi_canta"
-  if (/kozmetik|krem|serum|parfüm|makyaj|şampuan|saç|losyon|deodorant|maske/i.test(k)) return "kozmetik"
-  if (/takı|kolye|küpe|yüzük|bilezik|saat|gözlük|aksesuar/i.test(k)) return "taki_aksesuar"
-  return "genel"
-}
-
-export const UST_KATEGORI_LABELS: Record<UstKategori, string> = {
-  giyim: "Giyim",
-  ayakkabi_canta: "Ayakkabı / Çanta",
-  kozmetik: "Kozmetik / Bakım",
-  taki_aksesuar: "Takı / Aksesuar",
-  genel: "Ev & Diğer",
-}
-
-// AI prompt'unda kullanılır — kısa label yerine örneklerle zengin açıklama
-export const UST_KATEGORI_PROMPT_LABELS: Record<UstKategori, string> = {
-  giyim: "Giyim (tişört, gömlek, kazak, elbise, pantolon, ceket, etek, iç giyim, spor giyim)",
-  ayakkabi_canta: "Ayakkabı/Çanta (ayakkabı, bot, sneakers, sandalet, çanta, sırt çantası, cüzdan, bavul)",
-  kozmetik: "Kozmetik/Bakım (krem, serum, parfüm, makyaj, şampuan, saç bakım, vücut losyonu, deodorant)",
-  taki_aksesuar: "Takı/Aksesuar (kolye, küpe, yüzük, bilezik, saat, gözlük, şapka, atkı, kemer)",
-  genel: "Ev & Diğer (mutfak, dekor, elektronik, oyuncak, gıda, hediye, kırtasiye, bebek, çiçek)",
-}
+export type { UstKategori } from "@/lib/constants/kategori-mapping"
+export {
+  ALT_KATEGORI_MAP,
+  getAltKategoriler,
+  inferUstKategori,
+  UST_KATEGORI_LABELS,
+  UST_KATEGORI_PROMPT_LABELS,
+  UST_TO_GORSEL_KATEGORI,
+} from "@/lib/constants/kategori-mapping"
