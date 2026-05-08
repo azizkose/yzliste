@@ -4,7 +4,7 @@ import { resizeFoto } from "@/lib/listing-utils";
 import type { Kullanici } from "@/lib/listing-utils";
 import { analytics } from "@/lib/analytics";
 import { SOSYAL_PROMPT_VERSION } from "@/lib/prompts/sosyal";
-import type { Kategori as UstKategori } from "@/lib/fal/prompts/index";
+import type { UstKategori } from "@/lib/constants/kategori-mapping";
 
 type SosyalPlatform = "instagram" | "tiktok" | "facebook" | "twitter";
 type SosyalTon = "tanitim" | "indirim" | "hikaye";

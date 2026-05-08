@@ -3,7 +3,8 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { resizeFoto } from "@/lib/listing-utils";
 import type { Kullanici } from "@/lib/listing-utils";
 import { analytics } from "@/lib/analytics";
-import type { Kategori } from "@/lib/fal/prompts/index";
+import type { UstKategori } from "@/lib/constants/kategori-mapping";
+import { UST_TO_GORSEL_KATEGORI } from "@/lib/constants/kategori-mapping";
 
 interface GorselDeps {
   fotolar: string[];
@@ -14,7 +15,7 @@ interface GorselDeps {
   setHata: (v: string | null) => void;
   invalidateCredits: () => void;
   // Üst kategori parent'tan gelir (paylaşılan state)
-  seciliKategori: Kategori | null;
+  seciliKategori: UstKategori | null;
 }
 
 export function useGorselUretim(deps: GorselDeps) {
@@ -71,7 +72,7 @@ export function useGorselUretim(deps: GorselDeps) {
           userId: kullanici.id,
           referansGorsel,
           inputBoyut,
-          kategori: depsRef.current.seciliKategori, // V2: parent'tan gelir, null ise backend V1 pipeline kullanır
+          kategori: depsRef.current.seciliKategori ? UST_TO_GORSEL_KATEGORI[depsRef.current.seciliKategori] : null, // V2: 9-enum→5-enum map, null ise backend V1 pipeline kullanır
         }),
       });
       const data = await res.json();

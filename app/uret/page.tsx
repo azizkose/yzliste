@@ -12,7 +12,7 @@ import { PLATFORM_BILGI, getAltKategoriler } from "@/lib/constants";
 import { PLATFORM_KURALLARI } from "@/lib/prompts/metin";
 import type { Platform } from "@/lib/prompts/metin";
 import KategoriSelector from "@/components/uret/KategoriSelector";
-import type { Kategori as UstKategori } from "@/lib/fal/prompts/index";
+import type { UstKategori } from "@/lib/constants/kategori-mapping";
 import PaketModal from "@/components/PaketModal";
 import MetinSekmesi from "@/components/tabs/MetinSekmesi";
 import GorselSekmesi from "@/components/tabs/GorselSekmesi";
@@ -58,8 +58,8 @@ type Uretim = {
 
 const CONTENT_TYPES: { id: AnaSekme; label: string; Icon: LucideIcon; desc: string; credit: string; disabled?: boolean; badge?: string }[] = [
   { id: "metin", label: "Listing metni", Icon: FileText, desc: "Başlık, özellikler, açıklama", credit: "1 kredi / ürün" },
-  { id: "gorsel", label: "Ürün görseli", Icon: ImageIcon, desc: "7 stüdyo stili", credit: "1 kredi / stil", disabled: true, badge: "Yakında" },
-  { id: "video", label: "Ürün videosu", Icon: PlayCircle, desc: "5sn veya 10sn tanıtım", credit: "10–20 kredi", disabled: true, badge: "Yakında" },
+  { id: "gorsel", label: "Ürün görseli", Icon: ImageIcon, desc: "7 stüdyo stili", credit: "1 kredi / stil" },
+  { id: "video", label: "Ürün videosu", Icon: PlayCircle, desc: "5sn veya 10sn tanıtım", credit: "10–20 kredi" },
   { id: "sosyal", label: "Sosyal medya", Icon: Share2, desc: "Instagram, TikTok, Pinterest", credit: "3 kredi / kit" },
 ];
 
@@ -271,10 +271,7 @@ export default function Home() {
     const tabParam = params.get("tab");
     const girisParam = params.get("giris");
     if (tabParam && (["metin", "gorsel", "video", "sosyal"] as AnaSekme[]).includes(tabParam as AnaSekme)) {
-      // URET-MODE-01: disabled tab'lara fallback — gorsel/video geçici kapalı
-      const disabledTabs: AnaSekme[] = ["gorsel", "video"];
-      const resolvedTab = disabledTabs.includes(tabParam as AnaSekme) ? "metin" : (tabParam as AnaSekme);
-      setAnaSekme(resolvedTab);
+      setAnaSekme(tabParam as AnaSekme);
       // P10-10: tab URL param içerik türünü ön seçer ama step 1'de kalır (platform seçimi beklenir)
     }
     if (tabParam === "metin" && girisParam === "excel") {
@@ -770,7 +767,7 @@ export default function Home() {
                       disabled={!ustKategori}
                       className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800 disabled:bg-rd-neutral-50 disabled:text-rd-neutral-400"
                     >
-                      <option value="">— Boş bırak (AI tahmin etsin) —</option>
+                      <option value="">— Kategori belirtme —</option>
                       {altlar.map((k) => (
                         <option key={k} value={k}>{k}</option>
                       ))}

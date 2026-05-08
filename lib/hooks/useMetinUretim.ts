@@ -5,7 +5,7 @@ import { analytics } from "@/lib/analytics";
 import { METIN_PROMPT_VERSION } from "@/lib/prompts/metin";
 import { useUretimStore } from "@/store/uretimStore";
 import type { Kullanici } from "@/lib/listing-utils";
-import type { Kategori as UstKategori } from "@/lib/fal/prompts/index";
+import type { UstKategori } from "@/lib/constants/kategori-mapping";
 
 interface MetinDeps {
   fotolar: string[];
