@@ -2,7 +2,7 @@
 slug: ai-manken-model-giydirme-teknoloji
 baslik: AI Model Giydirme Teknolojisi: Sanal Mankenlerle Görsel Çekimi
 ozet: AI model giydirme nasıl çalışır? Gerçek model çekimi gerektirmeden farklı bedenlerde, farklı stillerde ürün görseli üretmek için pratik teknoloji rehberi.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-03-11
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

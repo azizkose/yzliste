@@ -2,7 +2,7 @@
 slug: ai-urun-fotografciligi
 baslik: Ürün Fotoğrafçılığında Yapay Zeka Devrimi: Profesyonel Görünümlü Çekimler
 ozet: Profesyonel fotoğrafçı maliyetine son! Yapay zeka ile evden profesyonel görünümlü ürün fotoğrafları üretmenin yolları.
-yayinTarihi: 2026-04-11
+yayinTarihi: 2025-07-17
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5 
 kategori: AI ve Görsel

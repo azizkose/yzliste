@@ -2,7 +2,7 @@
 slug: kargo-maliyeti-dusurme-anlasmalar
 baslik: Kargo Maliyetini Düşürme: Firma Anlaşmaları ve Optimizasyon Rehberi
 ozet: E-ticarette kargo maliyetini düşürmenin yolları. Kargo firma pazarlığı, hacim indirimi, paketleme optimizasyonu ve kargo yöneticisi kullanımı burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-12-20
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: İşletme ve SEO

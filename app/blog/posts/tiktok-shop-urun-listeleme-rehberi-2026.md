@@ -2,7 +2,7 @@
 slug: tiktok-shop-urun-listeleme-rehberi-2026
 baslik: TikTok Shop'ta Satış Yapmak: Ürün Listeleme ve İçerik Rehberi (2026)
 ozet: TikTok Shop'ta mağaza açmak, ürün listelemek ve viral içerikle satış yapmak için bilmen gereken her şey bu rehberde. Algoritma ipuçları dahil.
-yayinTarihi: 2026-03-03
+yayinTarihi: 2025-05-24
 yazarAdi: yzliste Ekibi
 okumaSuresi: 8
 kategori: Platform Rehberleri

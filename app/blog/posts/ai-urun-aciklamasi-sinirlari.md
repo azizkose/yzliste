@@ -2,7 +2,7 @@
 slug: ai-urun-aciklamasi-sinirlari
 baslik: AI ile Ürün Açıklaması Yazmanın Sınırları: Nerede Biter, İnsan Nerede Başlar?
 ozet: AI ürün açıklaması yazımında neleri yapabiliyor, neleri yapamıyor? Marka sesi, yaratıcılık ve duygu aktarımı gibi insan gerektiren alanlar bu yazıda.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-03-02
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

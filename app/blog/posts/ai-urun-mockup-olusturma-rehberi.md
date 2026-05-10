@@ -2,7 +2,7 @@
 slug: ai-urun-mockup-olusturma-rehberi
 baslik: AI ile Ürün Mock-up Oluşturma: T-shirt, Mug ve Çanta için Görsel
 ozet: Print-on-demand ve özel tasarım ürünler için AI ile gerçekçi mock-up oluşturma teknikleri, hangi araçların ne için uygun olduğu ve sık yapılan hatalar.
-yayinTarihi: 2026-04-27
+yayinTarihi: 2026-04-04
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
 kategori: AI ve Görsel

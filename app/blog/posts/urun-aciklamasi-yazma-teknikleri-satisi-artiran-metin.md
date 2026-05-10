@@ -2,7 +2,7 @@
 slug: urun-aciklamasi-yazma-teknikleri-satisi-artiran-metin
 baslik: Satışı Artıran Ürün Açıklaması Nasıl Yazılır? 7 Kanıtlanmış Teknik
 ozet: E-ticarette ürün açıklaması dönüşüm oranının en kritik faktörü. Özellik yerine fayda yazmaktan SEO uyumlu yapıya kadar 7 teknikle satışlarını artır.
-yayinTarihi: 2026-03-05
+yayinTarihi: 2025-05-27
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
 kategori: Satış Stratejileri

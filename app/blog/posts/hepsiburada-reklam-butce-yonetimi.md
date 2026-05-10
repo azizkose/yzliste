@@ -2,7 +2,7 @@
 slug: hepsiburada-reklam-butce-yonetimi
 baslik: Hepsiburada Reklam Yönetimi: Bütçe, Strateji ve Verim Ölçümü Rehberi
 ozet: Hepsiburada'da reklam yapmak satışı nasıl etkiliyor? Sponsored Product, bütçe belirleme, anahtar kelime ve verim ölçümü için pratik satıcı rehberi burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-12-26
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

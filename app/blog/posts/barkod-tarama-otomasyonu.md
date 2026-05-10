@@ -2,7 +2,7 @@
 slug: barkod-tarama-otomasyonu
 baslik: Barkod Tarama ile Saniyeler İçinde Ürün Girişi: E-Ticarette Hız Dönemi
 ozet: Manuel ürün girişine son! Barkod tarama teknolojisi ile pazar yerlerine ürün yükleme operasyonunuzu nasıl hızlandıracağınızı öğrenin.
-yayinTarihi: 2026-04-13
+yayinTarihi: 2025-07-29
 yazarAdi: yzliste Ekibi
 okumaSuresi: 4 
 kategori: AI ve Görsel

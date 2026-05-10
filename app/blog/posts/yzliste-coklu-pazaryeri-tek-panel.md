@@ -2,7 +2,7 @@
 slug: yzliste-coklu-pazaryeri-tek-panel
 baslik: yzliste ile Çoklu Pazaryeri Yönetimi: 7 Platform Tek Panelde
 ozet: yzliste ile 7 pazaryerinde aynı anda satış yapmak nasıl yönetilir? Listing senkronizasyonu, çoklu üretim ve verim avantajları rehberde.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-10-21
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Ürün Rehberleri

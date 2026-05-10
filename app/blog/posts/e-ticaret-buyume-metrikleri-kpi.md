@@ -2,7 +2,7 @@
 slug: e-ticaret-buyume-metrikleri-kpi
 baslik: E-Ticaret Büyüme Metrikleri: Hangi KPI'ları Takip Etmelisin?
 ozet: E-ticarette gerçek büyümeyi gösteren metrikler nelerdir? Cironun ötesinde dönüşüm, LTV, CAC ve operasyonel KPI'lar için pratik rehber satıcılara.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-01-31
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: İşletme ve SEO

@@ -2,7 +2,7 @@
 slug: amazon-usa-ppc-reklam-stratejisi
 baslik: Amazon USA PPC Reklam Stratejisi: Türk Satıcılar İçin Kapsamlı Rehber
 ozet: Amazon USA'de Sponsored Products, Sponsored Brands ve Sponsored Display kampanyaları nasıl yönetilir? ACoS, anahtar kelime ve optimizasyon burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-02-09
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: Platform Rehberleri

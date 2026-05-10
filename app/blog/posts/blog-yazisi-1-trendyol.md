@@ -2,7 +2,7 @@
 slug: trendyol-satis-artirma-seo-rehberi
 baslik: Trendyol’da Görünürlüğü Artırmanın Yolu: SEO Uyumlu Ürün Girişi
 ozet: Trendyol algoritmasında üst sıralara çıkmak için ürün başlığı ve açıklama yazımında dikkat edilmesi gereken profesyonel stratejiler.
-yayinTarihi: 2026-04-09
+yayinTarihi: 2025-07-02
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

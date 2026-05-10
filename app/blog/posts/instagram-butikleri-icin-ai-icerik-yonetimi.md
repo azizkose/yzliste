@@ -2,7 +2,7 @@
 slug: instagram-butikleri-icin-ai-icerik-yonetimi
 baslik: Instagram'dan Satış Yapmanın Yeni Yolu: AI Destekli Butik Yönetimi
 ozet: Instagram butiğiniz için her gün içerik üretmekten yoruldunuz mu? Yapay zeka ile profesyonel caption ve görsel hazırlama rehberi.
-yayinTarihi: 2026-04-13
+yayinTarihi: 2025-07-26
 yazarAdi: yzliste Ekibi
 okumaSuresi: 4
 kategori: Satış Stratejileri

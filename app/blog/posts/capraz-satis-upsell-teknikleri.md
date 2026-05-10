@@ -2,7 +2,7 @@
 slug: capraz-satis-upsell-teknikleri
 baslik: Çapraz Satış ve Upsell Teknikleri: Sepet Tutarını Artırmanın Yolu
 ozet: E-ticarette çapraz satış (cross-sell) ve upsell stratejileri ile ortalama sepet tutarını artırmak. Paket teklif, set öneri ve fırsat tetikleyici teknikleri burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-02-06
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: İşletme ve SEO

@@ -2,7 +2,7 @@
 slug: sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri
 baslik: Sosyal Medyada Ürün Tanıtımı: Instagram ve TikTok İçin Etkili Stratejiler
 ozet: Instagram ve TikTok'ta ürünlerini öne çıkarmak için içerik stratejisi, paylaşım zamanlaması ve etkileşim artırma taktiklerini bu rehberde bulacaksın.
-yayinTarihi: 2026-04-04
+yayinTarihi: 2025-06-26
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
 kategori: Satış Stratejileri

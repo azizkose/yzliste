@@ -2,7 +2,7 @@
 slug: etsy-baslik-tag-yazim-kurallari
 baslik: Etsy Başlık ve Tag Yazım Kuralları: Arama Görünürlüğü İçin Optimizasyon
 ozet: Etsy başlık ve tag alanlarında anahtar kelime nasıl yerleştirilir? 13 etiket alanının stratejik kullanımı ve arama algoritması uyumu pratik rehberde.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-01-10
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: Platform Rehberleri

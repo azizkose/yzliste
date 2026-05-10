@@ -2,7 +2,7 @@
 slug: amazon-brand-registry-kilavuz
 baslik: Amazon Brand Registry Kılavuzu: Marka Tescilli Satıcı Olmak
 ozet: Amazon Brand Registry başvuru süreci, gereken belgeler ve kazanılan avantajlar nelerdir? A+ Content, mağaza sayfası ve marka ihlali koruması rehberde.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-02-21
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

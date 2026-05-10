@@ -2,7 +2,7 @@
 slug: shopify-turkiye-magaza-acma-rehberi
 baslik: Shopify Türkiye'de Online Mağaza Açmak: Adım Adım Başlangıç Rehberi
 ozet: Shopify Türkiye'de mağaza açma süreci, ödeme entegrasyonu, vergi ayarları, tema seçimi ve ilk ürün listeleme adımlarını pratik ipuçlarıyla anlatan başlangıç rehberi.
-yayinTarihi: 2026-04-27
+yayinTarihi: 2026-03-23
 yazarAdi: yzliste Ekibi
 okumaSuresi: 8
 kategori: Platform Rehberleri

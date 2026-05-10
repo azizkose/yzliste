@@ -2,7 +2,7 @@
 slug: yzliste-parasut-entegrasyonu-e-fatura
 baslik: yzliste Paraşüt Entegrasyonu: e-Arşiv Fatura Otomasyonu
 ozet: yzliste'nin Paraşüt muhasebe yazılımı entegrasyonu nasıl çalışır? E-Arşiv fatura otomasyonu, sipariş senkronizasyonu ve kurulum adımları rehberde.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-10-09
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Ürün Rehberleri

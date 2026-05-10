@@ -2,7 +2,7 @@
 slug: instagram-satis-stratejileri
 baslik: Instagram’da Satış Yapanlar İçin AI Rehberi: Fotoğraftan Satışa
 ozet: Instagram estetiği ve yapay zeka desteğiyle butiğinizi nasıl büyütebilirsiniz? Görsel ve caption stratejileri.
-yayinTarihi: 2026-04-15
+yayinTarihi: 2025-08-10
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5 
 kategori: Satış Stratejileri

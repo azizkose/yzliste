@@ -2,7 +2,7 @@
 slug: ai-metin-ureticileri-karsilastirma
 baslik: AI Metin Üreticileri Karşılaştırması: E-Ticaret İçin Hangisi?
 ozet: ChatGPT, Claude, Gemini ve özel amaçlı e-ticaret AI araçları karşılaştırması. Listing üretimi için hangi aracı hangi durumda seçersin?
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-03-08
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

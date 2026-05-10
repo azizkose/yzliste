@@ -2,7 +2,7 @@
 slug: telefon-urun-fotografi-ai-duzeltme
 baslik: Telefonla Ürün Fotoğrafı Çek, AI ile Düzelt: Amatörden Profesyonele
 ozet: Cep telefonuyla çekilmiş ürün fotoğrafları AI ile nasıl düzeltilir? Işık, renk, arka plan ve detay rötuş için amatör satıcılara pratik rehber.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-11-23
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

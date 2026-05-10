@@ -2,7 +2,7 @@
 slug: e-ticarette-gorsel-kalitenin-satis-etkisi
 baslik: Görsel Kalitesi Satışı Nasıl Etkiler? E-Ticarette Fotoğrafın Gücü
 ozet: Düşük kaliteli görseller dönüşüm oranını ciddi oranda olumsuz etkileyebilir. Ürün görselinin satışa etkisini ve kaliteyi artırmanın yollarını bu rehberde bul.
-yayinTarihi: 2026-04-19
+yayinTarihi: 2025-09-12
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

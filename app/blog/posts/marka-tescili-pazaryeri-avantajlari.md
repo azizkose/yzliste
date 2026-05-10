@@ -2,7 +2,7 @@
 slug: marka-tescili-pazaryeri-avantajlari
 baslik: Marka Tescili ve Pazaryeri Avantajları: Neden Başvurmalısın?
 ozet: Marka tescili pazaryerinde hangi kapıları açıyor? Amazon Marka Tescili, Trendyol marka sahipliği ve Hepsiburada avantajlarını bir arada inceledik.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-12-14
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: İşletme ve SEO

@@ -2,7 +2,7 @@
 slug: yzliste-video-ozelligi-urun-tanitim
 baslik: yzliste Video Özelliği: Ürününü Hareketli Tanıt, Dönüşümünü Yükselt
 ozet: Pazaryerinde video, tıklamayı ve sepete eklemeyi yukarı çekiyor. yzliste AI video üretimi ile statik ürün fotoğrafından hareketli tanıtım nasıl hazırlanır?
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-10-03
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Ürün Rehberleri

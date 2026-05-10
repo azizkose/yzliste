@@ -2,7 +2,7 @@
 slug: trendyol-anahtar-kelime-arastirma
 baslik: Trendyol'da Anahtar Kelime Araştırması Nasıl Yapılır? Pratik Rehber
 ozet: Trendyol'da arama sonucunda üste çıkmak için doğru anahtar kelimeyi nasıl bulursun? Araç seçimi, uzun kuyruk kelime, rakip analizi ve yerleşim bu yazıda.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-11-20
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

@@ -2,7 +2,7 @@
 slug: elektronik-urunler-listing-teknik-ozellik-yazma
 baslik: Elektronik Ürün Listing'i Nasıl Yazılır? Teknik Detayları Satışa Çevirme Rehberi
 ozet: Elektronik kategorisinde teknik özellikler satışın anahtarıdır. Müşterinin anladığı dilde teknik detay yazmanın ve güven oluşturmanın yollarını öğren.
-yayinTarihi: 2026-04-14
+yayinTarihi: 2025-08-07
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: Satış Stratejileri

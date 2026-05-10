@@ -2,7 +2,7 @@
 slug: giyim-urunleri-listing-rehberi-beden-tablosu-ipuclari
 baslik: Giyim Ürünleri İçin Listing Rehberi: Beden Tablosu, Kumaş ve İade Azaltma
 ozet: Giyim kategorisinde listing yazarken beden tablosu, kumaş detayı ve görsel kalitesi iade oranını doğrudan etkiler. Kategori özel listing taktiklerini öğren.
-yayinTarihi: 2026-03-19
+yayinTarihi: 2025-06-11
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
 kategori: Satış Stratejileri

@@ -2,7 +2,7 @@
 slug: pazaryeri-fiyatlandirma-dinamik-stratejiler
 baslik: Pazaryerinde Dinamik Fiyatlandırma Stratejileri: Kârlı Büyümenin Yolu
 ozet: Dinamik fiyatlandırma, pazaryerinde rakip takibi ve BuyBox mücadelesinde nasıl kullanılır? Psikolojik fiyat, indirim stratejileri ve araçlar bu rehberde.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-12-05
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: İşletme ve SEO
