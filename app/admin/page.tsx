@@ -193,14 +193,14 @@ export default function AdminPage() {
               </thead>
               <tbody className="divide-y divide-[#F1F0EB]">
                 {[
-                  { tip: "Metin (Sonnet 4.6)", maliyet: "$0.005", kredi: 1, fiyat: "₺2.49", marj: "+1010%" },
-                  { tip: "Metin düzenleme", maliyet: "$0.003", kredi: 1, fiyat: "₺2.49", marj: "+1500%+" },
-                  { tip: "Görsel (RMBG+Bria)", maliyet: "$0.012", kredi: 1, fiyat: "₺2.49", marj: "+363%" },
-                  { tip: "Video 5sn (Kling v2.1)", maliyet: "$0.28", kredi: 10, fiyat: "₺24.90", marj: "+98%" },
-                  { tip: "Video 10sn (Kling v2.1)", maliyet: "$0.56", kredi: 20, fiyat: "₺49.80", marj: "+98%" },
-                  { tip: "Sosyal caption", maliyet: "$0.003", kredi: 1, fiyat: "₺2.49", marj: "+1500%+" },
-                  { tip: "Sosyal kit (caption+görsel)", maliyet: "$0.017", kredi: 2, fiyat: "₺4.98", marj: "+553%" },
-                  { tip: "Virtual try-on (FASHN)", maliyet: "$0.075", kredi: 3, fiyat: "₺7.47", marj: "+122%" },
+                  { tip: "Metin (Sonnet 4.6)", maliyet: "$0.005", kredi: 1, fiyat: "₺3.11", marj: "+94%" },
+                  { tip: "Metin düzenleme", maliyet: "$0.003", kredi: 1, fiyat: "₺3.11", marj: "+97%" },
+                  { tip: "Görsel (RMBG+Bria)", maliyet: "$0.012", kredi: 1, fiyat: "₺3.11", marj: "+87%" },
+                  { tip: "Video 5sn (Kling v2.1)", maliyet: "$0.28", kredi: 10, fiyat: "₺31.10", marj: "+69%" },
+                  { tip: "Video 10sn (Kling v2.1)", maliyet: "$0.56", kredi: 20, fiyat: "₺62.20", marj: "+69%" },
+                  { tip: "Sosyal caption", maliyet: "$0.003", kredi: 1, fiyat: "₺3.11", marj: "+97%" },
+                  { tip: "Sosyal kit (caption+görsel)", maliyet: "$0.017", kredi: 2, fiyat: "₺6.22", marj: "+90%" },
+                  { tip: "Virtual try-on (FASHN)", maliyet: "$0.075", kredi: 3, fiyat: "₺9.33", marj: "+72%" },
                 ].map((r) => (
                   <tr key={r.tip} className="text-sm">
                     <td className="py-2 text-[#5A5852]">{r.tip}</td>
@@ -215,7 +215,7 @@ export default function AdminPage() {
               </tbody>
             </table>
           </div>
-          <p className="text-xs text-[#908E86] mt-2">* Büyük paket: ₺2.49/kredi. $ → ₺ kuru: ~₺35.</p>
+          <p className="text-xs text-[#908E86] mt-2">* Büyük paket: ₺3,11/kredi (₺249/80kr). Başlangıç ₺3,90/kr · Popüler ₺3,96/kr. $ → ₺ kuru: ~₺35. Marj = (satış − maliyet) / satış.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">

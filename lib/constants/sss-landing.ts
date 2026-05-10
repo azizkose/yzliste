@@ -15,7 +15,7 @@ export const FAQ_ITEMS = [
   },
   {
     question: 'Abonelik var mı?',
-    answer: "Hayır. yzliste tamamen kullandığın kadar öde modeli ile çalışır. Aylık abonelik yoktur. 49₺'den başlayan kredi paketleri mevcuttur.",
+    answer: "Hayır. yzliste tamamen kullandığın kadar öde modeli ile çalışır. Aylık abonelik yoktur. 39₺'den başlayan kredi paketleri mevcuttur.",
   },
   {
     question: 'Hangi pazaryerlerini destekliyorsunuz?',
