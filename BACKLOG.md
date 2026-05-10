@@ -28,7 +28,8 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | ~~URET-KATEGORI-V2~~ | Kategori hibrit sistemi (4 sekme paylaşımlı üst + metin alt kategori) | Code | ✅ Tamamlandı (2026-05-07) | 5 enum üst kategori (KategoriSelector) + ALT_KATEGORI_MAP + getCTAState global guard + ustKategori state lifting |
 | ~~UX-CTA-CLEANUP~~ | /uret sayfasında 3 duplicate CTA temizliği | Code | ✅ Tamamlandı (2026-05-07) | SiteHeader "İçerik Üret →" aktifSayfa==="icerik" iken gizlendi; StickySubmitBar tek CTA |
 | ~~UX-PAKETI-03~~ | Kart-içi CTA labels + kategori hibrit tamamlama | Code | ✅ Tamamlandı (2026-05-08) | Metin→"Listing metnini üret", Görsel→"Görseli oluştur", Video→"Videoyu oluştur"; UST_KATEGORI_PROMPT_LABELS; sosyal/kit API'ye ustKategori; Sentry fallback |
-| ~~UX-FIX-04~~ | /uret tabs aktif + üst kategori 9'a genişletme + alt kategori metin düzeltme | Code | ✅ Tamamlandı (2026-05-08) | Görsel+Video disabled kaldırıldı; UstKategori 5→9 enum (ev_dekor/elektronik/bebek_oyuncak/gida_hediye/diger); UST_TO_GORSEL_KATEGORI fallback map; "AI tahmin etsin"→"Kategori belirtme" |
+| ~~UX-FIX-04~~ | /uret tabs aktif + üst kategori 9'a genişletme + alt kategori metin düzeltme | Code | ✅ Tamamlandı (2026-05-08) | Görsel+Video disabled kaldırıldı; UstKategori 5→9 enum (ev_dekor/elektronik/bebek_oyuncak/gida_hediye/diger); UST_TO_GORSEL_KATEGORI fallback map; "AI tahmin etsin"→"Detaylı kategori seç" |
+| ~~FIYAT-BLOG-BAKIM~~ | Fiyat güncellemesi + blog tarih dağıtımı | Code | ✅ Tamamlandı (2026-05-10) | ₺49/129/299→39/99/249 TL; kredi 30→25 & 100→80; 5 dosya güncellendi; 118 blog yazısı 3 günde 1 dağıtımla yeniden tarihlendi (2025-05-24→2026-05-10) |
 | AUTH-UX-CLEANUP | Nav.tsx + NAV_CTAS/NAV_LINKS silme | Code | P3 — sonraki sprint | `components/sections/HeroBlock/Nav.tsx` artık kullanılmıyor (V2 ile SiteHeader'a geçildi); slate-* renk ihlalleri de var. Güvenli silme: grep ile son kez kontrol et |
 | GORSEL-V2-A~G | Görsel V2 pipeline refactor | Code | ✅ Tamamlandı (2026-05-05) | Faz 1 araştırma + Faz 2 implementasyon |
 | ~~GORSEL-V2.2.1~~ | Composite pipeline (Sharp + flux-schnell) | ✅ Tamamlandı (2026-05-06) | preview'da READY |
@@ -39,7 +40,7 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | ~~POST-HF-01~~ | /uret metin foto+metin patladı | ✅ Tamamlandı (2026-05-04) | Code teşhis + fix |
 | ~~INPUT-MAP-01~~ | 4 tab input alanları haritası | ✅ Tamamlandı (2026-05-04) | `docs/icerik-input-map.md` |
 | AUTH-01 | Mobilde kayıt — Turnstile devre dışı | Kod OK, mobil test kaldı | Aziz manuel test |
-| FY-01 | Fiyat 49/129/299 TL | Kod OK, test kaldı | Aziz manuel test |
+| ~~FY-01~~ | Fiyat 39/99/249 TL | ✅ Tamamlandı (2026-05-10) | FIYAT-BLOG-BAKIM ile güncellendi |
 | CI-01 | CI lint hataları (12 error) | Kısmen | inline (setState in effect + prototype) |
 | ~~SEO-DOMAIN-01~~ | Canonical URL tutarlılık temizliği | ✅ Tamamlandı (2026-05-04) | 4 dosya, sadece metadata |
 | ~~URET-BUG-1A~~ | Metin revize sayacı düşmüyor | ✅ Tamamlandı (2026-05-05) | mikro() try/catch + setYenidenUretHakki(prev-1) |
