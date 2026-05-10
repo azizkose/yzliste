@@ -2,7 +2,7 @@
 slug: yzliste-sosyal-medya-kiti
 baslik: yzliste Sosyal Medya Kiti: Tek Tıkla 4 Platformun İçeriği Hazır
 ozet: Instagram, TikTok, Facebook ve X için ürününe özel sosyal medya içerikleri yzliste ile nasıl üretilir? Başlık, caption ve görsel formatları rehberde.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-10-06
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Ürün Rehberleri

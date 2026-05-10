@@ -2,7 +2,7 @@
 slug: urun-gorseli-arka-plan-degistirme
 baslik: Ürün Görselinde Arka Plan Değiştirme: AI ile Sahneleme Teknikleri
 ozet: Ürün fotoğrafının arka planını AI ile değiştirmek için pratik rehber. Beyaz fon, lifestyle ve sezon temalı sahneler üretmenin yolları burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-10-27
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

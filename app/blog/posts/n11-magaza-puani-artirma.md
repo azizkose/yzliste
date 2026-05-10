@@ -2,7 +2,7 @@
 slug: n11-magaza-puani-artirma
 baslik: N11’de Mağaza Puanınızı Yükseltin: Detaylı Açıklamanın Gücü
 ozet: N11'de şeffaf ve detaylı ürün listeleme yaparak iade oranlarını nasıl düşüreceğinizi ve puanınızı nasıl artıracağınızı öğrenin.
-yayinTarihi: 2026-04-14
+yayinTarihi: 2025-08-04
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5 
 kategori: Platform Rehberleri

@@ -2,7 +2,7 @@
 slug: hepsiburada-kampanya-yonetimi
 baslik: Hepsiburada Kampanya Yönetimi: Efsane Günler ve Kâr Korumalı İndirim
 ozet: Hepsiburada kampanya sistemi nasıl işler? Kâr marjını koruyarak katılım, stok planlama ve kampanya sonrası strateji için pratik satıcı rehberi burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-01-04
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: Platform Rehberleri

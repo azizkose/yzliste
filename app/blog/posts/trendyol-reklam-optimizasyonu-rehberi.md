@@ -2,7 +2,7 @@
 slug: trendyol-reklam-optimizasyonu-rehberi
 baslik: Trendyol Reklam Optimizasyonu: CPC, CTR ve Bütçe Yönetimi Rehberi
 ozet: Trendyol Ads panelinde CPC teklifi, anahtar kelime seçimi, dönüşüm takibi ve bütçe dağılımını adım adım öğrenin. Reklam veriminizi belirgin şekilde artırın.
-yayinTarihi: 2026-04-27
+yayinTarihi: 2026-03-20
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
 kategori: Platform Rehberleri

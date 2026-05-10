@@ -2,7 +2,7 @@
 slug: pazaryeri-iade-orani-dusurme
 baslik: Pazaryeri İade Oranını Düşürme: Sistematik Yaklaşım ve Pratikler
 ozet: Pazaryerinde iade oranını düşürmek için sistemli yaklaşım. Kök neden analizi, listing kalitesi, paketleme ve beklenti yönetimi rehber burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-12-02
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: İşletme ve SEO

@@ -2,7 +2,7 @@
 slug: email-pazarlama-e-ticaret-rehberi
 baslik: E-Ticarette Email Pazarlama: Liste Büyütme ve Otomasyon Rehberi
 ozet: E-ticarette email listesi nasıl büyütülür, hangi otomasyon akışları kurulmalı, açılma ve tıklama oranı nasıl yükseltilir? Pratik bir başlangıç rehberi.
-yayinTarihi: 2026-04-27
+yayinTarihi: 2026-04-01
 yazarAdi: yzliste Ekibi
 okumaSuresi: 8
 kategori: İşletme ve SEO

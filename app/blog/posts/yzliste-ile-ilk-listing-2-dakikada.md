@@ -2,7 +2,7 @@
 slug: yzliste-ile-ilk-listing-2-dakikada
 baslik: yzliste ile İlk Listinginizi 2 Dakikada Oluşturun: Pratik Rehber
 ozet: yzliste'ye kayıt olmaktan ilk listingini pazaryerine yüklemeye kadar geçen 2 dakikayı adım adım nasıl yapacağını anlattık. Yeni satıcılar için rehber.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-10-15
 yazarAdi: yzliste Ekibi
 okumaSuresi: 14
 kategori: Ürün Rehberleri

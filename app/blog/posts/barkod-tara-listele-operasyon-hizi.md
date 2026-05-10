@@ -2,7 +2,7 @@
 slug: barkod-tara-listele-operasyon-hizi
 baslik: Barkod Tarama Teknolojisi ile Ürün Yükleme Hızınızı Ciddi Oranda Artırın
 ozet: Yeni gelen stokları listelemek artık çok kolay. Barkod tarama özelliği ile ürün bilgilerini otomatik çekin ve satışa başlayın.
-yayinTarihi: 2026-04-17
+yayinTarihi: 2025-08-28
 yazarAdi: yzliste Ekibi
 okumaSuresi: 4
 kategori: Satış Stratejileri

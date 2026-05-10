@@ -2,7 +2,7 @@
 slug: etsy-ads-reklam-yonetimi
 baslik: Etsy Ads Reklam Yönetimi: Bütçe, Hedefleme ve Verim Ölçümü Rehberi
 ozet: Etsy Ads nasıl çalışır? Günlük bütçe, anahtar kelime seçimi, ürün hedefleme ve verim ölçümü için Türk satıcılara yönelik pratik reklam rehberi burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-01-13
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: Platform Rehberleri

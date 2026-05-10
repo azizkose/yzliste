@@ -2,7 +2,7 @@
 slug: pazarama-saticilik-rehberi
 baslik: Pazarama'da Satıcı Olmak: Mağaza Açma ve İlk Listing Rehberi
 ozet: Pazarama'da satıcı olma şartları, başvuru süreci, komisyon yapısı, ürün listeleme adımları ve büyük pazaryerlerinden farkları üzerine pratik bir başlangıç rehberi.
-yayinTarihi: 2026-04-27
+yayinTarihi: 2026-03-26
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: Platform Rehberleri

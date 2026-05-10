@@ -2,7 +2,7 @@
 slug: e-ticarette-yapay-zeka-devrimi
 baslik: E-Ticarette Manuel Veri Girişine Son: AI Listeleme Devrimi
 ozet: Ürünlerinizi pazar yerlerine yüklemek saatlerinizi mi alıyor? Yapay zeka ile saniyeler içinde profesyonel listing oluşturmanın yollarını keşfedin.
-yayinTarihi: 2026-04-16
+yayinTarihi: 2025-08-22
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

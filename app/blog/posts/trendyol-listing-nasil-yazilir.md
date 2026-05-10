@@ -2,7 +2,7 @@
 slug: trendyol-listing-nasil-yazilir
 baslik: Trendyol'da Satışları Artıran Listing Nasıl Yazılır? (2026 Güncel Rehber)
 ozet: Trendyol algoritmasının öne çıkardığı listing formatını adım adım öğren. Başlık, özellikler, açıklama ve etiket yazımında dikkat edilmesi gereken her şey bu rehberde.
-yayinTarihi: 2026-03-10
+yayinTarihi: 2025-05-30
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
 kategori: Platform Rehberleri

@@ -2,7 +2,7 @@
 slug: musteri-yorumlari-satis-etkisi-yonetim-rehberi
 baslik: Müşteri Yorumları Satışı Nasıl Etkiler? Yorum Yönetimi Rehberi
 ozet: Olumsuz yorumlar satış performansını belirgin şekilde olumsuz etkileyebilir. Yorum toplamaktan olumsuz yorumla başa çıkmaya kadar müşteri yorum yönetimi stratejilerini öğren.
-yayinTarihi: 2026-03-12
+yayinTarihi: 2025-06-05
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: Satış Stratejileri

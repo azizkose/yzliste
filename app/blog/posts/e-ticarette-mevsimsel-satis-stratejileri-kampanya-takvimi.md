@@ -2,7 +2,7 @@
 slug: e-ticarette-mevsimsel-satis-stratejileri-kampanya-takvimi
 baslik: E-Ticarette Mevsimsel Satış Takvimi: 12 Ay Kampanya Stratejisi
 ozet: Yılın her ayında hangi ürünler öne çıkar, hangi kampanyalar yapılmalı? 12 aylık satış takvimiyle gelirini dengeli tut ve fırsatları kaçırma.
-yayinTarihi: 2026-03-10
+yayinTarihi: 2025-06-02
 yazarAdi: yzliste Ekibi
 okumaSuresi: 9
 kategori: Satış Stratejileri

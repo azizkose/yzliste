@@ -2,7 +2,7 @@
 slug: amazon-usa-satis-rehberi-turkiye-satici
 baslik: Türkiye'den Amazon USA'da Satış Yapmak: Adım Adım Rehber (2026)
 ozet: Amazon.com'da mağaza açmak, FBA ile lojistiği çözmek ve İngilizce listing hazırlamak için Türk satıcılara özel rehber. Gümrük ve vergi bilgileri dahil.
-yayinTarihi: 2026-03-17
+yayinTarihi: 2025-06-08
 yazarAdi: yzliste Ekibi
 okumaSuresi: 10
 kategori: Platform Rehberleri

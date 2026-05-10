@@ -2,7 +2,7 @@
 slug: ebay-turkiye-satis-rehberi
 baslik: eBay'de Türkiye'den Satış: Global Pazara Açılmanın Kısa Yolu
 ozet: eBay'de Türkiye'den satıcı olmak, ürün listeleme, komisyon yapısı ve global teslimat yönetimi. Türk satıcılar için eBay platformunda başlangıç rehberi.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-01-16
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

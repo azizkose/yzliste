@@ -2,7 +2,7 @@
 slug: trendyol-yorum-alma-stratejileri
 baslik: Trendyol'da Yorum Almak İçin 7 Pratik Strateji (2026 Rehberi)
 ozet: Trendyol'da organik yorum toplamak için kullanabileceğin 7 pratik yöntemi anlattık. Paketleme, kart, iletişim ve satış sonrası ipuçları rehberde burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-11-02
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

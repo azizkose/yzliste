@@ -2,7 +2,7 @@
 slug: e-ticaret-seo-anahtar-kelime-arastirma-rehberi
 baslik: E-Ticaret SEO: Anahtar Kelime Araştırma ve Listing'e Yerleştirme Rehberi
 ozet: Pazaryerlerinde arama sonuçlarında üst sıralara çıkmak için doğru anahtar kelimeleri bulup listing'ine yerleştirmenin adım adım yolu bu rehberde.
-yayinTarihi: 2026-03-24
+yayinTarihi: 2025-06-14
 yazarAdi: yzliste Ekibi
 okumaSuresi: 8
 kategori: İşletme ve SEO

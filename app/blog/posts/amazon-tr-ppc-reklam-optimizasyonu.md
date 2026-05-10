@@ -2,7 +2,7 @@
 slug: amazon-tr-ppc-reklam-optimizasyonu
 baslik: Amazon TR PPC Reklam Optimizasyonu: Sponsored Products Rehberi
 ozet: Amazon Türkiye'de PPC reklamları kâr getirir mi? Sponsored Products kurulumu, ACoS hedefleme ve anahtar kelime yönetimi için pratik satıcı rehberi.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-02-15
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

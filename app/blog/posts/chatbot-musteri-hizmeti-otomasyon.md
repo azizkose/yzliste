@@ -2,7 +2,7 @@
 slug: chatbot-musteri-hizmeti-otomasyon
 baslik: Chatbot ile Müşteri Hizmeti Otomasyonu: E-Ticaret İçin Pratik Rehber
 ozet: E-ticarette chatbot kullanımı müşteri memnuniyetini nasıl etkiler? Kurulum, diyalog tasarımı ve insan temsilciye devir için pratik rehber burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-02-03
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

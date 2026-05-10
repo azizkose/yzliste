@@ -2,7 +2,7 @@
 slug: gorsel-seo-alt-text-dosya-adi
 baslik: Görsel SEO: Alt Text ve Dosya Adı Optimizasyonu Rehberi
 ozet: Ürün görsellerinde alt text, dosya adı ve görsel meta verisini optimize ederek Google aramalarında görünürlüğünü artırma rehberi e-ticaret için.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-01-07
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

@@ -2,7 +2,7 @@
 slug: ai-sosyal-medya-icerik-uretimi
 baslik: Yapay Zeka ile Sosyal Medya İçeriği Üretmek: 2026 Pratik Rehberi
 ozet: Yapay zeka ile Instagram, TikTok ve Facebook içerikleri nasıl hızla üretilir? Caption, görsel, hashtag ve video script üretimi için satıcılara pratik rehber.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-03-05
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

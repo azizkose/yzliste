@@ -2,7 +2,7 @@
 slug: trendyol-magaza-puani-ve-performans-metrikleri
 baslik: Trendyol Mağaza Puanı Nasıl Yükseltilir? Performans Metrikleri Rehberi
 ozet: Trendyol mağaza puanı satışlarını doğrudan etkiliyor. Hangi metriklerin puanı belirlediğini ve puanı yükseltmek için neler yapabileceğini öğren.
-yayinTarihi: 2026-04-16
+yayinTarihi: 2025-08-16
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
 kategori: Platform Rehberleri

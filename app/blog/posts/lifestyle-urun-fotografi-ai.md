@@ -2,7 +2,7 @@
 slug: lifestyle-urun-fotografi-ai
 baslik: Lifestyle Ürün Fotoğrafı: AI ile Sahneleme Teknikleri
 ozet: Lifestyle ürün fotoğrafları neden dönüşümü artırıyor? AI ile farklı ortamlarda sahnelenmiş görseller üretmek ve pazaryerine uyarlamak bu rehberde.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-12-17
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

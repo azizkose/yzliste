@@ -2,7 +2,7 @@
 slug: ai-ile-toplu-listing-olusturma-zaman-tasarrufu
 baslik: AI ile Toplu Listing Oluşturma: 100 Ürünü Saatler Yerine Dakikalarda Listele
 ozet: Onlarca ürünü tek tek listelemek günler sürüyor. AI ile toplu listing oluşturarak zamandan tasarruf etmenin ve kaliteyi korumanın yollarını öğren.
-yayinTarihi: 2026-04-18
+yayinTarihi: 2025-09-09
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: AI ve Görsel

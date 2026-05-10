@@ -2,7 +2,7 @@
 slug: urun-iade-politikasi-yazimi
 baslik: Ürün İade Politikası Nasıl Yazılır? Şeffaf ve Güven Veren Yaklaşım
 ozet: E-ticarette iade politikası nasıl yazılır? Yasal zorunluluklar, şeffaflık, esneklik dengesi ve dönüşüm etkisi için pratik rehber burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-10-24
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: İşletme ve SEO

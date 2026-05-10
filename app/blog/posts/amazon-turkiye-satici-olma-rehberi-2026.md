@@ -2,7 +2,7 @@
 slug: amazon-turkiye-satici-olma-rehberi-2026
 baslik: Amazon Türkiye'de Satıcı Olma Rehberi: Başvurudan İlk Satışa (2026)
 ozet: Amazon Türkiye'de satıcı hesabı açma, gerekli evraklar, vergi düzenlemeleri ve ilk ürünü listelemek için Türk satıcılar için 2026 adım adım pratik rehber.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-02-12
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: Platform Rehberleri

@@ -2,7 +2,7 @@
 slug: hepsiburada-satici-paneli-ipuclari
 baslik: Hepsiburada Satıcı Paneli: Verimli Kullanım İçin 10 İpucu
 ozet: Hepsiburada Merchant satıcı panelini verimli kullanmak için 10 pratik ipucu. Raporlar, toplu işlem, müşteri iletişimi ve günlük rutini zenginleştirme.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-12-23
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

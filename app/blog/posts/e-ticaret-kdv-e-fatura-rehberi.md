@@ -2,7 +2,7 @@
 slug: e-ticaret-kdv-e-fatura-rehberi
 baslik: E-Ticarette KDV ve E-Arşiv Fatura: Yasal Uyumluluk Rehberi
 ozet: E-ticaret satıcısı için KDV oranları, e-Arşiv fatura kesme zorunluluğu ve muhasebe entegrasyonu. Türkiye'de yasal uyum için pratik rehber burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-01-25
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: İşletme ve SEO

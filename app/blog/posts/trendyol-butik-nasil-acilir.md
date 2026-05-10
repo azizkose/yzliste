@@ -2,7 +2,7 @@
 slug: trendyol-butik-nasil-acilir
 baslik: Trendyol Butik Nasıl Açılır? Kendi Koleksiyon Sayfanla Satış Yap
 ozet: Trendyol Butik mağaza açma süreci, başvuru şartları, koleksiyon yönetimi ve avantajları. Butik kategorisine geçiş için satıcılara pratik rehber.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-11-17
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

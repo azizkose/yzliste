@@ -2,7 +2,7 @@
 slug: amazon-a9-algoritmasi
 baslik: Amazon TR’de Satış Artırmanın Yolları: A9 Algoritması Rehberi
 ozet: Amazon'un dönüşüm odaklı A9 algoritmasını çözerek ürünlerinizi ilk sayfaya nasıl taşıyacağınızı keşfedin.
-yayinTarihi: 2026-04-10
+yayinTarihi: 2025-07-08
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6 
 kategori: Platform Rehberleri

@@ -2,7 +2,7 @@
 slug: pazaryeri-komisyon-oranlari-karsilastirma-2026
 baslik: Pazaryeri Komisyon Oranları Karşılaştırması: 2026 Güncel Tablosu
 ozet: Trendyol, Hepsiburada, Amazon TR, N11 ve Etsy komisyon modelleri ile sabit ücret yapıları bir arada. Satıcı maliyeti planlaması için kısa rehber özeti.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-11-29
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: İşletme ve SEO

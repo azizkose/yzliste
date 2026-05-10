@@ -2,7 +2,7 @@
 slug: yzliste-yzstudio-premium-ozellikler
 baslik: yzstudio Premium Özellikler: Profesyonel Ürün Görseli ve Manken Çekimi
 ozet: yzliste'nin premium kolu yzstudio nedir? AI manken giydirme, profesyonel ürün fotoğrafı ve video üretimi premium özellikler rehberde.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-09-27
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Ürün Rehberleri

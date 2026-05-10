@@ -2,7 +2,7 @@
 slug: amazon-fba-turkiye-kullanim
 baslik: Amazon FBA Türkiye'den Nasıl Kullanılır? Türk Satıcılar İçin Rehber
 ozet: Amazon FBA nedir, Türkiye'den nasıl ürün gönderilir? Depolama, karşılama ücretleri ve FBA ile FBM karşılaştırması. Türk satıcılar için pratik rehber.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-02-18
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: Platform Rehberleri

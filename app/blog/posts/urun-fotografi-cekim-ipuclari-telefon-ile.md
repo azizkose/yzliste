@@ -2,7 +2,7 @@
 slug: urun-fotografi-cekim-ipuclari-telefon-ile
 baslik: Telefonla Profesyonel Ürün Fotoğrafı Çekmek: 10 Pratik İpucu
 ozet: Stüdyo olmadan telefonla satış artıran ürün fotoğrafları çekmenin 10 ipucu. Işık, arka plan, açı ve düzenleme tekniklerini öğren.
-yayinTarihi: 2026-03-31
+yayinTarihi: 2025-06-20
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: AI ve Görsel

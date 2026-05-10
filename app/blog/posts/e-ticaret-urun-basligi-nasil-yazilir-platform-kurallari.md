@@ -2,7 +2,7 @@
 slug: e-ticaret-urun-basligi-nasil-yazilir-platform-kurallari
 baslik: E-Ticarette Ürün Başlığı Nasıl Yazılır? Platform Kuralları 2026
 ozet: Trendyol, Hepsiburada, Amazon, N11 ve Etsy için ürün başlığı yazma kurallarını, karakter limitlerini ve dönüşümü artıran yazım formüllerini adım adım öğren.
-yayinTarihi: 2026-04-20
+yayinTarihi: 2025-09-21
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
 kategori: İşletme ve SEO

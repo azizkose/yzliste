@@ -2,7 +2,7 @@
 slug: e-ticaret-stok-yonetimi-sistemi
 baslik: E-Ticarette Stok Yönetimi: Tükenmeden Önce Tedarik Eden Sistem
 ozet: E-ticaret stok yönetimi nasıl yapılır? Min/max seviyeler, ABC analizi, tedarik süresi planlaması ve ERP entegrasyonu için pratik rehber burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-01-22
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: İşletme ve SEO

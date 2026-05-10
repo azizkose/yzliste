@@ -2,7 +2,7 @@
 slug: ai-urun-gorseli-uretme-studyosuz
 baslik: AI ile Ürün Fotoğrafı Çekmeden Profesyonel Görseller Üretmek
 ozet: Stüdyoya gitmeden yapay zekâ ile profesyonel görünümlü ürün görselleri üretmek nasıl işliyor? Arka plan, model giydirme ve sahneleme örneklerle rehberde.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-02-27
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

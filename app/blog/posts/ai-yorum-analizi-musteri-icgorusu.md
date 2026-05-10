@@ -2,7 +2,7 @@
 slug: ai-yorum-analizi-musteri-icgorusu
 baslik: AI ile Müşteri Yorumlarını Analiz Et: Gizli İçgörüleri Yakala
 ozet: E-ticarette müşteri yorumlarını AI ile tarayıp analiz etmek nasıl yapılır? Tekrarlayan sorunları, gizli talepleri ve ürün iyileştirme fırsatlarını keşfet.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-02-24
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel
