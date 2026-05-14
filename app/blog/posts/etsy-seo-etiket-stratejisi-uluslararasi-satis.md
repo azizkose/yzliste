@@ -2,7 +2,7 @@
 slug: etsy-seo-etiket-stratejisi-uluslararasi-satis
 baslik: Etsy SEO ve Etiket Stratejisi: Uluslararası Müşteriye Ulaşma Rehberi
 ozet: Etsy'de öne çıkmak SEO ve doğru etiket stratejisiyle başlar. İngilizce etiket yazma, kategori seçimi ve uluslararası satış ipuçlarını bu rehberde bul.
-yayinTarihi: 2026-04-20
+yayinTarihi: 2025-09-15
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
 kategori: Platform Rehberleri

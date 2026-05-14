@@ -31,6 +31,8 @@ type Uretim = {
   giris_tipi: string | null
   content_type: string | null
   sonuc: string | null
+  caption?: string | null
+  hashtag?: string | null
   created_at: string
 }
 
@@ -71,9 +73,9 @@ const PLATFORM_OPTIONS = [
 const TIP_OPTIONS = [
   { id: 'tumu', label: 'Tümü' },
   { id: 'metin', label: 'Metin' },
-  { id: 'gorsel', label: 'Görsel', disabled: true, disabledTooltip: 'Yakında — şimdilik sadece metin geçmişi' },
-  { id: 'video', label: 'Video' },
   { id: 'sosyal', label: 'Sosyal' },
+  { id: 'gorsel', label: 'Görsel', disabled: true, disabledTooltip: 'Yakında — geçmiş yakında görünür olacak' },
+  { id: 'video', label: 'Video', disabled: true, disabledTooltip: 'Yakında' },
 ]
 
 const TARIH_OPTIONS = [
@@ -95,6 +97,8 @@ const BOLUM_IKON: Record<string, React.ElementType> = {
   Açıklama: AlignLeft,
   'Arama etiketleri': Tag,
   İçerik: FileText,
+  Caption: AlignLeft,
+  Hashtag: Tag,
 }
 
 // ─── Yardımcı fonksiyonlar ────────────────────────────────────────────────────
@@ -112,6 +116,13 @@ function sonucuBolumle(sonuc: string): SonucBolum[] {
   if (aciklamaMatch) bolumler.push({ baslik: 'Açıklama', icerik: aciklamaMatch[1].trim() })
   if (etiketMatch) bolumler.push({ baslik: 'Arama etiketleri', icerik: etiketMatch[1].trim() })
   if (bolumler.length === 0 && temiz.trim()) bolumler.push({ baslik: 'İçerik', icerik: temiz.trim() })
+  return bolumler
+}
+
+function sosyalBolumleri(u: Uretim): SonucBolum[] {
+  const bolumler: SonucBolum[] = []
+  if (u.caption) bolumler.push({ baslik: 'Caption', icerik: u.caption })
+  if (u.hashtag) bolumler.push({ baslik: 'Hashtag', icerik: u.hashtag })
   return bolumler
 }
 
@@ -162,18 +173,46 @@ export default function HesapUretimlerPage() {
     refetch,
   } = useInfiniteQuery({
     queryKey: ['uretimler', currentUser?.id],
-    queryFn: async ({ pageParam }: { pageParam: number }) => {
+    queryFn: async () => {
       if (!currentUser?.id) return [] as Uretim[]
-      const { data } = await supabase
-        .from('uretimler')
-        .select('id, urun_adi, platform, giris_tipi, content_type, sonuc, created_at')
-        .eq('user_id', currentUser.id)
-        .order('created_at', { ascending: false })
-        .range(pageParam, pageParam + PAGE_SIZE - 1)
-      return (data ?? []) as Uretim[]
+
+      const [metinRes, sosyalRes] = await Promise.all([
+        supabase
+          .from('uretimler')
+          .select('id, urun_adi, platform, giris_tipi, content_type, sonuc, created_at')
+          .eq('user_id', currentUser.id)
+          .order('created_at', { ascending: false })
+          .limit(50),
+        supabase
+          .from('sosyal_uretimler')
+          .select('id, urun_adi, platform, caption, hashtag, created_at')
+          .eq('user_id', currentUser.id)
+          .order('created_at', { ascending: false })
+          .limit(50),
+      ])
+
+      const metinItems: Uretim[] = (metinRes.data ?? []).map((u) => ({
+        ...u,
+        content_type: u.content_type ?? 'metin',
+      }))
+
+      const sosyalItems: Uretim[] = (sosyalRes.data ?? []).map((s) => ({
+        id: s.id,
+        urun_adi: s.urun_adi,
+        platform: s.platform,
+        giris_tipi: 'manuel',
+        content_type: 'sosyal',
+        sonuc: null,
+        caption: s.caption,
+        hashtag: s.hashtag,
+        created_at: s.created_at,
+      }))
+
+      const merged = [...metinItems, ...sosyalItems]
+      merged.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      return merged
     },
-    getNextPageParam: (lastPage, allPages) =>
-      lastPage.length === PAGE_SIZE ? allPages.flat().length : undefined,
+    getNextPageParam: () => undefined,
     initialPageParam: 0,
     enabled: !!currentUser?.id,
   })
@@ -444,7 +483,10 @@ export default function HesapUretimlerPage() {
             <ul role="list" className="space-y-2">
               {filtrelenmis.map((u) => {
                 const acik = acikUretimId === u.id
-                const bolumler = sonucuBolumle(u.sonuc ?? '')
+                const bolumler =
+                  u.content_type === 'sosyal'
+                    ? sosyalBolumleri(u)
+                    : sonucuBolumle(u.sonuc ?? '')
                 const platformEtiket = PLATFORM_ETIKET[u.platform] ?? u.platform
                 const platformRenk =
                   PLATFORM_RENK[u.platform] ?? 'bg-rd-neutral-100 text-rd-neutral-600'

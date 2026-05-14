@@ -83,7 +83,7 @@ function SectionTitle({
     <div className="flex items-center gap-2 mb-5">
       <Icon size={15} strokeWidth={1.5} className="text-rd-neutral-400" aria-hidden="true" />
       <span
-        className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-neutral-500"
+        className="text-xs font-medium tracking-[0.1em] uppercase text-rd-neutral-500"
         style={{ fontFamily: 'var(--font-rd-display)' }}
       >
         {label}
@@ -235,13 +235,13 @@ export default function AyarlarPage() {
               Hesap
             </Link>
             <p
-              className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-primary-600 mb-2"
+              className="text-xs font-medium tracking-[0.1em] uppercase text-rd-primary-600 mb-2"
               style={{ fontFamily: 'var(--font-rd-display)' }}
             >
               Ayarlar
             </p>
             <h1
-              className="text-2xl font-bold text-rd-neutral-900"
+              className="text-2xl font-medium text-rd-neutral-900"
               style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em' }}
             >
               Hesap ayarların
@@ -421,7 +421,7 @@ export default function AyarlarPage() {
           <div className="bg-white rounded-xl border border-rd-neutral-200 p-6 w-full max-w-sm">
             <h2
               id="silme-modal-baslik"
-              className="font-bold text-rd-neutral-900 mb-2"
+              className="font-medium text-rd-neutral-900 mb-2"
               style={{ fontFamily: 'var(--font-rd-display)' }}
             >
               Hesabı silmek istediğinizden emin misiniz?

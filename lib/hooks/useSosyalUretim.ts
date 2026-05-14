@@ -2,6 +2,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { resizeFoto } from "@/lib/listing-utils";
 import type { Kullanici } from "@/lib/listing-utils";
+import { analytics } from "@/lib/analytics";
+import { SOSYAL_PROMPT_VERSION } from "@/lib/prompts/sosyal";
+import type { UstKategori } from "@/lib/constants/kategori-mapping";
 
 type SosyalPlatform = "instagram" | "tiktok" | "facebook" | "twitter";
 type SosyalTon = "tanitim" | "indirim" | "hikaye";
@@ -14,6 +17,7 @@ interface SosyalDeps {
   paketModalAc: () => void;
   setHata: (v: string | null) => void;
   invalidateCredits: () => void;
+  ustKategori: UstKategori | null;
 }
 
 export function useSosyalUretim(deps: SosyalDeps) {
@@ -55,17 +59,25 @@ export function useSosyalUretim(deps: SosyalDeps) {
     setCaptionYukleniyor(true);
     setSosyalCaption("");
     setSosyalHashtag("");
+    analytics.generationStarted({ platform: sosyalPlatform, type: "sosyal", prompt_version: SOSYAL_PROMPT_VERSION });
     try {
       const res = await fetch("/api/sosyal", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, platform: sosyalPlatform, ton: sosyalTon, sezon: sosyalSezon, userId: kullanici.id }),
+        body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, platform: sosyalPlatform, ton: sosyalTon, sezon: sosyalSezon, userId: kullanici.id, ustKategori: depsRef.current.ustKategori ?? undefined }),
       });
       const data = await res.json();
+      if (res.status === 402) { analytics.creditExhausted(); paketModalAc(); setCaptionYukleniyor(false); return; }
       if (data.caption) setSosyalCaption(data.caption);
       if (data.hashtag) setSosyalHashtag(data.hashtag);
-      if (!kullanici.is_admin) { setKullanici(k => k ? { ...k, kredi: k.kredi - 1 } : k); invalidateCredits(); }
-    } catch { setHata("Paylaşım metni üretilemedi. Tekrar deneyin."); }
+      if (!kullanici.is_admin) {
+        analytics.generationCompleted({ platform: sosyalPlatform, type: "sosyal", credits_remaining: kullanici.kredi - 1, prompt_version: SOSYAL_PROMPT_VERSION });
+        setKullanici(k => k ? { ...k, kredi: k.kredi - 1 } : k);
+        invalidateCredits();
+      } else {
+        analytics.generationCompleted({ platform: sosyalPlatform, type: "sosyal", credits_remaining: kullanici.kredi, prompt_version: SOSYAL_PROMPT_VERSION });
+      }
+    } catch { analytics.generationFailed({ platform: sosyalPlatform, type: "sosyal", error: "network" }); setHata("Paylaşım metni üretilemedi. Tekrar deneyin."); }
     setCaptionYukleniyor(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sosyalUrunAdi, sosyalEkBilgi, sosyalPlatform, sosyalTon, sosyalSezon]);
@@ -80,20 +92,30 @@ export function useSosyalUretim(deps: SosyalDeps) {
     setSosyalKitYukleniyor(true);
     setSosyalKitSonuc(null);
     setSosyalKitAcik(null);
+    analytics.generationStarted({ platform: "sosyal_kit", type: "sosyal", prompt_version: SOSYAL_PROMPT_VERSION });
     try {
       const res = await fetch("/api/sosyal/kit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, ton: sosyalTon, sezon: sosyalSezon, userId: kullanici.id }),
+        body: JSON.stringify({ urunAdi: sosyalUrunAdi, ekBilgi: sosyalEkBilgi, ton: sosyalTon, sezon: sosyalSezon, userId: kullanici.id, ustKategori: depsRef.current.ustKategori ?? undefined }),
       });
       const data = await res.json();
-      if (res.status === 402) { paketModalAc(); setSosyalKitYukleniyor(false); return; }
+      if (res.status === 402) { analytics.creditExhausted(); paketModalAc(); setSosyalKitYukleniyor(false); return; }
       if (data.captions) {
         setSosyalKitSonuc(data.captions);
         setSosyalKitAcik("instagram_tiktok");
-        if (!kullanici.is_admin) { setKullanici(k => k ? { ...k, kredi: k.kredi - (data.kullanilanKredi ?? krediGereken) } : k); invalidateCredits(); }
+        const kullanilanKredi = data.kullanilanKredi ?? krediGereken;
+        if (!kullanici.is_admin) {
+          analytics.generationCompleted({ platform: "sosyal_kit", type: "sosyal", credits_remaining: kullanici.kredi - kullanilanKredi, prompt_version: SOSYAL_PROMPT_VERSION });
+          setKullanici(k => k ? { ...k, kredi: k.kredi - kullanilanKredi } : k);
+          invalidateCredits();
+        } else {
+          analytics.generationCompleted({ platform: "sosyal_kit", type: "sosyal", credits_remaining: kullanici.kredi, prompt_version: SOSYAL_PROMPT_VERSION });
+        }
+      } else {
+        analytics.generationFailed({ platform: "sosyal_kit", type: "sosyal", error: "no_captions" });
       }
-    } catch { setHata("Kit üretilemedi. Tekrar deneyin."); }
+    } catch { analytics.generationFailed({ platform: "sosyal_kit", type: "sosyal", error: "network" }); setHata("Kit üretilemedi. Tekrar deneyin."); }
     setSosyalKitYukleniyor(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sosyalUrunAdi, sosyalEkBilgi, sosyalTon, sosyalSezon]);

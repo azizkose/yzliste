@@ -2,7 +2,7 @@
 slug: hepsiburada-buybox-rehberi
 baslik: Hepsiburada’da Buybox Kazanma Rehberi: Listeleme Kalitesi
 ozet: Hepsiburada'da Buybox rekabetinde öne geçmek için sadece fiyat değil, içerik kalitesi ve katalog verisinin önemini öğrenin.
-yayinTarihi: 2026-04-12
+yayinTarihi: 2025-07-20
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6 
 kategori: Platform Rehberleri

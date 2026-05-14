@@ -43,7 +43,7 @@ export default function Modal({ title, children }: ModalProps) {
           {title && (
             <h2
               id="modal-baslik"
-              className="text-base font-bold text-rd-neutral-900"
+              className="text-base font-medium text-rd-neutral-900"
               style={{ fontFamily: 'var(--font-rd-display)' }}
             >
               {title}

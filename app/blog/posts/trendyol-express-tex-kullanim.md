@@ -2,7 +2,7 @@
 slug: trendyol-express-tex-kullanim
 baslik: Trendyol Express (TEX) Kullanım Rehberi: Avantajlar ve Maliyetler
 ozet: Trendyol Express lojistik hizmeti nasıl çalışır? Depo giriş süreci, ücretlendirme ve kendi kargonla karşılaştırma. Satıcılar için TEX rehberi burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-11-14
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

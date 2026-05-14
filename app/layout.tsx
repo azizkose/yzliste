@@ -24,14 +24,14 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: {
-    default: "yzliste â€” ÃœrÃ¼nÃ¼n iÃ§in metin, gÃ¶rsel, video ve sosyal medya postu",
+    default: "yzliste — Ürünün için metin, görsel, video ve sosyal medya postu",
     template: "%s | yzliste",
   },
-  description: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA iÃ§in AI ile listing metni, stÃ¼dyo gÃ¶rseli, Ã¼rÃ¼n videosu ve sosyal medya postu Ã¼ret. FotoÄŸraf yÃ¼kle veya barkod tara, gerisini YZ halleder.",
+  description: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA için AI ile listing metni, stüdyo görseli, ürün videosu ve sosyal medya postu üret. Fotoğraf yükle veya barkod tara, gerisini YZ halleder.",
   metadataBase: new URL("https://www.yzliste.com"),
   openGraph: {
-    title: "yzliste â€” ÃœrÃ¼nÃ¼n iÃ§in metin, gÃ¶rsel, video ve sosyal medya postu",
-    description: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA iÃ§in AI ile listing metni, gÃ¶rsel, video ve sosyal medya iÃ§eriÄŸi Ã¼ret.",
+    title: "yzliste — Ürünün için metin, görsel, video ve sosyal medya postu",
+    description: "Trendyol, Hepsiburada, Amazon TR, N11, Etsy ve Amazon USA için AI ile listing metni, görsel, video ve sosyal medya içeriği üret.",
     url: "https://www.yzliste.com",
     siteName: "yzliste",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "yzliste" }],
@@ -40,8 +40,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "yzliste â€” E-ticaret listing iÃ§in en kolay Ã§Ã¶zÃ¼m",
-    description: "Trendyol, Hepsiburada, Amazon TR ve N11 iÃ§in AI ile optimize listing metni Ã¼ret.",
+    title: "yzliste — E-ticaret listing için en kolay çözüm",
+    description: "Trendyol, Hepsiburada, Amazon TR ve N11 için AI ile optimize listing metni üret.",
     images: ["/og-image.png"],
   },
   alternates: {
@@ -83,7 +83,7 @@ function RootJsonLd() {
                 height: 60,
               },
               description:
-                "E-ticaret listing metni ve AI gÃ¶rsel Ã¼retim aracÄ±",
+                "E-ticaret listing metni ve AI görsel üretim aracı",
               contactPoint: {
                 "@type": "ContactPoint",
                 telephone: "",
@@ -96,7 +96,7 @@ function RootJsonLd() {
               "@id": "https://www.yzliste.com/#software",
               name: "yzliste",
               description:
-                "Trendyol, Hepsiburada, Amazon TR ve N11 iÃ§in AI ile optimize listing metni ve stÃ¼dyo gÃ¶rseli Ã¼ret. FotoÄŸraf yÃ¼kle veya barkod tara.",
+                "Trendyol, Hepsiburada, Amazon TR ve N11 için AI ile optimize listing metni ve stüdyo görseli üret. Fotoğraf yükle veya barkod tara.",
               url: "https://www.yzliste.com",
               applicationCategory: "BusinessApplication",
               offers: {
@@ -107,9 +107,9 @@ function RootJsonLd() {
                 offerCount: "4",
               },
               featureList: [
-                "AI listing metni Ã¼retimi",
-                "AI gÃ¶rsel Ã¼retimi",
-                "Trendyol, Hepsiburada, Amazon, N11, Etsy desteÄŸi",
+                "AI listing metni üretimi",
+                "AI görsel üretimi",
+                "Trendyol, Hepsiburada, Amazon, N11, Etsy desteği",
                 "Barkod tarama",
               ],
               screenshot: "https://www.yzliste.com/og-image.png",
@@ -151,7 +151,7 @@ export default async function RootLayout({
     >
       <head>
         <RootJsonLd />
-        {/* Google Consent Mode v2 â€” GA yÃ¼klenmeden Ã¶nce default reddedildi */}
+        {/* Google Consent Mode v2 â€" GA yÃ¼klenmeden Ã¶nce default reddedildi */}
         <script
           nonce={nonce}
           dangerouslySetInnerHTML={{

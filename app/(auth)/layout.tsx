@@ -1,13 +1,6 @@
-import { redirect } from 'next/navigation'
-import { createSupabaseServerClient } from '@/lib/supabase-server'
-
-export default async function AuthLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect('/giris')
-  }
-
+// Auth protection is handled by middleware (middleware.ts PROTECTED_PATHS).
+// Duplicate server-side getUser() here consumed the JWT refresh token, causing
+// client-side useCurrentUser() to hang — HOTFIX-03 pattern.
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }

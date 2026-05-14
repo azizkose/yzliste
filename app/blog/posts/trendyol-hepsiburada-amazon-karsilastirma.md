@@ -2,7 +2,7 @@
 slug: trendyol-hepsiburada-amazon-karsilastirma
 baslik: Trendyol vs Hepsiburada vs Amazon: Hangi Pazaryeri Sana Uygun? (2026)
 ozet: Trendyol, Hepsiburada ve Amazon TR komisyon, rekabet, kargo ve alıcı profiline göre karşılaştırıldı. Mağazana uygun pazaryerini seçmek için kısa rehber.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-11-11
 yazarAdi: yzliste Ekibi
 okumaSuresi: 14
 kategori: İşletme ve SEO

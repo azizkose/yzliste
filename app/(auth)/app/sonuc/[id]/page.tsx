@@ -82,7 +82,7 @@ export default async function SonucPage({
           </div>
           <h1
             id="sonuc-h1"
-            className="text-3xl md:text-4xl font-bold text-rd-neutral-900"
+            className="text-3xl md:text-4xl font-medium text-rd-neutral-900"
             style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em' }}
           >
             İçerik üretildi

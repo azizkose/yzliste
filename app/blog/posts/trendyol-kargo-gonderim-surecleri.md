@@ -2,7 +2,7 @@
 slug: trendyol-kargo-gonderim-surecleri
 baslik: Trendyol Kargo ve Gönderim Süreçleri: Satıcılar İçin Operasyon Rehberi
 ozet: Trendyol'da kargo süreci nasıl işler? Kendi kargo anlaşması, Trendyol Express (TEX) ve teslim süresi yönetimi için operasyonel satıcı rehberi burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-11-05
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

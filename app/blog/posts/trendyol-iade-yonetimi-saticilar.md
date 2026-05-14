@@ -2,7 +2,7 @@
 slug: trendyol-iade-yonetimi-saticilar
 baslik: Trendyol İade Yönetimi: Satıcılar İçin Kapsamlı Rehber ve Pratikler
 ozet: Trendyol'da iade süreci nasıl işler? İade oranını düşürme, müşteri iletişimi ve operasyon için pratik satıcı rehberi — iade kaynaklı kayıpları önleme ipuçları.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-11-08
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: Platform Rehberleri

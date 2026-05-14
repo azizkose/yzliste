@@ -2,7 +2,7 @@
 slug: hepsiburada-one-cikan-urun-stratejisi
 baslik: Hepsiburada'da Öne Çıkan Ürün Nasıl Olunur? Algoritmaya Uyum Rehberi
 ozet: Hepsiburada'da arama sonucunda öne çıkmak için BuyBox, fiyat, stok, yorum ve kargo sinyallerini nasıl optimize edersin? Satıcılar için pratik rehber burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-01-01
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: Platform Rehberleri

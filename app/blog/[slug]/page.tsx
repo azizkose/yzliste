@@ -95,14 +95,33 @@ function ArticleJsonLd({ yazi }: { yazi: BlogYazisi }) {
           author: { "@id": "https://www.yzliste.com/#organization" },
           publisher: { "@id": "https://www.yzliste.com/#organization" },
           image: yazi.kapakGorsel
-            ? `https://yzliste.com${yazi.kapakGorsel}`
-            : "https://yzliste.com/yzliste_logo.png",
+            ? `https://www.yzliste.com${yazi.kapakGorsel}`
+            : "https://www.yzliste.com/yzliste_logo.png",
           keywords: yazi.etiketler.join(", "),
           articleSection: yazi.kategori,
         }),
       }}
     />
   );
+}
+
+function BreadcrumbJsonLd({ yazi }: { yazi: BlogYazisi }) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Anasayfa", item: "https://www.yzliste.com" },
+            { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.yzliste.com/blog" },
+            { "@type": "ListItem", position: 3, name: yazi.baslik, item: `https://www.yzliste.com/blog/${yazi.slug}` },
+          ],
+        }),
+      }}
+    />
+  )
 }
 
 function MetinLink({ text }: { text: string }) {
@@ -293,6 +312,7 @@ export default async function BlogYaziPage({
   return (
     <main className="min-h-screen bg-rd-neutral-50 font-sans">
       <ArticleJsonLd yazi={yazi} />
+      <BreadcrumbJsonLd yazi={yazi} />
 
       <SiteHeader aktifSayfa="blog" />
 

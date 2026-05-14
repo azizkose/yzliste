@@ -2,7 +2,7 @@
 slug: ai-listing-prompt-muhendisligi
 baslik: AI Destekli Listing Üretiminde Prompt Mühendisliği İpuçları
 ozet: AI listing üreticilerden iyi çıktı almak için nasıl prompt yazmalı? Ürün tanımı, ton seçimi, örnek kullanımı ve iterasyon yaklaşımı bu pratik rehberde.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-03-14
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

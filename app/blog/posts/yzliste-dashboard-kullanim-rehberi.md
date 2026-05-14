@@ -2,7 +2,7 @@
 slug: yzliste-dashboard-kullanim-rehberi
 baslik: yzliste Dashboard Kullanım Rehberi: Tüm Özellikler ve İpuçları
 ozet: yzliste paneli nasıl kullanılır? Ürün ekleme, listing üretimi, görsel oluşturma ve raporlama özelliklerinin pratik kullanım rehberi burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-10-18
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Ürün Rehberleri

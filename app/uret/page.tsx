@@ -8,9 +8,11 @@ import { analytics } from "@/lib/analytics";
 import AuthForm from "@/components/auth/AuthForm";
 import { resizeFoto } from "@/lib/listing-utils";
 import type { Kullanici } from "@/lib/listing-utils";
-import { PLATFORM_BILGI, KATEGORI_LISTESI } from "@/lib/constants";
+import { PLATFORM_BILGI, getAltKategoriler } from "@/lib/constants";
 import { PLATFORM_KURALLARI } from "@/lib/prompts/metin";
 import type { Platform } from "@/lib/prompts/metin";
+import KategoriSelector from "@/components/uret/KategoriSelector";
+import type { UstKategori } from "@/lib/constants/kategori-mapping";
 import PaketModal from "@/components/PaketModal";
 import MetinSekmesi from "@/components/tabs/MetinSekmesi";
 import GorselSekmesi from "@/components/tabs/GorselSekmesi";
@@ -54,7 +56,7 @@ type Uretim = {
   created_at: string;
 };
 
-const CONTENT_TYPES: { id: AnaSekme; label: string; Icon: LucideIcon; desc: string; credit: string }[] = [
+const CONTENT_TYPES: { id: AnaSekme; label: string; Icon: LucideIcon; desc: string; credit: string; disabled?: boolean; badge?: string }[] = [
   { id: "metin", label: "Listing metni", Icon: FileText, desc: "Başlık, özellikler, açıklama", credit: "1 kredi / ürün" },
   { id: "gorsel", label: "Ürün görseli", Icon: ImageIcon, desc: "7 stüdyo stili", credit: "1 kredi / stil" },
   { id: "video", label: "Ürün videosu", Icon: PlayCircle, desc: "5sn veya 10sn tanıtım", credit: "10–20 kredi" },
@@ -78,6 +80,8 @@ export default function Home() {
   // ===== SHARED STATE =====
   // P3-U1: default null (seçilmemiş)
   const [anaSekme, setAnaSekme] = useState<AnaSekme | null>(null);
+  // Hibrit kategori: paylaşılan üst kategori (tüm 4 sekme)
+  const [ustKategori, setUstKategori] = useState<UstKategori | null>(null);
   const [platformSecimliydi, setPlatformSecimliydi] = useState(false);
   const [kullanici, setKullanici] = useState<Kullanici | null>(null);
   const [authYukleniyor, setAuthYukleniyor] = useState(true);
@@ -138,10 +142,10 @@ export default function Home() {
   };
 
   // ===== TAB HOOKS =====
-  const metin = useMetinUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, gecmisiYukle, invalidateCredits });
-  const gorsel = useGorselUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
+  const metin = useMetinUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, gecmisiYukle, invalidateCredits, ustKategori, setUstKategori });
+  const gorsel = useGorselUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits, seciliKategori: ustKategori });
   const video = useVideoUretim({ fotolar, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
-  const sosyal = useSosyalUretim({ urunAdi: metin.urunAdi, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits });
+  const sosyal = useSosyalUretim({ urunAdi: metin.urunAdi, kullanici, setKullanici: setKullaniciFn, loginGerekli, paketModalAc, setHata, invalidateCredits, ustKategori });
 
   // Sticky bar — cost + credit check
   const cost = calculateCredits({
@@ -156,11 +160,18 @@ export default function Home() {
   const isInsufficientCredit = !kullanici || kullanici.anonim || remainingCredits < cost;
 
   const handleStickySubmit = () => {
+    doScrollToStep3();
     if (anaSekme === "metin") metin.icerikUret();
     else if (anaSekme === "gorsel") gorsel.gorselUret();
     else if (anaSekme === "video") video.videoUret();
     else if (anaSekme === "sosyal") sosyal.captionUret();
   };
+
+  // URET-SCROLL-01: MetinSekmesi'nin kendi üret butonu için scroll wrapper
+  const icerikUretWithScroll = useCallback(() => {
+    doScrollToStep3();
+    metin.icerikUret();
+  }, [metin]);
 
   const isStickySubmitting =
     anaSekme === "metin" ? metin.yukleniyor :
@@ -175,6 +186,7 @@ export default function Home() {
     selectedStylesCount: gorsel.seciliStiller?.size,
     selectedPlatformsCount: 1,
     isLoggedIn: !!kullanici && !kullanici.anonim,
+    hasUstKategori: !!ustKategori,
   });
 
   // P3-U1: step1Done = both content type AND platform actively selected
@@ -182,6 +194,14 @@ export default function Home() {
   const step1Done = anaSekme !== null && (platformSecimliydi || anaSekme === "sosyal");
   const step2Done = fotolar.length > 0 || metin.urunAdi.trim() !== "";
   const currentStep = !step1Done ? 1 : !step2Done ? 2 : 3;
+
+  // URET-SCROLL-01: bağımsız scroll helper — handleStickySubmit ve icerikUretWithScroll tarafından kullanılır
+  function doScrollToStep3() {
+    setTimeout(() => {
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      document.getElementById("step-3")?.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "start" });
+    }, 50);
+  }
 
   // P3-U1: step handlers — interacted only when both selections made
   const handleContentTypeChange = useCallback((tab: AnaSekme) => {
@@ -194,7 +214,7 @@ export default function Home() {
     setPlatformSecimliydi(true);
   }, [metin]);
 
-  // LP-12: auto-scroll when step completes
+  // LP-12: auto-scroll step-1→step-2 (platform seçimi sonrası)
   useEffect(() => {
     if (!step1Done) return;
     if (prevStep1DoneRef.current) return;
@@ -204,16 +224,9 @@ export default function Home() {
       document.getElementById("step-2")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [step1Done]);
+  // URET-INPUT-01: step2Done→step-3 auto-scroll kaldırıldı — input yazarken sayfa kayıyordu.
+  // Scroll artık sadece "Üret" butonu tıklandığında yapılıyor (URET-SCROLL-01).
 
-  useEffect(() => {
-    if (!step2Done || !step1Done) return;
-    if (prevStep2DoneRef.current) return;
-    prevStep2DoneRef.current = true;
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!prefersReduced) {
-      document.getElementById("step-3")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [step2Done, step1Done]);
 
   // Sync shared photo to sosyal tab (T7-07)
   useEffect(() => {
@@ -494,29 +507,39 @@ export default function Home() {
               aria-label="İçerik türü seçimi"
               className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5"
             >
-              {CONTENT_TYPES.map(({ id, label, Icon, desc, credit }) => (
+              {CONTENT_TYPES.map(({ id, label, Icon, desc, credit, disabled, badge }) => (
                 <button
                   key={id}
                   role="tab"
                   aria-selected={anaSekme === id}
                   aria-controls={`sekme-panel-${id}`}
-                  onClick={() => handleContentTypeChange(id)}
+                  onClick={() => !disabled && handleContentTypeChange(id)}
+                  disabled={disabled}
                   className={cn(
                     "flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-700 focus-visible:ring-offset-2",
-                    anaSekme === id
+                    disabled
+                      ? "border border-rd-neutral-200 bg-rd-neutral-50 opacity-60 cursor-not-allowed"
+                      : anaSekme === id
                       ? "border-2 border-rd-primary-700 bg-rd-primary-50"
                       : "border border-rd-neutral-200 bg-white hover:bg-rd-neutral-50"
                   )}
                 >
-                  <Icon
-                    size={22}
-                    strokeWidth={1.5}
-                    className={anaSekme === id ? "text-rd-primary-700" : "text-rd-neutral-500"}
-                    aria-hidden="true"
-                  />
+                  <div className="flex items-center gap-2">
+                    <Icon
+                      size={22}
+                      strokeWidth={1.5}
+                      className={disabled ? "text-rd-neutral-300" : anaSekme === id ? "text-rd-primary-700" : "text-rd-neutral-500"}
+                      aria-hidden="true"
+                    />
+                    {badge && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-rd-warning-50 text-rd-warning-700 font-medium border border-rd-warning-700/20">
+                        {badge}
+                      </span>
+                    )}
+                  </div>
                   <div>
-                    <p className={cn("text-sm font-medium", anaSekme === id ? "text-rd-primary-800" : "text-rd-neutral-900")}>
+                    <p className={cn("text-sm font-medium", disabled ? "text-rd-neutral-400" : anaSekme === id ? "text-rd-primary-800" : "text-rd-neutral-900")}>
                       {label}
                     </p>
                     <p className="text-xs text-rd-neutral-500 mt-0.5">{desc}</p>
@@ -590,6 +613,15 @@ export default function Home() {
             >
               2 · Ürünü tanıt
             </h2>
+
+            {/* Hibrit kategori: paylaşılan üst kategori — 4 sekme için zorunlu */}
+            <div className="bg-white rounded-xl border border-rd-neutral-200 p-4 mb-4">
+              <KategoriSelector
+                value={ustKategori}
+                onChange={setUstKategori}
+                zorunlu
+              />
+            </div>
 
             {/* P9-9: Giriş yöntemi kartları — sadece metin sekmesinde */}
             {anaSekme === "metin" && (
@@ -667,7 +699,7 @@ export default function Home() {
                       Değiştir
                       <input type="file" accept="image/*" className="hidden" onChange={tekFotoSec} />
                     </label>
-                    <button onClick={() => { setFotolar([]); gorsel.setGorselJoblar([]); }} className="text-xs text-rd-neutral-400 hover:text-red-500 transition-colors">Kaldır</button>
+                    <button onClick={() => { setFotolar([]); gorsel.setGorselJoblar([]); }} className="text-xs text-rd-neutral-400 hover:text-rd-danger-600 transition-colors">Kaldır</button>
                   </div>
                 </div>
               ) : (
@@ -718,32 +750,42 @@ export default function Home() {
                   </div>
                 )}
               </div>
-              <div>
-                <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Kategori <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
-                <select
-                  value={digerMod ? "Diğer" : (metin.kategori || "")}
-                  onChange={(e) => {
-                    if (e.target.value === "Diğer") { setDigerMod(true); metin.setKategori(""); }
-                    else { setDigerMod(false); metin.setKategori(e.target.value); }
-                  }}
-                  className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
-                >
-                  <option value="">— Seç (isteğe bağlı) —</option>
-                  {KATEGORI_LISTESI.map((k) => (
-                    <option key={k} value={k}>{k}</option>
-                  ))}
-                </select>
-                {digerMod && (
-                  <input
-                    type="text"
-                    value={metin.kategori}
-                    onChange={(e) => metin.setKategori(e.target.value)}
-                    placeholder="Kategori yaz..."
-                    autoFocus
-                    className="mt-2 w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
-                  />
-                )}
-              </div>
+              {/* Alt kategori — sadece metin sekmesinde, üst kategori seçilince aktif */}
+              {anaSekme === "metin" && (() => {
+                const altlar = getAltKategoriler(ustKategori);
+                return (
+                  <div>
+                    <label className="block text-sm font-medium text-rd-neutral-900 mb-1">
+                      Detaylı kategori <span className="text-rd-neutral-400 font-normal">(önerilir, kalite için)</span>
+                    </label>
+                    <select
+                      value={digerMod ? "__diger__" : (metin.kategori || "")}
+                      onChange={(e) => {
+                        if (e.target.value === "__diger__") { setDigerMod(true); metin.setKategori(""); }
+                        else { setDigerMod(false); metin.setKategori(e.target.value); }
+                      }}
+                      disabled={!ustKategori}
+                      className="w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800 disabled:bg-rd-neutral-50 disabled:text-rd-neutral-400"
+                    >
+                      <option value="">— Detaylı kategori seç —</option>
+                      {altlar.map((k) => (
+                        <option key={k} value={k}>{k}</option>
+                      ))}
+                      <option value="__diger__">Diğer (manuel yaz)</option>
+                    </select>
+                    {digerMod && (
+                      <input
+                        type="text"
+                        value={metin.kategori}
+                        onChange={(e) => metin.setKategori(e.target.value)}
+                        placeholder="Kategori yaz..."
+                        autoFocus
+                        className="mt-2 w-full border border-rd-neutral-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800"
+                      />
+                    )}
+                  </div>
+                );
+              })()}
               <div>
                 <label className="block text-sm font-medium text-rd-neutral-900 mb-1">Ürün detayları <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span></label>
                 <textarea
@@ -905,9 +947,10 @@ export default function Home() {
               sonuc={metin.sonuc} setSonuc={metin.setSonuc}
               duzenleYukleniyor={metin.duzenleYukleniyor} setDuzenleYukleniyor={metin.setDuzenleYukleniyor}
               uretimId={metin.uretimId} yenidenUretHakki={metin.yenidenUretHakki} setYenidenUretHakki={metin.setYenidenUretHakki}
-              kullanici={kullanici} paketModalAc={paketModalAc} icerikUret={metin.icerikUret}
+              kullanici={kullanici} paketModalAc={paketModalAc} icerikUret={icerikUretWithScroll}
               onGirisAc={() => { setAuthPopupMod("giris"); setAuthPopupAcik(true); }}
-              skor={metin.skor} oneriler={metin.oneriler}
+              skor={metin.skor} setSkor={metin.setSkor}
+              oneriler={metin.oneriler} setOneriler={metin.setOneriler}
               ucretsizRevizeKullanildi={metin.ucretsizRevizeKullanildi}
               ucretsizRevizeBaslat={metin.ucretsizRevizeBaslat}
             />
@@ -916,11 +959,12 @@ export default function Home() {
               <GorselSekmesi
                 aktif={anaSekme === "gorsel"}
                 urunAdi={metin.urunAdi} kategori={metin.kategori}
-                fotolar={fotolar} fotoKaldir={fotoKaldir}
+                fotolar={fotolar} setFotolar={setFotolar} fotoKaldir={fotoKaldir}
                 gorselEkPrompt={gorsel.gorselEkPrompt} setGorselEkPrompt={gorsel.setGorselEkPrompt}
                 seciliStiller={gorsel.seciliStiller} stilToggle={gorsel.stilToggle}
                 gorselYukleniyor={gorsel.gorselYukleniyor} gorselJoblar={gorsel.gorselJoblar} setGorselJoblar={gorsel.setGorselJoblar}
                 referansGorsel={gorsel.referansGorsel} setReferansGorsel={gorsel.setReferansGorsel}
+                seciliKategori={ustKategori} setSeciliKategori={setUstKategori}
                 kullanici={kullanici} paketModalAc={paketModalAc} gorselUret={gorsel.gorselUret}
                 blobIndir={blobIndir} resizeFoto={resizeFoto} invalidateCredits={invalidateCredits} setKullanici={setKullaniciFn}
               />
@@ -944,6 +988,7 @@ export default function Home() {
                 sosyalTon={sosyal.sosyalTon} setSosyalTon={sosyal.setSosyalTon}
                 sosyalSezon={sosyal.sosyalSezon} setSosyalSezon={sosyal.setSosyalSezon}
                 sosyalUrunAdi={sosyal.sosyalUrunAdi}
+                sosyalEkBilgi={sosyal.sosyalEkBilgi} setSosyalEkBilgi={sosyal.setSosyalEkBilgi}
                 captionYukleniyor={sosyal.captionYukleniyor}
                 sosyalCaption={sosyal.sosyalCaption} setSosyalCaption={sosyal.setSosyalCaption}
                 sosyalHashtag={sosyal.sosyalHashtag} setSosyalHashtag={sosyal.setSosyalHashtag}

@@ -2,7 +2,7 @@
 slug: ai-e-ticaret-5-yillik-gelecek
 baslik: AI ve E-Ticaretin Geleceği: Önümüzdeki 5 Yılda Neler Değişecek?
 ozet: 2026-2031 döneminde e-ticareti AI nasıl değiştirecek? Kişiselleştirme, sanal deneyim, otomasyon ve etik sorular üzerine analiz burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-03-17
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: AI ve Görsel

@@ -3,6 +3,18 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const PROTECTED_PATHS = ['/app', '/hesap', '/kredi-yukle', '/admin', '/yzstudio']
 
+const PUBLIC_CACHEABLE_PATHS = [
+  '/', '/blog', '/fiyatlar', '/sss', '/hakkimizda',
+  '/gizlilik', '/kosullar', '/kvkk-aydinlatma',
+  '/cerez-politikasi', '/mesafeli-satis', '/teslimat-iade',
+]
+
+function isPublicCacheable(pathname: string): boolean {
+  if (PUBLIC_CACHEABLE_PATHS.includes(pathname)) return true
+  if (pathname.startsWith('/blog/')) return true
+  return false
+}
+
 const BOT_UA_PATTERN = /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|sogou|exabot|facebot|ia_archiver/i
 
 function buildCsp(nonce: string, dev: boolean): string {
@@ -110,6 +122,12 @@ export async function middleware(request: NextRequest) {
   const AUTH_ONLY_PATHS = ['/giris', '/kayit']
   if (user && !user.is_anonymous && AUTH_ONLY_PATHS.includes(pathname)) {
     return addCsp(NextResponse.redirect(new URL('/uret', request.url)))
+  }
+
+  // Anonim kullanıcı + public sayfa → Googlebot için doğru Cache-Control sinyali
+  const isAnonymous = !user || user.is_anonymous
+  if (isAnonymous && isPublicCacheable(pathname)) {
+    response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate')
   }
 
   return addCsp(response)

@@ -2,7 +2,7 @@
 slug: e-ticarette-rekabet-analizi-rakip-listing-inceleme
 baslik: E-Ticarette Rekabet Analizi: Rakip Listing'lerini İnceleyerek Stratejini Güçlendir
 ozet: Rakiplerinin listing'lerini analiz ederek güçlü ve zayıf yönlerini belirle, kendi stratejini buna göre oluştur. Adım adım rekabet analizi rehberi.
-yayinTarihi: 2026-04-20
+yayinTarihi: 2025-09-18
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: İşletme ve SEO

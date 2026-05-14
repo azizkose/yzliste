@@ -2,7 +2,7 @@
 slug: e-ticaret-google-analytics-kullanimi
 baslik: E-Ticaret İçin Google Analytics Kullanımı: GA4 Kurulum ve Raporlar
 ozet: E-ticaret mağazanızda Google Analytics 4 nasıl kurulur? Dönüşüm takibi, kaynak analizi ve satış hunisini görselleştirmek için pratik satıcı rehberi.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-01-28
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: İşletme ve SEO

@@ -100,7 +100,7 @@ export function TabItem({
           "bg-white border border-rd-neutral-200 text-rd-neutral-600 font-medium",
           "hover:bg-rd-neutral-50 hover:border-rd-neutral-300",
         ],
-        isActive && "font-bold border-[1.5px]",
+        isActive && "font-medium border-[1.5px]",
         className
       )}
       {...props}
@@ -146,7 +146,7 @@ export function TabItemUnderline({
         "border-b-2 border-transparent -mb-px",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary/40",
         !isActive && "text-rd-neutral-600 font-medium bg-transparent hover:text-rd-neutral-800",
-        isActive && "font-bold bg-white",
+        isActive && "font-medium bg-white",
         className
       )}
       {...props}

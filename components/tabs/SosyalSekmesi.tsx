@@ -25,6 +25,8 @@ interface SosyalSekmesiProps {
   sosyalSezon: string;
   setSosyalSezon: (v: string) => void;
   sosyalUrunAdi: string;
+  sosyalEkBilgi: string;
+  setSosyalEkBilgi: (v: string) => void;
   captionYukleniyor: boolean;
   sosyalCaption: string;
   setSosyalCaption: (v: string) => void;
@@ -68,6 +70,7 @@ export default function SosyalSekmesi({
   sosyalTon, setSosyalTon,
   sosyalSezon, setSosyalSezon,
   sosyalUrunAdi,
+  sosyalEkBilgi, setSosyalEkBilgi,
   captionYukleniyor,
   sosyalCaption, setSosyalCaption,
   sosyalHashtag, setSosyalHashtag,
@@ -136,6 +139,20 @@ export default function SosyalSekmesi({
               4 platform · Instagram + TikTok + Facebook + Twitter/X
             </p>
           )}
+        </div>
+
+        {/* Ek bilgi — her zaman görünür */}
+        <div>
+          <label className="block text-xs font-medium text-rd-neutral-600 mb-1.5">
+            Ek bilgi <span className="text-rd-neutral-400 font-normal">(isteğe bağlı)</span>
+          </label>
+          <textarea
+            value={sosyalEkBilgi}
+            onChange={(e) => setSosyalEkBilgi(e.target.value)}
+            placeholder="Renk, malzeme, fiyat bilgisi, kampanya detayı — ne kadar detay girersen metin o kadar iyi olur"
+            rows={2}
+            className="w-full border border-rd-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rd-primary-800/20 focus:border-rd-primary-800 resize-none"
+          />
         </div>
 
         {/* Ton / Sezon — "Daha fazla seçenek" collapse */}

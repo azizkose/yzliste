@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-05-05 — GORSEL-V2-A~G: görsel pipeline refactor — kategori dropdown (5 tip), model routing (giyim→kontext, diğer→bria), 35 prompt template (5 kategori × 7 stil), vision-classify (Anthropic Haiku, silent), Sharp post-process (Pass 4), feature flag GORSEL_V2_PERCENT, gorsel_uretim DB tablosu — FASHN/eraser araştırma sonucu kaldırıldı
+
+## 2026-05-05 — URETIM-BUG-PAKETI: revize sayacı (mikro try/catch+decrement), loading banner, görsel pipeline (shotSizeFromAspect dikey/yatay/kare, NO_HANGER_PREFIX tüm stiller)
+
+## 2026-05-05 — TUR-9 fix paketi: /hesap/profil+krediler launch-blocker (auth layout getUser kaldırıldı, yukle try/finally), hakkimizda title, UTF-8 mojibake (layout+JSON-LD), CLAUDE.md UI ihlalleri 0'a düşürüldü (font-bold/semibold→medium, bg-amber/emerald/indigo→palette), /profil noindex, eski SEO açıklar kapatıldı
+
+## 2026-05-05 — MON-04/05: PostHog 12 event (auth, generation×4 hooks, feedback, share) + prompt_version A/B — event kataloğu docs/posthog-events-2026-05-05.md
+
+## 2026-05-05 — AI-PROMPT-01~05 + TEST-01: input audit, tarih ctx, Türkçe post-process, hashtag validasyon, CTA emir kipi, vitest smoke test — metin-v1.4, sosyal-v1.2
+
+## 2026-05-05 — REDESIGN-15: anasayfa sadeleştirme paketi — yeni hero metni, pazaryeri logo şeridi, step section silindi, infostrip accordion kaldırıldı, marka/neden bölümleri kısaltıldı, sss anasayfadan kaldırıldı
+
+## 2026-05-04 — SEO-DOMAIN-01: canonical URL tutarlılığı — 2 sayfa relatif→absolute, blog logo www, iyzico fallback www
+
 ## 2026-04-30 — Polish-13 P13H-1~P13H-3: Hero video opacity-0 fix, vitrin metinleri Anadolu Spor+Anadolu Bakır, InfoStrip "Örnek:" prefix tab üstüne
 
 ## 2026-04-30 — Polish-12 P12-1~P12-5: PLATFORM_KURALLARI 7 pazaryeri (Hepsi 255/N11 65/Çiçek yeni), PLATFORMS UI 4→7, markaEki ek_notlar 8. alan, platform form (karakter sayacı+N11 uyarı+Etsy 13 tag+Amazon backend SEO), video playbackRate 2.0+fade

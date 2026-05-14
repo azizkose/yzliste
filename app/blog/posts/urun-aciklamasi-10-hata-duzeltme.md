@@ -2,7 +2,7 @@
 slug: urun-aciklamasi-10-hata-duzeltme
 baslik: Ürün Açıklaması Yazarken Yapılan 10 Hata ve Düzeltmeleri
 ozet: Pazaryerinde satış yapamayan ürünün arkasındaki neden çoğu zaman açıklama metnidir. En sık yapılan 10 hata ve her biri için pratik düzeltme önerisi burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-10-30
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: İşletme ve SEO

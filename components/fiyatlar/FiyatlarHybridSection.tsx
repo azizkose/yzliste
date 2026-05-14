@@ -23,7 +23,7 @@ export default function FiyatlarHybridSection() {
       <div className="max-w-6xl mx-auto">
         <h2
           id="paketler-heading"
-          className="text-2xl font-bold text-rd-neutral-900 text-center mb-2"
+          className="text-2xl font-medium text-rd-neutral-900 text-center mb-2"
           style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em' }}
         >
           Paketler
@@ -76,13 +76,13 @@ export default function FiyatlarHybridSection() {
 
                   <div className="mb-4">
                     <p
-                      className="font-bold text-rd-neutral-900 text-lg"
+                      className="font-medium text-rd-neutral-900 text-lg"
                       style={{ fontFamily: 'var(--font-rd-display)' }}
                     >
                       {p.isim}
                     </p>
                     <p
-                      className="text-3xl font-bold text-rd-neutral-900 mt-1 tabular-nums"
+                      className="text-3xl font-medium text-rd-neutral-900 mt-1 tabular-nums"
                       style={{ fontFamily: 'var(--font-rd-display)' }}
                     >
                       {p.fiyatStr}

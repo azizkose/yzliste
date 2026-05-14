@@ -40,10 +40,10 @@ export const NAV_CTAS = {
 
 export const HERO_COPY = {
   eyebrow: '7 pazaryeri için içerik üretir',
-  h1Pre: 'E-ticaret içeriğini',
-  h1Highlight: 'Yapay zeka ile',
-  h1Post: 'üret.',
-  sub: 'Ürününü anlat veya fotoğrafını yükle — listing metni, stüdyo görseli, tanıtım videosu ve sosyal medya içeriği dakikalar içinde hazır. Aylık abonelik yok.',
+  h1Pre: '7 pazaryeri için',
+  h1Highlight: 'yapay zeka',
+  h1Post: 'içerik stüdyosu',
+  sub: 'Listing metni, stüdyo görseli, tanıtım videosu ve sosyal medya içeriği — her pazaryerinin kendi formatında. Kurulum yok, abonelik yok.',
   ctaPrimary: 'Ücretsiz başla — 3 kredi hediye',
   ctaSecondary: 'Nasıl çalışır?',
   reassurance: 'Kredi kartı gerekmez · 30 saniyede ilk içeriğin hazır',

@@ -2,7 +2,7 @@
 slug: yzliste-vs-manuel-zaman-karsilastirma
 baslik: yzliste vs Manuel Listing: Süre, Maliyet ve Kalite Karşılaştırması
 ozet: Pazaryerinde manuel listing yazımı vs yzliste ile AI üretim — süre, maliyet ve kalite açısından kapsamlı karşılaştırma e-ticaret satıcıları için.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-09-30
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Ürün Rehberleri

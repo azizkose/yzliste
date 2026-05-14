@@ -2,7 +2,7 @@
 slug: ai-urun-videosu-hareket-secenekleri
 baslik: AI ile Ürün Videosu Üretmek: Hangi Hareket Hangi Ürüne Yakışır?
 ozet: 360° dönüş mü, zoom yaklaşım mı, dramatik ışık mı? AI video üretiminde doğru hareketi seçmek tıklama oranını ciddi artırır. Her seçeneği, ne zaman kullanacağını ve hangi ürün kategorisine uyduğunu anlattık.
-yayinTarihi: 2026-04-16
+yayinTarihi: 2025-08-25
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: AI ve Görsel

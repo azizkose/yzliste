@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check, ThumbsUp, ThumbsDown } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { analytics } from "@/lib/analytics";
 
 interface Props {
   sessionId?: string;
@@ -36,14 +37,12 @@ export default function GenerationFeedback({ sessionId, platform, category }: Pr
         user_id: session?.user?.id || null,
       });
 
-      if (typeof window !== "undefined" && (window as unknown as { posthog?: { capture: (e: string, p: object) => void } }).posthog) {
-        (window as unknown as { posthog: { capture: (e: string, p: object) => void } }).posthog.capture("generation_feedback", {
-          rating: r,
-          platform,
-          category,
-          has_comment: !!c,
-        });
-      }
+      analytics.generationFeedback({
+        type: category ?? "unknown",
+        platform,
+        rating: r,
+        comment: c || undefined,
+      });
     } catch {
       // Feedback kaybı kritik değil
     }

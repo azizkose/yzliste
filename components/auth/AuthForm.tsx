@@ -7,6 +7,7 @@ import { Eye, EyeOff, AlertCircle, MailCheck, Loader2 } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import TurnstileWidget from './TurnstileWidget'
+import { analytics } from '@/lib/analytics'
 
 type AuthMode = 'giris' | 'kayit'
 
@@ -73,7 +74,7 @@ function EmailGonderildiUI({
         <MailCheck size={48} className="text-rd-success-600" strokeWidth={1.5} aria-hidden="true" />
       </div>
       <div>
-        <p className="font-bold text-rd-neutral-900" style={{ fontFamily: 'var(--font-rd-display)' }}>
+        <p className="font-medium text-rd-neutral-900" style={{ fontFamily: 'var(--font-rd-display)' }}>
           E-postanı kontrol et
         </p>
         <p className="text-sm text-rd-neutral-500 mt-1 leading-relaxed">
@@ -158,6 +159,7 @@ export default function AuthForm({ defaultMode = 'kayit', redirectTo = '/', onSu
 
     setYukleniyor(true)
     setHata('')
+    if (mod === 'kayit') analytics.signupStarted()
 
     if (turnstileEnabled && turnstileToken) {
       const verifyRes = await fetch('/api/turnstile', {
@@ -186,16 +188,42 @@ export default function AuthForm({ defaultMode = 'kayit', redirectTo = '/', onSu
             body: JSON.stringify({ userId: signUpData.user.id, refCode }),
           }).catch(() => {})
         }
+        analytics.signupCompleted({ method: 'email' })
         setKayitBasarili(true)
         setResendCooldown(60)
       }
     } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password: sifre })
+      const { data: loginData, error } = await supabase.auth.signInWithPassword({ email, password: sifre })
       if (error) {
         setHata(turkceHata(error.message))
       } else {
+        analytics.loginCompleted({ method: 'email' })
+
+        // Katman 1: cache'i hemen doldur — stale null flash önleme
+        if (loginData.user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('kredi, toplam_kullanilan, is_admin, ton, marka_adi')
+            .eq('id', loginData.user.id)
+            .single()
+
+          queryClient.setQueryData(['currentUser'], {
+            id: loginData.user.id,
+            email: loginData.user.email ?? null,
+            kredi: profile?.kredi ?? 0,
+            toplam_kullanilan: profile?.toplam_kullanilan ?? 0,
+            is_admin: profile?.is_admin ?? false,
+            anonim: loginData.user.is_anonymous ?? false,
+            ton: profile?.ton ?? null,
+            marka_adi: profile?.marka_adi ?? null,
+          })
+          queryClient.setQueryData(['credits'], profile?.kredi ?? 0)
+        }
+
+        // Yedek invalidate (TOKEN_REFRESHED ve diğer event'ler için)
         queryClient.invalidateQueries({ queryKey: ['currentUser'] })
         queryClient.invalidateQueries({ queryKey: ['credits'] })
+
         if (onSuccess) onSuccess()
         else router.push(redirectTo)
       }

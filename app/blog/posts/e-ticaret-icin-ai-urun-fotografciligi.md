@@ -2,7 +2,7 @@
 slug: e-ticaret-icin-ai-urun-fotografciligi
 baslik: E-Ticaret İçin AI Ürün Fotoğrafçılığı: İdeal Input Nasıl Çekilir?
 ozet: AI ürün fotoğrafından en iyi sonucu almak için input fotoğrafın nasıl olmalı? Arka plan, ışık, çözünürlük, açı ve kategoriye özel kurallar bu rehberde.
-yayinTarihi: 2026-04-22
+yayinTarihi: 2025-09-24
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
 kategori: AI ve Görsel

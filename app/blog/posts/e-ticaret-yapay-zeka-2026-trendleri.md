@@ -2,7 +2,7 @@
 slug: e-ticaret-yapay-zeka-2026-trendleri
 baslik: E-Ticarette Yapay Zeka 2026: Bu Yıl Değişen 8 Alan
 ozet: 2026'da e-ticarette yapay zeka nerede fark yaratıyor? Listing üretimi, görsel, müşteri hizmetleri, kargo, fiyatlama gibi 8 kritik alan bu yazıda.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2026-01-19
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: AI ve Görsel

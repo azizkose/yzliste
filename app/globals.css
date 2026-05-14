@@ -117,6 +117,16 @@
 
   /* Redesign Animations */
   --animate-fade-in: fade-in 200ms ease-out;
+  --animate-marquee: marquee 40s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 768px) {
+  .animate-marquee { animation-duration: 30s; }
 }
 
 /* Dark mode desteklenmiyor — tüm component'ler light-mode hardcoded */

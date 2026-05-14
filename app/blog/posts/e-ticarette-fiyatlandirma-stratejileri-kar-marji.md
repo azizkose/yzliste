@@ -2,7 +2,7 @@
 slug: e-ticarette-fiyatlandirma-stratejileri-kar-marji
 baslik: E-Ticarette Doğru Fiyatlandırma: Komisyon, Kargo ve Kar Marjı Hesaplama
 ozet: Pazaryeri komisyonları, kargo maliyeti ve vergiyi hesaplamadan fiyat koymak zarar ettirir. Kar marjını koruyan fiyatlandırma stratejilerini öğren.
-yayinTarihi: 2026-04-07
+yayinTarihi: 2025-06-29
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
 kategori: İşletme ve SEO

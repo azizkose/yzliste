@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { FileText, Image as ImageIcon, Video, MessageSquare, ChevronDown, RotateCw, ZoomIn, Lightbulb, Leaf, ScanSearch, Wind, Check, X, Tag, Hash, Camera, Timer, Film, Columns2 } from 'lucide-react'
+import { FileText, Image as ImageIcon, Video, MessageSquare, RotateCw, ZoomIn, Lightbulb, Leaf, ScanSearch, Wind, Check, X, Tag, Hash, Camera, Timer, Film, Columns2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Eyebrow } from '@/components/primitives/Eyebrow'
 import { EXAMPLE_CONTENT, EXAMPLE_CONTENT_TR } from '@/lib/data/exampleContent'
@@ -153,7 +153,7 @@ function MetinPanel({ market, setMarket }: { market: MarketId; setMarket: (m: Ma
         {platformVerileriInfoStrip[market].bolumler.map((bolum, i) => (
           <div key={i} className={cn('rounded-xl border-l-4', bolum.renk, 'border border-rd-neutral-200 bg-white p-4')}>
             <div className="flex items-center justify-between mb-2">
-              <span className="flex items-center gap-1.5 text-sm font-semibold text-rd-neutral-900">
+              <span className="flex items-center gap-1.5 text-sm font-medium text-rd-neutral-900">
                 <BolumIkon ikon={bolum.ikon} />
                 {bolum.baslik}
               </span>
@@ -174,7 +174,7 @@ function MetinPanel({ market, setMarket }: { market: MarketId; setMarket: (m: Ma
         ))}
       </div>
       <div className="mt-4 rounded-xl bg-rd-primary-50 border border-rd-primary-200 p-3 text-xs text-rd-primary-700 leading-relaxed">
-        Her pazaryerinin kuralları farklı. <strong className="font-semibold">Örnek:</strong> Trendyol max 100 karakter başlık ister,
+        Her pazaryerinin kuralları farklı. <strong className="font-medium">Örnek:</strong> Trendyol max 100 karakter başlık ister,
         Amazon 200&apos;e kadar keyword kabul eder, Etsy İngilizce + hikaye anlatımı sever.
         yzliste hepsini tek fotoğraftan üretir.
       </div>
@@ -195,14 +195,14 @@ function GorselPanel() {
         Arka plan otomatik temizlenir, 7 farklı stüdyo stilinden seçin —
         ya da sahnenizi anlatın, kendi fonunuzu yükleyin.
       </p>
-      <p className="text-sm font-semibold text-rd-neutral-900 mb-1">Tek fotoğraftan 7 farklı stüdyo stili</p>
+      <p className="text-sm font-medium text-rd-neutral-900 mb-1">Tek fotoğraftan 7 farklı stüdyo stili</p>
       <p className="text-xs text-rd-neutral-500 mb-5">Stil başına 1 kredi · Üretimde düşer, indirme bedava</p>
       {/* 1. satır: ham + 3 stil */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="flex flex-col">
           <div className="relative rounded-xl overflow-hidden border border-rd-neutral-200 bg-rd-neutral-100">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/ornek_once.jpg" alt="önce" className="w-full aspect-square object-contain" loading="lazy" />
+            <img src="/ornek_once.jpg" alt="önce" className="w-full aspect-square object-cover" loading="lazy" />
             <div className="absolute top-2 left-2">
               <span className="bg-rd-neutral-900/80 text-white text-xs px-2 py-1 rounded-full">Ham fotoğraf</span>
             </div>
@@ -222,7 +222,7 @@ function GorselPanel() {
           <div key={item.etiket} className="flex flex-col">
             <div className="rounded-xl overflow-hidden border border-rd-primary-200 bg-white">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" loading="lazy" />
+              <img src={item.src} alt={item.etiket} className="w-full aspect-square object-cover" loading="lazy" />
             </div>
             <p className="text-xs text-rd-neutral-600 font-medium text-center mt-1.5">{item.etiket}</p>
           </div>
@@ -239,14 +239,14 @@ function GorselPanel() {
           <div key={item.etiket} className="flex flex-col">
             <div className="rounded-xl overflow-hidden border border-rd-primary-200 bg-white">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" loading="lazy" />
+              <img src={item.src} alt={item.etiket} className="w-full aspect-square object-cover" loading="lazy" />
             </div>
             <p className="text-xs text-rd-neutral-600 font-medium text-center mt-1.5">{item.etiket}</p>
           </div>
         ))}
       </div>
       <div className="mt-6 pt-5 border-t border-rd-neutral-200">
-        <p className="text-xs text-rd-neutral-600 font-semibold mb-2">3 farklı yöntemle sahne oluştur:</p>
+        <p className="text-xs text-rd-neutral-600 font-medium mb-2">3 farklı yöntemle sahne oluştur:</p>
         <div className="flex flex-wrap gap-2">
           {['Hazır stiller (Beyaz, Koyu…)', 'Kendi promptunu yaz', 'Arka plan fotoğrafı ver'].map((t, i) => (
             <span key={i} className="text-xs bg-rd-primary-50 text-rd-primary-700 px-3 py-1 rounded-full border border-rd-primary-200">{i + 1}. {t}</span>
@@ -270,19 +270,19 @@ function VideoPanel() {
         stilinden seçin ya da kendi yönetmenliğinizi yapın — Reels, TikTok,
         YouTube ve pazaryeri formatlarında.
       </p>
-      <p className="text-sm font-semibold text-rd-neutral-900 mb-1">Ürün fotoğrafından tanıtım videosu</p>
+      <p className="text-sm font-medium text-rd-neutral-900 mb-1">Ürün fotoğrafından tanıtım videosu</p>
       <p className="text-xs text-rd-neutral-500 mb-5">Ürünü hareket ettiren, platform uyumlu dikey/kare video — MP4 olarak indir</p>
-      {/* 6 video kartı 2-kolon */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+      {/* 6 video kartı 3-kolon — video üstte kare, metin altta */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5">
         {[
-          { src: '/video-ornekler/360-donus.mp4', Ikon: RotateCw, baslik: '360° Dönüş', aciklama: 'Ürün kendi ekseni etrafında döner. Tüm açılar görünür. Takı, aksesuar, elektronik için ideal.' },
-          { src: '/video-ornekler/zoom-yaklasim.mp4', Ikon: ZoomIn, baslik: 'Zoom yaklaşım', aciklama: 'Kamera ürüne doğru yaklaşır. Doku ve detay hissi. El yapımı ve tekstil ürünler için güçlü.' },
-          { src: '/video-ornekler/dramatik-isik.mp4', Ikon: Lightbulb, baslik: 'Dramatik ışık', aciklama: 'Karanlık sahnede spotlight açılır. Premium ve lüks his. Kozmetik ve elektronik için etkili.' },
-          { src: '/video-ornekler/dogal-ortam.mp4', Ikon: Leaf, baslik: 'Doğal ortam', aciklama: 'Yapraklar sallanır, ışık oynar. Organik ve sıcak his. Gıda, bitki, doğal ürünler için ideal.' },
-          { src: '/video-ornekler/detay-tarama.mp4', Ikon: ScanSearch, baslik: 'Detay tarama', aciklama: 'Kamera yüzeyi soldan sağa tarar. Doku, işçilik, malzeme kalitesi ortaya çıkar. Elektronik ve deri ürünler için güçlü.' },
-          { src: '/video-ornekler/kumas-hareketi.mp4', Ikon: Wind, baslik: 'Kumaş hareketi', aciklama: 'Hafif esinti kumaşı hareket ettirir. Döküm ve akışkanlık hissi verir. Elbise, şal, perde için ideal.' },
+          { src: '/video-ornekler/360-donus.mp4', Ikon: RotateCw, baslik: '360° Dönüş', aciklama: 'Ürün kendi ekseni etrafında döner. Tüm açılar görünür.' },
+          { src: '/video-ornekler/zoom-yaklasim.mp4', Ikon: ZoomIn, baslik: 'Zoom yaklaşım', aciklama: 'Kamera ürüne doğru yaklaşır. Doku ve detay hissi.' },
+          { src: '/video-ornekler/dramatik-isik.mp4', Ikon: Lightbulb, baslik: 'Dramatik ışık', aciklama: 'Karanlık sahnede spotlight açılır. Premium his.' },
+          { src: '/video-ornekler/dogal-ortam.mp4', Ikon: Leaf, baslik: 'Doğal ortam', aciklama: 'Yapraklar sallanır, ışık oynar. Organik ve sıcak his.' },
+          { src: '/video-ornekler/detay-tarama.mp4', Ikon: ScanSearch, baslik: 'Detay tarama', aciklama: 'Kamera yüzeyi soldan sağa tarar. Doku ve işçilik.' },
+          { src: '/video-ornekler/kumas-hareketi.mp4', Ikon: Wind, baslik: 'Kumaş hareketi', aciklama: 'Hafif esinti kumaşı hareket ettirir. Döküm hissi.' },
         ].map((v, i) => (
-          <div key={i} className="flex gap-3 rounded-xl border border-rd-neutral-200 bg-white p-3">
+          <div key={i} className="rounded-xl border border-rd-neutral-200 bg-white overflow-hidden">
             <video
               src={v.src}
               autoPlay
@@ -290,10 +290,10 @@ function VideoPanel() {
               muted
               playsInline
               preload="auto"
-              className="w-24 h-24 rounded-lg object-cover flex-shrink-0 bg-rd-neutral-200"
+              className="w-full aspect-square object-cover bg-rd-neutral-200"
             />
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-rd-neutral-900 mb-1 flex items-center gap-1.5">
+            <div className="p-3">
+              <p className="text-xs font-medium text-rd-neutral-900 mb-1 flex items-center gap-1.5">
                 <v.Ikon size={13} strokeWidth={1.5} className="text-rd-neutral-600" />
                 {v.baslik}
               </p>
@@ -311,7 +311,7 @@ function VideoPanel() {
         ].map((v, i) => (
           <div key={i} className="rounded-xl border border-rd-neutral-200 bg-white p-3 text-center">
             <v.Ikon size={20} strokeWidth={1.5} className="text-rd-neutral-600 mx-auto mb-1" />
-            <p className="text-xs font-semibold text-rd-neutral-900">{v.baslik}</p>
+            <p className="text-xs font-medium text-rd-neutral-900">{v.baslik}</p>
             <p className="text-xs text-rd-neutral-500 mb-1">{v.aciklama}</p>
             <span className="text-xs font-medium text-rd-primary-700 bg-white border border-rd-primary-200 px-1.5 py-0.5 rounded-full">{v.etiket}</span>
           </div>
@@ -319,7 +319,7 @@ function VideoPanel() {
       </div>
       {/* Nasıl çalışır */}
       <div className="bg-white border border-rd-neutral-200 rounded-xl p-4">
-        <p className="text-xs font-semibold text-rd-neutral-600 mb-2">Nasıl çalışır?</p>
+        <p className="text-xs font-medium text-rd-neutral-600 mb-2">Nasıl çalışır?</p>
         <div className="space-y-1.5">
           {['Ürün fotoğrafını yükle', 'Süre ve format seç', 'AI ürünü animasyonlu videoya dönüştürür (~2 dk)', 'MP4 olarak indir, platforma yükle'].map((s, i) => (
             <div key={i} className="flex items-start gap-2 text-xs text-rd-neutral-600">
@@ -348,7 +348,7 @@ function SosyalPanel() {
         Her platform için ayrı formatta caption ve hashtag seti üretin.
         Instagram, TikTok, Facebook ve X — hepsi tek tıkla.
       </p>
-      <p className="text-sm font-semibold text-rd-neutral-900 mb-1">Platform uyumlu caption + hashtag seti</p>
+      <p className="text-sm font-medium text-rd-neutral-900 mb-1">Platform uyumlu caption + hashtag seti</p>
       <p className="text-xs text-rd-neutral-500 mb-5">Instagram, TikTok, Facebook, Twitter/X — her platform için ayrı format · 1 kredi</p>
       <div className="flex gap-2 mb-4 flex-wrap">
         {['Instagram', 'TikTok', 'Facebook', 'Twitter/X'].map((p) => (
@@ -358,7 +358,7 @@ function SosyalPanel() {
       <div className="space-y-3">
         <div className="rounded-xl border border-rd-neutral-200 bg-white p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-rd-neutral-600 flex items-center gap-1.5">
+            <span className="text-xs font-medium text-rd-neutral-600 flex items-center gap-1.5">
               <Camera size={13} strokeWidth={1.5} />
               Instagram Caption
             </span>
@@ -368,7 +368,7 @@ function SosyalPanel() {
         </div>
         <div className="rounded-xl border border-rd-neutral-200 bg-white p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-rd-neutral-600 flex items-center gap-1.5">
+            <span className="text-xs font-medium text-rd-neutral-600 flex items-center gap-1.5">
               <Tag size={13} strokeWidth={1.5} />
               Hashtag Seti
             </span>
@@ -378,7 +378,7 @@ function SosyalPanel() {
         </div>
         <div className="rounded-xl border border-rd-neutral-200 bg-white p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-rd-neutral-600">Twitter/X (280 karakter)</span>
+            <span className="text-xs font-medium text-rd-neutral-600">Twitter/X (280 karakter)</span>
             <KopyalaButon metin={twCaption} />
           </div>
           <p className="text-sm text-rd-neutral-600 leading-relaxed">{twCaption}</p>
@@ -397,13 +397,7 @@ function SosyalPanel() {
 
 export function InfoStrip() {
   const [activeTab, setActiveTab] = useState<TabId>('metin')
-  const [detailOpen, setDetailOpen] = useState(false)
   const [activeMarket, setActiveMarket] = useState<MarketId>('trendyol')
-
-  const handleTabClick = (tab: TabId) => {
-    setActiveTab(tab)
-    if (!detailOpen) setDetailOpen(true)
-  }
 
   const activeTabLabel = TABS.find((t) => t.id === activeTab)?.label ?? ''
 
@@ -416,7 +410,7 @@ export function InfoStrip() {
             İÇERİK TÜRLERİ
           </Eyebrow>
         </div>
-        <h2 className="font-rd-display text-3xl md:text-4xl text-rd-neutral-900 font-bold tracking-[-0.01em]">
+        <h2 className="font-rd-display text-3xl md:text-4xl text-rd-neutral-900 font-medium tracking-[-0.01em]">
           4 içerik türü, 7 pazaryeri için
         </h2>
         <p className="text-sm text-rd-neutral-500 mt-1.5 leading-relaxed max-w-[520px]">
@@ -440,7 +434,7 @@ export function InfoStrip() {
               role="tab"
               aria-selected={isActive}
               aria-controls="infostrip-detail"
-              onClick={() => handleTabClick(tab.id)}
+              onClick={() => setActiveTab(tab.id)}
               className={cn(
                 'flex flex-col items-start gap-2 p-3 rounded-xl border transition-all duration-200 text-left',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-300',
@@ -481,39 +475,18 @@ export function InfoStrip() {
         })}
       </div>
 
-      {/* Toggle — 4 kartın altında, ortalı */}
-      <div className="flex justify-center mt-4 mb-2">
-        <button
-          onClick={() => setDetailOpen((o) => !o)}
-          aria-expanded={detailOpen}
-          aria-controls="infostrip-detail"
-          className="flex items-center gap-1.5 text-sm text-rd-neutral-600 hover:text-rd-primary-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-primary-300 rounded px-2 py-1"
-        >
-          <span>{detailOpen ? 'Detayı kapat' : 'Detaya bak'}</span>
-          <ChevronDown
-            size={16}
-            strokeWidth={2}
-            aria-hidden="true"
-            className={cn('transition-transform duration-200', detailOpen && 'rotate-180')}
-          />
-        </button>
+      {/* Detail area — always visible */}
+      <div
+        id="infostrip-detail"
+        role="tabpanel"
+        aria-label={`${activeTabLabel} içerik türü detayı`}
+        className="mt-4 rounded-xl border border-rd-neutral-200 bg-rd-neutral-100 p-5 md:p-6"
+      >
+        {activeTab === 'metin' && <MetinPanel market={activeMarket} setMarket={setActiveMarket} />}
+        {activeTab === 'gorsel' && <GorselPanel />}
+        {activeTab === 'video' && <VideoPanel />}
+        {activeTab === 'sosyal' && <SosyalPanel />}
       </div>
-
-      {/* Detail area */}
-      {detailOpen && (
-        <div
-          id="infostrip-detail"
-          role="tabpanel"
-          aria-label={`${activeTabLabel} içerik türü detayı`}
-          className="mt-4 rounded-xl border border-rd-neutral-200 bg-rd-neutral-100 p-5 md:p-6"
-        >
-          {/* Panel */}
-          {activeTab === 'metin' && <MetinPanel market={activeMarket} setMarket={setActiveMarket} />}
-          {activeTab === 'gorsel' && <GorselPanel />}
-          {activeTab === 'video' && <VideoPanel />}
-          {activeTab === 'sosyal' && <SosyalPanel />}
-        </div>
-      )}
     </div>
   )
 }

@@ -2,7 +2,7 @@
 slug: musteri-sadakati-olusturma-e-ticaret
 baslik: E-Ticarette Müşteri Sadakati Oluşturma: Tekrar Alışverişin Yolu
 ozet: E-ticarette sadık müşteri nasıl yaratılır? Tekrar alışveriş, müşteri yaşam boyu değeri, sadakat programı ve ilişki yönetimi için pratik rehber burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-12-11
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: İşletme ve SEO

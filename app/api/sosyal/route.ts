@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { captionSistemPrompt, captionCiktiParse } from "@/lib/prompts/sosyal";
+import { UST_KATEGORI_PROMPT_LABELS } from "@/lib/constants";
+import { turkceyiDuzelt, hashtaglariValideEt } from "@/lib/prompts/_turkce-duzeltme";
 import { krediDus, krediIade } from "@/lib/credits";
 import { AI_MODELS, AI_TEMPERATURES } from "@/lib/ai-config";
 import { SOSYAL_PROMPT_VERSION } from "@/lib/prompts/sosyal";
 import logger from "@/lib/logger";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import * as Sentry from "@sentry/nextjs";
 
 let rlDakika: Ratelimit | null = null;
 if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
@@ -15,7 +18,12 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
 }
 
 export async function POST(req: NextRequest) {
-  const { urunAdi, ekBilgi, platform, ton, userId, sezon = "normal" } = await req.json();
+  const { urunAdi, ekBilgi: ekBilgiRaw, platform, ton, userId, sezon = "normal", ustKategori } = await req.json();
+
+  // ustKategori varsa ekBilgi başına ürün tipi bağlamı ekle
+  const ekBilgi = ustKategori
+    ? `Ürün tipi: ${UST_KATEGORI_PROMPT_LABELS[ustKategori as keyof typeof UST_KATEGORI_PROMPT_LABELS] ?? ustKategori}${ekBilgiRaw ? `\n${ekBilgiRaw}` : ""}`
+    : (ekBilgiRaw || "");
 
   if (!userId) return NextResponse.json({ hata: "Giriş yapılmadı" }, { status: 401 });
   if (!urunAdi) return NextResponse.json({ hata: "Ürün adı gerekli" }, { status: 400 });
@@ -104,7 +112,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ hata: "İçerik üretilemedi, lütfen tekrar deneyin." }, { status: 502 });
   }
 
-  const { caption, hashtag } = captionCiktiParse(metin);
+  const { caption: captionHam, hashtag: hashtagHam } = captionCiktiParse(metin);
+
+  // Türkçe post-process — sadece caption metnine uygula
+  const { duzeltilmis: caption, bulgular: duzeltmeBulgular } = turkceyiDuzelt(captionHam);
+  if (duzeltmeBulgular.length > 0) {
+    Sentry.captureMessage("Türkçe post-process bulgu", {
+      level: "info",
+      extra: { bulgular: duzeltmeBulgular, prompt_version: SOSYAL_PROMPT_VERSION, platform },
+    });
+  }
+
+  // Hashtag validasyon
+  const { gecerli: gecerliHashtaglar, reddedildi } = hashtaglariValideEt(hashtagHam);
+  if (reddedildi.length > 0) {
+    Sentry.captureMessage("Hashtag reddedildi", {
+      level: "info",
+      extra: { reddedildi, platform },
+    });
+  }
+  const hashtag = gecerliHashtaglar.join(" ");
 
   // Fire-and-forget DB log — failure doesn't block response
   supabase.from("sosyal_uretimler").insert({

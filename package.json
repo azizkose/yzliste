@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:smoke": "SMOKE_TEST_BASE_URL=http://localhost:3000 vitest run tests/unit/api-smoke.test.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui"
   },
@@ -35,7 +36,9 @@
     "posthog-js": "^1.369.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-easy-crop": "^5.5.7",
     "recharts": "^3.8.1",
+    "sharp": "^0.34.5",
     "tailwind-merge": "^3.5.0",
     "vanilla-cookieconsent": "^3.1.0",
     "xlsx": "^0.18.5",

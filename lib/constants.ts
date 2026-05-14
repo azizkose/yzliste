@@ -115,3 +115,17 @@ export const KATEGORI_LISTESI = [
   "Oto & Bahçe",
   "Diğer",
 ] as const;
+
+// ─── Hibrit kategori sistemi ──────────────────────────────────────────────────
+// Üst kategori (9 enum) → alt kategori listesi
+// Sadece metin sekmesinde alt kategori dropdown'ı için kullanılır.
+
+export type { UstKategori } from "@/lib/constants/kategori-mapping"
+export {
+  ALT_KATEGORI_MAP,
+  getAltKategoriler,
+  inferUstKategori,
+  UST_KATEGORI_LABELS,
+  UST_KATEGORI_PROMPT_LABELS,
+  UST_TO_GORSEL_KATEGORI,
+} from "@/lib/constants/kategori-mapping"

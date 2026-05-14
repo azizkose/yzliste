@@ -79,7 +79,9 @@ interface MetinSekmesiProps {
   icerikUret: () => void;
   onGirisAc?: () => void;
   skor: number | null;
+  setSkor: (v: number | null) => void;
   oneriler: string[];
+  setOneriler: (v: string[]) => void;
   ucretsizRevizeKullanildi: boolean;
   ucretsizRevizeBaslat: () => void;
 }
@@ -160,7 +162,7 @@ export default function MetinSekmesi({
   duzenleYukleniyor, setDuzenleYukleniyor,
   uretimId, yenidenUretHakki, setYenidenUretHakki,
   kullanici, paketModalAc, icerikUret, onGirisAc,
-  skor, oneriler, ucretsizRevizeKullanildi, ucretsizRevizeBaslat,
+  skor, setSkor, oneriler, setOneriler, ucretsizRevizeKullanildi, ucretsizRevizeBaslat,
 }: MetinSekmesiProps) {
   const platformBilgi = PLATFORM_BILGI[platform] || PLATFORM_BILGI.trendyol;
   const platformPh = PLATFORM_PLACEHOLDER[platform] || PLATFORM_PLACEHOLDER.trendyol;
@@ -684,7 +686,7 @@ export default function MetinSekmesi({
         disabled={!uretButonAktif || yukleniyor}
         className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-lg transition-colors"
       >
-        {yukleniyor ? YUKLENIYOR_MESAJLARI[yukleniyorMesaj] : "İçerik üret"}
+        {yukleniyor ? YUKLENIYOR_MESAJLARI[yukleniyorMesaj] : "Listing metnini üret"}
       </button>
       {(!kullanici || kullanici.anonim) && (
         <p className="text-xs text-center text-rd-neutral-400">
@@ -721,36 +723,70 @@ export default function MetinSekmesi({
           {/* Mikro-aksiyonlar */}
           {(() => {
             const mikro = async (aksiyon: string) => {
-              if (!kullanici || duzenleYukleniyor) return;
+              // Bug 1A: guard — sıfırda revize yapılmasın
+              if (!kullanici || duzenleYukleniyor || yenidenUretHakki <= 0) return;
               setDuzenleYukleniyor(true);
-              const res = await fetch("/api/uret/duzenle", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ sonuc, aksiyon, userId: kullanici.id, platform, kategori }),
-              });
-              const data = await res.json();
-              if (data.sonuc) setSonuc(data.sonuc);
-              setDuzenleYukleniyor(false);
+              try {
+                const res = await fetch("/api/uret/duzenle", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ sonuc, aksiyon, userId: kullanici.id, platform, kategori }),
+                });
+                const data = await res.json();
+                if (data.sonuc) {
+                  setSonuc(data.sonuc);
+                  // REVIZE-02: backend'den dönen güncel skor/öneriler
+                  if (data.skor !== undefined) setSkor(data.skor ?? null);
+                  if (data.oneriler !== undefined) setOneriler(data.oneriler ?? []);
+                  // Bug 1A: success sonrası sayacı düşür (hata durumunda düşmez)
+                  setYenidenUretHakki(prev => prev - 1);
+                }
+              } catch {
+                // Ağ hatası — sayaç DÜŞMEZ
+              } finally {
+                setDuzenleYukleniyor(false);
+              }
             };
             return (
               <div className="space-y-2 px-1">
-                <p className="text-xs text-rd-neutral-500">
-                  <span className="font-medium text-rd-neutral-700">{yenidenUretHakki}/3 ücretsiz revize</span> kaldı — birini seç:
-                </p>
+                {/* Bug 1B: revize sırasında loading banner */}
+                {duzenleYukleniyor ? (
+                  <div className="rounded-xl bg-rd-primary-50 border border-rd-primary-200 p-4">
+                    <div className="flex items-start gap-3">
+                      <Loader2 size={16} className="animate-spin text-rd-primary-700 mt-0.5 shrink-0" aria-hidden="true" />
+                      <div>
+                        <p className="text-sm font-medium text-rd-primary-700">Yapay zeka içeriği revize ediyor</p>
+                        <p className="text-xs text-rd-primary-600 mt-0.5">Bu işlem yaklaşık 30 saniye sürer. Sayfadan ayrılma.</p>
+                      </div>
+                    </div>
+                  </div>
+                ) : yenidenUretHakki === 0 ? (
+                  // REVIZE-01: 0 olunca bilgilendirici banner
+                  <div className="rounded-xl bg-rd-neutral-50 border border-rd-neutral-200 p-3 text-sm text-rd-neutral-700">
+                    Ücretsiz revize hakkın bitti. Yeni içerik için &ldquo;İçerik üret&rdquo; butonunu kullan.
+                  </div>
+                ) : (
+                  <p className="text-xs text-rd-neutral-500">
+                    <span className="font-medium text-rd-neutral-700">{yenidenUretHakki}/3 ücretsiz revize</span> kaldı — birini seç:
+                  </p>
+                )}
+                {/* REVIZE-01: yenidenUretHakki > 0 olduğunda butonları göster */}
+                {yenidenUretHakki > 0 && (
                 <div className="flex flex-wrap gap-2">
-                <button onClick={() => mikro("kisalt")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
-                  <Scissors size={12} strokeWidth={1.5} /> Kısalt
-                </button>
-                <button onClick={() => mikro("genislet")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
-                  Genişlet
-                </button>
-                <button onClick={() => mikro("ton_samimi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
-                  Samimi
-                </button>
-                <button onClick={() => mikro("ton_resmi")} disabled={duzenleYukleniyor || yukleniyor} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
-                  Resmi
-                </button>
+                  <button onClick={() => mikro("kisalt")} disabled={duzenleYukleniyor || yukleniyor || yenidenUretHakki <= 0} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
+                    <Scissors size={12} strokeWidth={1.5} /> Kısalt
+                  </button>
+                  <button onClick={() => mikro("genislet")} disabled={duzenleYukleniyor || yukleniyor || yenidenUretHakki <= 0} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
+                    Genişlet
+                  </button>
+                  <button onClick={() => mikro("ton_samimi")} disabled={duzenleYukleniyor || yukleniyor || yenidenUretHakki <= 0} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
+                    Samimi
+                  </button>
+                  <button onClick={() => mikro("ton_resmi")} disabled={duzenleYukleniyor || yukleniyor || yenidenUretHakki <= 0} className="flex items-center gap-1 text-xs bg-rd-neutral-100 hover:bg-rd-neutral-200/40 text-rd-neutral-600 px-3 py-1.5 rounded-lg border border-rd-neutral-200 transition-colors disabled:opacity-40">
+                    Resmi
+                  </button>
                 </div>
+                )}
               </div>
             );
           })()}

@@ -23,8 +23,10 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
   const [scrolled, setScrolled] = useState(false);
   const [araclarAcik, setAraclarAcik] = useState(false);
   const [mobilAraclarAcik, setMobilAraclarAcik] = useState(false);
-  const { data: currentUser, isLoading: authYukleniyor } = useCurrentUser();
+  const { data: currentUser, isLoading, isFetching } = useCurrentUser();
   const { data: kredi } = useCredits();
+  // loading veya stale-null refetch sırasında "Giriş Yap" flash'ı önle
+  const authYukleniyor = isLoading || (isFetching && !currentUser);
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -40,6 +42,7 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
   }, [isHeroPage]);
 
   const cikisYap = async () => {
+    analytics.logoutCompleted();
     await supabase.auth.signOut();
     analytics.reset();
     queryClient.clear();
@@ -109,7 +112,9 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
 
         {/* Auth buttons */}
         <div className="flex gap-1 sm:gap-2 ml-auto items-center">
-          {authYukleniyor ? null : girisVar ? (
+          {authYukleniyor ? (
+            <div className="w-20 h-8" aria-hidden="true" />
+          ) : girisVar ? (
             <>
               {kredi !== null && kredi !== undefined && (
                 <a
@@ -122,8 +127,17 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               )}
               <a
                 href="/hesap"
-                className={`text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors whitespace-nowrap ${transparent ? "text-white/80 hover:text-white hover:bg-white/10" : "text-[#5A5852] hover:text-[#1A1A17] hover:bg-[#F1F0EB]"}`}
+                className={`flex items-center gap-1.5 text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors whitespace-nowrap ${transparent ? "text-white/80 hover:text-white hover:bg-white/10" : "text-[#5A5852] hover:text-[#1A1A17] hover:bg-[#F1F0EB]"}`}
               >
+                {currentUser?.email && (
+                  <span
+                    className="w-6 h-6 rounded-full bg-[#F0F4FB] text-[#1E4DD8] flex items-center justify-center text-xs font-medium flex-shrink-0"
+                    title={currentUser.email}
+                    aria-hidden="true"
+                  >
+                    {currentUser.email.charAt(0).toUpperCase()}
+                  </span>
+                )}
                 Hesabım
               </a>
               <button
@@ -141,12 +155,14 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
               Giriş Yap
             </a>
           )}
-          <a
-            href="/uret"
-            className="hidden sm:block text-xs sm:text-sm bg-[#1E4DD8] text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-[#163B9E] transition-colors font-medium whitespace-nowrap"
-          >
-            İçerik Üret →
-          </a>
+          {aktifSayfa !== "icerik" && (
+            <a
+              href="/uret"
+              className="hidden sm:block text-xs sm:text-sm bg-[#1E4DD8] text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-[#163B9E] transition-colors font-medium whitespace-nowrap"
+            >
+              İçerik Üret →
+            </a>
+          )}
           {/* Mobile hamburger */}
           <button
             onClick={() => setMenuAcik(!menuAcik)}
@@ -231,12 +247,14 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
                   Giriş Yap
                 </a>
               )}
-              <a
-                href="/uret"
-                className="block px-3 py-2 rounded-lg text-sm font-medium bg-[#1E4DD8] text-white text-center hover:bg-[#163B9E] transition-colors"
-              >
-                İçerik Üret →
-              </a>
+              {aktifSayfa !== "icerik" && (
+                <a
+                  href="/uret"
+                  className="block px-3 py-2 rounded-lg text-sm font-medium bg-[#1E4DD8] text-white text-center hover:bg-[#163B9E] transition-colors"
+                >
+                  İçerik Üret →
+                </a>
+              )}
             </div>
           </nav>
         </div>

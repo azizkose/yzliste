@@ -2,13 +2,15 @@
 slug: influencer-pazarlama-e-ticaret-stratejisi
 baslik: E-Ticarette Influencer Pazarlama: İşbirliği Modelleri ve Geri Dönüş Ölçme
 ozet: Influencer pazarlamada işbirliği modelleri, mikro vs makro influencer farkı, anlaşma ücretleri, takip kodu kurulumu ve geri dönüş ölçme yöntemleri.
-yayinTarihi: 2026-04-27
+yayinTarihi: 2026-03-29
 yazarAdi: yzliste Ekibi
 okumaSuresi: 8
 kategori: İşletme ve SEO
 etiketler: influencer,pazarlama,e-ticaret,işbirliği,sosyal medya
 kapakGorsel: 
 ---
+
+# GİRİŞ
 
 Influencer pazarlama bir trend olmaktan çıkıp e-ticaretin standart kanallarından birine dönüştü. Reklamlara karşı duvar ören tüketici, güvendiği bir sosyal medya kullanıcısının önerisini farklı bir yerde değerlendiriyor. Ancak influencer işbirlikleri pahalı olabilir ve geri dönüşü ölçmek alışılmış reklam metriklerinden farklı. Bu rehberde mikro ve makro influencer farkını, hangi işbirliği modelinin hangi durumda işe yaradığını, anlaşma sürecini ve sonucu ölçmenin pratik yollarını bulacaksınız.
 

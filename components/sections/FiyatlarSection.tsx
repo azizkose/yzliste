@@ -81,7 +81,7 @@ export default function FiyatlarSection() {
               {/* Seçilen değer */}
               <p className="mt-4 text-center">
                 <span
-                  className="text-3xl font-bold text-rd-primary-700 tabular-nums"
+                  className="text-3xl font-medium text-rd-primary-700 tabular-nums"
                   style={{ fontFamily: 'var(--font-rd-display)' }}
                 >
                   {productCount}
@@ -99,7 +99,7 @@ export default function FiyatlarSection() {
                 {RECOMMENDATION_EYEBROW}
               </p>
               <p
-                className="text-xl font-bold text-rd-neutral-900"
+                className="text-xl font-medium text-rd-neutral-900"
                 style={{ fontFamily: 'var(--font-rd-display)' }}
               >
                 {recommendedPackage.isim}

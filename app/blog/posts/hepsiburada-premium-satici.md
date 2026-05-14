@@ -2,7 +2,7 @@
 slug: hepsiburada-premium-satici
 baslik: Hepsiburada Premium Satıcı Olma: Kriterler, Avantajlar ve Yol Haritası
 ozet: Hepsiburada Premium satıcı rozeti nasıl kazanılır? Satıcı puanı, yanıt hızı, kargo süresi ve iade oranı kriterleri için pratik yol haritası burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-12-29
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

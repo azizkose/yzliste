@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     .single();
 
   const conversationId = randomString(12);
-  const callbackBase = process.env.NEXT_PUBLIC_SITE_URL || "https://yzliste.com";
+  const callbackBase = process.env.NEXT_PUBLIC_SITE_URL || "https://www.yzliste.com";
   const randomKey = randomString(20);
 
   // Kimlik numarası — TC veya vergi no

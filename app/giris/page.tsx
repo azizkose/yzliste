@@ -41,13 +41,13 @@ export default async function GirisPage({
 
             {/* Başlık */}
             <p
-              className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-primary-600 mb-2"
+              className="text-xs font-medium tracking-[0.1em] uppercase text-rd-primary-600 mb-2"
               style={{ fontFamily: 'var(--font-rd-display)' }}
             >
               Giriş
             </p>
             <h1
-              className="text-3xl font-bold text-rd-neutral-900 mb-1"
+              className="text-3xl font-medium text-rd-neutral-900 mb-1"
               style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.02em', lineHeight: '1.3' }}
             >
               Tekrar hoş geldin
@@ -73,13 +73,13 @@ export default async function GirisPage({
           <div className="hidden lg:block">
             <div className="rounded-2xl bg-rd-primary-600 p-8 text-white">
               <p
-                className="text-xs font-semibold tracking-[0.1em] uppercase text-white/60 mb-4"
+                className="text-xs font-medium tracking-[0.1em] uppercase text-white/60 mb-4"
                 style={{ fontFamily: 'var(--font-rd-display)' }}
               >
                 yzliste ile
               </p>
               <h2
-                className="text-2xl font-bold text-white mb-6"
+                className="text-2xl font-medium text-white mb-6"
                 style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em', lineHeight: '1.3' }}
               >
                 Ürün içeriklerini<br />dakikalar içinde üret

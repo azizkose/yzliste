@@ -1,9 +1,11 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
-import { YUKLENIYOR_MESAJLARI, PLATFORM_BILGI } from "@/lib/constants";
+import { YUKLENIYOR_MESAJLARI, PLATFORM_BILGI, inferUstKategori } from "@/lib/constants";
 import { analytics } from "@/lib/analytics";
+import { METIN_PROMPT_VERSION } from "@/lib/prompts/metin";
 import { useUretimStore } from "@/store/uretimStore";
 import type { Kullanici } from "@/lib/listing-utils";
+import type { UstKategori } from "@/lib/constants/kategori-mapping";
 
 interface MetinDeps {
   fotolar: string[];
@@ -14,6 +16,9 @@ interface MetinDeps {
   setHata: (v: string | null) => void;
   gecmisiYukle: (userId: string) => void;
   invalidateCredits: () => void;
+  // Paylaşılan üst kategori (parent'tan gelir)
+  ustKategori: UstKategori | null;
+  setUstKategori: (k: UstKategori | null) => void;
 }
 
 export function useMetinUretim(deps: MetinDeps) {
@@ -92,6 +97,11 @@ export function useMetinUretim(deps: MetinDeps) {
         setUrunAdi(data.isim);
         if (data.marka) setKategori(data.marka);
         if (data.aciklama) setOzellikler(data.aciklama);
+        // Görev 7: barkod kategorisinden üst kategori infer et
+        if (data.kategori) {
+          const inferredUst = inferUstKategori(data.kategori);
+          if (inferredUst) depsRef.current.setUstKategori(inferredUst);
+        }
         kameraKapat();
       }
     } catch { alert("Barkod sorgulanırken hata oluştu."); }
@@ -141,7 +151,7 @@ export function useMetinUretim(deps: MetinDeps) {
     setYukleniyor(true);
     setSonuc("");
     setYukleniyorMesaj(0);
-    analytics.generationStarted({ platform, type: "metin" });
+    analytics.generationStarted({ platform, type: "metin", prompt_version: METIN_PROMPT_VERSION });
     mesajInterval.current = setInterval(() => setYukleniyorMesaj((prev) => (prev + 1) % YUKLENIYOR_MESAJLARI.length), 1800);
     try {
       const res = await fetch("/api/uret", {
@@ -155,6 +165,7 @@ export function useMetinUretim(deps: MetinDeps) {
           backendTerimler: backendTerimler || undefined,
           ucretsizRevize: ucretsizRevizeAktifRef.current,
           orijinalUretimId: ucretsizRevizeAktifRef.current ? uretimIdRef.current : undefined,
+          ustKategori: depsRef.current.ustKategori ?? undefined,
         }),
       });
       ucretsizRevizeAktifRef.current = false;
@@ -177,7 +188,7 @@ export function useMetinUretim(deps: MetinDeps) {
       setYenidenUretHakki(3);
       if (kullanici.is_admin) setKullanici(k => k ? { ...k, toplam_kullanilan: k.toplam_kullanilan + 1 } : k);
       else setKullanici(k => k ? { ...k, kredi: k.kredi - 1, toplam_kullanilan: k.toplam_kullanilan + 1 } : k);
-      analytics.generationCompleted({ platform, type: "metin", credits_remaining: kullanici.kredi - 1 });
+      analytics.generationCompleted({ platform, type: "metin", credits_remaining: kullanici.kredi - 1, prompt_version: METIN_PROMPT_VERSION });
       invalidateCredits();
       gecmisiYukle(kullanici.id);
     } catch {
@@ -215,7 +226,8 @@ export function useMetinUretim(deps: MetinDeps) {
     etiketler, setEtiketler,
     backendTerimler, setBackendTerimler,
     icerikUret,
-    skor, oneriler,
+    skor, setSkor,
+    oneriler, setOneriler,
     ucretsizRevizeKullanildi,
     ucretsizRevizeBaslat: () => { ucretsizRevizeAktifRef.current = true; },
   };

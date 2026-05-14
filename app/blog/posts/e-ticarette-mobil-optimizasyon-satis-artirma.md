@@ -2,7 +2,7 @@
 slug: e-ticarette-mobil-optimizasyon-satis-artirma
 baslik: E-Ticarette Mobil Optimizasyon: Müşterilerin Çoğu Mobilden Alışveriş Yapıyor
 ozet: Pazaryeri alışverişlerinin büyük çoğunluğu mobil cihazlardan yapılıyor. Listing'lerini mobil uyumlu hazırlamanın ipuçlarını bu rehberde bul.
-yayinTarihi: 2026-04-11
+yayinTarihi: 2025-07-11
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Satış Stratejileri

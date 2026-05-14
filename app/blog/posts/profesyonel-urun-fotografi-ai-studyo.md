@@ -2,7 +2,7 @@
 slug: profesyonel-urun-fotografi-ai-studyo
 baslik: Stüdyo Maliyetine Son: AI ile Profesyonel Ürün Fotoğrafları
 ozet: Ürünlerinizi profesyonel bir stüdyoda çekilmiş gibi göstermek için binlerce lira harcamanıza gerek yok. Yapay zeka ile görsel dönüşümü keşfedin.
-yayinTarihi: 2026-04-18
+yayinTarihi: 2025-09-03
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
 kategori: AI ve Görsel

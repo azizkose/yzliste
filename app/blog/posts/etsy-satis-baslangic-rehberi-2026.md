@@ -2,7 +2,7 @@
 slug: etsy-satis-baslangic-rehberi-2026
 baslik: Etsy'de Satış Yapmak: Türk Satıcılar İçin Başlangıç Rehberi (2026)
 ozet: Etsy'de satış yapmak isteyen Türk satıcılar için hazırladığımız 2026 başlangıç rehberi: mağaza kurma, listeleme, kargo, vergi ve ilk satış adımları burada.
-yayinTarihi: 2026-04-18
+yayinTarihi: 2025-09-06
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
 kategori: Platform Rehberleri

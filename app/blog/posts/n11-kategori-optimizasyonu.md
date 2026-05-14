@@ -2,7 +2,7 @@
 slug: n11-kategori-optimizasyonu
 baslik: N11 Kategori ve Anahtar Kelime Optimizasyonu: Görünürlüğü Artırma
 ozet: N11'de arama sonucunda üste çıkmak için kategori seçimi, anahtar kelime yerleştirme ve ürün özellik tablosu nasıl yapılandırılır? Pratik rehber burada.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-12-08
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: Platform Rehberleri

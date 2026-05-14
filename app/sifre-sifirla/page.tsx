@@ -63,7 +63,7 @@ function Step1() {
           <MailCheck size={48} className="text-rd-success-600" strokeWidth={1.5} aria-hidden="true" />
         </div>
         <div>
-          <p className="font-bold text-rd-neutral-900" style={{ fontFamily: 'var(--font-rd-display)' }}>
+          <p className="font-medium text-rd-neutral-900" style={{ fontFamily: 'var(--font-rd-display)' }}>
             E-posta gönderildi
           </p>
           <p className="text-sm text-rd-neutral-500 mt-2 leading-relaxed">
@@ -85,13 +85,13 @@ function Step1() {
   return (
     <>
       <p
-        className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-primary-600 mb-2"
+        className="text-xs font-medium tracking-[0.1em] uppercase text-rd-primary-600 mb-2"
         style={{ fontFamily: 'var(--font-rd-display)' }}
       >
         Şifre sıfırla
       </p>
       <h1
-        className="text-2xl font-bold text-rd-neutral-900 mb-1"
+        className="text-2xl font-medium text-rd-neutral-900 mb-1"
         style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em' }}
       >
         Şifreni sıfırla
@@ -191,13 +191,13 @@ function Step2() {
   return (
     <>
       <p
-        className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-primary-600 mb-2"
+        className="text-xs font-medium tracking-[0.1em] uppercase text-rd-primary-600 mb-2"
         style={{ fontFamily: 'var(--font-rd-display)' }}
       >
         Şifre sıfırla
       </p>
       <h1
-        className="text-2xl font-bold text-rd-neutral-900 mb-8"
+        className="text-2xl font-medium text-rd-neutral-900 mb-8"
         style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em' }}
       >
         Yeni şifre belirle
@@ -230,7 +230,7 @@ function Step2() {
                 <KeyRound size={22} strokeWidth={1.5} className="text-rd-success-600" aria-hidden="true" />
               </div>
             </div>
-            <p className="font-bold text-rd-neutral-900" style={{ fontFamily: 'var(--font-rd-display)' }}>
+            <p className="font-medium text-rd-neutral-900" style={{ fontFamily: 'var(--font-rd-display)' }}>
               Şifre güncellendi
             </p>
             <p className="text-sm text-rd-neutral-500">Yönlendiriliyorsunuz…</p>

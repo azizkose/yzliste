@@ -1,8 +1,12 @@
 ﻿"use client";
+import { useState, useEffect } from "react";
 import { Link2, ImageIcon as ImageIconLucide, Download } from "lucide-react";
 import { GORSEL_STILLER, kategoriKoduHesapla } from "@/lib/constants";
 import FotoThumbnail from "@/components/ui/FotoThumbnail";
 import KrediButon from "@/components/ui/KrediButon";
+import InputCropper from "@/components/uret/InputCropper";
+import type { UstKategori } from "@/lib/constants/kategori-mapping";
+import { UST_TO_GORSEL_KATEGORI } from "@/lib/constants/kategori-mapping";
 
 type Kullanici = {
   id: string;
@@ -19,16 +23,20 @@ interface GorselSekmesiProps {
   urunAdi: string;
   kategori: string;
   fotolar: string[];
+  setFotolar: (fn: (prev: string[]) => string[]) => void;
   fotoKaldir: (i: number) => void;
   gorselEkPrompt: string;
   setGorselEkPrompt: (v: string) => void;
   seciliStiller: Set<string>;
   stilToggle: (id: string) => void;
   gorselYukleniyor: boolean;
-  gorselJoblar: { requestId: string; label: string; stil: string }[];
-  setGorselJoblar: (fn: (prev: { requestId: string; label: string; stil: string }[]) => { requestId: string; label: string; stil: string }[]) => void;
+  gorselJoblar: { requestId: string; label: string; stil: string; model?: string; url?: string; immediate?: boolean; error?: boolean }[];
+  setGorselJoblar: (fn: (prev: { requestId: string; label: string; stil: string; model?: string; url?: string; immediate?: boolean; error?: boolean }[]) => { requestId: string; label: string; stil: string; model?: string; url?: string; immediate?: boolean; error?: boolean }[]) => void;
   referansGorsel: string | null;
   setReferansGorsel: (v: string | null) => void;
+  // V2: kategori seçimi
+  seciliKategori: UstKategori | null;
+  setSeciliKategori: (k: UstKategori | null) => void;
   kullanici: Kullanici | null;
   paketModalAc: () => void;
   gorselUret: () => void;
@@ -41,14 +49,25 @@ interface GorselSekmesiProps {
 export default function GorselSekmesi({
   aktif,
   urunAdi, kategori,
-  fotolar, fotoKaldir,
+  fotolar, setFotolar, fotoKaldir,
   gorselEkPrompt, setGorselEkPrompt,
   seciliStiller, stilToggle,
   gorselYukleniyor, gorselJoblar, setGorselJoblar,
   referansGorsel, setReferansGorsel,
+  seciliKategori, setSeciliKategori,
   kullanici, paketModalAc, gorselUret,
   blobIndir, resizeFoto, invalidateCredits, setKullanici,
 }: GorselSekmesiProps) {
+  const [showCropper, setShowCropper] = useState(false)
+  const [croppingFotoIndex, setCroppingFotoIndex] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (fotolar.length > 0 && seciliKategori && !showCropper && croppingFotoIndex === null) {
+      setShowCropper(true)
+      setCroppingFotoIndex(0)
+    }
+  }, [fotolar.length, seciliKategori]) // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div style={{ display: aktif ? "block" : "none" }} className="mt-4 bg-white border border-rd-neutral-200 rounded-xl p-6 space-y-4">
       <div className="flex items-center justify-between">
@@ -94,6 +113,25 @@ export default function GorselSekmesi({
           Rehberi oku
         </a>
       </p>
+
+      {/* V2: Ürün tipi adım 2'de paylaşılan KategoriSelector'dan geliyor */}
+
+      {/* V2.2: Crop UI — foto + kategori seçilince otomatik açılır */}
+      {showCropper && croppingFotoIndex !== null && fotolar[croppingFotoIndex] && (
+        <InputCropper
+          imageBase64={fotolar[croppingFotoIndex]}
+          kategori={seciliKategori ? UST_TO_GORSEL_KATEGORI[seciliKategori] : null}
+          onCropDone={(croppedBase64) => {
+            setFotolar((prev) => prev.map((f, i) => i === croppingFotoIndex ? croppedBase64 : f))
+            setShowCropper(false)
+            setCroppingFotoIndex(null)
+          }}
+          onSkip={() => {
+            setShowCropper(false)
+            setCroppingFotoIndex(null)
+          }}
+        />
+      )}
 
       <div>
         <p className="block text-xs font-medium text-rd-neutral-600 mb-2">Stil seç</p>
@@ -168,10 +206,10 @@ export default function GorselSekmesi({
         <button
           type="button"
           onClick={gorselUret}
-          disabled={gorselYukleniyor || seciliStiller.size === 0 || fotolar.length === 0}
+          disabled={gorselYukleniyor || !seciliKategori || seciliStiller.size === 0 || fotolar.length === 0}
           className="w-full bg-rd-primary-800 hover:bg-rd-primary-900 disabled:bg-rd-neutral-200 disabled:text-rd-neutral-400 text-white font-medium py-3 rounded-lg transition-colors"
         >
-          {gorselYukleniyor ? `${seciliStiller.size} görsel üretiliyor...` : "İçerik üret"}
+          {gorselYukleniyor ? `${seciliStiller.size} görsel üretiliyor...` : "Görseli oluştur"}
         </button>
       )}
 
@@ -205,13 +243,19 @@ export default function GorselSekmesi({
               <div key={job.requestId} className="space-y-1.5">
                 <div className="rounded-xl overflow-hidden border border-rd-neutral-200 bg-rd-neutral-100 relative group flex items-center justify-center min-h-[300px]">
                   <img
-                    src={`/api/gorsel/img?requestId=${job.requestId}&index=0`}
+                    src={job.url || `/api/gorsel/img?requestId=${job.requestId}&index=0${job.model ? `&model=${encodeURIComponent(job.model)}` : ""}`}
                     alt={job.label}
                     className="w-full max-h-[500px] mx-auto object-contain select-none"
                     draggable={false}
                     onContextMenu={(e) => e.preventDefault()}
                   />
                   <button onClick={async () => {
+                    if (job.url) {
+                      // V2.2: direkt Supabase URL'den indir
+                      const res = await fetch(job.url);
+                      blobIndir(await res.blob(), `yzliste-${job.stil}.jpg`);
+                      return;
+                    }
                     if (!kullanici) return;
                     const res = await fetch("/api/gorsel/download", {
                       method: "POST",
@@ -233,7 +277,7 @@ export default function GorselSekmesi({
                     const res = await fetch("/api/gorsel", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ foto: resizedFoto, stiller: [job.stil], ekPrompt: gorselEkPrompt, userId: kullanici.id, referansGorsel }),
+                      body: JSON.stringify({ foto: resizedFoto, stiller: [job.stil], ekPrompt: gorselEkPrompt, userId: kullanici.id, referansGorsel, kategori: seciliKategori ? UST_TO_GORSEL_KATEGORI[seciliKategori] : null }),
                     });
                     const data = await res.json();
                     if (!data.jobs?.[0]) return;
@@ -242,9 +286,10 @@ export default function GorselSekmesi({
                       invalidateCredits();
                     }
                     const newJob = data.jobs[0];
+                    const modelParam = newJob.model ? `&model=${encodeURIComponent(newJob.model)}` : "";
                     for (let d = 0; d < 40; d++) {
                       await new Promise(r => setTimeout(r, 4000));
-                      const pollRes = await fetch(`/api/gorsel/poll?requestId=${newJob.requestId}`);
+                      const pollRes = await fetch(`/api/gorsel/poll?requestId=${newJob.requestId}${modelParam}`);
                       const pollData = await pollRes.json();
                       if (pollData.status === "COMPLETED") {
                         setGorselJoblar(prev => prev.map(j => j.requestId === job.requestId ? newJob : j));

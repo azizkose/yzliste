@@ -2,7 +2,7 @@
 slug: sosyal-medya-pazaryeri-trafik
 baslik: Sosyal Medyadan Pazaryerine Trafik Çekme: UTM, Link in Bio, Reels Stratejisi
 ozet: Instagram, TikTok ve Facebook'tan pazaryeri ürün sayfalarına nasıl trafik çekersin? UTM, link in bio, reels stratejisi ve dönüşüm ölçümü pratik rehberde.
-yayinTarihi: 2026-04-23
+yayinTarihi: 2025-11-26
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
 kategori: İşletme ve SEO

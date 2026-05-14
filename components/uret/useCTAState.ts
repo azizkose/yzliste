@@ -9,6 +9,7 @@ interface CTAStateArgs {
   selectedStylesCount?: number
   selectedPlatformsCount?: number
   isLoggedIn?: boolean
+  hasUstKategori?: boolean
 }
 
 export interface CTAState {
@@ -24,9 +25,13 @@ export function getCTAState(args: CTAStateArgs): CTAState {
     selectedStylesCount = 0,
     selectedPlatformsCount = 0,
     isLoggedIn = true,
+    hasUstKategori = false,
   } = args
 
   if (!isLoggedIn) return { disabled: true, reason: 'Önce giriş yap' }
+
+  // Üst kategori tüm sekmeler için zorunlu
+  if (!hasUstKategori) return { disabled: true, reason: 'Ürün tipini seç' }
 
   const productNameTrimmed = productName.trim()
 

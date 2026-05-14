@@ -30,7 +30,7 @@ function HizliVideo() {
       muted
       playsInline
       preload="auto"
-      className="h-10 w-full rounded object-contain bg-rd-neutral-100"
+      className="w-full aspect-square rounded object-contain bg-rd-neutral-100"
       aria-hidden="true"
     />
   )
@@ -42,9 +42,21 @@ const OUTPUT_CARDS = [
     label: 'Listing',
     color: 'text-rd-primary-700',
     content: (
-      <div className="h-10 overflow-hidden flex items-start">
+      <div className="overflow-hidden flex items-start">
         <p className="text-xs text-rd-neutral-700 leading-tight line-clamp-3">
           {trendyolTitle.slice(0, 60)}…
+        </p>
+      </div>
+    ),
+  },
+  {
+    icon: MessageSquare,
+    label: 'Sosyal',
+    color: 'text-rd-primary-700',
+    content: (
+      <div className="overflow-hidden flex items-start">
+        <p className="text-xs text-rd-neutral-500 leading-tight line-clamp-3">
+          Sahaya çıkmadan önce doğru top şart. 7 numara FIBA standardı...
         </p>
       </div>
     ),
@@ -58,7 +70,7 @@ const OUTPUT_CARDS = [
       <img
         src="/ornek_beyaz.jpg"
         alt="Basketbol topu beyaz zemin"
-        className="h-10 w-full object-contain rounded bg-rd-neutral-50"
+        className="w-full aspect-square object-contain rounded bg-rd-neutral-50"
       />
     ),
   },
@@ -67,18 +79,6 @@ const OUTPUT_CARDS = [
     label: 'Video',
     color: 'text-rd-primary-700',
     content: <HizliVideo />,
-  },
-  {
-    icon: MessageSquare,
-    label: 'Sosyal',
-    color: 'text-rd-primary-700',
-    content: (
-      <div className="h-10 overflow-hidden flex items-start">
-        <p className="text-xs text-rd-neutral-500 leading-tight line-clamp-3">
-          Sahaya çıkmadan önce doğru top şart. 7 numara FIBA standardı...
-        </p>
-      </div>
-    ),
   },
 ]
 
@@ -105,9 +105,9 @@ export default function AppScreenshotMockup() {
         {/* Browser top bar */}
         <div className="flex items-center gap-3 border-b border-rd-neutral-200 bg-rd-neutral-50 px-4 py-3">
           <div className="flex items-center gap-1.5" aria-hidden="true">
-            <span className="h-3 w-3 rounded-full bg-red-400" />
-            <span className="h-3 w-3 rounded-full bg-amber-400" />
-            <span className="h-3 w-3 rounded-full bg-green-400" />
+            <span className="h-3 w-3 rounded-full bg-rd-danger-600" />
+            <span className="h-3 w-3 rounded-full bg-rd-warning-600" />
+            <span className="h-3 w-3 rounded-full bg-rd-success-600" />
           </div>
           <div className="flex flex-1 items-center justify-center rounded-md border border-rd-neutral-200 bg-white px-3 py-1">
             <span className="text-xs text-rd-neutral-400">yzliste.com/uret</span>

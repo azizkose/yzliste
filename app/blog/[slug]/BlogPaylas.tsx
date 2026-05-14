@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Share2, Link2 } from "lucide-react";
 import Toast, { type ToastMessage } from "@/components/primitives/Toast";
+import { analytics } from "@/lib/analytics";
 
 interface Props {
   url: string;
@@ -14,6 +15,7 @@ export default function BlogPaylas({ url, title }: Props) {
   const fullUrl = `https://www.yzliste.com${url}`;
 
   const handleKopyala = async () => {
+    analytics.shareClicked({ content_type: "blog_post" });
     try {
       await navigator.clipboard.writeText(fullUrl);
       setToast({ id: "copy", type: "success", message: "Link kopyalandı" });
@@ -34,6 +36,7 @@ export default function BlogPaylas({ url, title }: Props) {
           href={`https://x.com/intent/tweet?url=${encodeURIComponent(fullUrl)}&text=${encodeURIComponent(title)}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => analytics.shareClicked({ content_type: "blog_post" })}
           aria-label="X'te paylaş"
           className="size-9 rounded-lg bg-rd-neutral-100 hover:bg-rd-primary-50 flex items-center justify-center transition-colors"
         >
@@ -49,6 +52,7 @@ export default function BlogPaylas({ url, title }: Props) {
           href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(fullUrl)}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => analytics.shareClicked({ content_type: "blog_post" })}
           aria-label="LinkedIn'de paylaş"
           className="size-9 rounded-lg bg-rd-neutral-100 hover:bg-rd-primary-50 flex items-center justify-center transition-colors"
         >

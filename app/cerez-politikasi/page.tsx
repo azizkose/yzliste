@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     "yzliste çerez politikası — hangi çerezlerin kullanıldığı ve nasıl kontrol edeceğiniz.",
   openGraph: { title: "Çerez Politikası | yzliste" },
   alternates: {
-    canonical: "/cerez-politikasi",
+    canonical: "https://www.yzliste.com/cerez-politikasi",
     languages: {
       tr: "https://www.yzliste.com/cerez-politikasi",
       "x-default": "https://www.yzliste.com/cerez-politikasi",

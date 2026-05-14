@@ -34,13 +34,13 @@ export default function KayitPage() {
 
             {/* Başlık */}
             <p
-              className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-primary-600 mb-2"
+              className="text-xs font-medium tracking-[0.1em] uppercase text-rd-primary-600 mb-2"
               style={{ fontFamily: 'var(--font-rd-display)' }}
             >
               Kayıt
             </p>
             <h1
-              className="text-3xl font-bold text-rd-neutral-900 mb-1"
+              className="text-3xl font-medium text-rd-neutral-900 mb-1"
               style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.02em', lineHeight: '1.3' }}
             >
               Hesabını oluştur
@@ -66,13 +66,13 @@ export default function KayitPage() {
           <div className="hidden lg:block">
             <div className="rounded-2xl border border-rd-neutral-200 bg-white p-8">
               <p
-                className="text-xs font-semibold tracking-[0.1em] uppercase text-rd-primary-600 mb-4"
+                className="text-xs font-medium tracking-[0.1em] uppercase text-rd-primary-600 mb-4"
                 style={{ fontFamily: 'var(--font-rd-display)' }}
               >
                 Neden yzliste?
               </p>
               <h2
-                className="text-xl font-bold text-rd-neutral-900 mb-6"
+                className="text-xl font-medium text-rd-neutral-900 mb-6"
                 style={{ fontFamily: 'var(--font-rd-display)', letterSpacing: '-0.01em' }}
               >
                 Ücretsiz dene,<br />beğenince devam et
