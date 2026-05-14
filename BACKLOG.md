@@ -30,6 +30,7 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | ~~UX-PAKETI-03~~ | Kart-içi CTA labels + kategori hibrit tamamlama | Code | ✅ Tamamlandı (2026-05-08) | Metin→"Listing metnini üret", Görsel→"Görseli oluştur", Video→"Videoyu oluştur"; UST_KATEGORI_PROMPT_LABELS; sosyal/kit API'ye ustKategori; Sentry fallback |
 | ~~UX-FIX-04~~ | /uret tabs aktif + üst kategori 9'a genişletme + alt kategori metin düzeltme | Code | ✅ Tamamlandı (2026-05-08) | Görsel+Video disabled kaldırıldı; UstKategori 5→9 enum (ev_dekor/elektronik/bebek_oyuncak/gida_hediye/diger); UST_TO_GORSEL_KATEGORI fallback map; "AI tahmin etsin"→"Detaylı kategori seç" |
 | ~~FIYAT-BLOG-BAKIM~~ | Fiyat güncellemesi + blog tarih dağıtımı | Code | ✅ Tamamlandı (2026-05-10) | ₺49/129/299→39/99/249 TL; kredi 30→25 & 100→80; 5 dosya güncellendi; 118 blog yazısı 3 günde 1 dağıtımla yeniden tarihlendi (2025-05-24→2026-05-10) |
+| MOBIL-SPRINT | Mobil deneyim + anasayfa tutundurma | Aziz + Cowork + Code | P0 — yeni session'da başla | Aziz şikayeti (2026-05-11): "Mobil deneyim kötü, anasayfa tutundurmuyor". Plan: (1) Tanı — telefon test + Lighthouse mobile + PostHog mobile bounce/session/scroll, (2) Quick wins — buton boyutu 44px, font 16px, LCP, layout shift, yatay scroll, (3) İçerik/akış — hero mesaj netliği, CTA above the fold, sosyal kanıt, session replay |
 | AUTH-UX-CLEANUP | Nav.tsx + NAV_CTAS/NAV_LINKS silme | Code | P3 — sonraki sprint | `components/sections/HeroBlock/Nav.tsx` artık kullanılmıyor (V2 ile SiteHeader'a geçildi); slate-* renk ihlalleri de var. Güvenli silme: grep ile son kez kontrol et |
 | GORSEL-V2-A~G | Görsel V2 pipeline refactor | Code | ✅ Tamamlandı (2026-05-05) | Faz 1 araştırma + Faz 2 implementasyon |
 | ~~GORSEL-V2.2.1~~ | Composite pipeline (Sharp + flux-schnell) | ✅ Tamamlandı (2026-05-06) | preview'da READY |
@@ -131,6 +132,7 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 
 | ID | Başlık |
 |---|---|
+| SUPABASE-GRANT-01 | Migration'lara eksik GRANT'ları ekle (deadline: 2026-10-30) — 6 tablo: `deletion_log`, `feedback`, `user_feedback`, `consent_log`, `referrals`, `sosyal_uretimler`, `gorsel_uretim` — RLS var ama `authenticated`/`service_role` grant'ı yok. Ekim 2026'da Supabase zorunlu hale getiriyor. |
 | ~~SEO-01~~ | /blog `<title>` 74 → 58 char | ✅ Tamamlandı (2026-05-04) |
 | SEO-02 | OG description HTML entity bug (`&#x27;`) |
 | SEO-03 | Homepage H1 doğrulama (h1 vs div) |
