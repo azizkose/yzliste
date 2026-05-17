@@ -15,7 +15,7 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 
 | ID | Başlık | Sahip | Durum | Detay |
 |---|---|---|---|---|
-| ~~GSC-001~~ | Redirect error fix (yzliste.com → www) | Aziz GSC "Validate Fix" | ✅ Çözüldü (2026-05-07) | May 4 geçici hataydı. May 6 crawl Successful. Aziz GSC butonu basacak |
+| **GSC-001** | Redirect error fix (yzliste.com → www) | Aziz canlı debug → Code fix | **P0 — Yeniden açıldı (2026-05-11)** | May 11 taramada 2 URL (önceden 1) — sorun yayılıyor. Etkilenen: `/` + `/blog/trendyol-listing-nasil-yazilir`. `specs/GSC-001.md` "EK BÖLÜM" — bot UA Cache-Control fix talimatı |
 | ~~AUTH-UX-01~~ | Giriş yaptıktan sonra anasayfada hâlâ "Giriş yap" | Code | ✅ Tamamlandı (2026-05-07) | setQueryData instant cache + isFetching&&!currentUser guard — preview'da test bekliyor |
 | ~~URET-MODE-01~~ | Görsel + Video sekmeleri geçici kapat | Code | ✅ Tamamlandı (2026-05-07) | "Yakında" badge + disabled; URL fallback gorsel/video→metin |
 | ~~URET-SCROLL-01~~ | "Üret" sonrası output alanına scroll YOK | Code | ✅ Tamamlandı (2026-05-07) | doScrollToStep3() sticky bar + MetinSekmesi wrapper |
@@ -75,16 +75,17 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | ~~T6R-05~~ | /sifre-sifirla `<title>` anasayfa title gösteriyor | ✅ Tamamlandı (2026-05-04) |
 | ~~T6R-06~~ | /profil anonim 200 + root canonical | ✅ Tamamlandı (2026-05-05) | noindex eklendi, redirect 307 doğrulandı |
 
-**GSC denetim bulguları (2026-05-06):**
+**GSC denetim bulguları (2026-05-06, güncelleme 2026-05-11):**
 
 | ID | Başlık | Öncelik | Detay |
 |---|---|---|---|
-| ~~GSC-001~~ | Redirect error (yzliste.com → www) | **Çözüldü (2026-05-06)** | May 4 geçici hataydı; May 6 crawl'da Page fetch Successful. GSC'de "Validate Fix" bas. Cache-Control fix (GSC-003) hâlâ önerilir. |
-| **GSC-002** | /auth robots.txt'e ekle | **P1 (yeniden açıldı)** | `specs/GSC-002.md` — /auth 4 impression alıyor, search'te görünüyor. 308 redirect var ama disallow eksik. |
-| GSC-003 | Public sayfalara doğru Cache-Control | P1 | `specs/GSC-003.md` — şu an `private, no-store` (Googlebot için yanlış sinyal). middleware'e public path override |
-| GSC-004 | Blog yazılarına BreadcrumbList JSON-LD | P1 | `specs/GSC-004.md` — Article/BlogPosting var, BreadcrumbList eksik |
-| ~~GSC-005~~ | /uret indexability (yanlış alarm) | Kapatıldı | Zaten `index, follow`, sitemap'te. Crawl/discovery zamanlama. GSC-003 sonrası Request Indexing |
-| GSC-006 | Manuel Request Indexing 5 sayfa | P2 | `specs/GSC-006.md` — Aziz manuel, GSC-001 + GSC-003 sonrası |
+| **GSC-001** | Redirect error (yzliste.com → www) | **P0 — Yeniden açıldı (2026-05-11)** | May 4 (1 URL) → May 11 (2 URL) — sorun yayılıyor. `specs/GSC-001.md` "EK BÖLÜM" — Aşama A canlı debug + B/C fix talimatı. Aziz GSC URL Inspection canlı test yapacak, sonra Code fix uygulayacak. |
+| ~~GSC-002~~ | /auth robots.txt'e ekle | ✅ Tamamlandı (2026-05-17) | `specs/GSC-002.md` — /auth ve /auth/ disallow eklendi (commit 2ca7d72). |
+| GSC-003 V2 | Public sayfalara Cache-Control (route-level static) | P2 — AUTH-UX-01 sonrası | `specs/GSC-003-V2.md` — V1 başarısız, geri alındı. V2 mimari değişiklik (route-level `dynamic=force-static`). AUTH-UX-01 bekliyor. |
+| ~~GSC-004~~ | Blog yazılarına BreadcrumbList JSON-LD | ✅ **Tamamlandı (önceden)** | `app/blog/[slug]/page.tsx:108-125` — BreadcrumbJsonLd component implement edilmiş. Spec aktif olarak işaretliydi, gerçekte iş bitmiş. |
+| ~~GSC-005~~ | /uret indexability (yanlış alarm) | Kapatıldı → **GSC-007'ye dönüştü** | İlk değerlendirme zamanlama meselesi sandı. Gerçek kök sebep: /uret tamamen `"use client"` → Googlebot render edemiyor. `specs/GSC-007.md`'ye taşındı. |
+| GSC-006 | Manuel Request Indexing 5 sayfa | P2 | `specs/GSC-006.md` — Aziz manuel. GSC-001 + GSC-007 sonrası tetiklenmeli. |
+| **GSC-007** | /uret server component refactor (SEO) | **P1 — yeni (2026-05-11)** | `specs/GSC-007.md` — /uret tamamen client component, Googlebot anlamlı içerik göremiyor. Aşama 0 (Aziz GSC canlı debug) → Aşama 1 (Code: server component + UretClient island). GSC-005'in gerçek kök sebebi. |
 
 **P0.5 prompt iyileştirme:**
 
