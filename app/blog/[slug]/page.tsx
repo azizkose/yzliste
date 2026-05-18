@@ -17,6 +17,8 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import BlogPaylas from "./BlogPaylas";
 
+// P0-2 V2 SEO fix: middleware dynamic render override'ını geç — Cache-Control public döner
+export const dynamic = "force-static";
 export const revalidate = 3600;
 // P0-5 SEO fix: olmayan slug → Next.js 404 (soft 404 önlemi)
 export const dynamicParams = false;

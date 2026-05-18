@@ -4,6 +4,9 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { Eyebrow } from "@/components/primitives/Eyebrow";
 
+// P0-2 V2 SEO fix: middleware dynamic render override'ını geç — Cache-Control public döner
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Kullanım Koşulları",
   description: "yzliste kullanım koşulları ve hizmet şartları.",

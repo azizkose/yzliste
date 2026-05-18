@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getYazilar, kategoriler } from "./icerikler";
+
+// P0-2 V2 SEO fix: middleware dynamic render override'ını geç — Cache-Control public döner
+export const dynamic = "force-static";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import BlogListesi from "./BlogListesi";

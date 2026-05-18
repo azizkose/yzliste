@@ -1,6 +1,9 @@
 // P1-6 SEO fix: Kategori bazlı blog hub sayfaları.
 // 5 kategori × her biri ~12-45 yazı. Internal linking için doğal hub, kategori-bazlı keyword cluster için indexable.
 import type { Metadata } from "next";
+
+// P0-2 V2 SEO fix: middleware dynamic render override'ını geç — Cache-Control public döner
+export const dynamic = "force-static";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getYazilar, kategoriler } from "../../icerikler";

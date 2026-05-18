@@ -4,6 +4,9 @@ import SiteFooter from "@/components/SiteFooter";
 import { Eyebrow } from "@/components/primitives/Eyebrow";
 import SSSListesi, { type SSSItem } from "./SSSListesi";
 
+// P0-2 V2 SEO fix: middleware dynamic render override'ını geç — Cache-Control public döner
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Sık Sorulan Sorular",
   description:
