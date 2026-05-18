@@ -14,6 +14,8 @@ kapakGorsel:
 
 E-ticaret mağazalarında müşteri sorularına hızlı yanıt kritik ama 7/24 canlı temsilci tutmak maliyetli. Chatbot'lar bu boşluğu dolduran araç. 2026'da chatbot teknolojisi büyük dil modellerinin (LLM) etkisiyle belirgin olgunluğa ulaştı; rutin sorulara doğru ve hızlı yanıt veren, karmaşık durumları insan temsilciye devreden sistemler yaygınlaştı. Bu yazıda e-ticaret için chatbot otomasyonunun pratik kullanımını inceleyeceğiz.
 
+> Pillar rehber: konunun bütününü görmek için [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazısını okumanı öneririz.
+
 ## Chatbot Neler Yapabilir?
 
 Modern e-ticaret chatbot'u şu görevleri rutin olarak yerine getiriyor:

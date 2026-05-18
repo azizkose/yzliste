@@ -1,7 +1,7 @@
 ---
 slug: trendyol-iade-yonetimi-saticilar
-baslik: Trendyol İade Yönetimi: Satıcılar İçin Kapsamlı Rehber ve Pratikler
-ozet: Trendyol'da iade süreci nasıl işler? İade oranını düşürme, müşteri iletişimi ve operasyon için pratik satıcı rehberi — iade kaynaklı kayıpları önleme ipuçları.
+baslik: Trendyol iade oranını düşürme: 8 satıcı taktiği
+ozet: Trendyol satıcı iade sürecini adım adım açıklıyoruz. İade itirazı, müşteri iletişimi ve iade oranını düşüren 8 pratik taktik — operasyonel maliyeti azaltın.
 yayinTarihi: 2025-11-08
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
@@ -13,6 +13,8 @@ kapakGorsel:
 # GİRİŞ
 
 Trendyol'da satış yapan her satıcının karşılaştığı gerçek: iade kaçınılmaz. Ancak iade oranı %10 seviyesinde olan bir mağaza ile %25 seviyesinde olan mağaza arasında kâr farkı dramatik. İyi yönetilen iade süreci sadece maliyeti değil, müşteri deneyimini de etkiliyor. Bu rehberde Trendyol iade sürecinin mekaniğini, oranı düşürme taktiklerini ve iadeden gelen kayıpları minimize etmeyi inceleyeceğiz.
+
+> Detaylı bakış: [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
 
 ## Trendyol İade Süreci Nasıl İşler?
 

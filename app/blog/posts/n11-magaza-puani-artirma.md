@@ -15,6 +15,8 @@ kapakGorsel:
 
 Türkiye'nin köklü pazar yerlerinden biri olan n11, müşteri yorumları ve mağaza puanı odaklı bir ekosisteme sahiptir. n11'de sadece "fiyat" değil, "bilgi" rekabeti de ön plandadır. Ürününüzü ne kadar şeffaf anlatırsanız, puanınız o kadar yükselir.
 
+> İlgili: [N11 satış rehberi](/blog/n11-satis-rehberi-magaza-puani-ve-listing) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Teknik Detay Tablosu Oluşturma
 
 n11 müşterisi kıyaslama yapmayı sever. Ürününüzün materyali veya kullanım ömrü gibi verileri düz bir yazı yerine madde işaretleriyle sunmalısınız. Bu, ürünün profesyonel bir kaynaktan geldiği imajını verir.

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import Image from 'next/image'
 import {
   Check,
   Zap,
@@ -66,10 +67,12 @@ const OUTPUT_CARDS = [
     label: 'Görsel',
     color: 'text-rd-primary-700',
     content: (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
+      <Image
         src="/ornek_beyaz.jpg"
         alt="Basketbol topu beyaz zemin"
+        width={300}
+        height={300}
+        sizes="(max-width: 768px) 150px, 200px"
         className="w-full aspect-square object-contain rounded bg-rd-neutral-50"
       />
     ),
@@ -121,10 +124,11 @@ export default function AppScreenshotMockup() {
             className="mb-4 flex items-center gap-3 rounded-xl border border-rd-neutral-200 bg-rd-neutral-50 p-3"
             aria-hidden="true"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="/ornek_once.jpg"
               alt="Basketbol topu ham fotoğraf"
+              width={40}
+              height={40}
               className="h-10 w-10 shrink-0 rounded-lg object-cover border border-rd-neutral-200"
             />
             <div className="min-w-0 flex-1">

@@ -1,7 +1,7 @@
 ---
 slug: ai-urun-fotografi-golge-isik-duzenleme
 baslik: AI ile Ürün Fotoğrafında Gölge ve Işık Düzenleme: Pazaryerine Uygun Sonuçlar
-ozet: AI ürün fotoğrafında gölge düşürme, ışık yönü ayarlama ve kontrast düzenleme nasıl yapılır? Pazaryeri kabul standartlarına uygun sonuçlar üretmek için pratik teknikler.
+ozet: AI ürün fotoğrafında gölge düşürme, ışık yönü ayarlama ve kontrast düzenleme nasıl yapılır?
 yayinTarihi: 2026-05-13
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
@@ -15,6 +15,8 @@ kapakGorsel:
 İyi bir ürün fotoğrafı ile sıradan bir ürün fotoğrafı arasındaki farkın büyük bir kısmı ışıklandırmadan gelir. Profesyonel stüdyo kurulumunda softbox, reflektör ve diffüzör ile yaratılan etki, AI ile aynı sonuca yaklaşabiliyor. Ama AI'ın varsayılan üretimi her zaman pazaryeri kabul standartlarına uymaz — bazen aşırı dramatik, bazen yapay görünür. Bu rehberde AI ile ürün fotoğrafında gölge ve ışık düzenlemesini nasıl kontrol edeceğinizi, hangi prompt yapısının pazaryerine uygun sonuç ürettiğini ve sık karşılaşılan hataları nasıl önleyeceğinizi anlatıyoruz.
 
 ---
+
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [AI ürün fotoğrafçılığı rehberi](/blog/e-ticaret-icin-ai-urun-fotografciligi) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
 
 ## Pazaryeri Kabul Standartları
 

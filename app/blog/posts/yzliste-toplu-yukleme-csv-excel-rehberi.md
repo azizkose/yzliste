@@ -1,7 +1,7 @@
 ---
 slug: yzliste-toplu-yukleme-csv-excel-rehberi
 baslik: yzliste ile Toplu Listing: CSV ve Excel'den 100 Ürün Yükleme Rehberi
-ozet: 50, 100 hatta 500 üründen oluşan envanteri tek tek yüklemek günler alır. yzliste'nin toplu yükleme akışı ile CSV/Excel listenizden tüm pazaryerlerine uyumlu listing'leri hazırlama rehberi.
+ozet: 50, 100 hatta 500 üründen oluşan envanteri tek tek yüklemek günler alır.
 yayinTarihi: 2026-04-07
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
@@ -15,6 +15,8 @@ kapakGorsel:
 10 ürünü 1 saatte yüklemek hızlıdır; ama 100 ürün için aynı yöntem 10 saat eder. Hacim büyüdüğünde tek tek listing yapma alışkanlığı sürdürülemez. yzliste'nin toplu yükleme akışı, CSV veya Excel olarak hazırladığınız ürün listesini saniyeler içinde okur ve her satır için pazaryerlerine uyumlu listing içeriklerini üretir. Bu yazıda toplu yükleme sürecini adım adım anlatıyor, dosyanızı nasıl hazırlamanız gerektiğini gösteriyoruz.
 
 ---
+
+> İlgili: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
 
 ## Toplu Yükleme Hangi Durumda Kullanılır?
 
@@ -81,7 +83,7 @@ yzliste, üretilen içeriği iki formatta sunar:
 
 ## Sık Yapılan Hatalar
 
-Toplu yüklemede en çok karşılaşılan sorunlar:
+Toplu yüklemede sıkça karşılaşılan sorunlar:
 
 - **Tutarsız SKU:** Bazı satırlarda boşluklu, bazılarında tireli yazılmış SKU'lar sistem eşleşmesini bozar.
 - **Eksik kategori bilgisi:** Kategori boş kaldığında AI varsayılan bir kategori atar; pazaryerinde yanlış yere düşebilir.
@@ -115,6 +117,6 @@ API entegrasyonu olan müşteriler için süreç daha da otomatikleşir; yeni ü
 
 ## SONUÇ
 
-Toplu yükleme, hacim arttığında yzliste'nin en çok tasarruf sağladığı akıştır. CSV/Excel dosyanızı pazaryeri kurallarını bilen bir AI ile saniyelerde işleyip, doğrudan yükleme dosyalarını alıp panele kayıt edebilirsiniz. Operasyonel zamandan kazandığınız saatleri büyüme, pazarlama ve müşteri hizmetlerine ayırabilirsiniz.
+Toplu yükleme, hacim arttığında yzliste'nin sıkça tasarruf sağladığı akıştır. CSV/Excel dosyanızı pazaryeri kurallarını bilen bir AI ile saniyelerde işleyip, doğrudan yükleme dosyalarını alıp panele kayıt edebilirsiniz. Operasyonel zamandan kazandığınız saatleri büyüme, pazarlama ve müşteri hizmetlerine ayırabilirsiniz.
 
 [Hemen dene — ücretsiz başla](/uret)

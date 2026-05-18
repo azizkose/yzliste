@@ -14,6 +14,8 @@ kapakGorsel:
 
 Yapay zeka, e-ticaretin kenar süsü olmaktan çıkıp omurganın parçası haline geldi. 2026'ya girdiğimizde satıcıların günlük rutininin her aşamasında AI bir yerde mevcut: listing üretiminden fiyatlandırmaya, müşteri hizmetlerinden kargo planlamasına kadar. Bu yazıda bu yıl yapay zekanın e-ticarette fark yarattığı 8 kritik alanı inceleyeceğiz.
 
+> Detaylı bakış: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
+
 ## 1. Listing Üretimi Artık Dakikalar İçinde
 
 Bir yıl önce bir ürünün pazaryeri optimize metnini yazmak satıcı için 30-45 dakika süren bir iş. 2026'da yzliste gibi AI listing motorları aynı işi 2 dakikaya indirdi. Ürün fotoğrafı + kısa bilgi girişi = pazaryeri kurallarına uygun başlık, açıklama ve anahtar kelime seti.

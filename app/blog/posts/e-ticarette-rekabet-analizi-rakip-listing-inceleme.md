@@ -16,6 +16,8 @@ E-ticarette başarılı olmak için sadece kendi ürünlerini değil, rakiplerin
 
 ---
 
+> Pillar rehber: konunun bütününü görmek için [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısını okumanı öneririz.
+
 ## Rakibini Doğru Tanımla
 
 Rakibin aynı ürünü satan herkes değil — aynı fiyat aralığında, benzer müşteriye hitap eden satıcılar. Trendyol'da ürününü arat, ilk 10 sonucu incele. Bunlar senin doğrudan rakiplerin. Farklı fiyat segmentlerindekiler dolaylı rakip — onlardan da öğrenilecek çok şey var.

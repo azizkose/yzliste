@@ -15,7 +15,7 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 
 | ID | Başlık | Sahip | Durum | Detay |
 |---|---|---|---|---|
-| **GSC-001** | Redirect error fix (yzliste.com → www) | Aziz canlı debug → Code fix | **P0 — Yeniden açıldı (2026-05-11)** | May 11 taramada 2 URL (önceden 1) — sorun yayılıyor. Etkilenen: `/` + `/blog/trendyol-listing-nasil-yazilir`. `specs/GSC-001.md` "EK BÖLÜM" — bot UA Cache-Control fix talimatı |
+| ~~GSC-001~~ | Redirect error fix (yzliste.com → www) | Aziz GSC | ✅ Tamamlandı (2026-05-17) | May 17 Test Live URL her iki URL için "URL is available to Google, Page can be indexed". Aziz Validate Fix + Request Indexing tıkladı. Kod değişikliği yapılmadı — May 11 raporu geçici hataydı. |
 | ~~AUTH-UX-01~~ | Giriş yaptıktan sonra anasayfada hâlâ "Giriş yap" | Code | ✅ Tamamlandı (2026-05-07) | setQueryData instant cache + isFetching&&!currentUser guard — preview'da test bekliyor |
 | ~~URET-MODE-01~~ | Görsel + Video sekmeleri geçici kapat | Code | ✅ Tamamlandı (2026-05-07) | "Yakında" badge + disabled; URL fallback gorsel/video→metin |
 | ~~URET-SCROLL-01~~ | "Üret" sonrası output alanına scroll YOK | Code | ✅ Tamamlandı (2026-05-07) | doScrollToStep3() sticky bar + MetinSekmesi wrapper |
@@ -30,7 +30,8 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | ~~UX-PAKETI-03~~ | Kart-içi CTA labels + kategori hibrit tamamlama | Code | ✅ Tamamlandı (2026-05-08) | Metin→"Listing metnini üret", Görsel→"Görseli oluştur", Video→"Videoyu oluştur"; UST_KATEGORI_PROMPT_LABELS; sosyal/kit API'ye ustKategori; Sentry fallback |
 | ~~UX-FIX-04~~ | /uret tabs aktif + üst kategori 9'a genişletme + alt kategori metin düzeltme | Code | ✅ Tamamlandı (2026-05-08) | Görsel+Video disabled kaldırıldı; UstKategori 5→9 enum (ev_dekor/elektronik/bebek_oyuncak/gida_hediye/diger); UST_TO_GORSEL_KATEGORI fallback map; "AI tahmin etsin"→"Detaylı kategori seç" |
 | ~~FIYAT-BLOG-BAKIM~~ | Fiyat güncellemesi + blog tarih dağıtımı | Code | ✅ Tamamlandı (2026-05-10) | ₺49/129/299→39/99/249 TL; kredi 30→25 & 100→80; 5 dosya güncellendi; 118 blog yazısı 3 günde 1 dağıtımla yeniden tarihlendi (2025-05-24→2026-05-10) |
-| MOBIL-SPRINT | Mobil deneyim + anasayfa tutundurma | Aziz + Cowork + Code | P0 — yeni session'da başla | Aziz şikayeti (2026-05-11): "Mobil deneyim kötü, anasayfa tutundurmuyor". Plan: (1) Tanı — telefon test + Lighthouse mobile + PostHog mobile bounce/session/scroll, (2) Quick wins — buton boyutu 44px, font 16px, LCP, layout shift, yatay scroll, (3) İçerik/akış — hero mesaj netliği, CTA above the fold, sosyal kanıt, session replay |
+| MOBIL-SPRINT | Mobil deneyim + anasayfa tutundurma | Aziz + Cowork + Code | P0 — yeni session'da başla | Aziz şikayeti (2026-05-11): "Mobil deneyim kötü, anasayfa tutundurmuyor". Plan: (1) Tanı — telefon test + Lighthouse mobile + PostHog mobile bounce/session/scroll, (2) Quick wins — buton boyutu 44px, font 16px, LCP, layout shift, yatay scroll, (3) İçerik/akış — hero mesaj netliği, CTA above the fold, sosyal kanıt, session replay. **GSC doğrulama (2026-05-17):** Desktop %89 / Mobile %11 impression — TR ortalaması ters, mobile SEO ciddi sorun. |
+| SEO-DEPLOY | SEO-FIX-PAKETI canlıya deploy + manuel 3 fix | Code (canlıya atan) | P0 — sırada | `docs/seo-deploy-talimat-2026-05-18.md` — gece yapılan SEO-FIX-PAKETI'ni canlıya at. Manuel 3 küçük fix dahil. PR aç → preview test → main merge. Detaylı kontrol listesi dokümanda. |
 | AUTH-UX-CLEANUP | Nav.tsx + NAV_CTAS/NAV_LINKS silme | Code | P3 — sonraki sprint | `components/sections/HeroBlock/Nav.tsx` artık kullanılmıyor (V2 ile SiteHeader'a geçildi); slate-* renk ihlalleri de var. Güvenli silme: grep ile son kez kontrol et |
 | GORSEL-V2-A~G | Görsel V2 pipeline refactor | Code | ✅ Tamamlandı (2026-05-05) | Faz 1 araştırma + Faz 2 implementasyon |
 | ~~GORSEL-V2.2.1~~ | Composite pipeline (Sharp + flux-schnell) | ✅ Tamamlandı (2026-05-06) | preview'da READY |
@@ -75,17 +76,51 @@ Aşama: pre-traffic. yzliste.com canlı, Polish-1~13 + HOTFIX-01~04 + Sentry tam
 | ~~T6R-05~~ | /sifre-sifirla `<title>` anasayfa title gösteriyor | ✅ Tamamlandı (2026-05-04) |
 | ~~T6R-06~~ | /profil anonim 200 + root canonical | ✅ Tamamlandı (2026-05-05) | noindex eklendi, redirect 307 doğrulandı |
 
-**GSC denetim bulguları (2026-05-06, güncelleme 2026-05-11):**
+**GSC denetim bulguları (2026-05-06, güncellemeler: 2026-05-11, 2026-05-17):**
+
+> **🟡 Yeniden açıldı (2026-05-17 öğleden sonra):** Detaylı SEO denetim raporu üretildi (`docs/seo-audit-2026-05-17.md`). 12 yeni bulgu, 7 fix kodlandı (CHANGELOG SEO-FIX-PAKETI). Önceki kapanış erkendi — asıl sorunlar bulundu: **External backlinks: 0** (P0-6), **96 URL henüz keşfedilmedi** (P0-2 cache-control), **soft 404** (P0-5), **0 blog internal link** (P0-1). Devam dokümanlar: `seo-internal-linking-plan-2026-05-17.md`, `seo-backlink-strategy-2026-05-17.md`, `seo-title-rewrite-onerileri-2026-05-17.md`.
+
+> **Önceki not (2026-05-17 sabah):** Önceki tur: GSC denetim eksik veri ile değerlendirildi — "Site temiz" çıkarımı revize edildi.
 
 | ID | Başlık | Öncelik | Detay |
 |---|---|---|---|
-| **GSC-001** | Redirect error (yzliste.com → www) | **P0 — Yeniden açıldı (2026-05-11)** | May 4 (1 URL) → May 11 (2 URL) — sorun yayılıyor. `specs/GSC-001.md` "EK BÖLÜM" — Aşama A canlı debug + B/C fix talimatı. Aziz GSC URL Inspection canlı test yapacak, sonra Code fix uygulayacak. |
+| ~~GSC-001~~ | Redirect error (yzliste.com → www) | ✅ **Çözüldü (2026-05-17)** | May 17 Test Live URL: "URL is available to Google, Page can be indexed". May 11 yeniden açılma yanlış pozitifti. Validate Fix + Request Indexing tıklandı. `specs/GSC-001.md` durum güncellendi. |
 | ~~GSC-002~~ | /auth robots.txt'e ekle | ✅ Tamamlandı (2026-05-17) | `specs/GSC-002.md` — /auth ve /auth/ disallow eklendi (commit 2ca7d72). |
 | GSC-003 V2 | Public sayfalara Cache-Control (route-level static) | P2 — AUTH-UX-01 sonrası | `specs/GSC-003-V2.md` — V1 başarısız, geri alındı. V2 mimari değişiklik (route-level `dynamic=force-static`). AUTH-UX-01 bekliyor. |
 | ~~GSC-004~~ | Blog yazılarına BreadcrumbList JSON-LD | ✅ **Tamamlandı (önceden)** | `app/blog/[slug]/page.tsx:108-125` — BreadcrumbJsonLd component implement edilmiş. Spec aktif olarak işaretliydi, gerçekte iş bitmiş. |
-| ~~GSC-005~~ | /uret indexability (yanlış alarm) | Kapatıldı → **GSC-007'ye dönüştü** | İlk değerlendirme zamanlama meselesi sandı. Gerçek kök sebep: /uret tamamen `"use client"` → Googlebot render edemiyor. `specs/GSC-007.md`'ye taşındı. |
-| GSC-006 | Manuel Request Indexing 5 sayfa | P2 | `specs/GSC-006.md` — Aziz manuel. GSC-001 + GSC-007 sonrası tetiklenmeli. |
-| **GSC-007** | /uret server component refactor (SEO) | **P1 — yeni (2026-05-11)** | `specs/GSC-007.md` — /uret tamamen client component, Googlebot anlamlı içerik göremiyor. Aşama 0 (Aziz GSC canlı debug) → Aşama 1 (Code: server component + UretClient island). GSC-005'in gerçek kök sebebi. |
+| ~~GSC-005~~ | /uret indexability | ✅ **Çözüldü (2026-05-17)** | Live test: "URL is on Google, Page is indexed". Orijinal "sorun yok, crawl zamanlaması" analizi doğruydu. |
+| ~~GSC-006~~ | Manuel Request Indexing 5 sayfa | ✅ Tamamlandı (2026-05-17) | Aziz GSC URL Inspection üzerinden 5 sayfa için "Request Indexing" tıkladı: anasayfa, /blog/trendyol-listing-nasil-yazilir, /fiyatlar, /sss, /blog/amazon-a9-algoritmasi. 1-2 hafta içinde GSC > Pages > Indexed sayısı artmış olmalı. |
+| ~~GSC-007~~ | /uret server component refactor (SEO) | ❌ **Kapatıldı — yanlış alarm (2026-05-17)** | `specs/GSC-007.md` — /uret zaten indexed (URL is on Google, Page is indexed). Hipotez "use client → render edemiyor" yanlış çıktı. Premature refactor kaçınıldı. |
+
+**SEO-FIX-PAKETI (gece 17-18 May 2026, GSC verisi ile yeniden açılan tur):**
+
+> Detaylı rapor: `docs/seo-audit-2026-05-17.md` + GSC verisi (8 click, 206 impression, 0 external backlink, 31/136 indexed, US 92 impression / 0 click). Asıl darboğaz: **external backlink 0**. Detay: `docs/seo-gece-calismasi-2026-05-18.md`.
+
+| ID | Başlık | Sahip | Durum | Detay |
+|---|---|---|---|---|
+| ~~SEO-P0-1~~ | Blog internal linking — pillar-cluster | Cowork | ✅ Tamamlandı (2026-05-18) | 130 yazı → 120 cluster→pillar + 5 pillar→cluster (165+ link). Plan: `docs/seo-internal-linking-plan-2026-05-17.md` |
+| ~~SEO-P0-2~~ | Cache-Control public override | Cowork | ✅ Tamamlandı (2026-05-18) | `next.config.ts` — 12 public sayfa için `public, max-age=0, s-maxage=3600`. Deploy sonrası `curl -sI` ile doğrula. **Önceki GSC-003 V2'nin yerine geçti.** |
+| ~~SEO-P0-3~~ | Sitemap'ten düşen 6 yazı + parser fix | Cowork | ✅ Tamamlandı (2026-05-18) | `lib/blog-parser.ts` GİRİŞ/SONUÇ throw → console.warn + 6 yazıya manuel GİRİŞ paragrafı |
+| SEO-P0-5 | Soft 404 fix — olmayan blog slug | Code | P0 — manuel deploy | `app/blog/[slug]/page.tsx` — `dynamicParams=false` + noindex metadata. Edit tool encoding sorunu yüzünden manuel. Detay: `docs/seo-deploy-talimat-2026-05-18.md` |
+| SEO-P0-6 | External backlink stratejisi başlat | Aziz | P0 — açık iş | **EN KRİTİK**. GSC: external link 0. Hafta 1: Product Hunt + G2 + Capterra + Trustpilot + Crunchbase + AlternativeTo listing aç (1-2 saat). Doküman: `docs/seo-backlink-strategy-2026-05-17.md` |
+| SEO-P1-1 | next/image + WebP migration | Code | P1 — manuel deploy | Hero görseller `<img>` → `<Image>`. Otomatik denendi, Edit tool 4 dosyayı kesti, geri alındı. Manuel yapılması gerekli — talimat: `docs/seo-deploy-talimat-2026-05-18.md` |
+| ~~SEO-P1-2~~ | Meta description ≤155 char | Cowork | ✅ Tamamlandı (2026-05-18) | 27 yazıda ozet kısaltıldı (smart_truncate — cümle bütünlüğü korundu) |
+| ~~SEO-P1-3~~ | Title HTML entity bug fix | Cowork | ✅ Tamamlandı (2026-05-18) | `lib/blog-parser.ts` — düz apostrof (') → curly apostrof (' U+2019) baslik+ozet için. **Eski SEO-02 yerine geçti.** |
+| SEO-P1-4 | Blog H2/H3 yapısı zenginleştir | Aziz veya Code | P1 — açık iş | Örnek: trendyol-listing-nasil-yazilir 1832 kelime / 4 H2 / 0 H3. Beklenen 6-10 H2 + 4-8 H3. AI script + manuel review (2-3 gün) |
+| SEO-P1-5 | Yasaklı ifade temizliği | Cowork (devam) + Aziz | Kısmen ✅ — manuel kalan | 48 "en iyi/en çok" otomatik temizlendi. **187 kaynaksız %X istatistik + 1 katla** manuel review için. Detay: `docs/seo-yasak-ifade-rapor-2026-05-18.json` |
+| SEO-P1-6 | /blog/kategori/[slug] route | Code | P0 — manuel deploy | Yeni route dosyası oluşturuldu (`app/blog/kategori/[slug]/page.tsx`). `app/sitemap.ts`'e kategori sayfaları manuel eklenmeli. Talimat: `docs/seo-deploy-talimat-2026-05-18.md` |
+| ~~SEO-P1-7~~ | llms.txt + AI visibility | Cowork | ✅ Tamamlandı (2026-05-18) | `public/llms.txt` eklendi — AI asistanların (Claude, ChatGPT, Perplexity) site özetini doğru şekilde okuması için |
+| ~~SEO-P1-8~~ | Top impression title/meta rewrite | Cowork | ✅ Tamamlandı (2026-05-18) | 5 yazı: e-ticaret-urun-basligi, trendyol-iade-yonetimi, trendyol-butik-nasil-acilir, ciceksepeti-satici, trendyol-listing-nasil-yazilir. GSC kanıt: 59-39 impression / 0 click |
+| SEO-P1-9 | Hreflang + EN content kararı | Aziz | P1 — strateji kararı | GSC: US 92 impression / 0 click. EN versiyon yapılırsa US trafik gerçekleşebilir. Karar: pillar 5 yazı EN mi, full site i18n mi? |
+| SEO-P2-1 | Title ≤60 char rewrite | Aziz veya Code | P2 — açık iş | 100 yazıda title >60 char. Manuel review gerekli (otomatik kalite kaybeder). Detay: `docs/seo-uzun-baslik-rapor-2026-05-18.json` |
+| SEO-P2-4 | Schema markup zenginleştir | Code | P2 — manuel deploy | BlogPosting → wordCount + mainEntityOfPage + timeRequired. Edit sorunu, manuel. Talimat: `docs/seo-deploy-talimat-2026-05-18.md` |
+| ~~SEO-P2-5~~ | Robots.txt AI bot kuralları | Cowork | ✅ Tamamlandı (2026-05-18) | 9 AI bot: GPTBot, ChatGPT-User, OAI-SearchBot, PerplexityBot, Perplexity-User, ClaudeBot, Claude-Web, Google-Extended, Applebot-Extended |
+| ~~SEO-BONUS-DUP~~ | blog-yazisi-1-trendyol duplicate | Code | P0 — manuel deploy | Slug = trendyol-satis-artirma-seo-rehberi, dosya adı uyumsuz. `git mv` ile düzelt. Talimat dokümanda |
+
+**SEO durumu özeti (deploy sonrası):**
+- ✅ 9 P0/P1 iş otomatik tamam (kod ve içerik)
+- ⏸ 5 iş manuel deploy talimatı bekliyor (`docs/seo-deploy-talimat-2026-05-18.md`)
+- ❌ 4 iş Aziz/uzun vade (P0-6 backlink, P1-4 H2/H3, P1-5 %X review, P1-9 EN content)
 
 **P0.5 prompt iyileştirme:**
 

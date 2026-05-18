@@ -1,7 +1,7 @@
 ---
 slug: kozmetik-urunleri-listing-icerik-yazma-rehberi
 baslik: Kozmetik Ürünleri için Listing İçerik Yazma Rehberi: İçerik, Görsel, Mevzuat
-ozet: Kozmetik kategorisinde satış yapan satıcılar için listing yazımı, içerik kuralları, kozmetik mevzuatına uyumlu ifade kullanımı ve görsel hazırlama ipuçları bu rehberde.
+ozet: Kozmetik kategorisinde satış yapan satıcılar için listing yazımı, içerik kuralları, kozmetik mevzuatına uyumlu ifade kullanımı ve görsel hazırlama…
 yayinTarihi: 2026-05-13
 yazarAdi: yzliste Ekibi
 okumaSuresi: 8

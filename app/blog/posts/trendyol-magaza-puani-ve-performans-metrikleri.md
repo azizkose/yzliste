@@ -16,6 +16,8 @@ Trendyol'da mağaza puanın düşükse, ürünlerin ne kadar iyi olursa olsun ar
 
 ---
 
+> İlgili: [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Mağaza Puanını Belirleyen Metrikler
 
 Trendyol mağaza puanını belirleyen ana faktörler: zamanında gönderim oranı, iptal oranı, iade oranı, müşteri yorumları ve müşteri hizmeti yanıt süresi. Bu metriklerin her biri farklı ağırlıkta etki eder — zamanında gönderim en kritik olanı.

@@ -14,6 +14,8 @@ kapakGorsel:
 
 Müşteri yorumları altın değerinde veridir ama çoğu satıcı bu veriyi yeterince değerlendirmiyor. 50 yorum bile manuel okumakla zaman alıyor; 500 yorum olduğunda imkansızlaşıyor. AI destekli yorum analizi bu veriyi hızla işleyip içgörüye dönüştürüyor. Bu yazıda e-ticarette AI ile yorum analizinin pratik kullanımını, çıkarılabilecek içgörüleri ve dönüşüm kararlarını ele alacağız.
 
+> Ek okuma: [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## AI Yorum Analizi Nasıl Çalışıyor?
 
 AI yorum analizi birkaç temel tekniği kullanıyor:

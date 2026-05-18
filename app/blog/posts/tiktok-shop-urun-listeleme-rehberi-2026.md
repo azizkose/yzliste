@@ -16,6 +16,8 @@ TikTok artık sadece eğlence platformu değil — TikTok Shop ile doğrudan ür
 
 ---
 
+> Ek okuma: [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## TikTok Shop Nedir ve Neden Önemli?
 
 TikTok Shop, platformun içine entegre edilmiş bir e-ticaret altyapısı. Kullanıcılar videoyu izlerken, alışveriş sekmesine tıklayarak doğrudan satın alabiliyor. Geleneksel e-ticaretten farkı, içerik ve satışın aynı anda gerçekleşmesi. Sosyal kanıtın en güçlü olduğu kanal diyebiliriz.
@@ -30,7 +32,7 @@ Türkiye'de TikTok Shop'a başvuru yapmak için vergi levhası ve şirket bilgil
 
 ## İçerik Stratejisi: Viral Video + Satış
 
-TikTok'ta satış yapmanın yolu, ürünü gösteren kısa ve etkileyici videolar üretmek. Ürünü kullanırken, kutudan çıkarırken veya karşılaştırırken çekilen 15-30 saniyelik videolar en çok etkileşim alıyor. AI video araçlarıyla tek bir ürün fotoğrafından profesyonel tanıtım videosu oluşturabilirsin — stüdyo veya ekipman gerektirmeden.
+TikTok'ta satış yapmanın yolu, ürünü gösteren kısa ve etkileyici videolar üretmek. Ürünü kullanırken, kutudan çıkarırken veya karşılaştırırken çekilen 15-30 saniyelik videolar sıkça etkileşim alıyor. AI video araçlarıyla tek bir ürün fotoğrafından profesyonel tanıtım videosu oluşturabilirsin — stüdyo veya ekipman gerektirmeden.
 
 ---
 

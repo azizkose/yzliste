@@ -16,6 +16,8 @@ Pazaryerlerinde aynı ürünü satan yüzlerce mağaza var ve çoğu fiyat düş
 
 ---
 
+> İlgili: [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Marka Hikayesi Neden Önemli?
 
 İnsanlar ürün değil, hikaye satın alır. "El yapımı doğal sabun" sıradan. "Karadeniz yaylalarından toplanan lavantayla, 3 kuşaktır aynı reçeteyle üretilen doğal sabun" bir hikaye. Hikaye, aynı ürünü satan rakiplerinden seni ayırır ve müşterinin sana bağlanmasını sağlar.

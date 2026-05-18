@@ -16,6 +16,8 @@ AI ürün fotoğrafçılığı sihir değil — input'un kalitesi output'un kali
 
 ---
 
+> Pillar rehber: konunun bütününü görmek için [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısını okumanı öneririz.
+
 ## AI Neyi "Görebilir", Neyi Göremez?
 
 AI ürün görseli pipeline'ı kabaca üç aşamadan geçer: **arka plan temizleme** (RMBG), **ürün tespiti ve maskesi çıkarma**, ardından **stüdyo arka planına yerleştirme**. Her aşamanın başarısı, input fotoğrafındaki belirli özelliklere bağlıdır.
@@ -29,7 +31,7 @@ Kısacası AI senin için fotoğraf çekmiyor, senin fotoğrafını "yeniden giy
 ## Mükemmel Input Fotoğrafının 5 Temel Kuralı
 
 - **Arka plan:** Düz ve tek renk olmalı — tercihen beyaz, açık gri veya krem. Kumaş desenli, mobilyalı veya karışık arka planlar AI'ın ürünü izole etmesini zorlaştırır. Evde beyaz bir duvar veya büyük bir A3 kağıt yeterli.
-- **Işık:** Yumuşak ve dağınık olmalı. Direkt flash ve sert güneş ışığı "parlak noktalar" ve keskin gölge bırakır; AI bunları ürünün parçası sanabilir. En iyi seçim: gündüz penceresinin yanında, tül perde ardında çekim.
+- **Işık:** Yumuşak ve dağınık olmalı. Direkt flash ve sert güneş ışığı "parlak noktalar" ve keskin gölge bırakır; AI bunları ürünün parçası sanabilir. öne çıkan seçim: gündüz penceresinin yanında, tül perde ardında çekim.
 - **Odak:** Ürün keskin olmalı, arka plan isterse bulanık. Telefonda "portre modu" yerine normal modda, ürüne iki eliyle dokunarak odak kilitle. Bulanık bir input AI'ı da "tahmin"e iter ve detaylar kaybolur.
 - **Çerçeveleme:** Ürün karenin tam ortasında, her kenardan en az %10 boşluk bırakılarak çekilmeli. Kenardan taşan, kırpılmış veya çok uzakta küçük kalan ürün, AI'ın çalışma alanını daraltır.
 - **Çözünürlük:** En az 1024×1024 piksel — tercihen 2000 piksel üzeri. Sıkıştırılmış WhatsApp fotoğrafları, düşük bit-rate Instagram indirmesi veya ekran görüntüsü kullanma. Telefonun orijinal galeri hali en iyisi.
@@ -40,7 +42,7 @@ Kısacası AI senin için fotoğraf çekmiyor, senin fotoğrafını "yeniden giy
 
 Ürün tipi değiştikçe AI'ın beklediği input da değişir. Üç ana kategoride dikkat edilmesi gerekenler:
 
-**Giyim (virtual try-on için):** yzliste'nin try-on özelliği için en iyi sonuç, kıyafetin **düz yere serilmiş (flat-lay)** veya **sade mankende** fotoğrafıdır. Askıda, buruşuk veya katlanmış şekilde çekme — AI kıyafetin gerçek kesimini anlayamaz. Kıyafetin tamamı karede görünmeli, kollar açık, yaka düzgün. Arka plan yine sade olmalı. Portre formatında (dikey) çekmek en uyumlu boyut (864×1296 oranı idealdir).
+**Giyim (virtual try-on için):** yzliste'nin try-on özelliği için öne çıkan sonuç, kıyafetin **düz yere serilmiş (flat-lay)** veya **sade mankende** fotoğrafıdır. Askıda, buruşuk veya katlanmış şekilde çekme — AI kıyafetin gerçek kesimini anlayamaz. Kıyafetin tamamı karede görünmeli, kollar açık, yaka düzgün. Arka plan yine sade olmalı. Portre formatında (dikey) çekmek en uyumlu boyut (864×1296 oranı idealdir).
 
 **Takı, aksesuar ve küçük nesneler:** Makro çekime geç, ürüne yakın dur. Parlak yüzeylerde (altın, gümüş, cam) ışığı 45 derece açıyla ver — direkt ışık yansıma yapar ve AI bu yansımayı "çizik" sanabilir. Beyaz bir karton üzerine koyup üstten ışık al.
 
@@ -50,7 +52,7 @@ Kısacası AI senin için fotoğraf çekmiyor, senin fotoğrafını "yeniden giy
 
 ## 5 Sık Yapılan Hata
 
-Input fotoğraflarında en çok karşılaştığımız sorunlar ve düzeltmeleri:
+Input fotoğraflarında sıkça karşılaştığımız sorunlar ve düzeltmeleri:
 
 - **Karışık arka plan:** Halı deseninin üstünde ürün → AI desen parçalarını ürüne yapıştırır. Düzelt: beyaz kağıt/duvar.
 - **Sert tavan spotu:** Üstten direkt LED spot → burun düşüren gölge. Düzelt: spot ile ürün arasına tül veya beyaz kağıt tut.

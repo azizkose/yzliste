@@ -16,6 +16,8 @@ Bir noktada her e-ticaret satıcısı manuel kullanımın tıkandığı yere gel
 
 ---
 
+> İlgili: [AI ürün fotoğrafçılığı rehberi](/blog/e-ticaret-icin-ai-urun-fotografciligi) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Ne zaman entegrasyona ihtiyaç duyarsın?
 
 Manuel kullanım belirli bir ölçeğe kadar verimli. Ama şu sinyaller geldiğinde entegrasyona zaman ayırmanın zamanı gelmiş demektir:

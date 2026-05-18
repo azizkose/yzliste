@@ -14,6 +14,8 @@ kapakGorsel:
 
 Hepsiburada'da organik büyümek mümkün ama yavaş. Rekabetçi kategorilerde ya da yeni açılan listing'lerde reklam, mağazana görünürlük kazandırmanın en hızlı yolu. Ancak reklamı kontrolsüz çalıştırmak bütçeni eritebilir, verimsiz bir kampanya aylık geliri tehdit edebilir. Bu yazıda Hepsiburada reklam sisteminin nasıl çalıştığını, bütçeni nasıl planlayacağını ve verim ölçümünü nasıl yapacağını inceleyeceğiz.
 
+> İlgili: [Hepsiburada katalog ve listing kuralları](/blog/hepsiburada-katalog-ve-listing-kurallari) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Reklam Formatları
 
 Hepsiburada Ads'ta üç temel reklam formatı var. Sponsored Product, ürününü arama sonuçlarında üst sıraya yerleştiriyor ve "sponsorlu" etiketi ile görünüyor. CPC (tık başına ödeme) modelinde çalışıyor; alıcı tıkladığında belirlediğin teklif kadar ödüyorsun.

@@ -1,7 +1,7 @@
 ---
 slug: amazon-storefront-vitrin-sayfasi-rehberi
 baslik: Amazon Storefront (Vitrin) Sayfası Nasıl Açılır ve Optimize Edilir?
-ozet: Amazon Storefront markanıza özel bir mini site sunar. Brand Registry sonrası vitrin sayfası nasıl kurulur, hangi modüller satışa etki eder, trafiği nasıl artırırsınız bu rehberde.
+ozet: Amazon Storefront markanıza özel bir mini site sunar.
 yayinTarihi: 2026-05-13
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
@@ -16,9 +16,11 @@ Amazon'da ürün satmak yalnızca tek tek listing'leri optimize etmekle bitmiyor
 
 ---
 
+> İlgili: [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Storefront Nedir, Hangi Satıcılar Açabilir?
 
-Storefront, Amazon'un markaya ait özel bir alandır. Müşteri marka adınıza tıkladığında veya bir reklamdan yönlendirildiğinde tek bir ürün sayfası yerine birden fazla ürününüzü düzenli bir yerleşimde görür. Banner, kategoriler, en çok satanlar, video ve hikâye anlatımı içerebilir.
+Storefront, Amazon'un markaya ait özel bir alandır. Müşteri marka adınıza tıkladığında veya bir reklamdan yönlendirildiğinde tek bir ürün sayfası yerine birden fazla ürününüzü düzenli bir yerleşimde görür. Banner, kategoriler, sıkça satanlar, video ve hikâye anlatımı içerebilir.
 
 Storefront açabilmek için Amazon Brand Registry'e kayıtlı olmak gerekir. Bu kayıt için marka tescil belgenizin (TÜRKPATENT veya USPTO) onaylı olması ve markaya ait Amazon hesabınızın doğrulanmış olması şarttır. Brand Registry başvurusu onaylandıktan sonra Storefront, Brand Story ve A+ Content gibi özellikler hesabınıza eklenir.
 
@@ -30,7 +32,7 @@ Sayfayı oluşturmaya başlamadan önce şu materyalleri toplamanız işi hızla
 
 - **Marka logosu** (yüksek çözünürlüklü, şeffaf arka plan)
 - **Marka ana banner görseli** (3000×600 piksel önerilir)
-- **Kategori bazlı ürün listeleri** (en çok satanlar, yeni gelenler, sezon ürünleri)
+- **Kategori bazlı ürün listeleri** (sıkça satanlar, yeni gelenler, sezon ürünleri)
 - **Marka tanıtım metni** (200-300 kelime, marka hikâyesi)
 - **Ürün koleksiyonu fotoğrafları** (lifestyle çekimler tercih edilir)
 - **Tanıtım videosu** (opsiyonel ama dönüşümü artırır)
@@ -47,7 +49,7 @@ Seller Central panelinden vitrin sayfasını şu adımlarla oluşturabilirsiniz:
 2. "Create Store" butonuna basın ve markanızı seçin
 3. Bir şablon seçin (Marquee, Product Highlight, Product Grid gibi seçenekler)
 4. Ana sayfayı düzenleyin: banner, başlık, alt sayfalar
-5. Alt sayfaları ekleyin (kategori sayfaları, koleksiyon sayfaları, en çok satanlar)
+5. Alt sayfaları ekleyin (kategori sayfaları, koleksiyon sayfaları, sıkça satanlar)
 6. Modülleri yerleştirin: ürün ızgarası, banner, metin, video, kaydırmalı görsel
 7. Önizleme yapın, mobil ve masaüstü görünümü kontrol edin
 8. "Submit for publishing" ile yayına gönderin (Amazon onayı 24-72 saat sürer)
@@ -56,7 +58,7 @@ Seller Central panelinden vitrin sayfasını şu adımlarla oluşturabilirsiniz:
 
 ---
 
-## Hangi Modüller Satışa En Çok Etki Ediyor?
+## Hangi Modüller Satışa sıkça Etki Ediyor?
 
 Storefront'ta birçok modül seçeneği var ama hepsi eşit performans göstermiyor. Tecrübeler şunu gösteriyor:
 

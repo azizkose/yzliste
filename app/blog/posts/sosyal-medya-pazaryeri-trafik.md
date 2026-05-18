@@ -14,6 +14,8 @@ kapakGorsel:
 
 Pazaryeri organik trafiği çoğu satıcı için en büyük gelir kaynağı ama tek kaynak olarak kalmamalı. Instagram, TikTok, Facebook üzerinden pazaryeri ürün sayfalarına trafik çekmek; hem satışı çeşitlendiriyor hem de pazaryeri algoritmasında olumlu sinyal yaratıyor (dış trafik dönüşüm oranını yukarı çekiyor). Bu yazıda sosyal medyadan pazaryerine trafik çekmenin pratik tekniklerini ele alacağız.
 
+> Pillar rehber: konunun bütününü görmek için [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazısını okumanı öneririz.
+
 ## Neden Sosyal Medya Trafiği?
 
 Pazaryeri içi trafik (organik arama, reklam) tek başına bağımlı kalmak risk. Algoritma değişiklikleri, kategori rekabet artışı, reklam CPC yükselişi seni ani satış düşüşüne sürükleyebilir.

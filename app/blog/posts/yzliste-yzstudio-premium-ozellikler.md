@@ -14,6 +14,8 @@ kapakGorsel:
 
 yzliste'nin standart paketi pazaryeri içerik üretimini hızlandırıyor; ancak bazı ihtiyaçlar premium düzey görsel ve video üretim gerektiriyor. yzstudio, yzliste'nin premium kolu; AI manken giydirme, lifestyle ürün fotoğrafı, video tanıtım gibi yüksek değerli özellikler sunuyor. Bu rehberde yzstudio'nun ne sunduğunu ve hangi durumlarda değerli olduğunu ele alacağız.
 
+> Ek okuma: [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## yzstudio Nedir?
 
 yzstudio, yzliste'nin görsel ve video üretim için ayrılmış premium modülü. Standart yzliste paketinde temel görsel düzenleme (arka plan değiştirme) varken; yzstudio:
@@ -90,7 +92,7 @@ Bu tutarlılık manuel görsel üretiminde sürdürülmesi zor; AI öğrenme say
 
 ## 💡 İpucu
 
-yzstudio'yu öncelikle "flagship" ürünlerinde kullan. Tüm kataloğun premium görsel çekimi yapmak hem maliyet hem zaman açısından mantıksız. En çok satan 10-20 ürünün için yzstudio düzeyinde görseller, kalan ürünler için standart yzliste — bu denge en verimli kullanım. Pareto prensibi: cironun büyük çoğunluğu az sayıda üründen geliyor; yatırımı oraya yap.
+yzstudio'yu öncelikle "flagship" ürünlerinde kullan. Tüm kataloğun premium görsel çekimi yapmak hem maliyet hem zaman açısından mantıksız. sıkça satan 10-20 ürünün için yzstudio düzeyinde görseller, kalan ürünler için standart yzliste — bu denge en verimli kullanım. Pareto prensibi: cironun büyük çoğunluğu az sayıda üründen geliyor; yatırımı oraya yap.
 
 ## Hangi Sektörler için Çok Değerli?
 

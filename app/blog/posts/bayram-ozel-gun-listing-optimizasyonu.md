@@ -1,7 +1,7 @@
 ---
 slug: bayram-ozel-gun-listing-optimizasyonu
 baslik: Bayram ve Özel Gün Kampanyaları İçin Listing Optimizasyonu Rehberi
-ozet: Anneler Günü, Sevgililer Günü, Ramazan, Kurban Bayramı ve yılbaşı dönemlerinde listing'inizi nasıl hazırlarsınız? Başlık, görsel ve açıklamada özel gün için yapılması gerekenler.
+ozet: Anneler Günü, Sevgililer Günü, Ramazan, Kurban Bayramı ve yılbaşı dönemlerinde listing'inizi nasıl hazırlarsınız?
 yayinTarihi: 2026-04-16
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
@@ -15,6 +15,8 @@ kapakGorsel:
 Anneler Günü öncesi 2 hafta ve sonraki 1 hafta, bazı kategorilerde tüm yılın satışının önemli bir kısmını oluşturur. Aynı şey Sevgililer Günü, Ramazan, Kurban Bayramı, 23 Nisan, yılbaşı için de geçerlidir. Ama özel gün talebini yakalamak, sadece kampanyaya katılmak değildir; listing'in başlığından görseline, açıklamasından anahtar kelimesine kadar bu döneme uygun hazırlanması gerekir. Bu yazıda özel gün dönemlerinde listing'inizi adım adım nasıl optimize edeceğinizi anlatıyoruz.
 
 ---
+
+> İlgili: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
 
 ## Talep Yükselen Kelimeleri Tespit Etmek
 

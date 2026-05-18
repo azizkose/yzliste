@@ -14,6 +14,8 @@ kapakGorsel:
 
 Pazaryerinde satış yapan her satıcının en kritik sorusu: "Kategoride benim komisyonum ne kadar ve net kaç lira kalıyor?" Komisyon oranları kategori ve satıcı segmentine göre değişiyor, üstüne hizmet bedelleri, kargo ve reklam masrafları ekleniyor. Bu yazıda pazaryerinin komisyon yapısını karşılaştırmalı inceleyecek, hangi kalemlerin kâr marjınızı ne ölçüde etkilediğini göstereceğiz.
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [Hepsiburada katalog ve listing kuralları](/blog/hepsiburada-katalog-ve-listing-kurallari) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## Komisyon Modelleri Nasıl Çalışıyor?
 
 Tüm büyük pazaryerleri iki temel model kullanıyor: yüzdelik komisyon + sabit hizmet bedeli. Yüzdelik komisyon, satış tutarının belirli bir oranı olarak alınıyor ve kategoriye göre değişiyor. Sabit hizmet bedeli ise her siparişe uygulanan küçük bir tutar; düşük birim fiyatlı ürünlerde marjı ciddi oranda sıkıştırıyor.

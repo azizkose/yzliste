@@ -21,6 +21,83 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: securityHeaders,
       },
+      // P0-2 SEO fix: public sayfalara Googlebot-friendly Cache-Control header.
+      // Default Vercel + Next.js auth cookies yüzünden "private, no-cache, no-store" dönüyor —
+      // bu crawl bütçesini düşürüyor. Public sayfalar için explicit cacheable header gönderiyoruz.
+      // NOT: middleware.ts'deki Cache-Control set'i auth cookie response'ları yüzünden ezilebiliyor;
+      // bu next.config tarafı kesin override sağlar.
+      {
+        source: "/",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+        ],
+      },
+      {
+        source: "/blog",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+        ],
+      },
+      {
+        source: "/blog/:slug",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+        ],
+      },
+      {
+        source: "/fiyatlar",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+        ],
+      },
+      {
+        source: "/sss",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+        ],
+      },
+      {
+        source: "/hakkimizda",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+        ],
+      },
+      {
+        source: "/gizlilik",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+        ],
+      },
+      {
+        source: "/kosullar",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+        ],
+      },
+      {
+        source: "/kvkk-aydinlatma",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+        ],
+      },
+      {
+        source: "/cerez-politikasi",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+        ],
+      },
+      {
+        source: "/mesafeli-satis",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+        ],
+      },
+      {
+        source: "/teslimat-iade",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+        ],
+      },
     ];
   },
   async redirects() {

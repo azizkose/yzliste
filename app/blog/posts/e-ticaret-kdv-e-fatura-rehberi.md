@@ -16,6 +16,8 @@ E-ticaret satışlarında vergi yükümlülükleri — KDV, e-Arşiv fatura, gel
 
 > Not: Bu yazı genel bilgilendirme amaçlıdır. Özel durumunuz için mali müşavir danışmanlığı şarttır.
 
+> Pillar rehber: konunun bütününü görmek için [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazısını okumanı öneririz.
+
 ## Şirket Tipi ve Vergi
 
 E-ticaret yapmak için tüzel kişilik gerekli. Seçeneklerin:

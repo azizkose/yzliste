@@ -16,6 +16,8 @@ Türkiye'de e-ticaret trafiğinin büyük çoğunluğu mobil cihazlardan geliyor
 
 ---
 
+> Ek okuma: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## Mobil Ekranda Listing Nasıl Görünüyor?
 
 Masaüstünde harika görünen uzun açıklama metinleri, mobilde devasa bir metin duvarı olarak görünür ve kimse okumaz. Mobilde ilk 2-3 satır kritik — başlık ve açıklamanın ilk cümlesi tüm mesajı vermelidir. Sonra detaylar gelsin.
@@ -24,7 +26,7 @@ Masaüstünde harika görünen uzun açıklama metinleri, mobilde devasa bir met
 
 ## Görsel Optimizasyonu
 
-Mobilde görseller küçük ekranda görüntülenir — karmaşık detaylar kaybolabilir. Ürünü yakın plan ve temiz arka planlı çek. İlk görsel dikkat çekici olmalı — kaydırma refleksini durduracak bir görsel seç. Kare format tüm platformlarda en iyi çalışır.
+Mobilde görseller küçük ekranda görüntülenir — karmaşık detaylar kaybolabilir. Ürünü yakın plan ve temiz arka planlı çek. İlk görsel dikkat çekici olmalı — kaydırma refleksini durduracak bir görsel seç. Kare format tüm platformlarda öne çıkan çalışır.
 
 ---
 

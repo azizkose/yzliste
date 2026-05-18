@@ -14,6 +14,8 @@ kapakGorsel:
 
 eBay, Amazon ve Etsy'nin gölgesinde kalan ama hâlâ güçlü bir küresel pazaryeri. 1.7 milyar listing, 180'den fazla ülkede alıcı ve özellikle koleksiyon, elektronik, oto parçaları gibi niş kategorilerde sağlam bir pozisyon. Türkiye'den eBay'e açılmak sandığından daha erişilebilir. Bu rehberde eBay'de Türkiye'den satıcı olmanın adımlarını, listing mantığını ve operasyonel konuları ele alacağız.
 
+> İlgili: [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## eBay'in Türk Satıcılar İçin Avantajları
 
 eBay ile Amazon arasındaki temel fark: eBay satıcıya görece daha fazla esneklik sunuyor. Açık artırma formatı, "Buy It Now" sabit fiyat, "Best Offer" pazarlık — farklı satış modelleri mümkün. Amazon tek format (sabit fiyat) sunuyor; eBay'de ürün tipine göre format seçebiliyorsun.

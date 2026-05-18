@@ -1,7 +1,7 @@
 ---
 slug: ai-sosyal-medya-icerik-uretimi
 baslik: Yapay Zeka ile Sosyal Medya İçeriği Üretmek: 2026 Pratik Rehberi
-ozet: Yapay zeka ile Instagram, TikTok ve Facebook içerikleri nasıl hızla üretilir? Caption, görsel, hashtag ve video script üretimi için satıcılara pratik rehber.
+ozet: Yapay zeka ile Instagram, TikTok ve Facebook içerikleri nasıl hızla üretilir?
 yayinTarihi: 2026-03-05
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
@@ -12,7 +12,9 @@ kapakGorsel:
 
 # GİRİŞ
 
-Sosyal medya yönetiminin en çok zaman alan kısmı içerik üretimi. E-ticaret satıcısı olarak pazaryerine listing çıkarmanın yanında Instagram, TikTok ve Facebook için de haftalık içerik hazırlamak gerekiyor. Yapay zeka bu yükü dağıtıyor; caption, görsel, hashtag ve video senaryoları artık dakikalar içinde üretilebiliyor. Bu yazıda AI destekli sosyal medya içerik üretiminin pratik yollarını inceleyeceğiz.
+Sosyal medya yönetiminin sıkça zaman alan kısmı içerik üretimi. E-ticaret satıcısı olarak pazaryerine listing çıkarmanın yanında Instagram, TikTok ve Facebook için de haftalık içerik hazırlamak gerekiyor. Yapay zeka bu yükü dağıtıyor; caption, görsel, hashtag ve video senaryoları artık dakikalar içinde üretilebiliyor. Bu yazıda AI destekli sosyal medya içerik üretiminin pratik yollarını inceleyeceğiz.
+
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
 
 ## AI Hangi İçerik Tiplerinde İşe Yarıyor?
 
@@ -64,7 +66,7 @@ Tek bir AI aracına bağımlı kalmak verim düşürüyor. Caption için bir ara
 
 ## Kalite Kontrolü ve Marka Tutarlılığı
 
-AI içeriği üretiyor ama onaylama aşaması sende. İki filtre uygula. Birincisi, marka sesi filtresi: üretilen metin markanın ses rehberine uyuyor mu? (Samimi, profesyonel, oyunlu vb.) İkincisi, doğruluk filtresi: AI abartılı veya yanlış ifade ürettiyse düzelt. "Piyasadaki en iyi" gibi kanıtsız iddialar pazaryeri ve reklam politikalarıyla çakışıyor.
+AI içeriği üretiyor ama onaylama aşaması sende. İki filtre uygula. Birincisi, marka sesi filtresi: üretilen metin markanın ses rehberine uyuyor mu? (Samimi, profesyonel, oyunlu vb.) İkincisi, doğruluk filtresi: AI abartılı veya yanlış ifade ürettiyse düzelt. "Piyasadaki öne çıkan" gibi kanıtsız iddialar pazaryeri ve reklam politikalarıyla çakışıyor.
 
 Marka tutarlılığı için şablon kullan. Her ayın içerik planını aynı yapıda oluştur: hafta 1 ürün tanıtımı, hafta 2 müşteri hikâyesi, hafta 3 arka plan bilgi, hafta 4 kampanya. Bu düzen hem AI'a daha net direktif verebilmeni hem de takipçinin beklentisini yönetmeni sağlıyor.
 

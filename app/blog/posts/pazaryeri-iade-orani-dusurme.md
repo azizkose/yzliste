@@ -14,6 +14,8 @@ kapakGorsel:
 
 Pazaryerinde iade oranı, kârı doğrudan etkileyen gizli bir metrik. İade kargo ücreti, işçilik, depo geri koyma, ikinci kalite olma riski — tek bir iade 40-60 TL maliyet demek. %15 iade oranı olan bir mağaza ile %5 iade oranı olan mağaza arasındaki kâr farkı yıllık rakamlara ulaşıyor. Bu yazıda iade oranını sistemli bir şekilde düşürmenin yol haritasını ele alacağız.
 
+> İlgili: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Kök Neden Analizi
 
 İade oranını düşürmenin ilk adımı nedenleri kategorize etmek. Genel "iade oranını düşür" hedefi soyut; hangi neden hangi yüzdeyi temsil ediyor bilmek gerekiyor.

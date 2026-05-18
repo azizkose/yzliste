@@ -10,9 +10,15 @@ etiketler: amazon usa,etsy,ihracat,uluslararası satış,karşılaştırma,türk
 kapakGorsel: 
 ---
 
+# GİRİŞ
+
+Türkiye'den global ihracata açılan satıcılar için Amazon USA ve Etsy iki ana ABD pazarı kapısıdır. Hangi platforma yatırım yapacağınız ürün tipinize, marjınıza ve operasyon kapasitenize bağlı. Bu yazıda iki pazaryerini komisyon, hedef kitle, kargo modeli, listing zorluğu ve marka kurma potansiyeli açısından karşılaştırıyoruz.
+
 Türkiye'den uluslararası pazara açılmak isteyen satıcılar için iki platform öne çıkıyor: Amazon USA ve Etsy. Her ikisi de köklü ve küresel ölçekte alıcı kitlesine sahip pazar yerleri; ancak yapıları, komisyon modelleri ve ürün kategorileri açısından birbirinden belirgin biçimde ayrılıyor. Hangi platformun sizin için daha uygun olduğuna karar vermeden önce bu farkları anlamak önem taşıyor.
 
 ---
+
+> Pillar rehber: konunun bütününü görmek için [Etsy satış başlangıç rehberi](/blog/etsy-satis-baslangic-rehberi-2026) yazısını okumanı öneririz.
 
 ## Ürün Tipi: Hangi Platform Neye Uygun?
 

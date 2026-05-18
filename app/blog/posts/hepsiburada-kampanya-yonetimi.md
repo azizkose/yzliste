@@ -14,6 +14,8 @@ kapakGorsel:
 
 Hepsiburada Efsane Çarşamba, Hepsiburada Günleri, Yılbaşı ve Black Friday gibi büyük kampanya dönemlerinde satış hacmi günlük ortalamanın birkaç katına çıkıyor. Satıcılar için bu fırsat ama aynı zamanda tuzak — plansız katılım marjı yiyerek zarar üretebilir. Bu rehberde Hepsiburada kampanya sisteminin mantığını, kâr korumalı katılım stratejisini ve operasyonel hazırlığı inceleyeceğiz.
 
+> İlgili: [Hepsiburada katalog ve listing kuralları](/blog/hepsiburada-katalog-ve-listing-kurallari) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Kampanya Tipleri
 
 Hepsiburada'nın farklı kampanya tipleri var. Her birinin kuralları ve satıcı üzerindeki etkisi farklı.

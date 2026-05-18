@@ -14,6 +14,8 @@ kapakGorsel:
 # GİRİŞ
 Instagram, bir e-ticaret sitesinden çok bir "ilham kaynağı"dır. İnsanlar ihtiyaç duydukları için değil, beğendikleri için satın alırlar. Bu yüzden görsel estetik ve metinlerin samimiyeti başarının anahtarıdır.
 
+> İlgili: [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Kaydırmayı Durduran Görseller (Stop-the-Scroll)
 Sadece beyaz arka plan Instagram için sıkıcıdır. Yapay zeka ile evde çektiğiniz bir ürünü; Paris'te bir kafede veya şık bir ofis masasında gibi göstererek müşterinin dikkatini çekebilirsiniz.
 

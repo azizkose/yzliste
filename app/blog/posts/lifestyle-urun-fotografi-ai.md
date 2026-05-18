@@ -14,6 +14,8 @@ kapakGorsel:
 
 Alıcı ürün sayfasında beyaz fonlu fotoğrafı görüyor ama "bu benim evimde nasıl durur" sorusunun cevabını alamıyor. Lifestyle fotoğraf, ürünün kullanım ortamında sahnelendiği görsel tipi. İyi lifestyle görsel alıcının kafasındaki bu soruya görsel cevap vererek dönüşümü belirgin şekilde artırıyor. AI araçları bu görselleri stüdyo çekimi olmadan üretmeyi mümkün kıldı. Bu yazıda lifestyle fotoğrafın gücünü ve AI ile üretim tekniklerini ele alacağız.
 
+> İlgili: [AI ürün fotoğrafçılığı rehberi](/blog/e-ticaret-icin-ai-urun-fotografciligi) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Lifestyle Fotoğraf Neden Önemli?
 
 Lifestyle fotoğraf alıcıya iki temel şey veriyor: bağlam ve duygu.

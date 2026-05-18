@@ -1,5 +1,19 @@
 import type { MetadataRoute } from "next";
-import { getYazilar } from "./blog/icerikler";
+import { getYazilar, kategoriler } from "./blog/icerikler";
+
+// P1-6 SEO fix: kategori slug helper (page.tsx ile aynı mantık)
+function kategoriToSlug(kategori: string): string {
+  return kategori
+    .toLocaleLowerCase("tr")
+    .replace(/ı/g, "i")
+    .replace(/ğ/g, "g")
+    .replace(/ü/g, "u")
+    .replace(/ş/g, "s")
+    .replace(/ö/g, "o")
+    .replace(/ç/g, "c")
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.yzliste.com";
@@ -92,5 +106,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       : new Date(yazi.yayinTarihi),
   }));
 
-  return [...mainPages, ...blogPages];
+  // P1-6: kategori bazlı hub sayfaları
+  const cats = await kategoriler();
+  const kategoriPages: MetadataRoute.Sitemap = cats.map((kategori) => ({
+    url: `${baseUrl}/blog/kategori/${kategoriToSlug(kategori)}`,
+    changeFrequency: "weekly" as const,
+    priority: 0.6,
+    lastModified: new Date(),
+  }));
+
+  return [...mainPages, ...blogPages, ...kategoriPages];
 }

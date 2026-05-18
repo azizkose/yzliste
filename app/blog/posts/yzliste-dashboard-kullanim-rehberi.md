@@ -14,6 +14,8 @@ kapakGorsel:
 
 yzliste paneline ilk girdiğinde ne yapacağını bilmek, aracın gerçek değerine erişmenin anahtarı. Panelin her bölümü farklı amaca hizmet ediyor; hangi bölümün hangi durumda kullanılacağını anlamak zaman kazandırıyor. Bu rehberde yzliste dashboard'unun ana bölümlerini ve pratik kullanımlarını ele alacağız.
 
+> Detaylı bakış: [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
+
 ## Ana Sayfa: Hızlı Başlangıç
 
 yzliste'ye giriş yaptığında karşına ana sayfa çıkıyor. Bu sayfada üç temel kısayol var:
@@ -113,7 +115,7 @@ Geçmiş listing'leri yeniden indirebilir, kopyalayıp düzenleyerek yeni ürün
 
 ## Raporlama ve Analitik
 
-"Raporlar" sekmesi hangi pazaryerine ne kadar ürün eklediğini, kredi tüketimini, en çok kullanılan kategorileri gösteriyor. Aylık kullanım deseni anlamak için kısa bir özet.
+"Raporlar" sekmesi hangi pazaryerine ne kadar ürün eklediğini, kredi tüketimini, sıkça kullanılan kategorileri gösteriyor. Aylık kullanım deseni anlamak için kısa bir özet.
 
 Pazaryerinden gelen satış verisi yzliste paneline doğrudan akmıyor; pazaryerinin kendi paneli hâlâ satış istatistikleri için kaynak. yzliste içerik üretim aracı; satış izleme pazaryeri panelinde.
 

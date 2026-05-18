@@ -10,9 +10,15 @@ etiketler: yzliste,seo skoru,listing optimizasyonu,ürün açıklaması,pazaryer
 kapakGorsel: 
 ---
 
+# GİRİŞ
+
+yzliste'nin ürettiği her listing metni için anlık olarak hesaplanan SEO skoru, içeriğin pazaryeri algoritmasında ne kadar iyi performans göstereceğini öngörmenize yardımcı olur. Skor; başlık optimizasyonu, anahtar kelime dağılımı, açıklama kalitesi ve platform spesifik kurallar gibi 12 farklı parametre üzerinden hesaplanır. Bu yazıda SEO skorunun nasıl çalıştığını, hangi alanların ne kadar puan getirdiğini ve skoru iyileştirme yollarını ele alıyoruz.
+
 Yzliste'de bir ürün listing'i oluşturduktan sonra platform, hazırlanan içeriği belirli kriterler üzerinden değerlendirerek bir SEO skoru gösterir. Bu skor, listing'inizin pazaryeri arama algoritmalarında ne kadar iyi performans gösterebileceğine dair bir ön değerlendirmedir. Skoru anlamak ve iyileştirmek, ürününüzün organik görünürlüğünü artırmanın pratik bir yoludur.
 
 ---
+
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
 
 ## SEO Skoru Neyi Ölçer?
 

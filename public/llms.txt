@@ -1,0 +1,47 @@
+# yzliste
+
+> 7 pazaryeri için yapay zeka destekli e-ticaret içerik üretim platformu. Trendyol, Hepsiburada, Amazon TR, N11, Etsy, Amazon USA ve Çiçeksepeti için listing metni, ürün görseli, ürün videosu ve sosyal medya içeriği üretir.
+
+yzliste, e-ticaret satıcılarının her pazaryeri için platforma özel formatta ve dilde içerik üretmesini sağlar. Trendyol için 100 karakter başlık + 5 özellik, Hepsiburada için 60 karakter başlık + 255 karakter açıklama, Etsy için 13 etiket + İngilizce dil, Amazon için backend arama terimleri gibi her platformun kendi kurallarına otomatik uyar.
+
+Türkiye merkezli, KVKK uyumlu, e-Arşiv fatura entegrasyonlu. Aylık abonelik yok, kullandığın kadar öde modeli. İlk 3 kredi ücretsiz.
+
+## Temel özellikler
+
+- **Listing metni**: başlık, özellikler, açıklama, etiketler — platform spesifik
+- **Ürün görseli**: 7 stüdyo stili (beyaz, lifestyle, doğal, mermer, ahşap, koyu, gradient)
+- **Ürün videosu**: 5sn veya 10sn tanıtım videosu (9:16, 1:1, 16:9 formatlar)
+- **Sosyal medya**: Instagram, TikTok, Pinterest için caption + hashtag
+- **Barkod tara**: ürün barkodundan otomatik bilgi çekme
+- **Excel toplu**: bir kerede 100+ ürün
+
+## Desteklenen pazaryerleri
+
+- Trendyol (TR)
+- Hepsiburada (TR)
+- Amazon TR
+- N11 (TR)
+- Etsy (global, İngilizce)
+- Amazon USA (İngilizce)
+- Çiçeksepeti (TR)
+
+## Önemli dokümanlar
+
+- [Anasayfa](https://www.yzliste.com)
+- [Fiyatlar](https://www.yzliste.com/fiyatlar): 39 TL / 99 TL / 249 TL kredi paketleri
+- [Sık sorulan sorular](https://www.yzliste.com/sss)
+- [Blog](https://www.yzliste.com/blog): 130+ rehber yazı — listing yazımı, AI görsel, pazaryeri stratejileri
+- [Hakkımızda](https://www.yzliste.com/hakkimizda)
+
+## Öne çıkan rehberler
+
+- [Trendyol'da satışları artıran listing nasıl yazılır](https://www.yzliste.com/blog/trendyol-listing-nasil-yazilir)
+- [Amazon A9 algoritması rehberi](https://www.yzliste.com/blog/amazon-a9-algoritmasi)
+- [Etsy satış başlangıç rehberi 2026](https://www.yzliste.com/blog/etsy-satis-baslangic-rehberi-2026)
+- [Hepsiburada katalog ve listing kuralları](https://www.yzliste.com/blog/hepsiburada-katalog-ve-listing-kurallari)
+- [E-ticaret SEO anahtar kelime araştırma rehberi](https://www.yzliste.com/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi)
+
+## İletişim
+
+- E-posta: destek@yzliste.com
+- Web: https://www.yzliste.com

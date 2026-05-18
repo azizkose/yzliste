@@ -14,6 +14,8 @@ kapakGorsel:
 
 Amazon FBA (Fulfillment by Amazon), ürününü Amazon deposuna gönderip satış sonrası tüm lojistiği Amazon'a bıraktığın hizmet. Türkiye'den Amazon'a açılan satıcılar için FBA büyük soru işareti; kullanmak mı, kullanmamak mı? Her iki yolun da artıları ve eksileri var. Bu rehberde Amazon FBA'yı Türkiye'den nasıl kullanabileceğini, maliyet yapısını ve FBA vs FBM karşılaştırmasını inceleyeceğiz.
 
+> Ek okuma: [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## FBA Nedir ve Nasıl Çalışır?
 
 FBA'da süreç şu şekilde: ürününü büyük partiyle Amazon'un lojistik merkezine gönderiyorsun. Amazon depolaması, paketleme, kargolama, iade işlemleri ve müşteri hizmetlerini üstleniyor. Siparişler geldiğinde Amazon çözümlüyor; sen sadece stoğun yeterli olduğundan emin oluyor ve satıştan gelen net gelirini alıyorsun.

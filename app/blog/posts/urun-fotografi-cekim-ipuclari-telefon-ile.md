@@ -16,9 +16,11 @@ E-ticarette ilk izlenim görseldir — müşteri fotoğrafa bakarak tıklar veya
 
 ---
 
+> Detaylı bakış: [AI ürün fotoğrafçılığı rehberi](/blog/e-ticaret-icin-ai-urun-fotografciligi) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
+
 ## 1. Doğal Işığı Kullan
 
-Pencere kenarında, dolaylı gün ışığında çek. Direkt güneş ışığı sert gölgeler yaratır. Bulutlu havalar en iyi doğal softbox'tır. Işık yetersizse beyaz bir A4 kağıdı yansıtıcı olarak kullan.
+Pencere kenarında, dolaylı gün ışığında çek. Direkt güneş ışığı sert gölgeler yaratır. Bulutlu havalar öne çıkan doğal softbox'tır. Işık yetersizse beyaz bir A4 kağıdı yansıtıcı olarak kullan.
 
 ---
 

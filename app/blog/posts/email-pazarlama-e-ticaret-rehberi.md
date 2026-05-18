@@ -16,6 +16,8 @@ E-ticaret işletmecilerinin sosyal medya algoritmalarına ve reklam maliyetlerin
 
 ---
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## Email pazarlama e-ticaret için neden vazgeçilmez?
 
 Reklamla bir müşteriyi siteye getirmek için belirli bir maliyet ödediniz. Bu kişi alışveriş yapmadan ayrılırsa, yatırımınızın geri dönüşü sıfır. Email adresini almışsanız, sonradan tekrar ulaşma şansınız var. Yapılan sektör analizleri, mevcut bir müşteriye satış yapmanın yeni müşteri kazanmaktan ciddi oranda daha düşük maliyetli olduğunu gösteriyor (Kaynak: Bain & Company müşteri sadakat çalışmaları).
@@ -30,7 +32,7 @@ Email pazarlamanın e-ticaret için üç ana getirisi:
 
 ## Liste büyütme: hangi yöntemler işe yarar?
 
-Email listesi sıfırdan kurulurken en çok hata yapılan kısım "kayıt formu sayfanın altında dursun, gelen gelir" yaklaşımı. Bu yaklaşımla aylarca çalışıp 50 abone bile kazanamayabilirsiniz. İşe yarayan yöntemler:
+Email listesi sıfırdan kurulurken sıkça hata yapılan kısım "kayıt formu sayfanın altında dursun, gelen gelir" yaklaşımı. Bu yaklaşımla aylarca çalışıp 50 abone bile kazanamayabilirsiniz. İşe yarayan yöntemler:
 
 - **Pop-up form ile teşvik:** Site ziyaretçisi sayfayı kapatmaya yöneldiğinde çıkan, %10 indirim kuponu karşılığında email isteyen pop-up. Ortalama dönüşüm oranı %2-5 arasında.
 - **İçerik karşılığı email:** Bir rehber, kontrol listesi veya katalog PDF'i ile kayıt karşılığı içerik gönderimi. Niş kategorilerde belirgin şekilde etkili.

@@ -14,6 +14,8 @@ kapakGorsel:
 
 İade politikası, alıcı karar anının sessiz bir belirleyicisi. Alıcı sepete eklemeden önce çoğu zaman iade koşullarını okumayı düşünmese de "14 gün ücretsiz iade" gibi açık ifadeler güven veriyor. Kötü veya belirsiz iade politikası satın alma kararını engelliyor. Bu yazıda iade politikasını hem yasal uyumlu hem alıcı dostu yazmanın yollarını ele alacağız.
 
+> Detaylı bakış: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
+
 ## Yasal Çerçeve
 
 Türkiye'de tüketici hakları 6502 sayılı Tüketicinin Korunması Hakkında Kanun ile düzenleniyor. E-ticaret satıcıları için temel yasal zorunluluklar:

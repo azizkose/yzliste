@@ -16,6 +16,8 @@ Aynı ürünü satan iki mağazadan biri günde 50 adet satarken diğeri 5 adet 
 
 ---
 
+> Ek okuma: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## Teknik 1: Özellik Değil, Fayda Yaz
 
 "100% pamuk kumaş" bir özellik. "Yazın bile serin tutan, nefes alan pamuk kumaş" bir fayda. Müşteri teknik detayı değil, o detayın hayatına ne katacağını merak eder. Her özelliği yazdığında yanına "bu ne işe yarar?" sorusunun cevabını ekle.
@@ -48,7 +50,7 @@ Müşteriler satın almadan önce kafalarında sorular oluşturur: "Yıkamada ç
 
 ## BİLGİ KUTUSU
 
-💡 A/B testi yapamıyorsan en kolay yol: En çok iade edilen ürünün açıklamasını yeniden yaz. İade nedenleri, müşterinin açıklamadan ne beklediğini doğrudan gösterir.
+💡 A/B testi yapamıyorsan en kolay yol: sıkça iade edilen ürünün açıklamasını yeniden yaz. İade nedenleri, müşterinin açıklamadan ne beklediğini doğrudan gösterir.
 
 ---
 

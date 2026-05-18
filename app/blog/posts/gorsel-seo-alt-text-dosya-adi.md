@@ -14,6 +14,8 @@ kapakGorsel:
 
 Ürünün organik trafiğini düşündüğünde Google arama sonuç sayfaları ilk akla gelen. Ancak Google Images sekmesi de ciddi trafik kaynağı; özellikle moda, ev dekor, takı gibi görsel odaklı kategorilerde. Google Images'ta görünür olmak görsel SEO disiplinine bağlı — alt text, dosya adı ve meta veriyi doğru yönetmek gerekiyor. Bu rehberde görsel SEO'nun temellerini ve pratik uygulamalarını ele alacağız.
 
+> Detaylı bakış: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
+
 ## Görsel SEO Nedir?
 
 Görsel SEO, görsellerin arama motorları tarafından daha iyi anlaşılması ve sıralanması için yapılan optimizasyonlar. Google, Bing gibi arama motorları görselleri piksel piksel "görmek" yerine metin tabanlı bilgilerden anlam çıkarıyor: dosya adı, alt text, başlık ve sayfa bağlamı.

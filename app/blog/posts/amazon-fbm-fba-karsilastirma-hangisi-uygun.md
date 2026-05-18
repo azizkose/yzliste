@@ -1,7 +1,7 @@
 ---
 slug: amazon-fbm-fba-karsilastirma-hangisi-uygun
 baslik: Amazon FBM mi FBA mı? Türk Satıcılar İçin Karşılaştırmalı Rehber
-ozet: Amazon'da FBM (kendi gönderim) ve FBA (Amazon deposu) arasındaki maliyet, hız ve kontrol farkları. Hangi modelin sizin ürün ve hacminize uygun olduğunu örneklerle anlatıyoruz.
+ozet: Amazon'da FBM (kendi gönderim) ve FBA (Amazon deposu) arasındaki maliyet, hız ve kontrol farkları.
 yayinTarihi: 2026-04-19
 yazarAdi: yzliste Ekibi
 okumaSuresi: 8
@@ -15,6 +15,8 @@ kapakGorsel:
 Amazon'da satış yapmaya karar verdiğinizde önünüze çıkan ilk büyük tercih, ürünleri nasıl göndereceğinizdir. FBA (Fulfillment by Amazon) ürünleri Amazon'un deposuna gönderip orada saklatmak ve siparişleri Amazon'a hazırlatmak demektir. FBM (Fulfillment by Merchant) ise kendi deponuzdan, kendi anlaşmalı kargonuzla göndermek anlamına gelir. İkisi de geçerli; ama hangisi sizin için daha uygun, ürün tipi, hacim ve nakit akışınıza göre değişir. Bu yazıda iki modeli karşılaştırıp seçim için pratik bir çerçeve sunuyoruz.
 
 ---
+
+> Detaylı bakış: [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
 
 ## FBA Modelinin Çalışma Mantığı
 

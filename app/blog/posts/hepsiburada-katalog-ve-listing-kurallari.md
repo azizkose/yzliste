@@ -26,6 +26,12 @@ Hepsiburada, ürün açıklamalarında zengin metin düzenleyicisine izin verir.
 
 💡 İpucu: yzliste kullanarak Hepsiburada kataloğuna uygun teknik özellik setlerini ve açıklama metinlerini otomatik olarak hazırlatabilirsiniz.
 
+
+
+## Hepsiburada satıcıları için diğer rehberler
+
+Hepsiburada operasyonunuzu büyütmek için diğer rehberler: Buybox kazanma stratejileri için [Hepsiburada Buybox rehberi](/blog/hepsiburada-buybox-rehberi), kampanya yönetimi için [Hepsiburada kampanya yönetimi](/blog/hepsiburada-kampanya-yonetimi), öne çıkma stratejisi için [Hepsiburada öne çıkan ürün stratejisi](/blog/hepsiburada-one-cikan-urun-stratejisi), reklam bütçesi yönetimi için [Hepsiburada reklam bütçe yönetimi](/blog/hepsiburada-reklam-butce-yonetimi), Premium üyelik için [Hepsiburada Premium satıcı](/blog/hepsiburada-premium-satici) ve panel ipuçları için [Hepsiburada satıcı paneli ipuçları](/blog/hepsiburada-satici-paneli-ipuclari) yazılarına göz atın.
+
 ## SONUÇ
 
 Hepsiburada'da başarılı olmanın anahtarı, platformun katalog disiplinine uyum sağlamaktır. Doğru veri ve kaliteli içerikle Buybox rekabetinde bir adım öne geçin.

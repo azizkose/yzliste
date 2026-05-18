@@ -14,6 +14,8 @@ kapakGorsel:
 
 E-ticaret büyümenin iki yolu var: yeni müşteri kazanmak ve mevcut müşteriyi tutmak. Yeni müşteri kazanmanın maliyeti (reklam, pazarlama) tutma maliyetinin birkaç katı; oysa tutulan müşterinin tekrar alışveriş yapma olasılığı yüksek, ortalama sepeti büyük ve yeni müşteri önerisi çıkıyor. Bu yazıda e-ticarette müşteri sadakati oluşturmanın sistematik yollarını ele alacağız.
 
+> Detaylı bakış: [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
+
 ## Sadakatin Gücü
 
 Sadık müşteri, tek siparişi olan müşteriden belirgin şekilde farklı davranıyor:

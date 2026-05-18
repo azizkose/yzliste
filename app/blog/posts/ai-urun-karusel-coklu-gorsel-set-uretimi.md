@@ -1,7 +1,7 @@
 ---
 slug: ai-urun-karusel-coklu-gorsel-set-uretimi
 baslik: AI ile Ürün Karuseli: Tek Üründen Çoklu Görsel Set Üretmek
-ozet: Pazaryerlerinde 5-8 görsellik karusel ürün sayfasının vazgeçilmezi. AI ile aynı üründen tutarlı, farklı açılı ve farklı sahnelerdeki görsel setlerini nasıl üretirsiniz?
+ozet: Pazaryerlerinde 5-8 görsellik karusel ürün sayfasının vazgeçilmezi.
 yayinTarihi: 2026-04-22
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
@@ -15,6 +15,8 @@ kapakGorsel:
 Pazaryerlerinde tek bir görsel artık yetmiyor. Trendyol'da 8, Amazon'da 7, Etsy'de 10 görsele kadar çıkabiliyorsunuz ve dönüşüm verileri tek görselli ürünle dolu galerili ürün arasında belirgin bir fark olduğunu gösteriyor. Ama tek bir üründen 8 farklı, hem tutarlı hem de bilgi verici görsel üretmek geleneksel yöntemle yarım gün stüdyo demektir. Bu yazıda AI ile aynı üründen çoklu görsel set üretmenin pratik yolunu ve dikkat edilmesi gereken noktaları anlatıyoruz.
 
 ---
+
+> İlgili: [AI ürün fotoğrafçılığı rehberi](/blog/e-ticaret-icin-ai-urun-fotografciligi) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
 
 ## İyi Bir Karuselin Hangi Görselleri İçerir?
 
@@ -80,7 +82,7 @@ AI prompt'larına bu paleti ortak ek olarak yazmak ürün setinizi daha tutarlı
 
 ## Pazaryeri Bazlı Boyut ve Format Gereksinimleri
 
-Karusel görsellerini üretirken her pazaryerinin kendi teknik kuralları olduğunu unutmayın. Trendyol kare 1200x1200 piksel ister, Amazon ana görsel için 1600x1600 piksel ve %85 ürün kapsama oranını şart koşar; Etsy genelde 2000 piksel uzun kenarda en iyi sonucu verir. Bu boyutları göz önüne almadan üretirseniz görseller yüklendiğinde otomatik kırpılır ve ürünün önemli bir kısmı kesilebilir.
+Karusel görsellerini üretirken her pazaryerinin kendi teknik kuralları olduğunu unutmayın. Trendyol kare 1200x1200 piksel ister, Amazon ana görsel için 1600x1600 piksel ve %85 ürün kapsama oranını şart koşar; Etsy genelde 2000 piksel uzun kenarda öne çıkan sonucu verir. Bu boyutları göz önüne almadan üretirseniz görseller yüklendiğinde otomatik kırpılır ve ürünün önemli bir kısmı kesilebilir.
 
 İdeal yaklaşım, en yüksek çözünürlükte üretip sonra her pazaryeri için ayrı dışa aktarmaktır. Aynı sahneyi her platform için yeniden ürettirmek hem kredi hem zaman israfıdır.
 

@@ -14,6 +14,8 @@ kapakGorsel:
 
 Bir ürün fotoğrafının arka planı, o fotoğrafın satış gücünü büyük ölçüde belirliyor. Dağınık bir evin içinde çekilen bir vazo sağlam bir lifestyle arka planla yeniden sahnelenince satış gücü artıyor. AI arka plan değiştirme teknolojisi bu dönüşümü saniyeler içinde yapılabilir hale getirdi. Bu yazıda arka plan değiştirmenin nasıl çalıştığını, hangi sahnelerde başarılı olduğunu ve pazaryeri kurallarıyla nasıl uyumlu kaldığını inceleyeceğiz.
 
+> Ek okuma: [AI ürün fotoğrafçılığı rehberi](/blog/e-ticaret-icin-ai-urun-fotografciligi) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## Teknoloji Nasıl Çalışıyor?
 
 AI arka plan değiştirme iki ana adımdan oluşuyor:

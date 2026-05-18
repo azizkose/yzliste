@@ -1,7 +1,7 @@
 ---
 slug: ai-coklu-dil-urun-aciklamasi-uretimi
 baslik: AI ile Çoklu Dilli Ürün Açıklaması Üretmek: Etsy ve Amazon USA İçin Rehber
-ozet: Aynı ürünü Türkçe, İngilizce, Almanca, Fransızca pazara açmak için AI ile dil ve kültür uyumlu açıklama üretimi. Çeviri yerine yerelleştirme, anahtar kelime farkları ve dikkat edilmesi gerekenler.
+ozet: Aynı ürünü Türkçe, İngilizce, Almanca, Fransızca pazara açmak için AI ile dil ve kültür uyumlu açıklama üretimi.
 yayinTarihi: 2026-05-13
 yazarAdi: yzliste Ekibi
 okumaSuresi: 8
@@ -15,6 +15,8 @@ kapakGorsel:
 Türkiye'deki bir el yapımı takı satıcısı Etsy'de açılış yaptığında en sık karşılaştığı sorun şu olur: Türkçe açıklamayı Google Translate'e atıp İngilizceye çevirir ama listing aramada yer almaz. Çünkü çeviri ile yerelleştirme aynı şey değildir. Amerikalı bir alıcı "boho earring" arar, sizin çevirinizde "bohemian style earring" yazar. AI doğru kullanıldığında bu farkı çözer ve aynı ürünü farklı dillerde, farklı pazarın aradığı şekilde sunar. Bu rehberde çoklu dilli ürün açıklaması üretimini, AI ile nasıl ölçeklendireceğinizi ve hangi dillerde hangi tuzaklara dikkat etmeniz gerektiğini anlatıyoruz.
 
 ---
+
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [Etsy satış başlangıç rehberi](/blog/etsy-satis-baslangic-rehberi-2026) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
 
 ## Çeviri ve Yerelleştirme Farkı
 

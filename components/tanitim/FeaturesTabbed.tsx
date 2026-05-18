@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Check, FileText, X, ZoomIn, RotateCw, Lightbulb, Leaf, ScanSearch, Wind, Timer, Film, Columns2, Camera, Tag, Hash, Clapperboard, Share2 } from "lucide-react";
 
 type PlatformKey = "trendyol" | "amazon" | "etsy";
@@ -254,8 +255,7 @@ export default function FeaturesTabbed() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="flex flex-col">
                   <div className="relative rounded-xl overflow-hidden border border-[#D8D6CE] bg-[#F1F0EB]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/ornek_once.jpg" alt="önce" className="w-full aspect-square object-contain" />
+                    <Image src="/ornek_once.jpg" alt="önce" width={300} height={300} sizes="(max-width: 640px) 50vw, 25vw" className="w-full aspect-square object-contain" />
                     <div className="absolute top-2 left-2"><span className="bg-[#1A1A17]/80 text-white text-[10px] px-2 py-1 rounded-full">Ham fotoğraf</span></div>
                   </div>
                   <div className="bg-[#FCECEC] rounded-lg p-2 border border-[#7A1E1E]/20 mt-2">
@@ -272,8 +272,7 @@ export default function FeaturesTabbed() {
                 ].map((item) => (
                   <div key={item.etiket} className="flex flex-col">
                     <div className="rounded-xl overflow-hidden border border-[#BAC9EB] bg-[#FAFAF8]">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" />
+                      <Image src={item.src} alt={item.etiket} width={300} height={300} sizes="(max-width: 640px) 50vw, 25vw" className="w-full aspect-square object-contain" />
                     </div>
                     <p className="text-[11px] text-[#5A5852] font-medium text-center mt-1.5">{item.etiket}</p>
                   </div>
@@ -288,8 +287,7 @@ export default function FeaturesTabbed() {
                 ].map((item) => (
                   <div key={item.etiket} className="flex flex-col">
                     <div className="rounded-xl overflow-hidden border border-[#BAC9EB] bg-[#FAFAF8]">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={item.src} alt={item.etiket} className="w-full aspect-square object-contain" />
+                      <Image src={item.src} alt={item.etiket} width={300} height={300} sizes="(max-width: 640px) 50vw, 25vw" className="w-full aspect-square object-contain" />
                     </div>
                     <p className="text-[11px] text-[#5A5852] font-medium text-center mt-1.5">{item.etiket}</p>
                   </div>

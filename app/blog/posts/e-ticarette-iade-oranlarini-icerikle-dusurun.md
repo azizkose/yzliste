@@ -14,6 +14,8 @@ kapakGorsel:
 
 E-ticaretin en büyük gizli maliyeti iadelerdir. Çoğu iade, ürünün kötü olmasından değil, müşterinin beklediğinden farklı gelmesinden kaynaklanır. Doğru kurgulanmış bir ürün listing'i, iadeleri önemli ölçüde azaltabilir.
 
+> Detaylı bakış: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
+
 ## Beklentiyi Yönetmek: Şeffaf Olun
 
 Ürünün boyutlarını "büyük" veya "küçük" gibi göreceli kelimelerle değil, net ölçülerle (cm/mm) belirtin. Kumaş içeriğini, paket içeriğini ve kutu içinden çıkmayan (örn: pil) parçaları açıkça yazın. Müşteri ne alacağını bildiğinde iade etme ihtimali düşer.
@@ -24,7 +26,7 @@ Müşterilerden gelen soruları analiz edin. Eğer sürekli "Su geçirir mi?" so
 
 ## BİLGİ KUTUSU
 
-💡 İpucu: yzliste kullanarak müşterilerin en çok merak ettiği detayları içeren kapsamlı ve şeffaf ürün açıklamaları üretebilirsiniz.
+💡 İpucu: yzliste kullanarak müşterilerin sıkça merak ettiği detayları içeren kapsamlı ve şeffaf ürün açıklamaları üretebilirsiniz.
 
 ## SONUÇ
 

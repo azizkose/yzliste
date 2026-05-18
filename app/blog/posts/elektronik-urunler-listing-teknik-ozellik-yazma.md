@@ -16,6 +16,8 @@ Elektronik ürünlerde müşteri karar verirken teknik özelliklere bakar ama ç
 
 ---
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## Teknik Özelliği Faydaya Çevir
 
 Her teknik özelliğin yanına "bu ne işe yarar?" cevabını ekle. "IPX7 su geçirmez" yerine "Yağmurda, sporda ve duşta kullanabilirsin — IPX7 su geçirmez koruma". Müşteri spesifikasyonu değil, o spesifikasyonun hayatına ne katacağını satın alır.

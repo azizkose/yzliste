@@ -14,6 +14,8 @@ kapakGorsel:
 
 Stok bittiğinde sipariş kaçırırsın; stok fazla olduğunda nakit akışı tıkanır ve depolama maliyeti birikir. İki uç arasındaki dengeyi tutturmak e-ticaretin temel disiplinlerinden biri. Stok yönetimi sezgi ile değil sistem ile yapılmalı. Bu rehberde e-ticaret stok yönetiminin temel kavramlarını, pratik araçlarını ve büyüyen mağaza için altyapı kararlarını ele alacağız.
 
+> Ek okuma: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## Temel Kavramlar
 
 Stok yönetiminde bilmen gereken temel terimler:

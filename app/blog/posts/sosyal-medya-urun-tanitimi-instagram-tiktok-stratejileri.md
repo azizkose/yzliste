@@ -16,6 +16,8 @@ E-ticaret artık sadece pazaryerlerinde değil, sosyal medyada da yapılıyor. I
 
 ---
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## Instagram: Görsel Mağaza Vitrinin
 
 Instagram, e-ticaret için görsel bir mağaza vitrini gibi çalışır. Feed'in tutarlı ve profesyonel görünsün — renk paleti ve görsel stili belirle. Ürün fotoğraflarını karışık paylaşma: 3 ürün, 1 yaşam tarzı, 1 kullanıcı içeriği gibi bir döngü oluştur.
@@ -36,7 +38,7 @@ TikTok'ta satış yapan içerikler genellikle doğrudan reklam gibi görünmez. 
 
 ## BİLGİ KUTUSU
 
-💡 Paylaşım zamanı önemli: Instagram için hafta içi 12:00-14:00 ve 19:00-21:00, TikTok için 18:00-22:00 arası en yüksek etkileşim saatleri. Kendi analizlerini kontrol ederek en iyi saatleri bul.
+💡 Paylaşım zamanı önemli: Instagram için hafta içi 12:00-14:00 ve 19:00-21:00, TikTok için 18:00-22:00 arası en yüksek etkileşim saatleri. Kendi analizlerini kontrol ederek öne çıkan saatleri bul.
 
 ---
 
