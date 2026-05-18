@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Gift } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
+
+// P0-2 V2 SEO fix: middleware dynamic render override'ını geç — Cache-Control public döner
+export const dynamic = "force-static";
 import SiteFooter from "@/components/SiteFooter";
 import { PAKET_LISTESI } from "@/lib/paketler";
 import FiyatlarCta from "@/components/ui/FiyatlarCta";

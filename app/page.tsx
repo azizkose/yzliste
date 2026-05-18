@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import TanitimSayfasi from "./_tanitim-redesign";
 
+// P0-2 V2 SEO fix: middleware dynamic render override'ını geç — Cache-Control public döner
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: { absolute: "yzliste — AI ile E-ticaret Listing, Görsel ve Video Üret" },
   description:
