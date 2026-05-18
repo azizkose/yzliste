@@ -14,6 +14,8 @@ kapakGorsel:
 
 Deponuza yeni bir sevkiyat geldiğinde yaşadığınız o yoğun "ürün giriş" sürecini hayal edin. Her ürünün ismini, barkodunu ve özelliklerini tek tek sisteme yazmak hem yorucu hem de hataya açıktır. Barkod tarama teknolojisi bu süreci manuel girişe kıyasla çok daha hızlı hale getiriyor.
 
+> Pillar rehber: konunun bütününü görmek için [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısını okumanı öneririz.
+
 ## Telefonunuz Artık Bir Lojistik Terminali
 
 Özel bir donanıma ihtiyacınız yok. Akıllı telefonunuzun kamerasını kullanarak ürün barkodunu tarattığınızda, ürünün tüm künye bilgileri anında ekranınıza düşer. Bu teknoloji, karmaşık veri giriş süreçlerini ortadan kaldırır.

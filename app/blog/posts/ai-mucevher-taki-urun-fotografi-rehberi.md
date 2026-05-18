@@ -16,6 +16,8 @@ Mücevher ve takı kategorisi, ürün fotoğrafı tarafında en zorlu kategorile
 
 ---
 
+> Ek okuma: [AI ürün fotoğrafçılığı rehberi](/blog/e-ticaret-icin-ai-urun-fotografciligi) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## Mücevher fotoğrafının doğal zorlukları
 
 Klasik fotoğrafçılıkta mücevher çekimi, bir mikro stüdyo işidir. Yansımayı kontrol etmek için ışık panelleri, parlaklığı yumuşatmak için difüzörler, küçük detayları yakalamak için makro lens gerekiyor. Mücevher fotoğrafçısı saatlerce tek bir ürünle uğraşabiliyor.
@@ -107,7 +109,7 @@ AI üretiminde dikkat:
 
 ## BİLGİ KUTUSU
 
-💡 Mücevher fotoğrafında müşterinin en çok merak ettiği şey gerçek hali. Ürünü gerçek bir el üzerinde de çekip iki görseli yan yana koyman, müşteriye dürüstlüğünü ve ürünün gerçekliğini gösterme adına önemli bir adım. AI sahneleri katalogda, gerçek el fotoğrafı detay görselinde olabilir.
+💡 Mücevher fotoğrafında müşterinin sıkça merak ettiği şey gerçek hali. Ürünü gerçek bir el üzerinde de çekip iki görseli yan yana koyman, müşteriye dürüstlüğünü ve ürünün gerçekliğini gösterme adına önemli bir adım. AI sahneleri katalogda, gerçek el fotoğrafı detay görselinde olabilir.
 
 ---
 

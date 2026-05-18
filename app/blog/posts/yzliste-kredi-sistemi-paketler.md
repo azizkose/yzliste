@@ -1,7 +1,7 @@
 ---
 slug: yzliste-kredi-sistemi-paketler
 baslik: yzliste Kredi Sistemi ve Paketleri Rehberi
-ozet: yzliste kredi sistemi nasıl çalışır? Başlangıç, Popüler ve Büyük paketleri arasında doğru seçim, kredi tüketim mantığı ve ne zaman hangi paketi almanız gerektiği.
+ozet: yzliste kredi sistemi nasıl çalışır?
 yayinTarihi: 2025-10-12
 yazarAdi: yzliste Ekibi
 okumaSuresi: 4

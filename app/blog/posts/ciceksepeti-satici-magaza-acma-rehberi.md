@@ -1,7 +1,7 @@
 ---
 slug: ciceksepeti-satici-magaza-acma-rehberi
-baslik: Çiçeksepeti'nde Satıcı Olmak: Mağaza Açma, Listeleme ve Kategori Stratejileri
-ozet: Çiçeksepeti'nin satıcı modeli, başvuru şartları, kategori yapısı, listing kuralları ve hediye odaklı satışta öne çıkma yolları üzerine pratik bir rehber.
+baslik: Çiçeksepeti satıcı olma rehberi (2026 güncel)
+ozet: Çiçeksepeti'nde satıcı olmak için başvuru koşulları, vergi tipi, kategori seçimi, listing kuralları ve hediye odaklı satışın incelikleri.
 yayinTarihi: 2026-05-04
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
@@ -15,6 +15,8 @@ kapakGorsel:
 Çiçeksepeti, başlangıçta çiçek ve hediyelik ürünler için kurulmuş bir platformdu; bugün geniş bir pazaryerine dönüşmüş durumda. Hediye odaklı tüketici davranışı sayesinde dönüşüm oranları belirgin şekilde yüksek — kullanıcılar genellikle hediye almak için niyetli ve hızlı karar veriyor. Bu rehberde Çiçeksepeti'nde satıcı olmanın şartlarını, başvuru sürecini, kategori stratejilerini ve listing yazımında dikkat edilmesi gereken noktaları bulacaksın.
 
 ---
+
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
 
 ## Çiçeksepeti'nin satıcı için anlamı
 

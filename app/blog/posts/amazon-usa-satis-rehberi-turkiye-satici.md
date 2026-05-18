@@ -16,6 +16,8 @@ Amazon.com dünya e-ticaretinin en büyük pazaryeri ve Türk satıcılar için 
 
 ---
 
+> İlgili: [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Amazon USA Hesabı Açma Süreci
 
 Professional Seller hesabı açmak için pasaport veya kimlik, kredi kartı, banka hesabı ve vergi bilgilerin gerekiyor. Türkiye'den başvurularda EIN (vergi kimlik numarası) almak şart değil — bireysel satıcı olarak başlayabilirsin. Hesap onayı genellikle 1-2 hafta sürüyor.

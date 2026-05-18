@@ -1,7 +1,7 @@
 ---
 slug: shopify-turkiye-magaza-acma-rehberi
 baslik: Shopify Türkiye'de Online Mağaza Açmak: Adım Adım Başlangıç Rehberi
-ozet: Shopify Türkiye'de mağaza açma süreci, ödeme entegrasyonu, vergi ayarları, tema seçimi ve ilk ürün listeleme adımlarını pratik ipuçlarıyla anlatan başlangıç rehberi.
+ozet: Shopify Türkiye'de mağaza açma süreci, ödeme entegrasyonu, vergi ayarları, tema seçimi ve ilk ürün listeleme adımlarını pratik ipuçlarıyla anlatan…
 yayinTarihi: 2026-03-23
 yazarAdi: yzliste Ekibi
 okumaSuresi: 8
@@ -15,6 +15,8 @@ kapakGorsel:
 Pazaryerlerinde komisyon ve rekabet artarken kendi e-ticaret sitenizi açmak ciddi anlamda gündeme geliyor. Shopify, kod yazmadan kendi markalı online mağazanızı kurmak için en bilinen platformlardan biri. Türkiye'den Shopify mağazası açmak teknik olarak basit, ancak ödeme altyapısı, vergi entegrasyonu ve KVKK uyumu gibi konularda ülkeye özgü adımlar gerekiyor. Bu rehberde sıfırdan yayına almaya kadar olan süreci ve en sık karşılaşılan tuzakları göreceksiniz.
 
 ---
+
+> Detaylı bakış: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
 
 ## Shopify mağazası kimler için doğru tercih?
 

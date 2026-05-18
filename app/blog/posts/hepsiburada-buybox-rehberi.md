@@ -13,6 +13,8 @@ kapakGorsel:
 
 Hepsiburada’da satış yapmanın anahtarı öne çıkan satıcı konumuna gelmektir (Amazon’daki Buybox’un karşılığı). Birçok satıcı sadece fiyata odaklansa da, Hepsiburada satıcı deneyimini ve liste kalitesini değerlendirir. *(Kaynak: Hepsiburada Satıcı Merkezi)*
 
+> Pillar rehber: konunun bütününü görmek için [Hepsiburada katalog ve listing kuralları](/blog/hepsiburada-katalog-ve-listing-kurallari) yazısını okumanı öneririz.
+
 ## Katalog Verisi ve Eşleşme
 
 Hepsiburada devasa bir kataloğa sahiptir. Ürününüzü yüklerken marka, model ve teknik özellik verilerini ne kadar eksiksiz girerseniz, algoritma sizi doğru kategoride o kadar hızlı eşleştirir. Eksik veri, müşterinin karşısına çıkamamanız demektir.

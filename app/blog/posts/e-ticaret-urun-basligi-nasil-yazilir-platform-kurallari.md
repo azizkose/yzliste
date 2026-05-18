@@ -1,7 +1,7 @@
 ---
 slug: e-ticaret-urun-basligi-nasil-yazilir-platform-kurallari
-baslik: E-Ticarette Ürün Başlığı Nasıl Yazılır? Platform Kuralları 2026
-ozet: Trendyol, Hepsiburada, Amazon, N11 ve Etsy için ürün başlığı yazma kurallarını, karakter limitlerini ve dönüşümü artıran yazım formüllerini adım adım öğren.
+baslik: Ürün başlığı yazma rehberi: 5 pazaryeri karakter limiti
+ozet: Trendyol 100, Amazon 200, Etsy 140, N11 65 karakter — her pazaryerinin ürün başlığı kuralları ve dönüşüm yüksek yazım formülleri tek rehberde.
 yayinTarihi: 2025-09-21
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
@@ -15,6 +15,8 @@ kapakGorsel:
 Ürün başlığı, listing'in en fazla gösterilen ve en az ilgi gören parçasıdır. Satıcıların çoğu saatlerini açıklama ve görsele harcarken, başlığı 30 saniyede geçiştirir. Oysa pazaryeri algoritmaları — Trendyol'dan Amazon'a — arama sonuçlarında hangi ürünün üste çıkacağına büyük ölçüde başlığa bakarak karar verir. Bu rehberde her platformun başlık kurallarını, karakter limitlerini ve dönüşümü artıran yazım formüllerini öğreneceksin.
 
 ---
+
+> Pillar rehber: konunun bütününü görmek için [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısını okumanı öneririz.
 
 ## Ürün Başlığının 3 Temel Görevi
 
@@ -50,7 +52,7 @@ Bu yapıda marka öne çıkar (marka araması yüksek trafik getirir), model num
 
 Giyim kategorisinde formül biraz değişir: **Marka + Cinsiyet + Ürün Tipi + Malzeme/Stil + Renk + Beden**. Örnek: "Mavi Erkek Slim Fit %100 Pamuk Polo Yaka T-Shirt Lacivert Medium".
 
-Ev ve yaşam kategorisinde ise kullanım alanı öne çıkar: **Marka + Ürün Tipi + Ölçü/Kapasite + Malzeme + Kullanım Alanı + Renk**. Örnek: "Karaca Bone China 24 Parça 6 Kişilik Yemek Takımı Beyaz". Burada "6 kişilik" ve "24 parça" gibi sayısal özellikler alıcının en çok aradığı bilgilerdir; bu yüzden başlığın ortasına değil, ürün tipinin hemen yanına yerleşir.
+Ev ve yaşam kategorisinde ise kullanım alanı öne çıkar: **Marka + Ürün Tipi + Ölçü/Kapasite + Malzeme + Kullanım Alanı + Renk**. Örnek: "Karaca Bone China 24 Parça 6 Kişilik Yemek Takımı Beyaz". Burada "6 kişilik" ve "24 parça" gibi sayısal özellikler alıcının sıkça aradığı bilgilerdir; bu yüzden başlığın ortasına değil, ürün tipinin hemen yanına yerleşir.
 
 ---
 
@@ -68,7 +70,7 @@ Ev ve yaşam kategorisinde ise kullanım alanı öne çıkar: **Marka + Ürün T
 
 Başlık yazmak bir defalık iş değil. İlk yazdığın başlık büyük ihtimalle en iyisi değildir — rakamlar bunu gösterir. Pazaryerindeki mağazanın analitik ekranından her ürün için şu iki metriği takip et: **gösterim sayısı** (kaç aramada çıktı) ve **tıklanma oranı (CTR)**. Bu iki sayı sana başlığın hem aranabilirliğini hem dönüşümünü anlatır.
 
-Gösterim düşükse başlıkta yeterli anahtar kelime yok demektir — müşterinin aradığı kelimeleri eklemelisin. Gösterim yüksek ama CTR düşükse başlık aramada çıkıyor ama alıcıyı çekmiyor — formülü, sıralamayı veya ana özelliği gözden geçirmelisin. Her iki haftada bir en çok gösterilen ama en az tıklanan ürünlerinin başlığını revize et; küçük değişiklikler (bir kelimenin yeri, bir özelliğin öne alınması) bile CTR'yi belirgin şekilde artırabilir.
+Gösterim düşükse başlıkta yeterli anahtar kelime yok demektir — müşterinin aradığı kelimeleri eklemelisin. Gösterim yüksek ama CTR düşükse başlık aramada çıkıyor ama alıcıyı çekmiyor — formülü, sıralamayı veya ana özelliği gözden geçirmelisin. Her iki haftada bir sıkça gösterilen ama en az tıklanan ürünlerinin başlığını revize et; küçük değişiklikler (bir kelimenin yeri, bir özelliğin öne alınması) bile CTR'yi belirgin şekilde artırabilir.
 
 ---
 

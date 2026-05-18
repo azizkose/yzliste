@@ -14,6 +14,8 @@ kapakGorsel:
 
 N11 pazaryerinde satış yapan satıcıların çoğu "görünürlük" problemini yaşıyor. Ürünü yükledin, fiyatı rekabetçi, fotoğraf kaliteli — ama arama sonucunda 5. sayfada kalıyorsun. Çoğu zaman sorun kategori seçiminde veya anahtar kelime yerleşiminde. Bu rehberde N11'de görünürlüğü artırmak için kategori ve anahtar kelime optimizasyonunu ele alacağız.
 
+> Ek okuma: [N11 satış rehberi](/blog/n11-satis-rehberi-magaza-puani-ve-listing) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## N11 Arama Algoritması
 
 N11 arama motoru birkaç temel sinyale dayanıyor: ürün başlığı, kategori uygunluğu, özellik tablosu doluluğu, satıcı mağaza puanı, satış hızı ve yorum sayısı. Trendyol ve Hepsiburada'ya göre N11 algoritması biraz daha "başlığa duyarlı"; başlıkta yer almayan bir anahtar kelime, açıklamada binlerce kez geçse bile sıralamayı belirgin şekilde yukarı çıkaramıyor.

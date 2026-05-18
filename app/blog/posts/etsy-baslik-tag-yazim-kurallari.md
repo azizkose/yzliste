@@ -12,7 +12,9 @@ kapakGorsel:
 
 # GİRİŞ
 
-Etsy'de başlık ve etiket (tag) alanları, arama sıralamasının en güçlü iki sinyali. İyi bir ürün görseli satışı kapatan son adım; önce bulunman gerekiyor. Bu rehberde Etsy'nin 140 karakterlik başlık ve 13 etiketlik tag alanlarından en iyi şekilde yararlanmayı inceleyeceğiz.
+Etsy'de başlık ve etiket (tag) alanları, arama sıralamasının en güçlü iki sinyali. İyi bir ürün görseli satışı kapatan son adım; önce bulunman gerekiyor. Bu rehberde Etsy'nin 140 karakterlik başlık ve 13 etiketlik tag alanlarından öne çıkan şekilde yararlanmayı inceleyeceğiz.
+
+> Pillar rehber: konunun bütününü görmek için [Etsy satış başlangıç rehberi](/blog/etsy-satis-baslangic-rehberi-2026) yazısını okumanı öneririz.
 
 ## Etsy Arama Algoritması
 

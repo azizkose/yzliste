@@ -1,7 +1,7 @@
 ---
 slug: trendyol-smart-listing-akilli-urun-onerileri
 baslik: Trendyol Smart Listing Nedir? Akıllı Ürün Önerileri ile Görünürlük
-ozet: Trendyol'un Smart Listing sistemi ürünlerinizi nasıl önerir? Algoritmanın dikkate aldığı içerik, fiyat ve performans sinyallerini öğrenin, listing'inizi buna göre optimize edin.
+ozet: Trendyol'un Smart Listing sistemi ürünlerinizi nasıl önerir?
 yayinTarihi: 2026-04-13
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
@@ -15,6 +15,8 @@ kapakGorsel:
 Trendyol'da iyi bir ürün açıklaması yazdınız, fotoğraflar yerinde, fiyat rekabetçi. Ama satış istediğiniz gibi gelmiyor. Çoğu zaman eksik olan şey içerik kalitesi değil, Trendyol Smart Listing sisteminin ürününüzü "öne çıkarılmaya değer" görmesi için gereken sinyallerdir. Bu yazıda Smart Listing'in nasıl çalıştığını, hangi sinyalleri dikkate aldığını ve listing'inizi bu sisteme uygun nasıl hazırlayacağınızı anlatacağız.
 
 ---
+
+> Ek okuma: [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazısında bu konunun adım adım uygulamasını bulabilirsin.
 
 ## Smart Listing Nedir, Ne Yapar?
 

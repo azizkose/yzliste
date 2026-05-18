@@ -10,9 +10,15 @@ etiketler: ai görsel,beyaz arka plan,ürün fotoğrafı,amazon,trendyol,e-ticar
 kapakGorsel: 
 ---
 
+# GİRİŞ
+
+AI ile ürün fotoğrafı üretirken pazaryerlerinin beyaz arka plan standartlarına uymak satışı doğrudan etkiler. Trendyol, Hepsiburada, Amazon ve Etsy birbirinden farklı arka plan kuralları uygular — bunlardan biri uyumsuzsa listing'iniz yayından düşebilir veya reddedilebilir. Bu rehberde AI üretimi sırasında dikkat etmeniz gereken beyaz arka plan teknik standartlarını ele alıyoruz.
+
 Amazon, Trendyol, Hepsiburada ve pek çok pazar yeri, ana ürün görseli için beyaz arka plan zorunluluğu getirir. Bu gereksinim; tutarlı alışveriş deneyimi sağlamak ve ürünün dikkat dağıtıcı unsurlar olmadan net biçimde görülmesini garantilemek için belirlenir. Geleneksel yöntemle beyaz arka plan elde etmek için stüdyo kurmak ya da fotoğraf düzenleme programlarında uzun saatler harcamak gerekebiliyordu. Yapay zeka araçları bu süreci belirgin ölçüde kısaltıyor.
 
 ---
+
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
 
 ## Platform Gereksinimleri: Ne Bekleniyor?
 

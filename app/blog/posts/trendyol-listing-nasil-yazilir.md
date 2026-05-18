@@ -1,7 +1,7 @@
 ---
 slug: trendyol-listing-nasil-yazilir
 baslik: Trendyol'da Satışları Artıran Listing Nasıl Yazılır? (2026 Güncel Rehber)
-ozet: Trendyol algoritmasının öne çıkardığı listing formatını adım adım öğren. Başlık, özellikler, açıklama ve etiket yazımında dikkat edilmesi gereken her şey bu rehberde.
+ozet: Trendyol başlık 100, özellik 5, açıklama 300 kelime — algoritmanın öne çıkardığı listing formatını adım adım öğren.
 yayinTarihi: 2025-05-30
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
@@ -37,6 +37,12 @@ Trendyol açıklamasında yaklaşık 300 kelime hedefle. İlk iki cümle en öne
 ## BİLGİ KUTUSU
 
 💡 İpucu: yzliste kullanarak platform bazında optimize edilmiş başlık, özellik, açıklama ve etiket içeriklerini ortalama 20–60 saniyede üretebilirsin. Ürün fotoğrafını yükle ya da barkod tara, gerisini YZ halleder.
+
+
+
+## Trendyol satıcıları için diğer rehberler
+
+Trendyol'da satış yapmaya devam ettikçe karşılaşacağınız diğer konular için: butik açma süreci için [Trendyol butik nasıl açılır](/blog/trendyol-butik-nasil-acilir), anahtar kelime stratejisi için [Trendyol anahtar kelime araştırması](/blog/trendyol-anahtar-kelime-arastirma), reklam yönetimi için [Trendyol reklam optimizasyonu](/blog/trendyol-reklam-optimizasyonu-rehberi), iade oranını düşürmek için [Trendyol iade yönetimi rehberi](/blog/trendyol-iade-yonetimi-saticilar), mağaza puanını yükseltmek için [Trendyol mağaza puanı ve performans metrikleri](/blog/trendyol-magaza-puani-ve-performans-metrikleri), kargo süreçleri için [Trendyol kargo gönderim süreçleri](/blog/trendyol-kargo-gonderim-surecleri) ve yorum yönetimi için [Trendyol yorum alma stratejileri](/blog/trendyol-yorum-alma-stratejileri) yazılarına bakın.
 
 ## SONUÇ
 

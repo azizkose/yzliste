@@ -14,6 +14,8 @@ kapakGorsel:
 
 E-ticarette müşteri ürüne dokunamaz, onu sadece görür. Bu yüzden görsel kalitesi, satışın en büyük tetikleyicisidir. Ancak profesyonel fotoğrafçılık maliyetli ve zaman alan bir süreçtir. AI stüdyo araçları bu bariyeri tamamen ortadan kaldırıyor.
 
+> Pillar rehber: konunun bütününü görmek için [AI ürün fotoğrafçılığı rehberi](/blog/e-ticaret-icin-ai-urun-fotografciligi) yazısını okumanı öneririz.
+
 ## Beyaz Arka Plan ve Pazar Yeri Kuralları
 
 Trendyol ve Amazon gibi platformlar "saf beyaz" arka planlı ana görselleri zorunlu kılar. Evde veya depoda çektiğiniz gölgeli fotoğrafları, yapay zeka saniyeler içinde pazar yeri standartlarına uygun, pürüzsüz beyaz fonlara dönüştürür.

@@ -1,7 +1,7 @@
 ---
 slug: urun-varyant-yonetimi-renk-beden-model
 baslik: E-Ticarette Ürün Varyantı Yönetimi: Renk, Beden ve Model Kuralları
-ozet: Renk, beden, model gibi ürün varyantları doğru kurgulandığında dönüşüm artar, yanlış kurgulandığında karmaşa yaratır. Pazaryerlerinde varyant yönetiminin temel kurallarını öğrenin.
+ozet: Renk, beden, model gibi ürün varyantları doğru kurgulandığında dönüşüm artar, yanlış kurgulandığında karmaşa yaratır.
 yayinTarihi: 2026-04-10
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
@@ -15,6 +15,8 @@ kapakGorsel:
 Aynı tişörtün 5 rengi ve 4 bedeni varsa, bu 1 mi yoksa 20 ürün mü? Cevap pazaryerine göre değişir, ama yanlış kurguladığınızda hepsi sorun yaratır. Yanlış varyant yapısı kullanıcıyı kaybeder, doğru kurgu ise dönüşümü belirgin şekilde artırır. Bu yazıda renk, beden ve model varyantlarını pazaryerlerinde nasıl yöneteceğinizi ve ortak hataları nasıl önleyeceğinizi anlatıyoruz.
 
 ---
+
+> Pillar rehber: konunun bütününü görmek için [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısını okumanı öneririz.
 
 ## Varyant Nedir, Ürün Listesinde Neyi Etkiler?
 
@@ -95,6 +97,6 @@ Aynı varyant ailesini birden fazla pazaryerinde yönetirken en sık karşılaş
 
 ## SONUÇ
 
-Varyant yönetimi, e-ticaret operasyonunun arka planda en çok zaman alan ama en az görünür alanlarından biridir. SKU disiplini, doğru görsel yükleme ve pazaryerine uygun varyant ekseni seçimi; uzun vadede dönüşüm, stok ve müşteri deneyimini birlikte iyileştirir. yzliste, ürün ailesi olarak yüklediğiniz varyantlar için tek seferde tüm pazaryerlerine uygun açıklama, başlık ve özellik seti üretir; SKU yapınızı bozmadan listing sürecinizi hızlandırır.
+Varyant yönetimi, e-ticaret operasyonunun arka planda sıkça zaman alan ama en az görünür alanlarından biridir. SKU disiplini, doğru görsel yükleme ve pazaryerine uygun varyant ekseni seçimi; uzun vadede dönüşüm, stok ve müşteri deneyimini birlikte iyileştirir. yzliste, ürün ailesi olarak yüklediğiniz varyantlar için tek seferde tüm pazaryerlerine uygun açıklama, başlık ve özellik seti üretir; SKU yapınızı bozmadan listing sürecinizi hızlandırır.
 
 [Hemen dene — ücretsiz başla](/uret)

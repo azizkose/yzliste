@@ -14,6 +14,8 @@ kapakGorsel:
 
 Hepsiburada Merchant satıcı paneli, doğru kullanıldığında günlük operasyonu hızlandıran ama ilk bakışta karmaşık bir araç. Satıcıların çoğu panelin sadece %20'sini kullanıyor — sipariş yönetimi ve basit ürün ekleme. Oysa panel, rapor analizinden toplu işlemlere kadar birçok yeteneğe sahip. Bu yazıda Hepsiburada Merchant panelini verimli kullanmak için 10 pratik ipucunu ele alacağız.
 
+> Pillar rehber: konunun bütününü görmek için [Hepsiburada katalog ve listing kuralları](/blog/hepsiburada-katalog-ve-listing-kurallari) yazısını okumanı öneririz.
+
 ## 1. Sabah Rutini: Performans Özeti
 
 Her iş günü başında panelin "Performans Özeti" sekmesini 5 dakika incele. Bu sekmede dün satışı, bugüne ait sipariş bildirimi, bekleyen mesaj ve kargo gecikmeleri birlikte görünüyor. Günün önceliklerini belirlemenin en hızlı yolu.

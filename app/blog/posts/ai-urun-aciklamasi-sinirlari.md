@@ -14,6 +14,8 @@ kapakGorsel:
 
 AI ürün açıklaması üreticileri 2026'da olgunlaştı. Başlık, özellik tablosu, açıklama metni dakikalar içinde çıkabiliyor. Ancak AI'ın kapsadığı alan genişledikçe sınırları da netleşiyor. Bazı iş AI'ın iyi yaptığı, bazı iş hâlâ insan emeği gerektiren. Bu yazıda AI ürün açıklaması üretiminin neleri başardığını, nerede tökezlediğini ve insan dokunuşunun neden vazgeçilmez olduğunu inceleyeceğiz.
 
+> Ek okuma: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## AI'ın İyi Yaptığı İşler
 
 Yapılandırılmış içerik üretiminde AI belirgin güçlü. Şu görevlerde AI insan emeğinden daha hızlı ve neredeyse aynı kalitede:

@@ -14,6 +14,8 @@ kapakGorsel:
 
 Amazon USA'de satıcı hesabı açmak başlangıç; ürününün milyonlarca listing arasından görünmesi ise apayrı bir iş. Amazon PPC (Pay-Per-Click) reklam sistemi bu görünürlüğü sağlayan temel araç. Türk satıcılar Amazon USA'de aktif olduğunda PPC yönetimi günlük rutinin parçası haline geliyor. Bu rehberde Sponsored Products, Sponsored Brands ve Sponsored Display formatlarını, ACoS hedeflemeyi ve optimizasyon stratejisini inceleyeceğiz.
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## PPC Nedir ve Neden Gerekli?
 
 Amazon USA'de organik sıralamaya girmek için ürünün satış hızına ve yorum sayısına ihtiyacı var. Yeni listing'ler hiçbir geçmişe sahip olmadığı için algoritma tarafından geriye itiliyor. PPC, bu durgunluğu kırıp ilk satışları ve yorumları toplamak için kullanılıyor.

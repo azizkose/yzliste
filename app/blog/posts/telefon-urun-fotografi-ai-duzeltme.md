@@ -14,6 +14,8 @@ kapakGorsel:
 
 Pazaryerine yeni başlayan satıcıların en büyük engellerinden biri ürün fotoğrafı. Profesyonel stüdyo pahalı, eğitimli fotoğrafçı ulaşılmaz. Çoğu satıcı için pratik çözüm: cep telefonu ile çekim + AI düzeltme. Modern telefon kameraları artık yüksek çözünürlük sunuyor; AI araçları ışık, renk, arka plan gibi detayları sonradan iyileştirebiliyor. Bu rehberde bu ikilinin nasıl çalıştığını ve pazaryerinde kullanılabilir sonuca nasıl ulaşacağını ele alacağız.
 
+> İlgili: [AI ürün fotoğrafçılığı rehberi](/blog/e-ticaret-icin-ai-urun-fotografciligi) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Telefon Kamerası ile Doğru Çekim
 
 Çekim sırasında yaptığın işler sonraki AI düzeltmesinin kalitesini belirliyor. İyi çekim altyapısı:

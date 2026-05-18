@@ -10,9 +10,15 @@ etiketler: etsy,el yapımı,türk ürünleri,uluslararası satış,listing,ihrac
 kapakGorsel: 
 ---
 
+# GİRİŞ
+
+Etsy, dünyada el yapımı ve özgün tasarım ürünler için en büyük pazaryerlerinden biri. Türk el yapımı satıcıları için Etsy hem kazandırıcı hem de zorlayıcı bir platform: dolar bazlı satış, global müşteri ama yoğun rekabet. Bu rehberde Etsy'de Türk el yapımı ürün satmak için bilmeniz gereken her şeyi — mağaza açma, listing yazımı, fiyatlandırma ve kargo — adım adım anlatıyoruz.
+
 Etsy, el yapımı ve özgün ürünlere odaklanan bir pazar yeri olarak Türk zanaatkarlar ve küçük üreticiler için ciddi bir fırsat sunuyor. Kilimden seramike, gümüş takıdan ahşap oymalı ürünlere kadar pek çok kategori, uluslararası alıcıların ilgisini çekiyor. Ancak Etsy'de başarılı olmak için yalnızca iyi bir ürüne sahip olmak yetmiyor; platforma özgü listing kurallarını, arama algoritmalarını ve alıcı beklentilerini de anlamak gerekiyor.
 
 ---
+
+> İlgili: [Etsy satış başlangıç rehberi](/blog/etsy-satis-baslangic-rehberi-2026) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
 
 ## Türk El Yapımı Ürünler İçin Doğru Kategori Seçimi
 

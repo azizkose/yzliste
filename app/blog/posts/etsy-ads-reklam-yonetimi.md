@@ -14,6 +14,8 @@ kapakGorsel:
 
 Etsy'de rekabet artıyor; sadece organik arama ile öne çıkmak giderek zorlaşıyor. Etsy Ads, ürününü arama sonuçlarında üst sıraya yerleştiren reklam sistemi. Türk satıcılar için de erişilebilir durumda ve doğru yönetildiğinde global pazarda görünürlük sağlıyor. Bu rehberde Etsy Ads'in nasıl çalıştığını, günlük bütçe kurulumunu, hedefleme stratejisini ve verim ölçümünü ele alacağız.
 
+> İlgili: [Etsy satış başlangıç rehberi](/blog/etsy-satis-baslangic-rehberi-2026) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Etsy Ads Mantığı
 
 Etsy Ads, günlük bütçe temelli çalışan bir CPC (tık başına maliyet) sistemi. Kampanya açtığında tüm aktif listing'lerin otomatik olarak reklam havuzuna giriyor; algoritma hangi ürünün hangi aramada görüneceğini kendisi belirliyor. Manuel anahtar kelime hedefleme klasik anlamda yok; ancak listing'in başlık, etiket ve açıklama kalitesi reklam performansını doğrudan etkiliyor.

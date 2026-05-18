@@ -14,6 +14,8 @@ kapakGorsel:
 
 Hepsiburada'da "Premium Satıcı" rozeti, ürün detay sayfasında görünen güven işareti. Bu rozet algoritma tarafından ödüllendiriliyor; Premium satıcıların listing'leri arama sonuçlarında öne çıkıyor, BuyBox'ta avantaj elde ediyor ve alıcı güveni kazanılıyor. Bu rehberde Premium Satıcı olmak için gereken kriterleri, operasyonel disiplinleri ve yol haritasını ele alacağız.
 
+> Pillar rehber: konunun bütününü görmek için [Hepsiburada katalog ve listing kuralları](/blog/hepsiburada-katalog-ve-listing-kurallari) yazısını okumanı öneririz.
+
 ## Premium Satıcı Nedir?
 
 Premium Satıcı, Hepsiburada'nın belirlediği performans metriklerinin hepsini sürekli olarak sağlayan satıcılara verilen statü. Rozet ürün detay sayfasında, arama sonuçlarında ve mağaza sayfasında görünüyor. Alıcı kararı üzerinde güven etkisi yapıyor; Premium rozetli satıcıdan alımın dönüşüm oranı belirgin şekilde yüksek.

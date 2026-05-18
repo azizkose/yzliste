@@ -14,6 +14,8 @@ kapakGorsel:
 
 Bir ürünü satabilmek için görsel, metin kadar belirleyici. Ancak her satıcının stüdyo kiralayacak bütçesi ya da yerel fotoğrafçıya ulaşabileceği zaman yok. Yapay zekâ destekli görsel üretim, bu boşluğu kapatıyor; tek bir sade fotoğraftan çok sayıda kullanılabilir ürün görseli çıkarabiliyorsun. Bu yazıda AI görsel üretiminin nasıl çalıştığını, hangi durumlarda işe yaradığını ve dikkat etmen gereken noktaları inceleyeceğiz.
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [AI ürün fotoğrafçılığı rehberi](/blog/e-ticaret-icin-ai-urun-fotografciligi) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## AI Görsel Nasıl Çalışıyor?
 
 AI görsel üretimi iki temel teknoloji üzerine kurulu: difüzyon modelleri (arka plan değiştirme ve sahneleme için) ve sanal giydirme modelleri (model üzerinde giyim gösterimi için). Diffüzyon modelleri, yüksek çözünürlüklü görselleri anlayıp üzerinde seçili bölgeyi yeniden üretebiliyor. Sanal giydirme modelleri ise bir giysinin başka bir model üzerinde nasıl duracağını simüle ediyor.

@@ -14,6 +14,8 @@ kapakGorsel:
 
 Kargo maliyeti e-ticaret satıcısının en büyük gider kalemlerinden biri. Perakende kargo ücreti paket başına 30-50 TL bandında; hacim büyüdükçe bu tutar marjı ciddi oranda yer. Ancak kargo firmaları ile doğru pazarlık ve optimizasyon ile bu ücret %30-50 oranında düşebiliyor. Bu rehberde kargo maliyetini azaltmanın pratik yollarını ele alacağız.
 
+> Ek okuma: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## Kargo Maliyetini Belirleyen Faktörler
 
 Kargo ücreti birkaç değişkene bağlı:

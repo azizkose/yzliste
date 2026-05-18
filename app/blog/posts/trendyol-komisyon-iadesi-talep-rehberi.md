@@ -1,7 +1,7 @@
 ---
 slug: trendyol-komisyon-iadesi-talep-rehberi
 baslik: Trendyol Komisyon İadesi Nasıl Talep Edilir? (Satıcılar İçin 2026 Rehberi)
-ozet: Trendyol'da iade edilen veya iptal edilen siparişlerde komisyon iadesi nasıl alınır? Hangi durumlarda iade hakkınız var, nasıl başvurursunuz, hangi sürelere dikkat etmelisiniz?
+ozet: Trendyol'da iade edilen veya iptal edilen siparişlerde komisyon iadesi nasıl alınır?
 yayinTarihi: 2026-05-13
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
@@ -15,6 +15,8 @@ kapakGorsel:
 Trendyol'da bir sipariş tamamlandığında platformun aldığı komisyon hesabınıza yansır. Müşteri ürünü iade ettiğinde veya sipariş iptal olduğunda ise bu komisyonun büyük bir kısmı geri alınabilir. Ama otomatik gerçekleşmeyen durumlar var ve birçok satıcı hak ettiği komisyon iadesini talep etmediği için aylar içinde ciddi bir tutar kaybedebilir. Bu rehberde Trendyol komisyon iadesinin nasıl çalıştığını, hangi durumlarda iade talep edebileceğinizi ve süreci adım adım nasıl yöneteceğinizi anlatıyoruz.
 
 ---
+
+> Pillar rehber: konunun bütününü görmek için [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazısını okumanı öneririz.
 
 ## Komisyon İadesi Nedir, Ne Zaman Geçerlidir?
 

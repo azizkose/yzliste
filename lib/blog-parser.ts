@@ -40,8 +40,11 @@ function parseFrontMatter(content: string): { frontMatter: FrontMatter; body: st
     const value = valueParts.join(":").trim();
 
     if (key.trim() === "slug") metadata.slug = value;
-    if (key.trim() === "baslik") metadata.baslik = value;
-    if (key.trim() === "ozet") metadata.ozet = value;
+    // P1-3 SEO fix: TR yazım kuralı — düz apostrof (') yerine curly apostrof (U+2019, ') kullan.
+    // Düz apostrof React tarafından &#x27; olarak HTML escape ediliyor — bu teknik olarak OK ama OG meta'larda
+    // okunabilirlik için curly apostrof daha iyi. Sadece title ve ozet için uygula.
+    if (key.trim() === "baslik") metadata.baslik = value.replace(/'/g, "’");
+    if (key.trim() === "ozet") metadata.ozet = value.replace(/'/g, "’");
     if (key.trim() === "yayinTarihi") metadata.yayinTarihi = value;
     if (key.trim() === "guncellemeTarihi") metadata.guncellemeTarihi = value || undefined;
     if (key.trim() === "yazarAdi") metadata.yazarAdi = value;
@@ -156,12 +159,14 @@ function parseContent(body: string): BlogBolum[] {
 
   flushSection();
 
-  // Validasyon
+  // P0-3 SEO fix: GİRİŞ ve SONUÇ olmayan yazılar artık parse'tan düşmüyor — uyarı veriliyor.
+  // Eskiden Error throw ediyordu, 6 yazı sitemap'ten düşüyordu. Uyarı kaldı, build kırılmıyor.
+  // İlerleyen tarihte 6 yazıya GİRİŞ + SONUÇ eklendiğinde uyarı doğal olarak temizlenir.
   if (!sections.some((s) => s.tip === "giris")) {
-    throw new Error("# GİRİŞ bölümü zorunlu");
+    console.warn("[blog-parser] # GİRİŞ bölümü yok — yazıyı yine de yükle");
   }
   if (!sections.some((s) => s.tip === "sonuc")) {
-    throw new Error("## SONUÇ bölümü zorunlu");
+    console.warn("[blog-parser] ## SONUÇ bölümü yok — yazıyı yine de yükle");
   }
 
   return sections;

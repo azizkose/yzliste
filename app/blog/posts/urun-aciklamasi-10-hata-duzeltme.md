@@ -14,6 +14,8 @@ kapakGorsel:
 
 Pazaryerine ürün ekledin ama satış gelmiyor. Fiyat rekabetçi, fotoğraf güzel, yine de durum değişmiyor. Çoğu satıcının fark edemediği problem açıklama metninde gizli. Bu yazıda ürün açıklamasında en sık yapılan 10 hatayı ve her biri için uygulanabilir düzeltmeleri inceleyeceğiz.
 
+> Pillar rehber: konunun bütününü görmek için [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısını okumanı öneririz.
+
 ## Hata 1: Başlığı Soyut Yazmak
 
 "Şık yaz elbisesi" gibi başlıklar alıcı aramalarıyla örtüşmüyor. Alıcı Google veya pazaryeri arama çubuğuna "midi boy çiçek desenli yazlık elbise" yazıyor. Başlığın bu spesifikliğe ulaşması gerekiyor.
@@ -52,7 +54,7 @@ Düzeltme: ölçüleri cm/inch ikisiyle belirt, giyimde beden tablosunu görsel 
 
 ## Hata 7: Abartılı Satış Dili Kullanmak
 
-"Satışları katlayan formül", "piyasadaki en iyi ürün", "garantili sonuç" tarzı ifadeler hem pazaryeri politikasına aykırı hem alıcı güvenini sarsıyor. Modern alıcı, abartıdan hemen kaçıyor.
+"Satışları katlayan formül", "piyasadaki öne çıkan ürün", "garantili sonuç" tarzı ifadeler hem pazaryeri politikasına aykırı hem alıcı güvenini sarsıyor. Modern alıcı, abartıdan hemen kaçıyor.
 
 Düzeltme: somut ifadeler kullan. "Eksi 20 dereceye kadar sıcak tutar" > "mükemmel yalıtım". "180 gün kullanım sonrası bile form değiştirmez" > "uzun ömürlü".
 

@@ -1,7 +1,7 @@
 ---
 slug: trendyol-butik-nasil-acilir
-baslik: Trendyol Butik Nasıl Açılır? Kendi Koleksiyon Sayfanla Satış Yap
-ozet: Trendyol Butik mağaza açma süreci, başvuru şartları, koleksiyon yönetimi ve avantajları. Butik kategorisine geçiş için satıcılara pratik rehber.
+baslik: Trendyol Butik nasıl açılır? Başvuru ve koşullar (2026)
+ozet: Trendyol Butik mağaza açma süreci 2026: başvuru koşulları, gerekli evraklar, vergi tipi, koleksiyon kategorisi. Onay aldıktan sonra ilk adımlar.
 yayinTarihi: 2025-11-17
 yazarAdi: yzliste Ekibi
 okumaSuresi: 5
@@ -13,6 +13,8 @@ kapakGorsel:
 # GİRİŞ
 
 Trendyol Butik, pazaryerinin tasarımcı, butik ve bağımsız moda markaları için oluşturduğu özel satış kanalı. Klasik Trendyol'dan farklı olarak kendi koleksiyon sayfana sahip oluyorsun; alıcı markanın evrenini keşfediyor, ürünleri birlikte görüyor. Bu rehberde Trendyol Butik'e başvuru sürecini, gereken şartları ve kazanımları inceleyeceğiz.
+
+> İlgili: [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
 
 ## Trendyol Butik Nedir?
 

@@ -16,6 +16,8 @@ Standart ürün açıklaması artık yetmiyor — pazaryerleri, satıcılara ür
 
 ---
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## Amazon A+ Content Nedir?
 
 A+ Content (eski adıyla EBC — Enhanced Brand Content), Amazon'da marka tescilli satıcılara sunulan zengin içerik alanı. Görseller, karşılaştırma tabloları, marka hikayesi ve detaylı ürün açıklamaları ekleyebilirsin. A+ Content kullanan ürünlerin dönüşüm oranının daha yüksek olduğu bildiriliyor.

@@ -14,6 +14,8 @@ kapakGorsel:
 
 Instagram artık sadece bir fotoğraf paylaşım platformu değil, dev bir pazar yeri. Butik sahipleri için en büyük zorluk ise her gün yeni, ilgi çekici ve satış odaklı içerik üretmektir. Yapay zeka bu süreci tamamen otomatikleştiriyor.
 
+> Ek okuma: [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## Kaydırmayı Durduran Açıklamalar (Captions)
 
 "Fiyat DM" dönemi bitti. Müşteriler artık ürünün hikayesini ve net bilgilerini görmek istiyor. AI, ürünün fotoğrafından yola çıkarak samimi, emojilerle zenginleştirilmiş ve harekete geçirici mesajlar (CTA) içeren açıklamalar yazar.

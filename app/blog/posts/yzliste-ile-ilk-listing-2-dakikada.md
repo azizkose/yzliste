@@ -14,6 +14,8 @@ kapakGorsel:
 
 Yeni bir ürünü pazaryerine yüklemek için saatlerce başlık, açıklama ve özellik yazmaktan bıktın mı? yzliste tam olarak bu sorunu çözmek için var. Ürününün bir fotoğrafını yükle, birkaç bilgi gir; Trendyol, Hepsiburada, Amazon, Etsy veya N11 için hazır, SEO uyumlu listing iki dakika içinde elinde olsun. Bu rehberde kayıt olmaktan ilk listinginin pazaryerine yüklenmesine kadar tüm adımları birlikte yürüyeceğiz.
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## Başlamadan Önce: Elinde Ne Olmalı?
 
 İhtiyacın olan şeyler gerçekten minimum düzeyde. Ürününün en az bir fotoğrafı, kısa bir tanım ve birkaç temel özellik yeterli. Cep telefonuyla çekilmiş, beyaz zeminli basit bir fotoğraf bile yzliste'nin AI motoruna yeterli bağlam veriyor. Profesyonel stüdyo, pahalı ekipman ya da copywriter kiralamana gerek yok.

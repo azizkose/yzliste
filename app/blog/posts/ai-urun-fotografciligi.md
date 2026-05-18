@@ -13,6 +13,8 @@ kapakGorsel:
 
 E-ticarette müşteri ürünü değil, fotoğrafı satın alır. Ancak profesyonel bir fotoğraf çekimi; ekipman, stüdyo kirası ve edit süreci derken ciddi bir maliyet kalemidir. Artık bu süreci dijital bir stüdyoya taşımanın vakti geldi.
 
+> Detaylı bakış: [AI ürün fotoğrafçılığı rehberi](/blog/e-ticaret-icin-ai-urun-fotografciligi) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
+
 ## Beyaz Arka Plan Neden Zorunlu?
 
 Trendyol ve Amazon başta olmak üzere tüm büyük pazar yerleri, ana görselin "saf beyaz" arka planda olmasını şart koşar. Yapay zeka, cep telefonuyla çektiğiniz bir fotoğrafın arka planını tek tıkla profesyonel bir stüdyo çekimine dönüştürebilir.

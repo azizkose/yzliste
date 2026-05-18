@@ -18,6 +18,8 @@ import SiteFooter from "@/components/SiteFooter";
 import BlogPaylas from "./BlogPaylas";
 
 export const revalidate = 3600;
+// P0-5 SEO fix: olmayan slug → Next.js 404 (soft 404 önlemi)
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const yazilar = await getYazilar();
@@ -31,7 +33,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const yazi = await yaziGetir(slug);
-  if (!yazi) return { title: { absolute: "Yazı bulunamadı | yzliste" } };
+  // P0-5: olmayan slug için noindex + canonical kaldır
+  if (!yazi) return {
+    title: { absolute: "Yazı bulunamadı | yzliste" },
+    robots: { index: false, follow: false },
+    alternates: { canonical: undefined },
+  };
 
   return {
     title: yazi.baslik,
@@ -79,6 +86,14 @@ export async function generateMetadata({
 }
 
 function ArticleJsonLd({ yazi }: { yazi: BlogYazisi }) {
+  // P2-4 SEO fix: schema zenginleştir (wordCount, mainEntityOfPage, timeRequired)
+  const bodyText = yazi.icerik
+    .filter((b) => b.tip === "paragraf" || b.tip === "giris" || b.tip === "sonuc" || b.tip === "baslik")
+    .map((b) => `${b.baslik ?? ""} ${b.metin ?? ""}`)
+    .join(" ")
+    .trim();
+  const wordCount = bodyText.split(/\s+/).filter(Boolean).length;
+
   return (
     <script
       type="application/ld+json"
@@ -99,6 +114,12 @@ function ArticleJsonLd({ yazi }: { yazi: BlogYazisi }) {
             : "https://www.yzliste.com/yzliste_logo.png",
           keywords: yazi.etiketler.join(", "),
           articleSection: yazi.kategori,
+          mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": `https://www.yzliste.com/blog/${yazi.slug}`,
+          },
+          wordCount,
+          timeRequired: `PT${yazi.okumaSuresi}M`,
         }),
       }}
     />

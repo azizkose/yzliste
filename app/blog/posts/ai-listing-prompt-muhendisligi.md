@@ -14,6 +14,8 @@ kapakGorsel:
 
 AI listing üretici kullanmak sandığından daha çok prompt yazma becerisine bağlı. Aynı ürüne "şık bir açıklama yaz" diyen biri yüzeysel çıktı alırken, prompt'u doğru yapılandıran biri pazaryeri kurallarına uygun, dönüşüm odaklı bir metin alıyor. Bu yazıda AI listing üretiminde prompt mühendisliğinin pratik ipuçlarını inceleyeceğiz.
 
+> İlgili: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## İyi Bir Prompt Neye Benzer?
 
 AI'ın kaliteli çıktı üretmesi için prompt'un üç temel bileşeni taşıması gerekiyor: bağlam, hedef ve format. Bağlam ürünün ne olduğunu, kimlere yönelik olduğunu ve hangi pazaryerinde yayınlanacağını söyler. Hedef neye ulaşmak istediğini belirtir (dönüşüm, anahtar kelime yerleşimi, marka sesi). Format ise çıktının nasıl yapılandırılmasını istediğini tanımlar (başlık + 5 maddelik özellik + açıklama).

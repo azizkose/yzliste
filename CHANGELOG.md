@@ -1,5 +1,7 @@
 # Changelog
 
+## 2026-05-17 — SEO-FIX-PAKETI: P0-5 soft 404 fix (app/blog/[slug]/page.tsx — dynamicParams=false + generateMetadata noindex), P0-3 blog-parser GİRİŞ/SONUÇ uyarısı (throw→warn — 6 yazı sitemap'e döndü), P1-3 curly apostrof (lib/blog-parser title+ozet), P0-2 next.config Cache-Control public override (12 sayfa), P2-5 robots.txt AI bot kuralları (GPTBot/PerplexityBot/ClaudeBot/Google-Extended explicit Allow), P1-7 public/llms.txt + docs (seo-audit-2026-05-17.md, seo-internal-linking-plan-2026-05-17.md, seo-backlink-strategy-2026-05-17.md, seo-title-rewrite-onerileri-2026-05-17.md)
+
 ## 2026-05-05 — GORSEL-V2-A~G: görsel pipeline refactor — kategori dropdown (5 tip), model routing (giyim→kontext, diğer→bria), 35 prompt template (5 kategori × 7 stil), vision-classify (Anthropic Haiku, silent), Sharp post-process (Pass 4), feature flag GORSEL_V2_PERCENT, gorsel_uretim DB tablosu — FASHN/eraser araştırma sonucu kaldırıldı
 
 ## 2026-05-05 — URETIM-BUG-PAKETI: revize sayacı (mikro try/catch+decrement), loading banner, görsel pipeline (shotSizeFromAspect dikey/yatay/kare, NO_HANGER_PREFIX tüm stiller)

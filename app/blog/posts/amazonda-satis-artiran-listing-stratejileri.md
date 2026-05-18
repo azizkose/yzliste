@@ -15,6 +15,8 @@ kapakGorsel:
 
 Amazon, dünyanın en zorlu ama en kazançlı pazaryeridir. Burada başarılı olmanın yolu, Amazon'un arama algoritması olan A9'u beslemekten geçer. İyi bir Amazon listing'i sadece bilgi vermez, aynı zamanda algoritmayı ikna eder.
 
+> Detaylı bakış: [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
+
 ## Bullet Points: Müşteriyi 10 Saniyede İkna Edin
 
 Amazon'da "Ürün Özellikleri" (Bullet Points) alanı kritiktir. İlk madde en büyük faydayı anlatmalı, son madde ise güven (garanti/destek) vermelidir. Okuması kolay, büyük harf kullanımıyla vurgulanmış ve fayda odaklı maddeler dönüşümü olumlu etkiler.

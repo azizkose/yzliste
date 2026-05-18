@@ -16,6 +16,8 @@ Influencer pazarlama bir trend olmaktan çıkıp e-ticaretin standart kanalları
 
 ---
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## Influencer pazarlama neden farklı işliyor?
 
 Geleneksel reklam, belirsiz bir kalabalığa "şu ürünü al" mesajını gönderir. Influencer pazarlama, takipçileriyle güven ilişkisi kurmuş bir kişinin bu ürünü deneyimini paylaşmasıdır. Mesajın tonu farklı, yerleştirildiği bağlam farklı, satın alma niyeti üzerindeki etkisi farklı.
@@ -74,7 +76,7 @@ Türkiye'de Influencity, Heepsy, Modash gibi araçlar bu metrikleri dışarıdan
 
 ## BİLGİ KUTUSU
 
-💡 İlk influencer işbirliğinizde tek bir mikro influencer'a tüm bütçenizi vermek yerine, 3-5 nano/mikro influencer ile küçük bütçeyle deneyin. Hangisinin kitlesi sizin ürünlerinizle en iyi etkileşime girdiğini öğrenin, sonra başarılı olanlarla daha büyük anlaşma yapın. "Test ve ölçeklendirme" yaklaşımı bütçenizi ciddi oranda korur.
+💡 İlk influencer işbirliğinizde tek bir mikro influencer'a tüm bütçenizi vermek yerine, 3-5 nano/mikro influencer ile küçük bütçeyle deneyin. Hangisinin kitlesi sizin ürünlerinizle öne çıkan etkileşime girdiğini öğrenin, sonra başarılı olanlarla daha büyük anlaşma yapın. "Test ve ölçeklendirme" yaklaşımı bütçenizi ciddi oranda korur.
 
 ---
 

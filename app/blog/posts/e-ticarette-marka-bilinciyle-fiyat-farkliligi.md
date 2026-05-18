@@ -10,9 +10,15 @@ etiketler: marka,fiyatlandırma,e-ticaret stratejisi,marka değeri,fark yaratma,
 kapakGorsel: 
 ---
 
+# GİRİŞ
+
+E-ticarette aynı kategorideki ürünler için fiyat farkı çoğu zaman ürün kalitesinden değil marka bilinciliğinden geliyor. Tanınmış marka her zaman daha yüksek fiyatla satıyor — peki yeni marka olarak bu fiyat farkını nasıl yaratırsınız? Bu yazıda marka bilinciliğinin fiyatlandırma üzerindeki etkisini ve küçük markaların premium konuma çıkma yollarını ele alacağız.
+
 Pazaryerlerinde rekabet eden pek çok satıcı, zaman içinde fiyat savaşına sürüklenir. Rakip fiyatını düşürür, siz de düşürürsünüz; bu döngü kâr marjını aşındırır. Oysa bazı satıcılar benzer ürünleri rakiplerinden belirgin biçimde yüksek fiyata satmaya devam eder. Bu farkın ardında çoğunlukla marka algısı yatıyor.
 
 ---
+
+> Ek okuma: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısında bu konunun adım adım uygulamasını bulabilirsin.
 
 ## Marka Algısı Neden Fiyatı Etkiler?
 

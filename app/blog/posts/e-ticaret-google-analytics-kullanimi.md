@@ -14,11 +14,13 @@ kapakGorsel:
 
 E-ticaret sitesi çalıştırıyorsan veya kendi markanın web sitesi pazaryeri yanında açıksa Google Analytics 4 (GA4) temel ölçüm aracın. GA4, eski Universal Analytics'i değiştirdi ve e-ticaret için dönüşüm takibi, kullanıcı yolculuğu analizi ve gelir attribution sunuyor. Ancak GA4 kurulumu ilk bakışta karmaşık; doğru yapılmadığında yanlış veri topluyor. Bu rehberde GA4'ün e-ticaret için pratik kullanımını ele alacağız.
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## GA4 Nedir?
 
 GA4, Google'ın 2023'te geçtiği yeni analitik platformu. Eski versiyon (Universal Analytics) sayfa görüntüleme odaklıyken GA4 olay (event) odaklı. Her kullanıcı etkileşimi bir olay; "ürün görüntüleme", "sepete ekleme", "satın alma" ayrı olaylar olarak kaydediliyor.
 
-Bu yaklaşım e-ticaret için çok daha anlamlı; kullanıcının satın alma yolculuğu aşama aşama takip edilebiliyor. Hangi adımda kaç kullanıcı düştü, hangi kaynaktan gelen kullanıcı en kârlı, hangi ürün en çok görüntülendi — hepsi net görünüyor.
+Bu yaklaşım e-ticaret için çok daha anlamlı; kullanıcının satın alma yolculuğu aşama aşama takip edilebiliyor. Hangi adımda kaç kullanıcı düştü, hangi kaynaktan gelen kullanıcı en kârlı, hangi ürün sıkça görüntülendi — hepsi net görünüyor.
 
 GA4 ücretsiz. Aylık 10 milyon etkinliğe kadar limit yok; küçük-orta e-ticaret satıcılarının büyük çoğunluğu için ücretsiz sürüm yeterli.
 
@@ -60,7 +62,7 @@ Kullanıcı Edinme: kullanıcılar hangi kaynaktan geldi? Google arama, reklam, 
 
 Dönüşüm Hunisi: ürün görüntüleme → sepet → ödeme → satın alma adımlarında kullanıcı düşüşü. Hangi adım kritik kayıp yaratıyor belirlemek iyileştirme yol haritasını veriyor.
 
-Ürün Performansı: hangi ürün en çok görüntülendi, hangisi en çok satıldı, hangisi sepete eklendi ama satın alınmadı. Ürün sayfası optimizasyonu için ham veri.
+Ürün Performansı: hangi ürün sıkça görüntülendi, hangisi sıkça satıldı, hangisi sepete eklendi ama satın alınmadı. Ürün sayfası optimizasyonu için ham veri.
 
 Kullanıcı Yaşam Boyu Değeri (LTV): tek alışverişlik müşteri mi, tekrar alışveriş yapan mı? LTV ölçümü pazarlama bütçesi kararlarını destekliyor.
 

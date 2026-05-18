@@ -14,6 +14,8 @@ kapakGorsel:
 
 Trendyol'da ürünü yayına almak ilk adım; alıcının arama yaptığında senin ürününü görmesi ise ikinci ve asıl kritik adım. Bu köprüyü kuran şey doğru anahtar kelime araştırması. Bu yazıda Trendyol'a özel anahtar kelime bulmanın, değerlendirmenin ve listing'e yerleştirmenin pratik yollarını inceleyeceğiz.
 
+> Pillar rehber: konunun bütününü görmek için [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazısını okumanı öneririz.
+
 ## Trendyol Araması Nasıl Çalışır?
 
 Trendyol'un arama algoritması klasik Google SEO mantığından farklı. Alıcı genelde 2-4 kelimelik sorgular yazıyor ("kadın yazlık elbise", "bluetooth kulaklık") ve algoritma başlık, özellik tablosu ve yorum metinlerindeki anahtar kelime uyumunu dikkate alıyor. Ayrıca satış hızı, yorum sayısı ve ürünün tıklama oranı da sıralamayı belirleyen sinyaller.
@@ -56,7 +58,7 @@ Rakibin başlığını kopyalama — sadece yapı ve kelimelerden ilham al. Kend
 
 ## Anahtar Kelimenin Listing'de Yerleşimi
 
-Anahtar kelime bulduktan sonra listing'in hangi bölümüne nasıl yerleşeceği kritik. Trendyol algoritması başlığa en çok ağırlık veriyor, ardından özellik tablosu, sonra açıklama metni.
+Anahtar kelime bulduktan sonra listing'in hangi bölümüne nasıl yerleşeceği kritik. Trendyol algoritması başlığa sıkça ağırlık veriyor, ardından özellik tablosu, sonra açıklama metni.
 
 Başlık yerleşimi:
 

@@ -14,6 +14,8 @@ kapakGorsel:
 
 Trendyol Express (TEX), pazaryerinin kendi lojistik çözümü. Ürününü Trendyol deposuna gönderiyorsun, sipariş geldiğinde Trendyol paketliyor ve kendi kargo ağı ile teslim ediyor. Amazon FBA'ya benzer bir model Türkiye'de. Ancak her satıcıya uygun değil; artıları ve eksileri birlikte değerlendirmek gerekiyor. Bu rehberde TEX'in nasıl çalıştığını, ücret yapısını ve hangi durumlarda tercih edilmesi gerektiğini inceleyeceğiz.
 
+> Detaylı bakış: [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
+
 ## TEX Nasıl Çalışıyor?
 
 TEX sürecinin ana adımları:

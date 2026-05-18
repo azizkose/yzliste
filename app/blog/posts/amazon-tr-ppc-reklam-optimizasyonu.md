@@ -14,6 +14,8 @@ kapakGorsel:
 
 Amazon Türkiye'de organik sıralama zor. Yeni listing'ler geçmişi olmadığı için algoritma tarafından geriye itiliyor; ilk satışları ve yorumları toplamanın en hızlı yolu PPC reklamlar. Amazon TR pazar büyüklüğü Amazon USA'ye göre küçük ama rekabet de daha ölçülü; doğru yönetilen PPC kampanyaları burada belirgin verim getiriyor. Bu rehberde Amazon TR için Sponsored Products optimizasyonunu ele alacağız.
 
+> Detaylı bakış: [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
+
 ## Amazon TR PPC Ekosistemi
 
 Amazon TR'de üç temel reklam formatı var: Sponsored Products, Sponsored Brands ve Sponsored Display. Yeni satıcı için öncelik Sponsored Products; diğer iki format olgunlaşmış kampanyalarda açılır.

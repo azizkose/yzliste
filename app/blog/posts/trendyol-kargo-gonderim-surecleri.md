@@ -14,6 +14,8 @@ kapakGorsel:
 
 Pazaryerinde kâr etmenin büyük bir kısmı kargo yönetiminde saklı. Doğru fiyatlı kargo anlaşması, hızlı gönderim ve hasarsız teslimat — bu üç unsur birlikte hem müşteri memnuniyetini hem net kârı belirliyor. Trendyol'da kargo süreci iki temel modelde işliyor: kendi kargo anlaşması ve Trendyol Express (TEX). Bu rehberde her iki modelin mekaniğini, teslim süresi yönetimini ve maliyet optimizasyonunu ele alacağız.
 
+> İlgili: [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Kendi Kargo Anlaşması
 
 Türkiye'de en yaygın kargo firmaları: Aras Kargo, Yurtiçi Kargo, MNG Kargo, PTT Kargo, Sürat Kargo, HepsiJet ve Trendyol Express. Trendyol'da kendi kargonu yönetmek için bu firmalardan biriyle anlaşma yapıyorsun. Anlaşma şartları aylık sipariş hacmine, paket boyutuna ve teslimat bölgesine göre değişiyor.

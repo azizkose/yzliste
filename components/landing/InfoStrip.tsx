@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import NextImage from 'next/image'
 import { FileText, Image as ImageIcon, Video, MessageSquare, RotateCw, ZoomIn, Lightbulb, Leaf, ScanSearch, Wind, Check, X, Tag, Hash, Camera, Timer, Film, Columns2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Eyebrow } from '@/components/primitives/Eyebrow'
@@ -201,8 +202,7 @@ function GorselPanel() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="flex flex-col">
           <div className="relative rounded-xl overflow-hidden border border-rd-neutral-200 bg-rd-neutral-100">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/ornek_once.jpg" alt="önce" className="w-full aspect-square object-cover" loading="lazy" />
+            <NextImage src="/ornek_once.jpg" alt="önce" width={300} height={300} sizes="(max-width: 640px) 50vw, 25vw" className="w-full aspect-square object-cover" />
             <div className="absolute top-2 left-2">
               <span className="bg-rd-neutral-900/80 text-white text-xs px-2 py-1 rounded-full">Ham fotoğraf</span>
             </div>
@@ -221,8 +221,7 @@ function GorselPanel() {
         ].map((item) => (
           <div key={item.etiket} className="flex flex-col">
             <div className="rounded-xl overflow-hidden border border-rd-primary-200 bg-white">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.src} alt={item.etiket} className="w-full aspect-square object-cover" loading="lazy" />
+              <NextImage src={item.src} alt={item.etiket} width={300} height={300} sizes="(max-width: 640px) 50vw, 25vw" className="w-full aspect-square object-cover" />
             </div>
             <p className="text-xs text-rd-neutral-600 font-medium text-center mt-1.5">{item.etiket}</p>
           </div>
@@ -238,8 +237,7 @@ function GorselPanel() {
         ].map((item) => (
           <div key={item.etiket} className="flex flex-col">
             <div className="rounded-xl overflow-hidden border border-rd-primary-200 bg-white">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.src} alt={item.etiket} className="w-full aspect-square object-cover" loading="lazy" />
+              <NextImage src={item.src} alt={item.etiket} width={300} height={300} sizes="(max-width: 640px) 50vw, 25vw" className="w-full aspect-square object-cover" />
             </div>
             <p className="text-xs text-rd-neutral-600 font-medium text-center mt-1.5">{item.etiket}</p>
           </div>

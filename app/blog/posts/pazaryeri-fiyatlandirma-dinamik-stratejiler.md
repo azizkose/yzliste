@@ -14,6 +14,8 @@ kapakGorsel:
 
 Pazaryerinde fiyat sabit bir karar değil, canlı bir organizma. Rakipler fiyat değiştiriyor, kampanya dönemleri geliyor, stok baskıları dalgalanıyor. Dinamik fiyatlandırma bu hareketliliğe ayak uydurmanın sistemleşmiş yolu. Bu yazıda dinamik fiyatlandırmanın ne olduğunu, hangi kurallarla çalıştığını ve kendi mağazana nasıl uygulayacağını inceleyeceğiz.
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## Dinamik Fiyatlandırma Nedir?
 
 Dinamik fiyatlandırma, ürün fiyatının rakip hareketleri, stok durumu, talep yoğunluğu ve kampanya takvimine göre otomatik ya da yarı-otomatik güncellenmesi. Klasik sabit fiyat yaklaşımının aksine, algoritma veya insan kararıyla fiyat günlük hatta saatlik değişebilir.

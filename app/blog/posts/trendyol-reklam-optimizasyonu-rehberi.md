@@ -1,7 +1,7 @@
 ---
 slug: trendyol-reklam-optimizasyonu-rehberi
 baslik: Trendyol Reklam Optimizasyonu: CPC, CTR ve Bütçe Yönetimi Rehberi
-ozet: Trendyol Ads panelinde CPC teklifi, anahtar kelime seçimi, dönüşüm takibi ve bütçe dağılımını adım adım öğrenin. Reklam veriminizi belirgin şekilde artırın.
+ozet: Trendyol Ads panelinde CPC teklifi, anahtar kelime seçimi, dönüşüm takibi ve bütçe dağılımını adım adım öğrenin.
 yayinTarihi: 2026-03-20
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
@@ -15,6 +15,8 @@ kapakGorsel:
 Trendyol'da reklam vermek, ürünlerinizi organik sıralamanın üstünde, kategori sayfalarının ön sıralarında ve arama sonuçlarının başında göstermenin yolu. Ancak panelin önünüze koyduğu "günlük bütçe", "tıklama başı maliyet" ve "anahtar kelime puanı" kavramları doğru ayarlanmadığında reklam bütçesi hızla erir. Bu rehberde Trendyol Reklam panelini ilk açışta yapmanız gereken ayarları, ölçmeniz gereken metrikleri ve kar marjınızı korumak için izleyebileceğiniz çerçeveyi göreceksiniz.
 
 ---
+
+> İlgili: [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
 
 ## Trendyol reklam türleri ve hangisini ne zaman kullanmalı
 

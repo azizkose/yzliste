@@ -10,9 +10,15 @@ etiketler: ai video,ürün videosu,listing video,trendyol video,amazon video,e-t
 kapakGorsel: 
 ---
 
+# GİRİŞ
+
+Pazaryerlerinde ürün videosunun listing performansına etkisi her geçen ay artıyor. AI ile üretilen kısa klip ürün tanıtımları, satıcılara stüdyo maliyeti olmadan profesyonel video çıktısı sunuyor. Bu yazıda hangi tip ürünler için video listing'in dönüşüm kazandırdığını, hareket seçeneklerini ve platforma özel video kurallarını inceleyeceğiz.
+
 Pazaryerlerinde video içeriğinin önemi giderek artıyor. Amazon, Trendyol ve birçok platform artık ürün sayfalarında video görüntüleme imkânı sunuyor. Statik görsellere kıyasla video; ürünün boyutunu, kullanımını ve dokusunu çok daha etkili biçimde aktarıyor. Ancak geleneksel ürün videosu üretimi ekipman, mekan ve kurgu bilgisi gerektiriyordu. Yapay zeka araçları bu engeli belirgin ölçüde düşürüyor.
 
 ---
+
+> Ek okuma: [AI ürün videosu rehberi](/blog/ai-urun-videosu-hareket-secenekleri) yazısında bu konunun adım adım uygulamasını bulabilirsin.
 
 ## Neden Listing'e Video Eklemelisiniz?
 

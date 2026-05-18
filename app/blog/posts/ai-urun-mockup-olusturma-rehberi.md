@@ -16,6 +16,8 @@ Tasarımınızı önce gerçekleştirip sonra fotoğraf çekmek zaman ve para al
 
 ---
 
+> İlgili: [AI ürün fotoğrafçılığı rehberi](/blog/e-ticaret-icin-ai-urun-fotografciligi) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Mock-up nedir ve neden önemli?
 
 Mock-up, ürününüzün gerçeğe yakın bir görselleştirmesi. Müşteri tasarımınızı bir t-shirt'e basılı, mug'a uygulanmış veya çantaya işlenmiş olarak görür. Düz bir tasarım dosyası yerine "bu ürünü giyersem nasıl görünür?" sorusunun yanıtını sunar.

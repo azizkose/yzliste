@@ -16,6 +16,8 @@ Yemek ve gıda kategorisi, görselin satışı en doğrudan etkilediği alanlard
 
 ---
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [AI ürün fotoğrafçılığı rehberi](/blog/e-ticaret-icin-ai-urun-fotografciligi) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## Gıda fotoğrafının diğer kategorilerden farkı
 
 Bir kazak için ürünü ütüleyip beyaz arka planda çektiğinde fotoğraf işini tamamlanmış sayılabilir. Gıdada bu kadar sade görsel, dönüşümü ciddi oranda düşürüyor. Müşteri ürünü "yenirken" görmek istiyor; ambalajın üzerinde bir kavanozun nasıl açıldığı, bir çikolatanın nasıl kırıldığı, bir bal kavanozunun yanında ekmek dilimleri görmek istiyor.

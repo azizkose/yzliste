@@ -73,9 +73,15 @@ Etsy'de ilk satış ortalama 2-4 hafta sürüyor. Bu süreyi kısaltmak için ş
 
 Mağaza açıldıktan sonraki 90 gün kritik. Bu dönemde en az 15 ürün yükle, 3 yorum topla ve %100 yanıt hızı tut. Bu üç metrik, Etsy algoritmasının seni "Star Seller" havuzuna alması için yeterli.
 
-Büyüme aşamasında hangi ürünlerin çalıştığını anlamak için Etsy Stats panelini düzenli incele. En çok aranan anahtar kelimeler, tıklanma oranı düşük listingler ve dönüşüm getiren fotoğraflar burada görülür. Zayıf performans gösteren bir listing'i silmek yerine başlığı ve fotoğraflarını yenilemek çoğu zaman daha hızlı sonuç veriyor; Etsy, eski listinglerin birikmiş "arama sinyalini" yenilediğinde koruyor.
+Büyüme aşamasında hangi ürünlerin çalıştığını anlamak için Etsy Stats panelini düzenli incele. sıkça aranan anahtar kelimeler, tıklanma oranı düşük listingler ve dönüşüm getiren fotoğraflar burada görülür. Zayıf performans gösteren bir listing'i silmek yerine başlığı ve fotoğraflarını yenilemek çoğu zaman daha hızlı sonuç veriyor; Etsy, eski listinglerin birikmiş "arama sinyalini" yenilediğinde koruyor.
 
 Son olarak sezonluk fırsatları takip et: Sevgililer Günü, Anneler Günü, cadılar bayramı ve Noel, Etsy'de yılın en yüksek satış dönemleri. Bu sezonlara en az 6 hafta önceden hazırlanarak hem reklam verimini hem de organik görünürlüğü ciddi şekilde artırabilirsin.
+
+
+
+## Etsy satıcıları için diğer rehberler
+
+Etsy mağazanızı büyütmek için diğer rehberler: başlık ve etiket yazımı için [Etsy başlık ve tag yazım kuralları](/blog/etsy-baslik-tag-yazim-kurallari), reklam için [Etsy Ads reklam yönetimi](/blog/etsy-ads-reklam-yonetimi), SEO için [Etsy SEO etiket stratejisi](/blog/etsy-seo-etiket-stratejisi-uluslararasi-satis), Türk el yapımı satıcılar için [Etsy Türk el yapımı ürün satma rehberi](/blog/etsy-turk-el-yapimi-urun-satma-rehberi) ve global pazara açılma için [Global pazar yerlerine açılmanın anahtarı: AI listeleme](/blog/global-pazar-yerlerine-acilmanin-anahtari-ai-listeleme) yazılarımız işinize yarayacaktır.
 
 ## SONUÇ
 

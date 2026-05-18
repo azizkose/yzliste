@@ -16,6 +16,8 @@ Getir Çarşı, Türkiye'nin hızlı teslimat altyapısının yanına eklenen bi
 
 ---
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## Getir Çarşı nedir ve neden satıcı olunur?
 
 Getir Çarşı, ana Getir uygulamasının içinde yer alan bir pazaryeri sekmesi. Kullanıcı uygulamayı açtığında market kategorisinin yanında çarşı kategorisine geçebiliyor; burada moda, ev, kozmetik, hediyelik ve elektronik gibi farklı dikeylerden ürün buluyor. Satıcılar için iki cazip nokta var: mevcut Getir kullanıcı tabanına anında erişim ve hızlı teslimat avantajı.

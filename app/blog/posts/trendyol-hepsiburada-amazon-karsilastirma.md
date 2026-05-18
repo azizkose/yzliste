@@ -14,6 +14,8 @@ kapakGorsel:
 
 Türkiye'de e-ticarete başlayacağın ilk pazaryerini seçmek, aylar sonra cironu belirleyecek kadar kritik bir karar. Trendyol, Hepsiburada ve Amazon TR birbirinden oldukça farklı mantıklarla çalışıyor; komisyon oranları, alıcı davranışı, kargo modeli ve reklam ekosistemi üç platformda da aynı değil. Bu yazıda üç büyük pazaryerini somut kriterler üzerinden karşılaştıracak, kategoriye ve hedef kitleye göre hangisinin sana uygun olduğuna birlikte karar vereceğiz.
 
+> Detaylı bakış: [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
+
 ## Pazar Büyüklüğü ve Alıcı Profili
 
 Trendyol, Türkiye'nin en büyük pazaryeri konumunda. 30 milyonu aşkın aktif alıcıyla özellikle giyim, kozmetik ve ev ürünlerinde ezici pazar payına sahip. Mobil uygulaması günlük kullanım alışkanlığı oluşturacak kadar yaygın, bu da hızlı tüketim ürünlerinde hacim yaratıyor. Alıcı profili geniş: üniversite öğrencisinden ev hanımına, metropolden Anadolu'ya kadar dağılık bir kitle var.

@@ -16,6 +16,8 @@ E-ticarette satışlar yıl boyunca sabit değildir. Yılbaşı, Anneler Günü,
 
 ---
 
+> Pillar rehber: konunun bütününü görmek için [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısını okumanı öneririz.
+
 ## Ocak-Mart: Yeni Yıl ve Bahar Hazırlığı
 
 Ocak yılbaşı sonrası iade ve değişim yoğunluğuyla başlar — stok yönetimine dikkat et. Şubat Sevgililer Günü ile küçük ama yoğun bir satış dalgası getirir. Mart bahar koleksiyonlarının öne çıktığı, outdoor ve spor ürünlerinin talep gördüğü dönemdir. Bu dönemde listing'lerini "yeni sezon" mesajlarıyla güncelle.

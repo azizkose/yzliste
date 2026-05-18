@@ -1,7 +1,7 @@
 ---
 slug: whatsapp-business-e-ticaret-musteri-iletisimi
 baslik: WhatsApp Business ile E-Ticarette Müşteri İletişimi: Kullanım Rehberi 2026
-ozet: WhatsApp Business e-ticaret satıcıları için müşteri sorularına hızlı yanıt, sipariş takip ve satış sonrası destek aracıdır. Kurulum, katalog, etiketleme ve otomasyon adımları bu rehberde.
+ozet: WhatsApp Business e-ticaret satıcıları için müşteri sorularına hızlı yanıt, sipariş takip ve satış sonrası destek aracıdır.
 yayinTarihi: 2026-05-13
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
@@ -15,6 +15,8 @@ kapakGorsel:
 Türkiye'de e-ticaret müşterisinin önemli bir kısmı sipariş öncesi ve sonrası soru sormak için telefon yerine WhatsApp'ı tercih ediyor. Doğru kullanılan bir WhatsApp Business hesabı sipariş bilgisi, beden danışmanlığı, kargo takibi ve iade desteği gibi konuları tek kanalda çözüyor. Bu rehberde WhatsApp Business hesabını e-ticaret işiniz için nasıl kuracağınızı, hangi araçların gerçekten satışa katkı sağladığını ve müşteri iletişimini nasıl ölçeklendireceğinizi anlatıyoruz.
 
 ---
+
+> İlgili: [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
 
 ## Neden Standart WhatsApp Yerine WhatsApp Business?
 
@@ -52,7 +54,7 @@ WhatsApp Business katalog özelliği ürünlerinizi sohbet içinde paylaşmanız
 
 Katalog ürünleri için her bir kalemde şunlar olmalı: net bir başlık, 1-3 ürün fotoğrafı (kare format), kısa açıklama, fiyat ve isteğe bağlı kod/SKU alanı. yzliste ile zaten oluşturduğunuz listing içeriklerini WhatsApp kataloğuna kopyalamak operasyonu hızlandırır — ayrı görsel ve metin üretmenize gerek kalmaz.
 
-WhatsApp kataloğunda ürünler kategoriye ayrılmaz, hepsi tek bir listede görünür. Bu nedenle en çok sorulan 30-50 ürünü öne çıkarmak yeterli olur. Tüm kataloğun WhatsApp'a yüklenmesi gerekmez.
+WhatsApp kataloğunda ürünler kategoriye ayrılmaz, hepsi tek bir listede görünür. Bu nedenle sıkça sorulan 30-50 ürünü öne çıkarmak yeterli olur. Tüm kataloğun WhatsApp'a yüklenmesi gerekmez.
 
 ---
 

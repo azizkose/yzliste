@@ -16,6 +16,8 @@ E-ticarette en yaygın hata, maliyeti düşünmeden fiyat koymak. Ürünü 100 T
 
 ---
 
+> Ek okuma: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## Maliyet Kalemleri: Fiyatı Etkileyen Her Şey
 
 Ürün maliyetinin üzerine eklenmesi gereken kalemler: pazaryeri komisyonu, kargo ücreti, paketleme maliyeti, iade maliyeti, KDV ve stopaj. Trendyol'da komisyon yüzde 5-20 arasında kategoriye göre değişir. Hepsiburada benzer oranlarda, Amazon'da FBA ücreti eklenir. Tüm kalemleri hesaplamadan fiyat koyma.

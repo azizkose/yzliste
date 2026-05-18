@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Menu, X, CreditCard, FileText, Camera, Clapperboard, Share2, type LucideIcon } from "lucide-react";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
@@ -60,8 +61,14 @@ export default function SiteHeader({ aktifSayfa }: { aktifSayfa?: AktifSayfa }) 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-2">
         {/* Logo */}
         <Link href="/" className="flex-shrink-0 mr-1">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/yzliste_logo.png" alt="yzliste" className={`h-9 transition-all duration-300 ${transparent ? "brightness-0 invert" : ""}`} />
+          <Image
+            src="/yzliste_logo.png"
+            alt="yzliste"
+            width={120}
+            height={36}
+            priority
+            className={`h-9 w-auto transition-all duration-300 ${transparent ? "brightness-0 invert" : ""}`}
+          />
         </Link>
 
         {/* Desktop nav */}

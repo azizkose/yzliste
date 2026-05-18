@@ -14,6 +14,8 @@ kapakGorsel:
 
 Amazon'da tescilli marka sahibi olmak, satıcı deneyimini temelden değiştiriyor. Brand Registry programına kayıtlı olmak; A+ İçerik, marka mağazası sayfası, Sponsored Brand reklamı ve hızlı marka ihlali şikâyet yolu gibi kapıları açıyor. Bu rehberde Amazon Brand Registry başvurusu, gereken belgeler ve program sonrası kazanımları ele alacağız.
 
+> İlgili: [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazımız bu konunun teknik detaylarını ve örneklerini içeriyor.
+
 ## Brand Registry Nedir?
 
 Brand Registry, Amazon'un tescilli marka sahipleri için oluşturduğu program. Temel amacı marka hakları ihlali ve taklit ürünleri önlemek; yan faydası satıcıya özel pazarlama araçları sunmak.

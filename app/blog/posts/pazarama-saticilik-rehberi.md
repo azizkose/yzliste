@@ -1,7 +1,7 @@
 ---
 slug: pazarama-saticilik-rehberi
 baslik: Pazarama'da Satıcı Olmak: Mağaza Açma ve İlk Listing Rehberi
-ozet: Pazarama'da satıcı olma şartları, başvuru süreci, komisyon yapısı, ürün listeleme adımları ve büyük pazaryerlerinden farkları üzerine pratik bir başlangıç rehberi.
+ozet: Pazarama'da satıcı olma şartları, başvuru süreci, komisyon yapısı, ürün listeleme adımları ve büyük pazaryerlerinden farkları üzerine pratik bir…
 yayinTarihi: 2026-03-26
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
@@ -15,6 +15,8 @@ kapakGorsel:
 Pazarama, Türkiye'nin yükselen pazaryerlerinden biri. Trendyol ve Hepsiburada'daki yoğun rekabetin yorduğu satıcılar, daha az satıcının bulunduğu Pazarama'da ürünlerini öne çıkarmayı kolay bulabiliyor. Bu rehberde Pazarama'da satıcı olmanın şartlarını, mağaza açma sürecini, komisyon yapısını ve ilk listinginizi yayına almak için izlemeniz gereken adımları bulacaksınız.
 
 ---
+
+> Pillar rehber: konunun bütününü görmek için [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazısını okumanı öneririz.
 
 ## Pazarama nedir ve neden satıcı olunur?
 

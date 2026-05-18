@@ -1,7 +1,7 @@
 ---
 slug: cross-listing-coklu-pazaryeri-yonetimi
 baslik: Tek Üründen 7 Pazaryerine: Çoklu Listeleme ile Satış Hacmini Artırma Rehberi
-ozet: Aynı ürünü Trendyol, Hepsiburada, Amazon, N11, Etsy ve daha fazla platformda satmak satış hacmini ciddi ölçüde artırabilir. Çoklu listeleme stratejisini öğren.
+ozet: Aynı ürünü Trendyol, Hepsiburada, Amazon, N11, Etsy ve daha fazla platformda satmak satış hacmini ciddi ölçüde artırabilir.
 yayinTarihi: 2025-06-17
 yazarAdi: yzliste Ekibi
 okumaSuresi: 7
@@ -15,6 +15,8 @@ kapakGorsel:
 Sadece Trendyol'da satış yapıyorsan, potansiyel müşterilerin büyük çoğunluğunu kaçırıyorsun. Her pazaryerinin kendine özgü müşteri kitlesi var — Hepsiburada'da arayan birisi Trendyol'da aramayabilir. Tek ürünü birden fazla platformda listelemek satış hacmini önemli ölçüde artırabilir.
 
 ---
+
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [Trendyol'da listing nasıl yazılır](/blog/trendyol-listing-nasil-yazilir) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
 
 ## Neden Çoklu Pazaryeri?
 

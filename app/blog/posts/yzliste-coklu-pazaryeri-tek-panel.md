@@ -14,6 +14,8 @@ kapakGorsel:
 
 Tek pazaryerinde başlamak güvenli; ama büyümek için ikinci, üçüncü, dördüncü pazaryerine açılmak şart. Sorun şu ki her pazaryerinin kendi kuralları, kendi formatı, kendi paneli var. 5 pazaryerinde aynı ürünü yönetmek, manuel ortamda günlük operasyonu kâbusa çevirebiliyor. yzliste'nin çoklu pazaryeri yönetimi bu yükü ortadan kaldırıyor; tek panelden 7 platform için optimize edilmiş içerik üretiliyor. Bu yazıda yzliste ile çoklu pazaryeri yönetiminin nasıl çalıştığını ele alacağız.
 
+> Ek okuma: [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## Desteklenen 7 Pazaryeri
 
 yzliste şu anda 7 pazaryerini destekliyor:

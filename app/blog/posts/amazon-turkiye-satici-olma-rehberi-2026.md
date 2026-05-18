@@ -14,6 +14,8 @@ kapakGorsel:
 
 Amazon Türkiye 2018'de açıldığından beri kendi alıcı kitlesini yetiştiriyor. Pazarın görece yeni olması, doğru konumlanan satıcılar için hâlâ alan anlamına geliyor. Bu rehberde şirket kurulumundan Seller Central hesabına, evrak listesine ve ilk ürününü listelemeye kadar Amazon Türkiye'de satıcı olma sürecini adım adım inceleyeceğiz.
 
+> Ek okuma: [Amazon A9 algoritması](/blog/amazon-a9-algoritmasi) yazısında bu konunun adım adım uygulamasını bulabilirsin.
+
 ## Hangi Hesap Tipiyle Başlamalısın?
 
 Amazon Türkiye'de iki tür satıcı hesabı var: Bireysel ve Profesyonel. Bireysel hesap aylık abonelik ücreti olmadan sadece satış başına sabit ücret talep ediyor; ayda 40 siparişten az satış yapıyorsan bu hesapla başlaman mantıklı. Profesyonel hesap ise aylık sabit ücretle gelir ama yüksek hacimde (aylık 40+ satış) toplam maliyetin daha avantajlı oluyor.

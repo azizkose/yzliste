@@ -14,6 +14,8 @@ kapakGorsel:
 
 Pazaryerinde satış yapan her satıcı biliyor ki sadece pazaryerine yüklemek yeterli değil. Instagram, TikTok, Facebook ve X üzerinden ürünü duyurmak trafik ve marka bilinirliği sağlıyor. Ancak her platform için ayrı caption, görsel boyutu ve hashtag hazırlamak zaman alıyor. yzliste Sosyal Medya Kiti bu süreci tek tıkla tamamlıyor; ürün listing'inden sonra 4 platformun içeriği dakikalar içinde hazır. Bu yazıda kitin nasıl çalıştığını inceleyeceğiz.
 
+> İlgili rehber: bu konuyu derinlemesine ele aldığımız [sosyal medya ürün tanıtımı rehberi](/blog/sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri) yazısı, satıcıların karşılaştığı çoğu soruyu yanıtlıyor.
+
 ## Neden Platforma Özel İçerik Şart?
 
 Instagram'da satılan bir ürünün caption'ı TikTok'ta etkisiz kalıyor; TikTok'un hook'u Facebook'ta uyumsuz. Her platformun algoritması farklı sinyal ağırlıklıyor:

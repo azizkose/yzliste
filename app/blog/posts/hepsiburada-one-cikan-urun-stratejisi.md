@@ -1,7 +1,7 @@
 ---
 slug: hepsiburada-one-cikan-urun-stratejisi
 baslik: Hepsiburada'da Öne Çıkan Ürün Nasıl Olunur? Algoritmaya Uyum Rehberi
-ozet: Hepsiburada'da arama sonucunda öne çıkmak için BuyBox, fiyat, stok, yorum ve kargo sinyallerini nasıl optimize edersin? Satıcılar için pratik rehber burada.
+ozet: Hepsiburada'da arama sonucunda öne çıkmak için BuyBox, fiyat, stok, yorum ve kargo sinyallerini nasıl optimize edersin?
 yayinTarihi: 2026-01-01
 yazarAdi: yzliste Ekibi
 okumaSuresi: 6
@@ -13,6 +13,8 @@ kapakGorsel:
 # GİRİŞ
 
 Hepsiburada'da aynı ürünü satan onlarca satıcı varken biri BuyBox'u alıyor, arama sonucunda öne çıkıyor, diğerleri aynı sayfada dip sıralara düşüyor. Bu fark tek bir faktöre değil, birkaç sinyalin birlikte değerlendirilmesine bağlı. Bu yazıda Hepsiburada'da öne çıkan satıcı olmak için hangi metriklere odaklanman gerektiğini ve her birini nasıl iyileştireceğini inceleyeceğiz.
+
+> Pillar rehber: konunun bütününü görmek için [Hepsiburada katalog ve listing kuralları](/blog/hepsiburada-katalog-ve-listing-kurallari) yazısını okumanı öneririz.
 
 ## BuyBox Nedir ve Nasıl Kazanılır?
 

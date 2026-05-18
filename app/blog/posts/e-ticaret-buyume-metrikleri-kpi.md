@@ -14,6 +14,8 @@ kapakGorsel:
 
 E-ticaret mağazası büyüyor mu, sadece daha fazla mı satıyor? İki soru farklı; ciro artışı her zaman büyüme demek değil. Reklam harcaması artırılmış olabilir, marj eriyor olabilir, müşteri tabanı tek seferlik olabilir. Gerçek büyümeyi anlamak için doğru KPI'ları (Key Performance Indicators) takip etmek gerekiyor. Bu rehberde e-ticaret için kritik metrikleri ele alacağız.
 
+> Detaylı bakış: [e-ticaret SEO anahtar kelime rehberi](/blog/e-ticaret-seo-anahtar-kelime-arastirma-rehberi) yazısı bu yazıdaki konuyu daha geniş bir çerçevede ele alıyor.
+
 ## Cironun Ötesinde Bakmak
 
 Aylık ciro, ilk akla gelen metrik ama tek başına yanıltıcı. 100.000 TL ciro yapan iki mağaza arasında büyük fark olabilir:

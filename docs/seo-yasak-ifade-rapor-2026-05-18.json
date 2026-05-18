@@ -1,0 +1,1590 @@
+{
+  "ai-e-ticaret-5-yillik-gelecek.md": [
+    {
+      "line": 91,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "2026-2031 dönemi e-ticaret için AI dönüşümünün ikinci yarısı olacak. Hiper-kişiselleştirme, sanal deneyim, tam otomatik "
+    }
+  ],
+  "ai-ile-toplu-listing-olusturma-zaman-tasarrufu.md": [
+    {
+      "line": 41,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "💡 Hız önemli ama kaliteyi feda etme. AI'ın ürettiği listing'leri gözden geçir, ürüne özgü detayları kontrol et. Otomatik"
+    }
+  ],
+  "ai-listing-prompt-muhendisligi.md": [
+    {
+      "line": 30,
+      "category": "kaynaksiz_yuzde",
+      "match": "%100",
+      "context": "AI, soyut bilgiyi somuta çeviremez; ama somut bilgiyi soyuta çevirebilir. Yani ne kadar somut veri verirsen o kadar iyi "
+    }
+  ],
+  "ai-manken-model-giydirme-teknoloji.md": [
+    {
+      "line": 71,
+      "category": "kaynaksiz_yuzde",
+      "match": "%85",
+      "context": "AI model giydirme ile üretilen görseller pazaryerlerinin kurallarına uymak zorunda. Trendyol, Hepsiburada ve Amazon ana "
+    }
+  ],
+  "ai-metin-ureticileri-karsilastirma.md": [
+    {
+      "line": 140,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "AI metin üreticileri pazarında \"en iyi\" araç yok; \"senin için en uygun\" araç var. Genel amaçlı LLM'ler esnek ve ucuz; e-"
+    }
+  ],
+  "ai-mucevher-taki-urun-fotografi-rehberi.md": [
+    {
+      "line": 112,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "💡 Mücevher fotoğrafında müşterinin en çok merak ettiği şey gerçek hali. Ürünü gerçek bir el üzerinde de çekip iki görsel"
+    }
+  ],
+  "ai-sosyal-medya-icerik-uretimi.md": [
+    {
+      "line": 15,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Sosyal medya yönetiminin en çok zaman alan kısmı içerik üretimi. E-ticaret satıcısı olarak pazaryerine listing çıkarmanı"
+    },
+    {
+      "line": 69,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "AI içeriği üretiyor ama onaylama aşaması sende. İki filtre uygula. Birincisi, marka sesi filtresi: üretilen metin markan"
+    }
+  ],
+  "ai-urun-aciklamasi-sinirlari.md": [
+    {
+      "line": 55,
+      "category": "kaynaksiz_yuzde",
+      "match": "%80",
+      "context": "Çözüm: AI ilk taslak, insan son rötuş. AI %80 içeriği üretiyor, insan %20 marka dokunuşunu ekliyor. Bu hibrit yaklaşım z"
+    },
+    {
+      "line": 55,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Çözüm: AI ilk taslak, insan son rötuş. AI %80 içeriği üretiyor, insan %20 marka dokunuşunu ekliyor. Bu hibrit yaklaşım z"
+    },
+    {
+      "line": 84,
+      "category": "kaynaksiz_yuzde",
+      "match": "%50",
+      "context": "Bu modelin pratik sonucu: 50 ürünlük katalog bir günde değil, bir haftada bitiyor ama kalite %50 artıyor. Tamamen AI: hı"
+    }
+  ],
+  "ai-urun-fotografi-beyaz-arka-plan-standartlari.md": [
+    {
+      "line": 29,
+      "category": "kaynaksiz_yuzde",
+      "match": "%85",
+      "context": "- Ürün görsel alanının en az %85'ini kaplamalı"
+    },
+    {
+      "line": 40,
+      "category": "kaynaksiz_yuzde",
+      "match": "%80",
+      "context": "- Görselin en az %80'i ürün olmalı"
+    }
+  ],
+  "ai-urun-gorseli-uretme-studyosuz.md": [
+    {
+      "line": 43,
+      "category": "kaynaksiz_yuzde",
+      "match": "%85",
+      "context": "Pazaryerlerinin çoğu ana ürün görseli için katı kurallar koyuyor: beyaz fon, ürünün kadrajın en az %85'ini doldurması, g"
+    }
+  ],
+  "ai-urun-karusel-coklu-gorsel-set-uretimi.md": [
+    {
+      "line": 85,
+      "category": "kaynaksiz_yuzde",
+      "match": "%85",
+      "context": "Karusel görsellerini üretirken her pazaryerinin kendi teknik kuralları olduğunu unutmayın. Trendyol kare 1200x1200 pikse"
+    },
+    {
+      "line": 85,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "Karusel görsellerini üretirken her pazaryerinin kendi teknik kuralları olduğunu unutmayın. Trendyol kare 1200x1200 pikse"
+    }
+  ],
+  "ai-urun-mockup-olusturma-rehberi.md": [
+    {
+      "line": 62,
+      "category": "kaynaksiz_yuzde",
+      "match": "%85",
+      "context": "- **Aşırı parlak baskı:** AI bazen tasarımı kumaşa \"yapışık\" değil, üstüne yapıştırılmış sticker gibi gösterir. Opaklığı"
+    },
+    {
+      "line": 99,
+      "category": "en_iyi",
+      "match": "en yüksek kaliteli",
+      "context": "İlk görsel kategoride listelendiğinde ana karşılama görselidir, dolayısıyla en yüksek kaliteli ve en net sahne burada ol"
+    }
+  ],
+  "ai-urun-videosu-hareket-secenekleri.md": [
+    {
+      "line": 34,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "**İpucu:** Beyaz veya koyu arka planlı ürün fotoğraflarında en iyi çalışır. Karmaşık arka planlar dönüşü bozabilir."
+    },
+    {
+      "line": 74,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "**İpucu:** Ürün fotoğrafında zaten temiz bir arka plan varsa en iyi sonucu verir. Renkli ya da karmaşık arka planlı foto"
+    },
+    {
+      "line": 134,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "**İpucu:** Hafif ve dökümlü kumaşlarda en iyi sonucu verir. Kalın, sert yapılı kumaşlarda (kot, deri) rüzgar efekti doğa"
+    }
+  ],
+  "amazon-a9-algoritmasi.md": [
+    {
+      "line": 31,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "💡 Amazon'da başarılı olmanın sırrı veridir. Ürün açıklamanızda \"en iyi\" gibi soyut kelimeler yerine \"10 saate kadar pil "
+    }
+  ],
+  "amazon-fba-turkiye-kullanim.md": [
+    {
+      "line": 93,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "Türkiye'den Amazon USA'da satış yaparken Amerikan vergi beyanı gerekiyor. EIN (Employer Identification Number) almak ve "
+    }
+  ],
+  "amazon-storefront-vitrin-sayfasi-rehberi.md": [
+    {
+      "line": 23,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Storefront, Amazon'un markaya ait özel bir alandır. Müşteri marka adınıza tıkladığında veya bir reklamdan yönlendirildiğ"
+    },
+    {
+      "line": 35,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "- **Kategori bazlı ürün listeleri** (en çok satanlar, yeni gelenler, sezon ürünleri)"
+    },
+    {
+      "line": 52,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "5. Alt sayfaları ekleyin (kategori sayfaları, koleksiyon sayfaları, en çok satanlar)"
+    },
+    {
+      "line": 61,
+      "category": "en_iyi",
+      "match": "En Çok",
+      "context": "## Hangi Modüller Satışa En Çok Etki Ediyor?"
+    }
+  ],
+  "amazon-tr-ppc-reklam-optimizasyonu.md": [
+    {
+      "line": 35,
+      "category": "kaynaksiz_yuzde",
+      "match": "%50",
+      "context": "Tipik strateji: %50 otomatik + %50 manuel. Otomatik keşif yapmaya devam ediyor, manuel kanıtlanmış kelimelerde daha düşü"
+    },
+    {
+      "line": 35,
+      "category": "kaynaksiz_yuzde",
+      "match": "%50",
+      "context": "Tipik strateji: %50 otomatik + %50 manuel. Otomatik keşif yapmaya devam ediyor, manuel kanıtlanmış kelimelerde daha düşü"
+    },
+    {
+      "line": 54,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "- %30 brüt marjlı ürün için hedef ACoS: %20-25"
+    },
+    {
+      "line": 54,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "- %30 brüt marjlı ürün için hedef ACoS: %20-25"
+    },
+    {
+      "line": 55,
+      "category": "kaynaksiz_yuzde",
+      "match": "%50",
+      "context": "- %50 brüt marjlı ürün için hedef ACoS: %30-35"
+    },
+    {
+      "line": 55,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "- %50 brüt marjlı ürün için hedef ACoS: %30-35"
+    },
+    {
+      "line": 56,
+      "category": "kaynaksiz_yuzde",
+      "match": "%70",
+      "context": "- %70 brüt marjlı ürün için hedef ACoS: %40-50"
+    },
+    {
+      "line": 56,
+      "category": "kaynaksiz_yuzde",
+      "match": "%40",
+      "context": "- %70 brüt marjlı ürün için hedef ACoS: %40-50"
+    },
+    {
+      "line": 58,
+      "category": "kaynaksiz_yuzde",
+      "match": "%50",
+      "context": "ACoS hedefi marjın altında kalırsa kampanya kâr üretiyor. Kampanya başlangıcında ACoS genelde %50-80'e çıkıyor; veri bir"
+    },
+    {
+      "line": 66,
+      "category": "kaynaksiz_yuzde",
+      "match": "%80",
+      "context": "Başlangıç tekliflerinde kategori ortalamasının %80-90'ı makul. Amazon panelindeki \"önerilen teklif\" alanı ipucu veriyor."
+    }
+  ],
+  "amazon-turkiye-satici-olma-rehberi-2026.md": [
+    {
+      "line": 56,
+      "category": "kaynaksiz_yuzde",
+      "match": "%85",
+      "context": "Listing oluştururken başlık karakter sınırı, madde madde açıklama formatı, anahtar kelime arka plan alanları ve görsel k"
+    }
+  ],
+  "amazon-usa-etsy-karsilastirma-ihracat.md": [
+    {
+      "line": 39,
+      "category": "kaynaksiz_yuzde",
+      "match": "%6",
+      "context": "- İşlem komisyonu: %6,5 (satış fiyatı + kargo üzerinden)"
+    },
+    {
+      "line": 40,
+      "category": "kaynaksiz_yuzde",
+      "match": "%3",
+      "context": "- Ödeme işlem ücreti: %3 + 0,25 USD"
+    },
+    {
+      "line": 46,
+      "category": "kaynaksiz_yuzde",
+      "match": "%8",
+      "context": "- Referral fee (kategori komisyonu): %8-%15 arası (kategoriye göre değişir)"
+    },
+    {
+      "line": 46,
+      "category": "kaynaksiz_yuzde",
+      "match": "%15",
+      "context": "- Referral fee (kategori komisyonu): %8-%15 arası (kategoriye göre değişir)"
+    }
+  ],
+  "amazon-usa-ppc-reklam-stratejisi.md": [
+    {
+      "line": 55,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "ACoS (Advertising Cost of Sales), reklam harcamasının reklamdan gelen satışa oranı. %20 ACoS demek, 100 USD reklamdan ge"
+    },
+    {
+      "line": 57,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "Sürdürülebilir ACoS hedefi ürün marjına bağlı. %30 brüt marjı olan bir ürün için %20-25 ACoS sağlıklı. %50 brüt marjı ol"
+    },
+    {
+      "line": 57,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Sürdürülebilir ACoS hedefi ürün marjına bağlı. %30 brüt marjı olan bir ürün için %20-25 ACoS sağlıklı. %50 brüt marjı ol"
+    },
+    {
+      "line": 57,
+      "category": "kaynaksiz_yuzde",
+      "match": "%50",
+      "context": "Sürdürülebilir ACoS hedefi ürün marjına bağlı. %30 brüt marjı olan bir ürün için %20-25 ACoS sağlıklı. %50 brüt marjı ol"
+    },
+    {
+      "line": 57,
+      "category": "kaynaksiz_yuzde",
+      "match": "%35",
+      "context": "Sürdürülebilir ACoS hedefi ürün marjına bağlı. %30 brüt marjı olan bir ürün için %20-25 ACoS sağlıklı. %50 brüt marjı ol"
+    },
+    {
+      "line": 59,
+      "category": "kaynaksiz_yuzde",
+      "match": "%50",
+      "context": "Kampanya başlangıcında ACoS genellikle %50-70'e çıkar; bu normal. Veriler birikip optimize edildikçe ACoS düşer. 3 ay so"
+    },
+    {
+      "line": 76,
+      "category": "kaynaksiz_yuzde",
+      "match": "%5",
+      "context": "Amazon PPC'de \"Search Terms Report\" her haftanın sonunda mutlaka incelenmeli. Bu rapor gerçekte hangi sorguların senin r"
+    },
+    {
+      "line": 82,
+      "category": "kaynaksiz_yuzde",
+      "match": "%60",
+      "context": "- %60 Sponsored Products otomatik (keşif)"
+    },
+    {
+      "line": 83,
+      "category": "kaynaksiz_yuzde",
+      "match": "%25",
+      "context": "- %25 Sponsored Products manuel (kanıtlanmış kelimeler)"
+    },
+    {
+      "line": 84,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "- %10 Sponsored Brands (marka inşası)"
+    },
+    {
+      "line": 85,
+      "category": "kaynaksiz_yuzde",
+      "match": "%5",
+      "context": "- %5 Sponsored Display (rakip hedefleme)"
+    },
+    {
+      "line": 87,
+      "category": "kaynaksiz_yuzde",
+      "match": "%50",
+      "context": "Olgunlaşmış kampanyalarda (6+ ay sonra) oran ters dönüyor: manuel %50, otomatik %20, brands %20, display %10."
+    },
+    {
+      "line": 87,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Olgunlaşmış kampanyalarda (6+ ay sonra) oran ters dönüyor: manuel %50, otomatik %20, brands %20, display %10."
+    },
+    {
+      "line": 87,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Olgunlaşmış kampanyalarda (6+ ay sonra) oran ters dönüyor: manuel %50, otomatik %20, brands %20, display %10."
+    },
+    {
+      "line": 87,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "Olgunlaşmış kampanyalarda (6+ ay sonra) oran ters dönüyor: manuel %50, otomatik %20, brands %20, display %10."
+    }
+  ],
+  "bayram-ozel-gun-listing-optimizasyonu.md": [
+    {
+      "line": 23,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "Özel gün kampanyaları öncesinde aramalar değişir. Yılın geneli \"kadın kol saati\" ararken, anneler günü yaklaştığında \"an"
+    },
+    {
+      "line": 72,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "Pazaryerlerinin kendi kampanyaları (Trendyol Anneler Günü Festivali, Hepsiburada Bayram Fırsatları gibi) genellikle başl"
+    }
+  ],
+  "capraz-satis-upsell-teknikleri.md": [
+    {
+      "line": 35,
+      "category": "kaynaksiz_yuzde",
+      "match": "%15",
+      "context": "Tamamlayıcı set: ürünün doğal tamamlayıcılarını paket olarak sun. Şampuan + saç kremi + maske 3'lü set. Tek tek alma fiy"
+    },
+    {
+      "line": 39,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "Kampanya bazlı: belirli kategoriler birlikte alındığında indirim. \"Pantolon + tişört = ikinci ürün %30 indirim\". Müşteri"
+    },
+    {
+      "line": 49,
+      "category": "kaynaksiz_yuzde",
+      "match": "%25",
+      "context": "Bundle yükseltme: tek ürün → set → premium set. Set teklifleri tek ürün satışından %25-40 yüksek sepet getiriyor."
+    },
+    {
+      "line": 61,
+      "category": "kaynaksiz_yuzde",
+      "match": "%5",
+      "context": "Ödeme öncesi: son şans. \"Şunu da eklersen +%5 indirim\" gibi anlık teşvikler."
+    },
+    {
+      "line": 63,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "Ödeme sonrası: \"Teşekkürler, bir dahaki siparişe %10 indirim için bu ürünü dene\". Tekrar alışverişe yönlendirme."
+    },
+    {
+      "line": 75,
+      "category": "kaynaksiz_yuzde",
+      "match": "%15",
+      "context": "Bundle, ürünleri set halinde satmak. Tek tek alma fiyatından %15-25 indirimli paket fiyatı. Müşteri \"kazanç\" hissiyle pa"
+    },
+    {
+      "line": 95,
+      "category": "kaynaksiz_yuzde",
+      "match": "%60",
+      "context": "Çoğu müşteri orta paketi (350 TL) seçiyor; çünkü yanında 600 TL'lik var ve \"ucuz\" hissediyor. Eğer sadece standart ve pr"
+    },
+    {
+      "line": 103,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "Müşteri 220 TL'lik sepetinin yanına 30 TL'lik ek ürün eklemeyi kargo ücretinden kaçınmak için tercih ediyor. Bu tek başı"
+    }
+  ],
+  "chatbot-musteri-hizmeti-otomasyon.md": [
+    {
+      "line": 35,
+      "category": "kaynaksiz_yuzde",
+      "match": "%60",
+      "context": "Bu görevler müşteri mesajlarının yaklaşık %60-70'ini oluşturuyor. Chatbot bu yükü üstlendiğinde insan temsilci sadece ka"
+    },
+    {
+      "line": 103,
+      "category": "kaynaksiz_yuzde",
+      "match": "%40",
+      "context": "İlk ay kapanış oranı %40-50 bandında normal; iyileştirme ile 6 ay sonunda %70-80'e çıkabilir. Her hafta bot'un yanlış ya"
+    },
+    {
+      "line": 103,
+      "category": "kaynaksiz_yuzde",
+      "match": "%70",
+      "context": "İlk ay kapanış oranı %40-50 bandında normal; iyileştirme ile 6 ay sonunda %70-80'e çıkabilir. Her hafta bot'un yanlış ya"
+    }
+  ],
+  "e-ticaret-buyume-metrikleri-kpi.md": [
+    {
+      "line": 23,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "Mağaza A: 100.000 TL ciro, 50.000 TL reklam harcaması, %10 net kâr → 10.000 TL net."
+    },
+    {
+      "line": 24,
+      "category": "kaynaksiz_yuzde",
+      "match": "%25",
+      "context": "Mağaza B: 100.000 TL ciro, 5.000 TL reklam harcaması, %25 net kâr → 25.000 TL net."
+    },
+    {
+      "line": 39,
+      "category": "kaynaksiz_yuzde",
+      "match": "%5",
+      "context": "İdeal hedefler kategoriye göre değişir; ortalama e-ticaret için %5-15 net kâr marjı sağlıklı, %20+ üst düzey."
+    },
+    {
+      "line": 39,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "İdeal hedefler kategoriye göre değişir; ortalama e-ticaret için %5-15 net kâr marjı sağlıklı, %20+ üst düzey."
+    },
+    {
+      "line": 49,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "Tekrar Müşteri Oranı: toplam müşteri içinde tekrar alışveriş yapmış olanların yüzdesi. %30+ sağlıklı."
+    },
+    {
+      "line": 57,
+      "category": "kaynaksiz_yuzde",
+      "match": "%1",
+      "context": "Dönüşüm Oranı: ürün sayfası ziyareti başına satış oranı. %1-3 e-ticaret ortalaması; %5+ üst düzey."
+    },
+    {
+      "line": 57,
+      "category": "kaynaksiz_yuzde",
+      "match": "%5",
+      "context": "Dönüşüm Oranı: ürün sayfası ziyareti başına satış oranı. %1-3 e-ticaret ortalaması; %5+ üst düzey."
+    },
+    {
+      "line": 59,
+      "category": "kaynaksiz_yuzde",
+      "match": "%60",
+      "context": "Sepet Terk Oranı: sepete eklenen ürünlerin satışa dönmeme yüzdesi. %60-80 normal; düşürmek için ödeme süreci optimizasyo"
+    },
+    {
+      "line": 63,
+      "category": "kaynaksiz_yuzde",
+      "match": "%5",
+      "context": "İade Oranı: kategoriye göre %5-15 normal. Yüksek iade oranı listing veya ürün problemini gösteriyor."
+    },
+    {
+      "line": 77,
+      "category": "kaynaksiz_yuzde",
+      "match": "%2",
+      "context": "CTR (Click-Through Rate): gösterim başına tıklama oranı. Reklam veya organik için %2+ iyi."
+    },
+    {
+      "line": 79,
+      "category": "kaynaksiz_yuzde",
+      "match": "%50",
+      "context": "Bounce Rate: tek sayfa görüntüleme oranı. %50+ yüksek."
+    },
+    {
+      "line": 81,
+      "category": "kaynaksiz_yuzde",
+      "match": "%2",
+      "context": "Sosyal Medya Etkileşim Oranı: takipçi başına etkileşim. %2+ sağlıklı."
+    },
+    {
+      "line": 93,
+      "category": "kaynaksiz_yuzde",
+      "match": "%1",
+      "context": "- Dönüşüm oranı: %1-2.5"
+    },
+    {
+      "line": 95,
+      "category": "kaynaksiz_yuzde",
+      "match": "%8",
+      "context": "- İade oranı: %8-15"
+    },
+    {
+      "line": 96,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "- Tekrar müşteri oranı: %20-30"
+    }
+  ],
+  "e-ticaret-google-analytics-kullanimi.md": [
+    {
+      "line": 23,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Bu yaklaşım e-ticaret için çok daha anlamlı; kullanıcının satın alma yolculuğu aşama aşama takip edilebiliyor. Hangi adı"
+    },
+    {
+      "line": 65,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Ürün Performansı: hangi ürün en çok görüntülendi, hangisi en çok satıldı, hangisi sepete eklendi ama satın alınmadı. Ürü"
+    },
+    {
+      "line": 65,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Ürün Performansı: hangi ürün en çok görüntülendi, hangisi en çok satıldı, hangisi sepete eklendi ama satın alınmadı. Ürü"
+    }
+  ],
+  "e-ticaret-icin-ai-urun-fotografciligi.md": [
+    {
+      "line": 4,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "ozet: AI ürün fotoğrafından en iyi sonucu almak için input fotoğrafın nasıl olmalı? Arka plan, ışık, çözünürlük, açı ve "
+    },
+    {
+      "line": 34,
+      "category": "en_iyi",
+      "match": "En iyi",
+      "context": "- **Işık:** Yumuşak ve dağınık olmalı. Direkt flash ve sert güneş ışığı \"parlak noktalar\" ve keskin gölge bırakır; AI bu"
+    },
+    {
+      "line": 36,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "- **Çerçeveleme:** Ürün karenin tam ortasında, her kenardan en az %10 boşluk bırakılarak çekilmeli. Kenardan taşan, kırp"
+    },
+    {
+      "line": 45,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "**Giyim (virtual try-on için):** yzliste'nin try-on özelliği için en iyi sonuç, kıyafetin **düz yere serilmiş (flat-lay)"
+    },
+    {
+      "line": 55,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Input fotoğraflarında en çok karşılaştığımız sorunlar ve düzeltmeleri:"
+    },
+    {
+      "line": 60,
+      "category": "kaynaksiz_yuzde",
+      "match": "%80",
+      "context": "- **Fotoğrafı WhatsApp'tan indirmek:** %80'e kadar sıkıştırma, detay kaybı. Düzelt: galeri/iCloud/Google Foto orijinal d"
+    }
+  ],
+  "e-ticaret-kdv-e-fatura-rehberi.md": [
+    {
+      "line": 37,
+      "category": "kaynaksiz_yuzde",
+      "match": "%1",
+      "context": "- %1: belirli temel ihtiyaç ürünleri (tarım ürünleri, kitap)"
+    },
+    {
+      "line": 38,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "- %10: belirli ürün kategorileri (ilaç, gıda, tekstil bazılarında)"
+    },
+    {
+      "line": 39,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "- %20: standart oran (elektronik, kozmetik, ev eşyası ve birçok diğer kategori)"
+    }
+  ],
+  "e-ticaret-seo-anahtar-kelime-arastirma-rehberi.md": [
+    {
+      "line": 27,
+      "category": "en_iyi",
+      "match": "en popüler",
+      "context": "Pazaryerinin kendi arama çubuğuna yazmaya başla — otomatik tamamlama önerileri en popüler aramaları gösterir. Rakip list"
+    },
+    {
+      "line": 27,
+      "category": "en_iyi",
+      "match": "En çok",
+      "context": "Pazaryerinin kendi arama çubuğuna yazmaya başla — otomatik tamamlama önerileri en popüler aramaları gösterir. Rakip list"
+    }
+  ],
+  "e-ticaret-stok-yonetimi-sistemi.md": [
+    {
+      "line": 39,
+      "category": "kaynaksiz_yuzde",
+      "match": "%70",
+      "context": "A grubu ürünler: ciroyun %70-80'ini oluşturan, en kritik ürünler. Genelde toplam ürünlerin %15-20'si. Bu grupta stoksuz "
+    },
+    {
+      "line": 39,
+      "category": "kaynaksiz_yuzde",
+      "match": "%15",
+      "context": "A grubu ürünler: ciroyun %70-80'ini oluşturan, en kritik ürünler. Genelde toplam ürünlerin %15-20'si. Bu grupta stoksuz "
+    },
+    {
+      "line": 41,
+      "category": "kaynaksiz_yuzde",
+      "match": "%15",
+      "context": "B grubu: cironun %15-20'si, toplam ürünlerin %30'u. Orta öncelikli; düzenli takip yeterli."
+    },
+    {
+      "line": 41,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "B grubu: cironun %15-20'si, toplam ürünlerin %30'u. Orta öncelikli; düzenli takip yeterli."
+    },
+    {
+      "line": 43,
+      "category": "kaynaksiz_yuzde",
+      "match": "%5",
+      "context": "C grubu: cironun %5-10'u, toplam ürünlerin %50'si. Düşük öncelikli; aşırı stok bağlama, talep geldiğinde getir mantığı u"
+    },
+    {
+      "line": 43,
+      "category": "kaynaksiz_yuzde",
+      "match": "%50",
+      "context": "C grubu: cironun %5-10'u, toplam ürünlerin %50'si. Düşük öncelikli; aşırı stok bağlama, talep geldiğinde getir mantığı u"
+    },
+    {
+      "line": 69,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Tampon büyüklüğü tedarik süresinin %20-30'u kadar olmalı. 4 haftalık tedarik süresinde 1 haftalık ekstra tampon mantıklı"
+    },
+    {
+      "line": 71,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "A grubu ürünler için tampon daha cömert (%30-40), C grubu için daha az (%10-15)."
+    },
+    {
+      "line": 71,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "A grubu ürünler için tampon daha cömert (%30-40), C grubu için daha az (%10-15)."
+    }
+  ],
+  "e-ticaret-urun-basligi-nasil-yazilir-platform-kurallari.md": [
+    {
+      "line": 53,
+      "category": "kaynaksiz_yuzde",
+      "match": "%100",
+      "context": "Giyim kategorisinde formül biraz değişir: **Marka + Cinsiyet + Ürün Tipi + Malzeme/Stil + Renk + Beden**. Örnek: \"Mavi E"
+    },
+    {
+      "line": 55,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Ev ve yaşam kategorisinde ise kullanım alanı öne çıkar: **Marka + Ürün Tipi + Ölçü/Kapasite + Malzeme + Kullanım Alanı +"
+    },
+    {
+      "line": 73,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Gösterim düşükse başlıkta yeterli anahtar kelime yok demektir — müşterinin aradığı kelimeleri eklemelisin. Gösterim yüks"
+    }
+  ],
+  "e-ticarette-gorsel-kalitenin-satis-etkisi.md": [
+    {
+      "line": 41,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "💡 AI görsel araçlarıyla tek bir düz ürün fotoğrafından hem beyaz arka planlı stüdyo görseli hem lifestyle sahneler oluşt"
+    }
+  ],
+  "e-ticarette-iade-oranlarini-icerikle-dusurun.md": [
+    {
+      "line": 29,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "💡 İpucu: yzliste kullanarak müşterilerin en çok merak ettiği detayları içeren kapsamlı ve şeffaf ürün açıklamaları ürete"
+    }
+  ],
+  "e-ticarette-mobil-optimizasyon-satis-artirma.md": [
+    {
+      "line": 29,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "Mobilde görseller küçük ekranda görüntülenir — karmaşık detaylar kaybolabilir. Ürünü yakın plan ve temiz arka planlı çek"
+    }
+  ],
+  "ebay-turkiye-satis-rehberi.md": [
+    {
+      "line": 72,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "eBay komisyon oranları kategoriye göre değişiyor ama genel olarak %10-13 bandında. Amazon'la benzer ama bazı kategoriler"
+    },
+    {
+      "line": 74,
+      "category": "kaynaksiz_yuzde",
+      "match": "%2",
+      "context": "Ödeme işlem ücreti ayrıca var; sipariş tutarı üzerinden %2-3 bandında. Yabancı döviz kur çevirimi de küçük bir ücret içe"
+    },
+    {
+      "line": 76,
+      "category": "kaynaksiz_yuzde",
+      "match": "%14",
+      "context": "Toplam maliyet (komisyon + ödeme ücreti + kur çevirme) ürün satış tutarının %14-17'si civarında. Fiyatlandırırken bu ora"
+    }
+  ],
+  "email-pazarlama-e-ticaret-rehberi.md": [
+    {
+      "line": 35,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Email listesi sıfırdan kurulurken en çok hata yapılan kısım \"kayıt formu sayfanın altında dursun, gelen gelir\" yaklaşımı"
+    },
+    {
+      "line": 37,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "- **Pop-up form ile teşvik:** Site ziyaretçisi sayfayı kapatmaya yöneldiğinde çıkan, %10 indirim kuponu karşılığında ema"
+    },
+    {
+      "line": 37,
+      "category": "kaynaksiz_yuzde",
+      "match": "%2",
+      "context": "- **Pop-up form ile teşvik:** Site ziyaretçisi sayfayı kapatmaya yöneldiğinde çıkan, %10 indirim kuponu karşılığında ema"
+    }
+  ],
+  "etsy-ads-reklam-yonetimi.md": [
+    {
+      "line": 31,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "Bütçeyi belirlerken ürün başı ortalama marjını dikkate al. 20 USD'lik bir ürünün %30 marjı 6 USD; reklama ayıracağın mik"
+    },
+    {
+      "line": 31,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "Bütçeyi belirlerken ürün başı ortalama marjını dikkate al. 20 USD'lik bir ürünün %30 marjı 6 USD; reklama ayıracağın mik"
+    },
+    {
+      "line": 67,
+      "category": "kaynaksiz_yuzde",
+      "match": "%50",
+      "context": "Etsy trafik grafiği sezonlara duyarlı. Noel öncesi (Kasım-Aralık), Anneler Günü (Mayıs) ve Sevgililer Günü (Şubat) gibi "
+    },
+    {
+      "line": 73,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "Sadece reklam ile büyümek sürdürülebilir değil. Etsy algoritması reklamsız organik satışı da sinyal olarak değerlendiriy"
+    },
+    {
+      "line": 73,
+      "category": "kaynaksiz_yuzde",
+      "match": "%60",
+      "context": "Sadece reklam ile büyümek sürdürülebilir değil. Etsy algoritması reklamsız organik satışı da sinyal olarak değerlendiriy"
+    },
+    {
+      "line": 79,
+      "category": "kaynaksiz_yuzde",
+      "match": "%25",
+      "context": "Reklam kampanyası dönüşüm verirse ölçek büyütme zamanı. Günlük bütçeyi tek seferde iki katına çıkarmak yerine kademeli a"
+    }
+  ],
+  "etsy-baslik-tag-yazim-kurallari.md": [
+    {
+      "line": 15,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "Etsy'de başlık ve etiket (tag) alanları, arama sıralamasının en güçlü iki sinyali. İyi bir ürün görseli satışı kapatan s"
+    }
+  ],
+  "etsy-satis-baslangic-rehberi-2026.md": [
+    {
+      "line": 59,
+      "category": "kaynaksiz_yuzde",
+      "match": "%6",
+      "context": "Etsy fiyatlandırmaya yaklaşık %6,5 işlem, %3 ödeme ve 0,25 USD sabit komisyon uyguluyor. Etsy Ads kullanıyorsan bu gider"
+    },
+    {
+      "line": 59,
+      "category": "kaynaksiz_yuzde",
+      "match": "%3",
+      "context": "Etsy fiyatlandırmaya yaklaşık %6,5 işlem, %3 ödeme ve 0,25 USD sabit komisyon uyguluyor. Etsy Ads kullanıyorsan bu gider"
+    },
+    {
+      "line": 59,
+      "category": "kaynaksiz_yuzde",
+      "match": "%12",
+      "context": "Etsy fiyatlandırmaya yaklaşık %6,5 işlem, %3 ödeme ve 0,25 USD sabit komisyon uyguluyor. Etsy Ads kullanıyorsan bu gider"
+    },
+    {
+      "line": 74,
+      "category": "kaynaksiz_yuzde",
+      "match": "%100",
+      "context": "Mağaza açıldıktan sonraki 90 gün kritik. Bu dönemde en az 15 ürün yükle, 3 yorum topla ve %100 yanıt hızı tut. Bu üç met"
+    },
+    {
+      "line": 76,
+      "category": "en_iyi",
+      "match": "En çok",
+      "context": "Büyüme aşamasında hangi ürünlerin çalıştığını anlamak için Etsy Stats panelini düzenli incele. En çok aranan anahtar kel"
+    }
+  ],
+  "etsy-turk-el-yapimi-urun-satma-rehberi.md": [
+    {
+      "line": 68,
+      "category": "kaynaksiz_yuzde",
+      "match": "%6",
+      "context": "- Etsy komisyonu (%6,5 işlem ücreti + listeleme ücreti)"
+    },
+    {
+      "line": 69,
+      "category": "kaynaksiz_yuzde",
+      "match": "%5",
+      "context": "- Döviz kuru dalgalanma payı (en az %5-10 tampon)"
+    }
+  ],
+  "global-pazar-yerlerine-acilmanin-anahtari-ai-listeleme.md": [
+    {
+      "line": 25,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Etsy gibi platformlarda etiketler (tags) satış performansını önemli ölçüde belirler. Yapay zeka, o kategoride yurtdışınd"
+    }
+  ],
+  "gorsel-seo-alt-text-dosya-adi.md": [
+    {
+      "line": 84,
+      "category": "kaynaksiz_yuzde",
+      "match": "%60",
+      "context": "Sıkıştırma araçları (TinyPNG, Squoosh) görsel kalitesini koruyarak dosya boyutunu %60-80 azaltabiliyor. Bu küçük optimiz"
+    }
+  ],
+  "hepsiburada-kampanya-yonetimi.md": [
+    {
+      "line": 40,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Bu hesabı yapmadan %20 indirim verildiğinde bazı ürünlerde kâr sıfıra iniyor. Kampanyada zarar etmek kısa vadeli \"görünü"
+    },
+    {
+      "line": 42,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "Hepsiburada bazen minimum indirim oranı şartı koşuyor (%10, %15, %20 gibi). Bu şart ürününe göre kabul edilebilir değils"
+    },
+    {
+      "line": 42,
+      "category": "kaynaksiz_yuzde",
+      "match": "%15",
+      "context": "Hepsiburada bazen minimum indirim oranı şartı koşuyor (%10, %15, %20 gibi). Bu şart ürününe göre kabul edilebilir değils"
+    },
+    {
+      "line": 42,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Hepsiburada bazen minimum indirim oranı şartı koşuyor (%10, %15, %20 gibi). Bu şart ürününe göre kabul edilebilir değils"
+    },
+    {
+      "line": 90,
+      "category": "kaynaksiz_yuzde",
+      "match": "%5",
+      "context": "- Gün 3-4: kampanya fiyatı + %5"
+    },
+    {
+      "line": 91,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "- Gün 5-6: kampanya fiyatı + %10"
+    }
+  ],
+  "hepsiburada-one-cikan-urun-stratejisi.md": [
+    {
+      "line": 21,
+      "category": "kaynaksiz_yuzde",
+      "match": "%80",
+      "context": "Hepsiburada'da aynı ürünü birden fazla satıcı sattığında ürün detay sayfası tektir. Bu sayfada \"Sepete Ekle\" butonunun h"
+    },
+    {
+      "line": 29,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "Hepsiburada'da fiyat takibi otomatik yapmak istiyorsan üçüncü taraf SaaS araçları var; günlük rakip fiyatı tarayıp senin"
+    },
+    {
+      "line": 72,
+      "category": "kaynaksiz_yuzde",
+      "match": "%2",
+      "context": "Reklam bütçesini günlük 50-100 TL ile başla, dönüşüm verisi geldikçe artır ya da kes. Dönüşüm oranı %2'nin altında kalan"
+    }
+  ],
+  "hepsiburada-premium-satici.md": [
+    {
+      "line": 32,
+      "category": "kaynaksiz_yuzde",
+      "match": "%95",
+      "context": "- Zamanında gönderim oranı %95+"
+    },
+    {
+      "line": 35,
+      "category": "kaynaksiz_yuzde",
+      "match": "%2",
+      "context": "- Sipariş iptal oranı %2 altı"
+    },
+    {
+      "line": 55,
+      "category": "kaynaksiz_yuzde",
+      "match": "%95",
+      "context": "%95+ zamanında gönderim zor ama mümkün. Alışkanlık kurman gereken süreç:"
+    },
+    {
+      "line": 108,
+      "category": "kaynaksiz_yuzde",
+      "match": "%2",
+      "context": "%2 altı sipariş iptal oranı zor bir metrik. İptallerin çoğu satıcı kaynaklı (stok yok, adres doğrulanamadı, fiyat hatası"
+    }
+  ],
+  "hepsiburada-reklam-butce-yonetimi.md": [
+    {
+      "line": 29,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "Reklam bütçesini belirlerken iki temel yaklaşım var. Birinci yaklaşım ACoS (Advertising Cost of Sales) hedefine göre: sa"
+    },
+    {
+      "line": 29,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Reklam bütçesini belirlerken iki temel yaklaşım var. Birinci yaklaşım ACoS (Advertising Cost of Sales) hedefine göre: sa"
+    },
+    {
+      "line": 49,
+      "category": "kaynaksiz_yuzde",
+      "match": "%80",
+      "context": "Başlangıç için kategori ortalaması CPC'nin %80-90'ı bir teklifle giriş yap. Bu düzey rekabete girer ama aşırı agresif de"
+    },
+    {
+      "line": 63,
+      "category": "kaynaksiz_yuzde",
+      "match": "%0",
+      "context": "Sağlıklı kampanya sinyalleri: CTR %0.5+, dönüşüm oranı %1.5+, ACoS hedef marjın altında. Bu sinyallerin altında kalan ka"
+    },
+    {
+      "line": 63,
+      "category": "kaynaksiz_yuzde",
+      "match": "%1",
+      "context": "Sağlıklı kampanya sinyalleri: CTR %0.5+, dönüşüm oranı %1.5+, ACoS hedef marjın altında. Bu sinyallerin altında kalan ka"
+    }
+  ],
+  "hepsiburada-satici-paneli-ipuclari.md": [
+    {
+      "line": 15,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Hepsiburada Merchant satıcı paneli, doğru kullanıldığında günlük operasyonu hızlandıran ama ilk bakışta karmaşık bir ara"
+    }
+  ],
+  "influencer-pazarlama-e-ticaret-stratejisi.md": [
+    {
+      "line": 34,
+      "category": "kaynaksiz_yuzde",
+      "match": "%3",
+      "context": "- **Mikro influencer (10K-100K takipçi):** Belirgin bir uzmanlık alanı, etkileşim oranı tatmin edici (%3-7), ücret 2.000"
+    },
+    {
+      "line": 35,
+      "category": "kaynaksiz_yuzde",
+      "match": "%1",
+      "context": "- **Makro influencer (100K-1M takipçi):** Geniş kitle, etkileşim oranı görece düşük (%1-3), ücret 15.000-100.000 TL aras"
+    },
+    {
+      "line": 50,
+      "category": "kaynaksiz_yuzde",
+      "match": "%5",
+      "context": "Influencer'a özel kupon kodu veya takip linki verilir. Yapılan her satışın belirli bir yüzdesi (%5-15) ödenir. Düşük baş"
+    },
+    {
+      "line": 67,
+      "category": "kaynaksiz_yuzde",
+      "match": "%2",
+      "context": "- **Etkileşim oranı:** Beğeni + yorum toplamı / takipçi sayısı. %2'nin altı şüpheli, %3-7 sağlıklı, %7 üzeri belirgin şe"
+    },
+    {
+      "line": 67,
+      "category": "kaynaksiz_yuzde",
+      "match": "%3",
+      "context": "- **Etkileşim oranı:** Beğeni + yorum toplamı / takipçi sayısı. %2'nin altı şüpheli, %3-7 sağlıklı, %7 üzeri belirgin şe"
+    },
+    {
+      "line": 67,
+      "category": "kaynaksiz_yuzde",
+      "match": "%7",
+      "context": "- **Etkileşim oranı:** Beğeni + yorum toplamı / takipçi sayısı. %2'nin altı şüpheli, %3-7 sağlıklı, %7 üzeri belirgin şe"
+    },
+    {
+      "line": 79,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "💡 İlk influencer işbirliğinizde tek bir mikro influencer'a tüm bütçenizi vermek yerine, 3-5 nano/mikro influencer ile kü"
+    }
+  ],
+  "kargo-maliyeti-dusurme-anlasmalar.md": [
+    {
+      "line": 15,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "Kargo maliyeti e-ticaret satıcısının en büyük gider kalemlerinden biri. Perakende kargo ücreti paket başına 30-50 TL ban"
+    },
+    {
+      "line": 69,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Pazarlıkta ortalama %20-35 indirim mümkün. Aylık 500+ paket gönderen satıcılar %40'a kadar inebiliyor."
+    },
+    {
+      "line": 69,
+      "category": "kaynaksiz_yuzde",
+      "match": "%40",
+      "context": "Pazarlıkta ortalama %20-35 indirim mümkün. Aylık 500+ paket gönderen satıcılar %40'a kadar inebiliyor."
+    }
+  ],
+  "kozmetik-urunleri-listing-icerik-yazma-rehberi.md": [
+    {
+      "line": 117,
+      "category": "kaynaksiz_yuzde",
+      "match": "%95",
+      "context": "- **Doğal:** \"Natural\" iddiası en az tanımlı olanı, kullanırken oran belirtin (%95 doğal kökenli içerik gibi)"
+    }
+  ],
+  "musteri-sadakati-olusturma-e-ticaret.md": [
+    {
+      "line": 29,
+      "category": "kaynaksiz_yuzde",
+      "match": "%50",
+      "context": "Mağaza cirosunun ciddi bir kısmı tekrar eden müşterilerden gelir — iyi yönetilen mağazalarda cironun %50-70'i. Tek sefer"
+    }
+  ],
+  "n11-satis-rehberi-magaza-puani-ve-listing.md": [
+    {
+      "line": 19,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "N11 arama algoritması başlığın tamamını tarar. Bu yüzden başlıkta hem markaya hem de ürünün en çok aratılan özelliklerin"
+    }
+  ],
+  "pazarama-saticilik-rehberi.md": [
+    {
+      "line": 70,
+      "category": "kaynaksiz_yuzde",
+      "match": "%18",
+      "context": "- **Moda ve aksesuar:** %18-22"
+    },
+    {
+      "line": 71,
+      "category": "kaynaksiz_yuzde",
+      "match": "%8",
+      "context": "- **Elektronik:** %8-14"
+    },
+    {
+      "line": 72,
+      "category": "kaynaksiz_yuzde",
+      "match": "%15",
+      "context": "- **Ev ve yaşam:** %15-18"
+    },
+    {
+      "line": 73,
+      "category": "kaynaksiz_yuzde",
+      "match": "%18",
+      "context": "- **Kozmetik:** %18-22"
+    },
+    {
+      "line": 74,
+      "category": "kaynaksiz_yuzde",
+      "match": "%12",
+      "context": "- **Kitap:** %12-15"
+    }
+  ],
+  "pazaryeri-fiyatlandirma-dinamik-stratejiler.md": [
+    {
+      "line": 65,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "İkincisi, kampanyada marjı yemek yerine stoğu kontrollü aç. Tüm stoğunu indirimle satmak yerine %30-50'sini kampanyaya a"
+    },
+    {
+      "line": 95,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "Tam otomatik fiyatlandırma ayarı riskli — algoritma bazen beklenmedik davranış sergileyebiliyor, bir saatte fiyat çok aş"
+    }
+  ],
+  "pazaryeri-iade-orani-dusurme.md": [
+    {
+      "line": 15,
+      "category": "kaynaksiz_yuzde",
+      "match": "%15",
+      "context": "Pazaryerinde iade oranı, kârı doğrudan etkileyen gizli bir metrik. İade kargo ücreti, işçilik, depo geri koyma, ikinci k"
+    },
+    {
+      "line": 15,
+      "category": "kaynaksiz_yuzde",
+      "match": "%5",
+      "context": "Pazaryerinde iade oranı, kârı doğrudan etkileyen gizli bir metrik. İade kargo ücreti, işçilik, depo geri koyma, ikinci k"
+    },
+    {
+      "line": 34,
+      "category": "kaynaksiz_yuzde",
+      "match": "%40",
+      "context": "Her nedenin yüzdesi farklı çözüm gerektirir. Beden uyumsuzluğu %40'ı oluşturuyorsa listing iyileştirmeli; kargo hasarı %"
+    },
+    {
+      "line": 34,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Her nedenin yüzdesi farklı çözüm gerektirir. Beden uyumsuzluğu %40'ı oluşturuyorsa listing iyileştirmeli; kargo hasarı %"
+    },
+    {
+      "line": 34,
+      "category": "kaynaksiz_yuzde",
+      "match": "%15",
+      "context": "Her nedenin yüzdesi farklı çözüm gerektirir. Beden uyumsuzluğu %40'ı oluşturuyorsa listing iyileştirmeli; kargo hasarı %"
+    },
+    {
+      "line": 80,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Bu alternatif sunma taktiği iadelerin yaklaşık %20-30'unu satışta tutabiliyor. İade karar vermeden önce alıcı sorununun "
+    },
+    {
+      "line": 102,
+      "category": "kaynaksiz_yuzde",
+      "match": "%1",
+      "context": "Toplam müşterinin küçük bir yüzdesi iade oranının görece büyük kısmını oluşturabiliyor; bu %1-3'lük grubu tespit ve yöne"
+    },
+    {
+      "line": 112,
+      "category": "kaynaksiz_yuzde",
+      "match": "%5",
+      "context": "Pazaryerinde iade oranını düşürmek tek bir müdahaleyle olmuyor; sistemli bir yaklaşım gerektiriyor. Kök neden analizi, l"
+    }
+  ],
+  "pazaryeri-komisyon-oranlari-karsilastirma-2026.md": [
+    {
+      "line": 64,
+      "category": "kaynaksiz_yuzde",
+      "match": "%18",
+      "context": "Komisyon oranını tek başına değil, \"net eline kaç lira geçiyor\" hesabıyla değerlendir. %18 komisyonlu bir pazaryerinde k"
+    },
+    {
+      "line": 64,
+      "category": "kaynaksiz_yuzde",
+      "match": "%22",
+      "context": "Komisyon oranını tek başına değil, \"net eline kaç lira geçiyor\" hesabıyla değerlendir. %18 komisyonlu bir pazaryerinde k"
+    },
+    {
+      "line": 71,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "- Reklam harcamasını ürün başı kâr marjının %30'unu geçmeyecek şekilde bütçele"
+    }
+  ],
+  "shopify-turkiye-magaza-acma-rehberi.md": [
+    {
+      "line": 25,
+      "category": "kaynaksiz_yuzde",
+      "match": "%15",
+      "context": "- Pazaryerlerinde komisyon (genellikle %15-22) kar marjınızı eritiyorsa"
+    },
+    {
+      "line": 46,
+      "category": "kaynaksiz_yuzde",
+      "match": "%2",
+      "context": "- **iyzico:** Türkiye'nin yaygın ödeme servislerinden biri. Kurulumu basit, taksit desteği var. Komisyon %2,5-3,5 arası."
+    },
+    {
+      "line": 57,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Shopify Türkiye için KDV ayarlarını otomatik yapmaz. Manuel olarak panelden Ayarlar > Vergiler ve görevler kısmından Tür"
+    },
+    {
+      "line": 57,
+      "category": "kaynaksiz_yuzde",
+      "match": "%1",
+      "context": "Shopify Türkiye için KDV ayarlarını otomatik yapmaz. Manuel olarak panelden Ayarlar > Vergiler ve görevler kısmından Tür"
+    },
+    {
+      "line": 57,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "Shopify Türkiye için KDV ayarlarını otomatik yapmaz. Manuel olarak panelden Ayarlar > Vergiler ve görevler kısmından Tür"
+    }
+  ],
+  "sosyal-medya-pazaryeri-trafik.md": [
+    {
+      "line": 30,
+      "category": "kaynaksiz_yuzde",
+      "match": "%15",
+      "context": "Hedef: pazaryeri trafiğinin %15-25'i sosyal medya kaynaklı olsun. Bu oran istikrar ve büyümenin altın standardı."
+    },
+    {
+      "line": 102,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Sosyal medya post'larında satış mesajını %20 ile sınırla. Takipçiler sürekli \"al, al, al\" diyen hesapları takip etmiyor."
+    },
+    {
+      "line": 102,
+      "category": "kaynaksiz_yuzde",
+      "match": "%80",
+      "context": "Sosyal medya post'larında satış mesajını %20 ile sınırla. Takipçiler sürekli \"al, al, al\" diyen hesapları takip etmiyor."
+    },
+    {
+      "line": 102,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Sosyal medya post'larında satış mesajını %20 ile sınırla. Takipçiler sürekli \"al, al, al\" diyen hesapları takip etmiyor."
+    }
+  ],
+  "sosyal-medya-urun-tanitimi-instagram-tiktok-stratejileri.md": [
+    {
+      "line": 41,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "💡 Paylaşım zamanı önemli: Instagram için hafta içi 12:00-14:00 ve 19:00-21:00, TikTok için 18:00-22:00 arası en yüksek e"
+    }
+  ],
+  "telefon-urun-fotografi-ai-duzeltme.md": [
+    {
+      "line": 78,
+      "category": "kaynaksiz_yuzde",
+      "match": "%85",
+      "context": "- Amazon: 1500x1500+ piksel, saf beyaz fon (ürün %85 kare doldurmalı)"
+    }
+  ],
+  "tiktok-shop-urun-listeleme-rehberi-2026.md": [
+    {
+      "line": 35,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "TikTok'ta satış yapmanın yolu, ürünü gösteren kısa ve etkileyici videolar üretmek. Ürünü kullanırken, kutudan çıkarırken"
+    }
+  ],
+  "trendyol-anahtar-kelime-arastirma.md": [
+    {
+      "line": 61,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Anahtar kelime bulduktan sonra listing'in hangi bölümüne nasıl yerleşeceği kritik. Trendyol algoritması başlığa en çok a"
+    }
+  ],
+  "trendyol-express-tex-kullanim.md": [
+    {
+      "line": 45,
+      "category": "kaynaksiz_yuzde",
+      "match": "%8",
+      "context": "Toplam TEX maliyeti ürün birim fiyatının %8-15'i bandında. Kategoriye ve ürün boyutuna göre dalgalanıyor."
+    }
+  ],
+  "trendyol-iade-yonetimi-saticilar.md": [
+    {
+      "line": 15,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "Trendyol'da satış yapan her satıcının karşılaştığı gerçek: iade kaçınılmaz. Ancak iade oranı %10 seviyesinde olan bir ma"
+    },
+    {
+      "line": 15,
+      "category": "kaynaksiz_yuzde",
+      "match": "%25",
+      "context": "Trendyol'da satış yapan her satıcının karşılaştığı gerçek: iade kaçınılmaz. Ancak iade oranı %10 seviyesinde olan bir ma"
+    },
+    {
+      "line": 33,
+      "category": "kaynaksiz_yuzde",
+      "match": "%40",
+      "context": "- Beden uyumsuzluğu (giyim kategorisinde %40+)"
+    },
+    {
+      "line": 44,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "Giyim satıcıları için iade oranı %30-40 bandında seyredebiliyor; bu oran marjı ciddi şekilde yiyor. Beden uyumsuzluğunu "
+    },
+    {
+      "line": 54,
+      "category": "kaynaksiz_yuzde",
+      "match": "%15",
+      "context": "Kargo hasarı kaynaklı iadeler paketleme kalitesiyle doğrudan bağlantılı. Cam, seramik, elektronik ve küçük aksesuar gibi"
+    },
+    {
+      "line": 80,
+      "category": "kaynaksiz_yuzde",
+      "match": "%50",
+      "context": "Yüksek iade oranlı ürünlerini Trendyol panelinden tespit et. Kategori ortalamasının %50'sinden fazla iade getiren ürünle"
+    },
+    {
+      "line": 93,
+      "category": "kaynaksiz_yuzde",
+      "match": "%15",
+      "context": "Bu kalemleri topladığında tek bir iadenin maliyeti 40-60 TL bandına çıkabiliyor. 1000 siparişli bir mağazada %15 iade or"
+    },
+    {
+      "line": 100,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "- İkinci kalite (ufak kusurlar, %30-50 indirimle satılabilir)"
+    },
+    {
+      "line": 107,
+      "category": "kaynaksiz_yuzde",
+      "match": "%5",
+      "context": "Trendyol iade yönetimi, pasif bir operasyon değil aktif bir kâr koruma süreci. Nedenleri kategorize etmek, beden tablola"
+    }
+  ],
+  "trendyol-reklam-optimizasyonu-rehberi.md": [
+    {
+      "line": 33,
+      "category": "kaynaksiz_yuzde",
+      "match": "%2",
+      "context": "Doğru teklifi belirlemek için önce **kar marjınızdan geriye doğru hesap** yapın. Diyelim ki ürününüzün satış fiyatı 200 "
+    },
+    {
+      "line": 77,
+      "category": "kaynaksiz_yuzde",
+      "match": "%1",
+      "context": "- Hangi ürünün CTR'si %1'in altında?"
+    }
+  ],
+  "trendyol-smart-listing-akilli-urun-onerileri.md": [
+    {
+      "line": 84,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Smart Listing skorunda yorum sayısı kadar yorum kalitesi de belirleyicidir. 50 yorumu olan ama %20'si negatif olan bir ü"
+    }
+  ],
+  "trendyol-yorum-alma-stratejileri.md": [
+    {
+      "line": 67,
+      "category": "kaynaksiz_yuzde",
+      "match": "%100",
+      "context": "Yorumların %100'ü olumlu olmayacak, bu normal. Olumsuz yorum geldiğinde yapılacak ilk şey hızla müdahale etmek. Trendyol"
+    }
+  ],
+  "urun-aciklamasi-10-hata-duzeltme.md": [
+    {
+      "line": 33,
+      "category": "kaynaksiz_yuzde",
+      "match": "%100",
+      "context": "\"%100 pamuk. 180 gr. Dört mevsim kullanılır.\" — özellik listelemek gerekli ama yeterli değil. Alıcı ürünün ne işe yaradı"
+    },
+    {
+      "line": 57,
+      "category": "kat_abartisi",
+      "match": "katlayan",
+      "context": "\"Satışları katlayan formül\", \"piyasadaki en iyi ürün\", \"garantili sonuç\" tarzı ifadeler hem pazaryeri politikasına aykır"
+    },
+    {
+      "line": 57,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "\"Satışları katlayan formül\", \"piyasadaki en iyi ürün\", \"garantili sonuç\" tarzı ifadeler hem pazaryeri politikasına aykır"
+    }
+  ],
+  "urun-aciklamasi-yazma-teknikleri-satisi-artiran-metin.md": [
+    {
+      "line": 53,
+      "category": "en_iyi",
+      "match": "En çok",
+      "context": "💡 A/B testi yapamıyorsan en kolay yol: En çok iade edilen ürünün açıklamasını yeniden yaz. İade nedenleri, müşterinin aç"
+    }
+  ],
+  "urun-fotografi-cekim-ipuclari-telefon-ile.md": [
+    {
+      "line": 23,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "Pencere kenarında, dolaylı gün ışığında çek. Direkt güneş ışığı sert gölgeler yaratır. Bulutlu havalar en iyi doğal soft"
+    }
+  ],
+  "urun-gorseli-arka-plan-degistirme.md": [
+    {
+      "line": 51,
+      "category": "kaynaksiz_yuzde",
+      "match": "%85",
+      "context": "Amazon TR ve USA: ana görsel çok sıkı beyaz fon kuralı. Ürünün kadrajın %85'ini doldurması zorunlu. Alt görseller lifest"
+    }
+  ],
+  "urun-varyant-yonetimi-renk-beden-model.md": [
+    {
+      "line": 100,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Varyant yönetimi, e-ticaret operasyonunun arka planda en çok zaman alan ama en az görünür alanlarından biridir. SKU disi"
+    }
+  ],
+  "whatsapp-business-e-ticaret-musteri-iletisimi.md": [
+    {
+      "line": 57,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "WhatsApp kataloğunda ürünler kategoriye ayrılmaz, hepsi tek bir listede görünür. Bu nedenle en çok sorulan 30-50 ürünü ö"
+    }
+  ],
+  "yzliste-api-entegrasyon-erp-baglanti-rehberi.md": [
+    {
+      "line": 131,
+      "category": "kaynaksiz_yuzde",
+      "match": "%30",
+      "context": "💡 Entegrasyona başlamadan önce mevcut iş akışını bir flowchart ile çiz. Hangi sistem hangi bilgiyi tutuyor, kim kime ver"
+    }
+  ],
+  "yzliste-dashboard-kullanim-rehberi.md": [
+    {
+      "line": 118,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "\"Raporlar\" sekmesi hangi pazaryerine ne kadar ürün eklediğini, kredi tüketimini, en çok kullanılan kategorileri gösteriy"
+    }
+  ],
+  "yzliste-ile-ilk-listing-2-dakikada.md": [
+    {
+      "line": 27,
+      "category": "kaynaksiz_yuzde",
+      "match": "%100",
+      "context": "Ürün bilgisi hazırlığında sık yapılan bir hata, detayları fazla kısa yazmak. \"Pamuklu tişört\" yerine \"unisex, %100 pamuk"
+    },
+    {
+      "line": 63,
+      "category": "kaynaksiz_yuzde",
+      "match": "%100",
+      "context": "Ardından iki-üç satırlık kısa bir tanım yazıyorsun. Örneğin: \"XL beden gri kapüşonlu hoodie, %100 pamuk, unisex kesim, s"
+    }
+  ],
+  "yzliste-sosyal-medya-kiti.md": [
+    {
+      "line": 51,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "- Rakam vurgusu (\"3 gün içinde kargo\", \"%20 indirim\")"
+    },
+    {
+      "line": 75,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Sosyal medya içeriğinde \"satış mesajı\" oranını %20'nin altında tut. Takipçiler sürekli \"al, al, al\" diyen hesapları unfo"
+    },
+    {
+      "line": 75,
+      "category": "kaynaksiz_yuzde",
+      "match": "%80",
+      "context": "Sosyal medya içeriğinde \"satış mesajı\" oranını %20'nin altında tut. Takipçiler sürekli \"al, al, al\" diyen hesapları unfo"
+    },
+    {
+      "line": 75,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "Sosyal medya içeriğinde \"satış mesajı\" oranını %20'nin altında tut. Takipçiler sürekli \"al, al, al\" diyen hesapları unfo"
+    }
+  ],
+  "yzliste-toplu-yukleme-csv-excel-rehberi.md": [
+    {
+      "line": 86,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Toplu yüklemede en çok karşılaşılan sorunlar:"
+    },
+    {
+      "line": 120,
+      "category": "en_iyi",
+      "match": "en çok",
+      "context": "Toplu yükleme, hacim arttığında yzliste'nin en çok tasarruf sağladığı akıştır. CSV/Excel dosyanızı pazaryeri kurallarını"
+    }
+  ],
+  "yzliste-video-ozelligi-urun-tanitim.md": [
+    {
+      "line": 67,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "Video ilk 3 saniyesi en kritik. Alıcı ilk 3 saniyede ilgisini kaybederse geri kalanını izlemiyor. Bu yüzden video kurgus"
+    },
+    {
+      "line": 73,
+      "category": "kaynaksiz_yuzde",
+      "match": "%10",
+      "context": "Video öncesi 30 günlük ortalamayla video sonrası 30 günlük veriyi karşılaştır. Tıklama oranı en az %10 artmadıysa videon"
+    }
+  ],
+  "yzliste-vs-manuel-zaman-karsilastirma.md": [
+    {
+      "line": 86,
+      "category": "kaynaksiz_yuzde",
+      "match": "%100",
+      "context": "Pazaryeri uyumu: karakter sınırı, yasaklı kelime, format kuralları %100 uyumlu."
+    },
+    {
+      "line": 112,
+      "category": "kaynaksiz_yuzde",
+      "match": "%80",
+      "context": "İkilikten kaçmayın — \"ya manuel ya AI\" yerine hibrit yaklaşım çoğu satıcı için en verimli. yzliste %80 işi yapıyor (taba"
+    },
+    {
+      "line": 112,
+      "category": "kaynaksiz_yuzde",
+      "match": "%20",
+      "context": "İkilikten kaçmayın — \"ya manuel ya AI\" yerine hibrit yaklaşım çoğu satıcı için en verimli. yzliste %80 işi yapıyor (taba"
+    },
+    {
+      "line": 151,
+      "category": "en_iyi",
+      "match": "en iyi",
+      "context": "yzliste vs manuel listing kararı, basit bir teknoloji tercihi değil; e-ticaret operasyonunun ölçeklenebilirliği, maliyet"
+    }
+  ],
+  "yzliste-yzstudio-premium-ozellikler.md": [
+    {
+      "line": 95,
+      "category": "en_iyi",
+      "match": "En çok",
+      "context": "yzstudio'yu öncelikle \"flagship\" ürünlerinde kullan. Tüm kataloğun premium görsel çekimi yapmak hem maliyet hem zaman aç"
+    }
+  ]
+}

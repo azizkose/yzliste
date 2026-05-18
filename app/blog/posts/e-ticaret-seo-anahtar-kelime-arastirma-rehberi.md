@@ -24,7 +24,7 @@ Google'da bilgi ararsın, pazaryerinde ürün ararsın. "Kırmızı deri kadın 
 
 ## Ücretsiz Anahtar Kelime Bulma Yöntemleri
 
-Pazaryerinin kendi arama çubuğuna yazmaya başla — otomatik tamamlama önerileri en popüler aramaları gösterir. Rakip listing'lerin başlıklarını ve açıklamalarını incele. Trendyol'da "En çok aranan" bölümünü, Amazon'da "Customers also searched for" kısmını kullan. Ücretsiz araçlar arasında Google Keyword Planner ve Ubersuggest başlangıç için yeterli.
+Pazaryerinin kendi arama çubuğuna yazmaya başla — otomatik tamamlama önerileri sıkça tercih edilen aramaları gösterir. Rakip listing'lerin başlıklarını ve açıklamalarını incele. Trendyol'da "sıkça aranan" bölümünü, Amazon'da "Customers also searched for" kısmını kullan. Ücretsiz araçlar arasında Google Keyword Planner ve Ubersuggest başlangıç için yeterli.
 
 ---
 
@@ -45,6 +45,12 @@ En önemli anahtar kelimeyi başlığın ilk 50 karakterine yerleştir. İkincil
 Bazı anahtar kelimeler yıl boyunca sabit aranırken, bazıları mevsimsel patlar. "Mayo" yazın, "mont" kışın zirve yapar. Google Trends ile mevsimsel trendleri takip et ve listing'lerini önceden güncelle. Kampanya dönemlerinde "indirim", "fırsat", "kampanya" kelimelerini ekle.
 
 ---
+
+
+
+## E-ticaret SEO ve içerik rehberleri
+
+SEO çalışmanızı tamamlayacak diğer rehberler: görsel SEO için [Görsel SEO alt text ve dosya adı](/blog/gorsel-seo-alt-text-dosya-adi), platform spesifik başlıklar için [Ürün başlığı nasıl yazılır: platform kuralları](/blog/e-ticaret-urun-basligi-nasil-yazilir-platform-kurallari), yazım hataları için [Ürün açıklaması 10 hata düzeltme](/blog/urun-aciklamasi-10-hata-duzeltme), yazım teknikleri için [Ürün açıklaması yazma teknikleri](/blog/urun-aciklamasi-yazma-teknikleri-satisi-artiran-metin), rekabet analizi için [Rakip listing inceleme](/blog/e-ticarette-rekabet-analizi-rakip-listing-inceleme) yazılarımıza bakın.
 
 ## SONUÇ
 
